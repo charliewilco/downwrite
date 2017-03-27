@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="33px" height="50px" viewBox="0 0 33 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.5.2 (25235) - http://www.bohemiancoding.com/sketch -->
+    <title>logo</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <radialGradient cx="50.0002438%" cy="50%" fx="50.0002438%" fy="50%" r="143.827495%" id="radialGradient-1">
+            <stop stop-color="#FFCE00" offset="0%"></stop>
+            <stop stop-color="#FFD600" offset="16.39%"></stop>
+            <stop stop-color="#FFE600" offset="57.9%"></stop>
+            <stop stop-color="#FFCE00" offset="100%"></stop>
+        </radialGradient>
+        <radialGradient cx="49.9997562%" cy="50.0003091%" fx="49.9997562%" fy="50.0003091%" r="143.827495%" id="radialGradient-2">
+            <stop stop-color="#FFB600" offset="0%"></stop>
+            <stop stop-color="#FFC200" offset="52.49%"></stop>
+            <stop stop-color="#F4A903" offset="100%"></stop>
+        </radialGradient>
+    </defs>
+    <g id="Editor" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Desktop" sketch:type="MSArtboardGroup" transform="translate(-47.000000, -15.000000)">
+            <g id="header" sketch:type="MSLayerGroup">
+                <g id="DOWNWRITE-+-nav-menu-+-downwrite1_logo" transform="translate(47.000000, 15.000000)" sketch:type="MSShapeGroup">
+                    <g id="logo">
+                        <g id="Shape">
+                            <path d="M16.4687239,5.27463415 L16.4687239,30.9712195 C17.6705149,30.9712195 18.6447537,31.9360976 18.6447537,33.1263415 C18.6447537,34.3165854 17.6705149,35.2814634 16.4687239,35.2814634 L16.4687239,44.7253659 L26.5704179,35.1314634 L16.4687239,5.27463415 L16.4687239,5.27463415 Z" fill="url(#radialGradient-1)"></path>
+                            <path d="M14.292694,33.1263415 C14.292694,31.9360976 15.2669328,30.9712195 16.4687239,30.9712195 L16.4687239,5.27463415 L6.36702985,35.1312195 L16.4687239,44.725122 L16.4687239,35.2812195 C15.2669328,35.2814634 14.292694,34.3165854 14.292694,33.1263415 L14.292694,33.1263415 Z" fill="url(#radialGradient-2)"></path>
+                            <path d="M32.937694,50 L0,50 L0,0 L32.937694,0 L32.937694,50 L32.937694,50 Z M1.63029851,48.4695122 L31.3073955,48.4695122 L31.3073955,1.5304878 L1.63029851,1.5304878 L1.63029851,48.4695122 L1.63029851,48.4695122 Z" fill="#FFC200"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

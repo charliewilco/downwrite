@@ -1,0 +1,19 @@
+{
+  "dir": "ltr",
+  "lang": "en",
+  "short_name": "downwrite",
+  "name": "Downwrite",
+  "display": "browser",
+  "description": "A place to write",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#4FA5C2",
+  "background_color": "transparent",
+  "start_url": "./",
+  "display": "standalone"
+}

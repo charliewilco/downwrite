@@ -1,0 +1,37 @@
+{
+  "name": "redownwrite",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "enzyme": "^2.7.0",
+    "react-a11y": "^0.3.3",
+    "react-fix-it": "^0.3.3",
+    "react-scripts": "0.8.4",
+    "serve": "^2.1.2",
+    "sw-precache": "^4.2.3"
+  },
+  "dependencies": {
+    "aphrodite": "^1.1.0",
+    "axios": "^0.15.3",
+    "draft-js": "^0.9.1",
+    "firebase": "^3.6.4",
+    "history": "^4.5.0",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "react-redux": "^5.0.1",
+    "react-router-dom": "^4.0.0",
+    "redux": "^3.6.0"
+  },
+  "scripts": {
+    "now-start": "serve build/",
+    "start": "react-scripts start",
+    "build": "react-scripts build; sw-precache --config=sw-precache-config.js",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "now && now alias"
+  },
+  "now": {
+    "alias": "redownwrite"
+  }
+}
