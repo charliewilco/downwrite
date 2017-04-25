@@ -19,9 +19,9 @@ LG = @media only screen and (min-width: 57.75rem)
   --base-form-radius: 0;
   --base-form-mxw: 100%;
   --base-spacing: 1rem;
-  --headlines: var(--ff-avenir);
-  --ff-serif: var(--ff-charter);
-  --ff-mono: var(--ff-sfmono);
+  --headlines: 'Roboto', var(--ff-avenir);
+  --ff-serif: 'Charter', var(--ff-charter);
+  --ff-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
 }
 
 *,
@@ -36,7 +36,7 @@ html {
   box-sizing: border-box;
   text-size-adjust: 100%;
   background-color: #F9FBFC;
-  font: 400 100%/1.6 Avenir, Helvetica Neue, sans-serif;
+  font: 400 100%/1.6 'Roboto Mono', Roboto, Avenir, Helvetica Neue, sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -335,8 +335,7 @@ h6,
   margin: 0;
   line-height: 1.5;
   line-height: var(--lh-3);
-  font-family: -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', 'SF UI Text', 'Segoe UI', 'Fira Sans', 'Roboto', 'Noto Sans', 'Droid Sans', 'Helvetica Neue', 'Lucida Grande', sans-serif;
-  font-family: var(--headlines);
+  font-family: inherit;
 }
 
 @media only screen and (min-width: 48rem) {
