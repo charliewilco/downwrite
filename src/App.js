@@ -1,41 +1,62 @@
+import 'typeface-roboto-mono'
 import React from 'react'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
-
+import { ConnectedRouter, routerReducer, routerMiddleware, push } from 'react-router-redux'
+import { createStore, applyMiddleware } from 'redux'
+import createHistory from 'history/createBrowserHistory'
+import thunk from 'redux-thunk'
+import { composeWithDevTools } from 'redux-devtools-extension'
+import { connect, Provider } from 'react-redux'
+import { Route, Switch } from 'react-router-dom'
+import { EditorState } from 'draft-js'
+import EditorView from './components/EditorView'
 import Header from './components/Header'
-import Editor from './components/Editor/old'
-import './App.css'
+import Main from './Main'
+import NoMatch from './404'
+import rootReducer from './rootReducer'
 
-const EditorView = () =>
-  <div className='App'>
-    <Header name='Re:Downwrite Web' />
-    <h1 className='u-center'>Fuck it</h1>
-    <p className='u-center'>To get started, edit <code>src/App.js</code> and save to reload.</p>
-  </div>
-
-const MainView = () =>
-  <div className='App'>
-    <Header name='Re:Downwrite Web' />
-    <Editor />
-    <p className='u-center'>To get started, edit <code>src/App.js</code> and save to reload.</p>
-  </div>
-
-const NoMatch = props =>
-  <div>
-    <Header name='Re:Downwrite Web 404' />
-    <div className='o-Container o-Container--sm o-Container--center'>
-      <h2>404</h2>
-      <p>Sorry but {props.location.pathname} didn’t match any pages</p>
-    </div>
-  </div>
-
-const App = () => (
-  <BrowserRouter>
-    <Switch>
-      <Route exact={true} path='/' component={MainView} />
-      <Route path='/new' component={EditorView} />
-      <Route component={NoMatch} />
-    </Switch>
-  </BrowserRouter>
+const store = createStore(
+  rootReducer,
+  composeWithDevTools(
+    applyMiddleware(thunk, routerMiddleware(history))
+  )
 )
+
+const history = createHistory()
+
+class App extends React.Component {
+  state = {
+    editorState: EditorState.createEmpty()
+  }
+
+  render () {
+    const { editorState } = this.state
+    const NEditor = () => (
+      <EditorView
+        editorState={editorState}
+        onChange={editorState => this.setState({ editorState })}
+      />
+    )
+    return (
+      <Provider store={store}>
+        <ConnectedRouter history={history}>
+          <div>
+            <Header name='Re:Downwrite Web' />
+            <hr />
+            <Switch>
+              <Route exact path='/' component={Main} />
+              <Route path='/new' render={NEditor} />
+              <Route component={NoMatch} />
+            </Switch>
+          </div>
+        </ConnectedRouter>
+      </Provider>
+    )
+  }
+}
+
+function mapStateToProps (state) {
+  console.log(state)
+  return state
+}
 
 export default App
