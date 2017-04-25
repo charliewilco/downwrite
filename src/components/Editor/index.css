@@ -1,6 +1,6 @@
 
 .Editor {
-  border: 3px solid var(--color-1);
+  border-top: 3px solid var(--color-1);
   z-index: 0;
 }
 
@@ -25,12 +25,6 @@
 .Editor__bodyArea {
   display: block;
   height: 100%;
-}
-
-
-.Editor__tools {
-  display: flex;
-  justify-content: space-between;
 }
 
 .Editor__tools > * {
