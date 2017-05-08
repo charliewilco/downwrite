@@ -5,6 +5,9 @@
   "name": "Downwrite",
   "display": "browser",
   "description": "A place to write",
+  "permissions": [
+    "usb"
+  ],
   "icons": [
     {
       "src": "favicon.ico",

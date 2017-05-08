@@ -11,7 +11,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: 'rgba(0,0,0,.125)'
+    borderColor: 'rgba(0, 0, 0, .125)',
+    position: 'relative'
   },
   inner: {
     padding: 16,
@@ -89,14 +90,15 @@ class DWEditor extends React.Component {
   }
 
   toggleInlineStyle = (inlineStyle) => {
-    const r =  RichUtils.toggleInlineStyle(this.props.editorState, inlineStyle)
+    const r = RichUtils.toggleInlineStyle(this.props.editorState, inlineStyle)
     this.onChange(r)
   }
 
   render () {
     const { editorState } = this.props
 
-    const contentState = editorState.getCurrentContent()
+    let contentState = editorState.getCurrentContent()
+
     const className = css(
       (!contentState.hasText() && contentState.getBlockMap().first().getType() !== 'unstyled')
         ? [styles.inner, styles.placeholder]
@@ -105,7 +107,7 @@ class DWEditor extends React.Component {
 
     return (
       <div className={css(styles.editorShell)}>
-        <Button onClick={() => this.props.addPost(editorState)} content='Add' />
+        <Button positioned onClick={() => this.props.addPost(editorState)}>+</Button>
         <Toolbar types={BLOCK_TYPES} editorState={editorState} onToggle={this.toggleBlockType} />
         <Toolbar types={INLINE_TYPES} editorState={editorState} onToggle={this.toggleInlineStyle} />
         <div className={className} onClick={this.focus}>

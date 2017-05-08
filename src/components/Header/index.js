@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     padding: 16
   },
   title: {
-    fontSize: 20,
+    fontSize: '112.5%',
     fontWeight: 400,
     marginLeft: 16,
     lineHeight: 1

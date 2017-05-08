@@ -7,7 +7,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: '100%',
     appearance: 'none',
-    border: `1px solid var(--color-1)`,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'rgba(0,0,0,.125)',
     padding: 16
   }
 })
