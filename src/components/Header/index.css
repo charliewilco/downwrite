@@ -6,7 +6,7 @@
 .Header__tools { flex: 4; }
 .Header__tools--btn { width: 100%; }
 
-.Header .c-Header__link {
+.Header .Header__link {
   color: white;
 }
 
