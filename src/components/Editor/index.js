@@ -1,8 +1,10 @@
 import React from 'react'
 import { Editor, RichUtils } from 'draft-js'
 import { connect } from 'react-redux'
+import { addPost } from '../../actions'
 import Toolbar from '../Toolbar'
-import { StyleSheet, css } from 'aphrodite'
+import Button from '../Button'
+import { StyleSheet, css } from 'aphrodite/no-important'
 
 const styles = StyleSheet.create({
   editorShell: {
@@ -103,7 +105,7 @@ class DWEditor extends React.Component {
 
     return (
       <div className={css(styles.editorShell)}>
-        <button onClick={() => this.props.saveThis(editorState)}>Add</button>
+        <Button onClick={() => this.props.addPost(editorState)} content='Add' />
         <Toolbar types={BLOCK_TYPES} editorState={editorState} onToggle={this.toggleBlockType} />
         <Toolbar types={INLINE_TYPES} editorState={editorState} onToggle={this.toggleInlineStyle} />
         <div className={className} onClick={this.focus}>
@@ -123,8 +125,8 @@ class DWEditor extends React.Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return { saveThis:  dispatch.addPost }
+const mapStateToProps = (state) => {
+  return { posts: state.posts }
 }
 
-export default connect(mapDispatchToProps)(DWEditor)
+export default connect(mapStateToProps, { addPost })(DWEditor)

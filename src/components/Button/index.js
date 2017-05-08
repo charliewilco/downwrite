@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, css } from 'aphrodite'
+import { StyleSheet, css } from 'aphrodite/no-important'
 
 const BUTTON_SIZE = 62.5
 
@@ -14,7 +14,11 @@ const styles = StyleSheet.create({
     borderRadius: '50%',
     maxHeight: BUTTON_SIZE,
     width: BUTTON_SIZE,
-    height: '100%'
+    height: '100%',
+    boxShadow: '0 0 4px rgba(0,0,0,.07), 0 4px 8px rgba(0,0,0,.14)',
+    ':hover': {
+      backgroundColor: 'red'
+    }
   }
 })
 

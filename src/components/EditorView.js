@@ -1,12 +1,13 @@
 import React from 'react'
 import Editor from './Editor'
 import Output from './Output'
+import Input from './Input'
 import Wrapper from './Wrapper'
 
 export default ({ editorState, onChange }) =>
   <div>
-    <h1 className='u-center'>Hello</h1>
     <Wrapper padding={16}>
+      <Input value='Hello' />
       <Editor editorState={editorState} onChange={onChange} />
     </Wrapper>
     <Wrapper padding={16}>
