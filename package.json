@@ -33,16 +33,15 @@
     "typeface-roboto-mono": "0.0.22"
   },
   "scripts": {
-    "now-start": "serve -s build",
+    "now-start": "serve build/",
     "start": "react-scripts start",
     "build": "react-scripts build; sw-precache --config=sw-precache-config.js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "deploy": "now"
+    "deploy": "now && now alias"
   },
   "now": {
-    "alias": "redownwrite",
-    "public": true
+    "alias": "redownwrite"
   },
   "eslintConfig": {
     "extends": [
