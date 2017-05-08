@@ -1,5 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
+//
+// const Card = (props) => {
+//   props.blockMap.map(b => {
+//     <b.tag children={} />
+//   })
+// }
 
 const MainView = ({ posts }) => {
   console.log(posts)
@@ -7,7 +13,7 @@ const MainView = ({ posts }) => {
     <div className='App'>
       <h1>Posts</h1>
       <ul>
-        {posts.map((p, i) => (<li key={i}>{p}</li>))}
+        {posts.map((p) => console.log)}
       </ul>
     </div>
   )
