@@ -21,12 +21,10 @@ export function setPosts(posts) {
   }
 }
 
-export function addPost(post) {
-  return {
-    type: ADD_POST,
-    post
-  }
-}
+export const addPost = (post) => ({
+  type: ADD_POST,
+  post
+})
 
 export function postFetched(post) {
   return {
@@ -51,7 +49,7 @@ export function postDeleted(postId) {
 
 export function savePost(data) {
   return dispatch => {
-    return fetch('/api/posts', {
+    return fetch('/posts', {
       method: 'post',
       body: JSON.stringify(data),
       headers: {
@@ -64,7 +62,7 @@ export function savePost(data) {
 
 export function updatePost(data) {
   return dispatch => {
-    return fetch(`/api/posts/${data._id}`, {
+    return fetch(`/posts/v${data._id}`, {
       method: 'put',
       body: JSON.stringify(data),
       headers: {
@@ -77,7 +75,7 @@ export function updatePost(data) {
 
 export function deletePost(id) {
   return dispatch => {
-    return fetch(`/api/posts/${id}`, {
+    return fetch(`/posts/${id}`, {
       method: 'delete',
       headers: {
         'Content-Type': 'application/json'
@@ -89,16 +87,19 @@ export function deletePost(id) {
 
 export function fetchPosts() {
   return dispatch => {
-    fetch('/api/posts')
+    fetch('/posts')
       .then(res => res.json())
-      .then(data => dispatch(setPosts(data.posts)))
+      .then(data => dispatch(setPosts(data)))
   }
 }
 
 export function fetchPost(id) {
   return dispatch => {
-    fetch(`/api/posts/${id}`)
+    fetch(`/posts/${id}`)
       .then(res => res.json())
-      .then(data => dispatch(postFetched(data.post)))
+      .then(data => {
+        console.log(data)
+        return dispatch(postFetched(data))
+      })
   }
 }

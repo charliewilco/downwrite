@@ -1,3 +1,4 @@
+
 import { SET_POSTS, ADD_POST, POST_FETCHED, POST_UPDATED, POST_DELETED } from '../actions'
 
 export default function posts(state = [], action = {}) {

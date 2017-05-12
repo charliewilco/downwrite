@@ -9,6 +9,7 @@
     "react-fix-it": "^0.3.3",
     "react-scripts": "^0.9.5",
     "redux-devtools-extension": "^2.13.0",
+    "redux-logger": "^3.0.1",
     "sw-precache": "^4.2.3"
   },
   "standard": {
@@ -30,7 +31,8 @@
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
     "serve": "^2.1.2",
-    "typeface-roboto-mono": "0.0.22"
+    "typeface-roboto-mono": "0.0.22",
+    "uuid": "^3.0.1"
   },
   "scripts": {
     "now-start": "serve build/",
@@ -43,6 +45,7 @@
   "now": {
     "alias": "redownwrite"
   },
+  "proxy": "http://localhost:7171",
   "eslintConfig": {
     "extends": [
       "standard",

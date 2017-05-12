@@ -4,10 +4,12 @@ import { ConnectedRouter, routerReducer, routerMiddleware, push } from 'react-ro
 import { createStore, applyMiddleware } from 'redux'
 import createHistory from 'history/createBrowserHistory'
 import thunk from 'redux-thunk'
+import logger from 'redux-logger'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { connect, Provider } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
 import { EditorState } from 'draft-js'
+import Edit from './EditEditor'
 import EditorView from './components/EditorView'
 import Header from './components/Header'
 import Main from './Main'
@@ -17,9 +19,10 @@ import rootReducer from './rootReducer'
 const store = createStore(
   rootReducer,
   composeWithDevTools(
-    applyMiddleware(thunk, routerMiddleware(history))
+    applyMiddleware(thunk, routerMiddleware(history), logger)
   )
 )
+
 
 const history = createHistory()
 
@@ -45,6 +48,7 @@ class App extends React.Component {
             <Switch>
               <Route exact path='/' component={Main} />
               <Route path='/new' render={NEditor} />
+              <Route path='/edit/:id' component={Edit} />
               <Route component={NoMatch} />
             </Switch>
           </div>
