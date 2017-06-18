@@ -1,9 +1,13 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { EditorState } from 'draft-js'
 import Editor from './components/Editor'
 import Input from './components/Input'
 import Wrapper from './components/Wrapper'
-import { fetchPost } from './actions'
+import { css } from 'glamor'
+
+let inputStyle = css({
+  marginBottom: 16
+})
 
 const Loading = () => (
   <div>
@@ -11,19 +15,40 @@ const Loading = () => (
   </div>
 )
 
-
 class Edit extends React.Component {
-
-  componentWillMount () {
-    this.props.fetchPost(this.props.match.params.id)
+  state = {
+    post: {},
+    editorState: EditorState.createEmpty()
   }
 
+  componentWillMount () {
+    fetch(`/posts/${this.props.match.params.id}`)
+      .then(res => res.json())
+      .then(data => this.setState({ post: data }))
+  }
+
+  updateTitle = e => this.setState({
+    post: {
+      ...this.state.post,
+      title: e.target.value
+    }
+  })
+
   render () {
-    console.log(this.props)
+    const { editorState, post } = this.state
+    console.log(this.state.post, this.context)
     return (
-      this.props.posts.length > 0 ? <Loading /> : (
-        <Wrapper>
-          <Input value={this.props.posts[0].title} style={{ marginBottom: 16 }} />
+      !post ? <Loading /> : (
+        <Wrapper paddingTop={16}>
+          <Input
+            value={post.title}
+            onChange={this.updateTitle}
+            {...inputStyle}
+          />
+          <Editor
+            editorState={editorState}
+            onChange={e => this.setState({ post: { ...post, body: e } })}
+          />
         </Wrapper>
       )
     )
@@ -32,25 +57,7 @@ class Edit extends React.Component {
 
 /*
   <Editor editorState={this.props.post.body} />
-  <Editor
-    editorState={this.props.post.body}
-    onChange={post.body => dispatch(updatePost(post.body))}
-  />
 */
 
-function mapStateToProps (state, ownProps) {
-  const newCurrentPost = ownProps.match.params.id
-  function findPost (id, limit = newCurrentPost) {
-    return id === limit
-  }
 
-  const post = state.posts.find(findPost)
-
-  console.log(ownProps, newCurrentPost, state.posts[0], post)
-  return {
-    posts: state.posts,
-    ...ownProps
-  }
-}
-
-export default connect(mapStateToProps, { fetchPost })(Edit)
+export default Edit
