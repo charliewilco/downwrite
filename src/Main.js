@@ -1,46 +1,31 @@
+import 'typeface-hind'
 import React from 'react'
-import { connect } from 'react-redux'
-import { fetchPosts } from './actions'
 import uuid from 'uuid/v4'
 import Card from './components/Card'
-import { StyleSheet, css } from 'aphrodite/no-important'
-import { Block, Flex } from 'jsxstyle'
+import { css } from 'glamor'
+import { Block, Flex } from 'glamor-jsxstyle'
 
-const styles = StyleSheet.create({
-  item: {
-    flex: '1',
-    width: '100%',
-    maxWidth: '20rem'
-  }
+let itemSty = css({
+  width: '100%',
+  marginBottom: 24,
+  maxWidth: 400
 })
 
-class MainView extends React.Component {
-  componentWillMount () {
-    const { dispatch } = this.props
+let mainTitle = css({
+  paddingTop: 16,
+  marginBottom: 24,
+  fontSize: 40,
+  fontWeight: 400
+})
 
-    dispatch(fetchPosts())
-  }
-
-  render () {
-
-    return (
-      <Block className='App' padding={16}>
-        <h1>Posts</h1>
+const MainView = ({ posts }) =>
+  <Block fontFamily='Hind' padding={16}>
+    <h1 className={css(mainTitle)}>Posts</h1>
+    {posts.length > 0 ? (
         <Flex component='ul' justifyContent='space-between' flexWrap='wrap' listStyle='none inside'>
-          {this.props.posts.map((p) =>
-            <li className={css(styles.item)}>
-              <Card tag='li' {...p} key={uuid()} />
-            </li>
-          )}
+          {posts.map(p => <Card tag='li' className={css(itemSty)} key={uuid()} {...p} />)}
         </Flex>
-      </Block>
-    )
-  }
-}
+      ) : <h2>No Posts</h2>}
+  </Block>
 
-
-const mapStateToProps = (state) => {
-  return { posts: state.posts }
-}
-
-export default connect(mapStateToProps)(MainView)
+export default MainView

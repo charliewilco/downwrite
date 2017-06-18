@@ -1,30 +1,35 @@
 import React from 'react'
 import { Editor, RichUtils } from 'draft-js'
-import { connect } from 'react-redux'
-import { addPost } from '../../actions'
 import Toolbar from '../Toolbar'
 import Button from '../Button'
-import { StyleSheet, css } from 'aphrodite/no-important'
+import { css } from 'glamor'
 
-const styles = StyleSheet.create({
-  editorShell: {
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: 'rgba(0, 0, 0, .125)',
-    position: 'relative'
-  },
-  inner: {
-    padding: 16,
-    fontFamily: 'Charter, Georgia, PT Serif, serif'
-  },
-  code: {
-    fontFamily: 'SFMono-Light'
-  },
-  placeholder: {
-    fontStyle: 'italic',
-    opacity: 0.5
-  }
+const editorShell = css({
+  backgroundColor: 'white',
+  borderWidth: 1,
+  borderStyle: 'solid',
+  borderColor: 'rgba(0, 0, 0, .125)',
+  position: 'relative'
+})
+
+const inner = css({
+  padding: 16,
+  fontFamily: 'Charter, Georgia, PT Serif, serif'
+})
+
+const blockquoteStyle = css({
+  paddingLeft: 16,
+  fontStyle: 'italic',
+  color: 'black'
+})
+
+const codeStyle = css({
+  fontFamily: 'SFMono-Light'
+})
+
+const placeholder = css({
+  fontStyle: 'italic',
+  opacity: 0.5
 })
 
 const INLINE_TYPES = [
@@ -61,9 +66,9 @@ const styleMap = {
 function getBlockStyle (block) {
   switch (block.getType()) {
     case 'blockquote':
-      return css(styles.blockquote)
+      return css(blockquoteStyle)
     case 'code-block':
-      return css(styles.code)
+      return css(codeStyle)
     default:
       return null
   }
@@ -95,21 +100,21 @@ class DWEditor extends React.Component {
   }
 
   render () {
-    const { editorState } = this.props
+    const { editorState, addNew } = this.props
 
     let contentState = editorState.getCurrentContent()
 
     const className = css(
       (!contentState.hasText() && contentState.getBlockMap().first().getType() !== 'unstyled')
-        ? [styles.inner, styles.placeholder]
-        : [styles.inner]
+        ? [inner, placeholder]
+        : [inner]
     )
 
     return (
-      <div className={css(styles.editorShell)}>
-        <Button positioned onClick={() => this.props.addPost(editorState)}>+</Button>
+      <div className={css(editorShell)}>
         <Toolbar types={BLOCK_TYPES} editorState={editorState} onToggle={this.toggleBlockType} />
         <Toolbar types={INLINE_TYPES} editorState={editorState} onToggle={this.toggleInlineStyle} />
+        {addNew && <Button positioned onClick={this.props.addNew}>Add</Button>}
         <div className={className} onClick={this.focus}>
           <Editor
             blockStyleFn={getBlockStyle}
@@ -127,8 +132,4 @@ class DWEditor extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return { posts: state.posts }
-}
-
-export default connect(mapStateToProps, { addPost })(DWEditor)
+export default DWEditor

@@ -1,66 +1,84 @@
 import 'typeface-roboto-mono'
 import React from 'react'
-import { ConnectedRouter, routerReducer, routerMiddleware, push } from 'react-router-redux'
-import { createStore, applyMiddleware } from 'redux'
-import createHistory from 'history/createBrowserHistory'
-import thunk from 'redux-thunk'
-import logger from 'redux-logger'
-import { composeWithDevTools } from 'redux-devtools-extension'
-import { connect, Provider } from 'react-redux'
-import { Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import { EditorState } from 'draft-js'
+import Editor from './components/Editor/slate'
 import Edit from './EditEditor'
 import EditorView from './components/EditorView'
 import Header from './components/Header'
 import Main from './Main'
 import NoMatch from './404'
-import rootReducer from './rootReducer'
 
-const store = createStore(
-  rootReducer,
-  composeWithDevTools(
-    applyMiddleware(thunk, routerMiddleware(history), logger)
-  )
-)
+function handleResponse(response) {
+  if (response.ok) {
+    return response.json()
+  } else {
+    let error = new Error(response.statusText)
+    error.response = response
+    throw error
+  }
+}
 
-
-const history = createHistory()
 
 class App extends React.Component {
   state = {
-    editorState: EditorState.createEmpty()
+    editorState: EditorState.createEmpty(),
+    postAdded: false,
+    fakeNewTitle: '',
+    posts: []
+  }
+
+
+  componentWillMount () {
+    fetch('/posts')
+      .then(res => res.json())
+      .then(data => this.setState({ posts: data }))
+  }
+
+
+  addNew = () => {
+    fetch('/posts', {
+      method: 'post',
+      body: JSON.stringify({
+        title: this.state.fakeNewTitle,
+        id: this.state.posts.length + 1,
+        body: this.state.editorState,
+        author: 'charlespeters'
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(handleResponse)
+    .then(data => this.setState({ postAdded: true }))
   }
 
   render () {
-    const { editorState } = this.state
+    const { editorState, fakeNewTitle, posts, postAdded } = this.state
     const NEditor = () => (
       <EditorView
+        title={fakeNewTitle}
+        onTitleChange={e => this.setState({ fakeNewTitle: e })}
+        addNew={this.addNew}
         editorState={editorState}
         onChange={editorState => this.setState({ editorState })}
       />
     )
     return (
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <div>
-            <Header name='Re:Downwrite Web' />
-            <hr />
-            <Switch>
-              <Route exact path='/' component={Main} />
-              <Route path='/new' render={NEditor} />
-              <Route path='/edit/:id' component={Edit} />
-              <Route component={NoMatch} />
-            </Switch>
-          </div>
-        </ConnectedRouter>
-      </Provider>
+      <Router>
+        <div>
+          <Header name='Re:Downwrite Web' />
+          <hr />
+          <Switch>
+            <Route exact path='/' render={() => <Main posts={posts} />} />
+            <Route exact path='/editor' component={Editor} />
+            <Route path='/new' render={() => postAdded ? <Redirect /> : <NEditor />} />
+            <Route path='/edit/:id' component={Edit} />
+            <Route component={NoMatch} />
+          </Switch>
+        </div>
+      </Router>
     )
   }
-}
-
-function mapStateToProps (state) {
-  console.log(state)
-  return state
 }
 
 export default App

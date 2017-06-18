@@ -1,19 +1,17 @@
 import React from 'react'
 import { convertToRaw } from 'draft-js'
-import { Block } from 'jsxstyle'
-import { StyleSheet, css } from 'aphrodite/no-important'
+import { Block } from 'glamor-jsxstyle'
+import { css } from 'glamor'
 
-const styles = StyleSheet.create({
-  output: {
-    overflowWrap: 'break-word',
-    wordBreak: 'break-all',
-    fontSize: '87.5%'
-  }
+const outputStyle = css({
+  overflowWrap: 'break-word',
+  wordBreak: 'break-all',
+  fontSize: '87.5%'
 })
 
 const Output = ({ editorState }) =>
   <Block
-    className={css(styles.output)}
+    className={css(outputStyle)}
     children={JSON.stringify(convertToRaw(editorState.getCurrentContent()))}
   />
 

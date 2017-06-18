@@ -1,11 +1,6 @@
 import React from 'react'
-import { Block } from 'jsxstyle'
+import { Block } from 'glamor-jsxstyle'
 
-const Wrapper = props => {
-
-  return (
-    <Block {...props} maxWidth='68rem' margin='0 auto' />
-  )
-}
+const Wrapper = props => <Block {...props} maxWidth='68rem' margin='0 auto' />
 
 export default Wrapper
