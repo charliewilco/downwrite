@@ -2,7 +2,7 @@ import React from 'react'
 import Wrapper from './components/Wrapper'
 import { InlineBlock as In } from 'glamor-jsxstyle'
 
-const NoMatch = ({ location }) => (
+export default ({ location }) => (
   <div>
     <Wrapper textAlign='center' padding={`8rem 1rem`}>
       <In
@@ -13,9 +13,9 @@ const NoMatch = ({ location }) => (
         lineHeight={1}
         children={404}
       />
-      <p>Sorry but {location.pathname} didn’t match any pages</p>
+      <p>
+        Sorry but {location.pathname} didn’t match any pages
+      </p>
     </Wrapper>
   </div>
 )
-
-export default NoMatch

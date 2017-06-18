@@ -1,13 +1,14 @@
-import 'typeface-roboto-mono'
+// import 'typeface-roboto-mono'
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+import { Block } from 'glamor-jsxstyle'
 import { EditorState } from 'draft-js'
 import Editor from './components/Editor/slate'
 import Edit from './EditEditor'
 import EditorView from './components/EditorView'
 import Header from './components/Header'
 import Main from './Main'
-import NoMatch from './404'
+import NoMatch from './NoMatch'
 
 function handleResponse(response) {
   if (response.ok) {
@@ -65,17 +66,19 @@ class App extends React.Component {
     )
     return (
       <Router>
-        <div>
+        <Block fontFamily='Operator Mono'>
           <Header name='Re:Downwrite Web' />
           <hr />
           <Switch>
             <Route exact path='/' render={() => <Main posts={posts} />} />
             <Route exact path='/editor' component={Editor} />
-            <Route path='/new' render={() => postAdded ? <Redirect /> : <NEditor />} />
+            <Route path='/new' render={
+              () => postAdded ? <Redirect /> : <NEditor />
+            } />
             <Route path='/edit/:id' component={Edit} />
             <Route component={NoMatch} />
           </Switch>
-        </div>
+        </Block>
       </Router>
     )
   }
