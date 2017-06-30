@@ -36,7 +36,7 @@ const Spinner = ({ size, color }) => (
   </Block>
 )
 
-export default ({ size }) => (
+const Loading =  ({ size }) => (
   <Flex
     justifyContent='center'
     flexDirection='column'
@@ -47,3 +47,9 @@ export default ({ size }) => (
     <Spinner size={size} color='var(--color-1)' />
   </Flex>
 )
+
+Loading.defaultProps = {
+  size: 75
+}
+
+export default Loading

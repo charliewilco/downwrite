@@ -3,7 +3,7 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Block } from 'glamor-jsxstyle'
 import Editor from './components/Editor/slate'
-import Edit from './EditEditor'
+import EditPost from './EditPost'
 import Header from './components/Header'
 import Main from './Main'
 import NoMatch from './NoMatch'
@@ -20,18 +20,6 @@ import NoMatch from './NoMatch'
 // }
 
 class App extends React.Component {
-  state = {
-    posts: [],
-    loaded: false
-  }
-
-
-  componentWillMount () {
-    fetch('/posts')
-      .then(res => res.json())
-      .then(data => this.setState({ posts: data, loaded: true }))
-  }
-
   render () {
     // const NEditor = () => (
     //   <EditorView
@@ -47,10 +35,9 @@ class App extends React.Component {
         <Block fontFamily='Operator Mono' height='calc(100% - 82px)'>
           <Header name='Re:Downwrite Web' />
           <Switch>
-            <Route exact path='/' render={() => <Main {...this.state} />} />
-            <Route exact path='/editor' component={Editor} />
+            <Route exact path='/' component={Main} />
             <Route path='/new' component={Editor} />
-            <Route path='/edit/:id' component={Edit} />
+            <Route path='/edit/:id' component={EditPost} />
             <Route component={NoMatch} />
           </Switch>
         </Block>

@@ -1,4 +1,6 @@
 import React from 'react'
+import { Raw } from 'slate'
+
 import { Flex, Block } from 'glamor-jsxstyle'
 import { Link } from 'react-router-dom'
 import { css } from 'glamor'
@@ -8,7 +10,7 @@ const s = {
     fontSize: 24,
     fontWeight: 600
   }),
-  body: css({
+  content: css({
     fontSize: `small`,
     opacity: 0.875,
     padding: 16
@@ -25,6 +27,8 @@ const s = {
   })
 }
 
+// content.slice(0, 90)
+
 const Card = ({ title, id, content, author, className, ...props }) => (
   <Block component='li' padding='0 20px' className={className}>
     <Block className={css(s.card)} {...props}>
@@ -37,7 +41,9 @@ const Card = ({ title, id, content, author, className, ...props }) => (
         </div>
         <Link to={`edit/${id}`}>Edit</Link>
       </Flex>
-      {content && <p className={s.body}>{content.slice(0, 90)}...</p>}
+      {
+        content && <p className={s.content}>{JSON.stringify(Raw.deserialize(content)).slice(0, 90)}...</p>
+      }
     </Block>
   </Block>
 )

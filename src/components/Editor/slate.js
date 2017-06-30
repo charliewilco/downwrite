@@ -1,6 +1,7 @@
 import React from 'react'
 import { Editor, Plain, Raw } from 'slate'
 import Wrapper from '../Wrapper'
+import Input from '../Input'
 import Button from '../Button'
 import { css } from 'glamor'
 import uuid from 'uuid/v4'
@@ -22,58 +23,51 @@ const editorInner = css({
   borderWidth: 1,
   borderStyle: 'solid',
   borderColor: 'rgba(0, 0, 0, .125)',
-  fontWeight: '500'
+  fontWeight: '400'
 })
 
-const initialState = {
-  nodes: [
-    {
-      kind: 'block',
-      type: 'paragraph',
-      nodes: [
-        {
-          kind: 'text',
-          text: 'Recently I transitioned from working as a freelancer and agency work to working full time on a product at Onvia. Onvia is the most useful tool for buyers in the business-to-government space; their main application connects government proposals with buyers. In my role, I\'ve been working to define code styles across a medium sized team, curating best practices, defining process and finding that middle path between developer productivity and clarity.'
-        }
-      ]
-    },
-    {
-      kind: 'block',
-      type: 'paragraph',
-      nodes: [
-        {
-          kind: 'text',
-          text: 'What I\'d like to explore in 30 minutes is what it\'s like to work on a React application day in and day out.'
-        }
-      ]
-    }
-  ]
-}
+let inputStyle = css({
+  marginBottom: 16
+})
 
-export default class DWEditor extends React.Component {
+export default class extends React.Component {
+  static displayName = 'SlateEditor'
+
   state = {
-    editorState: Plain.deserialize('')
+    title: '',
+    content: Plain.deserialize('')
   }
 
   onKeyDown = (event, data, state) => console.log(event.which)
 
-  onChange = editorState => this.setState({ editorState })
+  onChange = content => this.setState({ content })
 
-  postsNewStory = () => fetch('/posts', {
-    method: 'POST',
-    body: {
-      title: 'Fake title',
+  addNew = () => fetch('/posts', {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      title: this.state.title,
       id: uuid(),
-      content: Plain.serialize(this.state.editorState)
-    }
+      content: Raw.serialize(this.state.content)
+    })
   })
 
   render () {
-    const { editorState } = this.state
+    const { content, title } = this.state
     return (
-      <Wrapper className={css(editorShell, editorInner)}>
-        <Button children='+' onClick={this.postsNewStory} />
-        <Editor state={editorState} onKeyDown={this.onKeyDown} onChange={this.onChange} />
+      <Wrapper paddingTop={20}>
+        <Input
+          value={title}
+          onChange={e => this.setState({ title: e.target.value })}
+          {...inputStyle}
+        />
+
+        <Wrapper className={css(editorShell, editorInner)}>
+          <Button positioned onClick={this.addNew}>Add</Button>
+          <Editor state={content} onKeyDown={this.onKeyDown} onChange={this.onChange} />
+        </Wrapper>
       </Wrapper>
     )
   }
