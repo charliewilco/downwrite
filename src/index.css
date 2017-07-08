@@ -40,7 +40,6 @@ html {
   text-size-adjust: 100%;
   background-color: #F9FBFC;
   font: 400 100%/1.6 var(--ff-default);
-  color: #484848;
   color: var(--text);
   -webkit-tap-highlight-color: transparent;
 }
@@ -106,7 +105,6 @@ audio:not([controls]) {
 /* Text Selectors */
 
 abbr[title] {
-  border-bottom-width: calc(1px / 2);
   border-bottom-width: calc(var(--base-border) / 2);
   border-bottom-style: dotted;
 }
@@ -192,9 +190,7 @@ input[type='text'],
 input[type='number'],
 input[type='email'],
 input[type='password'] {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
 }
 
 /* Textareas */
@@ -205,7 +201,7 @@ textarea {
 
 /* Selects */
 
-select { -webkit-appearance: menulist; -moz-appearance: menulist; appearance: menulist; }
+select { appearance: menulist; }
 
 optgroup { font-weight: bold; }
 
@@ -218,9 +214,7 @@ input[type='button'],
 input[type='reset'],
 input[type='submit'] {
   cursor: pointer;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
 }
 
 /* Other */
@@ -228,7 +222,6 @@ input[type='submit'] {
 fieldset {
   border: 1px solid;
   margin: 0;
-  padding: calc(1rem / 4);
   padding: calc(var(--base-spacing) / 4);
 }
 
@@ -265,65 +258,36 @@ legend {
   --headline-6: 1.25rem;
 
   /* Headline Small Sizes */
-  --headline-1-sm: calc(3.125rem * .875);
   --headline-1-sm: calc(var(--headline-1) * var(--sm-multiplier));
-  --headline-2-sm: calc(2.5rem * .875);
   --headline-2-sm: calc(var(--headline-2) * var(--sm-multiplier));
-  --headline-3-sm: calc(2.125rem * .875);
   --headline-3-sm: calc(var(--headline-3) * var(--sm-multiplier));
-  --headline-4-sm: calc(1.75rem * .875);
   --headline-4-sm: calc(var(--headline-4) * var(--sm-multiplier));
-  --headline-5-sm: calc(1.5rem * .875);
   --headline-5-sm: calc(var(--headline-5) * var(--sm-multiplier));
-  --headline-6-sm: calc(1.25rem * .875);
   --headline-6-sm: calc(var(--headline-6) * var(--sm-multiplier));
 
   /* Headline Medium Sizes */
-  --headline-1-md: calc(3.125rem * 1);
   --headline-1-md: calc(var(--headline-1) * var(--md-multiplier));
-  --headline-2-md: calc(2.5rem * 1);
   --headline-2-md: calc(var(--headline-2) * var(--md-multiplier));
-  --headline-3-md: calc(2.125rem * 1);
   --headline-3-md: calc(var(--headline-3) * var(--md-multiplier));
-  --headline-4-md: calc(1.75rem * 1);
   --headline-4-md: calc(var(--headline-4) * var(--md-multiplier));
-  --headline-5-md: calc(1.5rem * 1);
   --headline-5-md: calc(var(--headline-5) * var(--md-multiplier));
-  --headline-6-md: calc(1.25rem * 1);
   --headline-6-md: calc(var(--headline-6) * var(--md-multiplier));
 
   /* Headline Large Sizes */
-  --headline-1-lg: calc(3.125rem * 1.125);
   --headline-1-lg: calc(var(--headline-1) * var(--lg-multiplier));
-  --headline-2-lg: calc(2.5rem * 1.125);
   --headline-2-lg: calc(var(--headline-2) * var(--lg-multiplier));
-  --headline-3-lg: calc(2.125rem * 1.125);
   --headline-3-lg: calc(var(--headline-3) * var(--lg-multiplier));
-  --headline-4-lg: calc(1.75rem * 1.125);
   --headline-4-lg: calc(var(--headline-4) * var(--lg-multiplier));
-  --headline-5-lg: calc(1.5rem * 1.125);
   --headline-5-lg: calc(var(--headline-5) * var(--lg-multiplier));
-  --headline-6-lg: calc(1.25rem * 1.125);
   --headline-6-lg: calc(var(--headline-6) * var(--lg-multiplier));
 }
 
-h1,
-.h1 { font-size: calc(3.125rem * .875); font-size: var(--headline-1-sm); }
-
-h2,
-.h2 { font-size: calc(2.5rem * .875); font-size: var(--headline-2-sm); }
-
-h3,
-.h3 { font-size: calc(2.125rem * .875); font-size: var(--headline-3-sm); }
-
-h4,
-.h4 { font-size: calc(1.75rem * .875); font-size: var(--headline-4-sm); }
-
-h5,
-.h5 { font-size: calc(1.5rem * .875); font-size: var(--headline-5-sm); }
-
-h6,
-.h6 { font-size: calc(1.25rem * .875); font-size: var(--headline-6-sm); }
+h1, .h1 { font-size: var(--headline-1-sm); }
+h2, .h2 { font-size: var(--headline-2-sm); }
+h3, .h3 { font-size: var(--headline-3-sm); }
+h4, .h4 { font-size: var(--headline-4-sm); }
+h5, .h5 { font-size: var(--headline-5-sm); }
+h6, .h6 { font-size: var(--headline-6-sm); }
 
 h1,
 h2,
@@ -344,43 +308,21 @@ h6,
 }
 
 @media only screen and (min-width: 48rem) {
-  h1,
-  .h1 { font-size: calc(3.125rem * 1); font-size: var(--headline-1-md); }
-
-  h2,
-  .h2 { font-size: calc(2.5rem * 1); font-size: var(--headline-2-md); }
-
-  h3,
-  .h3 { font-size: calc(2.125rem * 1); font-size: var(--headline-3-md); }
-
-  h4,
-  .h4 { font-size: calc(1.75rem * 1); font-size: var(--headline-4-md); }
-
-  h5,
-  .h5 { font-size: calc(1.5rem * 1); font-size: var(--headline-5-md); }
-
-  h6,
-  .h6 { font-size: calc(1.25rem * 1); font-size: var(--headline-6-md); }
+  h1, .h1 { font-size: var(--headline-1-md); }
+  h2, .h2 { font-size: var(--headline-2-md); }
+  h3, .h3 { font-size: var(--headline-3-md); }
+  h4, .h4 { font-size: var(--headline-4-md); }
+  h5, .h5 { font-size: var(--headline-5-md); }
+  h6, .h6 { font-size: var(--headline-6-md); }
 }
 
 @media only screen and (min-width: 57.75rem) {
-  h1,
-  .h1 { font-size: calc(3.125rem * 1.125); font-size: var(--headline-1-lg); }
-
-  h2,
-  .h2 { font-size: calc(2.5rem * 1.125); font-size: var(--headline-2-lg); }
-
-  h3,
-  .h3 { font-size: calc(2.125rem * 1.125); font-size: var(--headline-3-lg); }
-
-  h4,
-  .h4 { font-size: calc(1.75rem * 1.125); font-size: var(--headline-4-lg); }
-
-  h5,
-  .h5 { font-size: calc(1.5rem * 1.125); font-size: var(--headline-5-lg); }
-
-  h6,
-  .h6 { font-size: calc(1.25rem * 1.125); font-size: var(--headline-6-lg); }
+  h1, .h1 { font-size: var(--headline-1-lg); }
+  h2, .h2 { font-size: var(--headline-2-lg); }
+  h3, .h3 { font-size: var(--headline-3-lg); }
+  h4, .h4 { font-size: var(--headline-4-lg); }
+  h5, .h5 { font-size: var(--headline-5-lg); }
+  h6, .h6 { font-size: var(--headline-6-lg); }
 }
 
 .small { font-size: 87.5%; }
@@ -388,12 +330,10 @@ h6,
 /*----------Body Text Default Elements----------*/
 
 p {
-  font-family: 'Athelas', 'Charter', 'Hoefler Text', 'Baskerville', 'Droid Serif', 'Georgia', 'Times', serif;
   font-family: var(--body-text);
 }
 
 p:not(:last-of-type) {
-  margin-bottom: 1rem;
   margin-bottom: var(--base-spacing);
 }
 
@@ -434,17 +374,11 @@ ol { list-style-position: inside; }
 a {
   background-color: transparent;
   text-decoration: none;
-  color: #147AAB;
   color: var(--link);
 }
 
 a:active,
 a:hover {
-  color: #CFE4ED;
   color: var(--link-hover);
   outline: 0;
 }
-
-
-@import './objects.css';
-@import './utilities.css';
