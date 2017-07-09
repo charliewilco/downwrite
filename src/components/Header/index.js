@@ -5,30 +5,33 @@ import Logo from '../Logo'
 import { css } from 'glamor'
 import { Flex } from 'glamor-jsxstyle'
 
-const link = css({
-  fontSize: 20,
-  fontWeight: 400,
-  marginLeft: 16,
-  lineHeight: 1,
-  color: 'white',
-  display: 'block',
-  transition: 'color 375ms ease-in-out',
-  '&:hover': {
-    color: `var(--color-2)`
-  }
-})
+const hSty = {
+  link: css({
+    fontSize: 20,
+    fontWeight: 400,
+    marginLeft: 16,
+    lineHeight: 1,
+    color: 'white',
+    display: 'block',
+    transition: 'color 375ms ease-in-out',
+    '&:hover': {
+      color: `var(--color-2)`
+    }
+  }),
+  bar: css({
+    padding: 16,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    background: `var(--color-1) linear-gradient(to right, #2584A5, #4FA5C2)`
+  })
+}
 
 const Header = ({ name }) =>
-  <Flex
-    component='header'
-    padding={16}
-    background={`var(--color-1) linear-gradient(to right, #2584A5, #4FA5C2)`}
-    justifyContent='space-between'
-    alignItems='center'>
-    <Flex className='Header__logo Header__link' alignItems='center'>
+  <Flex component='header' className={css(hSty.bar)}>
+    <Flex alignItems='center'>
       <Logo />
       <h1>
-        <Link className={css(link)} to='/'>{name}</Link>
+        <Link className={css(hSty.link)} to='/'>{name}</Link>
       </h1>
     </Flex>
     <Nav />

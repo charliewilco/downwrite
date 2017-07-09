@@ -12,13 +12,12 @@ export default class extends Component {
     loaded: false
   }
 
-
   componentWillMount () {
     fetch('/posts')
       .then(res => res.json())
       .then(data => this.setState({ posts: data, loaded: true }))
+      .catch(err => this.setState({ loaded: false }, console.error(err)))
   }
-
 
   render () {
     const { loaded, posts } = this.state
