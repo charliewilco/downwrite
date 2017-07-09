@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "concurrently": "^3.5.0",
     "enzyme": "^2.8.0",
     "react-a11y": "^0.3.3",
     "react-addons-test-utils": "^15.5.0",
@@ -28,9 +29,10 @@
     "uuid": "^3.0.1"
   },
   "scripts": {
-    "now-start": "serve build/",
-    "start": "react-scripts start",
-    "dev": "json-server --watch db.json -p 7171",
+    "start": "serve -s build",
+    "dev": "concurrently -c 'bgBlue.bold,bgYellow.bold' --names 'MockDB,Server' 'npm run dev:db' 'npm run dev:server'",
+    "dev:server": "react-scripts start",
+    "dev:db": "json-server --watch db.json -p 7171",
     "build": "react-scripts build; sw-precache --config=sw-precache-config.js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
