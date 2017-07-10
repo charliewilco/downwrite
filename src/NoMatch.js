@@ -1,6 +1,6 @@
 import React from 'react'
 import Wrapper from './components/Wrapper'
-import { InlineBlock as In } from 'glamor-jsxstyle'
+import { InlineBlock as In } from 'glamor/jsxstyle'
 
 export default ({ location }) => (
   <div>

@@ -9,8 +9,7 @@
   },
   "dependencies": {
     "draft-js": "^0.10.1",
-    "glamor": "^3.0.0-2",
-    "glamor-jsxstyle": "^3.0.0-2",
+    "glamor": "2.20.5",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.1.1",

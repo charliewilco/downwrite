@@ -1,7 +1,7 @@
 import React from 'react'
 import StyleButton from './Button'
 import { css } from 'glamor'
-import { Flex } from 'glamor-jsxstyle'
+import { Flex } from 'glamor/jsxstyle'
 
 const toolbar = css ({
   backgroundColor: 'white',

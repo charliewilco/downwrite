@@ -1,5 +1,5 @@
 import React from 'react'
-import { Block } from 'glamor-jsxstyle'
+import { Block } from 'glamor/jsxstyle'
 
 export default () => (
   <Block textAlign='center'>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Nav from '../Nav'
 import Logo from '../Logo'
 import { css } from 'glamor'
-import { Flex, Row } from 'glamor-jsxstyle'
+import { Flex, Row } from 'glamor/jsxstyle'
 
 const hSty = {
   link: css({

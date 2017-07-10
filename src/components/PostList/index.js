@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { Flex, Block } from 'glamor-jsxstyle'
+import { Flex, Block } from 'glamor/jsxstyle'
 import Card from '../Card'
 
 const s = {

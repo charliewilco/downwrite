@@ -1,6 +1,6 @@
 import React from 'react'
 import { convertToRaw } from 'draft-js'
-import { Block } from 'glamor-jsxstyle'
+import { Block } from 'glamor/jsxstyle'
 import { css } from 'glamor'
 
 const outputStyle = css({

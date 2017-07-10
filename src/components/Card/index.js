@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Block } from 'glamor-jsxstyle'
+import { Flex, Block } from 'glamor/jsxstyle'
 import { Link } from 'react-router-dom'
 import { css } from 'glamor'
 
