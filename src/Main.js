@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Block } from 'glamor-jsxstyle'
+import { Block } from 'glamor/jsxstyle'
 import PostList from './components/PostList'
 import Loading from './components/Loading'
 import EmptyPosts from './components/EmptyPosts'
