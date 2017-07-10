@@ -16,9 +16,8 @@ const s = {
   item: css({
     marginBottom: 24,
     width: '100%',
-    '@media (min-width:31.25rem)': { width: '50%' },
-    '@media (min-width: 48rem)': { width: `${100/3}%` },
-    '@media (min-width: 57.75rem)': { width: '25%' }
+    '@media (min-width: 48rem)': { width: '50%' },
+    '@media (min-width: 57.75rem)': { width: `${100/3}%` }
   })
 }
 

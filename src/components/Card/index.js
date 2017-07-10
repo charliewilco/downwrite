@@ -33,7 +33,7 @@ const Card = ({ title, id, content, author }) => (
       <Flex borderBottom='1px solid #f2f2f2' padding={16} justifyContent='space-between' alignItems='flex-start'>
         <div>
           <h2 className={s.title}>{title}</h2>
-          <small className={s.meta}>{author} - {id}</small>
+          <small className={s.meta}>{author}</small>
         </div>
         <Link to={`/edit/${id}`}>Edit</Link>
       </Flex>
