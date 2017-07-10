@@ -3,20 +3,32 @@
   "lang": "en",
   "short_name": "downwrite",
   "name": "Downwrite",
-  "display": "browser",
+  "display": "standalone",
   "description": "A place to write",
-  "permissions": [
-    "usb"
-  ],
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "icon192-beta.png",
       "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon256-beta.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512-beta.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-1024-beta.png",
+      "sizes": "1024x1024",
       "type": "image/png"
     }
   ],
   "theme_color": "#4FA5C2",
-  "background_color": "transparent",
+  "background_color": "#4FA5C2",
   "start_url": "./",
   "display": "standalone"
 }

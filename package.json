@@ -4,36 +4,27 @@
   "private": true,
   "devDependencies": {
     "concurrently": "^3.5.0",
-    "enzyme": "^2.8.0",
-    "react-a11y": "^0.3.3",
-    "react-addons-test-utils": "^15.5.0",
-    "react-fix-it": "^0.3.3",
-    "react-scripts": "^1.0.2",
-    "sw-precache": "^5.1.1"
-  },
-  "standard": {
-    "parser": "babel-eslint"
+    "enzyme": "^2.9.1",
+    "react-scripts": "^1.0.10"
   },
   "dependencies": {
     "draft-js": "^0.10.1",
-    "glamor": "^3.0.0-1",
-    "glamor-jsxstyle": "^3.0.0-1",
-    "react": "^15.4.1",
-    "react-dom": "^15.4.1",
-    "react-router-dom": "^4.0.0",
-    "serve": "^5.1.5",
-    "slate": "^0.20.1",
+    "glamor": "^3.0.0-2",
+    "glamor-jsxstyle": "^3.0.0-2",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-router-dom": "^4.1.1",
+    "serve": "^6.0.2",
+    "slate": "^0.20.4",
     "slate-markdown": "^0.1.1",
-    "typeface-hind": "^0.0.22",
-    "typeface-roboto-mono": "0.0.22",
-    "uuid": "^3.0.1"
+    "uuid": "^3.1.0"
   },
   "scripts": {
     "start": "serve -s build",
     "dev": "concurrently -c 'bgBlue.bold,bgYellow.bold' --names 'MockDB,Server' 'npm run dev:db' 'npm run dev:server'",
     "dev:server": "react-scripts start",
     "dev:db": "json-server --watch db.json -p 7171",
-    "build": "react-scripts build; sw-precache --config=sw-precache-config.js",
+    "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "deploy": "now && now alias"
@@ -41,11 +32,5 @@
   "now": {
     "alias": "redownwrite"
   },
-  "proxy": "http://localhost:7171",
-  "eslintConfig": {
-    "extends": [
-      "standard",
-      "standard-jsx"
-    ]
-  }
+  "proxy": "http://localhost:7171"
 }
