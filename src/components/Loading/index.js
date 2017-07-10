@@ -30,9 +30,9 @@ let spinners = size => css({
 
 const Spinner = ({ size, color }) => (
   <Block position='relative' color={color} margin='auto' transform={`translateY(-${size/2}px)`}>
-    <Block {...spinners(size)} animationDelay={`-0.6s`} />
-    <Block {...spinners(size)} animationDelay={`-0.4s`} />
-    <Block {...spinners(size)} animationDelay={`-0.2s`} />
+    <Block className={spinners(size)} animationDelay={`-0.6s`} />
+    <Block className={spinners(size)} animationDelay={`-0.4s`} />
+    <Block className={spinners(size)} animationDelay={`-0.2s`} />
   </Block>
 )
 

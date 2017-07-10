@@ -5,10 +5,6 @@ import Input from './components/Input'
 import Wrapper from './components/Wrapper'
 import { css } from 'glamor'
 
-let inputStyle = css({
-  marginBottom: 16
-})
-
 const Loading = () => (
   <div>
     <h1>Loading</h1>
@@ -43,7 +39,6 @@ class Edit extends React.Component {
           <Input
             value={post.title}
             onChange={this.updateTitle}
-            {...inputStyle}
           />
           <Editor
             editorState={editorState}

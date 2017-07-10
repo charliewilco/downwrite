@@ -24,10 +24,10 @@ const positionedSty = css({
   position: 'absolute',
   right: -32,
   top: -32
-})
+}, btn)
 
 const Button = ({ onClick, positioned, type, ...args }) => (
-  <button onClick={onClick} className={css(positioned ? [btn, positionedSty] : btn)} {...args} />
+  <button onClick={onClick} className={css(positioned ? positionedSty : btn)} {...args} />
 )
 
 export default Button

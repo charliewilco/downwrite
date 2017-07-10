@@ -7,7 +7,7 @@ import Wrapper from './Wrapper'
 export default ({ editorState, onChange, title, onTitleChange, addNew }) =>
   <div>
     <Wrapper padding={16}>
-      <Input value={title} onChange={e => onTitleChange(e.target.value)} style={{ marginBottom: 16 }} />
+      <Input value={title} onChange={e => onTitleChange(e.target.value)} />
       <Editor addNew={addNew} editorState={editorState} onChange={onChange} />
     </Wrapper>
     <Wrapper padding={16}>

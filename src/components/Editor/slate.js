@@ -30,12 +30,23 @@ let inputStyle = css({
   marginBottom: 16
 })
 
+
+const initialContent = {
+  nodes: [
+    {
+      kind: 'block',
+      type: 'paragraph'
+    }
+  ]
+}
+
+
 export default class extends React.Component {
   static displayName = 'SlateEditor'
 
   state = {
     title: '',
-    content: Plain.deserialize('')
+    content: Raw.deserialize(initialContent, { terse: true })
   }
 
   onKeyDown = (event, data, state) => console.log(event.which)
@@ -50,9 +61,15 @@ export default class extends React.Component {
     body: JSON.stringify({
       title: this.state.title,
       id: uuid(),
-      content: Raw.serialize(this.state.content)
+      content: JSON.stringify(Raw.serialize(this.state.content))
     })
   })
+
+  onDocumentChange = (document, state) => {
+    const content = JSON.stringify(Raw.serialize(state))
+    console.log(document, content, state)
+  }
+
 
   render () {
     const { content, title } = this.state
@@ -61,7 +78,6 @@ export default class extends React.Component {
         <Input
           value={title}
           onChange={e => this.setState({ title: e.target.value })}
-          {...inputStyle}
         />
 
         <Wrapper className={css(editorShell, editorInner)}>

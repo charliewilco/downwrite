@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Nav from '../Nav'
 import Logo from '../Logo'
 import { css } from 'glamor'
-import { Flex } from 'glamor-jsxstyle'
+import { Flex, Row } from 'glamor-jsxstyle'
 
 const hSty = {
   link: css({
@@ -27,7 +27,7 @@ const hSty = {
 }
 
 const Header = ({ name }) =>
-  <Flex component='header' className={css(hSty.bar)}>
+  <Row component='header' className={css(hSty.bar)}>
     <Flex alignItems='center'>
       <Logo />
       <h1>
@@ -35,6 +35,6 @@ const Header = ({ name }) =>
       </h1>
     </Flex>
     <Nav />
-  </Flex>
+  </Row>
 
 export default Header

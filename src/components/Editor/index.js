@@ -27,7 +27,7 @@ const codeStyle = css({
   fontFamily: 'SFMono-Light'
 })
 
-const placeholder = css({
+const placeholder = css(inner, {
   fontStyle: 'italic',
   opacity: 0.5
 })
@@ -106,8 +106,9 @@ class DWEditor extends React.Component {
 
     const className = css(
       (!contentState.hasText() && contentState.getBlockMap().first().getType() !== 'unstyled')
-        ? [inner, placeholder]
-        : [inner]
+        ? placeholder
+        : inner
+
     )
 
     return (
