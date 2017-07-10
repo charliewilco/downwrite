@@ -1,5 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
+import { Block } from 'glamor/jsxstyle'
 import { Editor, Raw } from 'slate'
 import Button from './components/Button'
 import Input from './components/Input'
@@ -19,6 +20,11 @@ const editorShell = css({
   right: 0
 })
 
+const meta = css({
+  opacity: .5,
+  fontSize: 'small'
+})
+
 const editorInner = css({
   backgroundColor: 'white',
   borderWidth: 1,
@@ -27,7 +33,9 @@ const editorInner = css({
   fontWeight: '400'
 })
 
-class Edit extends React.Component {
+export default class extends React.Component {
+  static displayName = 'UpdatePostEditor'
+
   state = {
     post: {},
     loaded: false
@@ -81,7 +89,7 @@ class Edit extends React.Component {
       ? <Loading />
       : (
         <Wrapper paddingTop={16}>
-          <span>{post.id}</span>
+          <Block className={css(meta)} marginBottom={8}>{post.id} | {post.author}</Block>
           <Input value={post.title} onChange={this.updateTitle} />
           <Wrapper className={css(editorShell, editorInner)}>
             <Button positioned onClick={this.updatePost}>Up</Button>
@@ -96,5 +104,3 @@ class Edit extends React.Component {
     )
   }
 }
-
-export default Edit

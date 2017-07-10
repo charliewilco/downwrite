@@ -1,7 +1,7 @@
 // import 'typeface-roboto-mono'
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { Block } from 'glamor-jsxstyle'
+import { Block } from 'glamor/jsxstyle'
 import NewPost from './NewPost'
 import EditPost from './EditPost'
 import Header from './components/Header'

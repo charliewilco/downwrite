@@ -1,7 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
 
-const BUTTON_SIZE = 62.5
 
 const btn = css({
   display: 'block',
@@ -12,8 +11,8 @@ const btn = css({
   border: 0,
   padding: 16,
   borderRadius: '50%',
-  height: BUTTON_SIZE,
-  width: BUTTON_SIZE,
+  height: 62.5,
+  width: 62.5,
   boxShadow: '0 0 4px rgba(0,0,0,.07), 0 4px 8px rgba(0,0,0,.14)',
   ':hover': {
     backgroundColor: 'var(--color-7)'
@@ -24,10 +23,10 @@ const positionedSty = css({
   position: 'absolute',
   right: -32,
   top: -32
-})
+}, btn)
 
 const Button = ({ onClick, positioned, type, ...args }) => (
-  <button onClick={onClick} className={css(positioned ? [btn, positionedSty] : btn)} {...args} />
+  <button onClick={onClick} className={css(positioned ? positionedSty : btn)} {...args} />
 )
 
 export default Button

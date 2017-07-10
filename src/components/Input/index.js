@@ -13,7 +13,7 @@ let styles = css({
 })
 
 const Input = ({ onChange, type, ...args }) =>
-  <input {...styles} type={type} onChange={onChange} {...args} />
+  <input className={css(styles)} type={type} onChange={onChange} {...args} />
 
 Input.defaultProps = {
   type: 'text'

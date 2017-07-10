@@ -27,7 +27,6 @@ const editorInner = css({
   fontWeight: '400'
 })
 
-
 const initialContent = {
   nodes: [
     {
@@ -37,9 +36,8 @@ const initialContent = {
   ]
 }
 
-
 export default class extends React.Component {
-  static displayName = 'SlateEditor'
+  static displayName = 'NewPostEditor'
 
   state = {
     title: '',
@@ -86,24 +84,19 @@ export default class extends React.Component {
     console.groupEnd()
   }
 
-  onDocumentChange = (document, state) => this.setState({ content: state, document }, this.logger(document, state))
+  onChange = (document, state) => this.setState({
+    content: state,
+    document
+  }, this.logger(document, state))
 
   render () {
     const { content, title } = this.state
     return (
       <Wrapper paddingTop={20}>
-        <Input
-          value={title}
-          onChange={e => this.setState({ title: e.target.value })}
-        />
-
+        <Input value={title} onChange={e => this.setState({ title: e.target.value })} />
         <Wrapper className={css(editorShell, editorInner)}>
           <Button positioned onClick={this.addNewPost}>Add</Button>
-          <Editor
-            state={content}
-            onKeyDown={this.onKeyDown}
-            onDocumentChange={this.onDocumentChange}
-          />
+          <Editor state={content} onDocumentChange={this.onChange} />
         </Wrapper>
       </Wrapper>
     )

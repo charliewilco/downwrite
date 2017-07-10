@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { css } from 'glamor'
-import { InlineBlock } from 'glamor-jsxstyle'
+import { InlineBlock } from 'glamor/jsxstyle'
 
 const btnStyle = css({
   padding: 8,

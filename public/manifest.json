@@ -17,12 +17,12 @@
       "type": "image/png"
     },
     {
-      "src": "icon-512-beta.png",
+      "src": "icon512-beta.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "icon-1024-beta.png",
+      "src": "icon1024-beta.png",
       "sizes": "1024x1024",
       "type": "image/png"
     }

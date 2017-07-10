@@ -8,9 +8,9 @@
     "react-scripts": "^1.0.10"
   },
   "dependencies": {
-    "draft-js": "^0.10.1",
-    "glamor": "^3.0.0-2",
-    "glamor-jsxstyle": "^3.0.0-2",
+    "date-fns": "^1.28.5",
+    "glamor": "2.20.5",
+    "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.1.1",
@@ -27,7 +27,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "deploy": "now && now alias"
+    "go": "now && now alias"
   },
   "now": {
     "alias": "redownwrite"
