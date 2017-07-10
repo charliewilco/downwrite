@@ -35,7 +35,7 @@ const Card = ({ title, id, content, author }) => (
           <h2 className={s.title}>{title}</h2>
           <small className={s.meta}>{author} - {id}</small>
         </div>
-        <Link to={`edit/${id}`}>Edit</Link>
+        <Link to={`/edit/${id}`}>Edit</Link>
       </Flex>
       {
         content && <p className={s.content}>Read More...</p>

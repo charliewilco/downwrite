@@ -1,5 +1,6 @@
 import React from 'react'
 import { Editor, Raw } from 'slate'
+import { Redirect } from 'react-router-dom'
 import Wrapper from './components/Wrapper'
 import Input from './components/Input'
 import Button from './components/Button'
@@ -39,10 +40,17 @@ const initialContent = {
 export default class extends React.Component {
   static displayName = 'NewPostEditor'
 
+  static defaultProps = {
+    author: 'charlespeters'
+  }
+
   state = {
     title: '',
     content: Raw.deserialize(initialContent, { terse: true }),
-    document: null
+    document: null,
+    id: uuid(),
+    dateAdded: new Date(),
+    saved: false
   }
 
   // onKeyDown = (event, data, state) => console.log(event.which)
@@ -51,23 +59,21 @@ export default class extends React.Component {
     method: 'post',
     headers: {
       'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      title: this.state.title,
-      id: uuid(),
-      content: JSON.stringify(Raw.serialize(this.state.content))
-    })
+    }, body
   })
+    .then(() => this.setState({ saved: true }))
 
   addNewPost = () => {
-    let id = uuid()
-    let { title, document } = this.state
+    let { id, title, document, dateAdded } = this.state
+    let { author } = this.props
     const content = Raw.serialize(this.state.content)
 
     const post = JSON.stringify({
       title,
       id,
+      author,
       content,
+      dateAdded,
       document
     })
 
@@ -90,15 +96,19 @@ export default class extends React.Component {
   }, this.logger(document, state))
 
   render () {
-    const { content, title } = this.state
+    const { content, title, saved, id } = this.state
     return (
-      <Wrapper paddingTop={20}>
-        <Input value={title} onChange={e => this.setState({ title: e.target.value })} />
-        <Wrapper className={css(editorShell, editorInner)}>
-          <Button positioned onClick={this.addNewPost}>Add</Button>
-          <Editor state={content} onDocumentChange={this.onChange} />
+      saved
+      ? (<Redirect to={`/edit/${id}`} />)
+      : (
+        <Wrapper paddingTop={20}>
+          <Input value={title} onChange={e => this.setState({ title: e.target.value })} />
+          <Wrapper className={css(editorShell, editorInner)}>
+            <Button positioned onClick={this.addNewPost}>Add</Button>
+            <Editor state={content} onDocumentChange={this.onChange} />
+          </Wrapper>
         </Wrapper>
-      </Wrapper>
+      )
     )
   }
 }

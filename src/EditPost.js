@@ -6,6 +6,7 @@ import Button from './components/Button'
 import Input from './components/Input'
 import Loading from './components/Loading'
 import Wrapper from './components/Wrapper'
+import format from 'date-fns/format'
 
 const editorShell = css({
   flex: 1,
@@ -46,12 +47,7 @@ export default class extends React.Component {
   componentWillMount () {
     fetch(`/posts/${this.props.match.params.id}`)
       .then(res => res.json())
-      .then(data => this.setState({
-        post: {
-          ...data,
-          content: JSON.parse(data.content)
-        }
-      }))
+      .then(post => this.setState({ post }))
       .then(() => this.setState({
         post: {
           ...this.state.post,
@@ -89,7 +85,9 @@ export default class extends React.Component {
       ? <Loading />
       : (
         <Wrapper paddingTop={16}>
-          <Block className={css(meta)} marginBottom={8}>{post.id} | {post.author}</Block>
+          <Block className={css(meta)} marginBottom={8}>
+            {post.id} | {post.author} | Date Added: {format(post.dateAdded, 'HH:MM A, DD MMMM YYYY')}
+          </Block>
           <Input value={post.title} onChange={this.updateTitle} />
           <Wrapper className={css(editorShell, editorInner)}>
             <Button positioned onClick={this.updatePost}>Up</Button>
