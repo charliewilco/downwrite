@@ -18,6 +18,9 @@ import NoMatch from './NoMatch'
 //   }
 // }
 
+
+// fetch('/profile')
+
 export default () => (
   <Router>
     <Block fontFamily='Operator Mono' height='calc(100% - 82px)'>
