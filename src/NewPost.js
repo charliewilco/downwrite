@@ -27,7 +27,6 @@ const editorInner = css({
   fontWeight: '400'
 })
 
-
 const initialContent = {
   nodes: [
     {
@@ -37,9 +36,8 @@ const initialContent = {
   ]
 }
 
-
 export default class extends React.Component {
-  static displayName = 'SlateEditor'
+  static displayName = 'NewPostEditor'
 
   state = {
     title: '',

@@ -80,7 +80,7 @@ export default class extends React.Component {
           onChange={e => this.setState({ title: e.target.value })}
         />
 
-        <Wrapper className={css(editorShell, editorInner)}>
+        <Wrapper>
           <Button positioned onClick={this.addNew}>Add</Button>
           <Editor state={content} onKeyDown={this.onKeyDown} onChange={this.onChange} />
         </Wrapper>

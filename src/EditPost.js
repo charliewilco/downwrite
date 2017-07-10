@@ -27,7 +27,9 @@ const editorInner = css({
   fontWeight: '400'
 })
 
-class Edit extends React.Component {
+export default class extends React.Component {
+  static displayName = 'UpdatePostEditor'
+
   state = {
     post: {},
     loaded: false
@@ -96,5 +98,3 @@ class Edit extends React.Component {
     )
   }
 }
-
-export default Edit

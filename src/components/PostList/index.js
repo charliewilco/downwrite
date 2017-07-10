@@ -22,12 +22,17 @@ const s = {
   })
 }
 
-
 export default ({ posts }) => (
   <Block>
     <h1 className={css(s.title)}>Posts</h1>
     <Flex component='ul' flexWrap='wrap' margin='0 -20px' listStyle='none inside'>
-      {posts.map(p => <Card className={css(s.item)} key={p.id} {...p} />)}
+      {posts.map(
+        p => (
+          <Block key={p.id} component='li' padding='0 20px' className={css(s.item)}>
+            <Card {...p} />
+          </Block>
+        )
+      )}
     </Flex>
   </Block>
 )

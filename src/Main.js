@@ -4,6 +4,7 @@ import PostList from './components/PostList'
 import Loading from './components/Loading'
 import EmptyPosts from './components/EmptyPosts'
 
+
 export default class extends Component {
   static displayName = 'Main View'
 
@@ -26,7 +27,7 @@ export default class extends Component {
         {
           loaded
           ? (posts.length > 0 ? <PostList posts={posts} /> : <EmptyPosts />)
-          : <Loading size={100} />
+          : (<Loading size={100} />)
         }
       </Block>
     )
