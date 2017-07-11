@@ -39,7 +39,8 @@ export default class extends React.Component {
 
   state = {
     post: {},
-    loaded: false
+    loaded: false,
+    dateModified: null
   }
 
   prepareContent = content => Raw.deserialize(content, { terse: true })
@@ -66,14 +67,20 @@ export default class extends React.Component {
     }
   })
 
-  updatePost = () => console.log(...this.state)
+  updatePost = body => fetch(`/posts/${this.props.match.params.id}`, {
+    method: 'put',
+    headers: {
+      'Content-Type': 'application/json'
+    }, body
+  })
 
   onDocumentChange = (document, state) => this.setState({
     post: {
       ...this.state.post,
       content: state,
       document
-    }
+    },
+    dateModified: new Date()
   })
 
 
