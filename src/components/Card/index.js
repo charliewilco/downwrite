@@ -5,8 +5,8 @@ import { css } from 'glamor'
 
 const s = {
   title: css({
-    fontSize: 24,
-    fontWeight: 600
+    fontSize: 18,
+    fontWeight: 500
   }),
   content: css({
     fontSize: `small`,
@@ -14,7 +14,7 @@ const s = {
     padding: 16
   }),
   card: css({
-    borderLeftWidth: 8,
+    borderLeftWidth: 4,
     borderLeftStyle: 'solid',
     borderColor: `var(--color-1)`,
     boxShadow: '0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12)',
@@ -37,9 +37,9 @@ const Card = ({ title, id, content, author }) => (
         </div>
         <Link to={`/edit/${id}`}>Edit</Link>
       </Flex>
-      {
-        content && <p className={s.content}>Read More...</p>
-      }
+      <Block>
+        {content && <p className={s.content}>Read More...</p>}
+      </Block>
     </Block>
 )
 

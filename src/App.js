@@ -23,7 +23,7 @@ import NoMatch from './NoMatch'
 
 export default () => (
   <Router>
-    <Block fontFamily='Operator Mono' height='calc(100% - 82px)'>
+    <Block fontFamily='Roboto Mono' height='calc(100% - 82px)'>
       <Header name='Re:Downwrite Web' />
       <Switch>
         <Route exact path='/' component={Main} />

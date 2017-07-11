@@ -10,7 +10,8 @@ const s = {
     fontWeight: 400
   }),
   title: css({
-    fontSize: 40,
+    fontSize: 36,
+    fontWeight: 400,
     marginBottom: 24
   }),
   item: css({
