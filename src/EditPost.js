@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import { css } from 'glamor'
 import { Block } from 'glamor/jsxstyle'
@@ -43,7 +44,7 @@ export default class extends React.Component {
     dateModified: null
   }
 
-  prepareContent = content => Raw.deserialize(content, { terse: true })
+  prepareContent = (content: {}) => Raw.deserialize(content, { terse: true })
 
   componentWillMount () {
     fetch(`/posts/${this.props.match.params.id}`)

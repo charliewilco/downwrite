@@ -1,4 +1,3 @@
-// import 'typeface-roboto-mono'
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Block } from 'glamor/jsxstyle'
