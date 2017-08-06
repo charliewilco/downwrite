@@ -19,7 +19,8 @@ const s = {
     width: '100%',
     padding: '0 20px',
     '@media (min-width: 48rem)': { width: '50%' },
-    '@media (min-width: 57.75rem)': { width: `${100 / 3}%` }
+    '@media (min-width: 57.75rem)': { width: `${100 / 3}%` },
+    '@media (min-width: 75rem)': { width: `${100 / 4}%` }
   })
 }
 

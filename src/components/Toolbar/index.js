@@ -1,5 +1,5 @@
 import React from 'react'
-import StyleButton from './Button'
+import Btn from './Button'
 import { css } from 'glamor'
 import { Flex } from 'glamor/jsxstyle'
 
@@ -25,9 +25,9 @@ const Toolbar = ({ editorState, onToggle, types }) => {
       flexWrap='wrap'
       justifyContent='space-around'
       className={css(toolbar)}>
-      {types.map(type => (
-        <StyleButton
-          key={type.label}
+      {types.map((type, i) => (
+        <Btn
+          key={i}
           active={type.style === blockType || currentStyle.has(type.style)}
           label={type.label}
           onToggle={onToggle}

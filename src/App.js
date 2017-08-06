@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Block } from 'glamor/jsxstyle'
 import NewPost from './NewPost'
 import EditPost from './EditPost'
-import Header from './components/Header'
+import { Header, APIStatus } from './components'
 import Main from './Main'
 import NoMatch from './NoMatch'
 
@@ -19,10 +19,13 @@ import NoMatch from './NoMatch'
 
 // fetch('/profile')
 
-export default () => (
+export default ({ data }) => (
   <Router>
-    <Block fontFamily='Roboto Mono' height='calc(100% - 82px)'>
+    <Block fontFamily='Operator Mono' height='calc(100% - 82px)'>
       <Header name='Re:Downwrite Web' />
+      {process.env.NODE_ENV === 'development' && (
+        <APIStatus data={data} env={process.env.NODE_ENV} />
+      )}
       <Switch>
         <Route exact path='/' component={Main} />
         <Route path='/new' component={NewPost} />
