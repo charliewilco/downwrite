@@ -1,22 +1,49 @@
 // @flow
 import React from 'react'
 import { css } from 'glamor'
-import { Block } from 'glamor/jsxstyle'
+import { Block, Flex } from 'glamor/jsxstyle'
 import { Editor, Raw } from 'slate'
 import { Button, Input, Loading, Wrapper } from './components'
 import format from 'date-fns/format'
+
+// {
+//   "title": "New Post I'm Making",
+//   "author": "charlespeters",
+//   "id": "9fcf1577-b37c-4571-a727-b62eb85e5fe9",
+//   "content": {},
+//   "dateAdded": "2017-07-10T05:55:04.388Z",
+//   "document": {}
+// }
 
 const editorShell = css({
   flex: 1,
   marginTop: '-1px',
   flexDirection: 'column',
   justifyContent: 'center',
-  padding: 16,
   minHeight: '100%',
   width: `100%`,
   position: 'absolute',
   left: 0,
   right: 0
+})
+
+const editorContent = css({
+  position: 'relative',
+  paddingTop: 64,
+  paddingRight: 16,
+  paddingLeft: 16
+})
+
+const toolbar = css({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  padding: 8,
+  background: 'white',
+  borderBottomWidth: 1,
+  borderBottomStyle: 'solid',
+  borderBottomColor: 'rgba(0, 0, 0, .125)'
 })
 
 const meta = css({
@@ -40,10 +67,12 @@ export default class extends React.Component {
   state = {
     post: {},
     loaded: false,
+    unchanged: false,
     dateModified: new Date()
   }
 
-  prepareContent = (content: {}) => Raw.deserialize(content, { terse: true })
+  prepareContent = (content: Object) =>
+    Raw.deserialize(content, { terse: true })
 
   componentWillMount () {
     fetch(`/posts/${this.props.match.params.id}`)
@@ -60,17 +89,27 @@ export default class extends React.Component {
       )
   }
 
-  // onChange = () => console.log('...okay')
+  onChange = (content: Object) =>
+    this.setState((prev, next) => {
+      console.log('from onChange', content, prev, next)
+      return {
+        post: {
+          ...prev.post,
+          content,
+          unchanged: true
+        }
+      }
+    })
 
-  onKeyDown = (e: Event) => console.log(e)
+  // onKeyDown = (e: Event) => console.log(e)
 
   updateTitle = ({ target }: { target: EventTarget }) =>
-    this.setState(() => {
+    this.setState(prevState => {
       let title = target instanceof HTMLInputElement && this.titleInput.value
 
       return {
         post: {
-          ...this.state.post,
+          ...prevState.post,
           title
         }
       }
@@ -86,13 +125,16 @@ export default class extends React.Component {
     })
 
   onDocumentChange = (document: Object, state: Object) =>
-    this.setState({
-      post: {
-        ...this.state.post,
-        content: state,
-        document
-      },
-      dateModified: new Date()
+    this.setState((prevState, nextProps) => {
+      console.log('from document change', document, state)
+      return {
+        post: {
+          ...this.state.post,
+          content: state,
+          document
+        },
+        dateModified: new Date()
+      }
     })
 
   render () {
@@ -107,22 +149,24 @@ export default class extends React.Component {
           {format(post.dateAdded, 'HH:MM A, DD MMMM YYYY')}
         </Block>
         <Input
-          ref={inp => {
-            this.titleInput = inp
+          inputRef={input => {
+            this.titleInput = input
           }}
           value={post.title}
-          onChange={this.updateTitle}
+          onChange={e => this.updateTitle(e)}
         />
         <Wrapper className={css(editorShell, editorInner)}>
-          <Button positioned onClick={this.updatePost}>
-            Up
-          </Button>
-          <Editor
-            placeholder='Enter some rich text...'
-            state={post.content}
-            onKeyDown={this.onKeyDown}
-            onDocumentChange={this.onDocumentChange}
-          />
+          <div className={css(editorContent)}>
+            <Flex justifyContent='flex-end' className={css(toolbar)}>
+              <Button onClick={() => console.log(post)}>Up</Button>
+            </Flex>
+            <Editor
+              placeholder='Enter some rich text...'
+              state={post.content}
+              onChange={this.onChange}
+              onDocumentChange={this.onDocumentChange}
+            />
+          </div>
         </Wrapper>
       </Wrapper>
     )

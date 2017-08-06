@@ -12,8 +12,14 @@ let styles = css({
   padding: 16
 })
 
-const Input = ({ onChange, type, ...args }) => (
-  <input className={css(styles)} type={type} onChange={onChange} {...args} />
+const Input = ({ onChange, type, inputRef, ...args }) => (
+  <input
+    className={css(styles)}
+    type={type}
+    ref={inputRef}
+    onChange={onChange}
+    {...args}
+  />
 )
 
 Input.defaultProps = {

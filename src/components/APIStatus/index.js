@@ -11,15 +11,14 @@ const pos = {
 export default ({ data, env }) => (
   <Block
     fontSize={12}
-    border='1px solid'
-    color={isEmpty(data) ? '#CF4832' : '#29994F'}
+    backgroundColor={isEmpty(data) ? '#CF4832' : '#29994F'}
+    color='white'
     padding={8}
+    zIndex={500}
     {...pos}>
     <Block>
       {isEmpty(data) ? 'Something is wrong with the API' : data.post}
     </Block>
-    <Block>
-      Environment: {env}
-    </Block>
+    <Block>Environment: {env}</Block>
   </Block>
 )

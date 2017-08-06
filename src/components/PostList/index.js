@@ -17,7 +17,7 @@ const s = {
   item: css({
     marginBottom: 24,
     width: '100%',
-    padding: '0 20px',
+    padding: '0 15px',
     '@media (min-width: 48rem)': { width: '50%' },
     '@media (min-width: 57.75rem)': { width: `${100 / 3}%` },
     '@media (min-width: 75rem)': { width: `${100 / 4}%` }
@@ -30,7 +30,7 @@ export default ({ posts }) => (
     <Flex
       component='ul'
       flexWrap='wrap'
-      margin='0 -20px'
+      margin='0 -15px'
       listStyle='none inside'>
       {posts.map(p => (
         <Block key={p.id} component='li' className={css(s.item)}>

@@ -10,11 +10,14 @@ const btn = css({
   transition: 'background-color 250ms ease-in-out',
   color: 'white',
   border: 0,
-  padding: 16,
-  borderRadius: '50%',
-  height: 64,
-  width: 64,
-  boxShadow: '0 0 4px rgba(0,0,0,.07), 0 4px 8px rgba(0,0,0,.14)',
+  paddingTop: 4,
+  paddingLeft: 8,
+  paddingRight: 8,
+  paddingBottom: 4,
+  maxWidth: 120,
+  width: `100%`,
+  borderRadius: 5,
+  boxShadow: '0 0 4px rgba(0,0,0,.037), 0 4px 8px rgba(0,0,0,.07)',
   ':hover': {
     backgroundColor: 'var(--color-7)'
   }
@@ -27,7 +30,7 @@ const positionedSty = css(
     right: 32,
     '@media only screen and (min-width: 48rem)': {
       position: 'absolute',
-      right: -32,
+      right: -16,
       top: -32
     }
   },
