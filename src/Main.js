@@ -30,11 +30,9 @@ export default class extends Component {
     const { loaded, posts, data } = this.state
     return (
       <Block padding={16} height='100%'>
-        {
-          process.env.NODE_ENV === 'development' && (
-            <APIStatus data={data} env={process.env.NODE_ENV} />
-          )
-        }
+        {process.env.NODE_ENV === 'development' && (
+          <APIStatus data={data} env={process.env.NODE_ENV} />
+        )}
         {loaded ? posts.length > 0 ? (
           <PostList posts={posts} />
         ) : (

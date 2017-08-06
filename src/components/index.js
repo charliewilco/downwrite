@@ -12,7 +12,6 @@ import Toolbar from './Toolbar'
 import Wrapper from './Wrapper'
 import APIStatus from './APIStatus'
 
-
 export {
   APIStatus,
   Wrapper,

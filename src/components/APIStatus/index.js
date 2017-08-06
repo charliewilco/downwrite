@@ -8,7 +8,18 @@ const pos = {
 }
 
 export default ({ data, env }) => (
-  <Block fontSize={12} background='#CF4832' color='white' textAlign='center' padding={8} {...pos} opacity='.375'>
-    {data && (<span>{data.post} {env}</span>)}
+  <Block
+    fontSize={12}
+    opacity='.375'
+    background='#CF4832'
+    color='white'
+    textAlign='center'
+    padding={8}
+    {...pos}>
+    {data && (
+      <span>
+        {data.post} {env}
+      </span>
+    )}
   </Block>
 )
