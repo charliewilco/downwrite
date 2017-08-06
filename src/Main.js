@@ -1,9 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import { Block } from 'glamor/jsxstyle'
-import PostList from './components/PostList'
-import Loading from './components/Loading'
-import EmptyPosts from './components/EmptyPosts'
+import { APIStatus, PostList, Loading, EmptyPosts } from './components'
 
 export default class extends Component {
   static displayName = 'Main View'
@@ -15,7 +13,7 @@ export default class extends Component {
   }
 
   serverTest = () => {
-    return fetch('http://localhost:4411/stuff')
+    return fetch('https://dwn-api.now.sh/stuff')
       .then(res => res.json())
       .then(data => this.setState({ data }))
       .catch(err => console.error(err))
@@ -32,7 +30,11 @@ export default class extends Component {
     const { loaded, posts, data } = this.state
     return (
       <Block padding={16} height='100%'>
-        <Block>{data && <h6>{data.post}</h6>}</Block>
+        {
+          process.env.NODE_ENV === 'development' && (
+            <APIStatus data={data} env={process.env.NODE_ENV} />
+          )
+        }
         {loaded ? posts.length > 0 ? (
           <PostList posts={posts} />
         ) : (
