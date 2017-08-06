@@ -21,7 +21,7 @@ const s = {
     backgroundColor: 'white'
   }),
   meta: css({
-    opacity: .5
+    opacity: 0.5
   })
 }
 
@@ -29,18 +29,20 @@ const s = {
 // JSON.stringify(Raw.deserialize(content)).slice(0, 90)
 
 const Card = ({ title, id, content, author }) => (
-    <Block className={css(s.card)}>
-      <Flex borderBottom='1px solid #f2f2f2' padding={16} justifyContent='space-between' alignItems='flex-start'>
-        <div>
-          <h2 className={s.title}>{title}</h2>
-          <small className={s.meta}>{author}</small>
-        </div>
-        <Link to={`/edit/${id}`}>Edit</Link>
-      </Flex>
-      <Block>
-        {content && <p className={s.content}>Read More...</p>}
-      </Block>
-    </Block>
+  <Block className={css(s.card)}>
+    <Flex
+      borderBottom='1px solid #f2f2f2'
+      padding={16}
+      justifyContent='space-between'
+      alignItems='flex-start'>
+      <div>
+        <h2 className={s.title}>{title}</h2>
+        <small className={s.meta}>{author}</small>
+      </div>
+      <Link to={`/edit/${id}`}>Edit</Link>
+    </Flex>
+    <Block>{content && <p className={s.content}>Read More...</p>}</Block>
+  </Block>
 )
 
 export default Card

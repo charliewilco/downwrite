@@ -20,16 +20,19 @@ const btn = css({
   }
 })
 
-const positionedSty = css({
-  position: 'fixed',
-  top: 64,
-  right: 32,
-  '@media only screen and (min-width: 48rem)': {
-    position: 'absolute',
-    right: -32,
-    top: -32,
-  }
-}, btn)
+const positionedSty = css(
+  {
+    position: 'fixed',
+    top: 64,
+    right: 32,
+    '@media only screen and (min-width: 48rem)': {
+      position: 'absolute',
+      right: -32,
+      top: -32
+    }
+  },
+  btn
+)
 
 type Props = {
   positioned: Boolean,
@@ -37,10 +40,7 @@ type Props = {
 }
 
 const Button = ({ positioned, ...args }: Props) => (
-  <button
-    className={css(positioned ? positionedSty : btn)}
-    {...args}
-  />
+  <button className={css(positioned ? positionedSty : btn)} {...args} />
 )
 
 export default Button

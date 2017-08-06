@@ -26,15 +26,18 @@ const hSty = {
   })
 }
 
-const Header = ({ name }) =>
+const Header = ({ name }) => (
   <Row component='header' className={css(hSty.bar)}>
     <Flex alignItems='center'>
       <Logo />
       <h1>
-        <Link className={css(hSty.link)} to='/'>{name}</Link>
+        <Link className={css(hSty.link)} to='/'>
+          {name}
+        </Link>
       </h1>
     </Flex>
     <Nav />
   </Row>
+)
 
 export default Header

@@ -3,7 +3,7 @@ import StyleButton from './Button'
 import { css } from 'glamor'
 import { Flex } from 'glamor/jsxstyle'
 
-const toolbar = css ({
+const toolbar = css({
   backgroundColor: 'white',
   borderStyle: 'solid',
   borderWidth: 0,
@@ -13,12 +13,19 @@ const toolbar = css ({
 
 const Toolbar = ({ editorState, onToggle, types }) => {
   const selection = editorState.getSelection()
-  const blockType = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType()
+  const blockType = editorState
+    .getCurrentContent()
+    .getBlockForKey(selection.getStartKey())
+    .getType()
   const currentStyle = editorState.getCurrentInlineStyle()
 
   return (
-    <Flex alignItems='center' flexWrap='wrap' justifyContent='space-around' className={css(toolbar)}>
-      {types.map((type) =>
+    <Flex
+      alignItems='center'
+      flexWrap='wrap'
+      justifyContent='space-around'
+      className={css(toolbar)}>
+      {types.map(type => (
         <StyleButton
           key={type.label}
           active={type.style === blockType || currentStyle.has(type.style)}
@@ -26,7 +33,7 @@ const Toolbar = ({ editorState, onToggle, types }) => {
           onToggle={onToggle}
           style={type.style}
         />
-      )}
+      ))}
     </Flex>
   )
 }

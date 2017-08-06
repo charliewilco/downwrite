@@ -32,14 +32,14 @@ export default class extends Component {
     const { loaded, posts, data } = this.state
     return (
       <Block padding={16} height='100%'>
-        <Block>
-          {data && (<h6>{data.post}</h6>)}
-        </Block>
-        {
-          loaded
-          ? (posts.length > 0 ? <PostList posts={posts} /> : <EmptyPosts />)
-          : (<Loading size={100} />)
-        }
+        <Block>{data && <h6>{data.post}</h6>}</Block>
+        {loaded ? posts.length > 0 ? (
+          <PostList posts={posts} />
+        ) : (
+          <EmptyPosts />
+        ) : (
+          <Loading size={100} />
+        )}
       </Block>
     )
   }

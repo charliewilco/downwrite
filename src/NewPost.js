@@ -55,13 +55,14 @@ export default class extends React.Component {
 
   // onKeyDown = (event, data, state) => console.log(event.which)
 
-  addNew = body => fetch('/posts', {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json'
-    }, body
-  })
-    .then(() => this.setState({ saved: true }))
+  addNew = body =>
+    fetch('/posts', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body
+    }).then(() => this.setState({ saved: true }))
 
   addNewPost = () => {
     let { id, title, document, dateAdded } = this.state
@@ -84,31 +85,38 @@ export default class extends React.Component {
     const content = JSON.stringify(Raw.serialize(state))
     console.group()
     console.log('from the document change')
-      console.log('document', document)
-      console.log('content', content)
-      console.log('state', state)
+    console.log('document', document)
+    console.log('content', content)
+    console.log('state', state)
     console.groupEnd()
   }
 
-  onChange = (document, state) => this.setState({
-    content: state,
-    document
-  }, this.logger(document, state))
+  onChange = (document, state) =>
+    this.setState(
+      {
+        content: state,
+        document
+      },
+      this.logger(document, state)
+    )
 
   render () {
     const { content, title, saved, id } = this.state
-    return (
-      saved
-      ? (<Redirect to={`/edit/${id}`} />)
-      : (
-        <Wrapper paddingTop={20}>
-          <Input value={title} onChange={e => this.setState({ title: e.target.value })} />
-          <Wrapper className={css(editorShell, editorInner)}>
-            <Button positioned onClick={this.addNewPost}>Add</Button>
-            <Editor state={content} onDocumentChange={this.onChange} />
-          </Wrapper>
+    return saved ? (
+      <Redirect to={`/edit/${id}`} />
+    ) : (
+      <Wrapper paddingTop={20}>
+        <Input
+          value={title}
+          onChange={e => this.setState({ title: e.target.value })}
+        />
+        <Wrapper className={css(editorShell, editorInner)}>
+          <Button positioned onClick={this.addNewPost}>
+            Add
+          </Button>
+          <Editor state={content} onDocumentChange={this.onChange} />
         </Wrapper>
-      )
+      </Wrapper>
     )
   }
 }

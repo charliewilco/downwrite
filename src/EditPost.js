@@ -20,7 +20,7 @@ const editorShell = css({
 })
 
 const meta = css({
-  opacity: .5,
+  opacity: 0.5,
   fontSize: 'small'
 })
 
@@ -49,70 +49,82 @@ export default class extends React.Component {
     fetch(`/posts/${this.props.match.params.id}`)
       .then(res => res.json())
       .then(post => this.setState({ post }))
-      .then(() => this.setState({
-        post: {
-          ...this.state.post,
-          content: this.prepareContent(this.state.post.content)
-        },
-        loaded: true
-      }))
+      .then(() =>
+        this.setState({
+          post: {
+            ...this.state.post,
+            content: this.prepareContent(this.state.post.content)
+          },
+          loaded: true
+        })
+      )
   }
 
   // onChange = () => console.log('...okay')
 
   onKeyDown = (e: Event) => console.log(e)
 
-  updateTitle = ({ target }: { target: EventTarget }) => this.setState(() => {
-    let title = (target instanceof HTMLInputElement) && this.titleInput.value
+  updateTitle = ({ target }: { target: EventTarget }) =>
+    this.setState(() => {
+      let title = target instanceof HTMLInputElement && this.titleInput.value
 
-    return {
+      return {
+        post: {
+          ...this.state.post,
+          title
+        }
+      }
+    })
+
+  updatePost = (body: Object) =>
+    fetch(`/posts/${this.props.match.params.id}`, {
+      method: 'put',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body
+    })
+
+  onDocumentChange = (document: Object, state: Object) =>
+    this.setState({
       post: {
         ...this.state.post,
-        title
-      }
-    }
-  })
-
-  updatePost = (body: Object) => fetch(`/posts/${this.props.match.params.id}`, {
-    method: 'put',
-    headers: {
-      'Content-Type': 'application/json'
-    }, body
-  })
-
-  onDocumentChange = (document: Object, state: Object) => this.setState({
-    post: {
-      ...this.state.post,
-      content: state,
-      document
-    },
-    dateModified: new Date()
-  })
-
+        content: state,
+        document
+      },
+      dateModified: new Date()
+    })
 
   render () {
     const { post, loaded } = this.state
 
-    return (
-      !loaded
-      ? <Loading />
-      : (
-        <Wrapper paddingTop={16}>
-          <Block className={css(meta)} marginBottom={8}>
-            {post.id} | {post.author} | Date Added: {format(post.dateAdded, 'HH:MM A, DD MMMM YYYY')}
-          </Block>
-          <Input ref={inp => { this.titleInput = inp }} value={post.title} onChange={this.updateTitle} />
-          <Wrapper className={css(editorShell, editorInner)}>
-            <Button positioned onClick={this.updatePost}>Up</Button>
-            <Editor
-              placeholder='Enter some rich text...'
-              state={post.content}
-              onKeyDown={this.onKeyDown}
-              onDocumentChange={this.onDocumentChange}
-            />
-          </Wrapper>
+    return !loaded ? (
+      <Loading />
+    ) : (
+      <Wrapper paddingTop={16}>
+        <Block className={css(meta)} marginBottom={8}>
+          {post.id} | {post.author} | Date Added:{' '}
+          {format(post.dateAdded, 'HH:MM A, DD MMMM YYYY')}
+        </Block>
+        <Input
+          ref={inp => {
+            this.titleInput = inp
+          }}
+          value={post.title}
+          onChange={this.updateTitle}
+        />
+        <Wrapper className={css(editorShell, editorInner)}>
+          <Button positioned onClick={this.updatePost}>
+            Up
+          </Button>
+          <Editor
+            placeholder='Enter some rich text...'
+            state={post.content}
+            onKeyDown={this.onKeyDown}
+            onDocumentChange={this.onDocumentChange}
+          />
         </Wrapper>
-      )
+      </Wrapper>
     )
   }
 }
