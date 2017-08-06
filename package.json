@@ -36,7 +36,16 @@
     "eject": "react-scripts eject",
     "go": "now && now alias",
     "flow": "flow",
-    "lint": "prettier --space-before-function-paren true --single-quote --braces-spacing true --jsx-single-quote --jsx-bracket-same-line --no-semi --write --parser 'flow' 'src/**/*.js'"
+    "lint": "prettier --write 'src/**/*.js'"
+  },
+  "prettier": {
+    "parser": "flow",
+    "semi": false,
+    "space-before-function-paren": true,
+    "single-quote": true,
+    "braces-spacing": true,
+    "jsx-single-quote": true,
+    "jsx-bracket-same-line": true
   },
   "now": {
     "alias": "redownwrite"

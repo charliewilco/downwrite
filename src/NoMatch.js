@@ -2,7 +2,7 @@ import React from 'react'
 import Wrapper from './components/Wrapper'
 import { InlineBlock as In } from 'glamor/jsxstyle'
 
-const Title = ({name}) => (
+const Title = ({ name }) => (
   <In
     component='h2'
     marginBottom={32}
