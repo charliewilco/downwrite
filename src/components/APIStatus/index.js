@@ -1,5 +1,6 @@
 import React from 'react'
 import { Block } from 'glamor/jsxstyle'
+import { isEmpty } from 'ramda'
 
 const pos = {
   bottom: 8,
@@ -10,16 +11,15 @@ const pos = {
 export default ({ data, env }) => (
   <Block
     fontSize={12}
-    opacity='.375'
-    background='#CF4832'
-    color='white'
-    textAlign='center'
+    border='1px solid'
+    color={isEmpty(data) ? '#CF4832' : '#29994F'}
     padding={8}
     {...pos}>
-    {data && (
-      <span>
-        {data.post} {env}
-      </span>
-    )}
+    <Block>
+      {isEmpty(data) ? 'Something is wrong with the API' : data.post}
+    </Block>
+    <Block>
+      Environment: {env}
+    </Block>
   </Block>
 )
