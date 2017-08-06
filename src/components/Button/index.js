@@ -1,6 +1,7 @@
+// @flow
+
 import React from 'react'
 import { css } from 'glamor'
-
 
 const btn = css({
   display: 'block',
@@ -30,8 +31,16 @@ const positionedSty = css({
   }
 }, btn)
 
-const Button = ({ onClick, positioned, type, ...args }) => (
-  <button onClick={onClick} className={css(positioned ? positionedSty : btn)} {...args} />
+type Props = {
+  positioned: Boolean,
+  args: Object
+}
+
+const Button = ({ positioned, ...args }: Props) => (
+  <button
+    className={css(positioned ? positionedSty : btn)}
+    {...args}
+  />
 )
 
 export default Button

@@ -3,10 +3,7 @@ import React from 'react'
 import { css } from 'glamor'
 import { Block } from 'glamor/jsxstyle'
 import { Editor, Raw } from 'slate'
-import Button from './components/Button'
-import Input from './components/Input'
-import Loading from './components/Loading'
-import Wrapper from './components/Wrapper'
+import { Button, Input, Loading, Wrapper } from './components'
 import format from 'date-fns/format'
 
 const editorShell = css({
@@ -38,10 +35,12 @@ const editorInner = css({
 export default class extends React.Component {
   static displayName = 'UpdatePostEditor'
 
+  titleInput: HTMLInputElement
+
   state = {
     post: {},
     loaded: false,
-    dateModified: null
+    dateModified: new Date()
   }
 
   prepareContent = (content: {}) => Raw.deserialize(content, { terse: true })
@@ -61,21 +60,27 @@ export default class extends React.Component {
 
   // onChange = () => console.log('...okay')
 
-  updateTitle = e => this.setState({
-    post: {
-      ...this.state.post,
-      title: e.target.value
+  onKeyDown = (e: Event) => console.log(e)
+
+  updateTitle = ({ target }: { target: EventTarget }) => this.setState(() => {
+    let title = (target instanceof HTMLInputElement) && this.titleInput.value
+
+    return {
+      post: {
+        ...this.state.post,
+        title
+      }
     }
   })
 
-  updatePost = body => fetch(`/posts/${this.props.match.params.id}`, {
+  updatePost = (body: Object) => fetch(`/posts/${this.props.match.params.id}`, {
     method: 'put',
     headers: {
       'Content-Type': 'application/json'
     }, body
   })
 
-  onDocumentChange = (document, state) => this.setState({
+  onDocumentChange = (document: Object, state: Object) => this.setState({
     post: {
       ...this.state.post,
       content: state,
@@ -96,10 +101,11 @@ export default class extends React.Component {
           <Block className={css(meta)} marginBottom={8}>
             {post.id} | {post.author} | Date Added: {format(post.dateAdded, 'HH:MM A, DD MMMM YYYY')}
           </Block>
-          <Input value={post.title} onChange={this.updateTitle} />
+          <Input ref={inp => { this.titleInput = inp }} value={post.title} onChange={this.updateTitle} />
           <Wrapper className={css(editorShell, editorInner)}>
             <Button positioned onClick={this.updatePost}>Up</Button>
             <Editor
+              placeholder='Enter some rich text...'
               state={post.content}
               onKeyDown={this.onKeyDown}
               onDocumentChange={this.onDocumentChange}

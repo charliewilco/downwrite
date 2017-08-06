@@ -5,22 +5,23 @@
   "devDependencies": {
     "concurrently": "^3.5.0",
     "enzyme": "^2.9.1",
-    "flow-bin": "^0.50.0",
-    "json-server": "^0.11.2",
-    "react-scripts": "^1.0.10"
+    "flow-bin": "^0.52.0",
+    "json-server": "^0.12.0",
+    "react-scripts": "^1.0.10",
+    "react-test-renderer": "^15.6.1"
   },
   "dependencies": {
     "date-fns": "^1.28.5",
-    "glamor": "2.20.5",
+    "glamor": "^2.20.39",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-router-dom": "^4.1.1",
+    "react-router-dom": "^4.1.2",
     "recompose": "^0.24.0",
-    "serve": "^6.0.2",
-    "slate": "^0.20.4",
+    "serve": "^6.0.6",
+    "slate": "^0.21.1",
     "slate-markdown": "^0.1.1",
-    "typeface-roboto-mono": "^0.0.31",
+    "typeface-roboto-mono": "0.0.31",
     "uuid": "^3.1.0"
   },
   "scripts": {
@@ -29,9 +30,11 @@
     "dev:server": "react-scripts start",
     "dev:db": "json-server --watch db.json -p 7171",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "concurrently -c 'bgMagenta.bold,bgCyan.bold' --names 'Flow,Jest' 'flow' 'npm run test:unit'",
+    "test:unit": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "go": "now && now alias"
+    "go": "now && now alias",
+    "flow": "flow"
   },
   "now": {
     "alias": "redownwrite"
