@@ -7,18 +7,6 @@ import { Header, APIStatus } from './components'
 import Main from './Main'
 import NoMatch from './NoMatch'
 
-// function handleResponse(response) {
-//   if (response.ok) {
-//     return response.json()
-//   } else {
-//     let error = new Error(response.statusText)
-//     error.response = response
-//     throw error
-//   }
-// }
-
-// fetch('/profile')
-
 export default ({ data }) => (
   <Router>
     <Block fontFamily='Operator Mono' height='calc(100% - 82px)'>
