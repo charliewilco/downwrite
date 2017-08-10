@@ -7,7 +7,8 @@ import 'typeface-roboto-mono'
 
 class Downwrite extends React.Component {
   state = {
-    data: {}
+    data: {},
+    activeBanner: true
   }
 
   componentWillMount () {
@@ -18,7 +19,12 @@ class Downwrite extends React.Component {
   }
 
   render () {
-    return <App data={this.state.data} />
+    return (
+      <App
+        {...this.state}
+        onAPIDismiss={() => this.setState({ activeBanner: false })}
+      />
+    )
   }
 }
 

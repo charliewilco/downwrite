@@ -7,6 +7,7 @@ import { Flex, Row } from 'glamor/jsxstyle'
 
 const hSty = {
   link: css({
+    fontFamily: 'Gotham HTF',
     fontSize: 20,
     fontWeight: 400,
     marginLeft: 16,

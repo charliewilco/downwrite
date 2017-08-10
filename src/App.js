@@ -7,13 +7,18 @@ import { Header, APIStatus } from './components'
 import Main from './Main'
 import NoMatch from './NoMatch'
 
-export default ({ data }) => (
+export default ({ data, activeBanner, onAPIDismiss }) => (
   <Router>
     <Block fontFamily='Operator Mono' height='calc(100% - 82px)'>
       <Header name='Re:Downwrite Web' />
-      {process.env.NODE_ENV === 'development' && (
-        <APIStatus data={data} env={process.env.NODE_ENV} />
-      )}
+      {process.env.NODE_ENV === 'development' &&
+        (activeBanner && (
+          <APIStatus
+            data={data}
+            env={process.env.NODE_ENV}
+            onDismiss={onAPIDismiss}
+          />
+        ))}
       <Switch>
         <Route exact path='/' component={Main} />
         <Route path='/new' component={NewPost} />

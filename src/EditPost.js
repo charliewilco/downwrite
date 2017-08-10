@@ -157,8 +157,17 @@ export default class extends React.Component {
         />
         <Wrapper className={css(editorShell, editorInner)}>
           <div className={css(editorContent)}>
-            <Flex justifyContent='flex-end' className={css(toolbar)}>
-              <Button onClick={() => console.log(post)}>Up</Button>
+            <Flex
+              justifyContent='space-between'
+              alignItems='center'
+              className={css(toolbar)}>
+              <Flex justifyContent='space-between'>
+                <a onClick={() => console.log('h1')}>h1</a>
+                <a onClick={() => console.log('h2')}>h2</a>
+                <a onClick={() => console.log('bold')}>bold</a>
+                <a onClick={() => console.log('italic')}>italic</a>
+              </Flex>
+              <Button onClick={() => console.log(post)}>Update</Button>
             </Flex>
             <Editor
               placeholder='Enter some rich text...'

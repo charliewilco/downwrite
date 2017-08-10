@@ -40,7 +40,7 @@
     "go": "now && now alias",
     "format": "prettier --write 'src/**/*.js'",
     "precommit": "lint-staged",
-    "postpush": "npm run go"
+    "prepush": "npm run go"
   },
   "prettier": {
     "parser": "flow",
