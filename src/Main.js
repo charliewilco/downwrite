@@ -8,8 +8,11 @@ export default class extends Component {
 
   state = {
     posts: [],
-    loaded: false
+    loaded: false,
+    layout: 'grid'
   }
+
+  layoutChange = (x: string) => this.setState({ layout: x })
 
   componentWillMount () {
     fetch('/posts')
@@ -19,11 +22,15 @@ export default class extends Component {
   }
 
   render () {
-    const { loaded, posts } = this.state
+    const { loaded, posts, layout } = this.state
     return (
       <Block padding={16} height='100%'>
         {loaded ? posts.length > 0 ? (
-          <PostList posts={posts} />
+          <PostList
+            layout={layout}
+            layoutChange={this.layoutChange}
+            posts={posts}
+          />
         ) : (
           <EmptyPosts />
         ) : (
