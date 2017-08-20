@@ -8,6 +8,7 @@ let styles = css({
   appearance: 'none',
   borderWidth: 1,
   borderStyle: 'solid',
+  borderRadius: 0,
   borderColor: 'rgba(0,0,0,.125)',
   padding: 16
 })

@@ -20,6 +20,8 @@ LG = @media only screen and (min-width: 57.75rem)
   --base-form-radius: 0;
   --base-form-mxw: 100%;
   --base-spacing: 1rem;
+  --primary-font: "Operator Mono SSm A", "Operator Mono SSm B", monospace;
+  --secondary-font: "Whitney SSm A", "Whitney SSm B", sans-serif;
   --headlines: 'Roboto', var(--ff-avenir);
   --ff-default: system, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', 'SF UI Text', 'Segoe UI', 'Roboto', 'Noto Sans', 'Helvetica Neue', 'Lucida Grande', sans-serif;
   --ff-serif: 'Charter', var(--ff-charter);
@@ -365,10 +367,8 @@ ol { list-style-position: inside; }
 /*---------Link Defaults / Anchor Element----------*/
 
 :root {
-  --link: #147AAB;
   --link: var(--color-1);
-  --link-hover: #CFE4ED;
-  --link-hover: var(--blue-light);
+  --link-hover: var(--color-3);
 }
 
 a {

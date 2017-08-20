@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import './index.css'
 import registerServiceWorker from './registerServiceWorker'
-import 'typeface-roboto-mono'
 
 class Downwrite extends React.Component {
   state = {

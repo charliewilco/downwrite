@@ -39,7 +39,11 @@ const toolbar = css({
   top: 0,
   left: 0,
   right: 0,
-  padding: 8,
+  paddingTop: 8,
+  paddingBottom: 8,
+  paddingRight: 16,
+  paddingLeft: 16,
+  fontFamily: 'var(--secondary-font)',
   background: 'white',
   borderBottomWidth: 1,
   borderBottomStyle: 'solid',
@@ -143,7 +147,7 @@ export default class extends React.Component {
     return !loaded ? (
       <Loading />
     ) : (
-      <Wrapper paddingTop={16}>
+      <Wrapper>
         <Block className={css(meta)} marginBottom={8}>
           {post.id} | {post.author} | Date Added:{' '}
           {format(post.dateAdded, 'HH:MM A, DD MMMM YYYY')}
@@ -161,7 +165,7 @@ export default class extends React.Component {
               justifyContent='space-between'
               alignItems='center'
               className={css(toolbar)}>
-              <Flex justifyContent='space-between'>
+              <Flex justifyContent='space-around' flex={1}>
                 <a onClick={() => console.log('h1')}>h1</a>
                 <a onClick={() => console.log('h2')}>h2</a>
                 <a onClick={() => console.log('bold')}>bold</a>

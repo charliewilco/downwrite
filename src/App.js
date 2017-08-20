@@ -9,8 +9,8 @@ import NoMatch from './NoMatch'
 
 export default ({ data, activeBanner, onAPIDismiss }) => (
   <Router>
-    <Block fontFamily='Operator Mono' height='calc(100% - 82px)'>
-      <Header name='Re:Downwrite Web' />
+    <Block fontFamily='var(--primary-font)' height='calc(100% - 82px)'>
+      <Header name='Downwrite' />
       {process.env.NODE_ENV === 'development' &&
         (activeBanner && (
           <APIStatus
@@ -22,7 +22,7 @@ export default ({ data, activeBanner, onAPIDismiss }) => (
       <Switch>
         <Route exact path='/' component={Main} />
         <Route path='/new' component={NewPost} />
-        <Route path='/edit/:id' component={EditPost} />
+        <Route path='/:id/edit' component={EditPost} />
         <Route component={NoMatch} />
       </Switch>
     </Block>
