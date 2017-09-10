@@ -1,19 +1,11 @@
 // @flow
 import React from 'react'
 import { css } from 'glamor'
-import { Block, Flex } from 'glamor/jsxstyle'
-import { Editor, Raw } from 'slate'
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js'
+import { Block } from 'glamor/jsxstyle'
 import { Button, Input, Loading, Wrapper } from './components'
 import format from 'date-fns/format'
-
-// {
-//   "title": "New Post I'm Making",
-//   "author": "charlespeters",
-//   "id": "9fcf1577-b37c-4571-a727-b62eb85e5fe9",
-//   "content": {},
-//   "dateAdded": "2017-07-10T05:55:04.388Z",
-//   "document": {}
-// }
+import { DWEditor } from './components'
 
 const editorShell = css({
   flex: 1,
@@ -29,25 +21,7 @@ const editorShell = css({
 
 const editorContent = css({
   position: 'relative',
-  paddingTop: 64,
-  paddingRight: 16,
-  paddingLeft: 16
-})
-
-const toolbar = css({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  paddingTop: 8,
-  paddingBottom: 8,
-  paddingRight: 16,
-  paddingLeft: 16,
-  fontFamily: 'var(--secondary-font)',
-  background: 'white',
-  borderBottomWidth: 1,
-  borderBottomStyle: 'solid',
-  borderBottomColor: 'rgba(0, 0, 0, .125)'
+  paddingTop: 64
 })
 
 const meta = css({
@@ -69,14 +43,42 @@ export default class extends React.Component {
   titleInput: HTMLInputElement
 
   state = {
+    editorState: EditorState.createEmpty(),
     post: {},
+    updated: false,
     loaded: false,
     unchanged: false,
+    document: null,
     dateModified: new Date()
   }
 
-  prepareContent = (content: Object) =>
-    Raw.deserialize(content, { terse: true })
+  prepareContent = (content: Object) => convertFromRaw(content)
+
+  updateCurrent = (body: Object) =>
+    fetch('/posts', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body
+    }).then(() => this.setState({ updated: true }))
+
+  updatePost = () => {
+    let { id, title, document, dateAdded } = this.state
+    let { author } = this.props
+    const content = convertToRaw(this.state.editorState)
+
+    const post = JSON.stringify({
+      title,
+      id,
+      author,
+      content,
+      dateAdded,
+      document
+    })
+
+    return this.updateCurrent(post)
+  }
 
   componentWillMount () {
     fetch(`/posts/${this.props.match.params.id}`)
@@ -86,8 +88,11 @@ export default class extends React.Component {
         this.setState({
           post: {
             ...this.state.post,
-            content: this.prepareContent(this.state.post.content)
+            content: convertFromRaw(this.state.post.content)
           },
+          editorState: EditorState.createWithContent(
+            convertFromRaw(this.state.post.content)
+          ),
           loaded: true
         })
       )
@@ -142,7 +147,7 @@ export default class extends React.Component {
     })
 
   render () {
-    const { post, loaded } = this.state
+    const { post, loaded, editorState } = this.state
 
     return !loaded ? (
       <Loading />
@@ -152,6 +157,7 @@ export default class extends React.Component {
           {post.id} | {post.author} | Date Added:{' '}
           {format(post.dateAdded, 'HH:MM A, DD MMMM YYYY')}
         </Block>
+        <Button onClick={() => console.log(post)}>Update</Button>
         <Input
           inputRef={input => {
             this.titleInput = input
@@ -159,25 +165,11 @@ export default class extends React.Component {
           value={post.title}
           onChange={e => this.updateTitle(e)}
         />
-        <Wrapper className={css(editorShell, editorInner)}>
+        <Wrapper className={css(editorShell)}>
           <div className={css(editorContent)}>
-            <Flex
-              justifyContent='space-between'
-              alignItems='center'
-              className={css(toolbar)}>
-              <Flex justifyContent='space-around' flex={1}>
-                <a onClick={() => console.log('h1')}>h1</a>
-                <a onClick={() => console.log('h2')}>h2</a>
-                <a onClick={() => console.log('bold')}>bold</a>
-                <a onClick={() => console.log('italic')}>italic</a>
-              </Flex>
-              <Button onClick={() => console.log(post)}>Update</Button>
-            </Flex>
-            <Editor
-              placeholder='Enter some rich text...'
-              state={post.content}
-              onChange={this.onChange}
-              onDocumentChange={this.onDocumentChange}
+            <DWEditor
+              editorState={editorState}
+              onChange={editorState => this.setState({ editorState })}
             />
           </div>
         </Wrapper>

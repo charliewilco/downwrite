@@ -10,13 +10,11 @@ const btn = css({
   transition: 'background-color 250ms ease-in-out',
   color: 'white',
   border: 0,
-  paddingTop: 4,
-  paddingLeft: 8,
-  paddingRight: 8,
-  paddingBottom: 4,
-  maxWidth: 120,
-  width: `100%`,
-  borderRadius: 5,
+  paddingTop: 8,
+  paddingLeft: 16,
+  paddingRight: 16,
+  paddingBottom: 8,
+  borderRadius: 4,
   boxShadow: '0 0 4px rgba(0,0,0,.037), 0 4px 8px rgba(0,0,0,.07)',
   ':hover': {
     backgroundColor: 'var(--color-7)'

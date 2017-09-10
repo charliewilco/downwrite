@@ -1,6 +1,6 @@
 import Button from './Button'
 import Card from './Card'
-import Editor from './Editor'
+import DWEditor from './Draft'
 import EmptyPosts from './EmptyPosts'
 import Header from './Header'
 import Input from './Input'
@@ -13,12 +13,12 @@ import Wrapper from './Wrapper'
 import APIStatus from './APIStatus'
 
 export {
+  DWEditor,
   APIStatus,
   Wrapper,
   Toolbar,
   Button,
   Card,
-  Editor,
   EmptyPosts,
   Header,
   Input,

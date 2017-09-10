@@ -1,9 +1,8 @@
 import React from 'react'
-import { Editor, Raw } from 'slate'
+import { EditorState, convertToRaw } from 'draft-js'
+import { DWEditor } from './components'
 import { Redirect } from 'react-router-dom'
-import Wrapper from './components/Wrapper'
-import Input from './components/Input'
-import Button from './components/Button'
+import { Wrapper, Input, Button } from './components'
 import { css } from 'glamor'
 import uuid from 'uuid/v4'
 
@@ -28,15 +27,6 @@ const editorInner = css({
   fontWeight: '400'
 })
 
-const initialContent = {
-  nodes: [
-    {
-      kind: 'block',
-      type: 'paragraph'
-    }
-  ]
-}
-
 export default class extends React.Component {
   static displayName = 'NewPostEditor'
 
@@ -45,9 +35,8 @@ export default class extends React.Component {
   }
 
   state = {
+    editorState: EditorState.createEmpty(),
     title: '',
-    content: Raw.deserialize(initialContent, { terse: true }),
-    document: null,
     id: uuid(),
     dateAdded: new Date(),
     saved: false
@@ -62,59 +51,41 @@ export default class extends React.Component {
         'Content-Type': 'application/json'
       },
       body
-    }).then(() => this.setState({ saved: true }))
+    }).then(console.log)
 
   addNewPost = () => {
-    let { id, title, document, dateAdded } = this.state
+    let { id, title, editorState, dateAdded } = this.state
     let { author } = this.props
-    const content = Raw.serialize(this.state.content)
+    const ContentState = this.state.editorState.getCurrentContent()
+    const content = convertToRaw(ContentState)
 
     const post = JSON.stringify({
       title,
       id,
       author,
       content,
-      dateAdded,
-      document
+      dateAdded
     })
 
     return this.addNew(post)
   }
 
-  logger = (document, state) => {
-    const content = JSON.stringify(Raw.serialize(state))
-    console.group()
-    console.log('from the document change')
-    console.log('document', document)
-    console.log('content', content)
-    console.log('state', state)
-    console.groupEnd()
-  }
-
-  onChange = (document, state) =>
-    this.setState(
-      {
-        content: state,
-        document
-      },
-      this.logger(document, state)
-    )
-
   render () {
-    const { content, title, saved, id } = this.state
+    const { editorState, title, saved, id } = this.state
     return saved ? (
       <Redirect to={`/edit/${id}`} />
     ) : (
       <Wrapper paddingTop={20}>
+        <Button onClick={this.addNewPost}>Add</Button>
         <Input
           value={title}
           onChange={e => this.setState({ title: e.target.value })}
         />
-        <Wrapper className={css(editorShell, editorInner)}>
-          <Button positioned onClick={this.addNewPost}>
-            Add
-          </Button>
-          <Editor state={content} onDocumentChange={this.onChange} />
+        <Wrapper>
+          <DWEditor
+            editorState={editorState}
+            onChange={editorState => this.setState({ editorState })}
+          />
         </Wrapper>
       </Wrapper>
     )

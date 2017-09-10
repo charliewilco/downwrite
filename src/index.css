@@ -20,8 +20,8 @@ LG = @media only screen and (min-width: 57.75rem)
   --base-form-radius: 0;
   --base-form-mxw: 100%;
   --base-spacing: 1rem;
-  --primary-font: "Operator Mono SSm A", "Operator Mono SSm B", monospace;
-  --secondary-font: "Whitney SSm A", "Whitney SSm B", sans-serif;
+  --primary-font: "Operator Mono SSm A", "Operator Mono SSm B", Roboto Mono, monospace;
+  --secondary-font: "Whitney SSm A", "Whitney SSm B", Avenir, sans-serif;
   --headlines: 'Roboto', var(--ff-avenir);
   --ff-default: system, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', 'SF UI Text', 'Segoe UI', 'Roboto', 'Noto Sans', 'Helvetica Neue', 'Lucida Grande', sans-serif;
   --ff-serif: 'Charter', var(--ff-charter);
@@ -41,7 +41,7 @@ html {
   box-sizing: border-box;
   text-size-adjust: 100%;
   background-color: #F9FBFC;
-  font: 400 100%/1.6 var(--ff-default);
+  font: 400 100%/1.6 var(--primary-font);
   color: var(--text);
   -webkit-tap-highlight-color: transparent;
 }
