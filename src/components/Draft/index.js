@@ -3,7 +3,7 @@ import React from 'react'
 import { css } from 'glamor'
 import { Flex } from 'glamor/jsxstyle'
 import { createElement } from 'glamor/react'
-
+import Toolbar from '../Toolbar'
 require('./RichText.css')
 
 /* @jsx createElement */
@@ -15,27 +15,11 @@ const editorStyle = css({
   width: '100%'
 })
 
-const toolbarStyle = css({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  paddingTop: 8,
-  paddingBottom: 8,
-  paddingRight: 16,
-  paddingLeft: 16,
-  fontFamily: 'var(--secondary-font)',
-  background: 'white',
-  borderBottomWidth: 1,
-  borderBottomStyle: 'solid',
-  borderBottomColor: 'rgba(0, 0, 0, .125)'
-})
-
 const editorShell = css({
   border: `1px solid rgba(0, 0, 0 ,.125)`,
   borderTop: 0,
   position: 'relative',
-  paddingTop: 47
+  paddingTop: 52
 })
 
 export default class extends React.Component {
@@ -89,7 +73,7 @@ export default class extends React.Component {
       <div
         className={`${css(editorShell)} OuterEditor`}
         css={{ height: '100%' }}>
-        <ToolBar
+        <Toolbar
           editorState={editorState}
           onToggleInlineStyle={this._toggleInlineStyle}
           onToggleBlockType={this._toggleBlockType}
@@ -134,101 +118,23 @@ function getBlockStyle (block){
   }
 }
 
-class StyleButton extends React.Component {
-  constructor () {
-    super()
-    this.onToggle = e => {
-      e.preventDefault()
-      this.props.onToggle(this.props.style)
-    }
-  }
-  render () {
-    let className = 'RichEditor-styleButton'
-    if (this.props.active) {
-      className += ' RichEditor-activeButton'
-    }
-    return (
-      <span css={{ flex: 1 }} className={className} onMouseDown={this.onToggle}>
-        {this.props.label}
-      </span>
-    )
-  }
-}
-
-const BLOCK_TYPES = [
-  { label: 'H1', style: 'header-one' },
-  { label: 'H2', style: 'header-two' },
-  { label: 'H3', style: 'header-three' },
-  { label: 'H4', style: 'header-four' },
-  { label: 'H5', style: 'header-five' },
-  { label: 'H6', style: 'header-six' },
-  { label: 'Blockquote', style: 'blockquote' },
-  { label: 'UL', style: 'unordered-list-item' },
-  { label: 'OL', style: 'ordered-list-item' },
-  { label: 'Code', style: 'code-block' }
-]
-
-const BlockStyleControls = ({ editorState, onToggle, width }) => {
-  const selection = editorState.getSelection()
-  const blockType = editorState
-    .getCurrentContent()
-    .getBlockForKey(selection.getStartKey())
-    .getType()
-  return (
-    <Flex width={width} className='RichEditor-controls'>
-      {BLOCK_TYPES.map(type => (
-        <StyleButton
-          key={type.label}
-          active={type.style === blockType}
-          label={type.label}
-          onToggle={onToggle}
-          style={type.style}
-        />
-      ))}
-    </Flex>
-  )
-}
-
-var INLINE_STYLES = [
-  { label: 'Bold', style: 'BOLD' },
-  { label: 'Italic', style: 'ITALIC' },
-  { label: 'Underline', style: 'UNDERLINE' },
-  { label: 'Mono', style: 'CODE' }
-]
-
-const InlineStyleControls = ({ editorState, onToggle, width }) => {
-  const currentStyle = editorState.getCurrentInlineStyle()
-  return (
-    <Flex width={width} className='RichEditor-controls'>
-      {INLINE_STYLES.map(type => (
-        <StyleButton
-          key={type.label}
-          active={currentStyle.has(type.style)}
-          label={type.label}
-          onToggle={onToggle}
-          style={type.style}
-        />
-      ))}
-    </Flex>
-  )
-}
-
-const ToolBar = ({
-  children,
-  editorState,
-  onToggleBlockType,
-  onToggleInlineStyle
-}) => (
-  <Flex className={css(toolbarStyle)} alignItems='center'>
-    <BlockStyleControls
-      editorState={editorState}
-      onToggle={onToggleBlockType}
-    />
-    <InlineStyleControls
-      editorState={editorState}
-      onToggle={onToggleInlineStyle}
-    />
-
-    <div css={{ flex: 1, alignSelf: 'flex-end' }}>{children}</div>
-  </Flex>
-)
+// class StyleButton extends React.Component {
+//   constructor () {
+//     super()
+//     this.onToggle = e => {
+//       e.preventDefault()
+//       this.props.onToggle(this.props.style)
+//     }
+//   }
+//   render () {
+//     let className = 'RichEditor-styleButton'
+//     if (this.props.active) {
+//       className += ' RichEditor-activeButton'
+//     }
+//     return (
+//       <span css={{ flex: 1, fontWeight: 300 }} className={className} onMouseDown={this.onToggle}>
+//         {this.props.label}
+//       </span>
+//     )
+//   }
+// }

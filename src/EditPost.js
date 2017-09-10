@@ -157,7 +157,6 @@ export default class extends React.Component {
           {post.id} | {post.author} | Date Added:{' '}
           {format(post.dateAdded, 'HH:MM A, DD MMMM YYYY')}
         </Block>
-        <Button onClick={() => console.log(post)}>Update</Button>
         <Input
           inputRef={input => {
             this.titleInput = input
@@ -165,12 +164,13 @@ export default class extends React.Component {
           value={post.title}
           onChange={e => this.updateTitle(e)}
         />
-        <Wrapper className={css(editorShell)}>
-          <div className={css(editorContent)}>
+        <Wrapper>
+          <div>
             <DWEditor
               editorState={editorState}
-              onChange={editorState => this.setState({ editorState })}
-            />
+              onChange={editorState => this.setState({ editorState })}>
+              <Button onClick={() => console.log(post)}>Update</Button>
+            </DWEditor>
           </div>
         </Wrapper>
       </Wrapper>
