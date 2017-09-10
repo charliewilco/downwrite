@@ -36,9 +36,6 @@ const s = {
   })
 }
 
-// content.slice(0, 90)
-// JSON.stringify(Raw.deserialize(content)).slice(0, 90)
-
 const Card = ({ title, id, content, author }) => (
   <Block className={css(s.card)}>
     <Flex
@@ -54,7 +51,14 @@ const Card = ({ title, id, content, author }) => (
         Edit
       </Link>
     </Flex>
-    <Block>{content && <p className={s.content}>Read More...</p>}</Block>
+
+    <Block>
+      {content && (
+        <p className={s.content}>
+          {content.blocks[0].text} {content.blocks[1].text}
+        </p>
+      )}
+    </Block>
   </Block>
 )
 

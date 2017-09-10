@@ -1,21 +1,44 @@
 {
   "posts": [
     {
-      "title": "First with Draft.js",
+      "title": "First with Draft.js Now....",
       "id": "1bea3aa4-a722-4d3f-a4aa-365924da7f0f",
-      "author": "charlespeters",
       "content": {
         "entityMap": {},
         "blocks": [
           {
             "key": "d6vnd",
-            "text": "Learning to use Draft.js",
+            "text": "Learning to use Draft.js has hard but i think it was easier to use than Slate.js. for sure.",
             "type": "unstyled",
             "depth": 0,
             "inlineStyleRanges": [
               {
                 "offset": 0,
-                "length": 24,
+                "length": 91,
+                "style": "ITALIC"
+              }
+            ],
+            "entityRanges": [],
+            "data": {}
+          },
+          {
+            "key": "54g89",
+            "text": "",
+            "type": "unstyled",
+            "depth": 0,
+            "inlineStyleRanges": [],
+            "entityRanges": [],
+            "data": {}
+          },
+          {
+            "key": "531cn",
+            "text": "Standing all alone",
+            "type": "unstyled",
+            "depth": 0,
+            "inlineStyleRanges": [
+              {
+                "offset": 0,
+                "length": 18,
                 "style": "ITALIC"
               }
             ],
@@ -24,7 +47,8 @@
           }
         ]
       },
-      "dateAdded": "2017-09-10T03:44:26.158Z"
+      "dateAdded": "2017-09-10T03:44:26.158Z",
+      "dateModified": "2017-09-10T23:17:29.101Z"
     }
   ],
   "profile": {

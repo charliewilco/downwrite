@@ -45,6 +45,7 @@ export default class extends React.Component {
   state = {
     editorState: EditorState.createEmpty(),
     post: {},
+    title: '',
     updated: false,
     loaded: false,
     unchanged: false,
@@ -54,30 +55,31 @@ export default class extends React.Component {
 
   prepareContent = (content: Object) => convertFromRaw(content)
 
-  updateCurrent = (body: Object) =>
-    fetch('/posts', {
-      method: 'post',
+  updateCurrent = (body: Object) => {
+    fetch(`/posts/${this.props.match.params.id}`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
       body
-    }).then(() => this.setState({ updated: true }))
+    }).then(() => this.setState({ post: body, updated: true }))
+  }
 
-  updatePost = () => {
-    let { id, title, document, dateAdded } = this.state
+  updatePostContent = () => {
+    let { post, title, dateModified } = this.state
     let { author } = this.props
-    const content = convertToRaw(this.state.editorState)
+    const ContentState = this.state.editorState.getCurrentContent()
+    const content = convertToRaw(ContentState)
 
-    const post = JSON.stringify({
+    const newPost = {
+      ...post,
       title,
-      id,
       author,
       content,
-      dateAdded,
-      document
-    })
+      dateModified
+    }
 
-    return this.updateCurrent(post)
+    return this.updatePost(newPost)
   }
 
   componentWillMount () {
@@ -90,6 +92,7 @@ export default class extends React.Component {
             ...this.state.post,
             content: convertFromRaw(this.state.post.content)
           },
+          title: this.state.post.title,
           editorState: EditorState.createWithContent(
             convertFromRaw(this.state.post.content)
           ),
@@ -98,17 +101,7 @@ export default class extends React.Component {
       )
   }
 
-  onChange = (content: Object) =>
-    this.setState((prev, next) => {
-      console.log('from onChange', content, prev, next)
-      return {
-        post: {
-          ...prev.post,
-          content,
-          unchanged: true
-        }
-      }
-    })
+  onChange = (editorState: Object) => this.setState({ editorState })
 
   // onKeyDown = (e: Event) => console.log(e)
 
@@ -116,12 +109,7 @@ export default class extends React.Component {
     this.setState(prevState => {
       let title = target instanceof HTMLInputElement && this.titleInput.value
 
-      return {
-        post: {
-          ...prevState.post,
-          title
-        }
-      }
+      return { title }
     })
 
   updatePost = (body: Object) =>
@@ -130,29 +118,16 @@ export default class extends React.Component {
       headers: {
         'Content-Type': 'application/json'
       },
-      body
-    })
-
-  onDocumentChange = (document: Object, state: Object) =>
-    this.setState((prevState, nextProps) => {
-      console.log('from document change', document, state)
-      return {
-        post: {
-          ...this.state.post,
-          content: state,
-          document
-        },
-        dateModified: new Date()
-      }
+      body: JSON.stringify(body)
     })
 
   render () {
-    const { post, loaded, editorState } = this.state
+    const { title, post, loaded, editorState } = this.state
 
     return !loaded ? (
       <Loading />
     ) : (
-      <Wrapper>
+      <Wrapper paddingTop={16}>
         <Block className={css(meta)} marginBottom={8}>
           {post.id} | {post.author} | Date Added:{' '}
           {format(post.dateAdded, 'HH:MM A, DD MMMM YYYY')}
@@ -161,15 +136,15 @@ export default class extends React.Component {
           inputRef={input => {
             this.titleInput = input
           }}
-          value={post.title}
+          value={title}
           onChange={e => this.updateTitle(e)}
         />
         <Wrapper>
           <div>
             <DWEditor
               editorState={editorState}
-              onChange={editorState => this.setState({ editorState })}>
-              <Button onClick={() => console.log(post)}>Update</Button>
+              onChange={editorState => this.onChange(editorState)}>
+              <Button onClick={() => this.updatePostContent()}>Update</Button>
             </DWEditor>
           </div>
         </Wrapper>

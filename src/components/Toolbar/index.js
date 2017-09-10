@@ -52,7 +52,7 @@ const Toolbar = ({
     .getBlockForKey(selection.getStartKey())
     .getType()
   return (
-    <Flex className={css(toolbarStyle)} alignItems='center'>
+    <Flex className={css(toolbarStyle)} flexWrap='wrap' alignItems='center'>
       {BLOCK_TYPES.map(type => (
         <StyleButton
           key={type.label}
