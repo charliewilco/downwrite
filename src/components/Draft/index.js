@@ -35,7 +35,7 @@ const editorShell = css({
   border: `1px solid rgba(0, 0, 0 ,.125)`,
   borderTop: 0,
   position: 'relative',
-  paddingTop: 41
+  paddingTop: 47
 })
 
 export default class extends React.Component {
@@ -74,7 +74,7 @@ export default class extends React.Component {
   }
 
   render () {
-    const { editorState } = this.props
+    const { editorState, children } = this.props
     // If the user changes block type before entering any text, we can
     // either style the placeholder or hide it. Let's just hide it now.
     let className = 'RichEditor-editor'
@@ -93,6 +93,7 @@ export default class extends React.Component {
           editorState={editorState}
           onToggleInlineStyle={this._toggleInlineStyle}
           onToggleBlockType={this._toggleBlockType}
+          children={children}
         />
         <div
           className={`${css(editorStyle)} ${className}`}
@@ -212,8 +213,13 @@ const InlineStyleControls = ({ editorState, onToggle, width }) => {
   )
 }
 
-const ToolBar = ({ editorState, onToggleBlockType, onToggleInlineStyle }) => (
-  <Flex className={css(toolbarStyle)}>
+const ToolBar = ({
+  children,
+  editorState,
+  onToggleBlockType,
+  onToggleInlineStyle
+}) => (
+  <Flex className={css(toolbarStyle)} alignItems='center'>
     <BlockStyleControls
       editorState={editorState}
       onToggle={onToggleBlockType}
@@ -222,5 +228,7 @@ const ToolBar = ({ editorState, onToggleBlockType, onToggleInlineStyle }) => (
       editorState={editorState}
       onToggle={onToggleInlineStyle}
     />
+
+    <div css={{ flex: 1, alignSelf: 'flex-end' }}>{children}</div>
   </Flex>
 )

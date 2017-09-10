@@ -4,7 +4,10 @@ import { DWEditor } from './components'
 import { Redirect } from 'react-router-dom'
 import { Wrapper, Input, Button } from './components'
 import { css } from 'glamor'
+import { createElement } from 'glamor/react'
 import uuid from 'uuid/v4'
+
+/* @jsx createElement */
 
 const editorShell = css({
   flex: 1,
@@ -76,7 +79,6 @@ export default class extends React.Component {
       <Redirect to={`/edit/${id}`} />
     ) : (
       <Wrapper paddingTop={20}>
-        <Button onClick={this.addNewPost}>Add</Button>
         <Input
           value={title}
           onChange={e => this.setState({ title: e.target.value })}
@@ -84,8 +86,9 @@ export default class extends React.Component {
         <Wrapper>
           <DWEditor
             editorState={editorState}
-            onChange={editorState => this.setState({ editorState })}
-          />
+            onChange={editorState => this.setState({ editorState })}>
+            <Button onClick={this.addNewPost}>Add</Button>
+          </DWEditor>
         </Wrapper>
       </Wrapper>
     )

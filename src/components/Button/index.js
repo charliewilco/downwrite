@@ -5,15 +5,15 @@ import { css } from 'glamor'
 
 const btn = css({
   display: 'block',
-  fontSize: 16,
+  fontSize: 14,
   backgroundColor: 'var(--color-6)',
   transition: 'background-color 250ms ease-in-out',
   color: 'white',
   border: 0,
-  paddingTop: 8,
-  paddingLeft: 16,
-  paddingRight: 16,
-  paddingBottom: 8,
+  paddingTop: 4,
+  paddingLeft: 12,
+  paddingRight: 12,
+  paddingBottom: 4,
   borderRadius: 4,
   boxShadow: '0 0 4px rgba(0,0,0,.037), 0 4px 8px rgba(0,0,0,.07)',
   ':hover': {
