@@ -37,7 +37,7 @@ const s = {
   })
 }
 
-export default ({ posts, layout, layoutChange }) => (
+export default ({ posts, layout, layoutChange, onDelete }) => (
   <Block>
     <Flex justifyContent='space-between' alignItems='center' marginBottom={24}>
       <h1 className={css(s.title)}>Posts</h1>
@@ -51,7 +51,7 @@ export default ({ posts, layout, layoutChange }) => (
         listStyle='none inside'>
         {posts.map(p => (
           <Block key={p.id} component='li' className={css(s.gridItem)}>
-            <Card {...p} />
+            <Card {...p} onDelete={() => onDelete(p)} />
           </Block>
         ))}
       </Flex>

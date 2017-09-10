@@ -14,12 +14,20 @@ export default class extends Component {
 
   layoutChange = (x: string) => this.setState({ layout: x })
 
-  componentWillMount () {
+  getPosts = () =>
     fetch('/posts')
       .then(res => res.json())
       .then(posts => this.setState({ posts, loaded: true }))
       .catch(err => this.setState({ loaded: false }, console.error(err)))
+
+  componentWillMount () {
+    this.getPosts()
   }
+
+  onDelete = p =>
+    fetch(`/posts/${p.id}`, {
+      method: 'DELETE'
+    }).then(() => this.getPosts())
 
   render () {
     const { loaded, posts, layout } = this.state
@@ -28,6 +36,7 @@ export default class extends Component {
         {loaded ? posts.length > 0 ? (
           <PostList
             layout={layout}
+            onDelete={this.onDelete}
             layoutChange={this.layoutChange}
             posts={posts}
           />

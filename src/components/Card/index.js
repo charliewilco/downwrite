@@ -36,7 +36,7 @@ const s = {
   })
 }
 
-const Card = ({ title, id, content, author }) => (
+const Card = ({ title, id, content, author, onDelete }) => (
   <Block className={css(s.card)}>
     <Flex
       borderBottom='1px solid #f2f2f2'
@@ -50,6 +50,7 @@ const Card = ({ title, id, content, author }) => (
       <Link to={`/${id}/edit`} className={s.edit}>
         Edit
       </Link>
+      <button onClick={onDelete}>Delete</button>
     </Flex>
 
     <Block>
