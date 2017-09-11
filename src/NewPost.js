@@ -76,7 +76,7 @@ export default class extends React.Component {
   render () {
     const { editorState, title, saved, id } = this.state
     return saved ? (
-      <Redirect to={`/edit/${id}`} />
+      <Redirect to={`/${id}/edit`} />
     ) : (
       <Wrapper paddingTop={20}>
         <Input

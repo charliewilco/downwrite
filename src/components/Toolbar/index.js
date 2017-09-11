@@ -2,6 +2,9 @@ import React from 'react'
 import StyleButton from './Button'
 import { css } from 'glamor'
 import { Flex } from 'glamor/jsxstyle'
+import { createElement } from 'glamor/react'
+
+/* @jsx createElement */
 
 const toolbarStyle = css({
   position: 'absolute',

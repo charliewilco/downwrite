@@ -10,6 +10,12 @@ const s = {
     fontFamily: 'var(--secondary-font)',
     '@media (min-width: 57.75rem)': { fontSize: 16 }
   }),
+  delete: css({
+    color: 'var(--color-2)',
+    border: 0,
+    appearance: 'none',
+    '-webkit-font-smoothing': 'antialiased'
+  }),
   content: css({
     fontSize: `small`,
     fontFamily: 'var(--secondary-font)',
@@ -32,9 +38,21 @@ const s = {
   }),
   edit: css({
     fontSize: 12,
-    '@media (min-width: 57.75rem)': { fontSize: 16 }
+    textAlign: 'right',
+    textTransform: 'uppercase',
+    letterSpacing: 2,
+    '@media (min-width: 57.75rem)': {
+      fontSize: 14,
+      fontWeight: 700
+    }
   })
 }
+
+const DeleteButton = ({ onDelete }) => (
+  <span className={css(s.edit, s.delete)} onClick={onDelete}>
+    Delete
+  </span>
+)
 
 const Card = ({ title, id, content, author, onDelete }) => (
   <Block className={css(s.card)}>
@@ -47,10 +65,12 @@ const Card = ({ title, id, content, author, onDelete }) => (
         <h2 className={s.title}>{title}</h2>
         <small className={s.meta}>{author}</small>
       </div>
-      <Link to={`/${id}/edit`} className={s.edit}>
-        Edit
-      </Link>
-      <button onClick={onDelete}>Delete</button>
+      <Flex flexDirection='column' className={css(s.action)}>
+        <Link to={`/${id}/edit`} className={s.edit}>
+          Edit
+        </Link>
+        <DeleteButton onDelete={onDelete} />
+      </Flex>
     </Flex>
 
     <Block>
