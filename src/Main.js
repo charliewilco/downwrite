@@ -24,8 +24,8 @@ export default class extends Component {
     this.getPosts()
   }
 
-  onDelete = p =>
-    fetch(`/posts/${p.id}`, {
+  onDelete = (post: Object) =>
+    fetch(`/posts/${post.id}`, {
       method: 'DELETE'
     }).then(() => this.getPosts())
 
