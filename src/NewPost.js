@@ -49,7 +49,7 @@ export default class extends React.Component {
 
   addNew = body =>
     fetch('/posts', {
-      method: 'post',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },

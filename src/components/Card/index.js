@@ -14,7 +14,7 @@ const s = {
     color: 'var(--color-2)',
     border: 0,
     appearance: 'none',
-    '-webkit-font-smoothing': 'antialiased'
+    WebkitFontSmoothing: 'antialiased'
   }),
   content: css({
     fontSize: `small`,

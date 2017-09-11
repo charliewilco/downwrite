@@ -82,6 +82,23 @@ export default class extends React.Component {
     return this.updatePost(newPost)
   }
 
+  postToHapi = (post: Object) => {
+    const newPost = {
+      ...post,
+      content: convertToRaw(post.content)
+    }
+
+    fetch('https://dwn-api.now.sh/posts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newPost)
+    })
+      .then(console.log)
+      .then(() => console.log(newPost))
+  }
+
   componentWillMount () {
     fetch(`/posts/${this.props.match.params.id}`)
       .then(res => res.json())
@@ -144,7 +161,8 @@ export default class extends React.Component {
             <DWEditor
               editorState={editorState}
               onChange={editorState => this.onChange(editorState)}>
-              <Button onClick={() => this.updatePostContent()}>Update</Button>
+              {/* <Button onClick={() => this.updatePostContent()}>Update</Button> */}
+              <Button onClick={() => this.postToHapi(post)}>Hapi</Button>
             </DWEditor>
           </div>
         </Wrapper>

@@ -15,6 +15,11 @@ class Downwrite extends React.Component {
       .then(res => res.json())
       .then(data => this.setState({ data }))
       .catch(err => console.error(err))
+
+    fetch('https://dwn-api.now.sh/posts')
+      .then(res => res.json())
+      .then(data => this.setState({ hapiPosts: data }))
+      .catch(err => console.error(err))
   }
 
   render () {
