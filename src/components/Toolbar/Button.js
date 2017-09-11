@@ -12,7 +12,7 @@ const btnStyle = css({
 })
 
 export default class StyleButton extends Component {
-  onToggle = (e) => {
+  onToggle = e => {
     e.preventDefault()
     this.props.onToggle(this.props.style)
   }

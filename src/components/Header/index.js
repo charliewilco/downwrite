@@ -7,10 +7,7 @@ import { Flex, Row } from 'glamor/jsxstyle'
 
 const hSty = {
   link: css({
-    fontSize: 20,
-    fontWeight: 400,
-    marginLeft: 16,
-    lineHeight: 1,
+    marginLeft: 12,
     color: 'white',
     display: 'block',
     transition: 'color 375ms ease-in-out',
@@ -18,23 +15,35 @@ const hSty = {
       color: `var(--color-2)`
     }
   }),
+  title: {
+    fontSize: 16,
+    fontStyle: 'normal',
+    lineHeight: 1,
+    fontWeight: 500,
+    '@media (min-width: 57.75rem)': {
+      fontSize: 20
+    }
+  },
   bar: css({
     padding: 16,
+    fontFamily: 'var(--secondary-font)',
+    fontWeight: 500,
     justifyContent: 'space-between',
     alignItems: 'center',
     background: `var(--color-1) linear-gradient(to right, #2584A5, #4FA5C2)`
   })
 }
 
-const Header = ({ name }) =>
+const Header = ({ name }) => (
   <Row component='header' className={css(hSty.bar)}>
     <Flex alignItems='center'>
       <Logo />
-      <h1>
-        <Link className={css(hSty.link)} to='/'>{name}</Link>
-      </h1>
+      <Link className={css(hSty.link)} to='/'>
+        <h1 className={css(hSty.title)} children={name} />
+      </Link>
     </Flex>
     <Nav />
   </Row>
+)
 
 export default Header

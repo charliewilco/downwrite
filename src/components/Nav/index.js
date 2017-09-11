@@ -11,9 +11,12 @@ const navButton = css({
   }
 })
 
-const Nav = props =>
+const Nav = props => (
   <nav>
-    <Link to='/new' className={css(navButton)}>New</Link>
+    <Link to='/new' className={css(navButton)}>
+      New
+    </Link>
   </nav>
+)
 
 export default Nav

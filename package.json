@@ -5,29 +5,54 @@
   "devDependencies": {
     "concurrently": "^3.5.0",
     "enzyme": "^2.9.1",
-    "react-scripts": "^1.0.10"
+    "flow-bin": "^0.52.0",
+    "husky": "^0.14.3",
+    "json-server": "^0.12.0",
+    "lint-staged": "^4.0.2",
+    "prettier-miscellaneous": "^1.5.3",
+    "react-test-renderer": "^15.6.1"
   },
   "dependencies": {
     "date-fns": "^1.28.5",
-    "glamor": "2.20.5",
+    "draft-js": "^0.10.1",
+    "glamor": "^2.20.40",
     "prop-types": "^15.5.10",
+    "ramda": "^0.24.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-router-dom": "^4.1.1",
-    "serve": "^6.0.2",
-    "slate": "^0.20.4",
-    "slate-markdown": "^0.1.1",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "^1.0.13",
+    "serve": "^6.0.6",
     "uuid": "^3.1.0"
   },
   "scripts": {
     "start": "serve -s build",
+    "build": "react-scripts build",
     "dev": "concurrently -c 'bgBlue.bold,bgYellow.bold' --names 'MockDB,Server' 'npm run dev:db' 'npm run dev:server'",
     "dev:server": "react-scripts start",
     "dev:db": "json-server --watch db.json -p 7171",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "concurrently -c 'bgMagenta.bold,bgGreen.bold' --names 'Flow,Jest' 'flow' 'npm run test:unit'",
+    "test:unit": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "go": "now && now alias"
+    "go": "now && now alias",
+    "format": "prettier --write 'src/**/*.js'",
+    "precommit": "lint-staged",
+    "prepush": "npm run go"
+  },
+  "prettier": {
+    "parser": "flow",
+    "semi": false,
+    "space-before-function-paren": true,
+    "single-quote": true,
+    "braces-spacing": true,
+    "jsx-single-quote": true,
+    "jsx-bracket-same-line": true
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "now": {
     "alias": "redownwrite"

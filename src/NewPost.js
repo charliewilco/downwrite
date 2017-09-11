@@ -1,10 +1,13 @@
 import React from 'react'
-import { Editor, Raw } from 'slate'
-import Wrapper from './components/Wrapper'
-import Input from './components/Input'
-import Button from './components/Button'
+import { EditorState, convertToRaw } from 'draft-js'
+import { DWEditor } from './components'
+import { Redirect } from 'react-router-dom'
+import { Wrapper, Input, Button } from './components'
 import { css } from 'glamor'
+import { createElement } from 'glamor/react'
 import uuid from 'uuid/v4'
+
+/* @jsx createElement */
 
 const editorShell = css({
   flex: 1,
@@ -27,76 +30,65 @@ const editorInner = css({
   fontWeight: '400'
 })
 
-const initialContent = {
-  nodes: [
-    {
-      kind: 'block',
-      type: 'paragraph'
-    }
-  ]
-}
-
 export default class extends React.Component {
   static displayName = 'NewPostEditor'
 
+  static defaultProps = {
+    author: 'charlespeters'
+  }
+
   state = {
+    editorState: EditorState.createEmpty(),
     title: '',
-    content: Raw.deserialize(initialContent, { terse: true }),
-    document: null
+    id: uuid(),
+    dateAdded: new Date(),
+    saved: false
   }
 
   // onKeyDown = (event, data, state) => console.log(event.which)
 
-  addNew = body => fetch('/posts', {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      title: this.state.title,
-      id: uuid(),
-      content: JSON.stringify(Raw.serialize(this.state.content))
-    })
-  })
+  addNew = body =>
+    fetch('/posts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body
+    }).then(console.log)
 
   addNewPost = () => {
-    let id = uuid()
-    let { title, document } = this.state
-    const content = Raw.serialize(this.state.content)
+    let { id, title, editorState, dateAdded } = this.state
+    let { author } = this.props
+    const ContentState = this.state.editorState.getCurrentContent()
+    const content = convertToRaw(ContentState)
 
     const post = JSON.stringify({
       title,
       id,
+      author,
       content,
-      document
+      dateAdded
     })
 
     return this.addNew(post)
   }
 
-  logger = (document, state) => {
-    const content = JSON.stringify(Raw.serialize(state))
-    console.group()
-    console.log('from the document change')
-      console.log('document', document)
-      console.log('content', content)
-      console.log('state', state)
-    console.groupEnd()
-  }
-
-  onChange = (document, state) => this.setState({
-    content: state,
-    document
-  }, this.logger(document, state))
-
   render () {
-    const { content, title } = this.state
-    return (
+    const { editorState, title, saved, id } = this.state
+    return saved ? (
+      <Redirect to={`/${id}/edit`} />
+    ) : (
       <Wrapper paddingTop={20}>
-        <Input value={title} onChange={e => this.setState({ title: e.target.value })} />
-        <Wrapper className={css(editorShell, editorInner)}>
-          <Button positioned onClick={this.addNewPost}>Add</Button>
-          <Editor state={content} onDocumentChange={this.onChange} />
+        <Input
+          value={title}
+          onChange={e => this.setState({ title: e.target.value })}
+        />
+        <Wrapper>
+          <DWEditor
+            editorState={editorState}
+            onChange={editorState => this.setState({ editorState })}>
+            <Button onClick={this.addNewPost}>Add</Button>
+          </DWEditor>
         </Wrapper>
       </Wrapper>
     )
