@@ -54,7 +54,10 @@ export default class extends React.Component {
         'Content-Type': 'application/json'
       },
       body
-    }).then(console.log)
+    })
+      .then(console.log)
+      .then(() => this.setState({ saved: true }))
+      .catch(console.err)
 
   addNewPost = () => {
     let { id, title, editorState, dateAdded } = this.state

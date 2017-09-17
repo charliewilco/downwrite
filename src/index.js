@@ -7,7 +7,8 @@ import registerServiceWorker from './registerServiceWorker'
 class Downwrite extends React.Component {
   state = {
     data: {},
-    activeBanner: true
+    activeBanner: true,
+    hapiPosts: {}
   }
 
   componentWillMount () {

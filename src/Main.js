@@ -18,7 +18,7 @@ export default class extends Component {
     fetch('/posts')
       .then(res => res.json())
       .then(posts => this.setState({ posts, loaded: true }))
-      .catch(err => this.setState({ loaded: false }, console.error(err)))
+      .catch(err => console.error(err))
 
   componentWillMount () {
     this.getPosts()

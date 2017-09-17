@@ -74,11 +74,7 @@ const Card = ({ title, id, content, author, onDelete }) => (
     </Flex>
 
     <Block>
-      {content && (
-        <p className={s.content}>
-          {content.blocks[0].text} {content.blocks[1].text}
-        </p>
-      )}
+      {content && <p className={s.content}>{content.blocks[0].text}</p>}
     </Block>
   </Block>
 )
