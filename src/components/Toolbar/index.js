@@ -1,5 +1,6 @@
 import React from 'react'
 import StyleButton from './Button'
+import Media from 'react-media'
 import { css } from 'glamor'
 import { Flex } from 'glamor/jsxstyle'
 import { createElement } from 'glamor/react'
@@ -27,45 +28,60 @@ const BLOCK_TYPES = [
   { label: 'H2', style: 'header-two' },
   { label: 'H3', style: 'header-three' },
   { label: 'H4', style: 'header-four' },
-  { label: 'H5', style: 'header-five' },
-  { label: 'H6', style: 'header-six' },
-  { label: 'Blockquote', style: 'blockquote' },
-  { label: 'UL', style: 'unordered-list-item' },
-  { label: 'OL', style: 'ordered-list-item' },
+  { label: 'Quote', style: 'blockquote' },
+  { label: 'Bullets', style: 'unordered-list-item' },
+  { label: 'Numbers ', style: 'ordered-list-item' },
   { label: 'Code', style: 'code-block' }
 ]
 
-var INLINE_STYLES = [
+const INLINE_STYLES = [
   { label: 'Bold', style: 'BOLD' },
   { label: 'Italic', style: 'ITALIC' },
   { label: 'Underline', style: 'UNDERLINE' },
   { label: 'Mono', style: 'CODE' }
 ]
 
-const Toolbar = ({
-  children,
-  editorState,
+const FullToolBar = ({
   onToggleBlockType,
-  onToggleInlineStyle
-}) => {
-  const currentStyle = editorState.getCurrentInlineStyle()
-  const selection = editorState.getSelection()
-  const blockType = editorState
-    .getCurrentContent()
-    .getBlockForKey(selection.getStartKey())
-    .getType()
-  return (
-    <Flex className={css(toolbarStyle)} flexWrap='wrap' alignItems='center'>
-      {BLOCK_TYPES.map(type => (
-        <StyleButton
-          key={type.label}
-          active={type.style === blockType}
-          label={type.label}
-          onToggle={onToggleBlockType}
-          style={type.style}
-        />
-      ))}
-      {INLINE_STYLES.map(type => (
+  children,
+  onToggleInlineStyle,
+  currentStyle,
+  blockType
+}) => (
+  <Flex className={css(toolbarStyle)} flexWrap='wrap' alignItems='center'>
+    {BLOCK_TYPES.map(type => (
+      <StyleButton
+        key={type.label}
+        active={type.style === blockType}
+        label={type.label}
+        onToggle={onToggleBlockType}
+        style={type.style}
+      />
+    ))}
+    {INLINE_STYLES.map(type => (
+      <StyleButton
+        key={type.label}
+        active={currentStyle.has(type.style)}
+        label={type.label}
+        onToggle={onToggleInlineStyle}
+        style={type.style}
+      />
+    ))}
+    <div css={{ flex: 1, alignSelf: 'flex-end' }}>{children}</div>
+  </Flex>
+)
+
+const SelectionToolBar = ({
+  children,
+  selectedText,
+  currentStyle,
+  onToggleInlineStyle,
+  onToggleBlockType,
+  blockType
+}) => (
+  <Flex className={css(toolbarStyle)} flexWrap='wrap' alignItems='center'>
+    {selectedText.length > 0 ? (
+      INLINE_STYLES.map(type => (
         <StyleButton
           key={type.label}
           active={currentStyle.has(type.style)}
@@ -73,10 +89,64 @@ const Toolbar = ({
           onToggle={onToggleInlineStyle}
           style={type.style}
         />
-      ))}
+      ))
+    ) : (
+      BLOCK_TYPES.map(type => (
+        <StyleButton
+          key={type.label}
+          active={type.style === blockType}
+          label={type.label}
+          onToggle={onToggleBlockType}
+          style={type.style}
+        />
+      ))
+    )}
+    <div css={{ flex: 1, alignSelf: 'flex-end' }}>{children}</div>
+  </Flex>
+)
 
-      <div css={{ flex: 1, alignSelf: 'flex-end' }}>{children}</div>
-    </Flex>
+const Toolbar = ({
+  children,
+  editorState,
+  onToggleBlockType,
+  onToggleInlineStyle
+}) => {
+  const selection = editorState.getSelection()
+  const anchorKey = selection.getAnchorKey()
+  const currentContent = editorState.getCurrentContent()
+  const currentContentBlock = currentContent.getBlockForKey(anchorKey)
+  const start = selection.getStartOffset()
+  const end = selection.getEndOffset()
+  const selectedText = currentContentBlock.getText().slice(start, end)
+  const currentStyle = editorState.getCurrentInlineStyle()
+  const blockType = editorState
+    .getCurrentContent()
+    .getBlockForKey(selection.getStartKey())
+    .getType()
+
+  console.log(selection, selectedText)
+  return (
+    <Media query='(min-width: 500px)'>
+      {matches =>
+        !matches ? (
+          <SelectionToolBar
+            selectedText={selectedText}
+            blockType={blockType}
+            currentStyle={currentStyle}
+            onToggleInlineStyle={onToggleInlineStyle}
+            onToggleBlockType={onToggleBlockType}
+            children={children}
+          />
+        ) : (
+          <FullToolBar
+            blockType={blockType}
+            currentStyle={currentStyle}
+            onToggleInlineStyle={onToggleInlineStyle}
+            onToggleBlockType={onToggleBlockType}
+            children={children}
+          />
+        )}
+    </Media>
   )
 }
 
