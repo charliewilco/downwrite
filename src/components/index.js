@@ -11,8 +11,10 @@ import PostList from './PostList'
 import Toolbar from './Toolbar'
 import Wrapper from './Wrapper'
 import APIStatus from './APIStatus'
+import Helpers from './Helpers'
 
 export {
+  Helpers,
   DWEditor,
   APIStatus,
   Wrapper,

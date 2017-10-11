@@ -59,7 +59,7 @@ export default ({ posts, layout, layoutChange, onDelete }) => (
       <Block>
         {posts.map(p => (
           <Block key={p.id} component='li' className={css(s.listItem)}>
-            <ListItem {...p} />
+            <ListItem {...p} onDelete={() => onDelete(p)} />
           </Block>
         ))}
       </Block>

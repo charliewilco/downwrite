@@ -3,9 +3,10 @@ import React from 'react'
 import { css } from 'glamor'
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js'
 import { Block } from 'glamor/jsxstyle'
-import { Button, Input, Loading, Wrapper } from './components'
+import { Button, Input, Loading, Wrapper, Helpers } from './components'
 import format from 'date-fns/format'
 import { DWEditor } from './components'
+import { saveAs } from 'file-saver'
 
 const editorShell = css({
   flex: 1,
@@ -82,23 +83,6 @@ export default class extends React.Component {
     return this.updatePost(newPost)
   }
 
-  postToHapi = (post: Object) => {
-    const newPost = {
-      ...post,
-      content: convertToRaw(post.content)
-    }
-
-    fetch('https://dwn-api.now.sh/posts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newPost)
-    })
-      .then(console.log)
-      .then(() => console.log(newPost))
-  }
-
   componentWillMount () {
     fetch(`/posts/${this.props.match.params.id}`)
       .then(res => res.json())
@@ -118,25 +102,58 @@ export default class extends React.Component {
       )
   }
 
-  onChange = (editorState: Object) => this.setState({ editorState })
-
-  // onKeyDown = (e: Event) => console.log(e)
-
-  updateTitle = ({ target }: { target: EventTarget }) =>
-    this.setState(prevState => {
-      let title = target instanceof HTMLInputElement && this.titleInput.value
-
-      return { title }
+  exportMD = async (body: Object) => {
+    const res = await fetch('http://localhost:8793/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
     })
 
-  updatePost = (body: Object) =>
-    fetch(`/posts/${this.props.match.params.id}`, {
+    const blob = await res.blob()
+
+    saveAs(blob, `${body.title.replace(/\s+/g, '-').toLowerCase()}.md`)
+  }
+
+  export = () => {
+    let { post, title, dateModified } = this.state
+    let { author } = this.props
+    const ContentState = this.state.editorState.getCurrentContent()
+    const content = convertToRaw(ContentState)
+
+    const newPost = {
+      ...post,
+      title,
+      author,
+      content,
+      dateModified
+    }
+
+    return this.exportMD(newPost)
+  }
+
+  onChange = (editorState: Object) => this.setState({ editorState })
+
+  updateTitle = ({ target }: { target: EventTarget }) => {
+    return this.setState(prevState => {
+      let title = target instanceof HTMLInputElement && this.titleInput.value
+
+      return {
+        title: title
+      }
+    })
+  }
+
+  updatePost = (body: Object) => {
+    return fetch(`/posts/${this.props.match.params.id}`, {
       method: 'put',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(body)
     })
+  }
 
   render () {
     const { title, post, loaded, editorState } = this.state
@@ -156,13 +173,17 @@ export default class extends React.Component {
           value={title}
           onChange={e => this.updateTitle(e)}
         />
+        <Helpers exportToMarkdown={() => this.export()}>
+          <div style={{ marginBottom: 16 }}>
+            <h6 style={{ fontSize: 16, marginBottom: 8 }}>Tags</h6>
+          </div>
+        </Helpers>
         <Wrapper>
           <div>
             <DWEditor
               editorState={editorState}
               onChange={editorState => this.onChange(editorState)}>
-              {/* <Button onClick={() => this.updatePostContent()}>Update</Button> */}
-              <Button onClick={() => this.postToHapi(post)}>Hapi</Button>
+              <Button onClick={() => this.updatePostContent()}>Save</Button>
             </DWEditor>
           </div>
         </Wrapper>
