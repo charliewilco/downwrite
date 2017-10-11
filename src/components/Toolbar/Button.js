@@ -1,6 +1,48 @@
-import React, { Component } from 'react'
+import React, { Component, createElement as h } from 'react'
 import { css } from 'glamor'
 import { InlineBlock } from 'glamor/jsxstyle'
+import {
+  BlockQuote,
+  BulletedList,
+  Numbers,
+  Code,
+  Bold,
+  Italic,
+  Mono,
+  Underline,
+  Label
+} from './Icon'
+
+const findIcon = (label, active) => {
+  switch (label) {
+    case 'Quote':
+      return h(BlockQuote, { active })
+      break
+    case 'Bullets':
+      return h(BulletedList, { active })
+      break
+    case 'Numbers':
+      return h(Numbers, { active })
+      break
+    case 'Code':
+      return h(Code, { active })
+      break
+    case 'Bold':
+      return h(Bold, { active })
+      break
+    case 'Italic':
+      return h(Italic, { active })
+      break
+    case 'Underline':
+      return h(Underline, { active })
+      break
+    case 'Mono':
+      return h(Mono, { active })
+      break
+    default:
+      return h(Label, { label, active })
+  }
+}
 
 const btnStyle = css({
   padding: 8,
@@ -21,11 +63,8 @@ export default class StyleButton extends Component {
     const { active, label } = this.props
 
     return (
-      <InlineBlock
-        className={css(btnStyle)}
-        opacity={active ? 1 : 0.375}
-        onMouseDown={this.onToggle}>
-        {label}
+      <InlineBlock className={css(btnStyle)} onMouseDown={this.onToggle}>
+        {findIcon(label, active)}
       </InlineBlock>
     )
   }

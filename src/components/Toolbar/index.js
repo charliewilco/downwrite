@@ -30,7 +30,7 @@ const BLOCK_TYPES = [
   { label: 'H4', style: 'header-four' },
   { label: 'Quote', style: 'blockquote' },
   { label: 'Bullets', style: 'unordered-list-item' },
-  { label: 'Numbers ', style: 'ordered-list-item' },
+  { label: 'Numbers', style: 'ordered-list-item' },
   { label: 'Code', style: 'code-block' }
 ]
 
