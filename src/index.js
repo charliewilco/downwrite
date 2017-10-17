@@ -1,37 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
+import { CookiesProvider } from 'react-cookie'
 import './index.css'
 import registerServiceWorker from './registerServiceWorker'
 
-class Downwrite extends React.Component {
-  state = {
-    data: {},
-    activeBanner: true,
-    hapiPosts: {}
-  }
-
-  componentWillMount () {
-    fetch('https://dwn-api.now.sh/stuff')
-      .then(res => res.json())
-      .then(data => this.setState({ data }))
-      .catch(err => console.error(err))
-
-    fetch('https://dwn-api.now.sh/posts')
-      .then(res => res.json())
-      .then(data => this.setState({ hapiPosts: data }))
-      .catch(err => console.error(err))
-  }
-
-  render () {
-    return (
-      <App
-        {...this.state}
-        onAPIDismiss={() => this.setState({ activeBanner: false })}
-      />
-    )
-  }
-}
+const Downwrite = () => (
+	<CookiesProvider>
+		<App />
+	</CookiesProvider>
+)
 
 ReactDOM.render(<Downwrite />, document.getElementById('root'))
 registerServiceWorker()
