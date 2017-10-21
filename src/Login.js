@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Block } from 'glamor/jsxstyle'
-import { Input } from './components'
+import { LoginInput, LoginButton } from './components'
 import { Redirect } from 'react-router-dom'
 
 const creds = {
@@ -46,35 +46,27 @@ class Login extends Component {
 	render() {
 		const { authed, username, password, email } = this.state
 		return (
-			<Block>
-				<Block padding={16} maxWidth={544} background="white" margin="32px auto" width="95%">
-					<form onSubmit={this.onSubmit}>
-						<h1 className="h6 u-mb4">Login</h1>
-						<label>
-							<Input
-								value={username}
-								onChange={e => this.setState({ username: e.target.value })}
-							/>
-							<span>Username</span>
-						</label>
-						<label>
-							<Input value={email} onChange={e => this.setState({ email: e.target.value })} />
-							<span>Email</span>
-						</label>
-						<label>
-							<Input
-								value={password}
-								type="password"
-								onChange={e => this.setState({ password: e.target.value })}
-							/>
-							<span>Password</span>
-						</label>
-						<Block paddingTop={16} textAlign="right">
-							<button onClick={this.onSubmit}>Submit</button>
-						</Block>
-					</form>
+			<form onSubmit={this.onSubmit}>
+				<LoginInput
+					label="Username"
+					value={username}
+					onChange={e => this.setState({ username: e.target.value })}
+				/>
+				<LoginInput
+					label="Email"
+					value={email}
+					onChange={e => this.setState({ email: e.target.value })}
+				/>
+				<LoginInput
+					label="Password"
+					value={password}
+					type="password"
+					onChange={e => this.setState({ password: e.target.value })}
+				/>
+				<Block paddingTop={16} textAlign="right">
+					<LoginButton label="Login" onClick={this.onSubmit} />
 				</Block>
-			</Block>
+			</form>
 		)
 	}
 }

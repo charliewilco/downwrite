@@ -11,6 +11,8 @@ import PostList from './PostList'
 import Toolbar from './Toolbar'
 import Wrapper from './Wrapper'
 import Helpers from './Helpers'
+import LoginInput from './LoginInput'
+import LoginButton from './LoginButton'
 
 export {
 	Helpers,
@@ -21,6 +23,8 @@ export {
 	Card,
 	EmptyPosts,
 	Header,
+	LoginInput,
+	LoginButton,
 	Input,
 	Loading,
 	Logo,

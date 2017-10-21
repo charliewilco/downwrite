@@ -11,14 +11,13 @@ import Home from './Home'
 import { PublicRoute, PrivateRoute } from './CustomRoutes'
 import { withCookies, Cookies } from 'react-cookie'
 
-class App extends React.Component<{ cookies: Cookies }, { authed: boolean }> {
+class App extends React.Component<{ cookies: typeof Cookies }, { authed: boolean }> {
 	state = {
 		authed: false
 	}
 
 	componentWillMount() {
-		const { cookies } = this.props
-		const token = cookies.get('token')
+		const token: Function = this.props.cookies.get('token')
 
 		this.setState({
 			authed: token !== undefined
@@ -29,6 +28,11 @@ class App extends React.Component<{ cookies: Cookies }, { authed: boolean }> {
 		return this.setState({ authed })
 	}
 
+	signOut = () => {
+		const rmToken: Function = this.props.cookies.remove('token')
+		return this.setState({ authed: false }, rmToken())
+	}
+
 	render() {
 		const { authed } = this.state
 		return (
@@ -37,13 +41,17 @@ class App extends React.Component<{ cookies: Cookies }, { authed: boolean }> {
 					<Header name="Downwrite" />
 					<Switch>
 						<Route exact path="/">
-							{authed ? <Main /> : <Home setAuth={this.setAuth} />}
+							{authed === true ? <Main /> : <Home setAuth={this.setAuth} />}
 						</Route>
-						<PrivateRoute auth={authed} path="/" component={Main} />
 						<PrivateRoute auth={authed} path="/new" component={NewPost} />
 						<Route path="/:id/edit" component={EditPost} />
 						<Route component={NoMatch} />
 					</Switch>
+					{authed && (
+						<footer>
+							<button onClick={() => this.signOut()}>Sign Out</button>
+						</footer>
+					)}
 				</Block>
 			</Router>
 		)

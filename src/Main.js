@@ -10,7 +10,7 @@ type Post = {
 
 type State = {
 	posts: Array<Post>,
-	loaded: Boolean,
+	loaded: boolean,
 	layout: 'grid' | 'list'
 }
 
@@ -23,7 +23,9 @@ export default class extends Component<void, State> {
 		layout: 'grid'
 	}
 
-	layoutChange = (x: string) => this.setState({ layout: x })
+	layoutChange = (x: 'grid' | 'list') => {
+		return this.setState({ layout: x })
+	}
 
 	getPosts = async () => {
 		const response = await fetch('/posts')
@@ -36,10 +38,14 @@ export default class extends Component<void, State> {
 		this.getPosts()
 	}
 
-	onDelete = (post: Object) =>
-		fetch(`/posts/${post.id}`, {
-			method: 'DELETE'
-		}).then(() => this.getPosts())
+	onDelete = async (post: Object) => {
+		const response = await fetch(`/posts/${post.id}`, { method: 'DELETE' })
+		const deletePost = await response.json()
+
+		if (deletePost) {
+			return this.getPosts()
+		}
+	}
 
 	render() {
 		const { loaded, posts, layout } = this.state
