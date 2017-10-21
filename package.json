@@ -38,8 +38,7 @@
 		"eject": "react-scripts eject",
 		"go": "now && now alias",
 		"format": "prettier --write 'src/**/*.js'",
-		"precommit": "lint-staged",
-		"prepush": "npm run go"
+		"precommit": "lint-staged"
 	},
 	"prettier": {
 		"printWidth": 95,
