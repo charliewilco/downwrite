@@ -6,7 +6,9 @@ import { InlineBlock as In } from 'glamor/jsxstyle'
 
 type NoMatchTitle = { name: string }
 type NoMatchType = {
-	location: Object
+	location: {
+		pathname: string
+	}
 }
 
 const Title = ({ name }: NoMatchTitle) => (

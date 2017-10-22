@@ -4,11 +4,15 @@ import * as React from 'react'
 import { css } from 'glamor'
 
 const lbtnStyle = css({
-	background: `var(--color-6)`,
+	padding: 8,
+	color: `var(--color-6)`,
 	border: 0,
-	fontFamily: 'var(--secondary-font)',
+	background: 'none',
+	fontFamily: 'inherit',
+	fontWeight: 700,
+	fontStyle: 'italic',
 	':hover': {
-		background: `var(--color-7)`
+		color: `var(--color-7)`
 	}
 })
 

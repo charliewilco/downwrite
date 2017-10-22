@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+// @flow
+
+import * as React from 'react'
 import { Block } from 'glamor/jsxstyle'
 import { LoginInput, LoginButton } from './components'
-import { Redirect } from 'react-router-dom'
 
 const creds = {
 	username: 'charlespeters',
@@ -9,9 +10,14 @@ const creds = {
 	password: 'wedontexist'
 }
 
-class Login extends Component {
+type LoginState = {
+	username: string,
+	email: string,
+	password: string
+}
+
+class Login extends React.Component<void, LoginState> {
 	state = {
-		data: undefined,
 		username: '',
 		email: '',
 		password: ''
@@ -30,21 +36,17 @@ class Login extends Component {
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({
-				username: this.state.username,
-				email: this.state.email,
-				password: this.state.password
-			})
+			body: JSON.stringify({ ...this.state })
 		})
 
 		const auth = await authRequest.json()
 		cookies.set('token', auth.id_token)
 		cookies.set('id', auth.userID)
-		this.props.setAuth(auth.id_token)
+		this.props.setAuth(auth.id_token.length > 0)
 	}
 
 	render() {
-		const { authed, username, password, email } = this.state
+		const { username, password, email } = this.state
 		return (
 			<form onSubmit={this.onSubmit}>
 				<LoginInput

@@ -13,7 +13,11 @@ const styles = {
 	label: css({
 		textTransform: 'uppercase',
 		letterSpacing: 1,
-		opacity: 0.5
+		color: '#B4B4B4',
+		transition: 'color 250ms ease-in-out'
+	}),
+	labelActive: css({
+		color: 'var(--color-6)'
 	}),
 	input: css({
 		fontFamily: 'var(--secondary-font)',
@@ -21,7 +25,9 @@ const styles = {
 		display: 'block',
 		border: 0,
 		width: '100%',
-		borderBottom: `2px solid var(--color-1)`,
+		borderRadius: 0,
+		borderBottom: `2px solid #B4B4B4`,
+		transition: 'border-bottom 250ms ease-in-out',
 		':focus': {
 			outline: 'none',
 			borderBottom: `2px solid var(--color-6)`
@@ -36,15 +42,27 @@ type InputType = {
 	type: String
 }
 
-export default class LoginInput extends React.Component<InputType, void> {
+export default class LoginInput extends React.Component<InputType, { active: boolean }> {
+	state = {
+		active: false
+	}
+
 	render() {
 		const id = uuid()
-
+		const { active } = this.state
 		const { label } = this.props
 		return (
 			<label htmlFor={id} className={css(styles.container)}>
-				<input className={css(styles.input)} id={id} {...this.props} />
-				<small className={css(styles.label)}>{label}</small>
+				<input
+					onFocus={() => this.setState({ active: true })}
+					onBlur={() => this.setState({ active: false })}
+					className={css(styles.input)}
+					id={id}
+					{...this.props}
+				/>
+				<small className={css(active ? [styles.label, styles.labelActive] : styles.label)}>
+					{label}
+				</small>
 			</label>
 		)
 	}
