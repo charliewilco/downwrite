@@ -17,10 +17,9 @@ class App extends React.Component<{ cookies: typeof Cookies }, { authed: boolean
 	}
 
 	componentWillMount() {
-		const token: Function = () => this.props.cookies.get('token')
-
+		const token: string = this.props.cookies.get('token')
 		this.setState({
-			authed: token() !== undefined
+			authed: token !== undefined && token !== 'undefined'
 		})
 	}
 
@@ -29,7 +28,11 @@ class App extends React.Component<{ cookies: typeof Cookies }, { authed: boolean
 	}
 
 	signOut = () => {
-		const rmToken: Function = () => this.props.cookies.remove('token')
+		const rmToken: Function = () => {
+			this.props.cookies.remove('token')
+			this.props.cookies.remove('id')
+		}
+
 		return this.setState({ authed: false }, rmToken())
 	}
 
@@ -43,15 +46,15 @@ class App extends React.Component<{ cookies: typeof Cookies }, { authed: boolean
 						<Route
 							exact
 							path="/"
-							render={props =>
+							render={(props: Object) =>
 								authed === true ? (
 									<Main {...props} />
 								) : (
 									<Home {...props} setAuth={this.setAuth} />
 								)}
 						/>
-						<PrivateRoute auth={authed} path="/new" component={NewPost} />
-						<Route path="/:id/edit" component={EditPost} />
+						<PrivateRoute authed={authed} path="/new" component={NewPost} />
+						<PrivateRoute authed={authed} path="/:id/edit" component={EditPost} />
 						<Route component={NoMatch} />
 					</Switch>
 					{authed && (

@@ -3,23 +3,24 @@
 import * as React from 'react'
 import { Block } from 'glamor/jsxstyle'
 import { LoginInput, LoginButton } from './components'
+import { Cookies } from 'react-cookie'
 
 const creds = {
-	username: 'charlespeters',
-	email: 'charlespeters42@gmail.com',
+	user: 'charlespeters',
 	password: 'wedontexist'
 }
 
 type LoginState = {
-	username: string,
-	email: string,
+	user: string,
 	password: string
 }
 
-class Login extends React.Component<void, LoginState> {
+class Login extends React.Component<
+	{ setAuth: Function, cookies: typeof Cookies },
+	LoginState
+> {
 	state = {
-		username: '',
-		email: '',
+		user: '',
 		password: ''
 	}
 
@@ -27,7 +28,7 @@ class Login extends React.Component<void, LoginState> {
 		this.setState({ ...creds })
 	}
 
-	onSubmit = async evt => {
+	onSubmit = async (evt: Event) => {
 		evt.preventDefault()
 
 		const { setAuth, cookies } = this.props
@@ -40,25 +41,30 @@ class Login extends React.Component<void, LoginState> {
 		})
 
 		const auth = await authRequest.json()
-		cookies.set('token', auth.id_token)
-		cookies.set('id', auth.userID)
-		this.props.setAuth(auth.id_token.length > 0)
+		console.log(auth, auth.id_token)
+
+		if (auth.userID) {
+			cookies.set('token', auth.id_token)
+			cookies.set('id', auth.userID)
+		}
+
+		setAuth(auth.id_token !== undefined)
 	}
 
 	render() {
-		const { username, password, email } = this.state
+		const { user, password /* email */ } = this.state
 		return (
 			<form onSubmit={this.onSubmit}>
 				<LoginInput
-					label="Username"
-					value={username}
-					onChange={e => this.setState({ username: e.target.value })}
+					label="Username or Email"
+					value={user}
+					onChange={e => this.setState({ user: e.target.value })}
 				/>
-				<LoginInput
+				{/* <LoginInput
 					label="Email"
 					value={email}
 					onChange={e => this.setState({ email: e.target.value })}
-				/>
+				/> */}
 				<LoginInput
 					label="Password"
 					value={password}

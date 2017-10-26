@@ -1,27 +1,39 @@
+// @flow
 import * as React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 
 type CustomRouteProps = {
-	component: React.ComponentType<void>,
-	authed: Boolean,
+	component: React.ElementType,
+	authed: boolean,
 	args: Array<number>
 }
 
-export const PrivateRoute = ({ component: Xcomp, authed, ...args }: CustomRouteProps) => (
+export const PrivateRoute: React.ElementType = ({
+	component: Component,
+	authed,
+	...args
+}: CustomRouteProps) => (
 	<Route
 		{...args}
-		render={props =>
+		render={(props: { location: string }) =>
 			authed === true ? (
-				<Xcomp {...props} />
+				<Component {...props} />
 			) : (
 				<Redirect to={{ pathname: '/', state: { from: props.location } }} />
 			)}
 	/>
 )
 
-export const PublicRoute = ({ component: Xcomp, authed, ...args }: CustomRouteProps) => (
+// TODO: Remove /dashboard
+
+export const PublicRoute: React.ElementType = ({
+	component: Component,
+	authed,
+	...args
+}: CustomRouteProps) => (
 	<Route
 		{...args}
-		render={props => (authed === false ? <Xcomp {...props} /> : <Redirect to="/dashboard" />)}
+		render={(props: Object) =>
+			authed === false ? <Component {...props} /> : <Redirect to="/dashboard" />}
 	/>
 )
