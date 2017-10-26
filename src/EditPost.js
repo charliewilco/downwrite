@@ -8,6 +8,7 @@ import { Button, Input, Loading, Wrapper, Helpers } from './components'
 import format from 'date-fns/format'
 import { DWEditor } from './components'
 import { saveAs } from 'file-saver'
+import { withCookies, Cookies } from 'react-cookie'
 
 const editorShell = css({
 	flex: 1,
@@ -39,7 +40,16 @@ const editorInner = css({
 	fontWeight: '400'
 })
 
-export default class extends React.Component {
+type EditorSt = {
+	title: string,
+	post: Object,
+	loaded: boolean,
+	updated: boolean,
+	editorState: EditorState,
+	dateModified: Date
+}
+
+class EditPost extends React.Component<{ match: Object, cookies: typeof Cookies }, EditorSt> {
 	static displayName = 'UpdatePostEditor'
 
 	titleInput: HTMLInputElement
@@ -58,7 +68,7 @@ export default class extends React.Component {
 	prepareContent = (content: Object) => convertFromRaw(content)
 
 	updateCurrent = (body: Object) => {
-		fetch(`/posts/${this.props.match.params.id}`, {
+		fetch(`http://localhost:4411/posts/${this.props.match.params.id}`, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json'
@@ -68,15 +78,14 @@ export default class extends React.Component {
 	}
 
 	updatePostContent = () => {
-		let { post, title, dateModified } = this.state
-		let { author } = this.props
-		const ContentState = this.state.editorState.getCurrentContent()
+		// TODO: Use Token to update author or USER
+		let { post, title, dateModified, editorState } = this.state
+		const ContentState = editorState.getCurrentContent()
 		const content = convertToRaw(ContentState)
 
 		const newPost = {
 			...post,
 			title,
-			author,
 			content,
 			dateModified
 		}
@@ -84,22 +93,61 @@ export default class extends React.Component {
 		return this.updatePost(newPost)
 	}
 
-	componentWillMount() {
-		fetch(`/posts/${this.props.match.params.id}`)
-			.then(res => res.json())
-			.then(post => this.setState({ post }))
-			.then(() =>
-				this.setState({
-					post: {
-						...this.state.post,
-						content: convertFromRaw(this.state.post.content)
-					},
-					title: this.state.post.title,
-					editorState: EditorState.createWithContent(convertFromRaw(this.state.post.content)),
-					loaded: true
-				})
-			)
+	getPost = async () => {
+		const h = new Headers()
+		const id = this.props.match.params.id
+		const user = this.props.cookies.get('id')
+		const token = this.props.cookies.get('token')
+
+		h.set('Authorization', `Bearer ${token}`)
+
+		const config = {
+			method: 'GET',
+			headers: h,
+			mode: 'cors',
+			cache: 'default'
+		}
+
+		const req = await fetch(`http://localhost:4411/posts/${id}`, config)
+		const post = await req.json()
+
+		return post
+		// .then(() => )
+
+		// this.setState({
+		// 	post: {
+		// 		...this.state.post,
+		// 		content: convertFromRaw(this.state.post.content),
+		// 	},
+		// 	title: this.state.post.title,
+		// 	editorState: EditorState.createWithContent(this.state.post.content),
+		// 	loaded: true
+		// })
 	}
+
+	componentWillMount() {
+		this.getPost().then((post: { title: string }) => {
+			return this.setState(
+				{
+					post,
+					title: post.title,
+					loaded: true
+				},
+				console.log(post)
+			)
+		})
+	}
+
+	// this.setState(prev => {
+	// 	return {
+	// 		post: { ...prev.post, content },
+	// 		title: prev.post.title,
+	// 		editorState: EditorState.createWithContent(content),
+	// 		loaded: true
+	// 	}
+	// })
+
+	componentDidMount() {}
 
 	exportMD = async (body: Object) => {
 		const res = await fetch('http://localhost:8793/', {
@@ -117,14 +165,12 @@ export default class extends React.Component {
 
 	export = () => {
 		let { post, title, dateModified } = this.state
-		let { author } = this.props
 		const ContentState = this.state.editorState.getCurrentContent()
 		const content = convertToRaw(ContentState)
 
 		const newPost = {
 			...post,
 			title,
-			author,
 			content,
 			dateModified
 		}
@@ -136,8 +182,8 @@ export default class extends React.Component {
 
 	updateTitle = ({ target }: { target: EventTarget }) => {
 		return this.setState(prevState => {
-			let title = target instanceof HTMLInputElement && this.titleInput.value
-
+			let title = this.titleInput.value
+			// target instanceof HTMLInputElement &&
 			return {
 				title: title
 			}
@@ -190,3 +236,5 @@ export default class extends React.Component {
 		)
 	}
 }
+
+export default withCookies(EditPost)

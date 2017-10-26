@@ -2,19 +2,20 @@
 import React, { Component } from 'react'
 import { Block } from 'glamor/jsxstyle'
 import { PostList, Loading, EmptyPosts } from './components'
+import { withCookies, Cookies } from 'react-cookie'
 
 type Post = {
 	title: String,
 	id: String
 }
 
-type State = {
+type MainState = {
 	posts: Array<Post>,
 	loaded: boolean,
 	layout: 'grid' | 'list'
 }
 
-export default class extends Component<void, State> {
+class Main extends Component<{ cookies: typeof Cookies }, MainState> {
 	static displayName = 'Main View'
 
 	state = {
@@ -28,22 +29,54 @@ export default class extends Component<void, State> {
 	}
 
 	getPosts = async () => {
-		const response = await fetch('/posts')
+		const h = new Headers()
+		const user = this.props.cookies.get('id')
+		const token = this.props.cookies.get('token')
+
+		h.set('Authorization', `Bearer ${token}`)
+
+		const config = {
+			method: 'GET',
+			headers: h,
+			mode: 'cors',
+			cache: 'default'
+		}
+
+		const response = await fetch('http://localhost:4411/posts', config)
 		const posts = await response.json()
 
 		return this.setState({ posts, loaded: true })
 	}
+
+	// getPosts = () => {
+	// 	return fetch('http://localhost:4411/posts')
+	// 		.then(res => res.json())
+	// 		.then(posts => this.setState({ posts, loaded: true }))
+	// }
 
 	componentWillMount() {
 		this.getPosts()
 	}
 
 	onDelete = async (post: Object) => {
-		const response = await fetch(`/posts/${post.id}`, { method: 'DELETE' })
+		const h = new Headers()
+		const user = this.props.cookies.get('id')
+		const token = this.props.cookies.get('token')
+
+		h.set('Authorization', `Bearer ${token}`)
+
+		const config = {
+			method: 'DELETE',
+			headers: h,
+			mode: 'cors',
+			cache: 'default'
+		}
+
+		const response = await fetch(`http://localhost:4411/posts/${post.id}`, config)
 		const deletePost = await response.json()
 
 		if (deletePost) {
-			return this.getPosts()
+			return await this.getPosts()
 		}
 	}
 
@@ -69,3 +102,5 @@ export default class extends Component<void, State> {
 		)
 	}
 }
+
+export default withCookies(Main)

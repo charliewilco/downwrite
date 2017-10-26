@@ -74,7 +74,7 @@ const Container = ({ children }) => (
 	/>
 )
 
-class Home extends Component<void, { loginSelected: boolean }> {
+class Home extends Component<{ cookies: typeof Cookies }, { loginSelected: boolean }> {
 	state = {
 		loginSelected: true
 	}

@@ -1,7 +1,9 @@
-import React from 'react'
+// @flow
+import * as React from 'react'
 import { EditorState, convertToRaw } from 'draft-js'
 import { DWEditor } from './components'
 import { Redirect } from 'react-router-dom'
+import { withCookies, Cookies } from 'react-cookie'
 import { Wrapper, Input, Button } from './components'
 import { css } from 'glamor'
 import { createElement } from 'glamor/react'
@@ -30,12 +32,16 @@ const editorInner = css({
 	fontWeight: '400'
 })
 
-export default class extends React.Component {
-	static displayName = 'NewPostEditor'
+type NewPostSt = {
+	saved: boolean,
+	editorState: EditorState,
+	id: string,
+	title: string,
+	dateAdded: Date
+}
 
-	static defaultProps = {
-		author: 'charlespeters'
-	}
+class NewPost extends React.Component<{ cookies: typeof Cookies }, NewPostSt> {
+	static displayName = 'NewPostEditor'
 
 	state = {
 		editorState: EditorState.createEmpty(),
@@ -45,32 +51,36 @@ export default class extends React.Component {
 		saved: false
 	}
 
-	// onKeyDown = (event, data, state) => console.log(event.which)
-
-	addNew = body =>
-		fetch('/posts', {
+	addNew = async body => {
+		const token = this.props.cookies.get('token')
+		const response = await fetch('http://localhost:4411/posts', {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`
 			},
 			body
 		})
-			.then(console.log)
-			.then(() => this.setState({ saved: true }))
-			.catch(console.err)
+
+		const newPost = await response.json()
+
+		if (!newPost.error) {
+			this.setState({ saved: false })
+		}
+	}
 
 	addNewPost = () => {
 		let { id, title, editorState, dateAdded } = this.state
-		let { author } = this.props
 		const ContentState = this.state.editorState.getCurrentContent()
 		const content = convertToRaw(ContentState)
+		const user = this.props.cookies.get('id')
 
 		const post = JSON.stringify({
 			title,
 			id,
-			author,
 			content,
-			dateAdded
+			dateAdded,
+			user
 		})
 
 		return this.addNew(post)
@@ -94,3 +104,5 @@ export default class extends React.Component {
 		)
 	}
 }
+
+export default withCookies(NewPost)
