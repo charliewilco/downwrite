@@ -8,7 +8,7 @@ import { Header } from './components'
 import Main from './Main'
 import NoMatch from './NoMatch'
 import Home from './Home'
-import { PublicRoute, PrivateRoute } from './CustomRoutes'
+import { PrivateRoute } from './CustomRoutes'
 import { withCookies, Cookies } from 'react-cookie'
 
 class App extends React.Component<{ cookies: typeof Cookies }, { authed: boolean }> {
@@ -33,7 +33,7 @@ class App extends React.Component<{ cookies: typeof Cookies }, { authed: boolean
 			this.props.cookies.remove('id')
 		}
 
-		return this.setState({ authed: false }, rmToken())
+		return this.setState({ authed: false }, rmToken)
 	}
 
 	render() {

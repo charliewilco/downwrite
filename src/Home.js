@@ -1,4 +1,5 @@
 // @flow
+// @jsx createElement
 import React, { Component } from 'react'
 import { withCookies, Cookies } from 'react-cookie'
 import Login from './Login'
