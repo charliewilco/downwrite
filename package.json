@@ -3,38 +3,33 @@
 	"version": "0.1.0",
 	"private": true,
 	"devDependencies": {
-		"concurrently": "^3.5.0",
 		"enzyme": "^3.1.0",
-		"flow-bin": "^0.56.0",
+		"flow-bin": "^0.57.3",
 		"husky": "^0.14.3",
-		"json-server": "^0.12.0",
-		"lint-staged": "^4.0.2",
-		"react-test-renderer": "^15.6.1"
+		"lint-staged": "^4.3.0",
+		"react-test-renderer": "^16.0.0"
 	},
 	"dependencies": {
-		"date-fns": "^1.28.5",
-		"draft-js": "^0.10.3",
+		"date-fns": "^1.29.0",
+		"draft-js": "^0.10.4",
 		"file-saver": "^1.3.3",
 		"glamor": "^2.20.40",
-		"prop-types": "^15.6.0",
+		"lodash.isempty": "^4.4.0",
 		"react": "^16.0.0",
 		"react-cookie": "^2.1.1",
 		"react-dom": "^16.0.0",
-		"react-icons": "^2.2.5",
+		"react-icons": "^2.2.7",
 		"react-media": "^1.6.1",
 		"react-router-dom": "^4.2.2",
 		"react-scripts": "^1.0.14",
-		"serve": "^6.2.0",
+		"serve": "^6.3.1",
 		"uuid": "^3.1.0"
 	},
 	"scripts": {
 		"start": "serve -s build",
 		"build": "react-scripts build",
-		"dev": "concurrently -c 'blue,yellow' --names 'MockDB,Server' 'npm run dev:db' 'npm run dev:server'",
-		"dev:server": "react-scripts start",
-		"dev:db": "json-server --watch db.json -p 7171",
-		"test": "concurrently -c 'bgMagenta.bold,bgGreen.bold' --names 'Flow,Jest' 'flow' 'npm run test:unit'",
-		"test:unit": "react-scripts test --env=jsdom",
+		"dev": "react-scripts start",
+		"test": "flow && react-scripts test --env=jsdom",
 		"eject": "react-scripts eject",
 		"go": "now && now alias",
 		"format": "prettier --write 'src/**/*.js'",
@@ -60,6 +55,5 @@
 	},
 	"now": {
 		"alias": "redownwrite"
-	},
-	"proxy": "http://localhost:7171"
+	}
 }
