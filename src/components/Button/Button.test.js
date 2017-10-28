@@ -6,6 +6,6 @@ const onClickHandler = jest.fn()
 const wrapper = mount(<Button onClick={onClickHandler} />)
 
 it('Fires onClick', () => {
-  wrapper.simulate('click')
-  expect(onClickHandler).toHaveBeenCalled()
+	wrapper.simulate('click')
+	expect(onClickHandler).toHaveBeenCalled()
 })
