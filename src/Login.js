@@ -1,9 +1,10 @@
 // @flow
 
 import * as React from 'react'
-import { Block } from 'glamor/jsxstyle'
-import { LoginInput, LoginButton } from './components'
+import { Block, InlineBlock } from 'glamor/jsxstyle'
+import { LoginInput, Button } from './components'
 import { Cookies } from 'react-cookie'
+import { AUTH_ENDPOINT } from './utils/urls'
 
 const creds = {
 	user: 'charlespeters',
@@ -32,7 +33,7 @@ class Login extends React.Component<
 		evt.preventDefault()
 
 		const { setAuth, cookies } = this.props
-		const authRequest = await fetch('http://localhost:4411/users/authenticate', {
+		const authRequest = await fetch(AUTH_ENDPOINT, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -72,7 +73,9 @@ class Login extends React.Component<
 					onChange={e => this.setState({ password: e.target.value })}
 				/>
 				<Block paddingTop={16} textAlign="right">
-					<LoginButton label="Login" onClick={this.onSubmit} />
+					<InlineBlock>
+						<Button onClick={this.onSubmit}>Login</Button>
+					</InlineBlock>
 				</Block>
 			</form>
 		)

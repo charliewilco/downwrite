@@ -1,4 +1,5 @@
 // @flow
+// @jsx createElement
 import * as React from 'react'
 import { EditorState, convertToRaw } from 'draft-js'
 import { DWEditor } from './components'
@@ -8,8 +9,7 @@ import { Wrapper, Input, Button } from './components'
 import { css } from 'glamor'
 import { createElement } from 'glamor/react'
 import uuid from 'uuid/v4'
-
-/* @jsx createElement */
+import { POST_ENDPOINT } from './utils/urls'
 
 const editorShell = css({
 	flex: 1,
@@ -52,8 +52,8 @@ class NewPost extends React.Component<{ cookies: typeof Cookies }, NewPostSt> {
 	}
 
 	addNew = async body => {
-		const token = this.props.cookies.get('token')
-		const response = await fetch('http://localhost:4411/posts', {
+		const token: string = this.props.cookies.get('token')
+		const response = await fetch(POST_ENDPOINT, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -72,8 +72,9 @@ class NewPost extends React.Component<{ cookies: typeof Cookies }, NewPostSt> {
 	addNewPost = () => {
 		let { id, title, editorState, dateAdded } = this.state
 		const ContentState = this.state.editorState.getCurrentContent()
-		const content = convertToRaw(ContentState)
+		const content = JSON.stringify(convertToRaw(ContentState))
 		const user = this.props.cookies.get('id')
+		console.log(content)
 
 		const post = JSON.stringify({
 			title,

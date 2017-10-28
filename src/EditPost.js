@@ -2,13 +2,16 @@
 
 import React from 'react'
 import { css } from 'glamor'
-import { EditorState, convertToRaw, convertFromRaw } from 'draft-js'
+import { EditorState, convertToRaw } from 'draft-js'
 import { Block } from 'glamor/jsxstyle'
 import { Button, Input, Loading, Wrapper, Helpers } from './components'
 import format from 'date-fns/format'
 import { DWEditor } from './components'
+import isEmpty from 'lodash.isempty'
 import { saveAs } from 'file-saver'
 import { withCookies, Cookies } from 'react-cookie'
+import { superConverter } from './utils/responseHandler'
+import { POST_ENDPOINT, MD_ENDPOINT } from './utils/urls'
 
 const editorShell = css({
 	flex: 1,
@@ -65,10 +68,10 @@ class EditPost extends React.Component<{ match: Object, cookies: typeof Cookies 
 		dateModified: new Date()
 	}
 
-	prepareContent = (content: Object) => convertFromRaw(content)
+	prepareContent = (content: Object) => superConverter(content)
 
 	updateCurrent = (body: Object) => {
-		fetch(`http://localhost:4411/posts/${this.props.match.params.id}`, {
+		fetch(`${POST_ENDPOINT}/${this.props.match.params.id}`, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json'
@@ -78,16 +81,18 @@ class EditPost extends React.Component<{ match: Object, cookies: typeof Cookies 
 	}
 
 	updatePostContent = () => {
-		// TODO: Use Token to update author or USER
 		let { post, title, dateModified, editorState } = this.state
-		const ContentState = editorState.getCurrentContent()
+		const user = this.props.cookies.get('id')
+		const ContentState: typeof ContentState = editorState.getCurrentContent()
 		const content = convertToRaw(ContentState)
+		const { _id, __v, ...sPost } = post
 
 		const newPost = {
-			...post,
+			...sPost,
 			title,
 			content,
-			dateModified
+			dateModified,
+			user
 		}
 
 		return this.updatePost(newPost)
@@ -108,49 +113,39 @@ class EditPost extends React.Component<{ match: Object, cookies: typeof Cookies 
 			cache: 'default'
 		}
 
-		const req = await fetch(`http://localhost:4411/posts/${id}`, config)
-		const post = await req.json()
+		const req = await fetch(`${POST_ENDPOINT}/${id}`, config)
+		const post: Object = await req.json()
 
 		return post
-		// .then(() => )
-
-		// this.setState({
-		// 	post: {
-		// 		...this.state.post,
-		// 		content: convertFromRaw(this.state.post.content),
-		// 	},
-		// 	title: this.state.post.title,
-		// 	editorState: EditorState.createWithContent(this.state.post.content),
-		// 	loaded: true
-		// })
 	}
 
-	componentWillMount() {
-		this.getPost().then((post: { title: string }) => {
-			return this.setState(
-				{
-					post,
-					title: post.title,
-					loaded: true
-				},
-				console.log(post)
-			)
+	shouldComponentUpdate(nextProps, nextState: { post: Object }) {
+		return isEmpty(nextState.post) || isEmpty(nextState.post.content.blocks)
+	}
+
+	async componentWillMount() {
+		const post = await this.getPost()
+		const content = await superConverter(post.content)
+
+		this.setState({
+			post: {
+				...post,
+				content
+			},
+			editorState: EditorState.createWithContent(content),
+			title: post.title,
+			loaded: true
 		})
 	}
 
-	// this.setState(prev => {
-	// 	return {
-	// 		post: { ...prev.post, content },
-	// 		title: prev.post.title,
-	// 		editorState: EditorState.createWithContent(content),
-	// 		loaded: true
-	// 	}
-	// })
-
-	componentDidMount() {}
+	componentDidMount() {
+		/// const content = convertFromRaw()
+		/// you get an object back from convertToRaw { blocks, entityMap }
+		/// I wonder if the entityMap is disappearing because it's empty...
+	}
 
 	exportMD = async (body: Object) => {
-		const res = await fetch('http://localhost:8793/', {
+		const res = await fetch(MD_ENDPOINT, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -180,7 +175,7 @@ class EditPost extends React.Component<{ match: Object, cookies: typeof Cookies 
 
 	onChange = (editorState: Object) => this.setState({ editorState })
 
-	updateTitle = ({ target }: { target: EventTarget }) => {
+	updateTitle = ({ target: EventTarget }: { target: EventTarget }) => {
 		return this.setState(prevState => {
 			let title = this.titleInput.value
 			// target instanceof HTMLInputElement &&
@@ -191,10 +186,12 @@ class EditPost extends React.Component<{ match: Object, cookies: typeof Cookies 
 	}
 
 	updatePost = (body: Object) => {
-		return fetch(`/posts/${this.props.match.params.id}`, {
+		const token: string = this.props.cookies.get('token')
+		return fetch(`${POST_ENDPOINT}/${this.props.match.params.id}`, {
 			method: 'put',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`
 			},
 			body: JSON.stringify(body)
 		})
@@ -225,11 +222,13 @@ class EditPost extends React.Component<{ match: Object, cookies: typeof Cookies 
 				</Helpers>
 				<Wrapper>
 					<div>
-						<DWEditor
-							editorState={editorState}
-							onChange={editorState => this.onChange(editorState)}>
-							<Button onClick={() => this.updatePostContent()}>Save</Button>
-						</DWEditor>
+						{editorState !== null && (
+							<DWEditor
+								editorState={editorState}
+								onChange={editorState => this.onChange(editorState)}>
+								<Button onClick={() => this.updatePostContent()}>Save</Button>
+							</DWEditor>
+						)}
 					</div>
 				</Wrapper>
 			</Wrapper>

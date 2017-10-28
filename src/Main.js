@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { Block } from 'glamor/jsxstyle'
 import { PostList, Loading, EmptyPosts } from './components'
 import { withCookies, Cookies } from 'react-cookie'
+import { POST_ENDPOINT } from './utils/urls'
 
 type Post = {
 	title: String,
@@ -42,40 +43,32 @@ class Main extends Component<{ cookies: typeof Cookies }, MainState> {
 			cache: 'default'
 		}
 
-		const response = await fetch('http://localhost:4411/posts', config)
+		const response = await fetch(POST_ENDPOINT, config)
 		const posts = await response.json()
 
 		return this.setState({ posts, loaded: true })
 	}
-
-	// getPosts = () => {
-	// 	return fetch('http://localhost:4411/posts')
-	// 		.then(res => res.json())
-	// 		.then(posts => this.setState({ posts, loaded: true }))
-	// }
 
 	componentWillMount() {
 		this.getPosts()
 	}
 
 	onDelete = async (post: Object) => {
-		const h = new Headers()
 		const user = this.props.cookies.get('id')
 		const token = this.props.cookies.get('token')
 
-		h.set('Authorization', `Bearer ${token}`)
-
 		const config = {
 			method: 'DELETE',
-			headers: h,
+			headers: {
+				Authorization: `Bearer ${token}`
+			},
 			mode: 'cors',
 			cache: 'default'
 		}
 
-		const response = await fetch(`http://localhost:4411/posts/${post.id}`, config)
-		const deletePost = await response.json()
+		const response = await fetch(`${POST_ENDPOINT}/${post.id}`, config)
 
-		if (deletePost) {
+		if (response.ok) {
 			return await this.getPosts()
 		}
 	}

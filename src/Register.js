@@ -1,9 +1,10 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Block } from 'glamor/jsxstyle'
+import { Block, InlineBlock } from 'glamor/jsxstyle'
 import { Cookies } from 'react-cookie'
-import { LoginInput as Input, LoginButton } from './components'
+import { LoginInput as Input, Button } from './components'
+import { USER_ENDPOINT } from './utils/urls'
 
 type RegisterType = {
 	username: string,
@@ -35,7 +36,7 @@ class Register extends Component<
 		evt.preventDefault()
 
 		const { setAuth, cookies } = this.props
-		const response = await fetch('http://localhost:4411/users', {
+		const response = await fetch(USER_ENDPOINT, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -77,7 +78,11 @@ class Register extends Component<
 				/>
 
 				<Block paddingTop={16} textAlign="right">
-					<LoginButton label="Register" onClick={this.onSubmit} />
+					<InlineBlock>
+						<Button css={{ display: 'inline-block' }} onClick={this.onSubmit}>
+							Register
+						</Button>
+					</InlineBlock>
 				</Block>
 			</form>
 		)
