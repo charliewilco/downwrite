@@ -383,3 +383,22 @@ a:hover {
   color: var(--link-hover);
   outline: 0;
 }
+
+.HomeBanner {
+	width: 100%;
+	height: 75vh;
+	overflow: hidden;
+	transform: skewY(-8.25deg);
+	transform-origin: 0;
+	background: linear-gradient(150deg, var(--color-1) 15%, var(--color-2) 70%, var(--color-1) 94%);
+	background: linear-gradient(150deg, var(--color-1), var(--color-2));
+}
+
+
+@media (min-width: 48rem) {
+
+}
+
+@media (min-width: 81rem) {
+	.HomeBanner { height: 50vh }
+}
