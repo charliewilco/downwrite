@@ -1,12 +1,10 @@
-import React from 'react'
-import { mount } from 'enzyme'
-import DWEditor from './'
+import { DWEditor } from '../components'
 import { EditorState, convertFromRaw } from 'draft-js'
-import { posts } from '../../../db.json'
+import { posts } from './db.json'
 
-// const content = convertFromRaw(posts[0].content)
+const content = convertFromRaw(posts[0].content)
 const emptyContent = EditorState.createEmpty()
-// const preloadedContent = EditorState.createWithContent(content)
+const preloadedContent = EditorState.createWithContent(content)
 const mockEditor = state => mount(<DWEditor editorState={state} />)
 
 class WrappedEditor extends React.Component {
@@ -27,7 +25,7 @@ describe('<DWEditor />', () => {
 		expect(editor.exists()).toBe(true)
 	})
 
-	xit('Editor mounts with preloaded content', () => {
+	it('Editor mounts with preloaded content', () => {
 		const editor = mockEditor(preloadedContent)
 		expect(editor.exists()).toBe(true)
 	})

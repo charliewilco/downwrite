@@ -48,7 +48,7 @@ const s = {
 }
 
 const DeleteButton = ({ onDelete }) => (
-	<span className={css(s.edit, s.delete)} onClick={onDelete}>
+	<span className={css(s.edit, s.delete)} data-test='cardDelete' onClick={onDelete}>
 		<svg width={18} height={18} viewBox="0 0 14 18">
 			<desc>Delete this Post</desc>
 
@@ -81,7 +81,7 @@ const EditButton = ({ id }) => (
 							d="M3,17.25 L3,21 L6.75,21 L17.81,9.94 L14.06,6.19 L3,17.25 Z M20.71,7.04 C21.1,6.65 21.1,6.02 20.71,5.63 L18.37,3.29 C17.98,2.9 17.35,2.9 16.96,3.29 L15.13,5.12 L18.88,8.87 L20.71,7.04 Z"
 							id="Shape"
 							fill="#185A70"
-							fill-rule="nonzero"
+							fillRule="nonzero"
 						/>
 						<polygon id="Shape" points="0 0 24 0 24 24 0 24" />
 					</g>
@@ -111,7 +111,7 @@ const Card = ({ title, id, content, author, onDelete }) => (
 		</Flex>
 
 		<Block>
-			{content && <p className={s.content}>{content.blocks[0].text.substr(0, 90)}</p>}
+			{content && <p data-test='snippet' className={s.content}>{content.blocks[0].text.substr(0, 90)}</p>}
 		</Block>
 	</Block>
 )
