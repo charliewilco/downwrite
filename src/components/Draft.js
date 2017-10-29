@@ -2,8 +2,8 @@ import { Editor, RichUtils } from 'draft-js'
 import React from 'react'
 import { css } from 'glamor'
 import { createElement } from 'glamor/react'
-import Toolbar from '../Toolbar'
-require('./RichText.css')
+import Toolbar from './Toolbar'
+require('./Editor.css')
 
 /* @jsx createElement */
 
