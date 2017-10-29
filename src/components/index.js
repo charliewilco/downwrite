@@ -10,22 +10,24 @@ import Nav from './Nav'
 import PostList from './PostList'
 import Toolbar from './Toolbar'
 import Wrapper from './Wrapper'
-import APIStatus from './APIStatus'
 import Helpers from './Helpers'
+import LoginInput from './LoginInput'
+import LoginButton from './LoginButton'
 
 export {
-  Helpers,
-  DWEditor,
-  APIStatus,
-  Wrapper,
-  Toolbar,
-  Button,
-  Card,
-  EmptyPosts,
-  Header,
-  Input,
-  Loading,
-  Logo,
-  Nav,
-  PostList
+	Helpers,
+	DWEditor,
+	Wrapper,
+	Toolbar,
+	Button,
+	Card,
+	EmptyPosts,
+	Header,
+	LoginInput,
+	LoginButton,
+	Input,
+	Loading,
+	Logo,
+	Nav,
+	PostList
 }
