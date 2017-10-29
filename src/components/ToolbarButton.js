@@ -11,7 +11,7 @@ import {
 	Mono,
 	Underline,
 	Label
-} from './Icon'
+} from './ToolbarIcon'
 
 const btnStyle = css({
 	padding: 8,

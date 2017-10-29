@@ -1,9 +1,9 @@
 import React from 'react'
 import { css } from 'glamor'
 import { Flex, Block } from 'glamor/jsxstyle'
-import Card from '../Card'
-import LayoutControl from '../LayoutControl'
-import ListItem from './ListItem'
+import Card from './Card'
+import LayoutControl from './LayoutControl'
+import ListItem from './PostListItem'
 
 const s = {
 	main: css({

@@ -1,6 +1,6 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import Button from './'
+import Button from './Button'
 
 const onClickHandler = jest.fn()
 const wrapper = mount(<Button onClick={onClickHandler} />)

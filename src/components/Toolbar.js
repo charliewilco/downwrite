@@ -1,5 +1,5 @@
 import React from 'react'
-import StyleButton from './Button'
+import StyleButton from './ToolbarButton'
 import Media from 'react-media'
 import { css } from 'glamor'
 import { Flex } from 'glamor/jsxstyle'
