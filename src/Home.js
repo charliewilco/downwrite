@@ -10,10 +10,10 @@ import { createElement } from 'glamor/react'
 import { Logo } from './components'
 
 const hStyle = css({
-	marginBottom: 16,
+	marginBottom: 32,
 	textAlign: 'center',
-	fontSize: 16,
-	fontStyle: 'italic',
+	fontSize: 18,
+	fontFamily: 'var(--secondary-font)',
 	fontWeight: 400
 })
 
@@ -42,6 +42,7 @@ const Intro = () => (
 			textAlign: 'center',
 			marginBottom: 32,
 			'@media (min-width: 57.75rem)': {
+				paddingTop: 144,
 				textAlign: 'left',
 				marginBottom: 0
 			}
@@ -66,7 +67,6 @@ const Container = ({ children }) => (
 		width="95%"
 		margin="auto"
 		justifyContent="space-around"
-		alignItems="center"
 		position="absolute"
 		top={64}
 		left={0}
@@ -77,7 +77,7 @@ const Container = ({ children }) => (
 
 class Home extends Component<{ cookies: typeof Cookies }, { loginSelected: boolean }> {
 	state = {
-		loginSelected: true
+		loginSelected: false
 	}
 
 	render() {
@@ -94,14 +94,14 @@ class Home extends Component<{ cookies: typeof Cookies }, { loginSelected: boole
 						background="white">
 						<Flex>
 							<button
-								className={css(loginSelected ? [navStyle, navStyleAction] : navStyle)}
-								onClick={() => this.setState({ loginSelected: true })}>
-								Login
-							</button>
-							<button
 								className={css(!loginSelected ? [navStyle, navStyleAction] : navStyle)}
 								onClick={() => this.setState({ loginSelected: false })}>
 								Register
+							</button>
+							<button
+								className={css(loginSelected ? [navStyle, navStyleAction] : navStyle)}
+								onClick={() => this.setState({ loginSelected: true })}>
+								Login
 							</button>
 						</Flex>
 						<Block padding={16}>

@@ -20,7 +20,8 @@ const styles = {
 		color: 'var(--color-6)'
 	}),
 	input: css({
-		fontFamily: 'var(--secondary-font)',
+		fontFamily: 'var(--primary-font)',
+		fontSize: 16,
 		appearance: 'none',
 		display: 'block',
 		border: 0,
@@ -31,6 +32,10 @@ const styles = {
 		':focus': {
 			outline: 'none',
 			borderBottom: `2px solid var(--color-6)`
+		},
+		'&::placeholder': {
+			color: '#D9D9D9',
+			fontStyle: 'italic'
 		}
 	})
 }

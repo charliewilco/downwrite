@@ -6,7 +6,7 @@ export default class SignOut extends React.Component {
 		this.props.signOut()
 	}
 
-	render () {
+	render() {
 		return (
 			<Redirect to={{ pathname: '/', state: { from: this.props.location, authed: false } }} />
 		)

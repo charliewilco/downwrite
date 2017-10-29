@@ -12,24 +12,16 @@ type RegisterType = {
 	email: string
 }
 
-const creds = {
-	username: 'test',
-	email: 'test@test.com',
-	password: 'test'
+type LoginProps = {
+	setAuth: Function,
+	cookies: typeof Cookies
 }
 
-class Register extends Component<
-	{ setAuth: Function, cookies: typeof Cookies },
-	RegisterType
-> {
+class Register extends Component<LoginProps, RegisterType> {
 	state = {
 		username: '',
 		password: '',
 		email: ''
-	}
-
-	componentWillMount() {
-		this.setState({ ...creds })
 	}
 
 	onSubmit = async (evt: Event) => {
@@ -59,18 +51,21 @@ class Register extends Component<
 		return (
 			<form onSubmit={this.onSubmit}>
 				<Input
+					placeholder="Try for something unique"
 					label="Username"
 					value={username}
 					onChange={(e: Event) => this.setState({ username: e.target.value })}
 				/>
 
 				<Input
+					placeholder="mail@email.com"
 					label="Email"
 					value={email}
 					onChange={(e: Event) => this.setState({ email: e.target.value })}
 				/>
 
 				<Input
+					placeholder="*********"
 					label="Password"
 					value={password}
 					type="password"
