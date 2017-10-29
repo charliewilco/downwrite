@@ -8,6 +8,7 @@ import { Header } from './components'
 import Main from './Main'
 import NoMatch from './NoMatch'
 import Home from './Home'
+import SignOut from './SignOut'
 import { PrivateRoute } from './CustomRoutes'
 import { withCookies, Cookies } from 'react-cookie'
 
@@ -41,7 +42,7 @@ class App extends React.Component<{ cookies: typeof Cookies }, { authed: boolean
 		return (
 			<Router>
 				<Block fontFamily="var(--primary-font)" height="calc(100% - 82px)">
-					{authed && <Header name="Downwrite" />}
+					{authed && <Header signOut={this.signOut} name="Downwrite" />}
 					<Switch>
 						<Route
 							exact
@@ -55,13 +56,9 @@ class App extends React.Component<{ cookies: typeof Cookies }, { authed: boolean
 						/>
 						<PrivateRoute authed={authed} path="/new" component={NewPost} />
 						<PrivateRoute authed={authed} path="/:id/edit" component={EditPost} />
+						<Route path='/signout' render={(props: Object) => <SignOut signOut={this.signOut} />} />
 						<Route component={NoMatch} />
 					</Switch>
-					{authed && (
-						<footer>
-							<button onClick={() => this.signOut()}>Sign Out</button>
-						</footer>
-					)}
 				</Block>
 			</Router>
 		)

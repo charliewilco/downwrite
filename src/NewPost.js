@@ -65,7 +65,7 @@ class NewPost extends React.Component<{ cookies: typeof Cookies }, NewPostSt> {
 		const newPost = await response.json()
 
 		if (!newPost.error) {
-			this.setState({ saved: false })
+			this.setState({ saved: true })
 		}
 	}
 
@@ -74,7 +74,6 @@ class NewPost extends React.Component<{ cookies: typeof Cookies }, NewPostSt> {
 		const ContentState = this.state.editorState.getCurrentContent()
 		const content = JSON.stringify(convertToRaw(ContentState))
 		const user = this.props.cookies.get('id')
-		console.log(content)
 
 		const post = JSON.stringify({
 			title,
