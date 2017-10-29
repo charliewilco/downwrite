@@ -49,6 +49,7 @@ const Intro = () => (
 		}}>
 		<Logo />
 		<h1
+			data-test='Login Page Container'
 			className={css({
 				fontSize: 32,
 				fontFamily: 'var(--secondary-font)',

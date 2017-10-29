@@ -4,7 +4,11 @@
 	"private": true,
 	"devDependencies": {
 		"enzyme": "^3.1.0",
+		"enzyme-adapter-react-16": "^1.0.2",
+		"enzyme-to-json": "^3.1.4",
 		"flow-bin": "^0.57.3",
+		"jest-fetch-mock": "^1.2.1",
+		"react-addons-test-utils": "^15.6.2",
 		"react-test-renderer": "^16.0.0"
 	},
 	"dependencies": {
@@ -26,7 +30,9 @@
 		"start": "serve -s build",
 		"build": "react-scripts build",
 		"dev": "react-scripts start",
-		"test": "flow && react-scripts test --env=jsdom",
+		"test": "react-scripts test --env=jsdom",
+		"analysis": "flow",
+		"lint": "npx eslint ./src/**/*.js --ignore-pattern ./src/__tests__/*.test.js",
 		"eject": "react-scripts eject",
 		"go": "now && now alias",
 		"format": "prettier --write 'src/**/*.js'"
