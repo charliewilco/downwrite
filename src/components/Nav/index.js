@@ -8,13 +8,20 @@ const navButton = css({
 	borderRadius: 4,
 	'&:hover': {
 		color: 'var(--color-2)'
+	},
+	'& + &': {
+		marginLeft: 16
 	}
 })
 
-const Nav = props => (
+const Nav = () => (
 	<nav>
 		<Link to="/new" className={css(navButton)}>
 			New
+		</Link>
+
+		<Link to="/signout" className={css(navButton)}>
+			Sign Out
 		</Link>
 	</nav>
 )
