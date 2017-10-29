@@ -15,5 +15,5 @@ export const AUTH_ENDPOINT =
 
 export const MD_ENDPOINT =
 	process.env.NODE_ENV === 'development'
-	? 'http://localhost:8793/'
-	: 'https://markdown.downwrite.us/'
+		? 'http://localhost:8793/'
+		: 'https://markdown.downwrite.us/'

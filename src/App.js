@@ -56,7 +56,10 @@ class App extends React.Component<{ cookies: typeof Cookies }, { authed: boolean
 						/>
 						<PrivateRoute authed={authed} path="/new" component={NewPost} />
 						<PrivateRoute authed={authed} path="/:id/edit" component={EditPost} />
-						<Route path='/signout' render={(props: Object) => <SignOut signOut={this.signOut} />} />
+						<Route
+							path="/signout"
+							render={(props: Object) => <SignOut signOut={this.signOut} />}
+						/>
 						<Route component={NoMatch} />
 					</Switch>
 				</Block>

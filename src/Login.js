@@ -6,27 +6,20 @@ import { LoginInput, Button } from './components'
 import { Cookies } from 'react-cookie'
 import { AUTH_ENDPOINT } from './utils/urls'
 
-const creds = {
-	user: 'charlespeters',
-	password: 'wedontexist'
-}
-
 type LoginState = {
 	user: string,
 	password: string
 }
 
-class Login extends React.Component<
-	{ setAuth: Function, cookies: typeof Cookies },
-	LoginState
-> {
+type LoginProps = {
+	setAuth: Function,
+	cookies: typeof Cookies
+}
+
+class Login extends React.Component<LoginProps, LoginState> {
 	state = {
 		user: '',
 		password: ''
-	}
-
-	componentWillMount() {
-		this.setState({ ...creds })
 	}
 
 	onSubmit = async (evt: Event) => {
@@ -53,20 +46,17 @@ class Login extends React.Component<
 	}
 
 	render() {
-		const { user, password /* email */ } = this.state
+		const { user, password } = this.state
 		return (
 			<form onSubmit={this.onSubmit}>
 				<LoginInput
+					placeholder="user@email.com"
 					label="Username or Email"
 					value={user}
 					onChange={e => this.setState({ user: e.target.value })}
 				/>
-				{/* <LoginInput
-					label="Email"
-					value={email}
-					onChange={e => this.setState({ email: e.target.value })}
-				/> */}
 				<LoginInput
+					placeholder="*********"
 					label="Password"
 					value={password}
 					type="password"

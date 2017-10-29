@@ -400,5 +400,5 @@ a:hover {
 }
 
 @media (min-width: 81rem) {
-	.HomeBanner { height: 50vh }
+	.HomeBanner { height: calc(65vh + 5rem) }
 }
