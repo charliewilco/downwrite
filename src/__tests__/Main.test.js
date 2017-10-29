@@ -15,8 +15,6 @@ let wrapperUnauthed = mount(
 	</CookiesProvider>
 )
 
-let wrapperAuthed = mount(<CookiesProvider cookies={cookies}><Main cookies={cookies} /></CookiesProvider>)
-
 describe('<Main /> post lists', () => {
 	it('shows login form if logged out', () => {
 		wrapperUnauthed.setState({ authed: false })
