@@ -44,6 +44,6 @@
 		"extends": "react-app"
 	},
 	"now": {
-		"alias": "downwrite.us"
+		"alias": "alpha.downwrite.us"
 	}
 }
