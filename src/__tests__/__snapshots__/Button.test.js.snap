@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button matches snapshot 1`] = `
+.glamor-0,
+[data-glamor-0] {
+  display: block;
+  font-size: 14px;
+  background-color: var(--color-6);
+  transition: background-color 250ms ease-in-out;
+  color: #282828;
+  border: 0;
+  padding-top: 4px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-bottom: 4px;
+  border-radius: 4px;
+  box-shadow: 0 0 4px rgba(0,0,0,.037), 0 4px 8px rgba(0,0,0,.07);
+  -webkit-transition: background-color 250ms ease-in-out;
+  -moz-transition: background-color 250ms ease-in-out;
+}
+
+.glamor-0:hover,
+[data-glamor-0]:hover {
+  background-color: var(--color-7);
+}
+
+<Button
+  onClick={[Function]}
+>
+  <button
+    className={
+      Object {
+        "data-glamor-0": "",
+      }
+    }
+    onClick={[Function]}
+  />
+</Button>
+`;

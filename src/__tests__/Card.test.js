@@ -1,5 +1,4 @@
 import { Card } from '../components'
-import { MemoryRouter } from 'react-router-dom'
 import { posts } from './db.json'
 
 const mockDelete = jest.fn()
@@ -21,6 +20,9 @@ describe('Card', () => {
 		expect(wrapper.find('h2').text()).toBe('Starting Again')
 	})
 
+	it('matches snapshot', () => {
+		expect(wrapper).toMatchSnapshot()
+	})
 
 	it('should fire a delete', () => {
 		wrapper.find('[data-test="cardDelete"]').simulate('click')
