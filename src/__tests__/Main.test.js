@@ -2,25 +2,36 @@ import Main from '../Main'
 import {Card} from '../components'
 import { CookiesProvider, Cookies } from 'react-cookie'
 import { posts } from './db.json'
-import { MemoryRouter as Router } from 'react-router-dom'
 import App from '../App'
 
 const cookies = new Cookies()
 
-let wrapperUnauthed = mount(
+let wrapper = mount(
 	<CookiesProvider cookies={cookies}>
-		<Router>
+		<MemoryRouter>
 			<App />
-		</Router>
+		</MemoryRouter>
 	</CookiesProvider>
 )
 
+cookies.get = () => jest.fn().mockReturnValue('someething')
+
+let main = mount(
+	<Main cookies={cookies} />
+)
+
+
+
 describe('<Main /> post lists', () => {
 	it('shows login form if logged out', () => {
-		wrapperUnauthed.setState({ authed: false })
+		wrapper.setState({ authed: false })
 
-		expect(wrapperUnauthed.find("[data-test='Login Page Container']").exists()).toBe(true)
+		expect(wrapper.find("[data-test='Login Page Container']").exists()).toBe(true)
 	})
 
-	xit('shows list of Cards if authed and has no posts')
+	it('shows list of Cards if authed and has no posts', () => {
+		const instance = main.instance()
+		const spy = jest.spyOn(instance, 'getPosts')
+		expect(spy).toHaveBeenCalled()
+	})
 })
