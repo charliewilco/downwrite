@@ -203,7 +203,7 @@ class EditPost extends React.Component<{ match: Object, cookies: typeof Cookies 
 		return !loaded ? (
 			<Loading />
 		) : (
-			<Wrapper paddingTop={16}>
+			<Wrapper paddingTop={16} sm>
 				<Block className={css(meta)} marginBottom={8}>
 					{post.id} | {post.author} | Date Added:{' '}
 					{format(post.dateAdded, 'HH:MM A, DD MMMM YYYY')}
@@ -220,7 +220,7 @@ class EditPost extends React.Component<{ match: Object, cookies: typeof Cookies 
 						<h6 style={{ fontSize: 16, marginBottom: 8 }}>Tags</h6>
 					</div>
 				</Helpers>
-				<Wrapper>
+				<Wrapper sm>
 					<div>
 						{editorState !== null && (
 							<DWEditor

@@ -47,10 +47,12 @@ type InputType = {
 	type: String
 }
 
-export default class LoginInput extends React.Component<InputType, { active: boolean }> {
+export default class extends React.Component<InputType, { active: boolean }> {
 	state = {
 		active: false
 	}
+
+	static displayName = 'LoginInput'
 
 	render() {
 		const id = uuid()
