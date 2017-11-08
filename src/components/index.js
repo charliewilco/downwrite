@@ -13,9 +13,13 @@ import Wrapper from './Wrapper'
 import Helpers from './Helpers'
 import LoginInput from './LoginInput'
 import LoginButton from './LoginButton'
+import Aux from './Aux'
+import Layout from './Layout'
 
 export {
+	Aux,
 	Helpers,
+	Layout,
 	DWEditor,
 	Wrapper,
 	Toolbar,
