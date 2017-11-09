@@ -50,7 +50,7 @@ const s = {
 }
 
 const DeleteButton = ({ onDelete }) => (
-	<span className={css(s.edit, s.delete)} data-test='cardDelete' onClick={onDelete}>
+	<span className={css(s.edit, s.delete)} data-test="cardDelete" onClick={onDelete}>
 		<svg width={18} height={18} viewBox="0 0 14 18">
 			<desc>Delete this Post</desc>
 
@@ -94,22 +94,37 @@ const EditButton = ({ id }) => (
 )
 
 const Card = ({ title, id, content, dateAdded, onDelete }) => (
-	<Flex height={192} flexDirection='column' justifyContent='space-between' className={css(s.card)} data-test='Card'>
-		<Block
-			borderBottom="1px solid #DBDCDD"
-			padding='12px 8px'>
-				<h2 className={s.title}>
-					<Link to={`/${id}/edit`}>{title}</Link>
-				</h2>
-				<small className={s.meta}>added {distance(dateAdded)} ago</small>
+	<Flex
+		height={192}
+		flexDirection="column"
+		justifyContent="space-between"
+		className={css(s.card)}
+		data-test="Card">
+		<Block borderBottom="1px solid #DBDCDD" padding="12px 8px">
+			<h2 className={s.title}>
+				<Link to={`/${id}/edit`}>{title}</Link>
+			</h2>
+			<small className={s.meta}>added {distance(dateAdded)} ago</small>
 		</Block>
 
 		<Block padding={8} flex={1}>
-			{content && <p data-test='snippet' className={s.content}>{content.blocks[0].text.substr(0, 90)}</p>}
+			{content && (
+				<p data-test="snippet" className={s.content}>
+					{content.blocks[0].text.substr(0, 90)}
+				</p>
+			)}
 		</Block>
-		<Flex className={css(s.tray)} padding={8} fontWeight={700} fontSize={12} justifyContent='space-between' backgroundColor='rgba(101, 163, 191, .125)'>
+		<Flex
+			className={css(s.tray)}
+			padding={8}
+			fontWeight={700}
+			fontSize={12}
+			justifyContent="space-between"
+			backgroundColor="rgba(101, 163, 191, .125)">
 			<Link to={`/${id}/edit`}>Edit</Link>
-			<button className={css(s.delete)} onClick={onDelete}>Delete</button>
+			<button className={css(s.delete)} onClick={onDelete}>
+				Delete
+			</button>
 		</Flex>
 	</Flex>
 )

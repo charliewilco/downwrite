@@ -26,7 +26,7 @@ const hSty = {
 }
 
 const Header = ({ name }) => (
-	<Row component="header"  alignItems='center' justifyContent='space-between' padding={16}>
+	<Row component="header" alignItems="center" justifyContent="space-between" padding={16}>
 		<Flex alignItems="center">
 			<Logo />
 			<Link className={css(hSty.link)} to="/">

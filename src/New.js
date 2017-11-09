@@ -100,7 +100,11 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 					<Button onClick={this.addNewPost}>Add</Button>
 				</Helpers>
 				<Wrapper>
-					<Input placeholder='Untitled Document' value={title} onChange={e => this.setState({ title: e.target.value })} />
+					<Input
+						placeholder="Untitled Document"
+						value={title}
+						onChange={e => this.setState({ title: e.target.value })}
+					/>
 					<DWEditor
 						editorState={editorState}
 						onChange={editorState => this.setState({ editorState })}

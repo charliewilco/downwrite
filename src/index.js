@@ -5,14 +5,11 @@ import App from './App'
 import './index.css'
 import registerServiceWorker from './registerServiceWorker'
 
-
 const Downwrite = () => (
 	<Auth>
-	{
-		(authed, token, user, signIn, signOut) => (
+		{(authed, token, user, signIn, signOut) => (
 			<App authed={authed} token={token} user={user} signIn={signIn} signOut={signOut} />
-		)
-	}
+		)}
 	</Auth>
 )
 

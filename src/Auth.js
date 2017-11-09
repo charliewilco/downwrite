@@ -31,14 +31,17 @@ export default class Auth extends Component {
 		})
 	}
 
-
 	signIn = (authed, token, user) => this.setState({ authed, token, user }, signIn(token, user))
 
-	signOut = () => this.setState({
-		authed: false,
-		token: undefined,
-		user: undefined
-	}, signOut())
+	signOut = () =>
+		this.setState(
+			{
+				authed: false,
+				token: undefined,
+				user: undefined
+			},
+			signOut()
+		)
 
 	render() {
 		return this.props.children(
