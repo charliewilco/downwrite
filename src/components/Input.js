@@ -3,22 +3,33 @@ import { css } from 'glamor'
 
 let styles = css({
 	display: 'block',
-	backgroundColor: 'white',
 	width: '100%',
 	appearance: 'none',
-	borderWidth: 1,
+	fontWeight: 700,
+	fontSize: '125%',
+	borderWidth: 0,
+	borderBottom: 1,
 	borderStyle: 'solid',
 	borderRadius: 0,
-	borderColor: 'rgba(0,0,0,.125)',
+	borderColor: 'rgba(0, 0, 0, .125)',
 	padding: 16
 })
 
-const Input = ({ onChange, type, inputRef, ...args }) => (
-	<input className={css(styles)} type={type} ref={inputRef} onChange={onChange} {...args} />
-)
+export default class Input extends React.Component {
+	static defaultProps = {
+		type: 'text'
+	}
 
-Input.defaultProps = {
-	type: 'text'
+	render() {
+		const { onChange, type, inputRef, ...args } = this.props
+
+		return (
+			<input
+				className={css(styles)}
+				ref={inputRef}
+				onChange={onChange}
+				{...args}
+			/>
+		)
+	}
 }
-
-export default Input

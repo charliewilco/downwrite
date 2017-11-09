@@ -394,6 +394,17 @@ a:hover {
 	background: linear-gradient(150deg, var(--color-1), var(--color-2));
 }
 
+.Root::before {
+	content: '';
+	display: block;
+	height: 4px;
+	width: 100%;
+	background-image: linear-gradient(to right, #2584A5, #4FA5C2)
+}
+
+.__modalOpen {
+	overflow: hidden !important;
+}
 
 @media (min-width: 48rem) {
 

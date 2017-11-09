@@ -1,6 +1,10 @@
 import { Header } from '../components'
 
-let wrapper = shallow(<Header name="Downwrite" />)
+let wrapper = mount(
+	<MemoryRouter>
+		<Header name="Downwrite" />
+	</MemoryRouter>
+)
 
 describe('Header Component', () => {
 	it('renders a header', () => {

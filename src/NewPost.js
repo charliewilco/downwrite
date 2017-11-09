@@ -4,8 +4,7 @@ import * as React from 'react'
 import { EditorState, convertToRaw } from 'draft-js'
 import { DWEditor } from './components'
 import { Redirect } from 'react-router-dom'
-import { withCookies, Cookies } from 'react-cookie'
-import { Wrapper, Input, Button } from './components'
+import { Wrapper, Input, Button, Helpers } from './components'
 import { css } from 'glamor'
 import { createElement } from 'glamor/react'
 import uuid from 'uuid/v4'
@@ -40,9 +39,12 @@ type NewPostSt = {
 	dateAdded: Date
 }
 
-class NewPost extends React.Component<{ cookies: typeof Cookies }, NewPostSt> {
-	static displayName = 'NewPostEditor'
+type NewPostProps = { token: String, user: String }
 
+// TODO: Shouldn't be able to add if editor is empty
+// TODO: If title is empty post should be named `Untitled Document ${uuid()}`
+
+export default class extends React.Component<NewPostProps, NewPostSt> {
 	state = {
 		editorState: EditorState.createEmpty(),
 		title: '',
@@ -51,8 +53,10 @@ class NewPost extends React.Component<{ cookies: typeof Cookies }, NewPostSt> {
 		saved: false
 	}
 
-	addNew = async body => {
-		const token: string = this.props.cookies.get('token')
+	static displayName = 'NewPostEditor'
+
+	addNew = async (body: Object) => {
+		const { token } = this.props
 		const response = await fetch(POST_ENDPOINT, {
 			method: 'POST',
 			headers: {
@@ -73,9 +77,9 @@ class NewPost extends React.Component<{ cookies: typeof Cookies }, NewPostSt> {
 		let { id, title, editorState, dateAdded } = this.state
 		const ContentState = this.state.editorState.getCurrentContent()
 		const content = JSON.stringify(convertToRaw(ContentState))
-		const user = this.props.cookies.get('id')
+		const { user } = this.props
 
-		const post = JSON.stringify({
+		const post: String = JSON.stringify({
 			title,
 			id,
 			content,
@@ -91,18 +95,18 @@ class NewPost extends React.Component<{ cookies: typeof Cookies }, NewPostSt> {
 		return saved ? (
 			<Redirect to={`/${id}/edit`} />
 		) : (
-			<Wrapper paddingTop={20}>
-				<Input value={title} onChange={e => this.setState({ title: e.target.value })} />
+			<Wrapper paddingTop={128} sm>
+				<Helpers>
+					<Button onClick={this.addNewPost}>Add</Button>
+				</Helpers>
 				<Wrapper>
+					<Input placeholder='Untitled Document' value={title} onChange={e => this.setState({ title: e.target.value })} />
 					<DWEditor
 						editorState={editorState}
-						onChange={editorState => this.setState({ editorState })}>
-						<Button onClick={this.addNewPost}>Add</Button>
-					</DWEditor>
+						onChange={editorState => this.setState({ editorState })}
+					/>
 				</Wrapper>
 			</Wrapper>
 		)
 	}
 }
-
-export default withCookies(NewPost)

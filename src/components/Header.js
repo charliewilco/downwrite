@@ -8,7 +8,6 @@ import { Flex, Row } from 'glamor/jsxstyle'
 const hSty = {
 	link: css({
 		marginLeft: 12,
-		color: 'white',
 		display: 'block',
 		transition: 'color 375ms ease-in-out',
 		'&:hover': {
@@ -23,19 +22,11 @@ const hSty = {
 		'@media (min-width: 57.75rem)': {
 			fontSize: 20
 		}
-	},
-	bar: css({
-		padding: 16,
-		fontFamily: 'var(--secondary-font)',
-		fontWeight: 500,
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		background: `var(--color-1) linear-gradient(to right, #2584A5, #4FA5C2)`
-	})
+	}
 }
 
 const Header = ({ name }) => (
-	<Row component="header" className={css(hSty.bar)}>
+	<Row component="header"  alignItems='center' justifyContent='space-between' padding={16}>
 		<Flex alignItems="center">
 			<Logo />
 			<Link className={css(hSty.link)} to="/">
