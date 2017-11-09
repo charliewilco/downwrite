@@ -12,10 +12,7 @@ type RegisterType = {
 }
 
 type LoginProps = {
-	setAuth: Function,
-	cookies: {
-		set: Function
-	}
+	signIn: Function
 }
 
 class Register extends Component<LoginProps, RegisterType> {
@@ -27,8 +24,6 @@ class Register extends Component<LoginProps, RegisterType> {
 
 	onSubmit = async (evt: Event) => {
 		evt.preventDefault()
-
-		const { setAuth, cookies } = this.props
 		const response = await fetch(USER_ENDPOINT, {
 			method: 'POST',
 			headers: {
@@ -40,11 +35,9 @@ class Register extends Component<LoginProps, RegisterType> {
 		const user = await response.json()
 
 		if (user.userID) {
-			cookies.set('token', user.id_token)
-			cookies.set('id', user.userID)
+			this.props.signIn((user.id_token !== undefined),  user.id_token, user.userID)
 		}
 
-		setAuth(user.id_token !== undefined)
 	}
 
 	render() {
