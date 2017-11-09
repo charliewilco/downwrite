@@ -2,38 +2,40 @@ import React from 'react'
 import { Flex, Block } from 'glamor/jsxstyle'
 import { Link } from 'react-router-dom'
 import { css } from 'glamor'
+import distance from 'date-fns/distance_in_words_to_now'
 
 const s = {
 	title: css({
 		fontSize: 14,
-		fontWeight: 500,
-		fontFamily: 'var(--secondary-font)',
-		'@media (min-width: 57.75rem)': { fontSize: 16 }
+		marginBottom: 0,
+		fontWeight: 700,
+		'@media (min-width: 57.75rem)': { fontSize: 18 }
 	}),
 	delete: css({
 		color: 'var(--color-2)',
 		border: 0,
+		background: 'none',
 		appearance: 'none',
 		WebkitFontSmoothing: 'antialiased'
 	}),
 	content: css({
-		fontSize: `small`,
-		opacity: 0.875,
-		padding: 16
+		fontSize: 12
 	}),
 	card: css({
-		borderLeftWidth: 4,
-		borderLeftStyle: 'solid',
-		borderColor: `var(--color-1)`,
-		height: '100%',
-		fontWeight: 500,
+		fontWeight: 400,
 		boxShadow: '0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12)',
 		backgroundColor: 'white'
 	}),
 	meta: css({
-		opacity: 0.5,
-		fontFamily: 'var(--primary-font)',
+		fontSize: 12,
+		display: 'block',
+		color: '#757575',
 		fontWeight: 400
+	}),
+	tray: css({
+		'& a': {
+			color: '#4382A1'
+		}
 	}),
 	edit: css({
 		fontSize: 12,
@@ -91,29 +93,25 @@ const EditButton = ({ id }) => (
 	</Link>
 )
 
-const Card = ({ title, id, content, author, onDelete }) => (
-	<Block className={css(s.card)}>
-		<Flex
-			borderBottom="1px solid #f2f2f2"
-			padding={16}
-			justifyContent="space-between"
-			alignItems="flex-start">
-			<div>
+const Card = ({ title, id, content, dateAdded, onDelete }) => (
+	<Flex height={192} flexDirection='column' justifyContent='space-between' className={css(s.card)} data-test='Card'>
+		<Block
+			borderBottom="1px solid #DBDCDD"
+			padding='12px 8px'>
 				<h2 className={s.title}>
 					<Link to={`/${id}/edit`}>{title}</Link>
 				</h2>
-				<small className={s.meta}>{author}</small>
-			</div>
-			<Flex flexDirection="column" className={css(s.action)}>
-				<EditButton id={id} />
-				<DeleteButton onDelete={onDelete} />
-			</Flex>
-		</Flex>
+				<small className={s.meta}>added {distance(dateAdded)} ago</small>
+		</Block>
 
-		<Block>
+		<Block padding={8} flex={1}>
 			{content && <p data-test='snippet' className={s.content}>{content.blocks[0].text.substr(0, 90)}</p>}
 		</Block>
-	</Block>
+		<Flex className={css(s.tray)} padding={8} fontWeight={700} fontSize={12} justifyContent='space-between' backgroundColor='rgba(101, 163, 191, .125)'>
+			<Link to={`/${id}/edit`}>Edit</Link>
+			<button className={css(s.delete)} onClick={onDelete}>Delete</button>
+		</Flex>
+	</Flex>
 )
 
 export default Card
