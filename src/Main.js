@@ -2,7 +2,6 @@
 import React, { Component } from 'react'
 import { Block } from 'glamor/jsxstyle'
 import { PostList, Loading, EmptyPosts } from './components'
-import { withCookies, Cookies } from 'react-cookie'
 import { POST_ENDPOINT } from './utils/urls'
 
 type Post = {
@@ -16,7 +15,7 @@ type MainState = {
 	layout: 'grid' | 'list'
 }
 
-class Main extends Component<{ cookies: typeof Cookies }, MainState> {
+export default class Main extends Component<{ user: String, token: String }, MainState> {
 	static displayName = 'Main View'
 
 	state = {
@@ -31,8 +30,7 @@ class Main extends Component<{ cookies: typeof Cookies }, MainState> {
 
 	getPosts = async () => {
 		const h = new Headers()
-		const user = this.props.cookies.get('id')
-		const token = this.props.cookies.get('token')
+		const { user, token } = this.props
 
 		h.set('Authorization', `Bearer ${token}`)
 
@@ -54,8 +52,7 @@ class Main extends Component<{ cookies: typeof Cookies }, MainState> {
 	}
 
 	onDelete = async (post: Object) => {
-		const user = this.props.cookies.get('id')
-		const token = this.props.cookies.get('token')
+		const { user, token } = this.props
 
 		const config = {
 			method: 'DELETE',
@@ -95,5 +92,3 @@ class Main extends Component<{ cookies: typeof Cookies }, MainState> {
 		)
 	}
 }
-
-export default withCookies(Main)
