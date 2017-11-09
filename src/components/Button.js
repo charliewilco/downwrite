@@ -26,8 +26,6 @@ type Props = {
 	args: Object
 }
 
-const Button = ({ ...args }: Props) => (
-	<button className={css(btn)} {...args} />
-)
+const Button = ({ ...args }: Props) => <button className={css(btn)} {...args} />
 
 export default Button

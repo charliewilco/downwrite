@@ -23,13 +23,6 @@ export default class Input extends React.Component {
 	render() {
 		const { onChange, type, inputRef, ...args } = this.props
 
-		return (
-			<input
-				className={css(styles)}
-				ref={inputRef}
-				onChange={onChange}
-				{...args}
-			/>
-		)
+		return <input className={css(styles)} ref={inputRef} onChange={onChange} {...args} />
 	}
 }

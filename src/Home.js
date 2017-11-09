@@ -13,7 +13,6 @@ const hStyle = css({
 	marginBottom: 32,
 	textAlign: 'center',
 	fontSize: 18,
-	fontFamily: 'var(--secondary-font)',
 	fontWeight: 400
 })
 
@@ -22,7 +21,6 @@ const navStyle = css({
 	border: 0,
 	appearance: 'none',
 	borderRadius: 0,
-	fontFamily: 'var(--secondary-font)',
 	borderBottomWidth: 3,
 	borderBottomStyle: 'solid',
 	paddingTop: 16,
@@ -49,10 +47,9 @@ const Intro = () => (
 		}}>
 		<Logo />
 		<h1
-			data-test='Login Page Container'
+			data-test="Login Page Container"
 			className={css({
 				fontSize: 32,
-				fontFamily: 'var(--secondary-font)',
 				marginTop: 16,
 				marginBottom: 4
 			})}>
@@ -112,11 +109,11 @@ class Home extends Component<void, { loginSelected: boolean, error: string }> {
 							<h2 className={css(hStyle)}>
 								{loginSelected ? 'Welcome Back!' : 'Sign Up as  a New User'}
 							</h2>
-							{
-								loginSelected
-								? <Login {...this.props} setError={this.errorMessage} cookies={oatmeal} />
-								: <Register {...this.props} setError={this.errorMessage} cookies={oatmeal} />
-							}
+							{loginSelected ? (
+								<Login {...this.props} setError={this.errorMessage} cookies={oatmeal} />
+							) : (
+								<Register {...this.props} setError={this.errorMessage} cookies={oatmeal} />
+							)}
 						</Block>
 					</Block>
 				</Container>
