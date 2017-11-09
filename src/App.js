@@ -10,15 +10,20 @@ import NoMatch from './NoMatch'
 import Home from './Home'
 import SignOut from './SignOut'
 import { PrivateRoute } from './CustomRoutes'
-import { withCookies, Cookies } from 'react-cookie'
 
-class App extends React.Component<{ cookies: typeof Cookies }, { authed: boolean }> {
+type AppProps = {
+	token: String,
+	user: String,
+	signOut: Function
+}
+
+class App extends React.Component<AppProps, { authed: boolean }> {
 	state = {
 		authed: false
 	}
 
 	componentWillMount() {
-		const token: string = this.props.cookies.get('token')
+		const { token } = this.props
 		this.setState({
 			authed: token !== undefined && token !== 'undefined'
 		})
@@ -29,12 +34,7 @@ class App extends React.Component<{ cookies: typeof Cookies }, { authed: boolean
 	}
 
 	signOut = () => {
-		const rmToken: Function = () => {
-			this.props.cookies.remove('token')
-			this.props.cookies.remove('id')
-		}
-
-		return this.setState({ authed: false }, rmToken)
+		return this.setState({ authed: false }, this.props.signOut())
 	}
 
 	render() {
@@ -49,7 +49,7 @@ class App extends React.Component<{ cookies: typeof Cookies }, { authed: boolean
 							path="/"
 							render={(props: Object) =>
 								authed === true ? (
-									<Main {...props} />
+									<Main user={this.props.user} token={this.props.token} {...props} />
 								) : (
 									<Home {...props} setAuth={this.setAuth} />
 								)}
@@ -68,4 +68,4 @@ class App extends React.Component<{ cookies: typeof Cookies }, { authed: boolean
 	}
 }
 
-export default withCookies(App)
+export default App

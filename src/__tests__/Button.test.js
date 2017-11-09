@@ -8,4 +8,6 @@ describe('Button', () => {
 		wrapper.simulate('click')
 		expect(onClickHandler).toHaveBeenCalled()
 	})
+
+	it('matches snapshot', () => expect(wrapper).toMatchSnapshot())
 })

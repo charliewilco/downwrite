@@ -9,13 +9,12 @@ require('./Editor.css')
 
 const editorStyle = css({
 	padding: 16,
-	background: 'white',
 	height: '100%',
 	width: '100%'
 })
 
 const editorShell = css({
-	border: `1px solid rgba(0, 0, 0 ,.125)`,
+	// border: `1px solid rgba(0, 0, 0 ,.125)`,
 	borderTop: 0,
 	position: 'relative',
 	paddingTop: 52
@@ -73,12 +72,15 @@ export default class extends React.Component {
 
 		return (
 			<div className={`${css(editorShell)} OuterEditor`} css={{ height: '100%' }}>
-				<Toolbar
-					editorState={editorState}
-					onToggleInlineStyle={this._toggleInlineStyle}
-					onToggleBlockType={this._toggleBlockType}
-					children={children}
-				/>
+				{this.props.toolbar && (
+					<Toolbar
+						editorState={editorState}
+						onToggleInlineStyle={this._toggleInlineStyle}
+						onToggleBlockType={this._toggleBlockType}
+						children={children}
+					/>
+				)}
+
 				<div className={`${css(editorStyle)} ${className}`} onClick={this.focus}>
 					<Editor
 						blockStyleFn={getBlockStyle}
@@ -87,7 +89,7 @@ export default class extends React.Component {
 						handleKeyCommand={this.handleKeyCommand}
 						onChange={editorState => this.onChange(editorState)}
 						onTab={this.onTab}
-						placeholder="Tell a story..."
+						placeholder="History will be kind to me for I intend to write it. — Winston Churchill"
 						ref="editor"
 						spellCheck={true}
 					/>

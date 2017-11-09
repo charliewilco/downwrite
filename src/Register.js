@@ -2,8 +2,7 @@
 
 import React, { Component } from 'react'
 import { Block, InlineBlock } from 'glamor/jsxstyle'
-import { Cookies } from 'react-cookie'
-import { LoginInput as Input, Button } from './components'
+import { LoginInput, Button } from './components'
 import { USER_ENDPOINT } from './utils/urls'
 
 type RegisterType = {
@@ -14,7 +13,9 @@ type RegisterType = {
 
 type LoginProps = {
 	setAuth: Function,
-	cookies: typeof Cookies
+	cookies: {
+		set: Function
+	}
 }
 
 class Register extends Component<LoginProps, RegisterType> {
@@ -50,21 +51,21 @@ class Register extends Component<LoginProps, RegisterType> {
 		const { username, password, email } = this.state
 		return (
 			<form onSubmit={this.onSubmit}>
-				<Input
+				<LoginInput
 					placeholder="Try for something unique"
 					label="Username"
 					value={username}
 					onChange={(e: Event) => this.setState({ username: e.target.value })}
 				/>
 
-				<Input
+				<LoginInput
 					placeholder="mail@email.com"
 					label="Email"
 					value={email}
 					onChange={(e: Event) => this.setState({ email: e.target.value })}
 				/>
 
-				<Input
+				<LoginInput
 					placeholder="*********"
 					label="Password"
 					value={password}

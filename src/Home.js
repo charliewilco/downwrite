@@ -1,13 +1,13 @@
 // @flow
 // @jsx createElement
 import React, { Component } from 'react'
-import { withCookies, Cookies } from 'react-cookie'
 import Login from './Login'
 import Register from './Register'
 import { Block, Flex } from 'glamor/jsxstyle'
 import { css } from 'glamor'
 import { createElement } from 'glamor/react'
 import { Logo } from './components'
+import oatmeal from './utils/cookie'
 
 const hStyle = css({
 	marginBottom: 32,
@@ -76,13 +76,16 @@ const Container = ({ children }) => (
 	/>
 )
 
-class Home extends Component<{ cookies: typeof Cookies }, { loginSelected: boolean }> {
+class Home extends Component<void, { loginSelected: boolean, error: string }> {
 	state = {
-		loginSelected: false
+		loginSelected: false,
+		error: ''
 	}
 
+	errorMessage = (x: string) => this.setState({ error: x })
+
 	render() {
-		const { loginSelected } = this.state
+		const { loginSelected, error } = this.state
 		return (
 			<Block position="relative">
 				<Block className="HomeBanner" />
@@ -109,13 +112,18 @@ class Home extends Component<{ cookies: typeof Cookies }, { loginSelected: boole
 							<h2 className={css(hStyle)}>
 								{loginSelected ? 'Welcome Back!' : 'Sign Up as  a New User'}
 							</h2>
-							{loginSelected ? <Login {...this.props} /> : <Register {...this.props} />}
+							{
+								loginSelected
+								? <Login {...this.props} setError={this.errorMessage} cookies={oatmeal} />
+								: <Register {...this.props} setError={this.errorMessage} cookies={oatmeal} />
+							}
 						</Block>
 					</Block>
 				</Container>
+				{error.length > 0 && <span>{error}</span>}
 			</Block>
 		)
 	}
 }
 
-export default withCookies(Home)
+export default Home

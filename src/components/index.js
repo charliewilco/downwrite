@@ -13,14 +13,22 @@ import Wrapper from './Wrapper'
 import Helpers from './Helpers'
 import LoginInput from './LoginInput'
 import LoginButton from './LoginButton'
+import Aux from './Aux'
+import SettingsIcon from './SettingsIcon'
+import Layout from './Layout'
+import Modal from './Modal'
 
 export {
+	Aux,
+	SettingsIcon,
 	Helpers,
+	Layout,
 	DWEditor,
 	Wrapper,
 	Toolbar,
 	Button,
 	Card,
+	Modal,
 	EmptyPosts,
 	Header,
 	LoginInput,
