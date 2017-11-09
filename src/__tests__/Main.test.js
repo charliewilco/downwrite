@@ -1,37 +1,38 @@
 import Main from '../Main'
-import {Card} from '../components'
-import { CookiesProvider, Cookies } from 'react-cookie'
+import { Card } from '../components'
 import { posts } from './db.json'
 import App from '../App'
+import { createWaitForElement } from 'enzyme-wait';
 
-const cookies = new Cookies()
-
-let wrapper = mount(
-	<CookiesProvider cookies={cookies}>
-		<MemoryRouter>
-			<App />
-		</MemoryRouter>
-	</CookiesProvider>
-)
-
-cookies.get = () => jest.fn().mockReturnValue('someething')
-
-let main = mount(
-	<Main cookies={cookies} />
-)
-
-
+const waitFor = createWaitForElement('[data-test="Card"]', 5000, 5000)
 
 describe('<Main /> post lists', () => {
 	it('shows login form if logged out', () => {
-		wrapper.setState({ authed: false })
+		let wrapper = mount(
+			<MemoryRouter>
+				<App />
+			</MemoryRouter>
+		)
 
 		expect(wrapper.find("[data-test='Login Page Container']").exists()).toBe(true)
 	})
 
-	it('shows list of Cards if authed and has no posts', () => {
-		const instance = main.instance()
-		const spy = jest.spyOn(instance, 'getPosts')
-		expect(spy).toHaveBeenCalled()
+	xit('shows list of Cards if authed and has no posts', async () => {
+		await fetch.mockResponse(JSON.stringify(posts))
+
+		let main = mount(
+			<MemoryRouter>
+				<Main user={user} token={token} />
+			</MemoryRouter>
+		)
+
+
+		const loadedMain = await waitFor(main)
+
+		console.log(main.debug())
+
+
+		expect(main.exists()).toBe(true)
+		expect(main.find('h2').contains('Starting Again')).toBe(true)
 	})
 })
