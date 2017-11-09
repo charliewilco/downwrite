@@ -11,11 +11,9 @@ type LoginState = {
 }
 
 type LoginProps = {
-	setAuth: Function,
 	setError: Function,
-	cookies: {
-		get: Function
-	}
+	signIn: Function,
+	signOut: Function
 }
 
 class Login extends React.Component<LoginProps, LoginState> {
@@ -27,7 +25,6 @@ class Login extends React.Component<LoginProps, LoginState> {
 	onSubmit = async (evt: Event) => {
 		evt.preventDefault()
 
-		const { setAuth, cookies } = this.props
 		const authRequest = await fetch(AUTH_ENDPOINT, {
 			method: 'POST',
 			headers: {
@@ -37,19 +34,16 @@ class Login extends React.Component<LoginProps, LoginState> {
 		})
 
 		const auth = await authRequest.json()
-		// TODO: Remove this
-		console.log(auth, auth.id_token)
+
+
 
 		if (auth.error) {
 			this.props.setError(auth.message)
 		}
 
 		if (auth.userID) {
-			cookies.set('token', auth.id_token)
-			cookies.set('id', auth.userID)
+			this.props.signIn((auth.id_token !== undefined), auth.id_token, auth.userID)
 		}
-
-		setAuth(auth.id_token !== undefined)
 	}
 
 	render() {

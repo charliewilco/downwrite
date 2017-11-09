@@ -13,7 +13,6 @@ const hStyle = css({
 	marginBottom: 32,
 	textAlign: 'center',
 	fontSize: 18,
-	fontFamily: 'var(--secondary-font)',
 	fontWeight: 400
 })
 
@@ -22,7 +21,6 @@ const navStyle = css({
 	border: 0,
 	appearance: 'none',
 	borderRadius: 0,
-	fontFamily: 'var(--secondary-font)',
 	borderBottomWidth: 3,
 	borderBottomStyle: 'solid',
 	paddingTop: 16,
@@ -52,7 +50,6 @@ const Intro = () => (
 			data-test='Login Page Container'
 			className={css({
 				fontSize: 32,
-				fontFamily: 'var(--secondary-font)',
 				marginTop: 16,
 				marginBottom: 4
 			})}>
