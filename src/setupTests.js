@@ -13,6 +13,8 @@ global.mount = mount
 global.toJson = toJson
 global.MemoryRouter = MemoryRouter
 global.fetch = require('jest-fetch-mock')
+// global.XMLHttpRequest = require('w3c-xmlhttprequest').XMLHttpRequest
+
 
 window.matchMedia = window.matchMedia || function() {
 	return {
@@ -21,3 +23,6 @@ window.matchMedia = window.matchMedia || function() {
 		removeListener: function() {}
 	}
 }
+
+global.user = '59ed5b03992843434f6fc8bb'
+global.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU5ZWQ1YjAzOTkyODQzNDM0ZjZmYzhiYiIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTUwOTU0NjI0NSwiZXhwIjoxNTA5NzE5MDQ1fQ.Go22Ea4XIILguaM7G-Hek27-aDUI7r0OnMT6MTq72s8'
