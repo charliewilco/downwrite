@@ -5,7 +5,6 @@ const oatmeal: typeof Cookies = new Cookies()
 export const TOKEN: string = oatmeal.get('DW_TOKEN')
 export const USER_ID: string = oatmeal.get('DW_USERID')
 
-
 export const signOut: Function = () => {
 	oatmeal.remove('DW_TOKEN')
 	oatmeal.remove('DW_USERID')

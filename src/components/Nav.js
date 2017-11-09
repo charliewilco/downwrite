@@ -12,7 +12,6 @@ const navButton = css({
 	}
 })
 
-
 export default class extends Component {
 	static defaultProps = {
 		open: true
@@ -21,7 +20,7 @@ export default class extends Component {
 	render() {
 		return (
 			<nav>
-				<Block backgroundColor='white'>
+				<Block backgroundColor="white">
 					<Link to="/new" className={css(navButton)}>
 						New
 					</Link>
@@ -30,7 +29,6 @@ export default class extends Component {
 						Sign Out
 					</Link>
 				</Block>
-
 			</nav>
 		)
 	}

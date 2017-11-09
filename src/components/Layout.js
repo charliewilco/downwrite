@@ -12,19 +12,16 @@ export default class extends Component {
 		open: this.props.navOpen
 	}
 
-	openNav = () => this.setState(({ open }) => {
-		return { open: !open }
-	})
+	openNav = () =>
+		this.setState(({ open }) => {
+			return { open: !open }
+		})
 
 	render() {
 		return (
 			<Aux>
 				<Header name="Downwrite" onClick={this.openNav} />
-				{
-					this.state.open && (
-						<Nav />
-					)
-				}
+				{this.state.open && <Nav />}
 			</Aux>
 		)
 	}

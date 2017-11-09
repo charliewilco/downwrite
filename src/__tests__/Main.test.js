@@ -2,7 +2,7 @@ import Main from '../Main'
 import { Card } from '../components'
 import { posts } from './db.json'
 import App from '../App'
-import { createWaitForElement } from 'enzyme-wait';
+import { createWaitForElement } from 'enzyme-wait'
 
 const waitFor = createWaitForElement('[data-test="Card"]', 5000, 5000)
 
@@ -26,11 +26,9 @@ describe('<Main /> post lists', () => {
 			</MemoryRouter>
 		)
 
-
 		const loadedMain = await waitFor(main)
 
 		console.log(main.debug())
-
 
 		expect(main.exists()).toBe(true)
 		expect(main.find('h2').contains('Starting Again')).toBe(true)

@@ -35,14 +35,12 @@ class Login extends React.Component<LoginProps, LoginState> {
 
 		const auth = await authRequest.json()
 
-
-
 		if (auth.error) {
 			this.props.setError(auth.message)
 		}
 
 		if (auth.userID) {
-			this.props.signIn((auth.id_token !== undefined), auth.id_token, auth.userID)
+			this.props.signIn(auth.id_token !== undefined, auth.id_token, auth.userID)
 		}
 	}
 
