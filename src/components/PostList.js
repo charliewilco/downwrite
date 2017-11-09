@@ -12,11 +12,10 @@ const s = {
 		fontWeight: 400
 	}),
 	title: css({
-		fontFamily: 'var(--secondary-font)',
 		fontWeight: 500,
-		fontSize: 20,
+		fontSize: 18,
 		'@media (min-width: 57.75rem)': {
-			fontSize: 36
+			fontSize: 24
 		}
 	}),
 	gridItem: css({
