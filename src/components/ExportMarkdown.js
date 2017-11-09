@@ -20,18 +20,18 @@ export default class extends React.Component<{ post: Object }, void> {
 	static displayName = 'Markdown'
 
 	exportToMarkdown = async (body: Object) => {
-			const res = await fetch(MD_ENDPOINT, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(body)
-			})
+		const res = await fetch(MD_ENDPOINT, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(body)
+		})
 
-			const blob = await res.blob()
+		const blob = await res.blob()
 
-			saveAs(blob, `${body.title.replace(/\s+/g, '-').toLowerCase()}.md`)
-		}
+		saveAs(blob, `${body.title.replace(/\s+/g, '-').toLowerCase()}.md`)
+	}
 
 	exportMD = () => {
 		let { post, title, dateModified, editorState } = this.props.post
@@ -45,7 +45,6 @@ export default class extends React.Component<{ post: Object }, void> {
 			dateModified
 		})
 	}
-
 
 	render() {
 		return (
