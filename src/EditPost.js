@@ -4,7 +4,16 @@ import React from 'react'
 import { css } from 'glamor'
 import { EditorState, convertToRaw } from 'draft-js'
 import { Block } from 'glamor/jsxstyle'
-import { Button, Input, Loading, Wrapper, Helpers, Modal, Aux, SettingsIcon } from './components'
+import {
+	Button,
+	Input,
+	Loading,
+	Wrapper,
+	Helpers,
+	Modal,
+	Aux,
+	SettingsIcon
+} from './components'
 import format from 'date-fns/format'
 import { DWEditor } from './components'
 import isEmpty from 'lodash.isempty'
@@ -51,7 +60,10 @@ type EditorSt = {
 	dateModified: Date
 }
 
-export default class EditPost extends React.Component<{ token: String, user: String, match: Object }, EditorSt> {
+export default class EditPost extends React.Component<
+	{ token: String, user: String, match: Object },
+	EditorSt
+> {
 	static displayName = 'UpdatePostEditor'
 
 	titleInput: HTMLInputElement
@@ -177,36 +189,34 @@ export default class EditPost extends React.Component<{ token: String, user: Str
 		) : (
 			<Aux>
 				{modalUIOpen && (
-					<Modal closeUIModal={this.toggleUIModal}>
-						i am a modal, deal with it
-					</Modal>
+					<Modal closeUIModal={this.toggleUIModal}>i am a modal, deal with it</Modal>
 				)}
-			<Wrapper paddingTop={16} sm>
-				<Helpers>
-					<Button onClick={() => this.updatePostContent()}>Save</Button>
-					<SettingsIcon onClick={this.toggleUIModal} />
-				</Helpers>
-				<Wrapper sm paddingTop={64}>
-					<Block className={css(meta)} marginBottom={8}>
-						{post.id} | {post.author} | Date Added:{' '}
-						{format(post.dateAdded, 'HH:MM A, DD MMMM YYYY')}
-					</Block>
-					<Input
-						inputRef={input => this.titleInput = input}
-						value={title}
-						onChange={e => this.updateTitle(e)}
-					/>
-					<div>
-						{editorState !== null && (
-							<DWEditor
-								editorState={editorState}
-								onChange={editorState => this.onChange(editorState)}
-							/>
-						)}
-					</div>
+				<Wrapper sm>
+					<Helpers>
+						<Button onClick={() => this.updatePostContent()}>Save</Button>
+						<SettingsIcon onClick={this.toggleUIModal} />
+					</Helpers>
+					<Wrapper sm paddingTop={128}>
+						<Block className={css(meta)} marginBottom={8}>
+							{post.id} | {post.author} | Date Added:{' '}
+							{format(post.dateAdded, 'HH:MM A, DD MMMM YYYY')}
+						</Block>
+						<Input
+							inputRef={input => (this.titleInput = input)}
+							value={title}
+							onChange={e => this.updateTitle(e)}
+						/>
+						<div>
+							{editorState !== null && (
+								<DWEditor
+									editorState={editorState}
+									onChange={editorState => this.onChange(editorState)}
+								/>
+							)}
+						</div>
+					</Wrapper>
 				</Wrapper>
-			</Wrapper>
-		</Aux>
+			</Aux>
 		)
 	}
 }
