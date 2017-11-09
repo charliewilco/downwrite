@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { Block, InlineBlock } from 'glamor/jsxstyle'
 import { LoginInput, Button } from './components'
-import { Cookies } from 'react-cookie'
 import { AUTH_ENDPOINT } from './utils/urls'
 
 type LoginState = {
@@ -13,7 +12,10 @@ type LoginState = {
 
 type LoginProps = {
 	setAuth: Function,
-	cookies: typeof Cookies
+	setError: Function,
+	cookies: {
+		get: Function
+	}
 }
 
 class Login extends React.Component<LoginProps, LoginState> {
@@ -35,7 +37,12 @@ class Login extends React.Component<LoginProps, LoginState> {
 		})
 
 		const auth = await authRequest.json()
+		// TODO: Remove this
 		console.log(auth, auth.id_token)
+
+		if (auth.error) {
+			this.props.setError(auth.message)
+		}
 
 		if (auth.userID) {
 			cookies.set('token', auth.id_token)
