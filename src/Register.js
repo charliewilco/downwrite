@@ -35,7 +35,7 @@ class Register extends Component<LoginProps, RegisterType> {
 		const user = await response.json()
 
 		if (user.userID) {
-			this.props.signIn(user.id_token !== undefined, user.id_token, user.userID)
+			this.props.signIn(user.id_token !== undefined, user.id_token, user.userID, user.username)
 		}
 	}
 

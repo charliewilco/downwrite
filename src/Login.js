@@ -40,7 +40,7 @@ class Login extends React.Component<LoginProps, LoginState> {
 		}
 
 		if (auth.userID) {
-			this.props.signIn(auth.id_token !== undefined, auth.id_token, auth.userID)
+			this.props.signIn(auth.id_token !== undefined, auth.id_token, auth.userID, auth.username)
 		}
 	}
 
