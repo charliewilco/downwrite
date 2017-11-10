@@ -11,7 +11,7 @@ export default class extends Component {
 		const req = await fetch(POST_ENDPOINT, {
 			method: 'GET',
 			headers: {
-				'Authorization': `Bearer ${TOKEN}`
+				Authorization: `Bearer ${TOKEN}`
 			},
 			mode: 'cors',
 			cache: 'default'

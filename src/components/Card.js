@@ -69,13 +69,11 @@ const Card = ({ title, id, content, dateAdded, onDelete }) => (
 			backgroundColor="rgba(101, 163, 191, .125)">
 			<Link to={`/${id}/edit`}>Edit</Link>
 
-			{
-				onDelete && (
-					<button className={css(s.delete)} onClick={onDelete}>
-						Delete
-					</button>
-				)
-			}
+			{onDelete && (
+				<button className={css(s.delete)} onClick={onDelete}>
+					Delete
+				</button>
+			)}
 		</Flex>
 	</Flex>
 )

@@ -14,9 +14,7 @@ class RandomColor extends React.Component {
 		})
 	}
 
-	shouldComponentUpdate() {
-
-	}
+	shouldComponentUpdate() {}
 
 	render() {
 		return this.props.children(this.state.a, this.state.b)
@@ -31,7 +29,7 @@ export default () => (
 				width={32}
 				height={32}
 				background={`linear-gradient(135deg, ${A} 10%, ${B} 100%)`}
-				margin='auto'
+				margin="auto"
 			/>
 		)}
 	</RandomColor>
