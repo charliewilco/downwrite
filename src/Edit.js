@@ -60,11 +60,10 @@ type EditorSt = {
 	dateModified: Date
 }
 
-export default class EditPost extends React.Component<
-	{ token: String, user: String, match: Object },
-	EditorSt
-> {
-	static displayName = 'UpdatePostEditor'
+type EditorPr = { token: string, user: string, match: Object }
+
+export default class extends React.Component<EditorPr, EditorSt> {
+	static displayName = 'Edit'
 
 	titleInput: HTMLInputElement
 

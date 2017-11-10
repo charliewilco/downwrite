@@ -5,8 +5,8 @@ import { PostList, Loading, EmptyPosts } from './components'
 import { POST_ENDPOINT } from './utils/urls'
 
 type Post = {
-	title: String,
-	id: String
+	title: string,
+	id: string
 }
 
 type MainState = {
@@ -15,7 +15,7 @@ type MainState = {
 	layout: 'grid' | 'list'
 }
 
-export default class Main extends Component<{ user: String, token: String }, MainState> {
+export default class Main extends Component<{ user: string, token: string }, MainState> {
 	static displayName = 'Main View'
 
 	state = {
@@ -30,9 +30,8 @@ export default class Main extends Component<{ user: String, token: String }, Mai
 
 	getPosts = async () => {
 		const h = new Headers()
-		const { user, token } = this.props
 
-		h.set('Authorization', `Bearer ${token}`)
+		h.set('Authorization', `Bearer ${this.props.token}`)
 
 		const config = {
 			method: 'GET',
