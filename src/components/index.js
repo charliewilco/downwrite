@@ -17,6 +17,7 @@ import Aux from './Aux'
 import SettingsIcon from './SettingsIcon'
 import Layout from './Layout'
 import Modal from './Modal'
+import Toggle from './Toggle'
 
 export {
 	Aux,
@@ -36,6 +37,7 @@ export {
 	Input,
 	Loading,
 	Logo,
+	Toggle,
 	Nav,
 	PostList
 }

@@ -413,3 +413,9 @@ a:hover {
 @media (min-width: 81rem) {
 	.HomeBanner { height: calc(65vh + 5rem) }
 }
+
+.u-cf::after {
+	content: '';
+	display: table;
+	clear: both;
+}
