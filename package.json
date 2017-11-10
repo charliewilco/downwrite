@@ -36,7 +36,7 @@
 		"dev": "react-scripts start",
 		"test": "react-scripts test --env=jsdom",
 		"analysis": "flow",
-		"lint": "npx eslint ./src/**/*.js --ignore-pattern ./src/__tests__/*.test.js",
+		"lint": "npx eslint ./src/**/*.js",
 		"eject": "react-scripts eject",
 		"go": "now && now alias",
 		"format": "prettier --write 'src/**/*.js'"
@@ -53,6 +53,7 @@
 	"eslintConfig": {
 		"extends": "react-app"
 	},
+	"eslintIgnore": ["/src/__tests__/*.test.js"],
 	"now": {
 		"alias": "alpha.downwrite.us"
 	},

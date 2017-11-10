@@ -1,9 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Nav from './Nav'
 import Logo from './Logo'
-import Aux from './Aux'
-import Toggle from './Toggle'
 import { css } from 'glamor'
 import { Flex, Row } from 'glamor/jsxstyle'
 
