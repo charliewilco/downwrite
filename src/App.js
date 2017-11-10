@@ -28,16 +28,11 @@ export default class extends React.Component<AppProps, void> {
 		return (
 			<Router>
 				<Toggle>
-					{
-						(navOpen, toggleNav) => (
-							<Block  fontFamily="var(--primary-font)">
-
-							<Block height="calc(100% - 82px)" className='u-cf'>
-
-								<Block float={navOpen && 'left'}  width={navOpen && 'calc(100% - 384px)'}>
-									{
-										authed && <Header name="Downwrite" onClick={toggleNav} />
-									}
+					{(navOpen, toggleNav) => (
+						<Block fontFamily="var(--primary-font)">
+							<Block height="calc(100% - 82px)" className="u-cf">
+								<Block float={navOpen && 'left'} width={navOpen && 'calc(100% - 384px)'}>
+									{authed && <Header name="Downwrite" onClick={toggleNav} />}
 									<Switch>
 										<Route
 											exact
@@ -63,17 +58,18 @@ export default class extends React.Component<AppProps, void> {
 											path="/:id/edit"
 											component={Edit}
 										/>
-										<Route path="/signout" render={(props: Object) => <SignOut signOut={signOut} />} />
+										<Route
+											path="/signout"
+											render={(props: Object) => <SignOut signOut={signOut} />}
+										/>
 										<Route component={NoMatch} />
 									</Switch>
 								</Block>
 								{navOpen && <Nav username={name} />}
 							</Block>
 						</Block>
-						)
-					}
-
-			</Toggle>
+					)}
+				</Toggle>
 			</Router>
 		)
 	}
