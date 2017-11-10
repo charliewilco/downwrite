@@ -7,8 +7,8 @@ import registerServiceWorker from './registerServiceWorker'
 
 const Downwrite = () => (
 	<Auth>
-		{(authed, token, user, signIn, signOut) => (
-			<App authed={authed} token={token} user={user} signIn={signIn} signOut={signOut} />
+		{(authed, token, user, name, signIn, signOut) => (
+			<App authed={authed} token={token} user={user} name={name} signIn={signIn} signOut={signOut} />
 		)}
 	</Auth>
 )
