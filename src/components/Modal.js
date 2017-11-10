@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Block, Row } from 'glamor/jsxstyle'
+import { Flex, Row } from 'glamor/jsxstyle'
 import { css, keyframes } from 'glamor'
 import { Wrapper } from './'
 

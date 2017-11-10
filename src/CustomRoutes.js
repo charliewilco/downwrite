@@ -1,14 +1,13 @@
 // @flow
 import * as React from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import Home from './Home'
 
 type CustomRouteProps = {
 	component: React.ElementType,
 	authed: boolean,
 	args: Array<number>,
-	user: String,
-	token: String
+	user: string,
+	token: string
 }
 
 export const PrivateRoute: React.ElementType = ({

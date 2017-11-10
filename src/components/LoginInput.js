@@ -41,10 +41,10 @@ const styles = {
 }
 
 type InputType = {
-	label: String,
+	label: string,
 	onChange: Function,
-	value: String,
-	type: String
+	value: string,
+	type: string
 }
 
 export default class extends React.Component<InputType, { active: boolean }> {
