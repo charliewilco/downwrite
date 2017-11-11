@@ -28,18 +28,18 @@ export default class extends React.Component<AppProps, void> {
 		return (
 			<Router>
 				<Toggle>
-					{(navOpen, toggleNav) => (
+					{(navOpen, toggleNav, closeNav) => (
 						<Block fontFamily="var(--primary-font)">
 							<Block height="calc(100% - 82px)" className="u-cf">
 								<Block float={navOpen && 'left'} width={navOpen && 'calc(100% - 384px)'}>
-									{authed && <Header name="Downwrite" onClick={toggleNav} />}
+									{authed && <Header name="Downwrite" open={navOpen} onClick={toggleNav} />}
 									<Switch>
 										<Route
 											exact
 											path="/"
 											render={(props: Object) =>
 												authed === true ? (
-													<Main token={token} user={user} {...props} />
+													<Main closeNav={closeNav} token={token} user={user} {...props} />
 												) : (
 													<Home {...props} signIn={signIn} signOut={signOut} />
 												)}
@@ -60,12 +60,12 @@ export default class extends React.Component<AppProps, void> {
 										/>
 										<Route
 											path="/signout"
-											render={(props: Object) => <SignOut signOut={signOut} />}
+											render={(props: Object) => <SignOut toggleNav={toggleNav} signOut={signOut} />}
 										/>
 										<Route component={NoMatch} />
 									</Switch>
 								</Block>
-								{navOpen && <Nav username={name} />}
+								{navOpen && <Nav token={token} user={user} username={name} />}
 							</Block>
 						</Block>
 					)}

@@ -9,13 +9,19 @@ type Post = {
 	id: string
 }
 
+type MainPr = {
+	user: string,
+	token: string,
+	closeNav: Function
+}
+
 type MainState = {
 	posts: Array<Post>,
 	loaded: boolean,
 	layout: 'grid' | 'list'
 }
 
-export default class Main extends Component<{ user: string, token: string }, MainState> {
+export default class Main extends Component<MainPr, MainState> {
 	static displayName = 'Main View'
 
 	state = {
@@ -48,6 +54,7 @@ export default class Main extends Component<{ user: string, token: string }, Mai
 
 	componentWillMount() {
 		this.getPosts()
+		this.props.closeNav()
 	}
 
 	onDelete = async (post: Object) => {
