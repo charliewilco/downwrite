@@ -68,7 +68,7 @@ export default class extends React.Component<EditorPr, EditorSt> {
 	titleInput: HTMLInputElement
 
 	state = {
-		modalUIOpen: true,
+		modalUIOpen: false,
 		editorState: EditorState.createEmpty(),
 		post: {},
 		title: '',
