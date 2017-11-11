@@ -28,7 +28,6 @@ const nibContainer = css({
 	}
 })
 
-
 const Nib = () => (
 	<div className={css(nibContainer)}>
 		<svg className={css(nibAni)} width="60" height="71" viewBox="0 0 60 71">
@@ -90,9 +89,8 @@ const Nib = () => (
 	</div>
 )
 
-
 export const SidebarEmpty = withRouter(({ history }) => (
-	<Flex justifyContent='center'>
+	<Flex justifyContent="center">
 		<Button onClick={() => history.replace('/new')}>Get Started</Button>
 	</Flex>
 ))
@@ -107,7 +105,9 @@ export default () => (
 				<h4 className={css({ fontSize: 24, marginBottom: 16 })}>
 					Looks like you don't have any entries
 				</h4>
-				<Link to="/new" className={css({ color: '#757575' })}>Get Started &rarr;</Link>
+				<Link to="/new" className={css({ color: '#757575' })}>
+					Get Started &rarr;
+				</Link>
 			</Block>
 		</Flex>
 	</Wrapper>

@@ -1,9 +1,10 @@
-import React from 'react'
+// @flow
+import * as React from 'react'
 import { Flex, Row } from 'glamor/jsxstyle'
 import { css, keyframes } from 'glamor'
 import { Wrapper } from './'
 
-const modalCloseButton = css({
+const modalCloseButton: string = css({
 	position: 'absolute',
 	right: 16,
 	top: 16,
@@ -14,7 +15,7 @@ const modalCloseButton = css({
 	margin: 0
 })
 
-const fadein = keyframes({
+const fadein: string = keyframes({
 	'0%': { transform: 'translate(0, 75%)', opacity: 0 },
 	'100%': { transform: 'translate(0, 0)', opacity: 1 }
 })
@@ -39,7 +40,7 @@ const ModalCloseIcon = () => (
 	</svg>
 )
 
-const Overlay = props => (
+const Overlay = (props: {}) => (
 	<Flex
 		zIndex={999}
 		justifyContent="center"
@@ -54,13 +55,20 @@ const Overlay = props => (
 
 // TODO: Remove scrolling on open
 
-export default class extends React.Component {
+export default class extends React.Component<{
+	closeUIModal: Function,
+	children: React.Node
+}> {
 	componentWillMount() {
-		document.body.classList.add('__modalOpen')
+		if (document.body) {
+			document.body.classList.add('__modalOpen')
+		}
 	}
 
 	componentWillUnmount() {
-		document.body.classList.remove('__modalOpen')
+		if (document.body) {
+			document.body.classList.remove('__modalOpen')
+		}
 	}
 
 	render() {
@@ -71,12 +79,13 @@ export default class extends React.Component {
 					background="white"
 					width="100%"
 					height="50%"
-					position="relative">
-					<Flex flexDirection="column" justifyContent="center">
-						<button onClick={this.props.closeUIModal} className={css(modalCloseButton)}>
-							<ModalCloseIcon />
-						</button>
+					position="relative"
+					display="flex">
+					<button onClick={this.props.closeUIModal} className={css(modalCloseButton)}>
+						<ModalCloseIcon />
+					</button>
 
+					<Flex flexDirection="column" justifyContent="center" flex={1}>
 						<Row alignItems="center" justifyContent="space-between">
 							{this.props.children}
 						</Row>

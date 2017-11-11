@@ -36,7 +36,7 @@ class Register extends React.Component<LoginProps, RegisterType> {
 		const user: { userID: string, id_token: string, username: string } = await response.json()
 
 		if (user.userID) {
-			this.props.signIn((user.id_token !== undefined), user.id_token, user.userID, user.username)
+			this.props.signIn(user.id_token !== undefined, user.id_token, user.userID, user.username)
 		}
 	}
 
@@ -48,14 +48,16 @@ class Register extends React.Component<LoginProps, RegisterType> {
 					placeholder="Try for something unique"
 					label="Username"
 					value={username}
-					onChange={({ target }: SyntheticInputEvent<*>) => this.setState({ username: target.value })}
+					onChange={({ target }: SyntheticInputEvent<*>) =>
+						this.setState({ username: target.value })}
 				/>
 
 				<LoginInput
 					placeholder="mail@email.com"
 					label="Email"
 					value={email}
-					onChange={({ target }: SyntheticInputEvent<*>) => this.setState({ email: target.value })}
+					onChange={({ target }: SyntheticInputEvent<*>) =>
+						this.setState({ email: target.value })}
 				/>
 
 				<LoginInput
@@ -63,7 +65,8 @@ class Register extends React.Component<LoginProps, RegisterType> {
 					label="Password"
 					value={password}
 					type="password"
-					onChange={({ target }: SyntheticInputEvent<*>) => this.setState({ password: target.value })}
+					onChange={({ target }: SyntheticInputEvent<*>) =>
+						this.setState({ password: target.value })}
 				/>
 
 				<Block paddingTop={16} textAlign="right">

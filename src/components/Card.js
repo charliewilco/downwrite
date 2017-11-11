@@ -53,7 +53,7 @@ const Card = ({ title, id, content, dateAdded, onDelete }) => (
 			<small className={css(s.meta)}>added {distance(dateAdded)} ago</small>
 		</Block>
 
-		<Block padding={8} flex={1} overflow='hidden'>
+		<Block padding={8} flex={1} overflow="hidden">
 			{content && (
 				<p data-test="snippet" className={css(s.content)}>
 					{content.blocks[0].text.substr(0, 75)}
