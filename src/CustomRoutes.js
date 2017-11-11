@@ -21,7 +21,7 @@ export const PrivateRoute: React.ElementType = ({
 		{...args}
 		render={(props: { location: string }) =>
 			authed === true ? (
-				<Component token={token} user={token} {...props} />
+				<Component token={token} user={user} {...props} />
 			) : (
 				<Redirect to={{ pathname: '/', state: { from: props.location } }} />
 			)}
