@@ -58,7 +58,7 @@ export default class Main extends Component<MainPr, MainState> {
 	}
 
 	onDelete = async (post: Object) => {
-		const { user, token } = this.props
+		const { token } = this.props
 
 		const config = {
 			method: 'DELETE',

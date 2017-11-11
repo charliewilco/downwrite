@@ -1,8 +1,9 @@
 // @flow
 
-import React from 'react'
+import * as React from 'react'
 import { css } from 'glamor'
 import { EditorState, convertToRaw } from 'draft-js'
+import type { ContentState } from 'draft-js'
 import { Block } from 'glamor/jsxstyle'
 import {
 	Button,
@@ -11,6 +12,7 @@ import {
 	Wrapper,
 	Helpers,
 	Modal,
+	Toggle,
 	Aux,
 	SettingsIcon
 } from './components'
@@ -18,41 +20,16 @@ import format from 'date-fns/format'
 import { DWEditor } from './components'
 import isEmpty from 'lodash.isempty'
 import { superConverter } from './utils/responseHandler'
-import { POST_ENDPOINT, MD_ENDPOINT } from './utils/urls'
-
-const editorShell = css({
-	flex: 1,
-	marginTop: '-1px',
-	flexDirection: 'column',
-	justifyContent: 'center',
-	minHeight: '100%',
-	width: `100%`,
-	position: 'absolute',
-	left: 0,
-	right: 0
-})
-
-const editorContent = css({
-	position: 'relative',
-	paddingTop: 64
-})
+import { POST_ENDPOINT } from './utils/urls'
+import type { Match } from 'react-router-dom'
 
 const meta = css({
 	opacity: 0.5,
 	fontSize: 'small'
 })
 
-const editorInner = css({
-	backgroundColor: 'white',
-	borderWidth: 1,
-	borderStyle: 'solid',
-	borderColor: 'rgba(0, 0, 0, .125)',
-	fontWeight: '400'
-})
-
 type EditorSt = {
 	title: string,
-	modalUIOpen: boolean,
 	post: Object,
 	loaded: boolean,
 	updated: boolean,
@@ -60,7 +37,7 @@ type EditorSt = {
 	dateModified: Date
 }
 
-type EditorPr = { token: string, user: string, match: Object }
+type EditorPr = { token: string, user: string, match: Match }
 
 export default class extends React.Component<EditorPr, EditorSt> {
 	static displayName = 'Edit'
@@ -68,7 +45,6 @@ export default class extends React.Component<EditorPr, EditorSt> {
 	titleInput: HTMLInputElement
 
 	state = {
-		modalUIOpen: false,
 		editorState: EditorState.createEmpty(),
 		post: {},
 		title: '',
@@ -79,9 +55,7 @@ export default class extends React.Component<EditorPr, EditorSt> {
 		dateModified: new Date()
 	}
 
-	toggleUIModal = () => this.setState(({ modalUIOpen }) => ({ modalUIOpen: !modalUIOpen }))
-
-	prepareContent = (content: Object) => superConverter(content)
+	prepareContent: Function = (content: ContentState) => superConverter(content)
 
 	updateCurrent = (body: Object) => {
 		fetch(`${POST_ENDPOINT}/${this.props.match.params.id}`, {
@@ -96,8 +70,8 @@ export default class extends React.Component<EditorPr, EditorSt> {
 	updatePostContent = () => {
 		let { post, title, dateModified, editorState } = this.state
 		const { user } = this.props
-		const ContentState: typeof ContentState = editorState.getCurrentContent()
-		const content = convertToRaw(ContentState)
+		const cx: ContentState = editorState.getCurrentContent()
+		const content = convertToRaw(cx)
 		const { _id, __v, ...sPost } = post
 
 		const newPost = {
@@ -114,7 +88,7 @@ export default class extends React.Component<EditorPr, EditorSt> {
 	getPost = async () => {
 		const h = new Headers()
 		const { id } = this.props.match.params
-		const { user, token } = this.props
+		const { token } = this.props
 
 		h.set('Authorization', `Bearer ${token}`)
 
@@ -156,7 +130,7 @@ export default class extends React.Component<EditorPr, EditorSt> {
 		/// I wonder if the entityMap is disappearing because it's empty...
 	}
 
-	onChange = (editorState: Object) => this.setState({ editorState })
+	onChange = (editorState: EditorState) => this.setState({ editorState })
 
 	updateTitle = ({ target: EventTarget }: { target: EventTarget }) => {
 		return this.setState(prevState => {
@@ -181,41 +155,50 @@ export default class extends React.Component<EditorPr, EditorSt> {
 	}
 
 	render() {
-		const { title, post, loaded, editorState, modalUIOpen } = this.state
+		const { title, post, loaded, editorState } = this.state
 
 		return !loaded ? (
 			<Loading />
 		) : (
-			<Aux>
-				{modalUIOpen && (
-					<Modal closeUIModal={this.toggleUIModal}>i am a modal, deal with it</Modal>
-				)}
-				<Wrapper sm>
-					<Helpers>
-						<Button onClick={() => this.updatePostContent()}>Save</Button>
-						<SettingsIcon onClick={this.toggleUIModal} />
-					</Helpers>
-					<Wrapper sm paddingTop={128}>
-						<Block className={css(meta)} marginBottom={8}>
-							{post.id} | {post.author} | Date Added:{' '}
-							{format(post.dateAdded, 'HH:MM A, DD MMMM YYYY')}
-						</Block>
-						<Input
-							inputRef={input => (this.titleInput = input)}
-							value={title}
-							onChange={e => this.updateTitle(e)}
-						/>
-						<div>
-							{editorState !== null && (
-								<DWEditor
-									editorState={editorState}
-									onChange={editorState => this.onChange(editorState)}
+			<Toggle defaultOpen>
+				{(open: boolean, toggleUIModal: Function) => (
+					<Aux>
+						{open && (
+							<Modal closeUIModal={toggleUIModal}>
+								<Button>Markdown</Button>
+								<Button>JSON</Button>
+								<Button>WordPress</Button>
+								<Button>Medium</Button>
+							</Modal>
+						)}
+						<Wrapper sm>
+							<Helpers>
+								<Button onClick={() => this.updatePostContent()}>Save</Button>
+								<SettingsIcon onClick={toggleUIModal} />
+							</Helpers>
+							<Wrapper sm paddingTop={128}>
+								<Block className={css(meta)} marginBottom={8}>
+									{post.id} | {post.author} | Date Added:{' '}
+									{format(post.dateAdded, 'HH:MM A, DD MMMM YYYY')}
+								</Block>
+								<Input
+									inputRef={input => (this.titleInput = input)}
+									value={title}
+									onChange={e => this.updateTitle(e)}
 								/>
-							)}
-						</div>
-					</Wrapper>
-				</Wrapper>
-			</Aux>
+								<div>
+									{editorState !== null && (
+										<DWEditor
+											editorState={editorState}
+											onChange={(editorState: EditorState) => this.onChange(editorState)}
+										/>
+									)}
+								</div>
+							</Wrapper>
+						</Wrapper>
+					</Aux>
+				)}
+			</Toggle>
 		)
 	}
 }

@@ -60,7 +60,9 @@ export default class extends React.Component<AppProps, void> {
 										/>
 										<Route
 											path="/signout"
-											render={(props: Object) => <SignOut toggleNav={toggleNav} signOut={signOut} />}
+											render={(props: Object) => (
+												<SignOut toggleNav={toggleNav} signOut={signOut} />
+											)}
 										/>
 										<Route component={NoMatch} />
 									</Switch>
