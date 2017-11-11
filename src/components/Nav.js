@@ -1,17 +1,32 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { css } from 'glamor'
+import { css, keyframes } from 'glamor'
 import { Block, Flex, Column } from 'glamor/jsxstyle'
 import User from './User'
 import Fetch from './CollectionFetch'
-import Card from './Card'
+import { SidebarEmpty } from './EmptyPosts'
+import SidebarPosts from './SideBarPosts'
 
 const navButton = css({
 	display: 'block',
 	color: '#757575',
+	'& + &': {
+		marginBottom: 8
+	},
 	'&:hover': {
 		color: 'var(--color-2)'
 	}
+})
+
+const navItem = css({
+	fontSize: 16,
+	paddingTop: 4,
+	paddingBottom: 4
+})
+
+const fadeInFromLeft = keyframes({
+	'0%': { transform: 'translate(25%, 0)', opacity: 0 },
+	'100%': { transform: 'translate(0, 0)', opacity: 1 }
 })
 
 const SignoutIcon = () => (
@@ -38,6 +53,7 @@ export default class extends Component {
 	render() {
 		return (
 			<Flex
+				animation={`${fadeInFromLeft} .45s`}
 				component="nav"
 				width={384}
 				backgroundColor="white"
@@ -46,30 +62,25 @@ export default class extends Component {
 				<Column flex={1} justifyContent="space-between">
 					<Block>
 						<User username={this.props.username} />
-						<Block padding={8}>
-							<Link to="/" className={css(navButton)}>
-								All Posts
+						<Block paddingLeft={8} paddingRight={8} paddingTop={16} paddingBottom={16}>
+							<Link to="/" className={css(navButton, navItem)}>
+								All Entries
 							</Link>
 
-							<Link to="/new" className={css(navButton)}>
-								Create New Post
+							<Link to="/new" className={css(navButton, navItem)}>
+								Create New Entry
 							</Link>
 						</Block>
 					</Block>
 					<Block flex={1} padding={8}>
-						<Fetch>
-							{posts =>
-								posts.slice(0, 2).map((post, i) => (
-									<Block key={i} marginBottom={16}>
-										<Card {...post} />
-									</Block>
-								))}
+						<Fetch token={this.props.token}>
+							{posts => (posts.length > 0 ? <SidebarPosts posts={posts} /> : <SidebarEmpty />)}
 						</Fetch>
 					</Block>
 
 					<Block borderTop="1px solid #DBDCDD" padding={8} textAlign="right">
-						<Link to="/signout" className={css(navButton)}>
-							<SignoutIcon /> <small>Sign Out</small>
+						<Link to="/signout" className={css(navButton, { fontSize: 14 })}>
+							<SignoutIcon /> <span>Sign Out</span>
 						</Link>
 					</Block>
 				</Column>
