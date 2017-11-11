@@ -1,6 +1,5 @@
 import { Component } from 'react'
 import { POST_ENDPOINT } from '../utils/urls'
-import { TOKEN } from '../utils/cookie'
 
 export default class extends Component {
 	state = {
@@ -11,7 +10,7 @@ export default class extends Component {
 		const req = await fetch(POST_ENDPOINT, {
 			method: 'GET',
 			headers: {
-				Authorization: `Bearer ${TOKEN}`
+				Authorization: `Bearer ${this.props.token}`
 			},
 			mode: 'cors',
 			cache: 'default'

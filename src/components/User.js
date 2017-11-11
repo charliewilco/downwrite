@@ -1,5 +1,5 @@
 import React from 'react'
-import { Block, Flex } from 'glamor/jsxstyle'
+import { InlineBlock, Block, Flex } from 'glamor/jsxstyle'
 import Avatar from './Avatar'
 
 export default ({ username }) => (
@@ -8,8 +8,9 @@ export default ({ username }) => (
 		paddingTop={32}
 		paddingBottom={32}
 		paddingLeft={8}
-		paddingRight={8}>
+		paddingRight={8}
+		borderBottom='1px solid #DBDCDD'>
 		<Avatar />
-		<h6>{username}</h6>
+		<InlineBlock component='span' fontSize={16} fontWeight={700}>{username}</InlineBlock>
 	</Block>
 )
