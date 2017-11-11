@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react'
 import { Route, Redirect } from 'react-router-dom'
+import type { Location } from 'react-router-dom'
 
 type CustomRouteProps = {
 	component: React.ElementType,
@@ -19,7 +20,7 @@ export const PrivateRoute: React.ElementType = ({
 }: CustomRouteProps) => (
 	<Route
 		{...args}
-		render={(props: { location: string }) =>
+		render={(props: { location: Location }) =>
 			authed === true ? (
 				<Component token={token} user={user} {...props} />
 			) : (
