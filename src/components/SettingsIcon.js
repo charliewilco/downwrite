@@ -1,8 +1,9 @@
 // @jsx createElement
-import React from 'react'
+// @flow
+import * as React from 'react'
 import { createElement } from 'glamor/react'
 
-const SettingsIcon = () => (
+const SettingsIcon: React.ElementType = () => (
 	<svg width="16" height="16" viewBox="0 0 16 16">
 		<title>Settings</title>
 		<g id="Canvas" transform="translate(-1700 1525)">
@@ -20,7 +21,7 @@ const SettingsIcon = () => (
 	</svg>
 )
 
-export default ({ onClick }) => (
+export default ({ onClick }: { onClick: Function }) => (
 	<button
 		onClick={onClick}
 		css={{
