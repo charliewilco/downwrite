@@ -19,3 +19,13 @@ export const MD_ENDPOINT: string =
 	process.env.NODE_ENV === 'development'
 		? 'http://localhost:8793/'
 		: 'https://markdown.downwrite.us/'
+
+export const JSON_ENDPOINT: string =
+	process.env.NODE_ENV === 'development'
+		? 'http://localhost:8794/'
+		: 'https://json.downwrite.us/'
+
+export const MEDIUM_ENDPOINT: string =
+	process.env.NODE_ENV === 'development'
+		? 'http://localhost:6335/'
+		: 'https://medium.downwrite.us/'
