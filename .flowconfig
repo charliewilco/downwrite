@@ -12,6 +12,7 @@
 ./node_modules/immutable
 
 [libs]
+flow-typed
 ./node_modules/fbjs/flow/lib
 
 [options]

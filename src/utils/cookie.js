@@ -12,7 +12,7 @@ export const signOut: Function = () => {
 	oatmeal.remove('DW_USERNAME')
 }
 
-export const signIn: Function = (token, id, name) => {
+export const signIn: Function = (token: string, id: string, name: string) => {
 	oatmeal.set('DW_TOKEN', token)
 	oatmeal.set('DW_USERID', id)
 	oatmeal.set('DW_USERNAME', name)
