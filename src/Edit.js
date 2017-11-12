@@ -14,10 +14,12 @@ import {
 	Modal,
 	Toggle,
 	Aux,
-	SettingsIcon
+	DWEditor,
+	SettingsIcon,
+	Export
 } from './components'
+
 import format from 'date-fns/format'
-import { DWEditor } from './components'
 import isEmpty from 'lodash.isempty'
 import { superConverter } from './utils/responseHandler'
 import { POST_ENDPOINT } from './utils/urls'
@@ -143,8 +145,8 @@ export default class extends React.Component<EditorPr, EditorSt> {
 	}
 
 	updatePost = (body: Object) => {
-		const { token } = this.props
-		return fetch(`${POST_ENDPOINT}/${this.props.match.params.id}`, {
+		const { token, match } = this.props
+		return fetch(`${POST_ENDPOINT}/${match.params.id}`, {
 			method: 'put',
 			headers: {
 				'Content-Type': 'application/json',
@@ -165,10 +167,7 @@ export default class extends React.Component<EditorPr, EditorSt> {
 					<Aux>
 						{open && (
 							<Modal closeUIModal={toggleUIModal}>
-								<Button>Markdown</Button>
-								<Button>JSON</Button>
-								<Button>WordPress</Button>
-								<Button>Medium</Button>
+								<Export editorState={editorState} title={title} date={post.dateAdded} />
 							</Modal>
 						)}
 						<Wrapper sm>

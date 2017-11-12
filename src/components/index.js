@@ -18,9 +18,11 @@ import SettingsIcon from './SettingsIcon'
 import Layout from './Layout'
 import Modal from './Modal'
 import Toggle from './Toggle'
+import Export from './Export'
 
 export {
 	Aux,
+	Export,
 	SettingsIcon,
 	Helpers,
 	Layout,
