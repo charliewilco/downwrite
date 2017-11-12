@@ -46,7 +46,7 @@ const Overlay = (props: {}) => (
 		justifyContent="center"
 		alignItems="center"
 		flexDirection="Column"
-		backgroundColor="rgba(21, 69, 93, 0.125)"
+		backgroundColor="rgba(21, 69, 93, 0.925)"
 		width="100%"
 		backgroundBlendMode="multiply"
 		{...props}
