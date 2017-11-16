@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { TOKEN, USER_ID, signOut, signIn } from './utils/cookie'
+import { TOKEN, USER_NAME, USER_ID, signOut, signIn } from './utils/cookie'
 
 // This component should passdown the state of authed from withAuthCheck() HOC
 // There is only one single point of state that needs to be rendered
@@ -20,7 +20,8 @@ export default class Auth extends Component {
 	state = {
 		authed: false,
 		token: TOKEN,
-		user: USER_ID
+		user: USER_ID,
+		name: USER_NAME
 	}
 
 	componentWillMount() {
@@ -31,14 +32,16 @@ export default class Auth extends Component {
 		})
 	}
 
-	signIn = (authed, token, user) => this.setState({ authed, token, user }, signIn(token, user))
+	signIn = (authed, token, id, username) =>
+		this.setState({ authed, token, user: id, name: username }, signIn(token, id, username))
 
 	signOut = () =>
 		this.setState(
 			{
 				authed: false,
 				token: undefined,
-				user: undefined
+				user: undefined,
+				name: undefined
 			},
 			signOut()
 		)
@@ -48,6 +51,7 @@ export default class Auth extends Component {
 			this.state.authed,
 			this.state.token,
 			this.state.user,
+			this.state.name,
 			this.signIn,
 			this.signOut
 		)

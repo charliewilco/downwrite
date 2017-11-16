@@ -1,9 +1,10 @@
-import React from 'react'
-import { Flex, Block, Row } from 'glamor/jsxstyle'
+// @flow
+import * as React from 'react'
+import { Flex, Row } from 'glamor/jsxstyle'
 import { css, keyframes } from 'glamor'
 import { Wrapper } from './'
 
-const modalCloseButton = css({
+const modalCloseButton: string = css({
 	position: 'absolute',
 	right: 16,
 	top: 16,
@@ -14,7 +15,7 @@ const modalCloseButton = css({
 	margin: 0
 })
 
-const fadein = keyframes({
+const fadein: string = keyframes({
 	'0%': { transform: 'translate(0, 75%)', opacity: 0 },
 	'100%': { transform: 'translate(0, 0)', opacity: 1 }
 })
@@ -25,13 +26,13 @@ const ModalCloseIcon = () => (
 		<g id="Canvas" transform="translate(-1561 -730)">
 			<g id="Close">
 				<g id="Combined Shape">
-					<use xlinkHref="#path0_fill" transform="translate(1561 730)" fill="#4382A1" />
+					<use xlinkHref="#modalClose" transform="translate(1561 730)" fill="#4382A1" />
 				</g>
 			</g>
 		</g>
 		<defs>
 			<path
-				id="path0_fill"
+				id="modalClose"
 				fillRule="evenodd"
 				d="M 6.70588 6L 12 0.705882L 11.2941 0L 6 5.29412L 0.705882 2.83725e-14L 0 0.705882L 5.29412 6L 0 11.2941L 0.705882 12L 6 6.70588L 11.2941 12L 12 11.2941L 6.70588 6Z"
 			/>
@@ -39,13 +40,13 @@ const ModalCloseIcon = () => (
 	</svg>
 )
 
-const Overlay = props => (
+const Overlay = (props: {}) => (
 	<Flex
 		zIndex={999}
 		justifyContent="center"
 		alignItems="center"
 		flexDirection="Column"
-		backgroundColor="rgba(21, 69, 93, 0.125)"
+		backgroundColor="rgba(21, 69, 93, 0.925)"
 		width="100%"
 		backgroundBlendMode="multiply"
 		{...props}
@@ -54,13 +55,20 @@ const Overlay = props => (
 
 // TODO: Remove scrolling on open
 
-export default class extends React.Component {
+export default class extends React.Component<{
+	closeUIModal: Function,
+	children: React.Node
+}> {
 	componentWillMount() {
-		document.body.classList.add('__modalOpen')
+		if (document.body) {
+			document.body.classList.add('__modalOpen')
+		}
 	}
 
 	componentWillUnmount() {
-		document.body.classList.remove('__modalOpen')
+		if (document.body) {
+			document.body.classList.remove('__modalOpen')
+		}
 	}
 
 	render() {
@@ -71,13 +79,14 @@ export default class extends React.Component {
 					background="white"
 					width="100%"
 					height="50%"
-					position="relative">
-					<Flex flexDirection="column" justifyContent="center">
-						<button onClick={this.props.closeUIModal} className={css(modalCloseButton)}>
-							<ModalCloseIcon />
-						</button>
+					position="relative"
+					display="flex">
+					<button onClick={this.props.closeUIModal} className={css(modalCloseButton)}>
+						<ModalCloseIcon />
+					</button>
 
-						<Row alignItems="center" justifyContent="space-between">
+					<Flex flexDirection="column" justifyContent="center" flex={1}>
+						<Row alignItems="center" padding={8}>
 							{this.props.children}
 						</Row>
 					</Flex>

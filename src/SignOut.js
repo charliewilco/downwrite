@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom'
 export default class SignOut extends React.Component {
 	componentWillMount() {
 		this.props.signOut()
+		this.props.toggleNav()
 	}
 
 	render() {

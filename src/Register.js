@@ -1,6 +1,7 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
+
 import { Block, InlineBlock } from 'glamor/jsxstyle'
 import { LoginInput, Button } from './components'
 import { USER_ENDPOINT } from './utils/urls'
@@ -15,7 +16,7 @@ type LoginProps = {
 	signIn: Function
 }
 
-class Register extends Component<LoginProps, RegisterType> {
+class Register extends React.Component<LoginProps, RegisterType> {
 	state = {
 		username: '',
 		password: '',
@@ -32,10 +33,10 @@ class Register extends Component<LoginProps, RegisterType> {
 			body: JSON.stringify({ ...this.state })
 		})
 
-		const user = await response.json()
+		const user: { userID: string, id_token: string, username: string } = await response.json()
 
 		if (user.userID) {
-			this.props.signIn(user.id_token !== undefined, user.id_token, user.userID)
+			this.props.signIn(user.id_token !== undefined, user.id_token, user.userID, user.username)
 		}
 	}
 
@@ -47,14 +48,16 @@ class Register extends Component<LoginProps, RegisterType> {
 					placeholder="Try for something unique"
 					label="Username"
 					value={username}
-					onChange={(e: Event) => this.setState({ username: e.target.value })}
+					onChange={({ target }: SyntheticInputEvent<*>) =>
+						this.setState({ username: target.value })}
 				/>
 
 				<LoginInput
 					placeholder="mail@email.com"
 					label="Email"
 					value={email}
-					onChange={(e: Event) => this.setState({ email: e.target.value })}
+					onChange={({ target }: SyntheticInputEvent<*>) =>
+						this.setState({ email: target.value })}
 				/>
 
 				<LoginInput
@@ -62,7 +65,8 @@ class Register extends Component<LoginProps, RegisterType> {
 					label="Password"
 					value={password}
 					type="password"
-					onChange={(e: Event) => this.setState({ password: e.target.value })}
+					onChange={({ target }: SyntheticInputEvent<*>) =>
+						this.setState({ password: target.value })}
 				/>
 
 				<Block paddingTop={16} textAlign="right">

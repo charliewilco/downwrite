@@ -1,11 +1,12 @@
+// @flow
+
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Nav from './Nav'
 import Logo from './Logo'
 import { css } from 'glamor'
 import { Flex, Row } from 'glamor/jsxstyle'
 
-const hSty = {
+const hSty: Object = {
 	link: css({
 		marginLeft: 12,
 		display: 'block',
@@ -14,7 +15,7 @@ const hSty = {
 			color: `var(--color-2)`
 		}
 	}),
-	title: {
+	title: css({
 		fontSize: 16,
 		fontStyle: 'normal',
 		lineHeight: 1,
@@ -22,10 +23,22 @@ const hSty = {
 		'@media (min-width: 57.75rem)': {
 			fontSize: 20
 		}
-	}
+	}),
+	toggleButton: css({
+		appearance: 'none',
+		outline: 'none',
+		border: 0,
+		background: 'none'
+	})
 }
 
-const Header = ({ name }) => (
+type Header = {
+	name: string,
+	onClick: Function,
+	open: boolean
+}
+
+export default ({ name, onClick, open }: Header) => (
 	<Row component="header" alignItems="center" justifyContent="space-between" padding={16}>
 		<Flex alignItems="center">
 			<Logo />
@@ -33,8 +46,29 @@ const Header = ({ name }) => (
 				<h1 className={css(hSty.title)} children={name} />
 			</Link>
 		</Flex>
-		<Nav />
+		<button onClick={onClick} className={css(hSty.toggleButton)}>
+			<svg width="20px" height="9px" viewBox="0 0 20 9">
+				<desc>Navicon</desc>
+				<g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+					<g fill={open ? '#65A3BF' : '#4C4C4C'}>
+						<rect id="Rectangle-Copy-3" x="0" y="0" width="20" height="1" />
+						<rect
+							id="Rectangle-Copy-4"
+							x={open ? 0 : 10}
+							y="4"
+							width={open ? 20 : 10}
+							height="1"
+						/>
+						<rect
+							id="Rectangle-Copy-5"
+							x={open ? 0 : 5}
+							y="8"
+							width={open ? 20 : 15}
+							height="1"
+						/>
+					</g>
+				</g>
+			</svg>
+		</button>
 	</Row>
 )
-
-export default Header
