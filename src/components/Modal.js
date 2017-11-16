@@ -86,7 +86,7 @@ export default class extends React.Component<{
 					</button>
 
 					<Flex flexDirection="column" justifyContent="center" flex={1}>
-						<Row alignItems="center" justifyContent="space-between">
+						<Row alignItems="center" padding={8}>
 							{this.props.children}
 						</Row>
 					</Flex>

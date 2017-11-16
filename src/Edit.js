@@ -162,7 +162,7 @@ export default class extends React.Component<EditorPr, EditorSt> {
 		return !loaded ? (
 			<Loading />
 		) : (
-			<Toggle>
+			<Toggle defaultOpen>
 				{(open: boolean, toggleUIModal: Function) => (
 					<Aux>
 						{open && (
