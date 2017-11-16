@@ -297,27 +297,27 @@ legend {
 }
 
 h1,
-.h1 {
+.f1 {
 	font-size: var(--headline-1-sm);
 }
 h2,
-.h2 {
+.f2 {
 	font-size: var(--headline-2-sm);
 }
 h3,
-.h3 {
+.f3 {
 	font-size: var(--headline-3-sm);
 }
 h4,
-.h4 {
+.f4 {
 	font-size: var(--headline-4-sm);
 }
 h5,
-.h5 {
+.f5 {
 	font-size: var(--headline-5-sm);
 }
 h6,
-.h6 {
+.f6 {
 	font-size: var(--headline-6-sm);
 }
 
@@ -327,12 +327,12 @@ h3,
 h4,
 h5,
 h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
+.f1,
+.f2,
+.f3,
+.f4,
+.f5,
+.f6 {
 	margin: 0;
 	line-height: 1.5;
 	line-height: var(--lh-3);
@@ -341,54 +341,54 @@ h6,
 
 @media only screen and (min-width: 48rem) {
 	h1,
-	.h1 {
+	.f1 {
 		font-size: var(--headline-1-md);
 	}
 	h2,
-	.h2 {
+	.f2 {
 		font-size: var(--headline-2-md);
 	}
 	h3,
-	.h3 {
+	.f3 {
 		font-size: var(--headline-3-md);
 	}
 	h4,
-	.h4 {
+	.f4 {
 		font-size: var(--headline-4-md);
 	}
 	h5,
-	.h5 {
+	.f5 {
 		font-size: var(--headline-5-md);
 	}
 	h6,
-	.h6 {
+	.f6 {
 		font-size: var(--headline-6-md);
 	}
 }
 
 @media only screen and (min-width: 57.75rem) {
 	h1,
-	.h1 {
+	.f1 {
 		font-size: var(--headline-1-lg);
 	}
 	h2,
-	.h2 {
+	.f2 {
 		font-size: var(--headline-2-lg);
 	}
 	h3,
-	.h3 {
+	.f3 {
 		font-size: var(--headline-3-lg);
 	}
 	h4,
-	.h4 {
+	.f4 {
 		font-size: var(--headline-4-lg);
 	}
 	h5,
-	.h5 {
+	.f5 {
 		font-size: var(--headline-5-lg);
 	}
 	h6,
-	.h6 {
+	.f6 {
 		font-size: var(--headline-6-lg);
 	}
 }
@@ -506,6 +506,10 @@ a:hover {
 	.Export__label {
 		color: #4C4C4C;
 		font-size: 12px;
+	}
+
+	.Export__list > button:not(:last-of-type) {
+		margin-right: 16px;
 	}
 
 .u-cf::after {
