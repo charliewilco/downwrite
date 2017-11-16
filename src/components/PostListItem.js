@@ -7,7 +7,7 @@ const f2 = css({
 	fontSize: 16,
 	fontWeight: 500,
 	'@media (min-width: 57.75rem)': { fontSize: 24 },
-	'@media (min-width: 75rem)': { fontSize: 40 }
+	'@media (min-width: 75rem)': { fontSize: 36 }
 })
 
 const deleteButton = css({
@@ -23,7 +23,7 @@ const metadata = css({
 
 const ListItem = ({ title, id, content, author, onDelete }) => (
 	<Flex justifyContent="space-between">
-		<Block fontFamily="var(--secondary-font)">
+		<Block>
 			<Link to={`/${id}/edit`}>
 				<h2 className={css(f2)}>{title}</h2>
 			</Link>

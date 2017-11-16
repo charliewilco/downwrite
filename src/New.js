@@ -5,31 +5,9 @@ import { EditorState, convertToRaw } from 'draft-js'
 import { DWEditor } from './components'
 import { Redirect } from 'react-router-dom'
 import { Wrapper, Input, Button, Helpers } from './components'
-import { css } from 'glamor'
 import { createElement } from 'glamor/react'
 import uuid from 'uuid/v4'
 import { POST_ENDPOINT } from './utils/urls'
-
-const editorShell = css({
-	flex: 1,
-	marginTop: '-1px',
-	flexDirection: 'column',
-	justifyContent: 'center',
-	padding: 16,
-	minHeight: '100%',
-	width: `100%`,
-	position: 'absolute',
-	left: 0,
-	right: 0
-})
-
-const editorInner = css({
-	backgroundColor: 'white',
-	borderWidth: 1,
-	borderStyle: 'solid',
-	borderColor: 'rgba(0, 0, 0, .125)',
-	fontWeight: '400'
-})
 
 type NewPostSt = {
 	saved: boolean,
@@ -39,7 +17,7 @@ type NewPostSt = {
 	dateAdded: Date
 }
 
-type NewPostProps = { token: String, user: String }
+type NewPostProps = { token: string, user: string }
 
 // TODO: Shouldn't be able to add if editor is empty
 // TODO: If title is empty post should be named `Untitled Document ${uuid()}`
@@ -63,7 +41,7 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${token}`
 			},
-			body
+			body: JSON.stringify(body)
 		})
 
 		const newPost = await response.json()
@@ -75,17 +53,17 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 
 	addNewPost = () => {
 		let { id, title, editorState, dateAdded } = this.state
-		const ContentState = this.state.editorState.getCurrentContent()
+		const ContentState = editorState.getCurrentContent()
 		const content = JSON.stringify(convertToRaw(ContentState))
 		const { user } = this.props
 
-		const post: String = JSON.stringify({
+		const post: Object = {
 			title,
 			id,
 			content,
 			dateAdded,
 			user
-		})
+		}
 
 		return this.addNew(post)
 	}

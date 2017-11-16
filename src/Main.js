@@ -5,8 +5,14 @@ import { PostList, Loading, EmptyPosts } from './components'
 import { POST_ENDPOINT } from './utils/urls'
 
 type Post = {
-	title: String,
-	id: String
+	title: string,
+	id: string
+}
+
+type MainPr = {
+	user: string,
+	token: string,
+	closeNav: Function
 }
 
 type MainState = {
@@ -15,7 +21,7 @@ type MainState = {
 	layout: 'grid' | 'list'
 }
 
-export default class Main extends Component<{ user: String, token: String }, MainState> {
+export default class Main extends Component<MainPr, MainState> {
 	static displayName = 'Main View'
 
 	state = {
@@ -30,9 +36,8 @@ export default class Main extends Component<{ user: String, token: String }, Mai
 
 	getPosts = async () => {
 		const h = new Headers()
-		const { user, token } = this.props
 
-		h.set('Authorization', `Bearer ${token}`)
+		h.set('Authorization', `Bearer ${this.props.token}`)
 
 		const config = {
 			method: 'GET',
@@ -49,10 +54,11 @@ export default class Main extends Component<{ user: String, token: String }, Mai
 
 	componentWillMount() {
 		this.getPosts()
+		this.props.closeNav()
 	}
 
 	onDelete = async (post: Object) => {
-		const { user, token } = this.props
+		const { token } = this.props
 
 		const config = {
 			method: 'DELETE',
