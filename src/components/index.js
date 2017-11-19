@@ -19,11 +19,14 @@ import Layout from './Layout'
 import Modal from './Modal'
 import Toggle from './Toggle'
 import Export from './Export'
+import CloseIcon from './CloseIcon'
+import UIFlash, { withUIFlash } from './UIFlashMessages'
 
 export {
 	Aux,
 	Export,
 	SettingsIcon,
+	CloseIcon,
 	Helpers,
 	Layout,
 	DWEditor,
@@ -34,6 +37,7 @@ export {
 	Modal,
 	EmptyPosts,
 	Header,
+	UIFlash,
 	LoginInput,
 	LoginButton,
 	Input,
@@ -41,5 +45,6 @@ export {
 	Logo,
 	Toggle,
 	Nav,
+	withUIFlash,
 	PostList
 }
