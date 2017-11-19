@@ -1,11 +1,9 @@
 // @flow
-// @jsx createElement
 import * as React from 'react'
 import { EditorState, convertToRaw } from 'draft-js'
 import { DWEditor } from './components'
 import { Redirect } from 'react-router-dom'
 import { Wrapper, Input, Button, Helpers } from './components'
-import { createElement } from 'glamor/react'
 import uuid from 'uuid/v4'
 import { POST_ENDPOINT } from './utils/urls'
 

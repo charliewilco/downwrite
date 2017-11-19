@@ -1,11 +1,8 @@
 import { Editor, RichUtils } from 'draft-js'
 import React from 'react'
 import { css } from 'glamor'
-import { createElement } from 'glamor/react'
 import Toolbar from './Toolbar'
-require('./Editor.css')
-
-/* @jsx createElement */
+import './Editor.css'
 
 const editorStyle = css({
 	padding: 16,
@@ -17,7 +14,8 @@ const editorShell = css({
 	// border: `1px solid rgba(0, 0, 0 ,.125)`,
 	borderTop: 0,
 	position: 'relative',
-	paddingTop: 52
+	paddingTop: 24
+	// paddingTop: 52
 })
 
 export default class extends React.Component {
@@ -132,7 +130,7 @@ function getBlockStyle(block) {
 //       className += ' RichEditor-activeButton'
 //     }
 //     return (
-//       <span css={{ flex: 1, fontWeight: 300 }} className={className} onMouseDown={this.onToggle}>
+//       <span style={{ flex: 1, fontWeight: 300 }} className={className} onMouseDown={this.onToggle}>
 //         {this.props.label}
 //       </span>
 //     )

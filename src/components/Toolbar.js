@@ -3,9 +3,6 @@ import StyleButton from './ToolbarButton'
 import Media from 'react-media'
 import { css } from 'glamor'
 import { Flex } from 'glamor/jsxstyle'
-import { createElement } from 'glamor/react'
-
-/* @jsx createElement */
 
 const toolbarStyle = css({
 	position: 'absolute',
@@ -67,7 +64,6 @@ const FullToolBar = ({
 				style={type.style}
 			/>
 		))}
-		<div css={{ flex: 1, alignSelf: 'flex-end' }}>{children}</div>
 	</Flex>
 )
 
@@ -99,7 +95,6 @@ const SelectionToolBar = ({
 						style={type.style}
 					/>
 				))}
-		<div css={{ flex: 1, alignSelf: 'flex-end' }}>{children}</div>
 	</Flex>
 )
 
@@ -118,7 +113,7 @@ const Toolbar = ({ children, editorState, onToggleBlockType, onToggleInlineStyle
 		.getType()
 
 	return (
-		<Media query="(min-width: 500px)">
+		<Media query={{ minWidth: 500 }}>
 			{matches =>
 				!matches ? (
 					<SelectionToolBar

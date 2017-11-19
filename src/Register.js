@@ -71,7 +71,7 @@ class Register extends React.Component<LoginProps, RegisterType> {
 
 				<Block paddingTop={16} textAlign="right">
 					<InlineBlock>
-						<Button css={{ display: 'inline-block' }} onClick={this.onSubmit}>
+						<Button onClick={this.onSubmit}>
 							Register
 						</Button>
 					</InlineBlock>
