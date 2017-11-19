@@ -1,13 +1,10 @@
 // @flow
-// @jsx createElement
 import React, { Component } from 'react'
 import Login from './Login'
 import Register from './Register'
 import { Block, Flex } from 'glamor/jsxstyle'
 import { css } from 'glamor'
-import { createElement } from 'glamor/react'
-import { Logo } from './components'
-import oatmeal from './utils/cookie'
+import { Logo, withUIFlash } from './components'
 
 const hStyle = css({
 	marginBottom: 32,
@@ -28,23 +25,23 @@ const navStyle = css({
 	borderBottomColor: 'transparent'
 })
 
+const introStyle = css({
+	textAlign: 'center',
+	marginBottom: 32,
+	'@media (min-width: 57.75rem)': {
+		paddingTop: 144,
+		textAlign: 'left',
+		marginBottom: 0
+	}
+})
+
 const navStyleAction = css({
 	color: `var(--color-6)`,
 	borderBottomColor: `var(--color-6)`
 })
 
 const Intro = () => (
-	<Block
-		color="var(--color-4)"
-		css={{
-			textAlign: 'center',
-			marginBottom: 32,
-			'@media (min-width: 57.75rem)': {
-				paddingTop: 144,
-				textAlign: 'left',
-				marginBottom: 0
-			}
-		}}>
+	<Block color="var(--color-4)" className={css(introStyle)}>
 		<Logo />
 		<h1
 			data-test="Login Page Container"
@@ -73,16 +70,15 @@ const Container = ({ children }) => (
 	/>
 )
 
-class Home extends Component<void, { loginSelected: boolean, error: string }> {
+class Home extends Component<{ setFlash: Function }, { loginSelected: boolean }> {
 	state = {
-		loginSelected: false,
-		error: ''
+		loginSelected: true
 	}
 
-	errorMessage = (x: string) => this.setState({ error: x })
+	errorMessage = (x: string, y: string) => this.props.setFlash(x, y)
 
 	render() {
-		const { loginSelected, error } = this.state
+		const { loginSelected } = this.state
 		return (
 			<Block position="relative">
 				<Block className="HomeBanner" />
@@ -110,17 +106,16 @@ class Home extends Component<void, { loginSelected: boolean, error: string }> {
 								{loginSelected ? 'Welcome Back!' : 'Sign Up as  a New User'}
 							</h2>
 							{loginSelected ? (
-								<Login {...this.props} setError={this.errorMessage} cookies={oatmeal} />
+								<Login {...this.props} setError={this.errorMessage} />
 							) : (
-								<Register {...this.props} setError={this.errorMessage} cookies={oatmeal} />
+								<Register {...this.props} setError={this.errorMessage} />
 							)}
 						</Block>
 					</Block>
 				</Container>
-				{error.length > 0 && <span>{error}</span>}
 			</Block>
 		)
 	}
 }
 
-export default Home
+export default withUIFlash(Home)
