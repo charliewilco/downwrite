@@ -2,13 +2,9 @@
 import * as React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Block } from 'glamor/jsxstyle'
-import New from './New'
-import Edit from './Edit'
+import Loadable from 'react-loadable';
+
 import { Header, Nav, Toggle } from './components'
-import Main from './Main'
-import Home from './Home'
-import NoMatch from './NoMatch'
-import SignOut from './SignOut'
 import { PrivateRoute } from './CustomRoutes'
 
 type AppProps = {
@@ -19,6 +15,41 @@ type AppProps = {
 	signIn: Function,
 	signOut: Function
 }
+
+const Loading = () => {
+	return (<h1>Loading</h1>)
+}
+
+const New = Loadable({
+  loader: () => import('./New'),
+  loading: Loading
+})
+
+const Edit = Loadable({
+	loader: () => import('./Edit'),
+	loading: Loading
+})
+
+const Home = Loadable({
+	loader: () => import('./Home'),
+	loading: Loading
+})
+
+const Main = Loadable({
+	loader: () => import('./Main'),
+	loading: Loading
+})
+
+const NotFound = Loadable({
+	loader: () => import('./NoMatch'),
+	loading: Loading
+})
+
+const SignOut = Loadable({
+	loader: () => import('./SignOut'),
+	loading: Loading
+})
+
 
 export default class extends React.Component<AppProps, void> {
 	static displayName = 'AppRouterContainer'
@@ -64,7 +95,7 @@ export default class extends React.Component<AppProps, void> {
 												<SignOut toggleNav={toggleNav} signOut={signOut} />
 											)}
 										/>
-										<Route component={NoMatch} />
+										<Route component={NotFound} />
 									</Switch>
 								</Block>
 								{navOpen && <Nav token={token} user={user} username={name} />}
