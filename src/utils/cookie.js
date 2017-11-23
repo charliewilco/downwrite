@@ -24,3 +24,5 @@ export const intialState = {
 	token: TOKEN,
 	user: USER_ID
 }
+
+// export const decodedState: Object = { ...decode(TOKEN) }

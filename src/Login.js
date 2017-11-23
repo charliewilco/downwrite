@@ -36,11 +36,20 @@ class Login extends React.Component<LoginProps, LoginState> {
 		const auth = await authRequest.json()
 
 		if (auth.error) {
-			this.props.setError(auth.message)
+			this.props.setError(auth.message, 'error')
 		}
 
 		if (auth.userID) {
 			this.props.signIn(auth.id_token !== undefined, auth.id_token, auth.userID, auth.username)
+		}
+	}
+
+	componentWillMount() {
+		if (process.env.NODE_ENV === 'development') {
+			this.setState({
+				user: 'red',
+				password: 'blue',
+			})
 		}
 	}
 
