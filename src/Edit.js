@@ -16,14 +16,14 @@ import {
 	Aux,
 	DWEditor,
 	SettingsIcon,
-	Export
+	Export,
+	withUIFlash
 } from './components'
 
 import format from 'date-fns/format'
 import isEmpty from 'lodash.isempty'
 import { superConverter } from './utils/responseHandler'
 import { POST_ENDPOINT } from './utils/urls'
-import type { Match } from 'react-router-dom'
 
 const meta = css({
 	opacity: 0.5,
@@ -39,9 +39,18 @@ type EditorSt = {
 	dateModified: Date
 }
 
-type EditorPr = { token: string, user: string, match: Match }
+type EditorPr = {
+	token: string,
+	user: string,
+	match: {
+		params: {
+			id: string
+		}
+	},
+	location: Location
+}
 
-export default class extends React.Component<EditorPr, EditorSt> {
+class Edit extends React.Component<EditorPr, EditorSt> {
 	static displayName = 'Edit'
 
 	titleInput: HTMLInputElement
@@ -162,7 +171,7 @@ export default class extends React.Component<EditorPr, EditorSt> {
 		return !loaded ? (
 			<Loading />
 		) : (
-			<Toggle defaultOpen>
+			<Toggle>
 				{(open: boolean, toggleUIModal: Function) => (
 					<Aux>
 						{open && (
@@ -175,10 +184,9 @@ export default class extends React.Component<EditorPr, EditorSt> {
 								<Button onClick={() => this.updatePostContent()}>Save</Button>
 								<SettingsIcon onClick={toggleUIModal} />
 							</Helpers>
-							<Wrapper sm paddingTop={128}>
+							<Wrapper sm paddingTop={0}>
 								<Block className={css(meta)} marginBottom={8}>
-									{post.id} | {post.author} | Date Added:{' '}
-									{format(post.dateAdded, 'HH:MM A, DD MMMM YYYY')}
+									Added on {format(post.dateAdded, 'DD MMMM YYYY')}
 								</Block>
 								<Input
 									inputRef={input => (this.titleInput = input)}
@@ -201,3 +209,5 @@ export default class extends React.Component<EditorPr, EditorSt> {
 		)
 	}
 }
+
+export default withUIFlash(Edit)

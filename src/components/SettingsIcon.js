@@ -1,7 +1,6 @@
-// @jsx createElement
 // @flow
 import * as React from 'react'
-import { createElement } from 'glamor/react'
+import { css } from 'glamor'
 
 const SettingsIcon: React.ElementType = () => (
 	<svg width="16" height="16" viewBox="0 0 16 16">
@@ -21,20 +20,17 @@ const SettingsIcon: React.ElementType = () => (
 	</svg>
 )
 
+const settingsIc = css({
+	border: 0,
+	background: 'none',
+	appearance: 'none',
+	marginTop: 16
+})
+
 export default ({ onClick }: { onClick: Function }) => (
 	<button
 		onClick={onClick}
-		css={{
-			display: 'flex',
-			alignItems: 'center',
-			border: 0,
-			background: 'none',
-			appearance: 'none',
-			marginTop: 16
-		}}>
+		className={css(settingsIc)}>
 		<SettingsIcon />
-		<small css={{ marginLeft: 8, textTransform: 'uppercase', letterSpacing: 2 }}>
-			Settings
-		</small>
 	</button>
 )
