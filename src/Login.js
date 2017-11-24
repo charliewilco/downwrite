@@ -46,15 +46,6 @@ class Login extends React.Component<LoginProps, LoginState> {
 		}
 	}
 
-	componentWillMount() {
-		if (process.env.NODE_ENV === 'development') {
-			this.setState({
-				user: 'red',
-				password: 'blue',
-			})
-		}
-	}
-
 	render() {
 		const { user, password } = this.state
 		return (
