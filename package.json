@@ -27,6 +27,7 @@
 		"jwt-decode": "^2.2.0",
 		"lodash.isempty": "^4.4.0",
 		"lodash.isundefined": "^3.0.1",
+		"lodash.orderby": "^4.6.0",
 		"prism": "^4.1.2",
 		"react": "^16.0.0",
 		"react-dom": "^16.0.0",
