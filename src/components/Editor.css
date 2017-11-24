@@ -62,6 +62,7 @@
 ** Overrides for Draft.js
 */
 
+.public-DraftStyleDefault-orderedListItem > *,
 .public-DraftStyleDefault-unorderedListItem > * {
   display: inline-block;
 }
