@@ -25,7 +25,7 @@ LG = @media only screen and (min-width: 57.75rem)
 	--secondary-font: Roboto, Avenir, sans-serif;
 	--ff-default: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', 'SF UI Text',
 		'Segoe UI', 'Roboto', 'Noto Sans', 'Helvetica Neue', 'Lucida Grande', sans-serif;
-	--ff-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+	--ff-mono: 'Input Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
 }
 
 *,

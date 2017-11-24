@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import { Block } from 'glamor/jsxstyle'
+import orderBy from 'lodash.orderby'
 import { PostList, Loading, EmptyPosts } from './components'
 import { POST_ENDPOINT } from './utils/urls'
 
@@ -47,7 +48,7 @@ export default class Main extends Component<MainPr, MainState> {
 		}
 
 		const response = await fetch(POST_ENDPOINT, config)
-		const posts = await response.json()
+		const posts = orderBy(await response.json(), ['dateAdded'], ['desc'])
 
 		return this.setState({ posts, loaded: true })
 	}
