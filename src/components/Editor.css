@@ -26,9 +26,9 @@
 .RichEditor-editor .RichEditor-blockquote {
   border-left: 5px solid #eee;
   color: #666;
-  font-family: 'Charter', 'Georgia', serif;
+  font-family: inherit;
   font-style: italic;
-  margin: 16px 0;
+  margin: 16px 0 16px -5px;
   padding: 10px 20px;
 }
 
@@ -55,4 +55,14 @@
 
 .RichEditor-activeButton {
   color: #5890ff;
+}
+
+
+/*
+** Overrides for Draft.js
+*/
+
+.public-DraftStyleDefault-orderedListItem > *,
+.public-DraftStyleDefault-unorderedListItem > * {
+  display: inline-block;
 }
