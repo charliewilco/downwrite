@@ -1,8 +1,10 @@
-import { Editor, RichUtils } from 'draft-js'
+import { RichUtils } from 'draft-js'
+import Editor from 'draft-js-plugins-editor'
 import React from 'react'
 import { css } from 'glamor'
 import Toolbar from './Toolbar'
 import './Editor.css'
+import createMarkdownPlugin from 'draft-js-markdown-plugin'
 
 const editorStyle = css({
 	padding: 16,
@@ -22,7 +24,8 @@ export default class extends React.Component {
 	static displayName = 'DWEditor'
 
 	state = {
-		editorState: this.props.editorState
+		editorState: this.props.editorState,
+		plugins: [createMarkdownPlugin()]
 	}
 
 	focus = () => this.refs.editor.focus()
@@ -90,6 +93,7 @@ export default class extends React.Component {
 						placeholder="History will be kind to me for I intend to write it. — Winston Churchill"
 						ref="editor"
 						spellCheck={true}
+						plugins={this.state.plugins}
 					/>
 				</div>
 			</div>

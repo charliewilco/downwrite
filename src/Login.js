@@ -25,13 +25,15 @@ class Login extends React.Component<LoginProps, LoginState> {
 	onSubmit = async (evt: Event) => {
 		evt.preventDefault()
 
-		const authRequest = await fetch(AUTH_ENDPOINT, {
+		const config = {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({ ...this.state })
-		})
+		}
+
+		const authRequest = await fetch(AUTH_ENDPOINT, config)
 
 		const auth = await authRequest.json()
 
