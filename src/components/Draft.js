@@ -1,10 +1,13 @@
 import { RichUtils } from 'draft-js'
 import Editor from 'draft-js-plugins-editor'
 import React from 'react'
+import Prism from 'prismjs'
 import { css } from 'glamor'
 import Toolbar from './Toolbar'
-import './Editor.css'
 import createMarkdownPlugin from 'draft-js-markdown-plugin'
+import createPrismPlugin from 'draft-js-prism-plugin'
+import './Editor.css'
+import './ganymede.css'
 
 const editorStyle = css({
 	padding: 16,
@@ -13,11 +16,9 @@ const editorStyle = css({
 })
 
 const editorShell = css({
-	// border: `1px solid rgba(0, 0, 0 ,.125)`,
 	borderTop: 0,
 	position: 'relative',
 	paddingTop: 24
-	// paddingTop: 52
 })
 
 export default class extends React.Component {
@@ -25,7 +26,7 @@ export default class extends React.Component {
 
 	state = {
 		editorState: this.props.editorState,
-		plugins: [createMarkdownPlugin()]
+		plugins: [createMarkdownPlugin(), createPrismPlugin({ prism: Prism })]
 	}
 
 	focus = () => this.refs.editor.focus()
@@ -105,7 +106,7 @@ export default class extends React.Component {
 const styleMap = {
 	CODE: {
 		backgroundColor: 'rgba(0, 0, 0, 0.05)',
-		fontFamily: 'Input Mono, "Menlo", "Consolas", monospace',
+		fontFamily: 'var(--ff-mono)',
 		fontSize: 14,
 		padding: 2
 	}
@@ -119,24 +120,3 @@ function getBlockStyle(block) {
 			return null
 	}
 }
-
-// class StyleButton extends React.Component {
-//   constructor () {
-//     super()
-//     this.onToggle = e => {
-//       e.preventDefault()
-//       this.props.onToggle(this.props.style)
-//     }
-//   }
-//   render () {
-//     let className = 'RichEditor-styleButton'
-//     if (this.props.active) {
-//       className += ' RichEditor-activeButton'
-//     }
-//     return (
-//       <span style={{ flex: 1, fontWeight: 300 }} className={className} onMouseDown={this.onToggle}>
-//         {this.props.label}
-//       </span>
-//     )
-//   }
-// }
