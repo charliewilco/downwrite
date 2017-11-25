@@ -67,8 +67,10 @@ const Card = ({ title, id, content, dateAdded, onDelete }) => (
 			fontSize={12}
 			justifyContent="space-between"
 			backgroundColor="rgba(101, 163, 191, .125)">
-			<Link to={`/${id}/edit`}>Edit</Link>
-
+			<Block>
+			<Link to={`/${id}/edit`} className={css({ marginRight: 8 })}>Edit</Link>
+			<Link to={`/${id}/preview`}>Preview</Link>
+		</Block>
 			{onDelete && (
 				<button className={css(s.delete)} onClick={onDelete}>
 					Delete
