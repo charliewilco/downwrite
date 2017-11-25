@@ -10,7 +10,10 @@ import './Editor.css'
 import './ganymede.css'
 
 const editorStyle = css({
-	padding: 16,
+	paddingLeft: 0,
+	paddingRight: 0,
+	paddingTop: 16,
+	paddingBottom: 16,
 	height: '100%',
 	width: '100%'
 })

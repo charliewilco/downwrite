@@ -12,7 +12,10 @@ let styles = css({
 	borderStyle: 'solid',
 	borderRadius: 0,
 	borderColor: 'rgba(0, 0, 0, .125)',
-	padding: 16
+	paddingLeft: 0,
+	paddingRight: 0,
+	paddingTop: 8,
+	paddingBottom: 8
 })
 
 export default class Input extends React.Component {
