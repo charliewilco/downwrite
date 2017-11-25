@@ -1,4 +1,6 @@
+// @flow
 import React, { Component } from 'react'
+import { findDOMNode } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { css, keyframes } from 'glamor'
 import { Block, Flex, Column } from 'glamor/jsxstyle'
@@ -47,21 +49,59 @@ const SignoutIcon = () => (
 	</svg>
 )
 
+// const CloseNavButton = ({ closeNav }) => (
+// 	<Block position="absolute" top={0}>
+// 		<button onClick={closeNav}>Close</button>
+// 	</Block>
+// )
+
 export default class extends Component {
 	static displayName = 'Nav'
 
+	componentWillMount() {
+		document.addEventListener('click', this.outsideHandleClick, false)
+
+		if (document.body && !this.props.matches) {
+			document.body.classList.add('__noScroll')
+		}
+	}
+  //
+	// componentDidMount() {
+	// 	findDOMNode(this).focus()
+	// }
+
+	componentWillUnmount() {
+		document.removeEventListener('click', this.outsideHandleClick, false)
+
+		if (document.body && !this.props.matches) {
+			document.body.classList.remove('__noScroll')
+		}
+	}
+
+	outsideHandleClick = e => {
+		if (!findDOMNode(this).contains(e.target)) {
+			return this.props.closeNav()
+		}
+	}
+
 	render() {
+		const { matches, token, username } = this.props
 		return (
 			<Flex
 				animation={`${fadeInFromLeft} .45s`}
 				component="nav"
-				width={384}
+				boxShadow={!matches && '0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12)'}
+				width={matches ? 384 : '75%'}
 				backgroundColor="white"
-				height="calc(100vh - 4px)"
-				float="right">
-				<Column flex={1} justifyContent="space-between">
+				position={!matches && 'fixed'}
+				right={!matches && 0}
+				top={!matches && 0}
+				bottom={!matches && 0}
+				height={matches ? "calc(100vh - 4px)" : "100vh"}
+				float={matches && 'right'}>
+				<Column flex={1} justifyContent={matches && 'space-between'}>
 					<Block>
-						<User username={this.props.username} />
+						<User username={username} />
 						<Block paddingLeft={8} paddingRight={8} paddingTop={16} paddingBottom={16}>
 							<Link to="/" className={css(navButton, navItem)}>
 								All Entries
@@ -72,9 +112,16 @@ export default class extends Component {
 							</Link>
 						</Block>
 					</Block>
-					<Block flex={1} padding={8}>
-						<Fetch token={this.props.token}>
-							{posts => (posts.length > 0 ? <SidebarPosts posts={posts} /> : <SidebarEmpty />)}
+
+					<Block flex={matches && 1} padding={8}>
+						<Fetch token={token}>
+							{posts =>
+								posts.length > 0 ? (
+									<SidebarPosts matches={matches} posts={posts} />
+								) : (
+									<SidebarEmpty />
+								)
+							}
 						</Fetch>
 					</Block>
 

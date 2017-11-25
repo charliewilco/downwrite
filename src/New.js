@@ -3,6 +3,7 @@ import * as React from 'react'
 import { EditorState, convertToRaw } from 'draft-js'
 import { DWEditor } from './components'
 import { Redirect } from 'react-router-dom'
+import Media from 'react-media'
 import { Wrapper, Input, Button, Helpers } from './components'
 import uuid from 'uuid/v4'
 import { POST_ENDPOINT } from './utils/urls'
@@ -71,22 +72,26 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 		return saved ? (
 			<Redirect to={`/${id}/edit`} />
 		) : (
-			<Wrapper paddingTop={128} sm>
-				<Helpers>
-					<Button onClick={this.addNewPost}>Add</Button>
-				</Helpers>
-				<Wrapper>
-					<Input
-						placeholder="Untitled Document"
-						value={title}
-						onChange={e => this.setState({ title: e.target.value })}
-					/>
-					<DWEditor
-						editorState={editorState}
-						onChange={editorState => this.setState({ editorState })}
-					/>
-				</Wrapper>
-			</Wrapper>
+			<Media query={{ minWidth: 500 }}>
+				{m => (
+					<Wrapper paddingTop={128} sm>
+						<Helpers>
+							<Button onClick={this.addNewPost}>Add</Button>
+						</Helpers>
+						<Wrapper sm paddingLeft={4} paddingRight={4}>
+							<Input
+								placeholder="Untitled Document"
+								value={title}
+								onChange={e => this.setState({ title: e.target.value })}
+							/>
+							<DWEditor
+								editorState={editorState}
+								onChange={editorState => this.setState({ editorState })}
+							/>
+						</Wrapper>
+					</Wrapper>
+				)}
+			</Media>
 		)
 	}
 }

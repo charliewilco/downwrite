@@ -4,6 +4,7 @@ import * as React from 'react'
 import { css } from 'glamor'
 import { EditorState, convertToRaw } from 'draft-js'
 import type { ContentState } from 'draft-js'
+import Media from 'react-media'
 import { Block } from 'glamor/jsxstyle'
 import {
 	Button,
@@ -171,41 +172,45 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		return !loaded ? (
 			<Loading />
 		) : (
-			<Toggle>
-				{(open: boolean, toggleUIModal: Function) => (
-					<Aux>
-						{open && (
-							<Modal closeUIModal={toggleUIModal}>
-								<Export editorState={editorState} title={title} date={post.dateAdded} />
-							</Modal>
-						)}
-						<Wrapper sm>
-							<Helpers>
-								<Button onClick={() => this.updatePostContent()}>Save</Button>
-								<SettingsIcon onClick={toggleUIModal} />
-							</Helpers>
-							<Wrapper sm paddingTop={0}>
-								<Block className={css(meta)} marginBottom={8}>
-									Added on {format(post.dateAdded, 'DD MMMM YYYY')}
-								</Block>
-								<Input
-									inputRef={input => (this.titleInput = input)}
-									value={title}
-									onChange={e => this.updateTitle(e)}
-								/>
-								<div>
-									{editorState !== null && (
-										<DWEditor
-											editorState={editorState}
-											onChange={(editorState: EditorState) => this.onChange(editorState)}
+			<Media query={{ minWidth: 500 }}>
+				{m => (
+					<Toggle>
+						{(open: boolean, toggleUIModal: Function) => (
+							<Aux>
+								{open && (
+									<Modal closeUIModal={toggleUIModal}>
+										<Export editorState={editorState} title={title} date={post.dateAdded} />
+									</Modal>
+								)}
+								<Wrapper sm>
+									<Helpers>
+											<Button onClick={() => this.updatePostContent()}>Save</Button>
+											<SettingsIcon onClick={toggleUIModal} />
+									</Helpers>
+									<Wrapper sm paddingTop={0} paddingLeft={4} paddingRight={4}>
+										<Block className={css(meta)} marginBottom={8}>
+											Added on {format(post.dateAdded, 'DD MMMM YYYY')}
+										</Block>
+										<Input
+											inputRef={input => (this.titleInput = input)}
+											value={title}
+											onChange={e => this.updateTitle(e)}
 										/>
-									)}
-								</div>
-							</Wrapper>
-						</Wrapper>
-					</Aux>
+										<div>
+											{editorState !== null && (
+												<DWEditor
+													editorState={editorState}
+													onChange={(editorState: EditorState) => this.onChange(editorState)}
+												/>
+											)}
+										</div>
+									</Wrapper>
+								</Wrapper>
+							</Aux>
+						)}
+					</Toggle>
 				)}
-			</Toggle>
+			</Media>
 		)
 	}
 }
