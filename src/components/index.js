@@ -22,9 +22,12 @@ import Export from './Export'
 import CloseIcon from './CloseIcon'
 import UIFlash, { withUIFlash } from './UIFlashMessages'
 
+import Content from './Content'
+
 export {
 	Aux,
 	Export,
+	Content,
 	SettingsIcon,
 	CloseIcon,
 	Helpers,
