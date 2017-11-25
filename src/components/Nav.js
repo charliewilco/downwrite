@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { css, keyframes } from 'glamor'
 import { Block, Flex, Column } from 'glamor/jsxstyle'
 import User from './User'
+import Aux from './Aux'
 import Fetch from './CollectionFetch'
 import { SidebarEmpty } from './EmptyPosts'
 import SidebarPosts from './SideBarPosts'
@@ -49,42 +50,68 @@ const SignoutIcon = () => (
 
 export default class extends Component {
 	static displayName = 'Nav'
+	componentWillMount() {
+		if (document.body && !this.props.matches) {
+			document.body.classList.add('__noScroll')
+		}
+	}
+
+	componentWillUnmount() {
+		if (document.body && !this.props.matches) {
+			document.body.classList.remove('__noScroll')
+		}
+	}
 
 	render() {
+		const { matches, closeNav, token, username } = this.props
 		return (
-			<Flex
-				animation={`${fadeInFromLeft} .45s`}
-				component="nav"
-				width={384}
-				backgroundColor="white"
-				height="calc(100vh - 4px)"
-				float="right">
-				<Column flex={1} justifyContent="space-between">
-					<Block>
-						<User username={this.props.username} />
-						<Block paddingLeft={8} paddingRight={8} paddingTop={16} paddingBottom={16}>
-							<Link to="/" className={css(navButton, navItem)}>
-								All Entries
-							</Link>
+					<Aux>
+						{!matches && (
+							<Block position='absolute'  top={0}>
+								<button onClick={closeNav}>Close</button>
+							</Block>
+						)}
+					<Flex
+						animation={`${fadeInFromLeft} .45s`}
+						component="nav"
+						width={matches ? 384 : '75%'}
+						backgroundColor="white"
+						position={!matches && 'fixed'}
+						right={!matches && 0}
+						top={!matches && 0}
+						bottom={!matches && 0}
+						height="calc(100vh - 4px)"
+						float={matches && 'right'}>
+						<Column flex={1} justifyContent={matches && "space-between"}>
+							<Block>
+								<User username={username} />
+								<Block paddingLeft={8} paddingRight={8} paddingTop={16} paddingBottom={16}>
+									<Link to="/" className={css(navButton, navItem)}>
+										All Entries
+									</Link>
 
-							<Link to="/new" className={css(navButton, navItem)}>
-								Create New Entry
-							</Link>
-						</Block>
-					</Block>
-					<Block flex={1} padding={8}>
-						<Fetch token={this.props.token}>
-							{posts => (posts.length > 0 ? <SidebarPosts posts={posts} /> : <SidebarEmpty />)}
-						</Fetch>
-					</Block>
+									<Link to="/new" className={css(navButton, navItem)}>
+										Create New Entry
+									</Link>
+								</Block>
+							</Block>
 
-					<Block borderTop="1px solid #DBDCDD" padding={8} textAlign="right">
-						<Link to="/signout" className={css(navButton, { fontSize: 14 })}>
-							<SignoutIcon /> <span>Sign Out</span>
-						</Link>
-					</Block>
-				</Column>
-			</Flex>
+								{matches && (
+									<Block flex={1} padding={8}>
+									<Fetch token={token}>
+										{posts => (posts.length > 0 ? <SidebarPosts posts={posts} /> : <SidebarEmpty />)}
+									</Fetch>
+								</Block>
+								)}
+
+							<Block borderTop="1px solid #DBDCDD" padding={8} textAlign="right">
+								<Link to="/signout" className={css(navButton, { fontSize: 14 })}>
+									<SignoutIcon /> <span>Sign Out</span>
+								</Link>
+							</Block>
+						</Column>
+					</Flex>
+				</Aux>
 		)
 	}
 }
