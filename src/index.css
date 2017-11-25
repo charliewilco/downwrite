@@ -481,8 +481,9 @@ a:hover {
 	background-image: linear-gradient(to right, #2584a5, #4fa5c2);
 }
 
-.__modalOpen {
+.__noScroll {
 	overflow: hidden !important;
+	position: fixed !important;
 }
 
 @media (min-width: 48rem) {}

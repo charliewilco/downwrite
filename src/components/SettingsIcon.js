@@ -24,7 +24,10 @@ const settingsIc = css({
 	border: 0,
 	background: 'none',
 	appearance: 'none',
-	marginTop: 16
+	'@media (min-width: 500px)': {
+		textAlign: 'left',
+		marginTop: 16
+	}
 })
 
 export default ({ onClick }: { onClick: Function }) => (

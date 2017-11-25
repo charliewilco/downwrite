@@ -1,8 +1,9 @@
 // @flow
 import * as React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import Media from 'react-media'
 import { Block } from 'glamor/jsxstyle'
-import Loadable from 'react-loadable';
+import Loadable from 'react-loadable'
 
 import { Header, Nav, Toggle } from './components'
 import { PrivateRoute } from './CustomRoutes'
@@ -17,12 +18,12 @@ type AppProps = {
 }
 
 const Loading = () => {
-	return (<h1>Loading</h1>)
+	return <h1>Loading</h1>
 }
 
 const New = Loadable({
-  loader: () => import('./New'),
-  loading: Loading
+	loader: () => import('./New'),
+	loading: Loading
 })
 
 const Edit = Loadable({
@@ -50,7 +51,6 @@ const SignOut = Loadable({
 	loading: Loading
 })
 
-
 export default class extends React.Component<AppProps, void> {
 	static displayName = 'AppRouterContainer'
 
@@ -58,51 +58,58 @@ export default class extends React.Component<AppProps, void> {
 		const { authed, token, user, name, signOut, signIn } = this.props
 		return (
 			<Router>
-				<Toggle>
-					{(navOpen, toggleNav, closeNav) => (
-						<Block fontFamily="var(--primary-font)">
-							<Block height="calc(100% - 82px)" className="u-cf">
-								<Block float={navOpen && 'left'} width={navOpen && 'calc(100% - 384px)'}>
-									{authed && <Header name="Downwrite" open={navOpen} onClick={toggleNav} />}
-									<Switch>
-										<Route
-											exact
-											path="/"
-											render={(props: Object) =>
-												authed === true ? (
-													<Main closeNav={closeNav} token={token} user={user} {...props} />
-												) : (
-													<Home {...props} signIn={signIn} signOut={signOut} />
-												)}
-										/>
-										<PrivateRoute
-											authed={authed}
-											token={token}
-											user={user}
-											path="/new"
-											component={New}
-										/>
-										<PrivateRoute
-											authed={authed}
-											token={token}
-											user={user}
-											path="/:id/edit"
-											component={Edit}
-										/>
-										<Route
-											path="/signout"
-											render={(props: Object) => (
-												<SignOut toggleNav={toggleNav} signOut={signOut} />
+				<Media query={{ minWidth: 500 }}>
+					{matches => (
+						<Toggle>
+							{(navOpen, toggleNav, closeNav) => (
+								<Block fontFamily="var(--primary-font)">
+									<Block height="calc(100% - 82px)" className="u-cf">
+										<Block float={(navOpen && matches) && 'left'} width={(navOpen && matches) && 'calc(100% - 384px)'}>
+											{authed && (
+												<Header name="Downwrite" open={navOpen} onClick={toggleNav} />
 											)}
-										/>
-										<Route component={NotFound} />
-									</Switch>
+											<Switch>
+												<Route
+													exact
+													path="/"
+													render={(props: Object) =>
+														authed === true ? (
+															<Main closeNav={closeNav} token={token} user={user} {...props} />
+														) : (
+															<Home {...props} signIn={signIn} signOut={signOut} />
+														)
+													}
+												/>
+												<PrivateRoute
+													authed={authed}
+													token={token}
+													user={user}
+													path="/new"
+													component={New}
+												/>
+												<PrivateRoute
+													authed={authed}
+													token={token}
+													user={user}
+													path="/:id/edit"
+													component={Edit}
+												/>
+												<Route
+													path="/signout"
+													render={(props: Object) => (
+														<SignOut toggleNav={toggleNav} signOut={signOut} />
+													)}
+												/>
+												<Route component={NotFound} />
+											</Switch>
+										</Block>
+										{navOpen && <Nav closeNav={closeNav} matches={matches} token={token} user={user} username={name} />}
+									</Block>
 								</Block>
-								{navOpen && <Nav token={token} user={user} username={name} />}
-							</Block>
-						</Block>
+							)}
+						</Toggle>
 					)}
-				</Toggle>
+				</Media>
 			</Router>
 		)
 	}

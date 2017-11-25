@@ -41,13 +41,13 @@ export default class extends React.Component<{
 }> {
 	componentWillMount() {
 		if (document.body) {
-			document.body.classList.add('__modalOpen')
+			document.body.classList.add('__noScroll')
 		}
 	}
 
 	componentWillUnmount() {
 		if (document.body) {
-			document.body.classList.remove('__modalOpen')
+			document.body.classList.remove('__noScroll')
 		}
 	}
 
