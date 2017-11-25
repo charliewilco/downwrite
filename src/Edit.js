@@ -5,6 +5,7 @@ import { css } from 'glamor'
 import { EditorState, convertToRaw } from 'draft-js'
 import type { ContentState } from 'draft-js'
 import Media from 'react-media'
+import { matchPath } from 'react-router-dom'
 import { Block } from 'glamor/jsxstyle'
 import {
 	Button,
@@ -97,9 +98,8 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		return this.updatePost(newPost)
 	}
 
-	getPost = async () => {
+	getPost = async (id) => {
 		const h = new Headers()
-		const { id } = this.props.match.params
 		const { token } = this.props
 
 		h.set('Authorization', `Bearer ${token}`)
@@ -122,7 +122,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 	}
 
 	async componentWillMount() {
-		const post = await this.getPost()
+		const post = await this.getPost(this.props.match.params.id)
 		const content = await superConverter(post.content)
 
 		this.setState({
@@ -166,6 +166,26 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		})
 	}
 
+	// TODO: Refactor this to do something smarter to render this component
+	// See this is where recompose might be cool
+	// I'm gonna need to take that back at some point
+	// Will Next.js fix this?
+	componentWillReceiveProps({ location }) {
+		if (location !== this.props.location) {
+			const newMatch = matchPath(location.pathname, { path: '/:id/edit' })
+			console.log(location, newMatch)
+			this.getPost(newMatch.params.id).then(post => this.setState({
+				post: {
+					...post,
+					content: superConverter(post.content)
+				},
+				editorState: EditorState.createWithContent(superConverter(post.content)),
+				title: post.title,
+				loaded: true
+			}))
+		}
+	}
+
 	render() {
 		const { title, post, loaded, editorState } = this.state
 
@@ -189,7 +209,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 									</Helpers>
 									<Wrapper sm paddingTop={0} paddingLeft={4} paddingRight={4}>
 										<Block className={css(meta)} marginBottom={8}>
-											Added on {format(post.dateAdded, 'DD MMMM YYYY')}
+											Added on <time dateTime={post.dateAdded}>{format(post.dateAdded, 'DD MMMM YYYY')}</time>
 										</Block>
 										<Input
 											inputRef={input => (this.titleInput = input)}
