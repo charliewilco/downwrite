@@ -7,6 +7,7 @@ export default ({ children }) => (
 		{m => (
 			<Block float={m ? "right": "none"} marginRight={m && -128} width={m && 96}>
 				<Flex
+					marginBottom={16}
 					flexDirection={m ? 'column' : 'row-reverse'}
 					justifyContent={!m && 'space-between'}
 					paddingLeft={!m && 8}

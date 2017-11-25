@@ -72,24 +72,26 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 		return saved ? (
 			<Redirect to={`/${id}/edit`} />
 		) : (
-			<Media query={{ minWidth: 500 }}>{m => (
-			<Wrapper paddingTop={128} sm>
-				<Helpers>
-					<Button onClick={this.addNewPost}>Add</Button>
-				</Helpers>
-				<Wrapper sm paddingLeft={4} paddingRight={4}>
-					<Input
-						placeholder="Untitled Document"
-						value={title}
-						onChange={e => this.setState({ title: e.target.value })}
-					/>
-					<DWEditor
-						editorState={editorState}
-						onChange={editorState => this.setState({ editorState })}
-					/>
-				</Wrapper>
-			</Wrapper>
-			)}</Media>
+			<Media query={{ minWidth: 500 }}>
+				{m => (
+					<Wrapper paddingTop={128} sm>
+						<Helpers>
+							<Button onClick={this.addNewPost}>Add</Button>
+						</Helpers>
+						<Wrapper sm paddingLeft={4} paddingRight={4}>
+							<Input
+								placeholder="Untitled Document"
+								value={title}
+								onChange={e => this.setState({ title: e.target.value })}
+							/>
+							<DWEditor
+								editorState={editorState}
+								onChange={editorState => this.setState({ editorState })}
+							/>
+						</Wrapper>
+					</Wrapper>
+				)}
+			</Media>
 		)
 	}
 }
