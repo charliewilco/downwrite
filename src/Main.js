@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import { Block } from 'glamor/jsxstyle'
-import orderBy from 'lodash.orderby'
+import orderBy from 'lodash/orderBy'
 import { PostList, Loading, EmptyPosts } from './components'
 import { POST_ENDPOINT } from './utils/urls'
 

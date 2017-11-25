@@ -23,7 +23,7 @@ import {
 } from './components'
 
 import format from 'date-fns/format'
-import isEmpty from 'lodash.isempty'
+import isEmpty from 'lodash/isEmpty'
 import { superConverter } from './utils/responseHandler'
 import { POST_ENDPOINT } from './utils/urls'
 
