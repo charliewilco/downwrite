@@ -6,7 +6,7 @@ import Logo from './Logo'
 import { css } from 'glamor'
 import { Flex, Row } from 'glamor/jsxstyle'
 
-const hSty: Object = {
+const hdr: Object = {
 	link: css({
 		marginLeft: 12,
 		display: 'block',
@@ -22,6 +22,17 @@ const hSty: Object = {
 		fontWeight: 500,
 		'@media (min-width: 57.75rem)': {
 			fontSize: 20
+		}
+	}),
+	new: css({
+		fontSize: 14,
+		lineHeight: 1.1,
+		opacity: .5,
+		color: 'var(--text)',
+		marginRight: 32,
+		'&:hover, &:focus': {
+			color: 'var(--text)',
+			opacity: 1
 		}
 	}),
 	toggleButton: css({
@@ -42,11 +53,13 @@ export default ({ name, onClick, open }: Header) => (
 	<Row component="header" alignItems="center" justifyContent="space-between" padding={16}>
 		<Flex alignItems="center">
 			<Logo />
-			<Link className={css(hSty.link)} to="/">
-				<h1 className={css(hSty.title)} children={name} />
+			<Link className={css(hdr.link)} to="/">
+				<h1 className={css(hdr.title)} children={name} />
 			</Link>
 		</Flex>
-		<button onClick={onClick} className={css(hSty.toggleButton)}>
+		<Flex alignItems="center" >
+			<Link to='/new' className={css(hdr.new)}>New</Link>
+		<button onClick={onClick} className={css(hdr.toggleButton)}>
 			<svg width="20px" height="9px" viewBox="0 0 20 9">
 				<desc>Navicon</desc>
 				<g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -70,5 +83,6 @@ export default ({ name, onClick, open }: Header) => (
 				</g>
 			</svg>
 		</button>
+	</Flex>
 	</Row>
 )
