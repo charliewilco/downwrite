@@ -1,20 +1,7 @@
 import React from 'react'
 import { matchPath } from 'react-router-dom'
-import Markdown from 'react-markdown'
-import PrismCode from 'react-prism'
-import 'prismjs'
-import { Wrapper } from './components'
-import './components/ganymede.css'
 import { PREVIEW_ENDPOINT } from './utils/urls'
-import format from 'date-fns/format'
-
-const CodeBlock = ({ language, value, ...props }) => (
-	<PrismCode className={`language-${language || 'javascript'}`} children={value} />
-)
-
-CodeBlock.defaultProps = {
-	language: 'javascript'
-}
+import { Content } from './components'
 
 export default class extends React.Component {
 	state = {
@@ -55,15 +42,7 @@ export default class extends React.Component {
 	render() {
 		const { post, loading } = this.state
 		return (
-			!loading && (
-				<Wrapper sm fontFamily="Charter" textAlign="center">
-					<h1 className="u-center f4">{post.title}</h1>
-					<time dateTime={post.dateAdded}>{format(post.dateAdded, 'DD MMMM YYYY')}</time>
-					<Wrapper textAlign="left" className="Preview">
-						<Markdown source={post.content} renderers={{ code: CodeBlock }} />
-					</Wrapper>
-				</Wrapper>
-			)
+			!loading && (<Content {...post} />)
 		)
 	}
 }
