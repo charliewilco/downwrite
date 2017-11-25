@@ -66,12 +66,14 @@
 		"/src/__tests__/*.test.js"
 	],
 	"now": {
-		"alias": "alpha.downwrite.us"
+		"alias": ["alpha.downwrite.us", "test.downwrite.us"]
 	},
 	"jest": {
 		"snapshotSerializers": [
 			"jest-glamor-react",
 			"enzyme-to-json/serializer"
 		]
-	}
+	},
+	"repository": "charlespeters/downwrite",
+	"author": "Charles ⚡ <charlespeters42@gmail.com>"
 }

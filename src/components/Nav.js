@@ -1,9 +1,10 @@
+// @flow
 import React, { Component } from 'react'
+import { findDOMNode } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { css, keyframes } from 'glamor'
 import { Block, Flex, Column } from 'glamor/jsxstyle'
 import User from './User'
-import Aux from './Aux'
 import Fetch from './CollectionFetch'
 import { SidebarEmpty } from './EmptyPosts'
 import SidebarPosts from './SideBarPosts'
@@ -48,70 +49,89 @@ const SignoutIcon = () => (
 	</svg>
 )
 
+// const CloseNavButton = ({ closeNav }) => (
+// 	<Block position="absolute" top={0}>
+// 		<button onClick={closeNav}>Close</button>
+// 	</Block>
+// )
+
 export default class extends Component {
 	static displayName = 'Nav'
+
 	componentWillMount() {
+		document.addEventListener('click', this.outsideHandleClick, false)
+
 		if (document.body && !this.props.matches) {
 			document.body.classList.add('__noScroll')
 		}
 	}
+  //
+	// componentDidMount() {
+	// 	findDOMNode(this).focus()
+	// }
 
 	componentWillUnmount() {
+		document.removeEventListener('click', this.outsideHandleClick, false)
+
 		if (document.body && !this.props.matches) {
 			document.body.classList.remove('__noScroll')
 		}
 	}
 
+	outsideHandleClick = e => {
+		if (!findDOMNode(this).contains(e.target)) {
+			return this.props.closeNav()
+		}
+	}
+
 	render() {
-		const { matches, closeNav, token, username } = this.props
+		const { matches, token, username } = this.props
 		return (
-					<Aux>
-						{!matches && (
-							<Block position='absolute'  top={0}>
-								<button onClick={closeNav}>Close</button>
-							</Block>
-						)}
-					<Flex
-						animation={`${fadeInFromLeft} .45s`}
-						component="nav"
-						width={matches ? 384 : '75%'}
-						backgroundColor="white"
-						position={!matches && 'fixed'}
-						right={!matches && 0}
-						top={!matches && 0}
-						bottom={!matches && 0}
-						height="calc(100vh - 4px)"
-						float={matches && 'right'}>
-						<Column flex={1} justifyContent={matches && "space-between"}>
-							<Block>
-								<User username={username} />
-								<Block paddingLeft={8} paddingRight={8} paddingTop={16} paddingBottom={16}>
-									<Link to="/" className={css(navButton, navItem)}>
-										All Entries
-									</Link>
+			<Flex
+				animation={`${fadeInFromLeft} .45s`}
+				component="nav"
+				boxShadow={!matches && '0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12)'}
+				width={matches ? 384 : '75%'}
+				backgroundColor="white"
+				position={!matches && 'fixed'}
+				right={!matches && 0}
+				top={!matches && 0}
+				bottom={!matches && 0}
+				height={matches ? "calc(100vh - 4px)" : "100vh"}
+				float={matches && 'right'}>
+				<Column flex={1} justifyContent={matches && 'space-between'}>
+					<Block>
+						<User username={username} />
+						<Block paddingLeft={8} paddingRight={8} paddingTop={16} paddingBottom={16}>
+							<Link to="/" className={css(navButton, navItem)}>
+								All Entries
+							</Link>
 
-									<Link to="/new" className={css(navButton, navItem)}>
-										Create New Entry
-									</Link>
-								</Block>
-							</Block>
+							<Link to="/new" className={css(navButton, navItem)}>
+								Create New Entry
+							</Link>
+						</Block>
+					</Block>
 
-								{matches && (
-									<Block flex={1} padding={8}>
-									<Fetch token={token}>
-										{posts => (posts.length > 0 ? <SidebarPosts posts={posts} /> : <SidebarEmpty />)}
-									</Fetch>
-								</Block>
-								)}
+					<Block flex={matches && 1} padding={8}>
+						<Fetch token={token}>
+							{posts =>
+								posts.length > 0 ? (
+									<SidebarPosts matches={matches} posts={posts} />
+								) : (
+									<SidebarEmpty />
+								)
+							}
+						</Fetch>
+					</Block>
 
-							<Block borderTop="1px solid #DBDCDD" padding={8} textAlign="right">
-								<Link to="/signout" className={css(navButton, { fontSize: 14 })}>
-									<SignoutIcon /> <span>Sign Out</span>
-								</Link>
-							</Block>
-						</Column>
-					</Flex>
-				</Aux>
+					<Block borderTop="1px solid #DBDCDD" padding={8} textAlign="right">
+						<Link to="/signout" className={css(navButton, { fontSize: 14 })}>
+							<SignoutIcon /> <span>Sign Out</span>
+						</Link>
+					</Block>
+				</Column>
+			</Flex>
 		)
 	}
 }

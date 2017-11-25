@@ -62,6 +62,24 @@
 ** Overrides for Draft.js
 */
 
+.RichEditor-editor h2 {
+  font-size: 137.5%;
+}
+
+.RichEditor-editor h3 {
+  font-size: 125%;
+}
+
+.RichEditor-editor h4 {
+  font-size: 112.5%;
+}
+
+.RichEditor-editor h5 {
+  font-size: 100%;
+}
+
+
+
 .public-DraftStyleDefault-orderedListItem > *,
 .public-DraftStyleDefault-unorderedListItem > * {
   display: inline-block;
