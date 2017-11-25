@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex, Block } from 'glamor/jsxstyle'
-import { Link } from 'react-router-dom'
+import Link from 'react-router-dom/Link'
 import { css } from 'glamor'
 import distance from 'date-fns/distance_in_words_to_now'
 
@@ -72,7 +72,7 @@ const Card = ({ title, id, content, dateAdded, onDelete }) => (
 			<Link to={`/${id}/preview`}>Preview</Link>
 		</Block>
 			{onDelete && (
-				<button className={css(s.delete)} onClick={onDelete}>
+				<button data-test='cardDelete' className={css(s.delete)} onClick={onDelete}>
 					Delete
 				</button>
 			)}
