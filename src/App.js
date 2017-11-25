@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Media from 'react-media'
 import { Block } from 'glamor/jsxstyle'
 import Loadable from 'react-loadable'
-
 import { Header, Nav, Toggle } from './components'
 import { PrivateRoute } from './CustomRoutes'
 
@@ -51,6 +50,11 @@ const SignOut = Loadable({
 	loading: Loading
 })
 
+const Preview = Loadable({
+	loader: () => import('./Preview'),
+	loading: Loading
+})
+
 export default class extends React.Component<AppProps, void> {
 	static displayName = 'AppRouterContainer'
 
@@ -68,7 +72,7 @@ export default class extends React.Component<AppProps, void> {
 											{authed && (
 												<Header name="Downwrite" open={navOpen} onClick={toggleNav} />
 											)}
-											<Switch>
+										<Switch>
 												<Route
 													exact
 													path="/"
@@ -80,6 +84,7 @@ export default class extends React.Component<AppProps, void> {
 														)
 													}
 												/>
+
 												<PrivateRoute
 													authed={authed}
 													token={token}
@@ -94,7 +99,9 @@ export default class extends React.Component<AppProps, void> {
 													path="/:id/edit"
 													component={Edit}
 												/>
+												<Route exact path='/:id/preview' component={Preview} />
 												<Route
+													exact
 													path="/signout"
 													render={(props: Object) => (
 														<SignOut toggleNav={toggleNav} signOut={signOut} />
