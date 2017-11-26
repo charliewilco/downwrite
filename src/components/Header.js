@@ -50,7 +50,7 @@ type Header = {
 }
 
 export default ({ name, onClick, open }: Header) => (
-	<Row component="header" alignItems="center" justifyContent="space-between" padding={16}>
+	<Row component="header" alignItems="center" justifyContent="space-between" paddingTop={16} paddingBottom={16} paddingLeft={8} paddingRight={8}>
 		<Flex alignItems="center">
 			<Logo />
 			<Link className={css(hdr.link)} to="/">

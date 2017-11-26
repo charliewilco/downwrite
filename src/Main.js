@@ -80,7 +80,7 @@ export default class Main extends Component<MainPr, MainState> {
 	render() {
 		const { loaded, posts, layout } = this.state
 		return (
-			<Block padding={16} height="100%">
+			<Block paddingLeft={8} paddingRight={8} paddingTop={16} paddingBottom={16} height="100%">
 				{loaded ? (
 					posts.length > 0 ? (
 						<PostList

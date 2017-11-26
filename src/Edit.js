@@ -52,6 +52,12 @@ type EditorPr = {
 	location: Location
 }
 
+// TODO: Document this
+// - Initial render
+// - Rerouting
+// - EditorState changes
+// - Updating the post on the server
+
 class Edit extends React.Component<EditorPr, EditorSt> {
 	static displayName = 'Edit'
 
@@ -207,7 +213,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 											<Button onClick={() => this.updatePostContent()}>Save</Button>
 											<SettingsIcon onClick={toggleUIModal} />
 									</Helpers>
-									<Wrapper sm paddingTop={0} paddingLeft={4} paddingRight={4}>
+									<Wrapper sm paddingTop={0} paddingLeft={8} paddingRight={8}>
 										<Block className={css(meta)} marginBottom={8}>
 											Added on <time dateTime={post.dateAdded}>{format(post.dateAdded, 'DD MMMM YYYY')}</time>
 										</Block>
