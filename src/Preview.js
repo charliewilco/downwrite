@@ -1,11 +1,20 @@
 import React from 'react'
 import { matchPath } from 'react-router-dom'
+import { Block } from 'glamor/jsxstyle'
 import { PREVIEW_ENDPOINT } from './utils/urls'
 import { Content } from './components'
+
+const ErrorSt = ({ error, message }) => (
+	<Block maxWidth={528} margin='auto' padding={8}>
+		<p className='f6'>{error}. Ummm... something went horribly wrong.</p>
+		<i>{message}</i>
+	</Block>
+)
 
 export default class extends React.Component {
 	state = {
 		loading: true,
+		error: false,
 		post: {}
 	}
 
@@ -16,15 +25,17 @@ export default class extends React.Component {
 			mode: 'cors',
 			cache: 'default'
 		})
+
+		console.log(PREVIEW_ENDPOINT, id)
 		const post = await req.json()
 
 		return post
 	}
 
 	async componentWillMount() {
-		const post = await this.getPreview(this.props.match.params.id)
+		const req = await this.getPreview(this.props.match.params.id)
 
-		this.setState({ post, loading: false })
+		this.setState({ error: req.error, loading: false, post: req })
 	}
 
 	// TODO: Refactor this to do something smarter to render this component
@@ -35,14 +46,12 @@ export default class extends React.Component {
 	componentWillReceiveProps({ location }) {
 		if (location !== this.props.location) {
 			const newMatch = matchPath(location.pathname, { path: '/:id/preview' })
-			this.getPreview(newMatch.params.id).then(post => this.setState({ post }))
+			this.getPreview(newMatch.params.id).then(post => this.setState({ error: post.error, post }))
 		}
 	}
 
 	render() {
-		const { post, loading } = this.state
-		return (
-			!loading && (<Content {...post} />)
-		)
+		const { post, error, loading } = this.state
+		return !loading && (error ? <ErrorSt {...post} /> : <Content {...post} />)
 	}
 }
