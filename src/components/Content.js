@@ -15,10 +15,12 @@ CodeBlock.defaultProps = {
 }
 
 export default ({ title, dateAdded, content }) => (
-	<Wrapper sm fontFamily="Charter" textAlign="center">
-		<h1 className="u-center f4">{title}</h1>
-		<time dateTime={dateAdded}>{format(dateAdded, 'DD MMMM YYYY')}</time>
-		<Wrapper textAlign="left" className="Preview">
+	<Wrapper sm fontFamily="Sentinel, Charter, Georgia, serif">
+    <header className="PreviewHeader">
+      <h1 className="u-center f4">{title}</h1>
+      <time dateTime={dateAdded}>{format(dateAdded, 'DD MMMM YYYY')}</time>
+    </header>
+		<Wrapper textAlign="left" className="PreviewBody">
 			<Markdown source={content} renderers={{ code: CodeBlock }} />
 		</Wrapper>
 	</Wrapper>
