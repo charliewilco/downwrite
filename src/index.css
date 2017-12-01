@@ -21,7 +21,7 @@ LG = @media only screen and (min-width: 57.75rem)
 	--base-form-mxw: 100%;
 	--base-spacing: 1rem;
 	--text: #4C4C4C;
-	--primary-font: 'Operator Mono SSm A', 'Operator Mono SSm B', Roboto Mono, monospace;
+	--primary-font: 'Operator Mono SSm A', 'Operator Mono SSm B', 'Input Mono Condensed', Roboto Mono, monospace;
 	--secondary-font: Roboto, Avenir, sans-serif;
 	--ff-default: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', 'SF UI Text',
 		'Segoe UI', 'Roboto', 'Noto Sans', 'Helvetica Neue', 'Lucida Grande', sans-serif;
@@ -513,6 +513,49 @@ a:hover {
 	.Export__list > button:not(:last-of-type) {
 		margin-right: 16px;
 	}
+
+
+.PreviewHeader {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.PreviewHeader time {
+  letter-spacing: 2px;
+  opacity: .75;
+  text-transform: uppercase;
+}
+
+.PreviewBody {
+  margin-bottom: 64px;
+}
+
+.PreviewBody h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.PreviewBody p,
+.PreviewBody li {
+  font-size: 18px;
+}
+
+
+.PreviewBody blockquote {
+  font-style: italic;
+  margin-bottom: 24px;
+  background: var(--color-3);
+  margin-left: -80px;
+  margin-right: -80px;
+}
+
+.PreviewBody blockquote::after {}
+
+.PreviewBody blockquote p {
+  padding: 16px;
+  font-size: 125%;
+}
 
 .u-cf::after {
 	content: '';
