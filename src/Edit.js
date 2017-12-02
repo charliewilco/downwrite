@@ -104,7 +104,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		return this.updatePost(newPost)
 	}
 
-	getPost = async (id) => {
+	getPost = async id => {
 		const h = new Headers()
 		const { token } = this.props
 
@@ -180,15 +180,17 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		if (location !== this.props.location) {
 			const newMatch = matchPath(location.pathname, { path: '/:id/edit' })
 			console.log(location, newMatch)
-			this.getPost(newMatch.params.id).then(post => this.setState({
-				post: {
-					...post,
-					content: superConverter(post.content)
-				},
-				editorState: EditorState.createWithContent(superConverter(post.content)),
-				title: post.title,
-				loaded: true
-			}))
+			this.getPost(newMatch.params.id).then(post =>
+				this.setState({
+					post: {
+						...post,
+						content: superConverter(post.content)
+					},
+					editorState: EditorState.createWithContent(superConverter(post.content)),
+					title: post.title,
+					loaded: true
+				})
+			)
 		}
 	}
 
@@ -210,12 +212,15 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 								)}
 								<Wrapper sm>
 									<Helpers>
-											<Button onClick={() => this.updatePostContent()}>Save</Button>
-											<SettingsIcon onClick={toggleUIModal} />
+										<Button onClick={() => this.updatePostContent()}>Save</Button>
+										<SettingsIcon onClick={toggleUIModal} />
 									</Helpers>
 									<Wrapper sm paddingTop={0} paddingLeft={8} paddingRight={8}>
 										<Block className={css(meta)} marginBottom={8}>
-											Added on <time dateTime={post.dateAdded}>{format(post.dateAdded, 'DD MMMM YYYY')}</time>
+											Added on{' '}
+											<time dateTime={post.dateAdded}>
+												{format(post.dateAdded, 'DD MMMM YYYY')}
+											</time>
 										</Block>
 										<Input
 											inputRef={input => (this.titleInput = input)}

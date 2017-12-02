@@ -68,11 +68,13 @@ const Card = ({ title, id, content, dateAdded, onDelete }) => (
 			justifyContent="space-between"
 			backgroundColor="rgba(101, 163, 191, .125)">
 			<Block>
-			<Link to={`/${id}/edit`} className={css({ marginRight: 8 })}>Edit</Link>
-			<Link to={`/${id}/preview`}>Preview</Link>
-		</Block>
+				<Link to={`/${id}/edit`} className={css({ marginRight: 8 })}>
+					Edit
+				</Link>
+				<Link to={`/${id}/preview`}>Preview</Link>
+			</Block>
 			{onDelete && (
-				<button data-test='cardDelete' className={css(s.delete)} onClick={onDelete}>
+				<button data-test="cardDelete" className={css(s.delete)} onClick={onDelete}>
 					Delete
 				</button>
 			)}

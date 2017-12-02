@@ -5,7 +5,6 @@ export const POST_ENDPOINT: string =
 		? 'http://localhost:4411/posts'
 		: 'https://api.downwrite.us/posts'
 
-
 export const PREVIEW_ENDPOINT: string =
 	process.env.NODE_ENV === 'development'
 		? 'http://localhost:4411/posts/preview'

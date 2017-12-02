@@ -31,9 +31,7 @@ const settingsIc = css({
 })
 
 export default ({ onClick }: { onClick: Function }) => (
-	<button
-		onClick={onClick}
-		className={css(settingsIc)}>
+	<button onClick={onClick} className={css(settingsIc)}>
 		<SettingsIcon />
 	</button>
 )

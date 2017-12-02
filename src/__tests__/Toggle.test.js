@@ -1,9 +1,7 @@
 import { Toggle } from '../components'
 
 let wrapper = mount(
-	<Toggle>
-		{(open, toggle) => <button onClick={toggle}>Toggle</button>}
-	</Toggle>
+	<Toggle>{(open, toggle) => <button onClick={toggle}>Toggle</button>}</Toggle>
 )
 
 describe('<Toggle />', () => {

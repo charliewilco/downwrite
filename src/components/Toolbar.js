@@ -132,7 +132,8 @@ const Toolbar = ({ children, editorState, onToggleBlockType, onToggleInlineStyle
 						onToggleBlockType={onToggleBlockType}
 						children={children}
 					/>
-				)}
+				)
+			}
 		</Media>
 	)
 }

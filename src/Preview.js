@@ -5,8 +5,8 @@ import { PREVIEW_ENDPOINT } from './utils/urls'
 import { Content } from './components'
 
 const ErrorSt = ({ error, message }) => (
-	<Block maxWidth={528} margin='auto' padding={8}>
-		<p className='f6'>{error}. Ummm... something went horribly wrong.</p>
+	<Block maxWidth={528} margin="auto" padding={8}>
+		<p className="f6">{error}. Ummm... something went horribly wrong.</p>
 		<i>{message}</i>
 	</Block>
 )
@@ -46,7 +46,9 @@ export default class extends React.Component {
 	componentWillReceiveProps({ location }) {
 		if (location !== this.props.location) {
 			const newMatch = matchPath(location.pathname, { path: '/:id/preview' })
-			this.getPreview(newMatch.params.id).then(post => this.setState({ error: post.error, post }))
+			this.getPreview(newMatch.params.id).then(post =>
+				this.setState({ error: post.error, post })
+			)
 		}
 	}
 

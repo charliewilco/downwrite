@@ -68,11 +68,13 @@ export default class extends React.Component<AppProps, void> {
 							{(navOpen, toggleNav, closeNav) => (
 								<Block fontFamily="var(--primary-font)">
 									<Block height="calc(100% - 82px)" className="u-cf">
-										<Block float={(navOpen && matches) && 'left'} width={(navOpen && matches) && 'calc(100% - 384px)'}>
+										<Block
+											float={navOpen && matches && 'left'}
+											width={navOpen && matches && 'calc(100% - 384px)'}>
 											{authed && (
 												<Header name="Downwrite" open={navOpen} onClick={toggleNav} />
 											)}
-										<Switch>
+											<Switch>
 												<Route
 													exact
 													path="/"
@@ -99,7 +101,7 @@ export default class extends React.Component<AppProps, void> {
 													path="/:id/edit"
 													component={Edit}
 												/>
-												<Route exact path='/:id/preview' component={Preview} />
+												<Route exact path="/:id/preview" component={Preview} />
 												<Route
 													exact
 													path="/signout"
@@ -110,7 +112,15 @@ export default class extends React.Component<AppProps, void> {
 												<Route component={NotFound} />
 											</Switch>
 										</Block>
-										{navOpen && <Nav closeNav={closeNav} matches={matches} token={token} user={user} username={name} />}
+										{navOpen && (
+											<Nav
+												closeNav={closeNav}
+												matches={matches}
+												token={token}
+												user={user}
+												username={name}
+											/>
+										)}
 									</Block>
 								</Block>
 							)}

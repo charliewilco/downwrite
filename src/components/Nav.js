@@ -31,8 +31,10 @@ const fadeInFromLeft = keyframes({
 	'100%': { transform: 'translate(0, 0)', opacity: 1 }
 })
 
-const addListeners = (el, s, fn) => s.split(' ').forEach(e => el.addEventListener(e, fn, false))
-const rmListeners = (el, s, fn) => s.split(' ').forEach(e => el.removeEventListener(e, fn, false))
+const addListeners = (el, s, fn) =>
+	s.split(' ').forEach(e => el.addEventListener(e, fn, false))
+const rmListeners = (el, s, fn) =>
+	s.split(' ').forEach(e => el.removeEventListener(e, fn, false))
 
 const SignoutIcon = () => (
 	<svg width="13" height="12" viewBox="0 0 13 12">
@@ -92,7 +94,7 @@ export default class extends Component {
 				right={!matches && 0}
 				top={!matches && 0}
 				bottom={!matches && 0}
-				height={matches ? "calc(100vh - 4px)" : "100vh"}
+				height={matches ? 'calc(100vh - 4px)' : '100vh'}
 				float={matches && 'right'}>
 				<Column flex={1} justifyContent={matches && 'space-between'}>
 					<Block>

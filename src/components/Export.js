@@ -19,9 +19,8 @@ const exportSubtitle = css({
 	fontStyle: 'italic',
 	fontWeight: 400,
 	marginBottom: 8,
-	opacity: .75
+	opacity: 0.75
 })
-
 
 type ExportPr = {
 	title: string,
@@ -96,11 +95,13 @@ export default class extends React.Component<ExportPr> {
 	render() {
 		return (
 			<Wrapper flex={1} sm>
-				<h3 className="f6" style={{ marginBottom: 16 }}>Export</h3>
+				<h3 className="f6" style={{ marginBottom: 16 }}>
+					Export
+				</h3>
 				<Flex>
 					<Block flex={1}>
 						<h4 className={css(exportSubtitle)}>Formats</h4>
-						<Flex className='Export__list'>
+						<Flex className="Export__list">
 							<Markdown onClick={() => this.export(this.toMarkdown)} />
 							<JSONBtn onClick={() => this.export(this.toJSON)} />
 						</Flex>
