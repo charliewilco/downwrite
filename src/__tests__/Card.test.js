@@ -3,11 +3,10 @@ import { posts } from './db.json'
 
 const mockDelete = jest.fn()
 
-
 const id = '6acebce0-20b6-4015-87fe-951c7bb36481'
 
 const wrapper = mount(
-	<MemoryRouter initialEntries={[ '/' ]} initialIndex={1}>
+	<MemoryRouter initialEntries={['/']} initialIndex={1}>
 		<Card title="Starting Again" content={posts[0].content} id={id} onDelete={mockDelete} />
 	</MemoryRouter>
 )

@@ -23,8 +23,6 @@ LG = @media only screen and (min-width: 57.75rem)
 	--text: #4C4C4C;
 	--primary-font: 'Operator Mono SSm A', 'Operator Mono SSm B', 'Input Mono Condensed', Roboto Mono, monospace;
 	--secondary-font: Roboto, Avenir, sans-serif;
-	--ff-default: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', 'SF UI Text',
-		'Segoe UI', 'Roboto', 'Noto Sans', 'Helvetica Neue', 'Lucida Grande', sans-serif;
 	--ff-mono: 'Input Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
 }
 
@@ -38,12 +36,12 @@ LG = @media only screen and (min-width: 57.75rem)
 
 html {
 	height: 100%;
+	tab-size: 2;
 	box-sizing: border-box;
 	text-size-adjust: 100%;
 	background-color: #f9fbfc;
 	font: 400 100%/1.6 var(--primary-font);
-font-display: swap;	
-color: var(--text);
+	color: var(--text);
 	-webkit-font-smoothing: antialiased;
 	-webkit-tap-highlight-color: transparent;
 }

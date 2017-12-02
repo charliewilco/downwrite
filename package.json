@@ -11,6 +11,7 @@
 		"flow-bin": "^0.59.0",
 		"jest-fetch-mock": "^1.2.1",
 		"jest-glamor-react": "^3.1.2",
+		"prettier": "^1.8.2",
 		"puppeteer": "^0.13.0",
 		"react-addons-test-utils": "^15.6.2",
 		"react-test-renderer": "^16.0.0",
@@ -50,7 +51,7 @@
 		"lint": "npx eslint ./src/**/*.js",
 		"eject": "react-scripts eject",
 		"deploy": "now && now alias",
-		"format": "prettier --write 'src/**/*.js'"
+		"format": "prettier --write 'src/**/*.{js,css}'"
 	},
 	"prettier": {
 		"printWidth": 95,
