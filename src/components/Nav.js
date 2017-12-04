@@ -31,6 +31,11 @@ const fadeInFromLeft = keyframes({
 	'100%': { transform: 'translate(0, 0)', opacity: 1 }
 })
 
+const addListeners = (el, s, fn) =>
+	s.split(' ').forEach(e => el.addEventListener(e, fn, false))
+const rmListeners = (el, s, fn) =>
+	s.split(' ').forEach(e => el.removeEventListener(e, fn, false))
+
 const SignoutIcon = () => (
 	<svg width="13" height="12" viewBox="0 0 13 12">
 		<title>Signout Icon</title>
@@ -49,29 +54,21 @@ const SignoutIcon = () => (
 	</svg>
 )
 
-// const CloseNavButton = ({ closeNav }) => (
-// 	<Block position="absolute" top={0}>
-// 		<button onClick={closeNav}>Close</button>
-// 	</Block>
-// )
+// TODO: Slide to close navigation?
 
 export default class extends Component {
 	static displayName = 'Nav'
 
 	componentWillMount() {
-		document.addEventListener('click', this.outsideHandleClick, false)
+		addListeners(document, 'touchstart click', this.outsideHandleClick)
 
 		if (document.body && !this.props.matches) {
 			document.body.classList.add('__noScroll')
 		}
 	}
-  //
-	// componentDidMount() {
-	// 	findDOMNode(this).focus()
-	// }
 
 	componentWillUnmount() {
-		document.removeEventListener('click', this.outsideHandleClick, false)
+		rmListeners(document, 'touchstart click', this.outsideHandleClick)
 
 		if (document.body && !this.props.matches) {
 			document.body.classList.remove('__noScroll')
@@ -97,7 +94,7 @@ export default class extends Component {
 				right={!matches && 0}
 				top={!matches && 0}
 				bottom={!matches && 0}
-				height={matches ? "calc(100vh - 4px)" : "100vh"}
+				height={matches ? 'calc(100vh - 4px)' : '100vh'}
 				float={matches && 'right'}>
 				<Column flex={1} justifyContent={matches && 'space-between'}>
 					<Block>

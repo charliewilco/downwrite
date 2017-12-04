@@ -5,6 +5,7 @@ import { css } from 'glamor'
 import { EditorState, convertToRaw } from 'draft-js'
 import type { ContentState } from 'draft-js'
 import Media from 'react-media'
+import { matchPath } from 'react-router-dom'
 import { Block } from 'glamor/jsxstyle'
 import {
 	Button,
@@ -18,11 +19,12 @@ import {
 	DWEditor,
 	SettingsIcon,
 	Export,
+	Privacy,
 	withUIFlash
 } from './components'
 
 import format from 'date-fns/format'
-import isEmpty from 'lodash.isempty'
+import isEmpty from 'lodash/isEmpty'
 import { superConverter } from './utils/responseHandler'
 import { POST_ENDPOINT } from './utils/urls'
 
@@ -51,6 +53,12 @@ type EditorPr = {
 	location: Location
 }
 
+// TODO: Document this
+// - Initial render
+// - Rerouting
+// - EditorState changes
+// - Updating the post on the server
+
 class Edit extends React.Component<EditorPr, EditorSt> {
 	static displayName = 'Edit'
 
@@ -64,6 +72,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		loaded: false,
 		unchanged: false,
 		document: null,
+		publicStatus: false,
 		dateModified: new Date()
 	}
 
@@ -80,7 +89,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 	}
 
 	updatePostContent = () => {
-		let { post, title, dateModified, editorState } = this.state
+		let { post, title, dateModified, editorState, publicStatus } = this.state
 		const { user } = this.props
 		const cx: ContentState = editorState.getCurrentContent()
 		const content = convertToRaw(cx)
@@ -89,6 +98,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		const newPost = {
 			...sPost,
 			title,
+			public: publicStatus,
 			content,
 			dateModified,
 			user
@@ -97,9 +107,8 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		return this.updatePost(newPost)
 	}
 
-	getPost = async () => {
+	getPost = async id => {
 		const h = new Headers()
-		const { id } = this.props.match.params
 		const { token } = this.props
 
 		h.set('Authorization', `Bearer ${token}`)
@@ -114,6 +123,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		const req = await fetch(`${POST_ENDPOINT}/${id}`, config)
 		const post: Object = await req.json()
 
+		console.log(post)
 		return post
 	}
 
@@ -122,7 +132,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 	}
 
 	async componentWillMount() {
-		const post = await this.getPost()
+		const post = await this.getPost(this.props.match.params.id)
 		const content = await superConverter(post.content)
 
 		this.setState({
@@ -130,6 +140,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 				...post,
 				content
 			},
+			publicStatus: post.public,
 			editorState: EditorState.createWithContent(content),
 			title: post.title,
 			loaded: true
@@ -166,30 +177,62 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		})
 	}
 
+	// TODO: Refactor this to do something smarter to render this component
+	// See this is where recompose might be cool
+	// I'm gonna need to take that back at some point
+	// Will Next.js fix this?
+	componentWillReceiveProps({ location }) {
+		if (location !== this.props.location) {
+			const newMatch = matchPath(location.pathname, { path: '/:id/edit' })
+			console.log(location, newMatch)
+			this.getPost(newMatch.params.id).then(post =>
+				this.setState({
+					post: {
+						...post,
+						content: superConverter(post.content)
+					},
+					editorState: EditorState.createWithContent(superConverter(post.content)),
+					title: post.title,
+					loaded: true
+				})
+			)
+		}
+	}
+
 	render() {
-		const { title, post, loaded, editorState } = this.state
+		const { title, post, loaded, editorState, publicStatus } = this.state
 
 		return !loaded ? (
 			<Loading />
 		) : (
 			<Media query={{ minWidth: 500 }}>
 				{m => (
-					<Toggle>
+					<Toggle defaultOpen>
 						{(open: boolean, toggleUIModal: Function) => (
 							<Aux>
 								{open && (
 									<Modal closeUIModal={toggleUIModal}>
 										<Export editorState={editorState} title={title} date={post.dateAdded} />
+										<Privacy
+											title={title}
+											publicStatus={publicStatus}
+											onChange={() =>
+												this.setState(({ publicStatus }) => ({ publicStatus: !publicStatus }))
+											}
+										/>
 									</Modal>
 								)}
 								<Wrapper sm>
 									<Helpers>
-											<Button onClick={() => this.updatePostContent()}>Save</Button>
-											<SettingsIcon onClick={toggleUIModal} />
+										<Button onClick={() => this.updatePostContent()}>Save</Button>
+										<SettingsIcon onClick={toggleUIModal} />
 									</Helpers>
-									<Wrapper sm paddingTop={0} paddingLeft={4} paddingRight={4}>
+									<Wrapper sm paddingTop={0} paddingLeft={8} paddingRight={8}>
 										<Block className={css(meta)} marginBottom={8}>
-											Added on {format(post.dateAdded, 'DD MMMM YYYY')}
+											Added on{' '}
+											<time dateTime={post.dateAdded}>
+												{format(post.dateAdded, 'DD MMMM YYYY')}
+											</time>
 										</Block>
 										<Input
 											inputRef={input => (this.titleInput = input)}

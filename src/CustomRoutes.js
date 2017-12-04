@@ -25,6 +25,7 @@ export const PrivateRoute: React.ElementType = ({
 				<Component token={token} user={user} {...props} />
 			) : (
 				<Redirect to={{ pathname: '/', state: { from: props.location } }} />
-			)}
+			)
+		}
 	/>
 )

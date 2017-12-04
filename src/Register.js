@@ -49,7 +49,8 @@ class Register extends React.Component<LoginProps, RegisterType> {
 					label="Username"
 					value={username}
 					onChange={({ target }: SyntheticInputEvent<*>) =>
-						this.setState({ username: target.value })}
+						this.setState({ username: target.value })
+					}
 				/>
 
 				<LoginInput
@@ -57,7 +58,8 @@ class Register extends React.Component<LoginProps, RegisterType> {
 					label="Email"
 					value={email}
 					onChange={({ target }: SyntheticInputEvent<*>) =>
-						this.setState({ email: target.value })}
+						this.setState({ email: target.value })
+					}
 				/>
 
 				<LoginInput
@@ -66,14 +68,13 @@ class Register extends React.Component<LoginProps, RegisterType> {
 					value={password}
 					type="password"
 					onChange={({ target }: SyntheticInputEvent<*>) =>
-						this.setState({ password: target.value })}
+						this.setState({ password: target.value })
+					}
 				/>
 
 				<Block paddingTop={16} textAlign="right">
 					<InlineBlock>
-						<Button onClick={this.onSubmit}>
-							Register
-						</Button>
+						<Button onClick={this.onSubmit}>Register</Button>
 					</InlineBlock>
 				</Block>
 			</form>

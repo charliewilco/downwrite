@@ -61,6 +61,7 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 			id,
 			content,
 			dateAdded,
+			public: false,
 			user
 		}
 
