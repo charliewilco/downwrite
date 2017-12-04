@@ -39,6 +39,8 @@ export default class extends React.Component<{
 	closeUIModal: Function,
 	children: React.Node
 }> {
+	static displayName = 'UIModal'
+
 	componentWillMount() {
 		if (document.body) {
 			document.body.classList.add('__noScroll')
@@ -66,7 +68,7 @@ export default class extends React.Component<{
 					</button>
 
 					<Flex flexDirection="column" justifyContent="center" flex={1}>
-						<Row alignItems="center" padding={8}>
+						<Row padding={8} justifyContent="space-around" flexWrap="wrap">
 							{this.props.children}
 						</Row>
 					</Flex>

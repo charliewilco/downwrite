@@ -503,6 +503,14 @@ a:hover {
 	align-items: center;
 }
 
+.Export__subtitle {
+	font-size: 12px;
+	font-style: italic;
+	font-weight: 400;
+	margin-bottom: 8;
+	opacity: 0.75;
+}
+
 .Export__icon {
 	display: block;
 	margin-right: 8px;

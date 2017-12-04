@@ -19,6 +19,7 @@ import {
 	DWEditor,
 	SettingsIcon,
 	Export,
+	Privacy,
 	withUIFlash
 } from './components'
 
@@ -71,6 +72,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		loaded: false,
 		unchanged: false,
 		document: null,
+		publicStatus: false,
 		dateModified: new Date()
 	}
 
@@ -87,7 +89,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 	}
 
 	updatePostContent = () => {
-		let { post, title, dateModified, editorState } = this.state
+		let { post, title, dateModified, editorState, publicStatus } = this.state
 		const { user } = this.props
 		const cx: ContentState = editorState.getCurrentContent()
 		const content = convertToRaw(cx)
@@ -96,6 +98,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		const newPost = {
 			...sPost,
 			title,
+			public: publicStatus,
 			content,
 			dateModified,
 			user
@@ -120,6 +123,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		const req = await fetch(`${POST_ENDPOINT}/${id}`, config)
 		const post: Object = await req.json()
 
+		console.log(post)
 		return post
 	}
 
@@ -136,6 +140,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 				...post,
 				content
 			},
+			publicStatus: post.public,
 			editorState: EditorState.createWithContent(content),
 			title: post.title,
 			loaded: true
@@ -195,19 +200,26 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 	}
 
 	render() {
-		const { title, post, loaded, editorState } = this.state
+		const { title, post, loaded, editorState, publicStatus } = this.state
 
 		return !loaded ? (
 			<Loading />
 		) : (
 			<Media query={{ minWidth: 500 }}>
 				{m => (
-					<Toggle>
+					<Toggle defaultOpen>
 						{(open: boolean, toggleUIModal: Function) => (
 							<Aux>
 								{open && (
 									<Modal closeUIModal={toggleUIModal}>
 										<Export editorState={editorState} title={title} date={post.dateAdded} />
+										<Privacy
+											title={title}
+											publicStatus={publicStatus}
+											onChange={() =>
+												this.setState(({ publicStatus }) => ({ publicStatus: !publicStatus }))
+											}
+										/>
 									</Modal>
 								)}
 								<Wrapper sm>
