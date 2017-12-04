@@ -46,10 +46,10 @@ const closeAlert = css({
 	color: 'inherit'
 })
 
-const UIFlash = ({ onClose, content, type }) => (
+const UIFlash = ({ width = 512, onClose, content, type }) => (
 	<Flex
 		zIndex={900}
-		maxWidth={512}
+		maxWidth={width}
 		borderRadius={4}
 		left={0}
 		right={0}
@@ -58,20 +58,25 @@ const UIFlash = ({ onClose, content, type }) => (
 		position="fixed"
 		top={20}
 		margin="auto"
+		textAlign={!onClose && 'center'}
 		paddingTop={8}
 		paddingRight={16}
 		paddingBottom={8}
 		paddingLeft={16}>
 		<Block flex={1} fontFamily="Roboto, sans-serif">
-			{type.length > 0 && type.toUpperCase()}: {content}
+			{type && `${(type.length > 0 && type.toUpperCase())}:`} {content}
 		</Block>
-		<button className={css(closeAlert)} onClick={onClose}>
-			<Close fill="currentColor" />
-		</button>
+		{onClose && (
+			<button className={css(closeAlert)} onClick={onClose}>
+				<Close fill="currentColor" />
+			</button>
+		)}
 	</Flex>
 )
 
 export default UIFlash
+
+// TODO: This needs a few tests and these functions need to be documented
 
 //
 /*
