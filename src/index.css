@@ -20,10 +20,12 @@ LG = @media only screen and (min-width: 57.75rem)
 	--base-form-radius: 0;
 	--base-form-mxw: 100%;
 	--base-spacing: 1rem;
-	--text: #4C4C4C;
-	--primary-font: 'Operator Mono SSm A', 'Operator Mono SSm B', 'Input Mono Condensed', Roboto Mono, monospace;
+	--text: #4c4c4c;
+	--primary-font: 'Operator Mono SSm A', 'Operator Mono SSm B', 'Input Mono Condensed',
+		Roboto Mono, monospace;
 	--secondary-font: Roboto, Avenir, sans-serif;
-	--ff-mono: 'Input Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+	--ff-mono: 'Input Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
+		monospace;
 }
 
 *,
@@ -67,6 +69,7 @@ html {
 
 body,
 .Root {
+	width: 100%;
 	height: 100%;
 }
 
@@ -485,7 +488,8 @@ a:hover {
 	position: fixed !important;
 }
 
-@media (min-width: 48rem) {}
+@media (min-width: 48rem) {
+}
 
 @media (min-width: 81rem) {
 	.HomeBanner {
@@ -499,61 +503,81 @@ a:hover {
 	align-items: center;
 }
 
-	.Export__icon {
-		display: block;
-		margin-right: 8px;
-	}
+.Export__icon {
+	display: block;
+	margin-right: 8px;
+}
 
-	.Export__label {
-		color: #4C4C4C;
-		font-size: 12px;
-	}
+.Export__label {
+	color: #4c4c4c;
+	font-size: 12px;
+}
 
-	.Export__list > button:not(:last-of-type) {
-		margin-right: 16px;
-	}
-
+.Export__list > button:not(:last-of-type) {
+	margin-right: 16px;
+}
 
 .PreviewHeader {
-  text-align: center;
-  margin-bottom: 32px;
+	text-align: center;
+	margin-bottom: 32px;
 }
 
 .PreviewHeader time {
-  letter-spacing: 2px;
-  opacity: .75;
-  text-transform: uppercase;
+	font-style: italic;
+	opacity: 0.75;
 }
 
 .PreviewBody {
-  margin-bottom: 64px;
+	padding: 8px;
+	margin-bottom: 64px;
 }
 
 .PreviewBody h3 {
-  font-size: 20px;
-  margin-bottom: 12px;
-  text-align: center;
+	font-size: 20px;
+	margin-bottom: 12px;
+	text-align: center;
+}
+
+.PreviewBody p {
+	line-height: 1.65;
+	margin-bottom: 24.6px;
 }
 
 .PreviewBody p,
 .PreviewBody li {
-  font-size: 18px;
+	font-size: 14.6667px;
 }
-
 
 .PreviewBody blockquote {
-  font-style: italic;
-  margin-bottom: 24px;
-  background: var(--color-3);
-  margin-left: -80px;
-  margin-right: -80px;
+	font-style: italic;
+	margin-bottom: 24px;
+	background: var(--color-3);
+	margin-left: -8px;
+	margin-right: -8px;
 }
 
-.PreviewBody blockquote::after {}
+.PreviewBody blockquote::after {
+}
 
 .PreviewBody blockquote p {
-  padding: 16px;
-  font-size: 125%;
+	padding: 16px;
+	font-size: 106.25%;
+}
+
+@media (min-width: 48rem) {
+	.PreviewBody blockquote {
+		margin-left: -80px;
+		margin-right: -80px;
+	}
+
+	.PreviewBody blockquote p {
+		font-size: 112.5%;
+	}
+
+	.PreviewBody p,
+	.PreviewBody li {
+		font-size: 17.6px;
+	}
 }
 
 .u-cf::after {
