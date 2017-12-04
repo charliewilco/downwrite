@@ -34,7 +34,6 @@ export default class extends React.Component {
 
 	async componentWillMount() {
 		const req = await this.getPreview(this.props.match.params.id)
-
 		this.setState({ error: req.error, loading: false, post: req })
 	}
 
