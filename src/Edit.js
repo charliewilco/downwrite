@@ -20,11 +20,12 @@ import {
 	SettingsIcon,
 	Export,
 	Privacy,
-	withUIFlash
+	UIFlash
 } from './components'
 
 import format from 'date-fns/format'
 import isEmpty from 'lodash/isEmpty'
+import debounce from 'lodash/debounce'
 import { superConverter } from './utils/responseHandler'
 import { POST_ENDPOINT } from './utils/urls'
 
@@ -65,6 +66,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 	titleInput: HTMLInputElement
 
 	state = {
+		autosaving: false,
 		editorState: EditorState.createEmpty(),
 		post: {},
 		title: '',
@@ -123,13 +125,17 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		const req = await fetch(`${POST_ENDPOINT}/${id}`, config)
 		const post: Object = await req.json()
 
-		console.log(post)
 		return post
 	}
 
 	shouldComponentUpdate(nextProps: Object, nextState: { post: Object }) {
 		return isEmpty(nextState.post) || isEmpty(nextState.post.content.blocks)
 	}
+
+	autoSave = debounce(() => {
+		this.setState({ autosaving: true })
+		this.updatePostContent()
+	}, 5000)
 
 	async componentWillMount() {
 		const post = await this.getPost(this.props.match.params.id)
@@ -145,15 +151,24 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 			title: post.title,
 			loaded: true
 		})
+
 	}
+
+	closeAlert = () => this.setState({ autosaving: false })
 
 	componentDidMount() {
-		/// const content = convertFromRaw()
-		/// you get an object back from convertToRaw { blocks, entityMap }
-		/// I wonder if the entityMap is disappearing because it's empty...
+		this.closeAutoSavingNotice = setInterval(() => this.closeAlert(), 4000)
 	}
 
-	onChange = (editorState: EditorState) => this.setState({ editorState })
+	componentWillUnmount () {
+		clearInterval(this.closeAutoSavingNotice)
+	}
+
+	onChange = (editorState: EditorState) => {
+		this.autoSave()
+		this.setState({ editorState })
+
+	}
 
 	updateTitle = ({ target: EventTarget }: { target: EventTarget }) => {
 		return this.setState(prevState => {
@@ -200,16 +215,17 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 	}
 
 	render() {
-		const { title, post, loaded, editorState, publicStatus } = this.state
+		const { title, post, loaded, editorState, publicStatus, autosaving } = this.state
 
 		return !loaded ? (
 			<Loading />
 		) : (
 			<Media query={{ minWidth: 500 }}>
 				{m => (
-					<Toggle defaultOpen>
+					<Toggle>
 						{(open: boolean, toggleUIModal: Function) => (
 							<Aux>
+								{autosaving && <UIFlash width={160} content='Autosaving' />}
 								{open && (
 									<Modal closeUIModal={toggleUIModal}>
 										<Export editorState={editorState} title={title} date={post.dateAdded} />
@@ -243,7 +259,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 											{editorState !== null && (
 												<DWEditor
 													editorState={editorState}
-													onChange={(editorState: EditorState) => this.onChange(editorState)}
+													onChange={this.onChange}
 												/>
 											)}
 										</div>
@@ -258,4 +274,4 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 	}
 }
 
-export default withUIFlash(Edit)
+export default Edit
