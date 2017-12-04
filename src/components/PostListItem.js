@@ -15,23 +15,16 @@ const deleteButton = css({
 	border: 0
 })
 
-const metadata = css({
-	fontSize: 12,
-	opacity: 0.5,
-	fontFamily: 'var(--primary-font)'
-})
-
-const ListItem = ({ title, id, content, author, onDelete }) => (
+const ListItem = ({ title, id, onDelete }) => (
 	<Flex justifyContent="space-between">
 		<Block>
 			<Link to={`/${id}/edit`}>
 				<h2 className={css(f2)}>{title}</h2>
 			</Link>
-			<small className={css(metadata)}>{author}</small>
 		</Block>
 
 		<button className={css(deleteButton)} onClick={onDelete}>
-			Delete
+			<small>Delete</small>
 		</button>
 	</Flex>
 )

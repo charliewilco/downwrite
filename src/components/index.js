@@ -19,14 +19,21 @@ import Layout from './Layout'
 import Modal from './Modal'
 import Toggle from './Toggle'
 import Export from './Export'
+import Privacy from './Privacy'
+import Check from './Checkbox'
 import CloseIcon from './CloseIcon'
 import UIFlash, { withUIFlash } from './UIFlashMessages'
+
+import Content from './Content'
 
 export {
 	Aux,
 	Export,
+	Privacy,
+	Content,
 	SettingsIcon,
 	CloseIcon,
+	Check,
 	Helpers,
 	Layout,
 	DWEditor,

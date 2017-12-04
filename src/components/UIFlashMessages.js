@@ -3,7 +3,7 @@ import { Flex, Block } from 'glamor/jsxstyle'
 import { css } from 'glamor'
 import { CloseIcon as Close, Toggle, Aux } from './'
 
-export const withUIFlash = (Component) => {
+export const withUIFlash = Component => {
 	return class extends React.Component {
 		static displayName = `withUIFlash(${Component.displayName || Component.name})`
 		state = {
@@ -54,7 +54,7 @@ const UIFlash = ({ onClose, content, type }) => (
 		left={0}
 		right={0}
 		background="var(--color-6)"
-		color='var(--text)'
+		color="var(--text)"
 		position="fixed"
 		top={20}
 		margin="auto"
@@ -62,9 +62,11 @@ const UIFlash = ({ onClose, content, type }) => (
 		paddingRight={16}
 		paddingBottom={8}
 		paddingLeft={16}>
-		<Block flex={1} fontFamily='Roboto, sans-serif'>{type.length > 0 && type.toUpperCase()}: {content}</Block>
+		<Block flex={1} fontFamily="Roboto, sans-serif">
+			{type.length > 0 && type.toUpperCase()}: {content}
+		</Block>
 		<button className={css(closeAlert)} onClick={onClose}>
-			<Close fill='currentColor' />
+			<Close fill="currentColor" />
 		</button>
 	</Flex>
 )

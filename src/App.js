@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Media from 'react-media'
 import { Block } from 'glamor/jsxstyle'
 import Loadable from 'react-loadable'
-
 import { Header, Nav, Toggle } from './components'
 import { PrivateRoute } from './CustomRoutes'
 
@@ -51,6 +50,11 @@ const SignOut = Loadable({
 	loading: Loading
 })
 
+const Preview = Loadable({
+	loader: () => import('./Preview'),
+	loading: Loading
+})
+
 export default class extends React.Component<AppProps, void> {
 	static displayName = 'AppRouterContainer'
 
@@ -64,7 +68,9 @@ export default class extends React.Component<AppProps, void> {
 							{(navOpen, toggleNav, closeNav) => (
 								<Block fontFamily="var(--primary-font)">
 									<Block height="calc(100% - 82px)" className="u-cf">
-										<Block float={(navOpen && matches) && 'left'} width={(navOpen && matches) && 'calc(100% - 384px)'}>
+										<Block
+											float={navOpen && matches && 'left'}
+											width={navOpen && matches && 'calc(100% - 384px)'}>
 											{authed && (
 												<Header name="Downwrite" open={navOpen} onClick={toggleNav} />
 											)}
@@ -80,6 +86,7 @@ export default class extends React.Component<AppProps, void> {
 														)
 													}
 												/>
+
 												<PrivateRoute
 													authed={authed}
 													token={token}
@@ -94,7 +101,9 @@ export default class extends React.Component<AppProps, void> {
 													path="/:id/edit"
 													component={Edit}
 												/>
+												<Route exact path="/:id/preview" component={Preview} />
 												<Route
+													exact
 													path="/signout"
 													render={(props: Object) => (
 														<SignOut toggleNav={toggleNav} signOut={signOut} />
@@ -103,7 +112,15 @@ export default class extends React.Component<AppProps, void> {
 												<Route component={NotFound} />
 											</Switch>
 										</Block>
-										{navOpen && <Nav closeNav={closeNav} matches={matches} token={token} user={user} username={name} />}
+										{navOpen && (
+											<Nav
+												closeNav={closeNav}
+												matches={matches}
+												token={token}
+												user={user}
+												username={name}
+											/>
+										)}
 									</Block>
 								</Block>
 							)}

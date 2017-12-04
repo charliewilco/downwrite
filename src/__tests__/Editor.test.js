@@ -5,7 +5,7 @@ import { posts } from './db.json'
 const content = convertFromRaw(posts[0].content)
 const emptyContent = EditorState.createEmpty()
 const preloadedContent = EditorState.createWithContent(content)
-const mockEditor = state => mount(<DWEditor editorState={state} />)
+const mockEditor = state => mount(<DWEditor onChange={jest.fn()} editorState={state} />)
 
 class WrappedEditor extends React.Component {
 	state = {

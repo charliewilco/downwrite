@@ -8,10 +8,11 @@ exports[`Button matches snapshot 1`] = `
   background-color: var(--color-6);
   transition: background-color 250ms ease-in-out;
   color: #282828;
+  font-weight: 700;
   border: 0;
   padding-top: 4px;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 18px;
+  padding-right: 18px;
   padding-bottom: 4px;
   border-radius: 4px;
   box-shadow: 0 0 4px rgba(0,0,0,.037), 0 4px 8px rgba(0,0,0,.07);

@@ -9,8 +9,12 @@ export default ({ matches, posts }) => (
 		<h6 className={css({ fontSize: 12, marginBottom: 8 })}>Recent Entries</h6>
 		{posts.slice(0, 2).map((post, i) => (
 			<Block key={i} marginBottom={16}>
-				{matches ? <Card {...post} /> : (
-					<Link to={`/${post.id}/edit`} className='small'>{post.title}</Link>
+				{matches ? (
+					<Card {...post} />
+				) : (
+					<Link to={`/${post.id}/edit`} className="small">
+						{post.title}
+					</Link>
 				)}
 			</Block>
 		))}
