@@ -24,5 +24,5 @@ const Downwrite = () => (
 )
 
 ReactDOM.render(<Downwrite />, document.getElementById('root'))
-loadCSS(PREVIEW_FONTS, document.getElementById("loadcss"))
+loadCSS(PREVIEW_FONTS, document.getElementById('loadcss'))
 registerServiceWorker()

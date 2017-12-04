@@ -16,14 +16,14 @@ CodeBlock.defaultProps = {
 
 export default ({ title, dateAdded, content }) => (
 	<Wrapper maxWidth={512} fontFamily="Sentinel SSm A, Sentinel SSm B,	Charter, Georgia, serif">
-		<article className='harticle'>
-		<header className="PreviewHeader">
-			<h1 className="u-center f4">{title}</h1>
-			<time dateTime={dateAdded}>{format(dateAdded, 'DD MMMM YYYY')}</time>
-		</header>
-		<Wrapper textAlign="left" className="PreviewBody">
-			<Markdown source={content} renderers={{ code: CodeBlock }} />
-		</Wrapper>
-	</article>
-</Wrapper>
+		<article className="harticle">
+			<header className="PreviewHeader">
+				<h1 className="u-center f4">{title}</h1>
+				<time dateTime={dateAdded}>{format(dateAdded, 'DD MMMM YYYY')}</time>
+			</header>
+			<Wrapper textAlign="left" className="PreviewBody">
+				<Markdown source={content} renderers={{ code: CodeBlock }} />
+			</Wrapper>
+		</article>
+	</Wrapper>
 )
