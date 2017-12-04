@@ -76,7 +76,7 @@ export default class extends React.Component {
 		}
 
 		return (
-			<div className={`${css(editorShell)} OuterEditor`} css={{ height: '100%' }}>
+			<div className={css(editorShell)}>
 				{this.props.toolbar && (
 					<Toolbar
 						editorState={editorState}

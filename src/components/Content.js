@@ -15,7 +15,7 @@ CodeBlock.defaultProps = {
 }
 
 export default ({ title, dateAdded, content }) => (
-	<Wrapper sm fontFamily="Sentinel, Charter, Georgia, serif">
+	<Wrapper maxWidth={512} fontFamily="Sentinel, Charter, Georgia, serif">
 		<header className="PreviewHeader">
 			<h1 className="u-center f4">{title}</h1>
 			<time dateTime={dateAdded}>{format(dateAdded, 'DD MMMM YYYY')}</time>
