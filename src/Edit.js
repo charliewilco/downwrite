@@ -10,6 +10,7 @@ import { Block } from 'glamor/jsxstyle'
 import {
 	Button,
 	Input,
+	NightMode,
 	Loading,
 	Wrapper,
 	Helpers,
@@ -151,7 +152,6 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 			title: post.title,
 			loaded: true
 		})
-
 	}
 
 	closeAlert = () => this.setState({ autosaving: false })
@@ -160,14 +160,13 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		this.closeAutoSavingNotice = setInterval(() => this.closeAlert(), 4000)
 	}
 
-	componentWillUnmount () {
+	componentWillUnmount() {
 		clearInterval(this.closeAutoSavingNotice)
 	}
 
 	onChange = (editorState: EditorState) => {
 		this.autoSave()
 		this.setState({ editorState })
-
 	}
 
 	updateTitle = ({ target: EventTarget }: { target: EventTarget }) => {
@@ -220,56 +219,57 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		return !loaded ? (
 			<Loading />
 		) : (
-			<Media query={{ minWidth: 500 }}>
-				{m => (
-					<Toggle>
-						{(open: boolean, toggleUIModal: Function) => (
-							<Aux>
-								{autosaving && <UIFlash width={160} content='Autosaving' />}
-								{open && (
-									<Modal closeUIModal={toggleUIModal}>
-										<Export editorState={editorState} title={title} date={post.dateAdded} />
-										<Privacy
-											title={title}
-											publicStatus={publicStatus}
-											onChange={() =>
-												this.setState(({ publicStatus }) => ({ publicStatus: !publicStatus }))
-											}
-										/>
-									</Modal>
-								)}
-								<Wrapper sm>
-									<Helpers>
-										<Button onClick={() => this.updatePostContent()}>Save</Button>
-										<SettingsIcon onClick={toggleUIModal} />
-									</Helpers>
-									<Wrapper sm paddingTop={0} paddingLeft={8} paddingRight={8}>
-										<Block className={css(meta)} marginBottom={8}>
-											Added on{' '}
-											<time dateTime={post.dateAdded}>
-												{format(post.dateAdded, 'DD MMMM YYYY')}
-											</time>
-										</Block>
-										<Input
-											inputRef={input => (this.titleInput = input)}
-											value={title}
-											onChange={e => this.updateTitle(e)}
-										/>
-										<div>
-											{editorState !== null && (
-												<DWEditor
-													editorState={editorState}
-													onChange={this.onChange}
-												/>
-											)}
-										</div>
+			<NightMode>
+				<Media query={{ minWidth: 500 }}>
+					{m => (
+						<Toggle>
+							{(open: boolean, toggleUIModal: Function) => (
+								<Aux>
+									{autosaving && <UIFlash width={160} content="Autosaving" />}
+									{open && (
+										<Modal closeUIModal={toggleUIModal}>
+											<Export editorState={editorState} title={title} date={post.dateAdded} />
+											<Privacy
+												title={title}
+												publicStatus={publicStatus}
+												onChange={() =>
+													this.setState(({ publicStatus }) => ({
+														publicStatus: !publicStatus
+													}))
+												}
+											/>
+										</Modal>
+									)}
+									<Wrapper sm>
+										<Helpers>
+											<Button onClick={() => this.updatePostContent()}>Save</Button>
+											<SettingsIcon onClick={toggleUIModal} />
+										</Helpers>
+										<Wrapper sm paddingTop={0} paddingLeft={8} paddingRight={8}>
+											<Block className={css(meta)} marginBottom={8}>
+												Added on{' '}
+												<time dateTime={post.dateAdded}>
+													{format(post.dateAdded, 'DD MMMM YYYY')}
+												</time>
+											</Block>
+											<Input
+												inputRef={input => (this.titleInput = input)}
+												value={title}
+												onChange={e => this.updateTitle(e)}
+											/>
+											<div>
+												{editorState !== null && (
+													<DWEditor editorState={editorState} onChange={this.onChange} />
+												)}
+											</div>
+										</Wrapper>
 									</Wrapper>
-								</Wrapper>
-							</Aux>
-						)}
-					</Toggle>
-				)}
-			</Media>
+								</Aux>
+							)}
+						</Toggle>
+					)}
+				</Media>
+			</NightMode>
 		)
 	}
 }

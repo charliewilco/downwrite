@@ -12,7 +12,10 @@ const sharedStyle = css({
 	border: 0
 })
 
-const checkedStyle = css(sharedStyle, { background: `var(--color-1) url(${icon}) no-repeat center center`, border: 0 })
+const checkedStyle = css(sharedStyle, {
+	background: `var(--color-1) url(${icon}) no-repeat center center`,
+	border: 0
+})
 
 const unCheckedStyle = css(sharedStyle, { background: '#D0D0D0' })
 

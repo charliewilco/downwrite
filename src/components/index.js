@@ -1,6 +1,7 @@
 import Button from './Button'
 import Card from './Card'
 import DWEditor from './Draft'
+import NightMode from './NightMode'
 import EmptyPosts from './EmptyPosts'
 import Header from './Header'
 import Input from './Input'
@@ -28,6 +29,7 @@ import Content from './Content'
 
 export {
 	Aux,
+	NightMode,
 	Export,
 	Privacy,
 	Content,
