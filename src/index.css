@@ -591,11 +591,13 @@ a:hover {
 
 .NightMode {
 	transition: background 375ms ease-in-out;
-	background: var(--color-2);
+	background: #1f5671;
 	color: var(--color-4);
 }
 
+.NightMode .PreviewBody blockquote,
 .NightMode blockquote {
+	background: none;
 	color: var(--color-3) !important;
 }
 

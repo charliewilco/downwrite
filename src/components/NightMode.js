@@ -9,22 +9,22 @@ export default class extends React.Component {
 		// TODO: there should be a better:
 		const night = JSON.parse(localStorage.getItem('nightMode')) || false
 
-		console.log(night)
-
 		this.setState({ night: night })
 	}
 
+	setNight = status => localStorage.setItem('nightMode', status)
 	onChange = () => {
-		this.setState(
-			({ night }) => ({ night: !night }),
-			() => localStorage.setItem('nightMode', this.state.night)
-		)
+		this.setState(({ night }) => {
+			this.setNight(!night)
+			return { night: !night }
+		})
 	}
 
 	render() {
+		const { night } = this.state
 		return (
-			<div className={this.state.night ? 'NightMode' : null}>
-				<button onClick={this.onChange}>Night</button>
+			<div className={night ? 'NightMode' : null}>
+				<button onClick={this.onChange}>Turn Night Mode {night ? 'Off' : 'On'}</button>
 				{this.props.children}
 			</div>
 		)
