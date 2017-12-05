@@ -71,9 +71,13 @@ export default class extends React.Component<AppProps, void> {
 										<Block
 											float={navOpen && matches && 'left'}
 											width={navOpen && matches && 'calc(100% - 384px)'}>
-											{authed && (
-												<Header name="Downwrite" open={navOpen} onClick={toggleNav} />
-											)}
+											<Header
+												name="Downwrite"
+												authed={authed}
+												open={navOpen}
+												onClick={toggleNav}
+											/>
+
 											<Switch>
 												<Route
 													exact
