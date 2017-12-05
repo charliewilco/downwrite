@@ -564,6 +564,7 @@ a:hover {
 	margin-right: -8px;
 }
 
+/* TODO: There at some point be a notch to separate the content */
 .PreviewBody blockquote::after {
 }
 
@@ -586,6 +587,16 @@ a:hover {
 	.PreviewBody li {
 		font-size: 17.6px;
 	}
+}
+
+.NightMode {
+	transition: background 375ms ease-in-out;
+	background: var(--color-2);
+	color: var(--color-4);
+}
+
+.NightMode blockquote {
+	color: var(--color-3) !important;
 }
 
 .u-cf::after {

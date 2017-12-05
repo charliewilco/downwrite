@@ -64,7 +64,7 @@ const UIFlash = ({ width = 512, onClose, content, type }) => (
 		paddingBottom={8}
 		paddingLeft={16}>
 		<Block flex={1} fontFamily="Roboto, sans-serif">
-			{type && `${(type.length > 0 && type.toUpperCase())}:`} {content}
+			{type && `${type.length > 0 && type.toUpperCase()}:`} {content}
 		</Block>
 		{onClose && (
 			<button className={css(closeAlert)} onClick={onClose}>
