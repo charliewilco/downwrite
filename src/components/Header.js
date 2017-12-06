@@ -92,7 +92,7 @@ const Menu = ({ toggleNav, open }) => (
 
 export default withRouter(
 	({ name, authed, onClick, open, match }: Header) =>
-		!(match.isExact && match.path === '/') ? (
+		!(match.isExact && match.path === '/' && !authed) ? (
 			<Row
 				component="header"
 				alignItems="center"
