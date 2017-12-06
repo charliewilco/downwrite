@@ -1,4 +1,6 @@
 import React from 'react'
+import { Block } from 'glamor/jsxstyle'
+import Check from './Checkbox'
 
 export default class extends React.Component {
 	state = {
@@ -23,10 +25,19 @@ export default class extends React.Component {
 	render() {
 		const { night } = this.state
 		return (
-			<div className={night ? 'NightMode' : null}>
-				<button onClick={this.onChange}>Turn Night Mode {night ? 'Off' : 'On'}</button>
+			<Block className={night ? 'NightMode' : null} position="relative">
+				<Block
+					padding={8}
+					boxShadow="0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12)"
+					background="white"
+					position="absolute">
+					<label>
+						<Check checked={night} onChange={this.onChange} />
+						<span>Turn Night Mode {night ? 'Off' : 'On'}</span>
+					</label>
+				</Block>
 				{this.props.children}
-			</div>
+			</Block>
 		)
 	}
 }
