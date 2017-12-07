@@ -81,16 +81,6 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 
 	prepareContent: Function = (content: ContentState) => superConverter(content)
 
-	updateCurrent = (body: Object) => {
-		fetch(`${POST_ENDPOINT}/${this.props.match.params.id}`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body
-		}).then(() => this.setState({ post: body, updated: true }))
-	}
-
 	updatePostContent = () => {
 		let { post, title, dateModified, editorState, publicStatus } = this.state
 		const { user } = this.props
@@ -107,7 +97,9 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 			user
 		}
 
-		return this.updatePost(newPost)
+		return this.updatePost(newPost).then(() =>
+			setTimeout(() => this.setState({ autosaving: false }), 3500)
+		)
 	}
 
 	getPost = async id => {
@@ -134,8 +126,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 	}
 
 	autoSave = debounce(() => {
-		this.setState({ autosaving: true })
-		this.updatePostContent()
+		this.setState({ autosaving: true }, this.updatePostContent)
 	}, 5000)
 
 	async componentWillMount() {
@@ -152,16 +143,6 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 			title: post.title,
 			loaded: true
 		})
-	}
-
-	closeAlert = () => this.setState({ autosaving: false })
-
-	componentDidMount() {
-		this.closeAutoSavingNotice = setInterval(() => this.closeAlert(), 4000)
-	}
-
-	componentWillUnmount() {
-		clearInterval(this.closeAutoSavingNotice)
 	}
 
 	onChange = (editorState: EditorState) => {
