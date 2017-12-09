@@ -71,7 +71,7 @@ const Card = ({ title, id, content, dateAdded, onDelete, ...args }) => (
 				<Link to={`/${id}/edit`} className={css({ marginRight: 8 })}>
 					Edit
 				</Link>
-				{args.public && <Link to={`/${id}/preview`}>Preview</Link>}{' '}
+				{args.public && <Link to={`/${id}/preview`}>Preview</Link>}
 			</Block>
 			{onDelete && (
 				<button data-test="cardDelete" className={css(s.delete)} onClick={onDelete}>
