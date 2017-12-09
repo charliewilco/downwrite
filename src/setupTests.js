@@ -6,6 +6,29 @@ import { MemoryRouter } from 'react-router-dom'
 
 Enzyme.configure({ adapter: new Adapter() })
 
+function storageMock() {
+	var storage = {}
+
+	return {
+		setItem: function(key, value) {
+			storage[key] = value || ''
+		},
+		getItem: function(key) {
+			return key in storage ? storage[key] : null
+		},
+		removeItem: function(key) {
+			delete storage[key]
+		},
+		get length() {
+			return Object.keys(storage).length
+		},
+		key: function(i) {
+			var keys = Object.keys(storage)
+			return keys[i] || null
+		}
+	}
+}
+
 global.React = React
 global.shallow = shallow
 global.render = render
@@ -13,6 +36,8 @@ global.mount = mount
 global.toJson = toJson
 global.MemoryRouter = MemoryRouter
 global.fetch = require('jest-fetch-mock')
+global.localStorage = storageMock()
+
 // global.XMLHttpRequest = require('w3c-xmlhttprequest').XMLHttpRequest
 
 window.matchMedia =

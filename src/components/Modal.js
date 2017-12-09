@@ -62,6 +62,7 @@ export default class extends React.Component<{
 					width="100%"
 					height="50%"
 					position="relative"
+					color="var(--text)"
 					display="flex">
 					<button onClick={this.props.closeUIModal} className={css(modalCloseButton)}>
 						<CloseIcon />
