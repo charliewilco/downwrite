@@ -20,8 +20,14 @@
 		"w3c-xmlhttprequest": "^2.1.2"
 	},
 	"lint-staged": {
-		"*.js": ["prettier --parser flow --write", "git add"],
-		"*.css": ["prettier --parser postcss --write", "git add"]
+		"*.js": [
+			"prettier --parser flow --write",
+			"git add"
+		],
+		"*.css": [
+			"prettier --parser postcss --write",
+			"git add"
+		]
 	},
 	"dependencies": {
 		"date-fns": "^1.29.0",
@@ -37,6 +43,8 @@
 		"lodash": "^4.17.4",
 		"prismjs": "^1.8.4",
 		"react": "^16.0.0",
+		"react-dnd": "^2.5.4",
+		"react-dnd-html5-backend": "^2.5.4",
 		"react-dom": "^16.0.0",
 		"react-loadable": "^5.3.1",
 		"react-markdown": "^3.0.2",

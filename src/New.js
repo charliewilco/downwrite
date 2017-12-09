@@ -21,6 +21,9 @@ type NewPostProps = { token: string, user: string }
 // TODO: Shouldn't be able to add if editor is empty
 // TODO: If title is empty post should be named `Untitled Document ${uuid()}`
 
+// NOTE: on drop -> POST content to API -> API returns contentRaw() -> state change triggers editorstate change
+// NOTE: https://react-dropzone.js.org/ might be a better fit for my needs
+
 export default class extends React.Component<NewPostProps, NewPostSt> {
 	state = {
 		editorState: EditorState.createEmpty(),
