@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 import Logo from './Logo'
 import { css } from 'glamor'
 import { Flex, Row } from 'glamor/jsxstyle'
@@ -44,54 +44,72 @@ const hdr: Object = {
 }
 
 type Header = {
+	authed: boolean,
 	name: string,
 	onClick: Function,
 	open: boolean
 }
 
-export default ({ name, onClick, open }: Header) => (
-	<Row
-		component="header"
-		alignItems="center"
-		justifyContent="space-between"
-		paddingTop={16}
-		paddingBottom={16}
-		paddingLeft={8}
-		paddingRight={8}>
-		<Flex alignItems="center">
-			<Logo />
-			<Link className={css(hdr.link)} to="/">
-				<h1 className={css(hdr.title)} children={name} />
-			</Link>
-		</Flex>
-		<Flex alignItems="center">
-			<Link to="/new" className={css(hdr.new)}>
-				New
-			</Link>
-			<button onClick={onClick} className={css(hdr.toggleButton)}>
-				<svg width="20px" height="9px" viewBox="0 0 20 9">
-					<desc>Navicon</desc>
-					<g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-						<g fill={open ? '#65A3BF' : '#4C4C4C'}>
-							<rect id="Rectangle-Copy-3" x="0" y="0" width="20" height="1" />
-							<rect
-								id="Rectangle-Copy-4"
-								x={open ? 0 : 10}
-								y="4"
-								width={open ? 20 : 10}
-								height="1"
-							/>
-							<rect
-								id="Rectangle-Copy-5"
-								x={open ? 0 : 5}
-								y="8"
-								width={open ? 20 : 15}
-								height="1"
-							/>
-						</g>
+const LoginSignUp = () => (
+	<Flex alignItems="center">
+		<Link to="/" className={css(hdr.new, { marginRight: 0 })}>
+			Login or Sign Up
+		</Link>
+	</Flex>
+)
+
+const Menu = ({ toggleNav, open }) => (
+	<Flex alignItems="center">
+		<Link to="/new" className={css(hdr.new)}>
+			New
+		</Link>
+		<button onClick={toggleNav} className={css(hdr.toggleButton)}>
+			<svg width="20px" height="9px" viewBox="0 0 20 9">
+				<desc>Navicon</desc>
+				<g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+					<g fill={open ? '#65A3BF' : '#4C4C4C'}>
+						<rect id="Rectangle-Copy-3" x="0" y="0" width="20" height="1" />
+						<rect
+							id="Rectangle-Copy-4"
+							x={open ? 0 : 10}
+							y="4"
+							width={open ? 20 : 10}
+							height="1"
+						/>
+						<rect
+							id="Rectangle-Copy-5"
+							x={open ? 0 : 5}
+							y="8"
+							width={open ? 20 : 15}
+							height="1"
+						/>
 					</g>
-				</svg>
-			</button>
-		</Flex>
-	</Row>
+				</g>
+			</svg>
+		</button>
+	</Flex>
+)
+
+export default withRouter(
+	({ name, authed, onClick, open, match }: Header) =>
+		!(match.isExact && match.path === '/' && !authed) ? (
+			<Row
+				component="header"
+				alignItems="center"
+				justifyContent="space-between"
+				paddingTop={16}
+				paddingBottom={16}
+				paddingLeft={8}
+				paddingRight={8}>
+				<Flex alignItems="center">
+					<Logo />
+					<Link className={css(hdr.link)} to="/">
+						<h1 className={css(hdr.title)} children={name} />
+					</Link>
+				</Flex>
+				{authed ? <Menu open={open} toggleNav={onClick} /> : <LoginSignUp />}
+			</Row>
+		) : (
+			<div />
+		)
 )

@@ -39,7 +39,7 @@ const s = {
 	})
 }
 
-const Card = ({ title, id, content, dateAdded, onDelete }) => (
+const Card = ({ title, id, content, dateAdded, onDelete, ...args }) => (
 	<Flex
 		height={192}
 		flexDirection="column"
@@ -71,7 +71,7 @@ const Card = ({ title, id, content, dateAdded, onDelete }) => (
 				<Link to={`/${id}/edit`} className={css({ marginRight: 8 })}>
 					Edit
 				</Link>
-				<Link to={`/${id}/preview`}>Preview</Link>
+				{args.public && <Link to={`/${id}/preview`}>Preview</Link>}
 			</Block>
 			{onDelete && (
 				<button data-test="cardDelete" className={css(s.delete)} onClick={onDelete}>

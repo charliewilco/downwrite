@@ -66,14 +66,19 @@ export default class extends React.Component<AppProps, void> {
 					{matches => (
 						<Toggle>
 							{(navOpen, toggleNav, closeNav) => (
-								<Block fontFamily="var(--primary-font)">
-									<Block height="calc(100% - 82px)" className="u-cf">
+								<Block minHeight="100%" fontFamily="var(--primary-font)">
+									<Block height="100%" className="u-cf">
 										<Block
+											minHeight="100%"
 											float={navOpen && matches && 'left'}
 											width={navOpen && matches && 'calc(100% - 384px)'}>
-											{authed && (
-												<Header name="Downwrite" open={navOpen} onClick={toggleNav} />
-											)}
+											<Header
+												name="Downwrite"
+												authed={authed}
+												open={navOpen}
+												onClick={toggleNav}
+											/>
+
 											<Switch>
 												<Route
 													exact
