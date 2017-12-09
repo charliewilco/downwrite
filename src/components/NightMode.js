@@ -1,5 +1,5 @@
 import React from 'react'
-import { Block } from 'glamor/jsxstyle'
+import { Flex, Block } from 'glamor/jsxstyle'
 import Check from './Checkbox'
 
 export default class extends React.Component {
@@ -15,6 +15,7 @@ export default class extends React.Component {
 	}
 
 	setNight = status => localStorage.setItem('nightMode', status)
+
 	onChange = () => {
 		this.setState(({ night }) => {
 			this.setNight(!night)
@@ -25,18 +26,21 @@ export default class extends React.Component {
 	render() {
 		const { night } = this.state
 		return (
-			<Block className={night ? 'NightMode' : null} position="relative">
+			<Block className={night ? 'NightMode' : null} minHeight="100%" position="relative">
 				<Block
+					color="var(--text)"
 					padding={8}
+					margin={16 * 2}
 					boxShadow="0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12)"
 					background="white"
-					position="absolute">
-					<label>
+					bottom={0}
+					position="fixed">
+					<Flex alignItems="center" component="label">
 						<Check checked={night} onChange={this.onChange} />
-						<span>Turn Night Mode {night ? 'Off' : 'On'}</span>
-					</label>
+						<small style={{ marginLeft: 8 }}>Night Mode is {!night ? 'Off' : 'On'}</small>
+					</Flex>
 				</Block>
-				{this.props.children}
+				<Block>{this.props.children}</Block>
 			</Block>
 		)
 	}
