@@ -2,6 +2,7 @@
 import * as React from 'react'
 import { EditorState, convertToRaw } from 'draft-js'
 import { DWEditor } from './components'
+import Upload from './components/Upload'
 import { Redirect } from 'react-router-dom'
 import Media from 'react-media'
 import { Wrapper, Input, Button, Helpers } from './components'
@@ -20,9 +21,6 @@ type NewPostProps = { token: string, user: string }
 
 // TODO: Shouldn't be able to add if editor is empty
 // TODO: If title is empty post should be named `Untitled Document ${uuid()}`
-
-// NOTE: on drop -> POST content to API -> API returns contentRaw() -> state change triggers editorstate change
-// NOTE: https://react-dropzone.js.org/ might be a better fit for my needs
 
 export default class extends React.Component<NewPostProps, NewPostSt> {
 	state = {
@@ -71,6 +69,8 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 		return this.addNew(post)
 	}
 
+	upload = (content: { title: string, editorState: EditorState }) => this.setState(content)
+
 	render() {
 		const { editorState, title, saved, id } = this.state
 		return saved ? (
@@ -83,15 +83,17 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 							<Button onClick={this.addNewPost}>Add</Button>
 						</Helpers>
 						<Wrapper sm paddingLeft={4} paddingRight={4}>
-							<Input
-								placeholder="Untitled Document"
-								value={title}
-								onChange={e => this.setState({ title: e.target.value })}
-							/>
-							<DWEditor
-								editorState={editorState}
-								onChange={editorState => this.setState({ editorState })}
-							/>
+							<Upload upload={this.upload}>
+								<Input
+									placeholder="Untitled Document"
+									value={title}
+									onChange={e => this.setState({ title: e.target.value })}
+								/>
+								<DWEditor
+									editorState={editorState}
+									onChange={editorState => this.setState({ editorState })}
+								/>
+							</Upload>
 						</Wrapper>
 					</Wrapper>
 				)}
