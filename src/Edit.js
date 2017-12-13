@@ -20,10 +20,9 @@ import {
 	DWEditor,
 	SettingsIcon,
 	Export,
-	Privacy,
-	UIFlash
+	Privacy
 } from './components'
-
+import Autosaving from './components/AutosavingNotification.js'
 import format from 'date-fns/format'
 import isEmpty from 'lodash/isEmpty'
 import debounce from 'lodash/debounce'
@@ -206,7 +205,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 						<Toggle>
 							{(open: boolean, toggleUIModal: Function) => (
 								<Aux>
-									{autosaving && <UIFlash width={160} content="Autosaving" />}
+									{autosaving && <Autosaving />}
 									{open && (
 										<Modal closeUIModal={toggleUIModal}>
 											<Export editorState={editorState} title={title} date={post.dateAdded} />
