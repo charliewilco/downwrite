@@ -2,6 +2,8 @@ import React from 'react'
 import { Flex, Block } from 'glamor/jsxstyle'
 import Check from './Checkbox'
 
+const NIGHT_MODE = 'NightMDX'
+
 export default class extends React.Component {
 	state = {
 		night: false
@@ -11,10 +13,22 @@ export default class extends React.Component {
 		// TODO: there should be a better:
 		const night = JSON.parse(localStorage.getItem('nightMode')) || false
 
-		this.setState({ night: night })
+		this.setState({ night: night }, () => {
+			if (night && !this.containsClass()) {
+				document.body.classList.add(NIGHT_MODE)
+			}
+		})
 	}
 
-	setNight = status => localStorage.setItem('nightMode', status)
+	containsClass = () => document.body.classList.contains(NIGHT_MODE)
+
+	setNight = status => {
+		localStorage.setItem('nightMode', status)
+
+		status
+			? document.body.classList.add(NIGHT_MODE)
+			: document.body.classList.remove(NIGHT_MODE)
+	}
 
 	onChange = () => {
 		this.setState(({ night }) => {
@@ -23,10 +37,15 @@ export default class extends React.Component {
 		})
 	}
 
+	componentWillUnmount() {
+		if (document.body) {
+			document.body.classList.remove(NIGHT_MODE)
+		}
+	}
 	render() {
 		const { night } = this.state
 		return (
-			<Block className={night ? 'NightMode' : null} minHeight="100%" position="relative">
+			<Block className={night ? 'NightMode' : ''} minHeight="100%" position="relative">
 				<Block
 					color="var(--text)"
 					padding={8}
