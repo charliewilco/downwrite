@@ -18,11 +18,13 @@ const s = {
 			fontSize: 24
 		}
 	}),
+	grid: css({
+		'@media (min-width: 48rem)': { marginLeft: -20 }
+	}),
 	gridItem: css({
 		marginBottom: 24,
 		width: '100%',
-		padding: '0 15px',
-		'@media (min-width: 48rem)': { width: '50%' },
+		'@media (min-width: 48rem)': { paddingLeft: 20, width: '50%' },
 		'@media (min-width: 57.75rem)': { width: `${100 / 3}%` },
 		'@media (min-width: 75rem)': { width: `${100 / 4}%` }
 	}),
@@ -43,7 +45,7 @@ export default ({ posts, layout, layoutChange, onDelete }) => (
 			<LayoutControl layout={layout} layoutChange={layoutChange} />
 		</Flex>
 		{layout === 'grid' ? (
-			<Flex component="ul" flexWrap="wrap" margin="0 -15px" listStyle="none inside">
+			<Flex component="ul" flexWrap="wrap" className={css(s.grid)} listStyle="none inside">
 				{posts.map(p => (
 					<Block key={p.id} component="li" className={css(s.gridItem)}>
 						<Card {...p} onDelete={() => onDelete(p)} />
