@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import orderBy from 'lodash/orderBy'
 import { POST_ENDPOINT } from '../utils/urls'
 
 export default class extends Component {
@@ -16,7 +17,7 @@ export default class extends Component {
 			cache: 'default'
 		})
 
-		const posts = await req.json()
+		const posts = orderBy(await req.json(), ['dateAdded'], ['desc'])
 
 		this.setState({ posts })
 	}
