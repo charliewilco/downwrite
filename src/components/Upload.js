@@ -6,8 +6,6 @@ import { markdownToDraft } from 'markdown-draft-js'
 
 let reader = new FileReader()
 
-// TODO: Make sure it only accepts markdown or plain .txt files or .md .markdown
-
 export default class extends Component {
 	state = { files: [] }
 
@@ -30,6 +28,7 @@ export default class extends Component {
 	render() {
 		return (
 			<Dropzone
+				accept="text/markdown, text/x-markdown, text/plain"
 				multiple={false}
 				style={{ border: 0, width: '100%' }}
 				onDrop={this.onDrop}
