@@ -590,10 +590,18 @@ a:hover {
 	}
 }
 
+.NightMDX {
+	background: #1f5671;
+}
 .NightMode {
 	transition: background 375ms ease-in-out;
 	background: #1f5671;
 	color: var(--color-4);
+}
+
+.NightMode svg,
+.NightMode svg path {
+	fill: var(--color-4) !important;
 }
 
 .NightMode .PreviewBody blockquote,

@@ -4,6 +4,7 @@ import { Block } from 'glamor/jsxstyle'
 /* TypeError: cyclic object value */
 export default () => (
 	<Block
+		color="var(--text)"
 		width={160}
 		textAlign="center"
 		top={20}
