@@ -27,9 +27,10 @@ I decided to take up Downwrite as an excuse to build those microservices.
 Markdown is probably the most efficient and universal tool for
 conveying syntax, semantics and structure across platforms.
 
-Originally coined by [John Gruber (Daring Fireball)](https://daringfireball.net/projects/markdown/) it was originally conceived as a text to HTML
-and is the staple of static site generators, OSS
-as well as a fair amount of comment sections, notetaking applications or any documentation tool.
+Originally coined by [John Gruber (Daring Fireball)](https://daringfireball.net/projects/markdown/)
+it was originally conceived as a text to HTML and is the staple of static site generators,
+OSS as well as a fair amount of comment sections, notetaking applications
+or any documentation tool.
 
 These shortcuts are almost as ubiquitous as `cmd + b` for bold or `cmd + i` for italics.
 
@@ -72,9 +73,35 @@ This idea from Ember.js being a URL driven being what drives application state.
 
 ---
 
+```jsx
+import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
+
+export default class extends Component {
+	componentWillMount() {
+		this.props.signOut()
+		this.props.toggleNav()
+	}
+
+	render() {
+		return (
+			<Redirect 
+				to={{
+					pathname: '/',
+					state: { from: this.props.location, authed: false }
+				}}
+			/>
+		)
+	}
+}
+```
+
+---
+
 ### Draft
 
-Using Draft.js was really a no-brainer, there's a rich set of plugins and uses cases are extendable the API is really approachable.
+Using Draft.js was really a no-brainer, there's a rich set of plugins
+and uses cases are extendable the API is really approachable.
 
 - Draft.js Plugins
 - Really f**ked up on mobile
@@ -86,7 +113,8 @@ Using Draft.js was really a no-brainer, there's a rich set of plugins and uses c
 - CSS custom properties
 - Aphrodite -> JSXStyle -> Glamor
 - UI state is malleable, diffing strings is stupid.
-- Font loading is hard. Maybe Google developers should solve that problem instead of harassing and baiting the React community on Twitter.
+- Font loading is hard. Maybe Google developers should solve that problem
+instead of harassing and baiting the React community on Twitter.
 You know, fix the fucking platform.
 - A palette utility is a good idea
 - Resets are a good idea. [Level.css](https://github.com/charlespeters/level.css/) 
@@ -95,7 +123,8 @@ You know, fix the fucking platform.
 
 ### Deployments
 
-Now. It's a simple binary and worth every penny. I have never found a deployment tool to be this simple and configurable and painless.
+Now. It's a simple binary and worth every penny.
+I have never found a deployment tool to be this simple and configurable and painless.
 
 ---
 
@@ -157,9 +186,13 @@ _founder of Zeit and CloudUp, creator of Socket.io, mongoose.js, Slackin, Now, M
 
 ---
 
-- Puppeteer and Jest are a match made in heaven. Writing asserts in the same way you would test a component is invaluable to your productivity.
-- For writing unit tests with React, Components should be easy to test. Components should do one thing, have methods that are easy to spy on and mock return values.
-- Writing snapshots should be the easiest test you write. It's a one liner.
+- Puppeteer and Jest are a match made in heaven.
+- Writing asserts in the same way you would test a component is invaluable to your productivity.
+- For writing unit tests with React, Components should be easy to test.
+-- Components should do one thing
+-- Components have methods that are easy to spy on
+-- Mocking out dependencies shouldn't be difficult.
+- Writing snapshots should be the easiest test you write. 
 - React Router components will kill your snapshots.
 - Asking what this component or piece of UI should do 3 or 4 times will make it very clear you're doing something wrong
 
