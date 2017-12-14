@@ -17,7 +17,7 @@ During planning out some of my quarterly goals at my last job I decided to go a 
 
 Markdown is probably the most efficient and universal tool for conveying syntax, semantics and structure across platforms.
 
-Originally coined by [John Gruber (Daring Fireball)](undefined) it was originally conceived as a text to HTML and is the stable of static site generators, OSS and a fair amount of comment sections, notetaking applications.
+Originally coined by [John Gruber (Daring Fireball)](undefined) it was originally conceived as a text to HTML and is the staple of static site generators, OSS and a fair amount of comment sections, notetaking applications.
 
 These shortcuts are almost as ubiquitous as `cmd + b` for bold or `cmd + i` for italics.
 
@@ -36,6 +36,12 @@ These shortcuts are almost as ubiquitous as `cmd + b` for bold or `cmd + i` for 
 - Auth - using JWT and stateless authentication pattern
 - Post Endpoints (Entries) - GET PUT POST DELETE for entries
 - Export Service - markdown or json
+
+---
+
+### CRA
+
+Client-side application was built with yarn and `create-react-app` and never ejected.
 
 ---
 
@@ -68,6 +74,16 @@ Using Draft.js was really a no-brainer, there's a rich set of plugins and uses c
 - Font loading is hard. Maybe Google developers should solve that problem instead of harassing and baiting the React community on Twitter. You know, fix the fucking platform.
 - A palette utility is a good idea
 - Resets are a good idea. [Level.css](undefined) 
+
+---
+
+### Deployments
+
+Now. It's a simple binary and worth every penny. I have never found a deployment tool to be this simple and configurable and painless.
+
+--- 
+
+## Demo
 
 ---
 
