@@ -9,7 +9,7 @@ So the idea here was simple build a simple markdown writing application. Markdow
 
 ---
 
-During planning out some of my quarterly goals at my last job I decided to go a little more full-stack with Node and start to really work through the process of building a microservice. Since I'm never really one to learning languages and frameworks in the abstract, I decided to take up Downwrite as an excuse to build those microservice.
+During planning out some of my quarterly goals at my last job I decided to go a little more full-stack with Node and start to really work through the process of building a microservice. Since I'm never really one to learning languages and frameworks in the abstract, I decided to take up Downwrite as an excuse to build those microservices.
 
 ---
 
@@ -17,9 +17,11 @@ During planning out some of my quarterly goals at my last job I decided to go a 
 
 Markdown is probably the most efficient and universal tool for conveying syntax, semantics and structure across platforms.
 
-Originally coined by [John Gruber (Daring Fireball)](undefined) it was originally conceived as a text to HTML and is the staple of static site generators, OSS and a fair amount of comment sections, notetaking applications.
+Originally coined by [John Gruber (Daring Fireball)](undefined) it was originally conceived as a text to HTML and is the staple of static site generators, OSS and a fair amount of comment sections, notetaking applications or any documentation tool.
 
 These shortcuts are almost as ubiquitous as `cmd + b` for bold or `cmd + i` for italics.
+
+Even this presentation was written in markdown.
 
 ---
 
@@ -27,7 +29,7 @@ These shortcuts are almost as ubiquitous as `cmd + b` for bold or `cmd + i` for 
 
 ---
 
-## Highlights
+## Tech Overview
 
 ---
 
@@ -83,7 +85,7 @@ Now. It's a simple binary and worth every penny. I have never found a deployment
 
 --- 
 
-## Demo
+## Application Demo
 
 ---
 
