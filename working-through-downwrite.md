@@ -4,20 +4,32 @@ A place to write.
 
 ---
 
-So the idea here was simple build a simple markdown writing application. Markdown is a huge deal and all the cool tools kept getting shut down and naively, I thought, how hard can this really be? So I've had poorly designed iterations of this thing for every year on the year as one of these services got shut down. When [Canvas](undefined) shut down this last year, I started to get a little more serious about this idea.
+So the idea here was simple build a simple markdown writing application.
+Markdown is a huge deal and all the cool tools kept getting shut down and naively,
+I thought, _how hard can this really be_?
+
+So I've had poorly designed iterations of this thing for every year on the year as one of these services got shut down.
+When [Canvas](https://blog.usecanvas.com/) shut down this last year, I started to get a little more serious about this idea.
 
 
 ---
 
-During planning out some of my quarterly goals at my last job I decided to go a little more full-stack with Node and start to really work through the process of building a microservice. Since I'm never really one to learning languages and frameworks in the abstract, I decided to take up Downwrite as an excuse to build those microservices.
+During planning out some of my quarterly goals at my last job I decided to go a little more
+full-stack with Node and start to really work through the process of building a microservice.
+
+Since I'm never really one to learning languages and frameworks in the abstract,
+I decided to take up Downwrite as an excuse to build those microservices.
 
 ---
 
 ## Why Markdown
 
-Markdown is probably the most efficient and universal tool for conveying syntax, semantics and structure across platforms.
+Markdown is probably the most efficient and universal tool for
+conveying syntax, semantics and structure across platforms.
 
-Originally coined by [John Gruber (Daring Fireball)](undefined) it was originally conceived as a text to HTML and is the staple of static site generators, OSS and a fair amount of comment sections, notetaking applications or any documentation tool.
+Originally coined by [John Gruber (Daring Fireball)](https://daringfireball.net/projects/markdown/) it was originally conceived as a text to HTML
+and is the staple of static site generators, OSS
+as well as a fair amount of comment sections, notetaking applications or any documentation tool.
 
 These shortcuts are almost as ubiquitous as `cmd + b` for bold or `cmd + i` for italics.
 
@@ -49,7 +61,8 @@ Client-side application was built with yarn and `create-react-app` and never eje
 
 ### Routing
 
-The URL is the state. This idea from Ember.js being a URL driven being what drives application state.
+The URL is the state.
+This idea from Ember.js being a URL driven being what drives application state.
 
 - `/` dashboard view or login
 - `/new` a create a new post route
@@ -73,9 +86,10 @@ Using Draft.js was really a no-brainer, there's a rich set of plugins and uses c
 - CSS custom properties
 - Aphrodite -> JSXStyle -> Glamor
 - UI state is malleable, diffing strings is stupid.
-- Font loading is hard. Maybe Google developers should solve that problem instead of harassing and baiting the React community on Twitter. You know, fix the fucking platform.
+- Font loading is hard. Maybe Google developers should solve that problem instead of harassing and baiting the React community on Twitter.
+You know, fix the fucking platform.
 - A palette utility is a good idea
-- Resets are a good idea. [Level.css](undefined) 
+- Resets are a good idea. [Level.css](https://github.com/charlespeters/level.css/) 
 
 ---
 
@@ -83,7 +97,7 @@ Using Draft.js was really a no-brainer, there's a rich set of plugins and uses c
 
 Now. It's a simple binary and worth every penny. I have never found a deployment tool to be this simple and configurable and painless.
 
---- 
+---
 
 ## Application Demo
 
@@ -137,7 +151,9 @@ I need to stop f**king around on this one and pick a direction.
 
 ---
 
-> Write tests. Not too many. Mostly integration. -- Guillermo Rauch, founder of Zeit and CloudUp, creator of Socket.io, mongoose.js, Slackin, Now, MooTools and whole pile of other shit
+> Write tests. Not too many. Mostly integration. -- Guillermo Rauch
+
+_founder of Zeit and CloudUp, creator of Socket.io, mongoose.js, Slackin, Now, MooTools and whole pile of other shit_
 
 ---
 
@@ -146,4 +162,10 @@ I need to stop f**king around on this one and pick a direction.
 - Writing snapshots should be the easiest test you write. It's a one liner.
 - React Router components will kill your snapshots.
 - Asking what this component or piece of UI should do 3 or 4 times will make it very clear you're doing something wrong
+
+---
+
+## Questions.
+
+---
 
