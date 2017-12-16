@@ -70,14 +70,6 @@
 		"deploy": "now && now alias",
 		"precommit": "lint-staged"
 	},
-	"prettier": {
-		"printWidth": 95,
-		"semi": false,
-		"singleQuote": true,
-		"useTabs": true,
-		"bracketSpacing": true,
-		"jsxBracketSameLine": true
-	},
 	"eslintConfig": {
 		"extends": "react-app"
 	},
