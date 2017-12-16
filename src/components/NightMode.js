@@ -45,7 +45,11 @@ export default class extends React.Component {
 	render() {
 		const { night } = this.state
 		return (
-			<Block className={night ? 'NightMode' : ''} minHeight="100%" position="relative">
+			<Block
+				className={night ? 'NightMode' : ''}
+				minHeight="100%"
+				position="relative"
+				paddingTop={16}>
 				<Block
 					color="var(--text)"
 					padding={8}
