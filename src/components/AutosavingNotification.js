@@ -14,6 +14,7 @@ export default () => (
 		position="fixed"
 		margin="auto"
 		backgroundColor="white"
+		fontWeight={700}
 		boxShadow="0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12)"
 		padding={4}>
 		Autosaving
