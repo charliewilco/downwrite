@@ -1,0 +1,24 @@
+{
+  "name": "medium-downwrite",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "markdown-draft-js": "^0.4.4",
+    "medium-sdk": "^0.0.4",
+    "micro": "^9.0.1",
+    "micro-cors": "^0.0.4"
+  },
+  "devDependencies": {
+    "micro-dev": "^1.4.0"
+  },
+	"now": {
+		"alias": "medium.downwrite.us"
+	},
+  "scripts": {
+	  "build": "echo \"no build specified\" && exit 0",
+    "dev": "micro-dev . -p 6335",
+    "start": "micro . -p 6335",
+    "deploy": "now && now alias"
+  }
+}

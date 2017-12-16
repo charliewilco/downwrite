@@ -7,13 +7,20 @@
     "app/export-json",
     "app/export-md"
   ],
+  "scripts": {
+    "dev": "lerna run dev --stream --parallel",
+    "build": "lerna run build --stream --parallel"
+  },
   "prettier": {
-		"printWidth": 95,
-		"parser": "flow",
-		"semi": false,
-		"singleQuote": true,
-		"useTabs": true,
-		"bracketSpacing": true,
-		"jsxBracketSameLine": true
-	}
+    "printWidth": 95,
+    "parser": "flow",
+    "semi": false,
+    "singleQuote": true,
+    "useTabs": true,
+    "bracketSpacing": true,
+    "jsxBracketSameLine": true
+  },
+  "devDependencies": {
+    "lerna": "^2.5.1"
+  }
 }
