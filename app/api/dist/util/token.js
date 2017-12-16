@@ -1,0 +1,25 @@
+'use strict';
+
+const jwt = require('jsonwebtoken');
+const { key } = require('./config');
+
+module.exports = function (user) {
+	let scopes;
+
+	if (user.admin) {
+		scopes = 'admin';
+	}
+
+	const jwtConfig = {
+		algorithm: 'HS256',
+		expiresIn: '10d'
+	};
+
+	const data = {
+		id: user._id,
+		username: user.username,
+		scope: scopes
+	};
+
+	return jwt.sign(data, key, jwtConfig);
+};

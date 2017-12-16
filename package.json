@@ -2,6 +2,18 @@
   "private": true,
   "name": "downwrite",
   "workspaces": [
-    "app/*"
-  ]
+    "app/api",
+    "app/client",
+    "app/export-json",
+    "app/export-md"
+  ],
+  "prettier": {
+		"printWidth": 95,
+		"parser": "flow",
+		"semi": false,
+		"singleQuote": true,
+		"useTabs": true,
+		"bracketSpacing": true,
+		"jsxBracketSameLine": true
+	}
 }
