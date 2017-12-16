@@ -9,8 +9,20 @@
   ],
   "scripts": {
     "dev": "lerna run dev --stream --parallel",
-    "build": "lerna run build --stream --parallel"
+    "build": "lerna run build --stream --parallel",
+    "precommit": "lint-staged"
+
   },
+  "lint-staged": {
+		"*.js": [
+			"prettier --parser flow --write",
+			"git add"
+		],
+		"*.css": [
+			"prettier --parser postcss --write",
+			"git add"
+		]
+	},
   "prettier": {
     "printWidth": 95,
     "parser": "flow",
@@ -21,6 +33,12 @@
     "jsxBracketSameLine": true
   },
   "devDependencies": {
-    "lerna": "^2.5.1"
+    "flow-bin": "^0.61.0",
+    "husky": "^0.14.3",
+    "jest": "^21.2.1",
+    "lerna": "^2.5.1",
+    "lint-staged": "^6.0.0",
+    "now": "^8.5.4",
+    "prettier": "^1.9.2"
   }
 }
