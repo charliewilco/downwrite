@@ -3,7 +3,7 @@ import Markdown from 'react-markdown'
 import PrismCode from 'react-prism'
 import 'prismjs'
 import { Wrapper, NightMode } from './'
-import './ganymede.css'
+// import './ganymede.css'
 import format from 'date-fns/format'
 
 const CodeBlock = ({ language, value, ...props }) => (

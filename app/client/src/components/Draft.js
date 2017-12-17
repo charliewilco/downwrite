@@ -6,8 +6,8 @@ import { css } from 'glamor'
 import Toolbar from './Toolbar'
 import createMarkdownPlugin from 'draft-js-markdown-plugin'
 import createPrismPlugin from 'draft-js-prism-plugin'
-import './Editor.css'
-import './ganymede.css'
+// import './Editor.css'
+// import './ganymede.css'
 
 const editorStyle = css({
 	paddingLeft: 0,

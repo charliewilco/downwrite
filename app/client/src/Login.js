@@ -2,7 +2,8 @@
 
 import * as React from 'react'
 import { Block, InlineBlock } from 'glamor/jsxstyle'
-import { LoginInput, Button } from './components'
+import LoginInput from './components/LoginInput'
+import Button from './components/Button'
 import { AUTH_ENDPOINT } from './utils/urls'
 
 type LoginState = {

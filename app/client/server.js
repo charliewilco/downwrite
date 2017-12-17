@@ -13,7 +13,7 @@ const verifyJWT = token =>
 const isLoggedIn = async (req, res, next) => {
 	try {
 		await verifyJWT(req.cookies['id_token'])
-		return res.redirect('/profile')
+		return res.redirect('/')
 	} catch (err) {
 		next()
 		return
@@ -42,6 +42,8 @@ app
 			return app.render(req, res, actualPage)
 		})
 
+		server.get('/new', (req, res) => app.render(req, res, '/new'))
+
 		server.get('/signUp', isLoggedIn, (req, res) => {
 			const actualPage = '/signUp'
 			return app.render(req, res, actualPage)
@@ -61,9 +63,9 @@ app
 			return handle(req, res)
 		})
 
-		server.listen(3000, err => {
+		server.listen(4000, err => {
 			if (err) throw err
-			console.log('> Ready on http://localhost:3000')
+			console.log('> Ready on http://localhost:4000')
 		})
 	})
 	.catch(error => {

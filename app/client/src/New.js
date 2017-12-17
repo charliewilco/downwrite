@@ -5,7 +5,11 @@ import { DWEditor } from './components'
 import Upload from './components/Upload'
 import { Redirect } from 'react-router-dom'
 import Media from 'react-media'
-import { Wrapper, Input, Button, Helpers } from './components'
+import Wrapper from './components/Wrapper'
+import Input from './components/Input'
+import Button from './components/Button'
+import Helpers from './components/Helpers'
+
 import uuid from 'uuid/v4'
 import { POST_ENDPOINT } from './utils/urls'
 

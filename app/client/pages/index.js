@@ -1,2 +1,4 @@
-import { Button } from '../src/components/Button'
-export default () => <div>Hello</div>
+import React, { Fragment, Component } from 'react'
+import Home from '../src/Home'
+
+export default () => <Home />
