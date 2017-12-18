@@ -4,8 +4,7 @@ import { Block } from 'glamor/jsxstyle'
 import orderBy from 'lodash/orderBy'
 import { PostList, Loading, EmptyPosts } from '../components'
 import { POST_ENDPOINT } from '../utils/urls'
-import { TOKEN } from '../utils/cookie'
-import 'isomorphic-unfetch'
+import 'isomorphic-fetch'
 
 type Post = {
 	title: string,
@@ -27,11 +26,21 @@ type MainState = {
 export default class extends Component<MainPr, MainState> {
 	static displayName = 'Dashboard'
 
-	static async getInitalProps() {
-		const cookies = new Cookies()
-		const posts = await this.getPosts()
+	static async getInitialProps({ req, query, ...ctx }) {
+		const TOKEN = req.cookies.DW_TOKEN
+		const config = {
+			method: 'GET',
+			headers: { Authorization: `Bearer ${TOKEN}` },
+			mode: 'cors'
+		}
+
+		console.log(ctx.res)
+
+		// const res = await fetch(POST_ENDPOINT, config)
+		// const posts = await res.json()
+		// fetch(POST_ENDPOINT, config).then(res => orderBy(res.json(), ['dateAdded'], ['desc']))
 		return {
-			posts: orderBy(posts, ['dateAdded'], ['desc']),
+			posts: query.posts,
 			token: TOKEN
 		}
 	}
@@ -47,26 +56,26 @@ export default class extends Component<MainPr, MainState> {
 	}
 
 	getPosts = async () => {
-		console.log('hello', TOKEN)
+		const { token } = this.props
 		const config = {
 			method: 'GET',
 			headers: {
-				Authorization: `Bearer ${TOKEN}`
+				Authorization: `Bearer ${token}`
 			},
 			mode: 'cors',
 			cache: 'default'
 		}
 
-		const response = await fetch(POST_ENDPOINT, config)
-		const posts = await response.json()
+		const res = await fetch(POST_ENDPOINT, config)
+		const posts = await res.json()
 
 		return posts
 	}
 
-	async componentWillMount() {
-		const posts = await this.getPosts()
-		this.setState({ posts })
-	}
+	// async componentWillMount() {
+	// 	const posts = await this.getPosts()
+	// 	this.setState({ posts })
+	// }
 
 	onDelete = async (post: Object) => {
 		const { token } = this.props
@@ -88,16 +97,16 @@ export default class extends Component<MainPr, MainState> {
 	}
 
 	render() {
-		const { loaded, posts, layout } = this.state
+		const { loaded, layout, posts } = this.state
 		return (
 			<Block paddingLeft={8} paddingRight={8} paddingTop={16} paddingBottom={16} height="100%">
 				<button onClick={() => this.getPosts()}>Fetch</button>
-				{posts.length > 0 ? (
+				{this.props.posts.length > 0 ? (
 					<PostList
 						layout={layout}
 						onDelete={this.onDelete}
 						layoutChange={this.layoutChange}
-						posts={posts}
+						posts={this.props.posts}
 					/>
 				) : (
 					<EmptyPosts />

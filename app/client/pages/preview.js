@@ -3,17 +3,16 @@ import { matchPath } from 'react-router-dom'
 import { Block } from 'glamor/jsxstyle'
 import { PREVIEW_ENDPOINT } from '../utils/urls'
 import { Content } from '../components'
-import 'isomorphic-unfetch'
+import 'isomorphic-fetch'
 
 // `:id/preview`
 
 export default class extends React.Component {
 	static displayName = 'Preview'
 
-	static async getInitialProps({ req }) {
+	static async getInitialProps({ req, query }) {
 		let { id } = req.params
-		const res = await fetch(`${PREVIEW_ENDPOINT}/${id}`, { mode: 'cors' })
-		const post = await res.json()
+		const { post } = query
 
 		return {
 			id,

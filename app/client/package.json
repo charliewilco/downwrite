@@ -54,6 +54,7 @@
     "glamor": "^2.20.40",
     "html-webpack-plugin": "2.29.0",
     "immutable": "^3.8.2",
+    "isomorphic-fetch": "^2.2.1",
     "isomorphic-unfetch": "^2.0.0",
     "jest": "20.0.4",
     "jsonwebtoken": "^8.1.0",
