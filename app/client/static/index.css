@@ -21,8 +21,8 @@ LG = @media only screen and (min-width: 57.75rem)
 	--base-form-mxw: 100%;
 	--base-spacing: 1rem;
 	--text: #4c4c4c;
-	--primary-font: 'Operator Mono SSm A', 'Operator Mono SSm B', 'Input Mono Condensed',
-		Roboto Mono, monospace;
+	--primary-font: 'Operator Mono SSm A', 'Operator Mono SSm B', 'Input Mono', 'Roboto Mono',
+		monospace;
 	--secondary-font: Roboto, Avenir, sans-serif;
 	--ff-mono: 'Input Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
 		monospace;

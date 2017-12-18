@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { Block } from 'glamor/jsxstyle'
 import { css } from 'glamor'
 import Card from './Card'
@@ -12,7 +12,7 @@ export default ({ matches, posts }) => (
 				{matches ? (
 					<Card {...post} />
 				) : (
-					<Link to={`/${post.id}/edit`} className="small">
+					<Link href={`/${post.id}/edit`} className="small">
 						{post.title}
 					</Link>
 				)}

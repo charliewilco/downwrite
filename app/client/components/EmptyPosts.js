@@ -1,6 +1,7 @@
 import React from 'react'
 import { Block, Flex } from 'glamor/jsxstyle'
-import { Link, withRouter } from 'react-router-dom'
+import Link from 'next/link'
+import Router from 'next/router'
 import { css, keyframes } from 'glamor'
 import Wrapper from './Wrapper'
 import Button from './Button'
@@ -89,11 +90,11 @@ const Nib = () => (
 	</div>
 )
 
-export const SidebarEmpty = withRouter(({ history }) => (
+export const SidebarEmpty = () => (
 	<Flex justifyContent="center">
-		<Button onClick={() => history.replace('/new')}>Get Started</Button>
+		<Button onClick={() => Router.push('/new')}>Get Started</Button>
 	</Flex>
-))
+)
 
 export default () => (
 	<Wrapper paddingTop={64}>
@@ -105,8 +106,8 @@ export default () => (
 				<h4 className={css({ fontSize: 24, marginBottom: 16 })}>
 					Looks like you don't have any entries
 				</h4>
-				<Link to="/new" className={css({ color: '#757575' })}>
-					Get Started &rarr;
+				<Link href="/new">
+					<a className={css({ color: '#757575' })}>Get Started &rarr;</a>
 				</Link>
 			</Block>
 		</Flex>

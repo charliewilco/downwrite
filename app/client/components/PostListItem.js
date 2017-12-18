@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import { Block, Flex } from 'glamor/jsxstyle'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 
 const f2 = css({
 	fontSize: 16,
@@ -18,7 +18,7 @@ const deleteButton = css({
 const ListItem = ({ title, id, onDelete }) => (
 	<Flex justifyContent="space-between">
 		<Block>
-			<Link to={`/${id}/edit`}>
+			<Link href={`/${id}/edit`}>
 				<h2 className={css(f2)}>{title}</h2>
 			</Link>
 		</Block>

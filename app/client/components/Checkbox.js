@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-// import icon from './check.svg'
+import icon from '../../static/check.svg'
 
 const sharedStyle = css({
 	display: 'inline-block',
