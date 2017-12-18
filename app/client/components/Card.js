@@ -49,7 +49,7 @@ const Card = ({ title, id, content, dateAdded, onDelete, ...args }) => (
 		<Block borderBottom="1px solid #DBDCDD" padding="12px 8px">
 			<h2 className={css(s.title)}>
 				<Link href={`/${id}/edit`}>
-					<span>{title}</span>
+					<a>{title}</a>
 				</Link>
 			</h2>
 			<small className={css(s.meta)}>added {distance(dateAdded)} ago</small>

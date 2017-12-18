@@ -11,19 +11,21 @@ export default class extends React.Component {
 
 	componentWillMount() {
 		// TODO: there should be a better:
-		const night = JSON.parse(localStorage.getItem('nightMode')) || false
+		if (typeof window !== 'undefined') {
+			const night = JSON.parse(window.localStorage.getItem('nightMode')) || false
 
-		this.setState({ night: night }, () => {
-			if (night && !this.containsClass()) {
-				document.body.classList.add(NIGHT_MODE)
-			}
-		})
+			this.setState({ night: night }, () => {
+				if (night && !this.containsClass()) {
+					document.body.classList.add(NIGHT_MODE)
+				}
+			})
+		}
 	}
 
 	containsClass = () => document.body.classList.contains(NIGHT_MODE)
 
 	setNight = status => {
-		localStorage.setItem('nightMode', status)
+		window.localStorage.setItem('nightMode', status)
 
 		status
 			? document.body.classList.add(NIGHT_MODE)

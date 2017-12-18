@@ -13,7 +13,7 @@ const sharedStyle = css({
 })
 
 const checkedStyle = css(sharedStyle, {
-	background: `var(--color-1) url('./check.svg') no-repeat center center`,
+	background: `var(--color-1) url(${icon}) no-repeat center center`,
 	border: 0
 })
 
