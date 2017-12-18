@@ -2,6 +2,8 @@ const express = require('express')
 const next = require('next')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
+require('isomorphic-unfetch')
+
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 
@@ -26,7 +28,7 @@ const isNotLoggedIn = async (req, res, next) => {
 		next()
 		return
 	} catch (err) {
-		return res.redirect('/')
+		return res.redirect('/login')
 	}
 }
 
@@ -36,32 +38,13 @@ app
 		const server = express()
 
 		server.use(cookieParser())
-
-		server.get('/', isLoggedIn, (req, res) => {
-			const actualPage = '/'
-			return app.render(req, res, actualPage)
-		})
-
-		server.get('/new', (req, res) => app.render(req, res, '/new'))
-
-		server.get('/signUp', isLoggedIn, (req, res) => {
-			const actualPage = '/signUp'
-			return app.render(req, res, actualPage)
-		})
-
-		server.get('/profile', isNotLoggedIn, (req, res) => {
-			const actualPage = '/profile'
-			return app.render(req, res, actualPage)
-		})
-
-		server.get('/other', isNotLoggedIn, (req, res) => {
-			const actualPage = '/other'
-			return app.render(req, res, actualPage)
-		})
-
-		server.get('*', (req, res) => {
-			return handle(req, res)
-		})
+		server.get('/', isLoggedIn, (req, res) => app.render(req, res, '/'))
+		server.get('/new', isLoggedIn, (req, res) => app.render(req, res, '/new'))
+		server.get('/login', isLoggedIn, (req, res) => app.render(req, res, '/login'))
+		server.get('/:id/edit', isNotLoggedIn, (req, res) => app.render(req, res, '/edit'))
+		server.get('/:id/preview', (req, res) => app.render(req, res, '/preview'))
+		server.get('/other', isNotLoggedIn, (req, res) => app.render(req, res, '/other'))
+		server.get('*', (req, res) => handle(req, res))
 
 		server.listen(4000, err => {
 			if (err) throw err

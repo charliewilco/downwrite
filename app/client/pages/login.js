@@ -1,10 +1,10 @@
 // @flow
 import React, { Component } from 'react'
-import Login from './Login'
-import Register from './Register'
+import Login from '../components/Login'
+import Register from '../components/Register'
 import { Block, Flex } from 'glamor/jsxstyle'
 import { css } from 'glamor'
-import { Logo, withUIFlash } from './components'
+import { Logo, withUIFlash } from '../components'
 
 const hStyle = css({
 	marginBottom: 32,

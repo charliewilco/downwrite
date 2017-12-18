@@ -2,6 +2,10 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 
 export default class SignOut extends React.Component {
+	static defaultProps = {
+		toggleNav: () => {}
+	}
+
 	componentWillMount() {
 		this.props.signOut()
 		this.props.toggleNav()

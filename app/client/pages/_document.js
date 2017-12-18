@@ -20,14 +20,15 @@ export default class MyDocument extends Document {
 		return (
 			<html>
 				<Head>
+					<meta charSet="utf-8" />
 					<meta name="description" content="Downwrite is a place to right" />
 					<meta name="viewport" content="width=device-width, initial-scale=1" />
-
 					<title>Downwrite</title>
+					<link href="/static/index.css" rel="stylesheet" />
 					<style dangerouslySetInnerHTML={{ __html: this.props.css }} />
 				</Head>
 				<body>
-					<Main />
+					<Main className="Root" />
 					<NextScript />
 				</body>
 			</html>

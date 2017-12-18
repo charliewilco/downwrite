@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "autoprefixer": "7.1.6",
+    "babel-plugin-transform-assets-import-to-string": "^1.0.1",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "enzyme": "^3.1.0",
     "enzyme-adapter-react-16": "^1.0.2",
@@ -19,7 +21,6 @@
     "w3c-xmlhttprequest": "^2.1.2"
   },
   "dependencies": {
-    "autoprefixer": "7.1.6",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",
     "babel-jest": "20.0.3",
@@ -53,6 +54,7 @@
     "glamor": "^2.20.40",
     "html-webpack-plugin": "2.29.0",
     "immutable": "^3.8.2",
+    "isomorphic-unfetch": "^2.0.0",
     "jest": "20.0.4",
     "jsonwebtoken": "^8.1.0",
     "jwt-decode": "^2.2.0",
@@ -87,9 +89,9 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
-    "start": "serve -s build",
+    "start": "node server.js",
     "build": "node scripts/build.js",
-    "dev": "node scripts/start.js",
+    "devx": "node server.js",
     "test": "node scripts/test.js --env=jsdom",
     "analysis": "flow",
     "lint": "yarn eslint ./src/**/*.js",
@@ -153,7 +155,14 @@
       "next/babel"
     ],
     "plugins": [
-      "transform-flow-strip-types"
+      "transform-flow-strip-types",
+      [
+        "transform-assets-import-to-string",
+        {
+          "baseDir": "static",
+          "baseUri": "/"
+        }
+      ]
     ]
   },
   "postcss": {
@@ -162,5 +171,7 @@
       "postcss-custom-properties": {}
     }
   },
-  "browserslist": [ "last 2 versions" ]
+  "browserslist": [
+    "last 2 versions"
+  ]
 }
