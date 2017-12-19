@@ -12,19 +12,21 @@ export default class extends React.Component {
 
 	static async getInitialProps({ req, query }) {
 		let { id } = req.params
-		const { post } = query
+
+		const res = await fetch(`${PREVIEW_ENDPOINT}/${id}`, {
+			mode: 'cors',
+			cache: 'default'
+		})
+		const post = await res.json()
 
 		return {
 			id,
-			dateAdded: post.dateAdded,
-			title: post.title,
-			content: post.content,
-			errorMessage: post.error
+			post
 		}
 	}
 
 	render() {
-		return <Content {...this.props} />
+		return <Content {...this.props.post} />
 	}
 }
 

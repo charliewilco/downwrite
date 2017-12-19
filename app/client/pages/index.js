@@ -34,19 +34,17 @@ export default class extends Component<MainPr, MainState> {
 			mode: 'cors'
 		}
 
-		console.log(ctx.res)
+		const res = await fetch(POST_ENDPOINT, config)
+		const posts = await res.json()
 
-		// const res = await fetch(POST_ENDPOINT, config)
-		// const posts = await res.json()
-		// fetch(POST_ENDPOINT, config).then(res => orderBy(res.json(), ['dateAdded'], ['desc']))
 		return {
-			posts: query.posts,
+			initialPosts: orderBy(posts, ['dateAdded'], ['desc']),
 			token: TOKEN
 		}
 	}
 
 	state = {
-		posts: this.props.posts || [],
+		posts: this.props.initialPosts,
 		loaded: true,
 		layout: 'grid'
 	}
@@ -100,13 +98,12 @@ export default class extends Component<MainPr, MainState> {
 		const { loaded, layout, posts } = this.state
 		return (
 			<Block paddingLeft={8} paddingRight={8} paddingTop={16} paddingBottom={16} height="100%">
-				<button onClick={() => this.getPosts()}>Fetch</button>
-				{this.props.posts.length > 0 ? (
+				{posts.length > 0 ? (
 					<PostList
 						layout={layout}
 						onDelete={this.onDelete}
 						layoutChange={this.layoutChange}
-						posts={this.props.posts}
+						posts={posts}
 					/>
 				) : (
 					<EmptyPosts />
