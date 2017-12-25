@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Header, Nav, Aux } from './'
+import React, { Fragment, Component } from 'react'
+import { Header, Nav } from './'
 
 export default class extends Component {
 	static displayName = 'ApplicationLayout'
@@ -19,10 +19,10 @@ export default class extends Component {
 
 	render() {
 		return (
-			<Aux>
+			<Fragment>
 				<Header name="Downwrite" onClick={this.openNav} />
 				{this.state.open && <Nav />}
-			</Aux>
+			</Fragment>
 		)
 	}
 }

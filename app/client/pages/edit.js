@@ -16,18 +16,18 @@ import {
 	Helpers,
 	Modal,
 	Toggle,
-	Aux,
 	DWEditor,
 	SettingsIcon,
 	Export,
 	Privacy
-} from './components'
-import Autosaving from './components/AutosavingNotification.js'
+} from '../components'
+import Autosaving from '../components/AutosavingNotification.js'
 import format from 'date-fns/format'
 import isEmpty from 'lodash/isEmpty'
 import debounce from 'lodash/debounce'
-import { superConverter } from './utils/responseHandler'
-import { POST_ENDPOINT } from './utils/urls'
+import Cookies from 'universal-cookie'
+import { superConverter } from '../utils/responseHandler'
+import { POST_ENDPOINT } from '../utils/urls'
 
 const meta = css({
 	opacity: 0.5,
@@ -63,15 +63,37 @@ type EditorPr = {
 class Edit extends React.Component<EditorPr, EditorSt> {
 	static displayName = 'Edit'
 
+	static async getInitialProps({ req, query }) {
+		const ck = new Cookies()
+		let { id } = req.params
+		const token = req ? req.universalCookies.cookies.DW_TOKEN : ck.get('DW_TOKEN')
+		console.log(req, token)
+
+		const config = {
+			method: 'GET',
+			headers: { Authorization: `Bearer ${token}` },
+			mode: 'cors'
+		}
+
+		const res = await fetch(`${POST_ENDPOINT}/${id}`, config)
+		const post = await res.json()
+
+		return {
+			token,
+			post,
+			id
+		}
+	}
+
 	titleInput: HTMLInputElement
 
 	state = {
 		autosaving: false,
-		editorState: EditorState.createEmpty(),
-		post: {},
-		title: '',
+		editorState: EditorState.createWithContent(superConverter(this.props.post.content)),
+		post: this.props.post,
+		title: this.props.post.title,
 		updated: false,
-		loaded: false,
+		loaded: true,
 		unchanged: false,
 		document: null,
 		publicStatus: false,
@@ -120,29 +142,30 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		return post
 	}
 
-	shouldComponentUpdate(nextProps: Object, nextState: { post: Object }) {
-		return isEmpty(nextState.post) || isEmpty(nextState.post.content.blocks)
-	}
+	// NOTE: this was a hack because of not having a default post
+	// shouldComponentUpdate(nextProps: Object, nextState: { post: Object }) {
+	// 	return isEmpty(nextState.post) || isEmpty(nextState.post.content.blocks)
+	// }
 
 	autoSave = debounce(() => {
 		this.setState({ autosaving: true }, this.updatePostContent)
 	}, 5000)
 
-	async componentWillMount() {
-		const post = await this.getPost(this.props.match.params.id)
-		const content = await superConverter(post.content)
-
-		this.setState({
-			post: {
-				...post,
-				content
-			},
-			publicStatus: post.public,
-			editorState: EditorState.createWithContent(content),
-			title: post.title,
-			loaded: true
-		})
-	}
+	// async componentWillMount() {
+	// 	const post = await this.getPost(this.props.match.params.id)
+	// 	const content = await superConverter(post.content)
+	//
+	// 	this.setState({
+	// 		post: {
+	// 			...post,
+	// 			content
+	// 		},
+	// 		publicStatus: post.public,
+	// 		editorState: EditorState.createWithContent(content),
+	// 		title: post.title,
+	// 		loaded: true
+	// 	})
+	// }
 
 	onChange = (editorState: EditorState) => {
 		this.autoSave()
@@ -160,8 +183,8 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 	}
 
 	updatePost = (body: Object) => {
-		const { token, match } = this.props
-		return fetch(`${POST_ENDPOINT}/${match.params.id}`, {
+		const { token, id } = this.props
+		return fetch(`${POST_ENDPOINT}/${id}`, {
 			method: 'put',
 			headers: {
 				'Content-Type': 'application/json',
@@ -175,23 +198,23 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 	// See this is where recompose might be cool
 	// I'm gonna need to take that back at some point
 	// Will Next.js fix this?
-	componentWillReceiveProps({ location }) {
-		if (location !== this.props.location) {
-			const newMatch = matchPath(location.pathname, { path: '/:id/edit' })
-			console.log(location, newMatch)
-			this.getPost(newMatch.params.id).then(post =>
-				this.setState({
-					post: {
-						...post,
-						content: superConverter(post.content)
-					},
-					editorState: EditorState.createWithContent(superConverter(post.content)),
-					title: post.title,
-					loaded: true
-				})
-			)
-		}
-	}
+	// componentWillReceiveProps({ location }) {
+	// 	if (location !== this.props.location) {
+	// 		const newMatch = matchPath(location.pathname, { path: '/:id/edit' })
+	// 		console.log(location, newMatch)
+	// 		this.getPost(newMatch.params.id).then(post =>
+	// 			this.setState({
+	// 				post: {
+	// 					...post,
+	// 					content: superConverter(post.content)
+	// 				},
+	// 				editorState: EditorState.createWithContent(superConverter(post.content)),
+	// 				title: post.title,
+	// 				loaded: true
+	// 			})
+	// 		)
+	// 	}
+	// }
 
 	render() {
 		const { title, post, loaded, editorState, publicStatus, autosaving } = this.state
@@ -204,7 +227,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 					{m => (
 						<Toggle>
 							{(open: boolean, toggleUIModal: Function) => (
-								<Aux>
+								<React.Fragment>
 									{autosaving && <Autosaving />}
 									{open && (
 										<Modal closeUIModal={toggleUIModal}>
@@ -244,7 +267,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 											</div>
 										</Wrapper>
 									</Wrapper>
-								</Aux>
+								</React.Fragment>
 							)}
 						</Toggle>
 					)}
