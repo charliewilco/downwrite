@@ -73,7 +73,11 @@ const Card = ({ title, id, content, dateAdded, onDelete, ...args }) => (
 				<Link href={`/${id}/edit`}>
 					<a className={css({ marginRight: 8 })}>Edit</a>
 				</Link>
-				{args.public && <Link href={`/${id}/preview`}>Preview</Link>}
+				{args.public && (
+					<Link href={`/${id}/preview`}>
+						<a>Preview</a>
+					</Link>
+				)}
 			</Block>
 			{onDelete && (
 				<button data-test="cardDelete" className={css(s.delete)} onClick={onDelete}>

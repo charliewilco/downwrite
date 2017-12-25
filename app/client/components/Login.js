@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Block, InlineBlock } from 'glamor/jsxstyle'
 import LoginInput from './LoginInput'
 import Button from './Button'
+import Router from 'next/router'
 import { AUTH_ENDPOINT } from '../utils/urls'
 
 type LoginState = {
@@ -43,7 +44,8 @@ class Login extends React.Component<LoginProps, LoginState> {
 		}
 
 		if (auth.userID) {
-			this.props.signIn(auth.id_token !== undefined, auth.id_token, auth.userID, auth.username)
+			this.props.signIn(auth.id_token, auth.userID, auth.username)
+			Router.push({ pathName: '/' }, { query: auth.id_token })
 		}
 	}
 
