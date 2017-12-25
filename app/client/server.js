@@ -1,8 +1,7 @@
 const express = require('express')
 const next = require('next')
 const jwt = require('jsonwebtoken')
-const cookieParser = require('cookie-parser')
-
+const cookiesMiddleware = require('universal-cookie-express')
 require('isomorphic-fetch')
 
 const dev = process.env.NODE_ENV !== 'production'
@@ -25,7 +24,7 @@ const isLoggedIn = async (req, res, next) => {
 
 const isNotLoggedIn = async (req, res, next) => {
 	try {
-		await verifyJWT(req.cookies['id_token'])
+		await verifyJWT(req.universalCookies.get('id_token'))
 		next()
 		return
 	} catch (err) {
@@ -61,18 +60,12 @@ app
 	.then(() => {
 		const server = express()
 
-		server.use(cookieParser())
-		server.get('/', isLoggedIn, async (req, res) => {
-			const posts = await getPosts(req.cookies.DW_TOKEN)
-			return app.render(req, res, '/', { ...req.query, posts })
-		})
+		server.use(cookiesMiddleware())
+		server.get('/', isLoggedIn, (req, res) => app.render(req, res, '/'))
 		server.get('/new', isLoggedIn, (req, res) => app.render(req, res, '/new'))
 		server.get('/login', isLoggedIn, (req, res) => app.render(req, res, '/login'))
-		server.get('/:id/edit', isNotLoggedIn, (req, res) => app.render(req, res, '/edit'))
-		server.get('/:id/preview', async (req, res) => {
-			const post = await getPreview(req.params.id)
-			return app.render(req, res, '/preview', { ...req.query, post })
-		})
+		server.get('/:id/edit', isLoggedIn, (req, res) => app.render(req, res, '/edit', req.query))
+		server.get('/:id/preview', (req, res) => app.render(req, res, '/preview'))
 		server.get('/other', isNotLoggedIn, (req, res) => app.render(req, res, '/other'))
 		server.get('*', (req, res) => handle(req, res))
 
