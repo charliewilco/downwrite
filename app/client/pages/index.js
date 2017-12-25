@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { Block } from 'glamor/jsxstyle'
 import orderBy from 'lodash/orderBy'
 import { PostList, Loading, EmptyPosts } from '../components'
+import Cookies from 'universal-cookie'
 import { POST_ENDPOINT } from '../utils/urls'
 import 'isomorphic-fetch'
 
@@ -23,14 +24,18 @@ type MainState = {
 	layout: 'grid' | 'list'
 }
 
-export default class extends Component<MainPr, MainState> {
+class Index extends Component<MainPr, MainState> {
 	static displayName = 'Dashboard'
 
-	static async getInitialProps({ req, query, ...ctx }) {
-		const TOKEN = req.cookies.DW_TOKEN
+	static async getInitialProps({ req, query }) {
+		const ck = new Cookies()
+		const token = req
+			? req.universalCookies.cookies.DW_TOKEN
+			: query.token || ck.get('DW_TOKEN')
+
 		const config = {
 			method: 'GET',
-			headers: { Authorization: `Bearer ${TOKEN}` },
+			headers: { Authorization: `Bearer ${token}` },
 			mode: 'cors'
 		}
 
@@ -38,13 +43,13 @@ export default class extends Component<MainPr, MainState> {
 		const posts = await res.json()
 
 		return {
-			initialPosts: orderBy(posts, ['dateAdded'], ['desc']),
-			token: TOKEN
+			token,
+			posts
 		}
 	}
 
 	state = {
-		posts: this.props.initialPosts,
+		posts: this.props.posts,
 		loaded: true,
 		layout: 'grid'
 	}
@@ -112,3 +117,5 @@ export default class extends Component<MainPr, MainState> {
 		)
 	}
 }
+
+export default Index

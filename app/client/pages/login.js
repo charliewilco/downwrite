@@ -5,6 +5,7 @@ import Register from '../components/Register'
 import { Block, Flex } from 'glamor/jsxstyle'
 import { css } from 'glamor'
 import { Logo, withUIFlash } from '../components'
+import { signIn } from '../utils/cookie'
 
 const hStyle = css({
 	marginBottom: 32,
@@ -106,7 +107,7 @@ class Home extends Component<{ setFlash: Function }, { loginSelected: boolean }>
 								{loginSelected ? 'Welcome Back!' : 'Sign Up as a New User'}
 							</h2>
 							{loginSelected ? (
-								<Login {...this.props} setError={this.errorMessage} />
+								<Login {...this.props} signIn={signIn} setError={this.errorMessage} />
 							) : (
 								<Register {...this.props} setError={this.errorMessage} />
 							)}
