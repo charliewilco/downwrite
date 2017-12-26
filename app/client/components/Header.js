@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { withRouter, Link } from 'react-router-dom'
+import Link from 'next/link'
 import Logo from './Logo'
 import { css } from 'glamor'
 import { Flex, Row } from 'glamor/jsxstyle'
@@ -52,16 +52,16 @@ type Header = {
 
 const LoginSignUp = () => (
 	<Flex alignItems="center">
-		<Link to="/" className={css(hdr.new, { marginRight: 0 })}>
-			Login or Sign Up
+		<Link href="/login">
+			<a className={css(hdr.new, { marginRight: 0 })}>Login or Sign Up</a>
 		</Link>
 	</Flex>
 )
 
 const Menu = ({ toggleNav, open }) => (
 	<Flex alignItems="center">
-		<Link to="/new" className={css(hdr.new)}>
-			New
+		<Link href="/new">
+			<a className={css(hdr.new)}>New</a>
 		</Link>
 		<button onClick={toggleNav} className={css(hdr.toggleButton)}>
 			<svg width="20px" height="9px" viewBox="0 0 20 9">
@@ -90,27 +90,24 @@ const Menu = ({ toggleNav, open }) => (
 	</Flex>
 )
 
-export default withRouter(
-	({ name, authed, onClick, open, match }: Header) =>
-		!(match.isExact && match.path === '/' && !authed) ? (
-			<Row
-				component="header"
-				background="#f9fbfc"
-				alignItems="center"
-				justifyContent="space-between"
-				paddingTop={16}
-				paddingBottom={16}
-				paddingLeft={8}
-				paddingRight={8}>
-				<Flex alignItems="center">
-					<Logo />
-					<Link className={css(hdr.link)} to="/">
-						<h1 className={css(hdr.title)} children={name} />
-					</Link>
-				</Flex>
-				{authed ? <Menu open={open} toggleNav={onClick} /> : <LoginSignUp />}
-			</Row>
-		) : (
-			<div />
-		)
+export default ({ name, authed, onClick, open, match }: Header) => (
+	<Row
+		component="header"
+		background="#f9fbfc"
+		alignItems="center"
+		justifyContent="space-between"
+		paddingTop={16}
+		paddingBottom={16}
+		paddingLeft={8}
+		paddingRight={8}>
+		<Flex alignItems="center">
+			<Logo />
+			<h1>
+				<Link href="/">
+					<a className={css(hdr.link, hdr.title)}>Downwrite</a>
+				</Link>
+			</h1>
+		</Flex>
+		{authed ? <Menu open={open} toggleNav={onClick} /> : <LoginSignUp />}
+	</Row>
 )

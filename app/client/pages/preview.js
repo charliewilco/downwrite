@@ -1,8 +1,9 @@
 import React from 'react'
 import { matchPath } from 'react-router-dom'
 import { Block } from 'glamor/jsxstyle'
+import getToken from '../utils/getToken'
 import { PREVIEW_ENDPOINT } from '../utils/urls'
-import { Content } from '../components'
+import { Content, Layout } from '../components'
 import 'isomorphic-fetch'
 
 // `:id/preview`
@@ -11,6 +12,8 @@ export default class extends React.Component {
 	static displayName = 'Preview'
 
 	static async getInitialProps({ req, query }) {
+		const { token, userID, username } = getToken(req, query)
+
 		let { id } = req.params
 
 		const res = await fetch(`${PREVIEW_ENDPOINT}/${id}`, {
@@ -21,12 +24,23 @@ export default class extends React.Component {
 
 		return {
 			id,
-			post
+			post,
+			token,
+			userID,
+			username
 		}
 	}
 
 	render() {
-		return <Content {...this.props.post} />
+		return (
+			<Layout
+				title={`Editing "${this.props.post.title}" | Downwrite`}
+				token={this.props.token}
+				username={this.props.username}
+				userID={this.props.userID}>
+				<Content {...this.props.post} />
+			</Layout>
+		)
 	}
 }
 

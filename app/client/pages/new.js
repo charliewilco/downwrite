@@ -1,14 +1,10 @@
 // @flow
 import * as React from 'react'
 import { EditorState, convertToRaw } from 'draft-js'
-import { Redirect } from 'react-router-dom'
+import Cookies from 'universal-cookie'
+import Router from 'next/router'
 import Media from 'react-media'
-import Upload from '../components/Upload'
-import { DWEditor } from '../components'
-import Wrapper from '../components/Wrapper'
-import Input from '../components/Input'
-import Button from '../components/Button'
-import Helpers from '../components/Helpers'
+import { Layout, DWEditor, Wrapper, Input, Button, Upload, Helpers } from '../components'
 
 import uuid from 'uuid/v4'
 import { POST_ENDPOINT } from '../utils/urls'
@@ -24,15 +20,24 @@ type NewPostSt = {
 type NewPostProps = { token: string, user: string }
 
 // TODO: Shouldn't be able to add if editor is empty
-// TODO: If title is empty post should be named `Untitled Document ${uuid()}`
 
 export default class extends React.Component<NewPostProps, NewPostSt> {
+	static getInitialProps({ req, query }) {
+		const ck = new Cookies()
+		const token = req
+			? req.universalCookies.cookies.DW_TOKEN
+			: query.token || ck.get('DW_TOKEN')
+
+		return {
+			token
+		}
+	}
+
 	state = {
 		editorState: EditorState.createEmpty(),
 		title: '',
 		id: uuid(),
-		dateAdded: new Date(),
-		saved: false
+		dateAdded: new Date()
 	}
 
 	static displayName = 'NewPostEditor'
@@ -51,7 +56,7 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 		const newPost = await response.json()
 
 		if (!newPost.error) {
-			this.setState({ saved: true })
+			Router.push(`/${this.state.id}/edit`)
 		}
 	}
 
@@ -62,7 +67,7 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 		const { user } = this.props
 
 		const post: Object = {
-			title,
+			title: title.length > 0 ? title : `Untitled ${id}`,
 			id,
 			content,
 			dateAdded,
@@ -76,32 +81,32 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 	upload = (content: { title: string, editorState: EditorState }) => this.setState(content)
 
 	render() {
-		const { editorState, title, saved, id } = this.state
-		return saved ? (
-			<Redirect to={`/${id}/edit`} />
-		) : (
-			<Media query={{ minWidth: 500 }}>
-				{m => (
-					<Wrapper paddingTop={128} sm>
-						<Helpers>
-							<Button onClick={this.addNewPost}>Add</Button>
-						</Helpers>
-						<Wrapper sm paddingLeft={4} paddingRight={4}>
-							<Upload upload={this.upload}>
-								<Input
-									placeholder="Untitled Document"
-									value={title}
-									onChange={e => this.setState({ title: e.target.value })}
-								/>
-								<DWEditor
-									editorState={editorState}
-									onChange={editorState => this.setState({ editorState })}
-								/>
-							</Upload>
+		const { editorState, title, id } = this.state
+		return (
+			<Layout title="New Entry | Downwrite" token={this.props.token}>
+				<Media query={{ minWidth: 500 }}>
+					{m => (
+						<Wrapper paddingTop={128} sm>
+							<Helpers>
+								<Button onClick={this.addNewPost}>Add</Button>
+							</Helpers>
+							<Wrapper sm paddingLeft={4} paddingRight={4}>
+								<Upload upload={this.upload}>
+									<Input
+										placeholder="Untitled Document"
+										value={title}
+										onChange={e => this.setState({ title: e.target.value })}
+									/>
+									<DWEditor
+										editorState={editorState}
+										onChange={editorState => this.setState({ editorState })}
+									/>
+								</Upload>
+							</Wrapper>
 						</Wrapper>
-					</Wrapper>
-				)}
-			</Media>
+					)}
+				</Media>
+			</Layout>
 		)
 	}
 }

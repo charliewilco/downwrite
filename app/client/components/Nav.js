@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import { findDOMNode } from 'react-dom'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { css, keyframes } from 'glamor'
 import { Block, Flex, Column } from 'glamor/jsxstyle'
 import User from './User'
@@ -100,12 +100,12 @@ export default class extends Component {
 					<Block>
 						<User username={username} />
 						<Block paddingLeft={8} paddingRight={8} paddingTop={16} paddingBottom={16}>
-							<Link to="/" className={css(navButton, navItem)}>
-								All Entries
+							<Link href="/">
+								<a className={css(navButton, navItem)}>All Entries</a>
 							</Link>
 
-							<Link to="/new" className={css(navButton, navItem)}>
-								Create New Entry
+							<Link href="/new">
+								<a className={css(navButton, navItem)}>Create New Entry</a>
 							</Link>
 						</Block>
 					</Block>
@@ -123,8 +123,10 @@ export default class extends Component {
 					</Block>
 
 					<Block borderTop="1px solid #DBDCDD" padding={8} textAlign="right">
-						<Link to="/signout" className={css(navButton, { fontSize: 14 })}>
-							<SignoutIcon /> <span>Sign Out</span>
+						<Link href="/signout">
+							<Block className={css(navButton, { fontSize: 14 })}>
+								<SignoutIcon /> <span>Sign Out</span>
+							</Block>
 						</Link>
 					</Block>
 				</Column>

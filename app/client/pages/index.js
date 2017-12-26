@@ -2,8 +2,8 @@
 import React, { Component } from 'react'
 import { Block } from 'glamor/jsxstyle'
 import orderBy from 'lodash/orderBy'
-import { PostList, Loading, EmptyPosts } from '../components'
-import Cookies from 'universal-cookie'
+import { Layout, PostList, Loading, EmptyPosts } from '../components'
+import getToken from '../utils/getToken'
 import { POST_ENDPOINT } from '../utils/urls'
 import 'isomorphic-fetch'
 
@@ -28,13 +28,9 @@ class Index extends Component<MainPr, MainState> {
 	static displayName = 'Dashboard'
 
 	static async getInitialProps({ req, query }) {
-		const ck = new Cookies()
-		const token = req
-			? req.universalCookies.cookies.DW_TOKEN
-			: query.token || ck.get('DW_TOKEN')
+		const { token, userID, username } = getToken(req, query)
 
 		const config = {
-			method: 'GET',
 			headers: { Authorization: `Bearer ${token}` },
 			mode: 'cors'
 		}
@@ -44,6 +40,8 @@ class Index extends Component<MainPr, MainState> {
 
 		return {
 			token,
+			userID,
+			username,
 			posts
 		}
 	}
@@ -102,18 +100,25 @@ class Index extends Component<MainPr, MainState> {
 	render() {
 		const { loaded, layout, posts } = this.state
 		return (
-			<Block paddingLeft={8} paddingRight={8} paddingTop={16} paddingBottom={16} height="100%">
-				{posts.length > 0 ? (
-					<PostList
-						layout={layout}
-						onDelete={this.onDelete}
-						layoutChange={this.layoutChange}
-						posts={posts}
-					/>
-				) : (
-					<EmptyPosts />
-				)}
-			</Block>
+			<Layout title="Dashboard | Downwrite" token={this.props.token}>
+				<Block
+					paddingLeft={8}
+					paddingRight={8}
+					paddingTop={16}
+					paddingBottom={16}
+					height="100%">
+					{posts.length > 0 ? (
+						<PostList
+							layout={layout}
+							onDelete={this.onDelete}
+							layoutChange={this.layoutChange}
+							posts={posts}
+						/>
+					) : (
+						<EmptyPosts />
+					)}
+				</Block>
+			</Layout>
 		)
 	}
 }

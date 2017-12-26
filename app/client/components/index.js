@@ -21,6 +21,7 @@ import Toggle from './Toggle'
 import Export from './Export'
 import Privacy from './Privacy'
 import Check from './Checkbox'
+import Upload from './Upload'
 import CloseIcon from './CloseIcon'
 import UIFlash, { withUIFlash } from './UIFlashMessages'
 
@@ -52,6 +53,7 @@ export {
 	Logo,
 	Toggle,
 	Nav,
+	Upload,
 	withUIFlash,
 	PostList
 }

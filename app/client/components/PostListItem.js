@@ -19,7 +19,7 @@ const ListItem = ({ title, id, onDelete }) => (
 	<Flex justifyContent="space-between">
 		<Block>
 			<Link href={`/${id}/edit`}>
-				<h2 className={css(f2)}>{title}</h2>
+				<a className={css(f2)}>{title}</a>
 			</Link>
 		</Block>
 

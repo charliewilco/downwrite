@@ -19,7 +19,8 @@ import {
 	DWEditor,
 	SettingsIcon,
 	Export,
-	Privacy
+	Privacy,
+	Layout
 } from '../components'
 import Autosaving from '../components/AutosavingNotification.js'
 import format from 'date-fns/format'
@@ -37,7 +38,6 @@ const meta = css({
 type EditorSt = {
 	title: string,
 	post: Object,
-	loaded: boolean,
 	updated: boolean,
 	editorState: EditorState,
 	dateModified: Date
@@ -93,7 +93,6 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		post: this.props.post,
 		title: this.props.post.title,
 		updated: false,
-		loaded: true,
 		unchanged: false,
 		document: null,
 		publicStatus: false,
@@ -217,62 +216,66 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 	// }
 
 	render() {
-		const { title, post, loaded, editorState, publicStatus, autosaving } = this.state
+		const { title, post, editorState, publicStatus, autosaving } = this.state
 
-		return !loaded ? (
-			<Loading />
-		) : (
-			<NightMode>
-				<Media query={{ minWidth: 500 }}>
-					{m => (
-						<Toggle>
-							{(open: boolean, toggleUIModal: Function) => (
-								<React.Fragment>
-									{autosaving && <Autosaving />}
-									{open && (
-										<Modal closeUIModal={toggleUIModal}>
-											<Export editorState={editorState} title={title} date={post.dateAdded} />
-											<Privacy
-												title={title}
-												publicStatus={publicStatus}
-												onChange={() =>
-													this.setState(({ publicStatus }) => ({
-														publicStatus: !publicStatus
-													}))
-												}
-											/>
-										</Modal>
-									)}
-									<Wrapper sm>
-										<Helpers>
-											<Button onClick={() => this.updatePostContent()}>Save</Button>
-											<SettingsIcon onClick={toggleUIModal} />
-										</Helpers>
-										<Wrapper sm paddingTop={0} paddingLeft={8} paddingRight={8}>
-											<Block className={css(meta)} marginBottom={8}>
-												Added on{' '}
-												<time dateTime={post.dateAdded}>
-													{format(post.dateAdded, 'DD MMMM YYYY')}
-												</time>
-											</Block>
-											<Input
-												inputRef={input => (this.titleInput = input)}
-												value={title}
-												onChange={e => this.updateTitle(e)}
-											/>
-											<div>
-												{editorState !== null && (
-													<DWEditor editorState={editorState} onChange={this.onChange} />
-												)}
-											</div>
+		return (
+			<Layout title={`Editing "${this.state.title}" | Downwrite`} token={this.props.token}>
+				<NightMode>
+					<Media query={{ minWidth: 500 }}>
+						{m => (
+							<Toggle>
+								{(open: boolean, toggleUIModal: Function) => (
+									<React.Fragment>
+										{autosaving && <Autosaving />}
+										{open && (
+											<Modal closeUIModal={toggleUIModal}>
+												<Export
+													editorState={editorState}
+													title={title}
+													date={post.dateAdded}
+												/>
+												<Privacy
+													title={title}
+													publicStatus={publicStatus}
+													onChange={() =>
+														this.setState(({ publicStatus }) => ({
+															publicStatus: !publicStatus
+														}))
+													}
+												/>
+											</Modal>
+										)}
+										<Wrapper sm>
+											<Helpers>
+												<Button onClick={() => this.updatePostContent()}>Save</Button>
+												<SettingsIcon onClick={toggleUIModal} />
+											</Helpers>
+											<Wrapper sm paddingTop={0} paddingLeft={8} paddingRight={8}>
+												<Block className={css(meta)} marginBottom={8}>
+													Added on{' '}
+													<time dateTime={post.dateAdded}>
+														{format(post.dateAdded, 'DD MMMM YYYY')}
+													</time>
+												</Block>
+												<Input
+													inputRef={input => (this.titleInput = input)}
+													value={title}
+													onChange={e => this.updateTitle(e)}
+												/>
+												<div>
+													{editorState !== null && (
+														<DWEditor editorState={editorState} onChange={this.onChange} />
+													)}
+												</div>
+											</Wrapper>
 										</Wrapper>
-									</Wrapper>
-								</React.Fragment>
-							)}
-						</Toggle>
-					)}
-				</Media>
-			</NightMode>
+									</React.Fragment>
+								)}
+							</Toggle>
+						)}
+					</Media>
+				</NightMode>
+			</Layout>
 		)
 	}
 }

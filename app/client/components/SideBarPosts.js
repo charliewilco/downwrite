@@ -12,8 +12,8 @@ export default ({ matches, posts }) => (
 				{matches ? (
 					<Card {...post} />
 				) : (
-					<Link href={`/${post.id}/edit`} className="small">
-						{post.title}
+					<Link href={`/${post.id}/edit`}>
+						<a className="small">{post.title}</a>
 					</Link>
 				)}
 			</Block>

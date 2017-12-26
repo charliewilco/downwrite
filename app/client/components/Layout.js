@@ -1,8 +1,10 @@
 import React, { Fragment, Component } from 'react'
+import { Block } from 'glamor/jsxstyle'
+import Head from 'next/head'
 import { Header, Nav } from './'
 
 export default class extends Component {
-	static displayName = 'ApplicationLayout'
+	static displayName = 'Layout'
 
 	static defaultProps = {
 		navOpen: false
@@ -12,16 +14,26 @@ export default class extends Component {
 		open: this.props.navOpen
 	}
 
-	openNav = () =>
-		this.setState(({ open }) => {
-			return { open: !open }
-		})
-
 	render() {
 		return (
 			<Fragment>
-				<Header name="Downwrite" onClick={this.openNav} />
-				{this.state.open && <Nav />}
+				<Head>
+					<title>{this.props.title}</title>
+				</Head>
+				<Block>
+					<Header
+						onClick={() => this.setState(({ open }) => ({ open: !open }))}
+						authed={this.props.token !== undefined}
+					/>
+					{this.props.children}
+				</Block>
+				{this.state.open && (
+					<Nav
+						closeNav={() => this.setState({ open: false })}
+						username={this.props.username}
+						token={this.props.token}
+					/>
+				)}
 			</Fragment>
 		)
 	}
