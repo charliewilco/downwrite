@@ -48,7 +48,7 @@ const Card = ({ title, id, content, dateAdded, onDelete, ...args }) => (
 		data-test="Card">
 		<Block borderBottom="1px solid #DBDCDD" padding="12px 8px">
 			<h2 className={css(s.title)}>
-				<Link href={`/${id}/edit`}>
+				<Link href="/edit" as={`/${id}/edit`} prefetch>
 					<a>{title}</a>
 				</Link>
 			</h2>

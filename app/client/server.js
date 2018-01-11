@@ -32,29 +32,6 @@ const isNotLoggedIn = async (req, res, next) => {
 	}
 }
 
-const getPosts = async token => {
-	const config = {
-		method: 'GET',
-		headers: {
-			Authorization: `Bearer ${token}`
-		},
-		mode: 'cors',
-		cache: 'default'
-	}
-
-	const res = await fetch('http://localhost:4411/posts', config)
-	const posts = await res.json()
-
-	return posts
-}
-
-const getPreview = async id => {
-	const res = await fetch(`http://localhost:4411/posts/preview/${id}`, { mode: 'cors' })
-	const post = await res.json()
-
-	return post
-}
-
 app
 	.prepare()
 	.then(() => {
@@ -64,9 +41,10 @@ app
 		server.get('/', isLoggedIn, (req, res) => app.render(req, res, '/'))
 		server.get('/new', isLoggedIn, (req, res) => app.render(req, res, '/new'))
 		server.get('/login', isLoggedIn, (req, res) => app.render(req, res, '/login'))
-		server.get('/:id/edit', isLoggedIn, (req, res) => app.render(req, res, '/edit', req.query))
-		server.get('/:id/preview', (req, res) => app.render(req, res, '/preview'))
-		server.get('/other', isNotLoggedIn, (req, res) => app.render(req, res, '/other'))
+		server.get('/:id/edit', isLoggedIn, (req, res) =>
+			app.render(req, res, '/edit', req.params)
+		)
+		server.get('/:id/preview', (req, res) => app.render(req, res, '/preview', req.params))
 		server.get('*', (req, res) => handle(req, res))
 
 		server.listen(4000, err => {

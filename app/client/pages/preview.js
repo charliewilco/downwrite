@@ -34,7 +34,7 @@ export default class extends React.Component {
 	render() {
 		return (
 			<Layout
-				title={`Editing "${this.props.post.title}" | Downwrite`}
+				title={this.props.post.title}
 				token={this.props.token}
 				username={this.props.username}
 				userID={this.props.userID}>

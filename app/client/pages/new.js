@@ -7,6 +7,7 @@ import Media from 'react-media'
 import { Layout, DWEditor, Wrapper, Input, Button, Upload, Helpers } from '../components'
 
 import uuid from 'uuid/v4'
+import getToken from '../utils/getToken'
 import { POST_ENDPOINT } from '../utils/urls'
 
 type NewPostSt = {
@@ -23,13 +24,11 @@ type NewPostProps = { token: string, user: string }
 
 export default class extends React.Component<NewPostProps, NewPostSt> {
 	static getInitialProps({ req, query }) {
-		const ck = new Cookies()
-		const token = req
-			? req.universalCookies.cookies.DW_TOKEN
-			: query.token || ck.get('DW_TOKEN')
-
+		const { userID, username, token } = getToken(req, query)
 		return {
-			token
+			token,
+			userID,
+			username
 		}
 	}
 
@@ -64,7 +63,7 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 		let { id, title, editorState, dateAdded } = this.state
 		const ContentState = editorState.getCurrentContent()
 		const content = JSON.stringify(convertToRaw(ContentState))
-		const { user } = this.props
+		const { userID } = this.props
 
 		const post: Object = {
 			title: title.length > 0 ? title : `Untitled ${id}`,
@@ -72,7 +71,7 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 			content,
 			dateAdded,
 			public: false,
-			user
+			user: userID
 		}
 
 		return this.addNew(post)

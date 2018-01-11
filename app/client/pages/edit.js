@@ -26,9 +26,9 @@ import Autosaving from '../components/AutosavingNotification.js'
 import format from 'date-fns/format'
 import isEmpty from 'lodash/isEmpty'
 import debounce from 'lodash/debounce'
-import Cookies from 'universal-cookie'
 import { superConverter } from '../utils/responseHandler'
 import { POST_ENDPOINT } from '../utils/urls'
+import getToken from '../utils/getToken'
 
 const meta = css({
 	opacity: 0.5,
@@ -45,7 +45,7 @@ type EditorSt = {
 
 type EditorPr = {
 	token: string,
-	user: string,
+	userID: string,
 	match: {
 		params: {
 			id: string
@@ -60,14 +60,12 @@ type EditorPr = {
 // - EditorState changes
 // - Updating the post on the server
 
-class Edit extends React.Component<EditorPr, EditorSt> {
+export default class Edit extends React.Component<EditorPr, EditorSt> {
 	static displayName = 'Edit'
 
 	static async getInitialProps({ req, query }) {
-		const ck = new Cookies()
 		let { id } = req.params
-		const token = req ? req.universalCookies.cookies.DW_TOKEN : ck.get('DW_TOKEN')
-		console.log(req, token)
+		const { token, userID, username } = getToken(req, query)
 
 		const config = {
 			method: 'GET',
@@ -99,11 +97,9 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		dateModified: new Date()
 	}
 
-	prepareContent: Function = (content: ContentState) => superConverter(content)
-
 	updatePostContent = () => {
 		let { post, title, dateModified, editorState, publicStatus } = this.state
-		const { user } = this.props
+		const { userID } = this.props
 		const cx: ContentState = editorState.getCurrentContent()
 		const content = convertToRaw(cx)
 		const { _id, __v, ...sPost } = post
@@ -114,7 +110,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 			public: publicStatus,
 			content,
 			dateModified,
-			user
+			user: userID
 		}
 
 		return this.updatePost(newPost).then(() =>
@@ -123,14 +119,11 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 	}
 
 	getPost = async id => {
-		const h = new Headers()
 		const { token } = this.props
-
-		h.set('Authorization', `Bearer ${token}`)
 
 		const config = {
 			method: 'GET',
-			headers: h,
+			headers: { Authorization: `Bearer ${token}` },
 			mode: 'cors',
 			cache: 'default'
 		}
@@ -279,5 +272,3 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 		)
 	}
 }
-
-export default Edit
