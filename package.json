@@ -8,12 +8,33 @@
     "app/export-md"
   ],
   "prettier": {
-		"printWidth": 95,
-		"parser": "flow",
-		"semi": false,
-		"singleQuote": true,
-		"useTabs": true,
-		"bracketSpacing": true,
-		"jsxBracketSameLine": true
-	}
+    "printWidth": 95,
+    "parser": "flow",
+    "semi": false,
+    "singleQuote": true,
+    "useTabs": true,
+    "bracketSpacing": true,
+    "jsxBracketSameLine": true
+  },
+  "scripts": {
+    "precommit": "lint-staged",
+    "dev": "lerna run dev --stream --parallel",
+    "build": "lerna run build --stream --parallel"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --parser flow --write",
+      "git add"
+    ],
+    "*.css": [
+      "prettier --parser postcss --write",
+      "git add"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^0.14.3",
+    "lerna": "^2.6.0",
+    "lint-staged": "^6.0.0",
+    "prettier": "^1.10.2"
+  }
 }

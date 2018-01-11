@@ -9,25 +9,12 @@
 		"enzyme-wait": "^1.0.9",
 		"fbjs": "^0.8.16",
 		"flow-bin": "^0.59.0",
-		"husky": "^0.14.3",
 		"jest-fetch-mock": "^1.2.1",
 		"jest-glamor-react": "^3.1.2",
-		"lint-staged": "^6.0.0",
-		"prettier": "^1.8.2",
 		"puppeteer": "^0.13.0",
 		"react-addons-test-utils": "^15.6.2",
 		"react-test-renderer": "^16.0.0",
 		"w3c-xmlhttprequest": "^2.1.2"
-	},
-	"lint-staged": {
-		"*.js": [
-			"prettier --parser flow --write",
-			"git add"
-		],
-		"*.css": [
-			"prettier --parser postcss --write",
-			"git add"
-		]
 	},
 	"dependencies": {
 		"date-fns": "^1.29.0",
@@ -67,8 +54,7 @@
 		"lint": "yarn eslint ./src/**/*.js",
 		"format": "prettier --write 'src/**/*.js' --parser flow",
 		"eject": "react-scripts eject",
-		"deploy": "now && now alias",
-		"precommit": "lint-staged"
+		"deploy": "now && now alias"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
