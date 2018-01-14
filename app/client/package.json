@@ -27,6 +27,7 @@
 		"front-matter": "^2.3.0",
 		"glamor": "^2.20.40",
 		"immutable": "^3.8.2",
+		"jsonwebtoken": "^8.1.0",
 		"jwt-decode": "^2.2.0",
 		"lodash": "^4.17.4",
 		"markdown-draft-js": "^0.4.5",

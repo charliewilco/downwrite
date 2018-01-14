@@ -6,12 +6,10 @@
   "private": true,
   "scripts": {
     "build": "babel src --out-dir dist",
-    "predev": "npm run build",
+    "predev": "yarn build",
     "deploy": "now && now alias",
     "start": "node dist/server.js",
-    "dev": "concurrently -c 'blue,yellow' --names 'Babel,Nodemon' 'npm run dev:build' 'npm run dev:server'",
-    "dev:build": "babel src -w --out-dir dist",
-    "dev:server": "nodemon dist/server.js",
+    "dev": "concurrently -c 'blue,yellow' --names 'Babel,Nodemon' 'yarn build -w' 'nodemon dist/server.js'",
     "test": "jest"
   },
   "license": "MIT",
