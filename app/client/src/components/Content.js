@@ -7,7 +7,9 @@ import './ganymede.css'
 import format from 'date-fns/format'
 
 const CodeBlock = ({ language, value, ...props }) => (
-	<PrismCode className={`language-${language || 'javascript'}`} children={value} />
+	<pre>
+		<PrismCode className={`language-${language || 'javascript'}`} children={value} />
+	</pre>
 )
 
 CodeBlock.defaultProps = {
