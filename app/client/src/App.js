@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import Helmet from 'react-helmet'
 import Media from 'react-media'
 import { Block } from 'glamor/jsxstyle'
 import Loadable from 'react-loadable'
@@ -58,6 +59,7 @@ export default class extends React.Component<AppProps, void> {
 						<Toggle>
 							{(navOpen, toggleNav, closeNav) => (
 								<Block minHeight="100%" fontFamily="var(--primary-font)">
+									<Helmet title="Downwrite" />
 									<Block height="100%" className="u-cf">
 										<Block
 											minHeight="100%"
