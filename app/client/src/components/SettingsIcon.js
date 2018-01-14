@@ -7,7 +7,7 @@ const SettingsIcon: React.ElementType = () => (
 		<title>Settings</title>
 		<g id="Canvas" transform="translate(-1700 1525)">
 			<g id="Settings">
-				<use xlinkHref="#settingsIcon" transform="translate(1700 -1525)" fill="#434343" />
+				<use xlinkHref="#settingsIcon" transform="translate(1700 -1525)" />
 			</g>
 		</g>
 		<defs>

@@ -1,0 +1,24 @@
+{
+  "name": "json-downwrite",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "markdown-draft-js": "^0.4.3",
+    "micro": "^9.0.1",
+    "micro-cors": "^0.0.4"
+  },
+	"now": {
+		"alias": "json.downwrite.us"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 0",
+		"build": "echo \"No build specified\" && exit 0",
+		"dev": "micro-dev . -p 8794",
+		"start": "micro . -p 8794",
+		"deploy": "now && now alias"
+	},
+  "devDependencies": {
+    "micro-dev": "^1.4.0"
+  }
+}
