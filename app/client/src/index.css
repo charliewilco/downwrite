@@ -585,6 +585,7 @@ a:hover {
 }
 
 @media (min-width: 48rem) {
+	.PreviewBody pre,
 	.PreviewBody blockquote {
 		margin-left: -80px;
 		margin-right: -80px;
