@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Media from 'react-media'
 import { Block } from 'glamor/jsxstyle'
 import Loadable from 'react-loadable'
-import { Header, Nav, Toggle } from './components'
+import { Header, Loading, Nav, Toggle } from './components'
 import { PrivateRoute } from './CustomRoutes'
 
 type AppProps = {
@@ -16,43 +16,34 @@ type AppProps = {
 	signOut: Function
 }
 
-const Loading = () => {
-	return <h1>Loading</h1>
-}
+const Ldx = opts => Loadable(Object.assign({ loading: Loading }, opts))
 
-const New = Loadable({
-	loader: () => import('./New'),
-	loading: Loading
+const New = Ldx({
+	loader: () => import('./New')
 })
 
-const Edit = Loadable({
-	loader: () => import('./Edit'),
-	loading: Loading
+const Edit = Ldx({
+	loader: () => import('./Edit')
 })
 
-const Home = Loadable({
-	loader: () => import('./Home'),
-	loading: Loading
+const Home = Ldx({
+	loader: () => import('./Home')
 })
 
-const Main = Loadable({
-	loader: () => import('./Main'),
-	loading: Loading
+const Main = Ldx({
+	loader: () => import('./Main')
 })
 
-const NotFound = Loadable({
-	loader: () => import('./NoMatch'),
-	loading: Loading
+const NotFound = Ldx({
+	loader: () => import('./NoMatch')
 })
 
-const SignOut = Loadable({
-	loader: () => import('./SignOut'),
-	loading: Loading
+const SignOut = Ldx({
+	loader: () => import('./SignOut')
 })
 
-const Preview = Loadable({
-	loader: () => import('./Preview'),
-	loading: Loading
+const Preview = Ldx({
+	loader: () => import('./Preview')
 })
 
 export default class extends React.Component<AppProps, void> {
