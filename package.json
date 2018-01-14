@@ -1,12 +1,14 @@
 {
 	"private": true,
 	"name": "downwrite",
-	"workspaces": [
-		"app/api",
-		"app/client",
-		"app/export-json",
-		"app/export-md"
-	],
+	"description": "A place to write",
+	"author": "Charles ⚡ <charlespeters42@gmail.com>",
+	"repository": "charlespeters/downwrite",
+	"scripts": {
+		"precommit": "lint-staged",
+		"dev": "bolt ws dev",
+		"build": "bolt ws build"
+	},
 	"prettier": {
 		"printWidth": 95,
 		"parser": "flow",
@@ -16,17 +18,13 @@
 		"bracketSpacing": true,
 		"jsxBracketSameLine": true
 	},
-	"scripts": {
-		"precommit": "lint-staged",
-		"dev": "bolt ws run dev",
-		"build": "bolt ws run build"
-	},
 	"lint-staged": {
 		"*.js": [
 			"prettier --parser flow --write",
 			"git add"
 		],
-		"*.css": [ "prettier --parser postcss --write",
+		"*.css": [
+			"prettier --parser postcss --write",
 			"git add"
 		]
 	},
@@ -35,14 +33,17 @@
 			"app/*"
 		]
 	},
+	"workspaces": [
+		"app/api",
+		"app/client",
+		"app/export-json",
+		"app/export-md"
+	],
 	"devDependencies": {
 		"bolt": "^0.18.3",
 		"husky": "^0.14.3",
 		"lint-staged": "^6.0.0",
 		"prettier": "^1.10.2"
 	},
-	"version": "1.0.0",
-	"description": "A place to write",
-	"author": "Charles ⚡ <charlespeters42@gmail.com>",
 	"license": "MIT"
 }
