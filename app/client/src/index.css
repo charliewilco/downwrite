@@ -604,6 +604,11 @@ a:hover {
 .NightMDX {
 	background: #1f5671;
 }
+
+.NightMode a {
+	color: var(--color-6);
+}
+
 .NightMode {
 	transition: background 375ms ease-in-out;
 	background: #1f5671;
