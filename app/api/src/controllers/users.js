@@ -1,8 +1,10 @@
-const User = require('../models/User')
+const jwt = require('jsonwebtoken')
 const Boom = require('boom')
+const uuid = require('uuid/v4')
+const User = require('../models/User')
 const hash = require('../util/hash')
 const createToken = require('../util/token')
-const uuid = require('uuid/v4')
+const { key } = require('../util/config')
 
 exports.createUser = (req, reply) => {
 	const user = new User()

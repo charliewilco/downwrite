@@ -14,7 +14,7 @@ const noSpace = s => s.replace(/\s+/g, '-').toLowerCase()
 const streamify = text => {
 	var s = new Readable()
 	s.push(text)
-	s.push(null)
+	s.push(null) // TODO: what was this for again?
 	return s
 }
 

@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { Block } from 'glamor/jsxstyle'
 import orderBy from 'lodash/orderBy'
-import { PostList, Loading, EmptyPosts } from './components'
+import { PostList, Loading, EmptyPosts, InvalidToken } from './components'
 import { POST_ENDPOINT } from './utils/urls'
 
 type Post = {
@@ -28,7 +28,8 @@ export default class Main extends Component<MainPr, MainState> {
 	state = {
 		posts: [],
 		loaded: false,
-		layout: 'grid'
+		layout: 'grid',
+		error: false
 	}
 
 	layoutChange = (x: 'grid' | 'list') => {
@@ -48,9 +49,13 @@ export default class Main extends Component<MainPr, MainState> {
 		}
 
 		const response = await fetch(POST_ENDPOINT, config)
-		const posts = orderBy(await response.json(), ['dateAdded'], ['desc'])
+		const posts = await response.json()
 
-		return this.setState({ posts, loaded: true })
+		if (response.ok) {
+			return this.setState({ posts: orderBy(posts, ['dateAdded'], ['desc']), loaded: true })
+		} else {
+			return this.setState({ error: posts.message, loaded: true })
+		}
 	}
 
 	componentWillMount() {
@@ -78,7 +83,7 @@ export default class Main extends Component<MainPr, MainState> {
 	}
 
 	render() {
-		const { loaded, posts, layout } = this.state
+		const { loaded, posts, layout, error } = this.state
 		return (
 			<Block paddingLeft={8} paddingRight={8} paddingTop={16} paddingBottom={16} height="100%">
 				{loaded ? (
@@ -89,6 +94,8 @@ export default class Main extends Component<MainPr, MainState> {
 							layoutChange={this.layoutChange}
 							posts={posts}
 						/>
+					) : error ? (
+						<InvalidToken error={error} />
 					) : (
 						<EmptyPosts />
 					)
