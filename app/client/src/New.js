@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import Helmet from 'react-helmet'
 import { EditorState, convertToRaw } from 'draft-js'
 import { DWEditor } from './components'
 import Upload from './components/Upload'
@@ -79,6 +80,10 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 			<Media query={{ minWidth: 500 }}>
 				{m => (
 					<Wrapper paddingTop={128} sm>
+						<Helmet
+							title={this.state.title.length > 0 ? this.state.title : 'New'}
+							titleTemplate="%s | Downwrite"
+						/>
 						<Helpers>
 							<Button onClick={this.addNewPost}>Add</Button>
 						</Helpers>
