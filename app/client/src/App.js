@@ -111,7 +111,7 @@ export default class extends React.Component<AppProps, void> {
 													exact
 													path="/signout"
 													render={(props: Object) => (
-														<SignOut toggleNav={toggleNav} signOut={signOut} />
+														<SignOut toggleNav={closeNav} signOut={signOut} />
 													)}
 												/>
 												<Route component={NotFound} />

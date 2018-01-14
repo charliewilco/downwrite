@@ -9,7 +9,11 @@ const { key } = require('./util/config')
 
 const server = new Hapi.Server()
 
-server.connection({ port: 4411, host: 'localhost', routes: { cors: true } })
+server.connection({
+	port: 4411,
+	host: 'localhost',
+	routes: { cors: true }
+})
 
 server.register({
 	register: require('good'),

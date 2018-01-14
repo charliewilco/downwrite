@@ -10,7 +10,7 @@ module.exports = function(user) {
 
 	const jwtConfig = {
 		algorithm: 'HS256',
-		expiresIn: '10d'
+		expiresIn: '180d'
 	}
 
 	const data = {

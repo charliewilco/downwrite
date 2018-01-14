@@ -24,7 +24,7 @@ import Privacy from './Privacy'
 import Check from './Checkbox'
 import CloseIcon from './CloseIcon'
 import UIFlash, { withUIFlash } from './UIFlashMessages'
-
+import InvalidToken from './InvalidToken'
 import Content from './Content'
 
 export {
@@ -35,6 +35,7 @@ export {
 	Content,
 	SettingsIcon,
 	CloseIcon,
+	InvalidToken,
 	Check,
 	Helpers,
 	Layout,
