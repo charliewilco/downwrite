@@ -59,7 +59,7 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 		const { user } = this.props
 
 		const post: Object = {
-			title,
+			title: title.length > 0 ? title : `Untitled ${id}`,
 			id,
 			content,
 			dateAdded,
