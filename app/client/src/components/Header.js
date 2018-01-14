@@ -95,6 +95,7 @@ export default withRouter(
 		!(match.isExact && match.path === '/' && !authed) ? (
 			<Row
 				component="header"
+				background="#f9fbfc"
 				alignItems="center"
 				justifyContent="space-between"
 				paddingTop={16}

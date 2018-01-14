@@ -48,9 +48,10 @@ const closeAlert = css({
 
 const UIFlash = ({ width = 512, onClose, content, type }) => (
 	<Flex
+		borderLeft="5px solid rgba(0, 0, 0, .25)"
+		boxShadow="0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12)"
 		zIndex={900}
 		maxWidth={width}
-		borderRadius={4}
 		left={0}
 		right={0}
 		background="var(--color-6)"
@@ -63,7 +64,7 @@ const UIFlash = ({ width = 512, onClose, content, type }) => (
 		paddingRight={16}
 		paddingBottom={8}
 		paddingLeft={16}>
-		<Block flex={1} fontFamily="Roboto, sans-serif">
+		<Block flex={1}>
 			{type && `${type.length > 0 && type.toUpperCase()}:`} {content}
 		</Block>
 		{onClose && (

@@ -1,0 +1,4 @@
+node_modules/*
+dist/
+build/
+services/**/node_modules/*
