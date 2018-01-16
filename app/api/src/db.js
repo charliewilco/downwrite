@@ -8,7 +8,7 @@ const db = Mongoose.connection
 
 db.on('error', console.error.bind(console, 'connection error'))
 db.once('open', () => {
-	console.log(`Connection with database succeeded.`, `${db.host}:${db.port}/${db.name}`)
+  console.log(`Connection with database succeeded.`, `${db.host}:${db.port}/${db.name}`)
 })
 
 exports.db = db
