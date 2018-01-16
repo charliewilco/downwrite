@@ -15,6 +15,7 @@ type NewPostSt = {
   editorState: EditorState,
   id: string,
   title: string,
+  error: string,
   dateAdded: Date
 }
 
@@ -29,7 +30,7 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
     title: '',
     id: uuid(),
     dateAdded: new Date(),
-    error: false,
+    error: null,
     saved: false
   }
 
@@ -77,6 +78,7 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
 
   render() {
     const { error, editorState, title, saved, id } = this.state
+
     return saved ? (
       <Redirect to={`/${id}/edit`} />
     ) : (
