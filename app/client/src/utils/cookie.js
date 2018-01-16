@@ -7,22 +7,22 @@ export const USER_ID: string = oatmeal.get('DW_USERID')
 export const USER_NAME: string = oatmeal.get('DW_USERNAME')
 
 export const signOut: Function = () => {
-	oatmeal.remove('DW_TOKEN')
-	oatmeal.remove('DW_USERID')
-	oatmeal.remove('DW_USERNAME')
+  oatmeal.remove('DW_TOKEN')
+  oatmeal.remove('DW_USERID')
+  oatmeal.remove('DW_USERNAME')
 }
 
 export const signIn: Function = (token: string, id: string, name: string) => {
-	oatmeal.set('DW_TOKEN', token)
-	oatmeal.set('DW_USERID', id)
-	oatmeal.set('DW_USERNAME', name)
+  oatmeal.set('DW_TOKEN', token)
+  oatmeal.set('DW_USERID', id)
+  oatmeal.set('DW_USERNAME', name)
 }
 
 export default oatmeal
 
 export const intialState = {
-	token: TOKEN,
-	user: USER_ID
+  token: TOKEN,
+  user: USER_ID
 }
 
 // export const decodedState: Object = { ...decode(TOKEN) }
