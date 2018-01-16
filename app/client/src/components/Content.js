@@ -1,4 +1,5 @@
 import React from 'react'
+import Helmet from 'react-helmet'
 import Markdown from 'react-markdown'
 import PrismCode from 'react-prism'
 import 'prismjs'
@@ -18,6 +19,7 @@ CodeBlock.defaultProps = {
 
 export default ({ title, dateAdded, content }) => (
 	<NightMode>
+		<Helmet title={title} titleTemplate="%s | Downwrite" />
 		<Wrapper
 			paddingTop={32}
 			paddingBottom={32}

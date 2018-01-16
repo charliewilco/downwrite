@@ -4,6 +4,7 @@ import * as React from 'react'
 import { css } from 'glamor'
 import { EditorState, convertToRaw } from 'draft-js'
 import type { ContentState } from 'draft-js'
+import Helmet from 'react-helmet'
 import Media from 'react-media'
 import { matchPath } from 'react-router-dom'
 import { Block } from 'glamor/jsxstyle'
@@ -200,6 +201,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
 			<Loading />
 		) : (
 			<NightMode>
+				<Helmet title={title} titleTemplate="%s | Downwrite" />
 				<Media query={{ minWidth: 500 }}>
 					{m => (
 						<Toggle>
