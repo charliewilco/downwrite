@@ -11,11 +11,11 @@ import uuid from 'uuid/v4'
 import { POST_ENDPOINT } from './utils/urls'
 
 type NewPostSt = {
-	saved: boolean,
-	editorState: EditorState,
-	id: string,
-	title: string,
-	dateAdded: Date
+  saved: boolean,
+  editorState: EditorState,
+  id: string,
+  title: string,
+  dateAdded: Date
 }
 
 type NewPostProps = { token: string, user: string }
@@ -24,85 +24,89 @@ type NewPostProps = { token: string, user: string }
 // TODO: If title is empty post should be named `Untitled Document ${uuid()}`
 
 export default class extends React.Component<NewPostProps, NewPostSt> {
-	state = {
-		editorState: EditorState.createEmpty(),
-		title: '',
-		id: uuid(),
-		dateAdded: new Date(),
-		saved: false
-	}
+  state = {
+    editorState: EditorState.createEmpty(),
+    title: '',
+    id: uuid(),
+    dateAdded: new Date(),
+    error: false,
+    saved: false
+  }
 
-	static displayName = 'NewPostEditor'
+  static displayName = 'NewPostEditor'
 
-	addNew = async (body: Object) => {
-		const { token } = this.props
-		const response = await fetch(POST_ENDPOINT, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`
-			},
-			body: JSON.stringify(body)
-		})
+  addNew = async (body: Object) => {
+    const { token } = this.props
+    const response = await fetch(POST_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(body)
+    })
 
-		const newPost = await response.json()
+    const newPost = await response.json()
 
-		if (!newPost.error) {
-			this.setState({ saved: true })
-		}
-	}
+    if (!newPost.error) {
+      this.setState({ saved: true })
+    } else {
+      this.setState({ error: newPost.message })
+    }
+  }
 
-	addNewPost = () => {
-		let { id, title, editorState, dateAdded } = this.state
-		const ContentState = editorState.getCurrentContent()
-		const content = JSON.stringify(convertToRaw(ContentState))
-		const { user } = this.props
+  addNewPost = () => {
+    let { id, title, editorState, dateAdded } = this.state
+    const ContentState = editorState.getCurrentContent()
+    const content = JSON.stringify(convertToRaw(ContentState))
+    const { user } = this.props
 
-		const post: Object = {
-			title: title.length > 0 ? title : `Untitled ${id}`,
-			id,
-			content,
-			dateAdded,
-			public: false,
-			user
-		}
+    const post: Object = {
+      title: title.length > 0 ? title : `Untitled ${id}`,
+      id,
+      content,
+      dateAdded,
+      public: false,
+      user
+    }
 
-		return this.addNew(post)
-	}
+    return this.addNew(post)
+  }
 
-	upload = (content: { title: string, editorState: EditorState }) => this.setState(content)
+  upload = (content: { title: string, editorState: EditorState }) => this.setState(content)
 
-	render() {
-		const { editorState, title, saved, id } = this.state
-		return saved ? (
-			<Redirect to={`/${id}/edit`} />
-		) : (
-			<Media query={{ minWidth: 500 }}>
-				{m => (
-					<Wrapper paddingTop={128} sm>
-						<Helmet
-							title={this.state.title.length > 0 ? this.state.title : 'New'}
-							titleTemplate="%s | Downwrite"
-						/>
-						<Helpers>
-							<Button onClick={this.addNewPost}>Add</Button>
-						</Helpers>
-						<Wrapper sm paddingLeft={4} paddingRight={4}>
-							<Upload upload={this.upload}>
-								<Input
-									placeholder="Untitled Document"
-									value={title}
-									onChange={e => this.setState({ title: e.target.value })}
-								/>
-								<DWEditor
-									editorState={editorState}
-									onChange={editorState => this.setState({ editorState })}
-								/>
-							</Upload>
-						</Wrapper>
-					</Wrapper>
-				)}
-			</Media>
-		)
-	}
+  render() {
+    const { error, editorState, title, saved, id } = this.state
+    return saved ? (
+      <Redirect to={`/${id}/edit`} />
+    ) : (
+      <Media query={{ minWidth: 500 }}>
+        {m => (
+          <Wrapper paddingTop={128} sm>
+            {error && <span className="f6 u-center">{error}</span>}
+            <Helmet
+              title={this.state.title.length > 0 ? this.state.title : 'New'}
+              titleTemplate="%s | Downwrite"
+            />
+            <Helpers>
+              <Button onClick={this.addNewPost}>Add</Button>
+            </Helpers>
+            <Wrapper sm paddingLeft={4} paddingRight={4}>
+              <Upload upload={this.upload}>
+                <Input
+                  placeholder="Untitled Document"
+                  value={title}
+                  onChange={e => this.setState({ title: e.target.value })}
+                />
+                <DWEditor
+                  editorState={editorState}
+                  onChange={editorState => this.setState({ editorState })}
+                />
+              </Upload>
+            </Wrapper>
+          </Wrapper>
+        )}
+      </Media>
+    )
+  }
 }
