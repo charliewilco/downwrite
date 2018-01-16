@@ -1,4 +1,5 @@
 node_modules/*
 dist/
+app/client/flow-typed/*
 build/
 services/**/node_modules/*
