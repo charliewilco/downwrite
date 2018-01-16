@@ -9,18 +9,18 @@ import registerServiceWorker from './registerServiceWorker'
 const PREVIEW_FONTS = 'https://cloud.typography.com/7107912/7471392/css/fonts.css'
 
 const Downwrite = () => (
-	<Auth>
-		{(authed, token, user, name, signIn, signOut) => (
-			<App
-				authed={authed}
-				token={token}
-				user={user}
-				name={name}
-				signIn={signIn}
-				signOut={signOut}
-			/>
-		)}
-	</Auth>
+  <Auth>
+    {(authed, token, user, name, signIn, signOut) => (
+      <App
+        authed={authed}
+        token={token}
+        user={user}
+        name={name}
+        signIn={signIn}
+        signOut={signOut}
+      />
+    )}
+  </Auth>
 )
 
 ReactDOM.render(<Downwrite />, document.getElementById('root'))

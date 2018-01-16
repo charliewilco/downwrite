@@ -4,10 +4,10 @@ const onClickHandler = jest.fn()
 const wrapper = mount(<Button onClick={onClickHandler} />)
 
 describe('Button', () => {
-	it('Fires onClick', () => {
-		wrapper.simulate('click')
-		expect(onClickHandler).toHaveBeenCalled()
-	})
+  it('Fires onClick', () => {
+    wrapper.simulate('click')
+    expect(onClickHandler).toHaveBeenCalled()
+  })
 
-	it('matches snapshot', () => expect(wrapper).toMatchSnapshot())
+  it('matches snapshot', () => expect(wrapper).toMatchSnapshot())
 })

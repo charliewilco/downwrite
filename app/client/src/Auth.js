@@ -16,45 +16,45 @@ import { TOKEN, USER_NAME, USER_ID, signOut, signIn } from './utils/cookie'
 */
 
 export default class Auth extends Component {
-	state = {
-		authed: false,
-		token: TOKEN,
-		user: USER_ID,
-		name: USER_NAME
-	}
+  state = {
+    authed: false,
+    token: TOKEN,
+    user: USER_ID,
+    name: USER_NAME
+  }
 
-	setAuth = authed => this.setState({ authed })
+  setAuth = authed => this.setState({ authed })
 
-	componentWillMount() {
-		this.setState(({ token }) => {
-			return {
-				authed: token !== undefined && token !== 'undefined'
-			}
-		})
-	}
+  componentWillMount() {
+    this.setState(({ token }) => {
+      return {
+        authed: token !== undefined && token !== 'undefined'
+      }
+    })
+  }
 
-	signIn = (authed, token, id, username) =>
-		this.setState({ authed, token, user: id, name: username }, signIn(token, id, username))
+  signIn = (authed, token, id, username) =>
+    this.setState({ authed, token, user: id, name: username }, signIn(token, id, username))
 
-	signOut = () =>
-		this.setState(
-			{
-				authed: false,
-				token: undefined,
-				user: undefined,
-				name: undefined
-			},
-			signOut()
-		)
+  signOut = () =>
+    this.setState(
+      {
+        authed: false,
+        token: undefined,
+        user: undefined,
+        name: undefined
+      },
+      signOut()
+    )
 
-	render() {
-		return this.props.children(
-			this.state.authed,
-			this.state.token,
-			this.state.user,
-			this.state.name,
-			this.signIn,
-			this.signOut
-		)
-	}
+  render() {
+    return this.props.children(
+      this.state.authed,
+      this.state.token,
+      this.state.user,
+      this.state.name,
+      this.signIn,
+      this.signOut
+    )
+  }
 }
