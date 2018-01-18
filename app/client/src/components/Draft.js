@@ -21,7 +21,8 @@ const editorStyle = css({
 const editorShell = css({
   borderTop: 0,
   position: 'relative',
-  paddingTop: 24
+  paddingTop: 24,
+  paddingBottom: 128
 })
 
 export default class extends React.Component {
