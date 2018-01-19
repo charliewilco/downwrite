@@ -1,5 +1,7 @@
 // @flow
 import Cookies from 'universal-cookie'
+import addMonths from 'date-fns/add_months'
+
 const oatmeal: typeof Cookies = new Cookies()
 
 export const TOKEN: string = oatmeal.get('DW_TOKEN')
@@ -12,10 +14,14 @@ export const signOut: Function = () => {
   oatmeal.remove('DW_USERNAME')
 }
 
+const cookieOptions = {
+  expires: addMonths(Date.now(), 6)
+}
+
 export const signIn: Function = (token: string, id: string, name: string) => {
-  oatmeal.set('DW_TOKEN', token)
-  oatmeal.set('DW_USERID', id)
-  oatmeal.set('DW_USERNAME', name)
+  oatmeal.set('DW_TOKEN', token, cookieOptions)
+  oatmeal.set('DW_USERID', id, cookieOptions)
+  oatmeal.set('DW_USERNAME', name, cookieOptions)
 }
 
 export default oatmeal
