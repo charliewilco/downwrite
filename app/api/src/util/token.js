@@ -14,8 +14,8 @@ module.exports = function(user) {
   }
 
   const data = {
-    id: user._id,
-    username: user.username,
+    user: user._id,
+    name: user.username,
     scope: scopes
   }
 

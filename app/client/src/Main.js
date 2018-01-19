@@ -37,13 +37,11 @@ export default class Main extends Component<MainPr, MainState> {
   }
 
   getPosts = async () => {
-    const h = new Headers()
-
-    h.set('Authorization', `Bearer ${this.props.token}`)
-
     const config = {
       method: 'GET',
-      headers: h,
+      headers: {
+        Authorization: `Bearer ${this.props.token}`
+      },
       mode: 'cors',
       cache: 'default'
     }
