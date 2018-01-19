@@ -58,7 +58,7 @@ export default class Main extends Component<MainPr, MainState> {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getPosts()
     this.props.closeNav()
   }
