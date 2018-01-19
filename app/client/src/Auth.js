@@ -15,23 +15,17 @@ import { TOKEN, USER_NAME, USER_ID, signOut, signIn } from './utils/cookie'
 	</Auth>
 */
 
+// state needs to evaluate the existence of token + decode the content of the token
+
 export default class Auth extends Component {
   state = {
-    authed: false,
+    authed: TOKEN !== undefined && TOKEN !== 'undefined',
     token: TOKEN,
     user: USER_ID,
     name: USER_NAME
   }
 
   setAuth = authed => this.setState({ authed })
-
-  componentWillMount() {
-    this.setState(({ token }) => {
-      return {
-        authed: token !== undefined && token !== 'undefined'
-      }
-    })
-  }
 
   signIn = (authed, token, id, username) =>
     this.setState({ authed, token, user: id, name: username }, signIn(token, id, username))
