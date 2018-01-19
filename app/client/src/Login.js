@@ -25,15 +25,13 @@ class Login extends React.Component<LoginProps, LoginState> {
   onSubmit = async (evt: Event) => {
     evt.preventDefault()
 
-    const config = {
+    const authRequest = await fetch(AUTH_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ ...this.state })
-    }
-
-    const authRequest = await fetch(AUTH_ENDPOINT, config)
+    })
 
     const auth = await authRequest.json()
 
@@ -41,8 +39,8 @@ class Login extends React.Component<LoginProps, LoginState> {
       this.props.setError(auth.message, 'error')
     }
 
-    if (auth.userID) {
-      this.props.signIn(auth.id_token !== undefined, auth.id_token, auth.userID, auth.username)
+    if (auth.token) {
+      this.props.signIn(auth.token !== undefined, auth.token)
     }
   }
 

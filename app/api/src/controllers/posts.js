@@ -24,8 +24,8 @@ exports.updatePost = (req, reply) => {
 // GET
 
 exports.getPosts = (req, reply) => {
-  const user = req.auth.credentials
-  Post.find({ user: { $eq: user.id } }).exec((error, posts) => {
+  const { user } = req.auth.credentials
+  Post.find({ user: { $eq: user } }).exec((error, posts) => {
     if (error) {
       reply(Boom.internal('Internal MongoDB error', error))
     }
