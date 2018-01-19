@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+import withOfflineState from 'react-offline-hoc'
 import Helmet from 'react-helmet'
 import { EditorState, convertToRaw } from 'draft-js'
 import { DWEditor } from './components'
@@ -7,10 +8,12 @@ import Upload from './components/Upload'
 import { Redirect } from 'react-router-dom'
 import Media from 'react-media'
 import { Wrapper, Input, Button, Helpers } from './components'
+import LocalDrafts from './components/ListDrafts'
 import uuid from 'uuid/v4'
 import { POST_ENDPOINT } from './utils/urls'
 
 type NewPostSt = {
+  drafts: Array<any>,
   saved: boolean,
   editorState: EditorState,
   id: string,
@@ -21,16 +24,14 @@ type NewPostSt = {
 
 type NewPostProps = { token: string, user: string }
 
-// TODO: Shouldn't be able to add if editor is empty
-// TODO: If title is empty post should be named `Untitled Document ${uuid()}`
-
-export default class extends React.Component<NewPostProps, NewPostSt> {
+class NewX extends React.Component<NewPostProps, NewPostSt> {
   state = {
     editorState: EditorState.createEmpty(),
     title: '',
     id: uuid(),
     dateAdded: new Date(),
     error: null,
+    drafts: [],
     saved: false
   }
 
@@ -56,11 +57,14 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
     }
   }
 
+  saveLocalDraft = (id: string, post: Object) =>
+    localStorage.setItem('Draft ' + id, JSON.stringify(post))
+
   addNewPost = () => {
     let { id, title, editorState, dateAdded } = this.state
     const ContentState = editorState.getCurrentContent()
     const content = JSON.stringify(convertToRaw(ContentState))
-    const { user } = this.props
+    const { isOnline, user } = this.props
 
     const post: Object = {
       title: title.length > 0 ? title : `Untitled ${id}`,
@@ -71,7 +75,7 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
       user
     }
 
-    return this.addNew(post)
+    return isOnline ? this.addNew(post) : this.saveLocalDraft(post)
   }
 
   upload = (content: { title: string, editorState: EditorState }) => this.setState(content)
@@ -90,8 +94,10 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
               title={this.state.title.length > 0 ? this.state.title : 'New'}
               titleTemplate="%s | Downwrite"
             />
+            {!this.props.isOnline && <span>Offline</span>}
             <Helpers>
               <Button onClick={this.addNewPost}>Add</Button>
+              <LocalDrafts />
             </Helpers>
             <Wrapper sm paddingLeft={4} paddingRight={4}>
               <Upload upload={this.upload}>
@@ -112,3 +118,5 @@ export default class extends React.Component<NewPostProps, NewPostSt> {
     )
   }
 }
+
+export default withOfflineState(NewX)
