@@ -2,7 +2,15 @@
 import React, { Fragment, Component } from 'react'
 import { Flex, Block } from 'glamor/jsxstyle'
 import orderBy from 'lodash/orderBy'
-import { Modal, Button, PostList, Loading, EmptyPosts, InvalidToken } from './components'
+import {
+  Modal,
+  Cancel,
+  Button,
+  PostList,
+  Loading,
+  EmptyPosts,
+  InvalidToken
+} from './components'
 import { POST_ENDPOINT } from './utils/urls'
 
 type Post = {
@@ -100,18 +108,19 @@ export default class Main extends Component<MainPr, MainState> {
       <Fragment>
         {modalOpen &&
           selectedPost !== undefined && (
-            <Modal closeUIModal={this.closeUIModal}>
-              <Flex background="tomato" flexWrap="wrap" justifyContent="space-between">
-                <Block flex={1}>
+            <Modal closeUIModal={this.closeUIModal} sm>
+              <Block>
+                <Block marginBottom={16}>
                   <p className="h5">
                     Are you sure you want to delete <strong>"{selectedPost.title}"</strong>?
                   </p>
                 </Block>
-                <Flex>
-                  <span onClick={this.cancelDelete}>Cancel</span>
+                <hr />
+                <Flex justifyContent="flex-end">
+                  <Cancel onClick={this.cancelDelete}>Cancel</Cancel>
                   <Button onClick={() => this.onDelete(selectedPost)}>Delete</Button>
                 </Flex>
-              </Flex>
+              </Block>
             </Modal>
           )}
         <Block
