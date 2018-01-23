@@ -102,6 +102,8 @@ export default class Main extends Component<MainPr, MainState> {
   confirmDelete = (post: Object): Function =>
     this.setState({ selectedPost: post, modalOpen: true })
 
+  // TODO: refactor to have selected post, deletion to be handled by a lower level component
+  // should be opened at this level and be handed a token and post to delete
   render() {
     const { modalOpen, loaded, posts, layout, error, selectedPost } = this.state
     return (
