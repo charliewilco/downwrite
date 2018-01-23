@@ -1,8 +1,8 @@
 // @flow
-import React, { Component } from 'react'
-import { Block } from 'glamor/jsxstyle'
+import React, { Fragment, Component } from 'react'
+import { Flex, Block } from 'glamor/jsxstyle'
 import orderBy from 'lodash/orderBy'
-import { PostList, Loading, EmptyPosts, InvalidToken } from './components'
+import { Modal, Button, PostList, Loading, EmptyPosts, InvalidToken } from './components'
 import { POST_ENDPOINT } from './utils/urls'
 
 type Post = {
@@ -29,6 +29,8 @@ export default class Main extends Component<MainPr, MainState> {
     posts: [],
     loaded: false,
     layout: 'grid',
+    modalOpen: false,
+    seletedPost: undefined,
     error: false
   }
 
@@ -36,7 +38,7 @@ export default class Main extends Component<MainPr, MainState> {
     return this.setState({ layout: x })
   }
 
-  getPosts = async () => {
+  getPosts = async close => {
     const config = {
       method: 'GET',
       headers: {
@@ -50,9 +52,14 @@ export default class Main extends Component<MainPr, MainState> {
     const posts = await response.json()
 
     if (response.ok) {
-      return this.setState({ posts: orderBy(posts, ['dateAdded'], ['desc']), loaded: true })
+      return this.setState({
+        posts: orderBy(posts, ['dateAdded'], ['desc']),
+        seletedPost: undefined,
+        loaded: true,
+        modalOpen: !close
+      })
     } else {
-      return this.setState({ error: posts.message, loaded: true })
+      return this.setState({ error: posts.message, loaded: true, seletedPost: undefined })
     }
   }
 
@@ -61,7 +68,9 @@ export default class Main extends Component<MainPr, MainState> {
     this.props.closeNav()
   }
 
-  onDelete = async (post: Object) => {
+  closeUIModal = () => this.setState({ modalOpen: false })
+
+  onDelete = async (post: Object, cb) => {
     const { token } = this.props
 
     const config = {
@@ -76,31 +85,59 @@ export default class Main extends Component<MainPr, MainState> {
     const response = await fetch(`${POST_ENDPOINT}/${post.id}`, config)
 
     if (response.ok) {
-      return await this.getPosts()
+      return await this.getPosts(true)
     }
   }
 
+  cancelDelete = () => this.setState({ selectedPost: undefined, modalOpen: false })
+
+  confirmDelete = (post: Object): Function =>
+    this.setState({ selectedPost: post, modalOpen: true })
+
   render() {
-    const { loaded, posts, layout, error } = this.state
+    const { modalOpen, loaded, posts, layout, error, selectedPost } = this.state
     return (
-      <Block paddingLeft={8} paddingRight={8} paddingTop={16} paddingBottom={16} height="100%">
-        {loaded ? (
-          posts.length > 0 ? (
-            <PostList
-              layout={layout}
-              onDelete={this.onDelete}
-              layoutChange={this.layoutChange}
-              posts={posts}
-            />
-          ) : error ? (
-            <InvalidToken error={error} />
+      <Fragment>
+        {modalOpen &&
+          selectedPost !== undefined && (
+            <Modal closeUIModal={this.closeUIModal}>
+              <Flex background="tomato" flexWrap="wrap" justifyContent="space-between">
+                <Block flex={1}>
+                  <p className="h5">
+                    Are you sure you want to delete <strong>"{selectedPost.title}"</strong>?
+                  </p>
+                </Block>
+                <Flex>
+                  <span onClick={this.cancelDelete}>Cancel</span>
+                  <Button onClick={() => this.onDelete(selectedPost)}>Delete</Button>
+                </Flex>
+              </Flex>
+            </Modal>
+          )}
+        <Block
+          paddingLeft={8}
+          paddingRight={8}
+          paddingTop={16}
+          paddingBottom={16}
+          height="100%">
+          {loaded ? (
+            posts.length > 0 ? (
+              <PostList
+                layout={layout}
+                onDelete={this.confirmDelete}
+                layoutChange={this.layoutChange}
+                posts={posts}
+              />
+            ) : error ? (
+              <InvalidToken error={error} />
+            ) : (
+              <EmptyPosts />
+            )
           ) : (
-            <EmptyPosts />
-          )
-        ) : (
-          <Loading size={100} />
-        )}
-      </Block>
+            <Loading size={100} />
+          )}
+        </Block>
+      </Fragment>
     )
   }
 }
