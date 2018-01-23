@@ -1,4 +1,5 @@
 import Button from './Button'
+import Cancel from './Cancel'
 import Card from './Card'
 import DWEditor from './Draft'
 import NightMode from './NightMode'
@@ -31,6 +32,7 @@ export {
   Aux,
   NightMode,
   Export,
+  Cancel,
   Privacy,
   Content,
   SettingsIcon,
