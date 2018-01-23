@@ -57,10 +57,11 @@ export default class extends React.Component {
           boxShadow="0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12)"
           background="white"
           bottom={0}
+          zIndex={50}
           position="fixed">
           <Flex alignItems="center" component="label">
             <Check checked={night} onChange={this.onChange} />
-            <small style={{ marginLeft: 8 }}>Night Mode is {!night ? 'Off' : 'On'}</small>
+            <small style={{ marginLeft: 8 }}>Night Mode</small>
           </Flex>
         </Block>
         <Block>{this.props.children}</Block>

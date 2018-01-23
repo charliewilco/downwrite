@@ -8,7 +8,6 @@ import Upload from './components/Upload'
 import { Redirect } from 'react-router-dom'
 import Media from 'react-media'
 import { Wrapper, Input, Button, Helpers } from './components'
-import LocalDrafts from './components/ListDrafts'
 import uuid from 'uuid/v4'
 import { POST_ENDPOINT } from './utils/urls'
 
@@ -64,7 +63,7 @@ class NewX extends React.Component<NewPostProps, NewPostSt> {
     let { id, title, editorState, dateAdded } = this.state
     const ContentState = editorState.getCurrentContent()
     const content = JSON.stringify(convertToRaw(ContentState))
-    const { isOnline, user } = this.props
+    const { user } = this.props
 
     const post: Object = {
       title: title.length > 0 ? title : `Untitled ${id}`,
@@ -75,7 +74,7 @@ class NewX extends React.Component<NewPostProps, NewPostSt> {
       user
     }
 
-    return isOnline ? this.addNew(post) : this.saveLocalDraft(post)
+    return this.addNew(post)
   }
 
   upload = (content: { title: string, editorState: EditorState }) => this.setState(content)
@@ -94,10 +93,9 @@ class NewX extends React.Component<NewPostProps, NewPostSt> {
               title={this.state.title.length > 0 ? this.state.title : 'New'}
               titleTemplate="%s | Downwrite"
             />
-            {!this.props.isOnline && <span>Offline</span>}
+            {!this.props.isOnline && <span>You're Offline Right Now</span>}
             <Helpers>
               <Button onClick={this.addNewPost}>Add</Button>
-              <LocalDrafts />
             </Helpers>
             <Wrapper sm paddingLeft={4} paddingRight={4}>
               <Upload upload={this.upload}>
