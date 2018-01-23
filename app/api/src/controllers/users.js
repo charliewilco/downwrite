@@ -36,9 +36,5 @@ exports.createUser = (req, reply) => {
 }
 
 exports.authenticateUser = (req, reply) => {
-  return reply({
-    userID: req.pre.user.id,
-    username: req.pre.user.username,
-    id_token: createToken(req.pre.user)
-  }).code(201)
+  return reply({ token: createToken(req.pre.user) }).code(201)
 }

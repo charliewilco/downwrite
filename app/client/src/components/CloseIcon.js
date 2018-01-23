@@ -1,7 +1,12 @@
 import React from 'react'
 
 const CloseIcon = ({ size, fill }) => (
-  <svg width={size} height={size} viewBox="0 0 12 12" style={{ display: 'block' }}>
+  <svg
+    width={size}
+    height={size}
+    className="Modal__close"
+    viewBox="0 0 12 12"
+    style={{ display: 'block' }}>
     <title>Close</title>
     <g id="Canvas" transform="translate(-1561 -730)">
       <g id="Close">

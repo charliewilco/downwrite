@@ -1,5 +1,6 @@
 import { Component } from 'react'
-import { TOKEN, USER_NAME, USER_ID, signOut, signIn } from './utils/cookie'
+import addDays from 'date-fns/add_days'
+
 // This component should passdown the state of authed from withAuthCheck() HOC
 // There is only one single point of state that needs to be rendered
 
@@ -16,19 +17,40 @@ import { TOKEN, USER_NAME, USER_ID, signOut, signIn } from './utils/cookie'
 */
 
 // state needs to evaluate the existence of token + decode the content of the token
+const COOKIE_EXPIRATION = 180
+
+const cookieOptions = {
+  path: '/',
+  expires: addDays(Date.now(), COOKIE_EXPIRATION)
+}
 
 export default class Auth extends Component {
-  state = {
-    authed: TOKEN !== undefined && TOKEN !== 'undefined',
-    token: TOKEN,
-    user: USER_ID,
-    name: USER_NAME
+  constructor(props) {
+    super(props)
+
+    let token = props.cookie.get('DW_TOKEN')
+
+    let __TOKEN_EXISTS__ = token !== undefined && token !== 'undefined'
+    const { user, name } = __TOKEN_EXISTS__ && props.decodeToken(token)
+
+    this.state = {
+      token,
+      authed: __TOKEN_EXISTS__,
+      user: user || null,
+      name: name || null
+    }
   }
 
-  setAuth = authed => this.setState({ authed })
+  signIn = (authed, token) => {
+    const { user, name } = this.props.decodeToken(token)
 
-  signIn = (authed, token, id, username) =>
-    this.setState({ authed, token, user: id, name: username }, signIn(token, id, username))
+    console.log({ token, user, name })
+
+    return this.setState(
+      { authed, token, user, name },
+      this.props.cookie.set('DW_TOKEN', token, cookieOptions)
+    )
+  }
 
   signOut = () =>
     this.setState(
@@ -38,7 +60,7 @@ export default class Auth extends Component {
         user: undefined,
         name: undefined
       },
-      signOut()
+      this.props.cookie.remove('DW_TOKEN')
     )
 
   render() {
