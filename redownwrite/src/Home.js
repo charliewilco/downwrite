@@ -101,10 +101,12 @@ class Home extends Component<{ setFlash: Function }, { loginSelected: boolean }>
                 Login
               </button>
             </Flex>
-            <Block padding={16}>
-              <h2 className={css(hStyle)}>
-                {loginSelected ? 'Welcome Back!' : 'Sign Up as a New User'}
-              </h2>
+            <Block>
+              <header style={{ padding: 16 }}>
+                <h2 className={css(hStyle)}>
+                  {loginSelected ? 'Welcome Back!' : 'Sign Up as a New User'}
+                </h2>
+              </header>
               {loginSelected ? (
                 <Login {...this.props} setError={this.errorMessage} />
               ) : (
