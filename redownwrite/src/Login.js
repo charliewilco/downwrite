@@ -47,26 +47,28 @@ class Login extends React.Component<LoginProps, LoginState> {
   render() {
     const { user, password } = this.state
     return (
-      <form onSubmit={this.onSubmit}>
-        <LoginInput
-          placeholder="user@email.com"
-          label="Username or Email"
-          value={user}
-          onChange={e => this.setState({ user: e.target.value })}
-        />
-        <LoginInput
-          placeholder="*********"
-          label="Password"
-          value={password}
-          type="password"
-          onChange={e => this.setState({ password: e.target.value })}
-        />
-        <Block paddingTop={16} textAlign="right">
-          <InlineBlock>
-            <Button onClick={this.onSubmit}>Login</Button>
-          </InlineBlock>
-        </Block>
-      </form>
+      <Block padding={16}>
+        <form onSubmit={this.onSubmit}>
+          <LoginInput
+            placeholder="user@email.com"
+            label="Username or Email"
+            value={user}
+            onChange={e => this.setState({ user: e.target.value })}
+          />
+          <LoginInput
+            placeholder="*********"
+            label="Password"
+            value={password}
+            type="password"
+            onChange={e => this.setState({ password: e.target.value })}
+          />
+          <Block paddingTop={16} textAlign="right">
+            <InlineBlock>
+              <Button onClick={this.onSubmit}>Login</Button>
+            </InlineBlock>
+          </Block>
+        </form>
+      </Block>
     )
   }
 }
