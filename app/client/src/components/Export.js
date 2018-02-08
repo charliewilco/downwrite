@@ -2,9 +2,9 @@
 
 import * as React from 'react'
 import { saveAs } from 'file-saver'
-import { MD_ENDPOINT, JSON_ENDPOINT, MEDIUM_ENDPOINT } from '../utils/urls'
 import { Flex, Block } from 'glamor/jsxstyle'
 import { convertToRaw, EditorState } from 'draft-js'
+import { draftToMarkdown } from 'markdown-draft-js'
 
 import Markdown from './ExportIcons/MD'
 
@@ -37,47 +37,19 @@ export default class extends React.Component<ExportPr> {
     })
   }
 
-  toJSON = async ({ title, content, date }: ExportCb) => {
-    const res = await fetch(JSON_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ title, content, date })
-    })
-
-    const jsonex = await res.blob()
-    const titlex: string = title.replace(/\s+/g, '-').toLowerCase()
-
-    saveAs(jsonex, `${titlex}.json`)
-  }
-
-  toMedium = async ({ title, content, date }: ExportCb) => {
-    const res = await fetch(MEDIUM_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ title, content, date })
-    })
-
-    const medium = await res.json()
-
-    console.log(medium)
-  }
-
   toMarkdown = async ({ title, content, date }: ExportCb) => {
-    const res = await fetch(MD_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ title, content, date })
-    })
+    let markdown = `
+---
+title: ${title}
+dateAdded: ${date}
+---
 
-    const markdown = await res.blob()
+${draftToMarkdown(content)}
+`
 
-    saveAs(markdown, `${title.replace(/\s+/g, '-').toLowerCase()}.md`)
+    const contents = new Blob([markdown.trim()], { type: 'text/markdown; charset=UTF-8' })
+
+    saveAs(contents, `${title.replace(/\s+/g, '-').toLowerCase()}.md`)
   }
 
   render() {
