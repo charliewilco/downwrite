@@ -22,7 +22,8 @@ export default class extends Component {
                   marginBottom={16}
                   justifyContent={children ? 'space-between' : 'flex-end'}
                   padding={!match && 8}>
-                  {!match && children && <button onClick={toggle}>Open</button>} {render()}
+                  {!match && children && <button onClick={toggle}>Open</button>}{' '}
+                  {render && render()}
                 </Flex>
                 {(match || open) && (
                   <Flex
