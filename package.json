@@ -42,7 +42,7 @@
 		"app/export-md"
 	],
 	"devDependencies": {
-		"bolt": "^0.18.4",
+		"bolt": "^0.19.3",
 		"husky": "^0.14.3",
 		"lint-staged": "^6.0.0",
 		"prettier": "^1.10.2"
