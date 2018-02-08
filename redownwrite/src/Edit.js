@@ -15,10 +15,7 @@ import {
   Loading,
   Wrapper,
   Helpers,
-  Modal,
-  Toggle,
   DWEditor,
-  SettingsIcon,
   Export,
   Privacy
 } from './components'
@@ -205,51 +202,46 @@ class Edit extends Component<EditorPr, EditorSt> {
         <Helmet title={title} titleTemplate="%s | Downwrite" />
         <Media query={{ minWidth: 500 }}>
           {m => (
-            <Toggle>
-              {(open: boolean, toggleUIModal: Function) => (
-                <Fragment>
-                  {autosaving && <Autosaving />}
-                  {open && (
-                    <Modal closeUIModal={toggleUIModal}>
-                      <Export editorState={editorState} title={title} date={post.dateAdded} />
-                      <Privacy
-                        title={title}
-                        publicStatus={publicStatus}
-                        onChange={() =>
-                          this.setState(({ publicStatus }) => ({
-                            publicStatus: !publicStatus
-                          }))
-                        }
-                      />
-                    </Modal>
-                  )}
-                  <Wrapper sm>
-                    <Helpers>
+            <Fragment>
+              {autosaving && <Autosaving />}
+              <Wrapper sm>
+                <Helpers
+                  render={() => (
+                    <Block maxWidth={96}>
                       <Button onClick={() => this.updatePostContent()}>Save</Button>
-                      <SettingsIcon onClick={toggleUIModal} />
-                    </Helpers>
-                    <Wrapper sm paddingTop={0} paddingLeft={8} paddingRight={8}>
-                      <Block className={css(meta)} marginBottom={8}>
-                        Added on{' '}
-                        <time dateTime={post.dateAdded}>
-                          {format(post.dateAdded, 'DD MMMM YYYY')}
-                        </time>
-                      </Block>
-                      <Input
-                        inputRef={input => (this.titleInput = input)}
-                        value={title}
-                        onChange={e => this.updateTitle(e)}
-                      />
-                      <div>
-                        {editorState !== null && (
-                          <DWEditor editorState={editorState} onChange={this.onChange} />
-                        )}
-                      </div>
-                    </Wrapper>
-                  </Wrapper>
-                </Fragment>
-              )}
-            </Toggle>
+                    </Block>
+                  )}>
+                  <Export editorState={editorState} title={title} date={post.dateAdded} />
+                  <Privacy
+                    title={title}
+                    publicStatus={publicStatus}
+                    onChange={() =>
+                      this.setState(({ publicStatus }) => ({
+                        publicStatus: !publicStatus
+                      }))
+                    }
+                  />
+                </Helpers>
+                <Wrapper sm paddingTop={0} paddingLeft={8} paddingRight={8}>
+                  <Block className={css(meta)} marginBottom={8}>
+                    Added on{' '}
+                    <time dateTime={post.dateAdded}>
+                      {format(post.dateAdded, 'DD MMMM YYYY')}
+                    </time>
+                  </Block>
+                  <Input
+                    inputRef={input => (this.titleInput = input)}
+                    value={title}
+                    onChange={e => this.updateTitle(e)}
+                  />
+                  <div>
+                    {editorState !== null && (
+                      <DWEditor editorState={editorState} onChange={this.onChange} />
+                    )}
+                  </div>
+                </Wrapper>
+              </Wrapper>
+            </Fragment>
           )}
         </Media>
       </NightMode>
