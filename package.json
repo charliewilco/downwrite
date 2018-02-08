@@ -8,7 +8,8 @@
 		"precommit": "lint-staged",
 		"dev": "bolt ws dev",
 		"build": "bolt ws build",
-		"go": "bolt ws deploy"
+		"go": "bolt ws deploy",
+		"clean": "bolt ws exec -- 'rm -rf node_modules'"
 	},
 	"prettier": {
 		"printWidth": 95,
@@ -32,14 +33,13 @@
 	},
 	"bolt": {
 		"workspaces": [
-			"app/*"
+			"redownwrite",
+			"api-downwrite"
 		]
 	},
 	"workspaces": [
-		"app/api",
-		"app/client",
-		"app/export-json",
-		"app/export-md"
+		"redownwrite",
+		"api-downwrite"
 	],
 	"devDependencies": {
 		"bolt": "^0.19.3",

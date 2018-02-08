@@ -1,7 +1,7 @@
 // flow-typed signature: 4d8e947f2e396ef2f26ecbd1ed7f04ab
 // flow-typed version: 97d98ab83e/react-router-dom_v4.x.x/flow_>=v0.53.x
 
-declare module "react-router-dom" {
+declare module 'react-router-dom' {
   declare export class BrowserRouter extends React$Component<{
     basename?: string,
     forceRefresh?: boolean,
@@ -13,7 +13,7 @@ declare module "react-router-dom" {
   declare export class HashRouter extends React$Component<{
     basename?: string,
     getUserConfirmation?: GetUserConfirmation,
-    hashType?: "slash" | "noslash" | "hashbang",
+    hashType?: 'slash' | 'noslash' | 'hashbang',
     children?: React$Node
   }> {}
 
@@ -43,59 +43,55 @@ declare module "react-router-dom" {
     hash: string,
     state?: any,
     key?: string
-  };
+  }
 
   declare export type LocationShape = {
     pathname?: string,
     search?: string,
     hash?: string,
     state?: any
-  };
+  }
 
-  declare export type HistoryAction = "PUSH" | "REPLACE" | "POP";
+  declare export type HistoryAction = 'PUSH' | 'REPLACE' | 'POP'
 
   declare export type RouterHistory = {
     length: number,
     location: Location,
     action: HistoryAction,
-    listen(
-      callback: (location: Location, action: HistoryAction) => void
-    ): () => void,
+    listen(callback: (location: Location, action: HistoryAction) => void): () => void,
     push(path: string | LocationShape, state?: any): void,
     replace(path: string | LocationShape, state?: any): void,
     go(n: number): void,
     goBack(): void,
     goForward(): void,
     canGo?: (n: number) => boolean,
-    block(
-      callback: (location: Location, action: HistoryAction) => boolean
-    ): void,
+    block(callback: (location: Location, action: HistoryAction) => boolean): void,
     // createMemoryHistory
     index?: number,
     entries?: Array<Location>
-  };
+  }
 
   declare export type Match = {
     params: { [key: string]: ?string },
     isExact: boolean,
     path: string,
     url: string
-  };
+  }
 
   declare export type ContextRouter = {|
     history: RouterHistory,
     location: Location,
     match: Match
-  |};
+  |}
 
   declare export type GetUserConfirmation = (
     message: string,
     callback: (confirmed: boolean) => void
-  ) => void;
+  ) => void
 
   declare type StaticRouterContext = {
     url?: string
-  };
+  }
 
   declare export class StaticRouter extends React$Component<{
     basename?: string,
@@ -142,17 +138,17 @@ declare module "react-router-dom" {
 
   declare export function withRouter<P>(
     Component: React$ComponentType<{| ...ContextRouter, ...P |}>
-  ): React$ComponentType<P>;
+  ): React$ComponentType<P>
 
   declare type MatchPathOptions = {
     path?: string,
     exact?: boolean,
     sensitive?: boolean,
     strict?: boolean
-  };
+  }
 
   declare export function matchPath(
     pathname: string,
     options?: MatchPathOptions | string
-  ): null | Match;
+  ): null | Match
 }
