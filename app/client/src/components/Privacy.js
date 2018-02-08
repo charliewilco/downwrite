@@ -4,12 +4,14 @@ import Check from './Checkbox'
 
 const Privacy = ({ title, publicStatus, onChange }) => (
   <Block width="100%" maxWidth={512} marginBottom={16}>
-    <h3 className="f6" style={{ marginBottom: 16 }}>
+    <h3 className="small" style={{ marginBottom: 16 }}>
       Public
     </h3>
     <small>
-      All posts are private by default, by selecting this option you're allowing anyone who has
-      a URL to see the content.
+      <i>
+        All posts are private by default, by selecting this option you're allowing anyone who
+        has a URL to see the content.
+      </i>
     </small>
     <Block>
       <Block component="label" fontSize={12} padding="16px 0">
