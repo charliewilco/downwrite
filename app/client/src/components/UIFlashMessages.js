@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Flex, Block } from 'glamor/jsxstyle'
 import { css } from 'glamor'
-import { CloseIcon as Close, Toggle, Aux } from './'
+import { CloseIcon as Close, Toggle } from './'
 
 export const withUIFlash = Component => {
   return class extends React.Component {
@@ -18,7 +18,7 @@ export const withUIFlash = Component => {
       return (
         <Toggle>
           {(open, toggle, close) => (
-            <Aux>
+            <Fragment>
               {content.length > 0 && (
                 <UIFlash
                   type={type}
@@ -32,7 +32,7 @@ export const withUIFlash = Component => {
                 openUIFlash={open}
                 {...this.props}
               />
-            </Aux>
+            </Fragment>
           )}
         </Toggle>
       )

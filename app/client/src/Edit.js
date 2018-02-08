@@ -17,7 +17,6 @@ import {
   Helpers,
   Modal,
   Toggle,
-  Aux,
   DWEditor,
   SettingsIcon,
   Export,
@@ -61,7 +60,9 @@ type EditorPr = {
 // - EditorState changes
 // - Updating the post on the server
 
-class Edit extends React.Component<EditorPr, EditorSt> {
+const { Component, Fragment } = React
+
+class Edit extends Component<EditorPr, EditorSt> {
   static displayName = 'Edit'
 
   titleInput: HTMLInputElement
@@ -206,7 +207,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
           {m => (
             <Toggle>
               {(open: boolean, toggleUIModal: Function) => (
-                <Aux>
+                <Fragment>
                   {autosaving && <Autosaving />}
                   {open && (
                     <Modal closeUIModal={toggleUIModal}>
@@ -246,7 +247,7 @@ class Edit extends React.Component<EditorPr, EditorSt> {
                       </div>
                     </Wrapper>
                   </Wrapper>
-                </Aux>
+                </Fragment>
               )}
             </Toggle>
           )}
