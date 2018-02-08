@@ -7,7 +7,6 @@ import { Flex, Block } from 'glamor/jsxstyle'
 import { convertToRaw, EditorState } from 'draft-js'
 
 import Markdown from './ExportIcons/MD'
-import JSONBtn from './ExportIcons/JSONIcon'
 
 import type { ContentState } from 'draft-js'
 
@@ -84,14 +83,13 @@ export default class extends React.Component<ExportPr> {
   render() {
     return (
       <Block width="100%" maxWidth={512} marginBottom={16}>
-        <h3 className="f6" style={{ marginBottom: 16 }}>
+        <h3 className="small" style={{ marginBottom: 16 }}>
           Export
         </h3>
         <Flex>
           <Block flex={1}>
             <Flex className="Export__list">
               <Markdown onClick={() => this.export(this.toMarkdown)} />
-              <JSONBtn onClick={() => this.export(this.toJSON)} />
             </Flex>
           </Block>
         </Flex>
