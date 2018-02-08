@@ -30,7 +30,7 @@
 		"jsonwebtoken": "^8.1.0",
 		"jwt-decode": "^2.2.0",
 		"lodash": "^4.17.4",
-		"markdown-draft-js": "^0.4.5",
+		"markdown-draft-js": "^0.6.2",
 		"prismjs": "^1.8.4",
 		"react": "^16.2.0",
 		"react-dom": "^16.2.0",
