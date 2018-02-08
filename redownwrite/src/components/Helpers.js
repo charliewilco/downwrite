@@ -18,8 +18,11 @@ export default class extends Component {
                 float={match ? 'right' : 'none'}
                 marginRight={match && -208}
                 width={match && 192}>
-                <Flex marginBottom={16} justifyContent="space-between">
-                  {!match && <button onClick={toggle}>Open</button>} {render()}
+                <Flex
+                  marginBottom={16}
+                  justifyContent={children ? 'space-between' : 'flex-end'}
+                  padding={!match && 8}>
+                  {!match && children && <button onClick={toggle}>Open</button>} {render()}
                 </Flex>
                 {(match || open) && (
                   <Flex
