@@ -94,9 +94,7 @@ class NewX extends React.Component<NewPostProps, NewPostSt> {
               titleTemplate="%s | Downwrite"
             />
             {!this.props.isOnline && <span>You're Offline Right Now</span>}
-            <Helpers>
-              <Button onClick={this.addNewPost}>Add</Button>
-            </Helpers>
+            <Helpers render={() => <Button onClick={this.addNewPost}>Add</Button>} />
             <Wrapper sm paddingLeft={4} paddingRight={4}>
               <Upload upload={this.upload}>
                 <Input
