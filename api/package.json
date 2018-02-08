@@ -1,5 +1,5 @@
 {
-  "name": "downwrite-hapi-api",
+  "name": "api-downwrite",
   "description": "REST API for downwrite",
   "version": "0.0.0",
   "main": "server.js",
