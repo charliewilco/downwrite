@@ -37,9 +37,7 @@
 	},
 	"workspaces": [
 		"app/api",
-		"app/client",
-		"app/export-json",
-		"app/export-md"
+		"app/client"
 	],
 	"devDependencies": {
 		"bolt": "^0.19.3",
