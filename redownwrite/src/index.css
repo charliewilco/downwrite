@@ -518,7 +518,6 @@ a:hover {
 }
 
 .Export__label {
-  color: #4c4c4c;
   font-size: 12px;
 }
 
@@ -615,9 +614,9 @@ a:hover {
   color: var(--color-4);
 }
 
-.NightMode svg:not(.Export__icon, .Modal__close),
-.NightMode svg:not(.Export__icon, .Modal__close) path {
-  fill: var(--color-4) !important;
+.NightMode svg,
+.NightMode svg path {
+  fill: var(--color-1) !important;
 }
 
 .NightMode .PreviewBody blockquote,
