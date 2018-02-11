@@ -614,8 +614,8 @@ a:hover {
   color: var(--color-4);
 }
 
-.NightMode svg,
-.NightMode svg path {
+.NightMode svg:not(.Chevron),
+.NightMode svg:not(.Chevron) path {
   fill: var(--color-1) !important;
 }
 
@@ -623,6 +623,10 @@ a:hover {
 .NightMode blockquote {
   background: none;
   color: var(--color-3) !important;
+}
+
+.Chevron {
+  fill: none !important;
 }
 
 .u-cf::after {
