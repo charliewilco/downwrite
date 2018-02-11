@@ -194,7 +194,7 @@ class Edit extends Component<EditorPr, EditorSt> {
 
   render() {
     const { title, post, loaded, editorState, publicStatus, autosaving } = this.state
-
+    const { match } = this.props
     return !loaded ? (
       <Loading />
     ) : (
@@ -213,6 +213,7 @@ class Edit extends Component<EditorPr, EditorSt> {
                   )}>
                   <Export editorState={editorState} title={title} date={post.dateAdded} />
                   <Privacy
+                    id={match.params.id}
                     title={title}
                     publicStatus={publicStatus}
                     onChange={() =>
