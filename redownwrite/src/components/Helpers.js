@@ -1,11 +1,10 @@
+// @flow
 import React, { Component } from 'react'
 import { Block, Flex } from 'glamor/jsxstyle'
 import { Toggle } from './'
 import Media from 'react-media'
 
-// Open Button Should be a Chevron
-
-const Chevron = ({ open }) => (
+export const Chevron = ({ open }: { open: boolean }) => (
   <svg
     className="Chevron"
     viewBox="0 0 16 16"
