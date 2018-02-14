@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-
+import { Link } from 'react-router-dom'
 import { Flex, Block, InlineBlock } from 'glamor/jsxstyle'
 import { LoginInput, Button, Check } from './components'
 import { USER_ENDPOINT } from './utils/urls'
@@ -89,7 +89,7 @@ class Register extends React.Component<LoginProps, RegisterType> {
                 verticalAlign: 'middle',
                 lineHeight: 1.1
               }}>
-              I'm agreeing to abide in all the legal stuff.
+              I'm agreeing to abide in all the <Link to="/legal">legal stuff</Link>.
             </small>
           </label>
         </Flex>
