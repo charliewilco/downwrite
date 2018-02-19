@@ -1,4 +1,4 @@
-import Main from '../Main'
+import Main from '../Dashboard'
 import { Card } from '../components'
 import { posts } from './db.json'
 import App from '../App'
@@ -6,7 +6,7 @@ import { createWaitForElement } from 'enzyme-wait'
 
 const waitFor = createWaitForElement('[data-test="Card"]', 5000, 5000)
 
-describe('<Main /> post lists', () => {
+describe('<Dashboard /> post lists', () => {
   // NOTE: Hey this is now an acceptance test
   xit('shows login form if logged out', () => {
     let w = mount(

@@ -2,7 +2,7 @@ import { Header } from '../components'
 
 let wrapper = mount(
   <MemoryRouter>
-    <Header name="Downwrite" />
+    <Header authed name="Downwrite" />
   </MemoryRouter>
 )
 
