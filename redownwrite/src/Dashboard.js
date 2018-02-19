@@ -31,7 +31,7 @@ type MainState = {
 }
 
 export default class Main extends Component<MainPr, MainState> {
-  static displayName = 'Main View'
+  static displayName = 'Dashboard'
 
   state = {
     posts: [],
