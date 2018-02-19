@@ -11,6 +11,12 @@
 		"go": "bolt ws deploy",
 		"clean": "bolt ws exec -- 'rm -rf node_modules'"
 	},
+	"devDependencies": {
+		"bolt": "^0.19.3",
+		"husky": "^0.14.3",
+		"lint-staged": "^6.1.1",
+		"prettier": "^1.10.2"
+	},
 	"prettier": {
 		"printWidth": 95,
 		"parser": "flow",
@@ -41,11 +47,5 @@
 		"redownwrite",
 		"api-downwrite"
 	],
-	"devDependencies": {
-		"bolt": "^0.19.3",
-		"husky": "^0.14.3",
-		"lint-staged": "^6.0.0",
-		"prettier": "^1.10.2"
-	},
 	"license": "MIT"
 }
