@@ -177,7 +177,7 @@ class Edit extends Component<EditorPr, EditorSt> {
   componentWillReceiveProps({ location }) {
     if (location !== this.props.location) {
       const newMatch = matchPath(location.pathname, { path: '/:id/edit' })
-      console.log(location, newMatch)
+
       this.getPost(newMatch.params.id).then(post =>
         this.setState({
           post: {
