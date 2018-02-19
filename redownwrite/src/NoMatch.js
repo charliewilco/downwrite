@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Wrapper from './components/Wrapper'
-import { InlineBlock as In } from 'glamor/jsxstyle'
+import { InlineBlock } from 'glamor/jsxstyle'
 
 type NoMatchTitle = { name: string }
 type NoMatchType = {
@@ -12,7 +12,7 @@ type NoMatchType = {
 }
 
 const Title = ({ name }: NoMatchTitle) => (
-  <In
+  <InlineBlock
     component="h2"
     marginBottom={32}
     fontWeight={100}
