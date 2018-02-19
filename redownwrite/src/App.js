@@ -19,7 +19,11 @@ type AppProps = {
   signOut: Function
 }
 
-const Ldx = opts => Loadable(Object.assign({ loading: Loading }, opts))
+type LoaderOpts = {
+  loader: Function
+}
+
+const Ldx = (opts: LoaderOpts) => Loadable(Object.assign({ loading: Loading }, opts))
 
 const New = Ldx({
   loader: () => import('./New')

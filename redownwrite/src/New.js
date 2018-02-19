@@ -17,8 +17,9 @@ type NewPostSt = {
   editorState: EditorState,
   id: string,
   title: string,
-  error: string,
-  dateAdded: Date
+  error?: string,
+  dateAdded: Date,
+  error: string
 }
 
 type NewPostProps = { token: string, user: string }
@@ -29,7 +30,7 @@ class NewX extends React.Component<NewPostProps, NewPostSt> {
     title: '',
     id: uuid(),
     dateAdded: new Date(),
-    error: null,
+    error: '',
     drafts: [],
     saved: false
   }
@@ -88,7 +89,7 @@ class NewX extends React.Component<NewPostProps, NewPostSt> {
       <Media query={{ minWidth: 500 }}>
         {m => (
           <Wrapper paddingTop={128} sm>
-            {error && <span className="f6 u-center">{error}</span>}
+            {error.length > 0 && <span className="f6 u-center">{error}</span>}
             <Helmet
               title={this.state.title.length > 0 ? this.state.title : 'New'}
               titleTemplate="%s | Downwrite"

@@ -7,6 +7,7 @@ import type { ContentState } from 'draft-js'
 import Helmet from 'react-helmet'
 import Media from 'react-media'
 import { matchPath } from 'react-router-dom'
+import type { Location, Match } from 'react-router'
 import { Block } from 'glamor/jsxstyle'
 import {
   Button,
@@ -37,18 +38,20 @@ type EditorSt = {
   loaded: boolean,
   updated: boolean,
   editorState: EditorState,
-  dateModified: Date
+  dateModified: Date,
+  publicStatus: boolean,
+  autosaving: boolean
 }
 
 type EditorPr = {
   token: string,
   user: string,
+  location: Location,
   match: {
     params: {
       id: string
     }
-  },
-  location: Location
+  }
 }
 
 // TODO: Document this
@@ -84,10 +87,10 @@ class Edit extends Component<EditorPr, EditorSt> {
     const { user } = this.props
     const cx: ContentState = editorState.getCurrentContent()
     const content = convertToRaw(cx)
-    const { _id, __v, ...sPost } = post
+    const { _id, __v, ...args } = post
 
     const newPost = {
-      ...sPost,
+      ...args,
       title,
       public: publicStatus,
       content,
@@ -100,7 +103,7 @@ class Edit extends Component<EditorPr, EditorSt> {
     )
   }
 
-  getPost = async id => {
+  getPost = async (id: string) => {
     const h = new Headers()
     const { token } = this.props
 
@@ -126,6 +129,8 @@ class Edit extends Component<EditorPr, EditorSt> {
   autoSave = debounce(() => {
     this.setState({ autosaving: true }, this.updatePostContent)
   }, 5000)
+
+  // TODO: Consider this lifecycle hook is deprecated
 
   async componentWillMount() {
     const post = await this.getPost(this.props.match.params.id)
@@ -174,11 +179,14 @@ class Edit extends Component<EditorPr, EditorSt> {
   // See this is where recompose might be cool
   // I'm gonna need to take that back at some point
   // Will Next.js fix this?
-  componentWillReceiveProps({ location }) {
-    if (location !== this.props.location) {
-      const newMatch = matchPath(location.pathname, { path: '/:id/edit' })
 
-      this.getPost(newMatch.params.id).then(post =>
+  // TODO: Consider this lifecycle hook is deprecated
+
+  componentWillReceiveProps({ location }: { location: Location }) {
+    if (location !== this.props.location) {
+      const { params: { id } } = matchPath(location.pathname, { path: '/:id/edit' })
+
+      this.getPost(id).then(post =>
         this.setState({
           post: {
             ...post,
@@ -195,6 +203,9 @@ class Edit extends Component<EditorPr, EditorSt> {
   render() {
     const { title, post, loaded, editorState, publicStatus, autosaving } = this.state
     const { match } = this.props
+
+    console.log(this.props)
+
     return !loaded ? (
       <Loading />
     ) : (
