@@ -1,4 +1,7 @@
-import { Component } from 'react'
+// @flow
+import { Container } from 'unstated'
+import jwt from 'jwt-decode'
+import Cookies from 'universal-cookie'
 import addDays from 'date-fns/add_days'
 
 // This component should passdown the state of authed from withAuthCheck() HOC
@@ -16,22 +19,31 @@ import addDays from 'date-fns/add_days'
 	</Auth>
 */
 
-// state needs to evaluate the existence of token + decode the content of the token
-const COOKIE_EXPIRATION = 180
+// state needs to evaluate the existence of
+// token + decode the content of the token
 
+const cookie = new Cookies()
+const COOKIE_EXPIRATION = 180
 const cookieOptions = {
   path: '/',
   expires: addDays(Date.now(), COOKIE_EXPIRATION)
 }
 
-export default class Auth extends Component {
+type AuthState = {
+  token: string,
+  user: string,
+  name: string,
+  authed: boolean
+}
+
+export default class Auth extends Container<AuthState> {
   constructor(props) {
     super(props)
 
-    let token = props.cookie.get('DW_TOKEN')
+    let token = cookie.get('DW_TOKEN')
 
     let __TOKEN_EXISTS__ = token !== undefined && token !== 'undefined'
-    const { user, name } = __TOKEN_EXISTS__ && props.decodeToken(token)
+    const { user, name } = __TOKEN_EXISTS__ && jwt(token)
 
     this.state = {
       token,
@@ -42,11 +54,11 @@ export default class Auth extends Component {
   }
 
   signIn = (authed, token) => {
-    const { user, name } = this.props.decodeToken(token)
+    const { user, name } = jwt(token)
 
     return this.setState(
       { authed, token, user, name },
-      this.props.cookie.set('DW_TOKEN', token, cookieOptions)
+      cookie.set('DW_TOKEN', token, cookieOptions)
     )
   }
 
@@ -58,17 +70,6 @@ export default class Auth extends Component {
         user: undefined,
         name: undefined
       },
-      this.props.cookie.remove('DW_TOKEN')
+      cookie.remove('DW_TOKEN')
     )
-
-  render() {
-    return this.props.children(
-      this.state.authed,
-      this.state.token,
-      this.state.user,
-      this.state.name,
-      this.signIn,
-      this.signOut
-    )
-  }
 }

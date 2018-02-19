@@ -44,6 +44,7 @@
 		"react-scripts": "^1.1.1",
 		"serve": "^6.4.10",
 		"universal-cookie": "^2.1.0",
+		"unstated": "^1.0.3",
 		"uuid": "^3.1.0"
 	},
 	"scripts": {

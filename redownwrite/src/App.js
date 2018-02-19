@@ -1,11 +1,13 @@
 // @flow
 import * as React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { Subscribe } from 'unstated'
 import Helmet from 'react-helmet'
 import Media from 'react-media'
 import { Block } from 'glamor/jsxstyle'
 import Loadable from 'react-loadable'
-import { Header, Loading, Nav, Toggle } from './components'
+import AuthContainer from './Auth'
+import { Header, Loading, Nav, Toggle, Logger } from './components'
 import { PrivateRoute } from './CustomRoutes'
 
 type AppProps = {
@@ -31,8 +33,8 @@ const Home = Ldx({
   loader: () => import('./Home')
 })
 
-const Main = Ldx({
-  loader: () => import('./Main')
+const Dashboard = Ldx({
+  loader: () => import('./Dashboard')
 })
 
 const NotFound = Ldx({
@@ -55,83 +57,84 @@ export default class extends React.Component<AppProps, void> {
   static displayName = 'AppRouterContainer'
 
   render() {
-    const { authed, token, user, name, signOut, signIn } = this.props
     return (
-      <Router>
-        <Media query={{ minWidth: 500 }}>
-          {matches => (
-            <Toggle>
-              {(navOpen, toggleNav, closeNav) => (
-                <Block minHeight="100%" fontFamily="var(--primary-font)">
-                  <Helmet title="Downwrite" />
-                  <Block height="100%" className="u-cf">
-                    <Block
-                      minHeight="100%"
-                      float={navOpen && matches && 'left'}
-                      width={navOpen && matches && 'calc(100% - 384px)'}>
-                      <Header
-                        name="Downwrite"
-                        authed={authed}
-                        open={navOpen}
-                        onClick={toggleNav}
-                      />
+      <Subscribe to={[AuthContainer]}>
+        {auth => (
+          <Router>
+            <Media query={{ minWidth: 500 }}>
+              {matches => (
+                <Toggle>
+                  {(navOpen, toggleNav, closeNav) => (
+                    <Block minHeight="100%" fontFamily="var(--primary-font)">
+                      <Helmet title="Downwrite" />
+                      <Logger value={auth} />
+                      <Block height="100%" className="u-cf">
+                        <Block
+                          minHeight="100%"
+                          float={navOpen && matches && 'left'}
+                          width={navOpen && matches && 'calc(100% - 384px)'}>
+                          <Header
+                            name="Downwrite"
+                            authed={auth.state.authed}
+                            open={navOpen}
+                            onClick={toggleNav}
+                          />
 
-                      <Switch>
-                        <Route
-                          exact
-                          path="/"
-                          render={(props: Object) =>
-                            authed === true ? (
-                              <Main closeNav={closeNav} token={token} user={user} {...props} />
-                            ) : (
-                              <Home {...props} signIn={signIn} signOut={signOut} />
-                            )
-                          }
-                        />
+                          <Switch>
+                            <Route
+                              exact
+                              path="/"
+                              render={(props: Object) =>
+                                auth.state.authed === true ? (
+                                  <Dashboard
+                                    closeNav={closeNav}
+                                    token={auth.state.token}
+                                    user={auth.state.user}
+                                    {...props}
+                                  />
+                                ) : (
+                                  <Home
+                                    {...props}
+                                    signIn={auth.signIn}
+                                    signOut={auth.signOut}
+                                  />
+                                )
+                              }
+                            />
 
-                        <PrivateRoute
-                          authed={authed}
-                          token={token}
-                          user={user}
-                          path="/new"
-                          component={New}
-                        />
-                        <PrivateRoute
-                          authed={authed}
-                          token={token}
-                          user={user}
-                          path="/:id/edit"
-                          component={Edit}
-                        />
-                        <Route exact path="/:id/preview" component={Preview} />
-                        <Route
-                          exact
-                          path="/signout"
-                          render={(props: Object) => (
-                            <SignOut toggleNav={closeNav} signOut={signOut} />
-                          )}
-                        />
-                        <Route path="/legal" component={Legal} />
+                            <PrivateRoute path="/new" component={New} />
+                            <PrivateRoute path="/:id/edit" component={Edit} />
+                            <Route exact path="/:id/preview" component={Preview} />
+                            <Route
+                              exact
+                              path="/signout"
+                              render={(props: Object) => (
+                                <SignOut toggleNav={closeNav} signOut={auth.signOut} />
+                              )}
+                            />
+                            <Route path="/legal" component={Legal} />
 
-                        <Route component={NotFound} />
-                      </Switch>
+                            <Route component={NotFound} />
+                          </Switch>
+                        </Block>
+                        {navOpen && (
+                          <Nav
+                            closeNav={closeNav}
+                            matches={matches}
+                            token={auth.state.token}
+                            user={auth.state.user}
+                            username={auth.state.name}
+                          />
+                        )}
+                      </Block>
                     </Block>
-                    {navOpen && (
-                      <Nav
-                        closeNav={closeNav}
-                        matches={matches}
-                        token={token}
-                        user={user}
-                        username={name}
-                      />
-                    )}
-                  </Block>
-                </Block>
+                  )}
+                </Toggle>
               )}
-            </Toggle>
-          )}
-        </Media>
-      </Router>
+            </Media>
+          </Router>
+        )}
+      </Subscribe>
     )
   }
 }
