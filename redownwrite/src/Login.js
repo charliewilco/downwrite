@@ -52,6 +52,7 @@ class Login extends React.Component<LoginProps, LoginState> {
           <LoginInput
             placeholder="user@email.com"
             label="Username or Email"
+            autoComplete="username"
             value={user}
             onChange={e => this.setState({ user: e.target.value })}
           />
@@ -60,6 +61,7 @@ class Login extends React.Component<LoginProps, LoginState> {
             label="Password"
             value={password}
             type="password"
+            autoComplete="current-password"
             onChange={e => this.setState({ password: e.target.value })}
           />
           <Block paddingTop={16} textAlign="right">
