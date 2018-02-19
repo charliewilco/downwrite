@@ -1,6 +1,6 @@
 // @flow
 
-const __IS_DEV__ = process.env.NODE_ENV === 'development'
+import __IS_DEV__ from './dev'
 
 export const POST_ENDPOINT: string = __IS_DEV__
   ? 'http://localhost:4411/posts'
