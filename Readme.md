@@ -1,14 +1,12 @@
-![Banner](header.png)
+# ![Downwrite](header.png)
 
-# Downwrite
-
-Collection of Microservices and Client Side Application for Downwrite.
+**_Collection of Microservices and Client Side Application for Downwrite._**
 
 ## Setup
 
 This project uses [Yarn Workspaces](https://yarnpkg.com/blog/2017/08/02/introducing-workspaces/) and [Bolt](https://github.com/boltpkg/bolt)
 
-```
+```bash
 brew cask install yarn
 yarn
 ```
@@ -24,7 +22,7 @@ yarn
 
 ### Commands
 
-```
+```bash
 yarn dev
 yarn build
 yarn deploy
