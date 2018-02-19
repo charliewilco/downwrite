@@ -23,7 +23,7 @@ export const Chevron = ({ open }: { open: boolean }) => (
   </svg>
 )
 
-export default class extends Component {
+export default class extends Component<{ children: React.Element, render: Function }> {
   static displayName = 'HelperToolbar'
   render() {
     const { children, render } = this.props
