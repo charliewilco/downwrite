@@ -31,19 +31,24 @@ const cookieOptions = {
 
 type AuthState = {
   token: string,
-  user: string,
-  name: string,
+  user: ?string,
+  name: ?string,
   authed: boolean
 }
 
+const EMPTY_USER = {
+  user: null,
+  name: null
+}
+
 export default class Auth extends Container<AuthState> {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super()
 
     let token = cookie.get('DW_TOKEN')
 
-    let __TOKEN_EXISTS__ = token !== undefined && token !== 'undefined'
-    const { user, name } = __TOKEN_EXISTS__ && jwt(token)
+    let __TOKEN_EXISTS__: boolean = token !== undefined && token !== 'undefined'
+    const { user, name } = __TOKEN_EXISTS__ ? jwt(token) : EMPTY_USER
 
     this.state = {
       token,
@@ -53,23 +58,21 @@ export default class Auth extends Container<AuthState> {
     }
   }
 
-  signIn = (authed, token) => {
+  signIn = (authed: boolean, token: string) => {
     const { user, name } = jwt(token)
+    cookie.set('DW_TOKEN', token, cookieOptions)
 
-    return this.setState(
-      { authed, token, user, name },
-      cookie.set('DW_TOKEN', token, cookieOptions)
-    )
+    return this.setState({ authed, token, user, name })
   }
 
-  signOut = () =>
-    this.setState(
-      {
-        authed: false,
-        token: undefined,
-        user: undefined,
-        name: undefined
-      },
-      cookie.remove('DW_TOKEN')
-    )
+  signOut = () => {
+    cookie.remove('DW_TOKEN')
+
+    return this.setState({
+      authed: false,
+      token: undefined,
+      user: undefined,
+      name: undefined
+    })
+  }
 }

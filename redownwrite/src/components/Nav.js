@@ -31,9 +31,9 @@ const fadeInFromLeft = keyframes({
   '100%': { transform: 'translate(0, 0)', opacity: 1 }
 })
 
-const addListeners = (el, s, fn) =>
+const addListeners = (el: Element, s: string, fn: Function) =>
   s.split(' ').forEach(e => el.addEventListener(e, fn, false))
-const rmListeners = (el, s, fn) =>
+const rmListeners = (el: Element, s: string, fn: Function) =>
   s.split(' ').forEach(e => el.removeEventListener(e, fn, false))
 
 const SignoutIcon = () => (
@@ -56,27 +56,38 @@ const SignoutIcon = () => (
 
 // TODO: Slide to close navigation?
 
-export default class extends Component {
+type NavigationProps = {
+  matches: boolean,
+  token: string,
+  username: string,
+  closeNav: Function
+}
+
+export default class extends Component<NavigationProps> {
   static displayName = 'Nav'
 
   componentWillMount() {
-    addListeners(document, 'touchstart click', this.outsideHandleClick)
+    if (document) {
+      addListeners(document, 'touchstart click', this.outsideHandleClick)
 
-    if (document.body && !this.props.matches) {
-      document.body.classList.add('__noScroll')
+      if (document.body && !this.props.matches) {
+        document.body.classList.add('__noScroll')
+      }
     }
   }
 
   componentWillUnmount() {
-    rmListeners(document, 'touchstart click', this.outsideHandleClick)
+    if (document) {
+      rmListeners(document, 'touchstart click', this.outsideHandleClick)
 
-    if (document.body && !this.props.matches) {
-      document.body.classList.remove('__noScroll')
+      if (document.body && !this.props.matches) {
+        document.body.classList.remove('__noScroll')
+      }
     }
   }
 
-  outsideHandleClick = e => {
-    if (!findDOMNode(this).contains(e.target)) {
+  outsideHandleClick = ({ target }: SyntheticInputEvent<*>) => {
+    if (!findDOMNode(this).contains(target)) {
       return this.props.closeNav()
     }
   }

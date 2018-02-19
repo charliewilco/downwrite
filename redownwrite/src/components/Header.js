@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { withRouter, Link } from 'react-router-dom'
+import type { Match } from 'react-router-dom'
 import Logo from './Logo'
 import { css } from 'glamor'
 import { Flex, Row } from 'glamor/jsxstyle'
@@ -47,7 +48,8 @@ type Header = {
   authed: boolean,
   name: string,
   onClick: Function,
-  open: boolean
+  open: boolean,
+  match: Match
 }
 
 const LoginSignUp = () => (
