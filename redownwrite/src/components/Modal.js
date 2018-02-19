@@ -37,7 +37,9 @@ const Overlay = (props: {}) => (
 
 export default class extends React.Component<{
   closeUIModal: Function,
-  children: React.Node
+  children: React.Node,
+  xs: boolean,
+  sm: boolean
 }> {
   static displayName = 'UIModal'
 

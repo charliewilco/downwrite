@@ -70,7 +70,10 @@ const Container = ({ children }) => (
   />
 )
 
-class Home extends Component<{ setFlash: Function }, { loginSelected: boolean }> {
+class Home extends Component<
+  { setFlash: Function, signIn: Function },
+  { loginSelected: boolean }
+> {
   state = {
     loginSelected: true
   }

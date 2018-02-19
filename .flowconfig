@@ -3,7 +3,7 @@
 .*/react/node_modules/.*
 .*/fbjs/node_modules/.*
 .*/node_modules/invariant/.*
-
+./api-downwrite/
 
 [include]
 ./node_modules/react

@@ -2,6 +2,8 @@
 import React, { Fragment, Component } from 'react'
 import { Flex, Block } from 'glamor/jsxstyle'
 import orderBy from 'lodash/orderBy'
+import isEmpty from 'lodash/isEmpty'
+import type { ContentState } from 'draft-js'
 import {
   Modal,
   Cancel,
@@ -13,10 +15,22 @@ import {
 } from './components'
 import { POST_ENDPOINT } from './utils/urls'
 
-type Post = {
+export type Post = {
   title: string,
-  id: string
+  id: string,
+  dateAdded: Date,
+  dateModified: Date,
+  public: boolean,
+  content: ContentState
 }
+
+export type PostError = {
+  error: string,
+  message: string,
+  statusCode: number
+}
+
+type Res = PostError | Array<Post>
 
 type MainPr = {
   user: string,
@@ -25,28 +39,31 @@ type MainPr = {
 }
 
 type MainState = {
-  posts: Array<Post>,
+  posts: Res,
   loaded: boolean,
-  layout: 'grid' | 'list'
+  layout: 'grid' | 'list',
+  selectedPost?: Post | {},
+  modalOpen: boolean,
+  error: string
 }
 
 export default class Main extends Component<MainPr, MainState> {
-  static displayName = 'Main View'
+  static displayName = 'Dashboard'
 
   state = {
     posts: [],
     loaded: false,
     layout: 'grid',
     modalOpen: false,
-    seletedPost: undefined,
-    error: false
+    selectedPost: {},
+    error: ''
   }
 
   layoutChange = (x: 'grid' | 'list') => {
     return this.setState({ layout: x })
   }
 
-  getPosts = async close => {
+  getPosts = async (close: ?boolean) => {
     const config = {
       method: 'GET',
       headers: {
@@ -57,17 +74,17 @@ export default class Main extends Component<MainPr, MainState> {
     }
 
     const response = await fetch(POST_ENDPOINT, config)
-    const posts = await response.json()
+    const posts: Res = await response.json()
 
-    if (response.ok) {
+    if (Array.isArray(posts) || response.ok) {
       return this.setState({
         posts: orderBy(posts, ['dateAdded'], ['desc']),
-        seletedPost: undefined,
+        selectedPost: {},
         loaded: true,
         modalOpen: !close
       })
-    } else {
-      return this.setState({ error: posts.message, loaded: true, seletedPost: undefined })
+    } else if (typeof posts === 'object') {
+      return this.setState({ error: posts.message, loaded: true, selectedPost: {} })
     }
   }
 
@@ -78,7 +95,7 @@ export default class Main extends Component<MainPr, MainState> {
 
   closeUIModal = () => this.setState({ modalOpen: false })
 
-  onDelete = async (post: Object, cb) => {
+  onDelete = async (post: Post, cb: ?Function) => {
     const { token } = this.props
 
     const config = {
@@ -97,10 +114,9 @@ export default class Main extends Component<MainPr, MainState> {
     }
   }
 
-  cancelDelete = () => this.setState({ selectedPost: undefined, modalOpen: false })
+  cancelDelete = () => this.setState({ selectedPost: {}, modalOpen: false })
 
-  confirmDelete = (post: Object): Function =>
-    this.setState({ selectedPost: post, modalOpen: true })
+  confirmDelete = (post: Post | {}) => this.setState({ selectedPost: post, modalOpen: true })
 
   // TODO: refactor to have selected post, deletion to be handled by a lower level component
   // should be opened at this level and be handed a token and post to delete
@@ -109,7 +125,7 @@ export default class Main extends Component<MainPr, MainState> {
     return (
       <Fragment>
         {modalOpen &&
-          selectedPost !== undefined && (
+          !isEmpty(selectedPost) && (
             <Modal closeUIModal={this.closeUIModal} sm>
               <Block>
                 <Block marginBottom={16}>
@@ -132,14 +148,14 @@ export default class Main extends Component<MainPr, MainState> {
           paddingBottom={16}
           height="100%">
           {loaded ? (
-            posts.length > 0 ? (
+            Array.isArray(posts) && posts.length > 0 ? (
               <PostList
                 layout={layout}
                 onDelete={this.confirmDelete}
                 layoutChange={this.layoutChange}
                 posts={posts}
               />
-            ) : error ? (
+            ) : error.length > 0 ? (
               <InvalidToken error={error} />
             ) : (
               <EmptyPosts />
