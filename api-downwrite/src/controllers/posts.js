@@ -51,7 +51,7 @@ exports.getMarkdown = (req, reply) => {
     } else if (!post.public) {
       return reply(
         Boom.notFound(
-          "This post is either not public or I couldn't even find it. Things are hard sometimes."
+          "This post is either not public or I couldn't even find it.  Things are hard sometimes."
         )
       )
     } else {

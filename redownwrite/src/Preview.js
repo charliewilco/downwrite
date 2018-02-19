@@ -26,7 +26,6 @@ export default class extends React.Component {
       cache: 'default'
     })
 
-    console.log(PREVIEW_ENDPOINT, id)
     const post = await req.json()
 
     return post
