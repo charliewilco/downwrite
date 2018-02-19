@@ -1,4 +1,7 @@
-import { Component } from 'react'
+// @flow
+import { Container } from 'unstated'
+import jwt from 'jwt-decode'
+import Cookies from 'universal-cookie'
 import addDays from 'date-fns/add_days'
 
 // This component should passdown the state of authed from withAuthCheck() HOC
@@ -16,22 +19,36 @@ import addDays from 'date-fns/add_days'
 	</Auth>
 */
 
-// state needs to evaluate the existence of token + decode the content of the token
-const COOKIE_EXPIRATION = 180
+// state needs to evaluate the existence of
+// token + decode the content of the token
 
+const cookie = new Cookies()
+const COOKIE_EXPIRATION = 180
 const cookieOptions = {
   path: '/',
   expires: addDays(Date.now(), COOKIE_EXPIRATION)
 }
 
-export default class Auth extends Component {
-  constructor(props) {
-    super(props)
+type AuthState = {
+  token: string,
+  user: ?string,
+  name: ?string,
+  authed: boolean
+}
 
-    let token = props.cookie.get('DW_TOKEN')
+const EMPTY_USER = {
+  user: null,
+  name: null
+}
 
-    let __TOKEN_EXISTS__ = token !== undefined && token !== 'undefined'
-    const { user, name } = __TOKEN_EXISTS__ && props.decodeToken(token)
+export default class Auth extends Container<AuthState> {
+  constructor() {
+    super()
+
+    let token = cookie.get('DW_TOKEN')
+
+    let __TOKEN_EXISTS__: boolean = token !== undefined && token !== 'undefined'
+    const { user, name } = __TOKEN_EXISTS__ ? jwt(token) : EMPTY_USER
 
     this.state = {
       token,
@@ -41,34 +58,21 @@ export default class Auth extends Component {
     }
   }
 
-  signIn = (authed, token) => {
-    const { user, name } = this.props.decodeToken(token)
+  signIn = (authed: boolean, token: string) => {
+    const { user, name } = jwt(token)
+    cookie.set('DW_TOKEN', token, cookieOptions)
 
-    return this.setState(
-      { authed, token, user, name },
-      this.props.cookie.set('DW_TOKEN', token, cookieOptions)
-    )
+    return this.setState({ authed, token, user, name })
   }
 
-  signOut = () =>
-    this.setState(
-      {
-        authed: false,
-        token: undefined,
-        user: undefined,
-        name: undefined
-      },
-      this.props.cookie.remove('DW_TOKEN')
-    )
+  signOut = () => {
+    cookie.remove('DW_TOKEN')
 
-  render() {
-    return this.props.children(
-      this.state.authed,
-      this.state.token,
-      this.state.user,
-      this.state.name,
-      this.signIn,
-      this.signOut
-    )
+    return this.setState({
+      authed: false,
+      token: undefined,
+      user: undefined,
+      name: undefined
+    })
   }
 }

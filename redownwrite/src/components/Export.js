@@ -12,14 +12,14 @@ import type { ContentState } from 'draft-js'
 
 type ExportPr = {
   title: string,
-  date: typeof Date,
+  date: Date,
   editorState: EditorState
 }
 
 type ExportCb = {
   title: string,
   content: ContentState,
-  date: typeof Date
+  date: Date
 }
 
 export default class extends React.Component<ExportPr> {
@@ -41,7 +41,7 @@ export default class extends React.Component<ExportPr> {
     let markdown = `
 ---
 title: ${title}
-dateAdded: ${date}
+dateAdded: ${date.toString()}
 ---
 
 ${draftToMarkdown(content)}

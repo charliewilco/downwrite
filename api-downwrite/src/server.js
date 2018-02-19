@@ -52,3 +52,5 @@ server.start(err => {
 
   server.log('info', 'Server running at: ' + server.info.uri)
 })
+
+module.exports = server

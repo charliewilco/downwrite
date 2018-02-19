@@ -9,7 +9,7 @@ beforeAll(async () => {
   page = await browser.newPage()
 })
 
-describe('Login Flow', () => {
+xdescribe('Login Flow', () => {
   it('shows registration form', async () => {
     await page.goto(baseURL)
     await page.waitForSelector(`[data-test='Login Page Container']`)

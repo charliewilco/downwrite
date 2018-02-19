@@ -12,8 +12,7 @@ type LoginState = {
 
 type LoginProps = {
   setError: Function,
-  signIn: Function,
-  signOut: Function
+  signIn: Function
 }
 
 class Login extends React.Component<LoginProps, LoginState> {
