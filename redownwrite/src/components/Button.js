@@ -19,6 +19,9 @@ const btn = css({
   boxShadow: '0 0 4px rgba(0,0,0,.037), 0 4px 8px rgba(0,0,0,.07)',
   ':hover': {
     backgroundColor: 'var(--color-7)'
+  },
+  '[disabled]': {
+    filter: `grayscale(100%)`
   }
 })
 

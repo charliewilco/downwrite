@@ -1,8 +1,9 @@
 import React from 'react'
-import { Block } from 'glamor/jsxstyle'
+import { Block, Flex } from 'glamor/jsxstyle'
+import { Link } from 'react-router-dom'
 import Check from './Checkbox'
 
-const Privacy = ({ title, publicStatus, onChange }) => (
+const Privacy = ({ id, title, publicStatus, onChange }) => (
   <Block width="100%" maxWidth={512} marginBottom={16}>
     <h3 className="small" style={{ marginBottom: 16 }}>
       Public
@@ -14,18 +15,23 @@ const Privacy = ({ title, publicStatus, onChange }) => (
       </i>
     </small>
     <Block>
-      <Block component="label" fontSize={12} padding="16px 0">
+      <Flex component="label" fontSize={12} padding="16px 0" alignItems="center">
         <Check checked={publicStatus} onChange={onChange} value={publicStatus} />
         <span
           style={{
-            marginLeft: 16,
+            marginLeft: 8,
             display: 'inline-block',
             verticalAlign: 'middle',
-            lineHeight: 1.1
+            lineHeight: 1.2
           }}>
           <em>{title}</em> is <span>{publicStatus ? 'Public' : 'Private'}</span>
         </span>
-      </Block>
+      </Flex>
+      {publicStatus && (
+        <Link to={`/${id}/preview`} className="small">
+          Preview <i>{title}</i>
+        </Link>
+      )}
     </Block>
   </Block>
 )

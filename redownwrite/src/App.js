@@ -47,6 +47,10 @@ const Preview = Ldx({
   loader: () => import('./Preview')
 })
 
+const Legal = Ldx({
+  loader: () => import('./Legal')
+})
+
 export default class extends React.Component<AppProps, void> {
   static displayName = 'AppRouterContainer'
 
@@ -107,6 +111,8 @@ export default class extends React.Component<AppProps, void> {
                             <SignOut toggleNav={closeNav} signOut={signOut} />
                           )}
                         />
+                        <Route path="/legal" component={Legal} />
+
                         <Route component={NotFound} />
                       </Switch>
                     </Block>

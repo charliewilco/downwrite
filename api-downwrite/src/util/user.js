@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 exports.verifyUniqueUser = (req, res) => {
   // Find an entry from the database that
   // matches either the email or username
+
   User.findOne(
     {
       $or: [{ email: req.payload.email }, { username: req.payload.username }]
@@ -31,6 +32,7 @@ exports.verifyCredentials = (req, res) => {
   const password = req.payload.password
   // Find an entry from the database that
   // matches either the email or username
+
   User.findOne(
     {
       $or: [{ email: req.payload.user }, { username: req.payload.user }]

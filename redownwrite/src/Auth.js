@@ -44,8 +44,6 @@ export default class Auth extends Component {
   signIn = (authed, token) => {
     const { user, name } = this.props.decodeToken(token)
 
-    console.log({ token, user, name })
-
     return this.setState(
       { authed, token, user, name },
       this.props.cookie.set('DW_TOKEN', token, cookieOptions)

@@ -49,9 +49,12 @@ exports.ughhAuthUser = Joi.alternatives().try(
 )
 
 exports.authUser = {
-  user: Joi.string()
-    .alphanum()
-    .min(2)
-    .max(30),
+  user: Joi.alternatives().try(
+    Joi.string()
+      .alphanum()
+      .min(2)
+      .max(30),
+    Joi.string().email()
+  ),
   password: Joi.string().required()
 }

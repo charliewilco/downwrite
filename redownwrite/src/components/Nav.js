@@ -122,11 +122,19 @@ export default class extends Component {
             </Fetch>
           </Block>
 
-          <Block borderTop="1px solid #DBDCDD" padding={8} textAlign="right">
+          <Flex
+            borderTop="1px solid #DBDCDD"
+            justifyContent="space-between"
+            alignItems="center"
+            padding={8}
+            textAlign="right">
+            <Link to="/legal" className={css(navButton, { fontSize: 12 })}>
+              Legal
+            </Link>
             <Link to="/signout" className={css(navButton, { fontSize: 14 })}>
               <SignoutIcon /> <span>Sign Out</span>
             </Link>
-          </Block>
+          </Flex>
         </Column>
       </Flex>
     )
