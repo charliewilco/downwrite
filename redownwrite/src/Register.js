@@ -40,8 +40,6 @@ class Register extends React.Component<LoginProps, RegisterType> {
 
     const user: { userID: string, id_token: string, username: string } = await response.json()
 
-    console.log(user)
-
     if (user.userID) {
       this.props.signIn(user.id_token !== undefined, user.id_token)
     }
