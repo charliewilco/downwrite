@@ -10,6 +10,7 @@
 		"dev": "bolt ws dev",
 		"build": "bolt ws build",
 		"go": "bolt ws deploy",
+		"test": "bolt ws test",
 		"clean": "bolt ws exec -- 'rm -rf node_modules'"
 	},
 	"devDependencies": {
