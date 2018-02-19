@@ -6,10 +6,7 @@ const { draftToMarkdown } = require('markdown-draft-js')
 
 exports.updatePost = (req, reply) => {
   const updatedPost = req.payload
-
-  const query = {
-    id: updatedPost.id
-  }
+  const query = { id: updatedPost.id }
 
   Post.findOneAndUpdate(query, updatedPost, { upsert: true }, (err, post) => {
     if (err) {
@@ -25,6 +22,7 @@ exports.updatePost = (req, reply) => {
 
 exports.getPosts = (req, reply) => {
   const { user } = req.auth.credentials
+
   Post.find({ user: { $eq: user } }).exec((error, posts) => {
     if (error) {
       reply(Boom.internal('Internal MongoDB error', error))
@@ -51,7 +49,7 @@ exports.getMarkdown = (req, reply) => {
     } else if (!post.public) {
       return reply(
         Boom.notFound(
-          "This post is either not public or I couldn't even find it.  Things are hard sometimes."
+          "This post is either not public or I couldn't even find it. Things are hard sometimes."
         )
       )
     } else {
@@ -67,9 +65,7 @@ exports.getMarkdown = (req, reply) => {
 // POST
 
 exports.createPost = (req, reply) => {
-  const post = new Post({
-    ...req.payload
-  })
+  const post = new Post({ ...req.payload })
 
   post.save((error, post) => {
     if (error) {

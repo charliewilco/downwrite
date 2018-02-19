@@ -15,7 +15,6 @@
   "license": "MIT",
   "dependencies": {
     "babel-cli": "^6.26.0",
-    "babel-jest": "^21.0.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "bcrypt": "^1.0.3",
@@ -30,6 +29,12 @@
     "markdown-draft-js": "^0.6.2",
     "mongoose": "^4.11.11",
     "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "babel-jest": "^22.2.2",
+    "concurrently": "^3.5.0",
+    "jest": "^21.0.2",
+    "nodemon": "^1.15.0"
   },
   "now": {
     "alias": "api.downwrite.us",
@@ -58,9 +63,6 @@
       "transform-object-rest-spread"
     ]
   },
-  "devDependencies": {
-    "concurrently": "^3.5.0",
-    "jest": "^21.0.2",
-    "nodemon": "^1.11.0"
-  }
+  "repository": "charlespeters/downwrite",
+  "author": "Charles ⚡ <charlespeters42@gmail.com>"
 }
