@@ -1,44 +1,7 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { Flex, Block } from 'glamor/jsxstyle'
 import { css } from 'glamor'
-import { CloseIcon as Close, Toggle } from './'
-
-export const withUIFlash = Component => {
-  return class extends React.Component {
-    static displayName = `withUIFlash(${Component.displayName || Component.name})`
-    state = {
-      content: '',
-      type: ''
-    }
-
-    setFlash = (content: string, type: string) => this.setState({ content, type })
-
-    render() {
-      const { content, type } = this.state
-      return (
-        <Toggle>
-          {(open, toggle, close) => (
-            <Fragment>
-              {content.length > 0 && (
-                <UIFlash
-                  type={type}
-                  content={content}
-                  onClose={() => this.setState({ content: '', type: '' }, close())}
-                />
-              )}
-              <Component
-                setFlash={this.setFlash}
-                toggleUIFlash={toggle}
-                openUIFlash={open}
-                {...this.props}
-              />
-            </Fragment>
-          )}
-        </Toggle>
-      )
-    }
-  }
-}
+import { CloseIcon } from './'
 
 const closeAlert = css({
   appearance: 'none',
@@ -69,7 +32,7 @@ const UIFlash = ({ width = 512, onClose, content, type }) => (
     </Block>
     {onClose && (
       <button className={css(closeAlert)} onClick={onClose}>
-        <Close fill="currentColor" />
+        <CloseIcon fill="currentColor" />
       </button>
     )}
   </Flex>
