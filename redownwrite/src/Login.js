@@ -15,7 +15,7 @@ type LoginProps = {
   signIn: Function
 }
 
-class Login extends React.Component<LoginProps, LoginState> {
+export default class Login extends React.Component<LoginProps, LoginState> {
   state = {
     user: '',
     password: ''
@@ -73,5 +73,3 @@ class Login extends React.Component<LoginProps, LoginState> {
     )
   }
 }
-
-export default Login

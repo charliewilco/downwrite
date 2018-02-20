@@ -1,10 +1,13 @@
 // @flow
+
 import React, { Component } from 'react'
-import Login from './Login'
-import Register from './Register'
 import { Block, Flex } from 'glamor/jsxstyle'
 import { css } from 'glamor'
-import { Logo, withUIFlash } from './components'
+import { Subscribe } from 'unstated'
+import Login from './Login'
+import Register from './Register'
+import ErrorContainer from './Errors'
+import { Logo } from './components'
 
 const hStyle = css({
   marginBottom: 32,
@@ -70,15 +73,10 @@ const Container = ({ children }) => (
   />
 )
 
-class Home extends Component<
-  { setFlash: Function, signIn: Function },
-  { loginSelected: boolean }
-> {
+export default class Home extends Component<{ signIn: Function }, { loginSelected: boolean }> {
   state = {
     loginSelected: true
   }
-
-  errorMessage = (x: string, y: string) => this.props.setFlash(x, y)
 
   render() {
     const { loginSelected } = this.state
@@ -110,11 +108,15 @@ class Home extends Component<
                   {loginSelected ? 'Welcome Back!' : 'Sign Up as a New User'}
                 </h2>
               </header>
-              {loginSelected ? (
-                <Login {...this.props} setError={this.errorMessage} />
-              ) : (
-                <Register {...this.props} setError={this.errorMessage} />
-              )}
+              <Subscribe to={[ErrorContainer]}>
+                {err =>
+                  loginSelected ? (
+                    <Login {...this.props} setError={err.setFlash} />
+                  ) : (
+                    <Register {...this.props} setError={err.setFlash} />
+                  )
+                }
+              </Subscribe>
             </Block>
           </Block>
         </Container>
@@ -122,5 +124,3 @@ class Home extends Component<
     )
   }
 }
-
-export default withUIFlash(Home)

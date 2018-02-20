@@ -1,6 +1,15 @@
+// @flow
 import { Component } from 'react'
 
-export default class extends Component {
+type ToggleState = {
+  open: boolean
+}
+
+type ToggleProps = {
+  defaultOpen: boolean
+}
+
+export default class extends Component<ToggleProps, ToggleState> {
   static defaultProps = {
     defaultOpen: false
   }
