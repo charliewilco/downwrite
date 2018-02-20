@@ -42,6 +42,8 @@ class Register extends React.Component<LoginProps, RegisterType> {
 
     if (user.userID) {
       this.props.signIn(user.id_token !== undefined, user.id_token)
+    } else {
+      this.props.setError(user.message, 'error')
     }
   }
 
