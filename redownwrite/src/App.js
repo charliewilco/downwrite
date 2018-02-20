@@ -7,7 +7,8 @@ import Media from 'react-media'
 import { Block } from 'glamor/jsxstyle'
 import Loadable from 'react-loadable'
 import AuthContainer from './Auth'
-import { Header, Loading, Nav, Toggle, Logger } from './components'
+import ErrorContainer from './Errors'
+import { UIFlash, Header, Loading, Nav, Toggle, Logger } from './components'
 import { PrivateRoute } from './CustomRoutes'
 
 type AppProps = {
@@ -22,6 +23,14 @@ type AppProps = {
 type LoaderOpts = {
   loader: Function
 }
+
+const ErrorMessage = () => (
+  <Subscribe to={[ErrorContainer]}>
+    {err =>
+      err.state.content.length > 0 && <UIFlash {...err.state} onClose={err.clearFlash} />
+    }
+  </Subscribe>
+)
 
 const Ldx = (opts: LoaderOpts) => Loadable(Object.assign({ loading: Loading }, opts))
 
@@ -71,7 +80,8 @@ export default class extends React.Component<AppProps, void> {
                   {(navOpen, toggleNav, closeNav) => (
                     <Block minHeight="100%" fontFamily="var(--primary-font)">
                       <Helmet title="Downwrite" />
-                      <Logger value={auth} />
+                      <ErrorMessage />
+                      <Logger value={[auth]} />
                       <Block height="100%" className="u-cf">
                         <Block
                           minHeight="100%"

@@ -41,7 +41,7 @@ const EMPTY_USER = {
   name: null
 }
 
-export default class Auth extends Container<AuthState> {
+export default class AuthContainer extends Container<AuthState> {
   constructor() {
     super()
 
