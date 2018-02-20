@@ -8,8 +8,6 @@ export default class SignOut extends React.Component {
   }
 
   render() {
-    return (
-      <Redirect to={{ pathname: '/', state: { from: this.props.location, authed: false } }} />
-    )
+    return <Redirect to={{ pathname: '/', state: { from: this.props.location } }} />
   }
 }

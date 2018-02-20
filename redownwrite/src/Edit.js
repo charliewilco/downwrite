@@ -204,8 +204,6 @@ class Edit extends Component<EditorPr, EditorSt> {
     const { title, post, loaded, editorState, publicStatus, autosaving } = this.state
     const { match } = this.props
 
-    console.log(this.props)
-
     return !loaded ? (
       <Loading />
     ) : (
