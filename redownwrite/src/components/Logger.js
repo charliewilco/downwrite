@@ -1,7 +1,6 @@
-import { Component, createElement as h } from 'react'
+import React, { Component } from 'react'
 import __IS_DEV__ from '../utils/dev'
-
-const Null = () => null
+import Null from './Null'
 
 export default class Logger extends Component {
   static defaultProps = {
@@ -27,6 +26,6 @@ export default class Logger extends Component {
   }
 
   render() {
-    return h(Null)
+    return <Null />
   }
 }
