@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react'
-import withOfflineState from 'react-offline-hoc'
+import { Subscribe } from 'unstated'
 import Helmet from 'react-helmet'
-import { EditorState, convertToRaw } from 'draft-js'
-import { DWEditor } from './components'
-import Upload from './components/Upload'
 import { Redirect } from 'react-router-dom'
+import { EditorState, convertToRaw } from 'draft-js'
+import OfflineContainer from './Offline'
+
 import Media from 'react-media'
-import { Wrapper, Input, Button, Helpers } from './components'
+import { DWEditor, Upload, Wrapper, Input, Button, Helpers } from './components'
 import uuid from 'uuid/v4'
 import { POST_ENDPOINT } from './utils/urls'
 
@@ -24,7 +24,7 @@ type NewPostSt = {
 
 type NewPostProps = { token: string, user: string }
 
-class NewX extends React.Component<NewPostProps, NewPostSt> {
+export default class NewX extends React.Component<NewPostProps, NewPostSt> {
   state = {
     editorState: EditorState.createEmpty(),
     title: '',
@@ -82,7 +82,6 @@ class NewX extends React.Component<NewPostProps, NewPostSt> {
 
   render() {
     const { error, editorState, title, saved, id } = this.state
-
     return saved ? (
       <Redirect to={`/${id}/edit`} />
     ) : (
@@ -90,11 +89,10 @@ class NewX extends React.Component<NewPostProps, NewPostSt> {
         {m => (
           <Wrapper paddingTop={128} sm>
             {error.length > 0 && <span className="f6 u-center">{error}</span>}
-            <Helmet
-              title={this.state.title.length > 0 ? this.state.title : 'New'}
-              titleTemplate="%s | Downwrite"
-            />
-            {!this.props.isOnline && <span>You're Offline Right Now</span>}
+            <Helmet title={title.length > 0 ? title : 'New'} titleTemplate="%s | Downwrite" />
+            <Subscribe to={[OfflineContainer]}>
+              {network => network.state.offline && <span>You're Offline Right Now</span>}
+            </Subscribe>
             <Helpers render={() => <Button onClick={this.addNewPost}>Add</Button>} />
             <Wrapper sm paddingLeft={4} paddingRight={4}>
               <Upload upload={this.upload}>
@@ -115,5 +113,3 @@ class NewX extends React.Component<NewPostProps, NewPostSt> {
     )
   }
 }
-
-export default withOfflineState(NewX)
