@@ -1,6 +1,6 @@
 // @flow
 
-import { Container, Subscribe } from 'unstated'
+import { Container } from 'unstated'
 
 type OfflineAtrx = {
   offline: boolean

@@ -68,7 +68,7 @@ const Legal = Ldx({
 })
 
 export default class extends React.Component<AppProps, void> {
-  static displayName = 'AppRouterContainer'
+  static displayName = 'App'
 
   render() {
     return (

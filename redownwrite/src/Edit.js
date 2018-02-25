@@ -1,6 +1,6 @@
 // @flow
 
-import * as React from 'react'
+import React, { Component, Fragment } from 'react'
 import { css } from 'glamor'
 import { EditorState, convertToRaw, type ContentState } from 'draft-js'
 import Helmet from 'react-helmet'
@@ -8,6 +8,7 @@ import Media from 'react-media'
 import { matchPath, type Location, type Match } from 'react-router-dom'
 import { Block } from 'glamor/jsxstyle'
 import {
+  Autosaving,
   Button,
   Input,
   NightMode,
@@ -18,7 +19,6 @@ import {
   Export,
   Privacy
 } from './components'
-import Autosaving from './components/AutosavingNotification.js'
 import format from 'date-fns/format'
 import isEmpty from 'lodash/isEmpty'
 import debounce from 'lodash/debounce'
@@ -45,11 +45,13 @@ type EditorPr = {
   token: string,
   user: string,
   location: Location,
-  match: {
-    params: {
-      id: string
-    }
-  }
+  match:
+    | {
+        params: {
+          id: string
+        }
+      }
+    | Match
 }
 
 // TODO: Document this
@@ -58,9 +60,7 @@ type EditorPr = {
 // - EditorState changes
 // - Updating the post on the server
 
-const { Component, Fragment } = React
-
-class Edit extends Component<EditorPr, EditorSt> {
+export default class Edit extends Component<EditorPr, EditorSt> {
   static displayName = 'Edit'
 
   titleInput: HTMLInputElement
@@ -256,5 +256,3 @@ class Edit extends Component<EditorPr, EditorSt> {
     )
   }
 }
-
-export default Edit
