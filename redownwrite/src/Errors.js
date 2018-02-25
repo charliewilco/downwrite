@@ -15,5 +15,5 @@ export default class ErrorState extends Container<ErrorTypes> {
 
   clearFlash = () => this.setState({ content: '', type: '' })
 
-  setFlash = (content: string, type: string) => this.setState({ content, type })
+  setError = (content: string, type: string) => this.setState({ content, type })
 }

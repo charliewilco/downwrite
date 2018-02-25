@@ -1,8 +1,7 @@
 // @flow
 
 import React from 'react'
-import type { Match, Location } from 'react-router-dom'
-import { matchPath } from 'react-router-dom'
+import { matchPath, type Match, type Location } from 'react-router-dom'
 import { Block } from 'glamor/jsxstyle'
 import { PREVIEW_ENDPOINT } from './utils/urls'
 import { Content } from './components'
@@ -59,10 +58,8 @@ export default class extends React.Component<PreviewProps, PreviewState> {
 
   componentWillReceiveProps({ location }: { location: Location }) {
     if (location !== this.props.location) {
-      const { params: { id } }: { params: { id: string } } = matchPath(location.pathname, {
-        path: '/:id/preview'
-      })
-      this.getPreview(id).then(post => this.setState({ error: post.error, post }))
+      const match: Match = matchPath(location.pathname, { path: '/:id/preview' })
+      this.getPreview(match.params.id).then(post => this.setState({ error: post.error, post }))
     }
   }
 

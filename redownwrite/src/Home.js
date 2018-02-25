@@ -111,9 +111,9 @@ export default class Home extends Component<{ signIn: Function }, { loginSelecte
               <Subscribe to={[ErrorContainer]}>
                 {err =>
                   loginSelected ? (
-                    <Login {...this.props} setError={err.setFlash} />
+                    <Login {...this.props} setError={err.setError} />
                   ) : (
-                    <Register {...this.props} setError={err.setFlash} />
+                    <Register {...this.props} setError={err.setError} />
                   )
                 }
               </Subscribe>
