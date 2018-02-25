@@ -3,7 +3,7 @@ import React, { Fragment, Component } from 'react'
 import { Flex, Block } from 'glamor/jsxstyle'
 import orderBy from 'lodash/orderBy'
 import isEmpty from 'lodash/isEmpty'
-import type { ContentState } from 'draft-js'
+import { type ContentState } from 'draft-js'
 import {
   Modal,
   Cancel,

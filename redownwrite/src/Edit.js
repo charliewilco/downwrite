@@ -2,12 +2,10 @@
 
 import * as React from 'react'
 import { css } from 'glamor'
-import { EditorState, convertToRaw } from 'draft-js'
-import type { ContentState } from 'draft-js'
+import { EditorState, convertToRaw, type ContentState } from 'draft-js'
 import Helmet from 'react-helmet'
 import Media from 'react-media'
-import { matchPath } from 'react-router-dom'
-import type { Location, Match } from 'react-router'
+import { matchPath, type Location, type Match } from 'react-router-dom'
 import { Block } from 'glamor/jsxstyle'
 import {
   Button,
