@@ -31,9 +31,9 @@ const fadeInFromLeft = keyframes({
   '100%': { transform: 'translate(0, 0)', opacity: 1 }
 })
 
-const addListeners = (el: Element, s: string, fn: Function) =>
+const addListeners = (el: Document, s: string, fn: Function) =>
   s.split(' ').forEach(e => el.addEventListener(e, fn, false))
-const rmListeners = (el: Element, s: string, fn: Function) =>
+const rmListeners = (el: Document, s: string, fn: Function) =>
   s.split(' ').forEach(e => el.removeEventListener(e, fn, false))
 
 const SignoutIcon = () => (

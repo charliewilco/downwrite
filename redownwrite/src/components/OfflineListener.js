@@ -8,7 +8,8 @@ export default class OfflineListener extends Component<{ onChange: Function }, v
     window.addEventListener('online', this.handleChange)
   }
 
-  handleChange = (x: Event) => this.props.onChange(!x.currentTarget.navigator.onLine)
+  handleChange = (x: SyntheticInputEvent<*>) =>
+    this.props.onChange(!x.currentTarget.navigator.onLine)
 
   componentWillUnmount() {
     window.removeEventListener('offline', this.handleChange)

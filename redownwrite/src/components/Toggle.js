@@ -6,7 +6,8 @@ type ToggleState = {
 }
 
 type ToggleProps = {
-  defaultOpen: boolean
+  defaultOpen: boolean,
+  children: Function
 }
 
 export default class extends Component<ToggleProps, ToggleState> {
