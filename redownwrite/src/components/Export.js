@@ -6,7 +6,7 @@ import { Flex, Block } from 'glamor/jsxstyle'
 import { convertToRaw, EditorState } from 'draft-js'
 import { draftToMarkdown } from 'markdown-draft-js'
 
-import Markdown from './ExportIcons/MD'
+import Markdown from './ExportMarkdownIcon'
 
 import type { ContentState } from 'draft-js'
 

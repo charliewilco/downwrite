@@ -8,7 +8,8 @@ import { Block } from 'glamor/jsxstyle'
 import Loadable from 'react-loadable'
 import AuthContainer from './Auth'
 import ErrorContainer from './Errors'
-import { UIFlash, Header, Loading, Nav, Toggle, Logger } from './components'
+import OfflineContainer from './Offline'
+import { UIFlash, Header, Loading, Nav, Toggle, Logger, Offline } from './components'
 import { PrivateRoute } from './CustomRoutes'
 
 type AppProps = {
@@ -71,82 +72,85 @@ export default class extends React.Component<AppProps, void> {
 
   render() {
     return (
-      <Subscribe to={[AuthContainer]}>
-        {auth => (
-          <Router>
-            <Media query={{ minWidth: 500 }}>
-              {matches => (
-                <Toggle>
-                  {(navOpen, toggleNav, closeNav) => (
-                    <Block minHeight="100%" fontFamily="var(--primary-font)">
-                      <Helmet title="Downwrite" />
-                      <ErrorMessage />
-                      <Logger value={[auth]} />
-                      <Block height="100%" className="u-cf">
-                        <Block
-                          minHeight="100%"
-                          float={navOpen && matches && 'left'}
-                          width={navOpen && matches && 'calc(100% - 384px)'}>
-                          <Header
-                            name="Downwrite"
-                            authed={auth.state.authed}
-                            open={navOpen}
-                            onClick={toggleNav}
-                          />
-
-                          <Switch>
-                            <Route
-                              exact
-                              path="/"
-                              render={(props: Object) =>
-                                auth.state.authed === true ? (
-                                  <Dashboard
-                                    closeNav={closeNav}
-                                    token={auth.state.token}
-                                    user={auth.state.user}
-                                    {...props}
-                                  />
-                                ) : (
-                                  <Home
-                                    {...props}
-                                    signIn={auth.signIn}
-                                    signOut={auth.signOut}
-                                  />
-                                )
-                              }
+      <Subscribe to={[AuthContainer, OfflineContainer]}>
+        {(auth, offline) => (
+          <React.Fragment>
+            <Offline onChange={offline.handleChange} />
+            <Router>
+              <Media query={{ minWidth: 500 }}>
+                {matches => (
+                  <Toggle>
+                    {(navOpen, toggleNav, closeNav) => (
+                      <Block minHeight="100%" fontFamily="var(--primary-font)">
+                        <Helmet title="Downwrite" />
+                        <ErrorMessage />
+                        <Logger value={[auth, offline]} />
+                        <Block height="100%" className="u-cf">
+                          <Block
+                            minHeight="100%"
+                            float={navOpen && matches && 'left'}
+                            width={navOpen && matches && 'calc(100% - 384px)'}>
+                            <Header
+                              name="Downwrite"
+                              authed={auth.state.authed}
+                              open={navOpen}
+                              onClick={toggleNav}
                             />
 
-                            <PrivateRoute path="/new" component={New} />
-                            <PrivateRoute path="/:id/edit" component={Edit} />
-                            <Route exact path="/:id/preview" component={Preview} />
-                            <Route
-                              exact
-                              path="/signout"
-                              render={(props: Object) => (
-                                <SignOut toggleNav={closeNav} signOut={auth.signOut} />
-                              )}
-                            />
-                            <Route path="/legal" component={Legal} />
+                            <Switch>
+                              <Route
+                                exact
+                                path="/"
+                                render={(props: Object) =>
+                                  auth.state.authed === true ? (
+                                    <Dashboard
+                                      closeNav={closeNav}
+                                      token={auth.state.token}
+                                      user={auth.state.user}
+                                      {...props}
+                                    />
+                                  ) : (
+                                    <Home
+                                      {...props}
+                                      signIn={auth.signIn}
+                                      signOut={auth.signOut}
+                                    />
+                                  )
+                                }
+                              />
 
-                            <Route component={NotFound} />
-                          </Switch>
+                              <PrivateRoute path="/new" component={New} />
+                              <PrivateRoute path="/:id/edit" component={Edit} />
+                              <Route exact path="/:id/preview" component={Preview} />
+                              <Route
+                                exact
+                                path="/signout"
+                                render={(props: Object) => (
+                                  <SignOut toggleNav={closeNav} signOut={auth.signOut} />
+                                )}
+                              />
+                              <Route path="/legal" component={Legal} />
+
+                              <Route component={NotFound} />
+                            </Switch>
+                          </Block>
+                          {navOpen && (
+                            <Nav
+                              closeNav={closeNav}
+                              matches={matches}
+                              token={auth.state.token}
+                              user={auth.state.user}
+                              username={auth.state.name}
+                            />
+                          )}
                         </Block>
-                        {navOpen && (
-                          <Nav
-                            closeNav={closeNav}
-                            matches={matches}
-                            token={auth.state.token}
-                            user={auth.state.user}
-                            username={auth.state.name}
-                          />
-                        )}
                       </Block>
-                    </Block>
-                  )}
-                </Toggle>
-              )}
-            </Media>
-          </Router>
+                    )}
+                  </Toggle>
+                )}
+              </Media>
+            </Router>
+          </React.Fragment>
         )}
       </Subscribe>
     )
