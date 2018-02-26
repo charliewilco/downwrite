@@ -4,11 +4,11 @@ import { Subscribe } from 'unstated'
 import Helmet from 'react-helmet'
 import { Redirect } from 'react-router-dom'
 import { EditorState, convertToRaw } from 'draft-js'
-import OfflineContainer from './Offline'
-
 import Media from 'react-media'
-import { DWEditor, Upload, Wrapper, Input, Button, Helpers } from './components'
 import uuid from 'uuid/v4'
+
+import OfflineContainer from './Offline'
+import { DWEditor, Upload, Wrapper, Input, Helpers } from './components'
 import { POST_ENDPOINT } from './utils/urls'
 
 type NewPostSt = {
