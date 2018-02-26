@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react'
+import React, { Fragment, Component } from 'react'
 import { Subscribe } from 'unstated'
 import Helmet from 'react-helmet'
 import { Redirect } from 'react-router-dom'
@@ -24,14 +24,13 @@ type NewPostSt = {
 
 type NewPostProps = { token: string, user: string }
 
-export default class NewX extends React.Component<NewPostProps, NewPostSt> {
+export default class NewX extends Component<NewPostProps, NewPostSt> {
   state = {
     editorState: EditorState.createEmpty(),
     title: '',
     id: uuid(),
     dateAdded: new Date(),
     error: '',
-    drafts: [],
     saved: false
   }
 
@@ -60,7 +59,7 @@ export default class NewX extends React.Component<NewPostProps, NewPostSt> {
   saveLocalDraft = (id: string, post: Object) =>
     localStorage.setItem('Draft ' + id, JSON.stringify(post))
 
-  addNewPost = () => {
+  addNewPost = (offline: boolean) => {
     let { id, title, editorState, dateAdded } = this.state
     const ContentState = editorState.getCurrentContent()
     const content = JSON.stringify(convertToRaw(ContentState))
@@ -75,38 +74,51 @@ export default class NewX extends React.Component<NewPostProps, NewPostSt> {
       user
     }
 
-    return this.addNew(post)
+    return offline ? this.saveLocalDraft(id, post) : this.addNew(post)
   }
 
   upload = (content: { title: string, editorState: EditorState }) => this.setState(content)
 
   render() {
     const { error, editorState, title, saved, id } = this.state
+
     return saved ? (
       <Redirect to={`/${id}/edit`} />
     ) : (
       <Media query={{ minWidth: 500 }}>
         {m => (
           <Wrapper paddingTop={128} sm>
-            {error.length > 0 && <span className="f6 u-center">{error}</span>}
-            <Helmet title={title.length > 0 ? title : 'New'} titleTemplate="%s | Downwrite" />
             <Subscribe to={[OfflineContainer]}>
-              {network => network.state.offline && <span>You're Offline Right Now</span>}
+              {network => (
+                <Fragment>
+                  {network.state.offline && <span>You're Offline Right Now</span>}
+                  <Helmet
+                    title={title.length > 0 ? title : 'New'}
+                    titleTemplate="%s | Downwrite"
+                  />
+
+                  <Helpers
+                    disabled={network.state.offline}
+                    buttonText="Add"
+                    onChange={() => this.addNewPost(network.state.offline)}
+                  />
+                  <Wrapper sm paddingLeft={4} paddingRight={4}>
+                    {error.length > 0 && <span className="f6 u-center">{error}</span>}
+                    <Upload upload={this.upload}>
+                      <Input
+                        placeholder="Untitled Document"
+                        value={title}
+                        onChange={e => this.setState({ title: e.target.value })}
+                      />
+                      <DWEditor
+                        editorState={editorState}
+                        onChange={editorState => this.setState({ editorState })}
+                      />
+                    </Upload>
+                  </Wrapper>
+                </Fragment>
+              )}
             </Subscribe>
-            <Helpers render={() => <Button onClick={this.addNewPost}>Add</Button>} />
-            <Wrapper sm paddingLeft={4} paddingRight={4}>
-              <Upload upload={this.upload}>
-                <Input
-                  placeholder="Untitled Document"
-                  value={title}
-                  onChange={e => this.setState({ title: e.target.value })}
-                />
-                <DWEditor
-                  editorState={editorState}
-                  onChange={editorState => this.setState({ editorState })}
-                />
-              </Upload>
-            </Wrapper>
           </Wrapper>
         )}
       </Media>

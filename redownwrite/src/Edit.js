@@ -17,7 +17,8 @@ import {
   Helpers,
   DWEditor,
   Export,
-  Privacy
+  Privacy,
+  WordCounter
 } from './components'
 import format from 'date-fns/format'
 import isEmpty from 'lodash/isEmpty'
@@ -212,12 +213,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
             <Fragment>
               {autosaving && <Autosaving />}
               <Wrapper sm>
-                <Helpers
-                  render={() => (
-                    <Block maxWidth={96}>
-                      <Button onClick={() => this.updatePostContent()}>Save</Button>
-                    </Block>
-                  )}>
+                <Helpers onChange={this.updatePostContent} buttonText="Save">
                   <Export editorState={editorState} title={title} date={post.dateAdded} />
                   <Privacy
                     id={match.params.id}
@@ -229,6 +225,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
                       }))
                     }
                   />
+                  <WordCounter component={Block} editorState={editorState} />
                 </Helpers>
                 <Wrapper sm paddingTop={0} paddingLeft={8} paddingRight={8}>
                   <Block className={css(meta)} marginBottom={8}>
