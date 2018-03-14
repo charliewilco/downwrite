@@ -1,4 +1,4 @@
-# ![Downwrite](header.png)
+# ![Downwrite](.idea/header.png)
 
 **_Collection of Microservices and Client Side Application for Downwrite._**
 
@@ -16,9 +16,19 @@ yarn
 ### Contents
 
 - `services/export-md` Export Markdown - Micro (removed)
-- `redownwrite` Client - React + Draft.js
-- `api-downwrite` CRUD Endpoints - Hapi.js
-- `jwt` Auth JWT - Micro (TODO)
+- `redownwrite` Client - React + RR + Draft.js
+- `api-downwrite` REST API - Hapi.js
+
+#### Upcoming
+
+- `jwt` Auth JWT - Micro (TODO) Bearer
+- `graph-downwrite` - GraphQL API - Express + Mongo
+- `changelog` Engineering Notes - Gatsby
+- `help` FAQ / Help Notes - Gatsby
+- `@downwrite/ui` UI Library - React + Glamor
+- `@downwrite/css` Shared Common Base Styles - PostCSS
+- `@downwrite/markings` Helpers for Markdown - Draft.js + Markdown
+
 
 ### Commands
 
