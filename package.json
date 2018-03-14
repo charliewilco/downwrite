@@ -44,12 +44,14 @@
 	"bolt": {
 		"workspaces": [
 			"redownwrite",
-			"api-downwrite"
+			"api-downwrite",
+			"graph-downwrite"
 		]
 	},
 	"workspaces": [
 		"redownwrite",
-		"api-downwrite"
+		"api-downwrite",
+		"graph-downwrite"
 	],
 	"license": "MIT"
 }
