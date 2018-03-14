@@ -9,7 +9,7 @@ let wrapper = mount(
 )
 
 describe('<Check />', () => {
-  xit('checks', () => {
+  it('checks', () => {
     wrapper.find('input').simulate('toggle')
     expect(checkFire).toHaveBeenCalled()
   })
