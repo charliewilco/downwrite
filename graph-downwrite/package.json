@@ -1,0 +1,68 @@
+{
+  "name": "graph-downwrite",
+  "description": "GraphQL API for downwrite",
+  "version": "0.1.0",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "predev": "yarn build",
+    "deploy": "now && now alias",
+    "start": "node dist/server.js",
+    "dev": "concurrently -c 'blue,yellow' --names 'Babel,Nodemon' 'yarn build -w' 'nodemon dist/server.js'",
+    "test": "jest"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "express": "^4.16.3",
+    "express-graphql": "^0.6.12",
+    "graphql": "^0.13.1",
+    "universal-cookie-express": "^2.1.2",
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "babel-jest": "^22.4.0",
+    "jest": "^22.4.0",
+    "nodemon": "^1.15.1"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "test/*",
+      "src/*"
+    ],
+    "verbose": true,
+    "delay": "2500"
+  },
+  "now": {
+    "alias": "graph.downwrite.us",
+    "env": {
+      "NODE_ENV": "production"
+    },
+    "dotenv": ".env.production"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": true
+          }
+        }
+      ]
+    ],
+    "plugins": [
+      "transform-object-rest-spread"
+    ]
+  },
+  "repository": "charlespeters/downwrite",
+  "author": "Charles ⚡ <charlespeters42@gmail.com>"
+}
