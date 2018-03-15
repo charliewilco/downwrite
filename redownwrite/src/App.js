@@ -3,12 +3,11 @@ import * as React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Subscribe } from 'unstated'
 import Helmet from 'react-helmet'
-import { Block } from 'glamor/jsxstyle'
 import Loadable from 'react-loadable'
 import AuthContainer from './Auth'
 import ErrorContainer from './Errors'
 import OfflineContainer from './Offline'
-import { UIFlash, Header, Loading, Nav, Toggle, Logger, Offline } from './components'
+import { Shell, UIFlash, Loading, Logger, Offline } from './components/'
 import { PrivateRoute } from './CustomRoutes'
 
 type AppProps = {
@@ -75,67 +74,44 @@ export default class extends React.Component<AppProps, void> {
         {(auth, offline) => (
           <React.Fragment>
             <Offline onChange={offline.handleChange} />
+            <Logger value={[auth, offline]} />
+            <Helmet title="Downwrite" />
             <Router>
-              <Toggle>
-                {(navOpen, toggleNav, closeNav) => (
-                  <Block minHeight="100%" fontFamily="var(--primary-font)">
-                    <Helmet title="Downwrite" />
-                    <ErrorMessage />
-                    <Logger value={[auth, offline]} />
-                    <Block height="100%" className="u-cf">
-                      <Block minHeight="100%">
-                        <Header
-                          name="Downwrite"
-                          authed={auth.state.authed}
-                          open={navOpen}
-                          onClick={toggleNav}
-                        />
-
-                        <Switch>
-                          <Route
-                            exact
-                            path="/"
-                            render={(props: Object) =>
-                              auth.state.authed === true ? (
-                                <Dashboard
-                                  closeNav={closeNav}
-                                  token={auth.state.token}
-                                  user={auth.state.user}
-                                  {...props}
-                                />
-                              ) : (
-                                <Home {...props} signIn={auth.signIn} signOut={auth.signOut} />
-                              )
-                            }
+              <Shell auth={auth} renderErrors={() => <ErrorMessage />}>
+                {closeNav => (
+                  <Switch>
+                    <Route
+                      exact
+                      path="/"
+                      render={(props: Object) =>
+                        auth.state.authed === true ? (
+                          <Dashboard
+                            token={auth.state.token}
+                            user={auth.state.user}
+                            closeNav={closeNav}
+                            {...props}
                           />
+                        ) : (
+                          <Home {...props} signIn={auth.signIn} signOut={auth.signOut} />
+                        )
+                      }
+                    />
 
-                          <PrivateRoute path="/new" component={New} />
-                          <PrivateRoute path="/:id/edit" component={Edit} />
-                          <Route exact path="/:id/preview" component={Preview} />
-                          <Route
-                            exact
-                            path="/signout"
-                            render={(props: Object) => (
-                              <SignOut toggleNav={closeNav} signOut={auth.signOut} />
-                            )}
-                          />
-                          <Route path="/legal" component={Legal} />
-
-                          <Route component={NotFound} />
-                        </Switch>
-                      </Block>
-                      {navOpen && (
-                        <Nav
-                          closeNav={closeNav}
-                          token={auth.state.token}
-                          user={auth.state.user}
-                          username={auth.state.name}
-                        />
+                    <PrivateRoute path="/new" component={New} />
+                    <PrivateRoute path="/:id/edit" component={Edit} />
+                    <Route exact path="/:id/preview" component={Preview} />
+                    <Route
+                      exact
+                      path="/signout"
+                      render={(props: Object) => (
+                        <SignOut toggleNav={closeNav} signOut={auth.signOut} />
                       )}
-                    </Block>
-                  </Block>
+                    />
+                    <Route path="/legal" component={Legal} />
+                    <Route component={NotFound} />
+                  </Switch>
                 )}
-              </Toggle>
+              </Shell>
             </Router>
           </React.Fragment>
         )}
