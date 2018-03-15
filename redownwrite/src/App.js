@@ -3,7 +3,6 @@ import * as React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Subscribe } from 'unstated'
 import Helmet from 'react-helmet'
-import Media from 'react-media'
 import { Block } from 'glamor/jsxstyle'
 import Loadable from 'react-loadable'
 import AuthContainer from './Auth'
@@ -77,78 +76,66 @@ export default class extends React.Component<AppProps, void> {
           <React.Fragment>
             <Offline onChange={offline.handleChange} />
             <Router>
-              <Media query={{ minWidth: 500 }}>
-                {matches => (
-                  <Toggle>
-                    {(navOpen, toggleNav, closeNav) => (
-                      <Block minHeight="100%" fontFamily="var(--primary-font)">
-                        <Helmet title="Downwrite" />
-                        <ErrorMessage />
-                        <Logger value={[auth, offline]} />
-                        <Block height="100%" className="u-cf">
-                          <Block
-                            minHeight="100%"
-                            float={navOpen && matches && 'left'}
-                            width={navOpen && matches && 'calc(100% - 384px)'}>
-                            <Header
-                              name="Downwrite"
-                              authed={auth.state.authed}
-                              open={navOpen}
-                              onClick={toggleNav}
-                            />
+              <Toggle>
+                {(navOpen, toggleNav, closeNav) => (
+                  <Block minHeight="100%" fontFamily="var(--primary-font)">
+                    <Helmet title="Downwrite" />
+                    <ErrorMessage />
+                    <Logger value={[auth, offline]} />
+                    <Block height="100%" className="u-cf">
+                      <Block minHeight="100%">
+                        <Header
+                          name="Downwrite"
+                          authed={auth.state.authed}
+                          open={navOpen}
+                          onClick={toggleNav}
+                        />
 
-                            <Switch>
-                              <Route
-                                exact
-                                path="/"
-                                render={(props: Object) =>
-                                  auth.state.authed === true ? (
-                                    <Dashboard
-                                      closeNav={closeNav}
-                                      token={auth.state.token}
-                                      user={auth.state.user}
-                                      {...props}
-                                    />
-                                  ) : (
-                                    <Home
-                                      {...props}
-                                      signIn={auth.signIn}
-                                      signOut={auth.signOut}
-                                    />
-                                  )
-                                }
-                              />
+                        <Switch>
+                          <Route
+                            exact
+                            path="/"
+                            render={(props: Object) =>
+                              auth.state.authed === true ? (
+                                <Dashboard
+                                  closeNav={closeNav}
+                                  token={auth.state.token}
+                                  user={auth.state.user}
+                                  {...props}
+                                />
+                              ) : (
+                                <Home {...props} signIn={auth.signIn} signOut={auth.signOut} />
+                              )
+                            }
+                          />
 
-                              <PrivateRoute path="/new" component={New} />
-                              <PrivateRoute path="/:id/edit" component={Edit} />
-                              <Route exact path="/:id/preview" component={Preview} />
-                              <Route
-                                exact
-                                path="/signout"
-                                render={(props: Object) => (
-                                  <SignOut toggleNav={closeNav} signOut={auth.signOut} />
-                                )}
-                              />
-                              <Route path="/legal" component={Legal} />
+                          <PrivateRoute path="/new" component={New} />
+                          <PrivateRoute path="/:id/edit" component={Edit} />
+                          <Route exact path="/:id/preview" component={Preview} />
+                          <Route
+                            exact
+                            path="/signout"
+                            render={(props: Object) => (
+                              <SignOut toggleNav={closeNav} signOut={auth.signOut} />
+                            )}
+                          />
+                          <Route path="/legal" component={Legal} />
 
-                              <Route component={NotFound} />
-                            </Switch>
-                          </Block>
-                          {navOpen && (
-                            <Nav
-                              closeNav={closeNav}
-                              matches={matches}
-                              token={auth.state.token}
-                              user={auth.state.user}
-                              username={auth.state.name}
-                            />
-                          )}
-                        </Block>
+                          <Route component={NotFound} />
+                        </Switch>
                       </Block>
-                    )}
-                  </Toggle>
+                      {navOpen && (
+                        <Nav
+                          closeNav={closeNav}
+                          token={auth.state.token}
+                          user={auth.state.user}
+                          username={auth.state.name}
+                        />
+                      )}
+                    </Block>
+                  </Block>
                 )}
-              </Media>
+              </Toggle>
             </Router>
           </React.Fragment>
         )}

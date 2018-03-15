@@ -95,7 +95,7 @@ export default class Main extends Component<MainPr, MainState> {
 
   closeUIModal = () => this.setState({ modalOpen: false })
 
-  onDelete = async (post: Post, cb: ?Function) => {
+  onDelete = async (post: Post, cb?: Function) => {
     const { token } = this.props
 
     const config = {
