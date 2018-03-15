@@ -19,6 +19,7 @@ const Privacy = ({ id, title, publicStatus, onChange }) => (
         <Check checked={publicStatus} onChange={onChange} value={publicStatus} />
         <span
           style={{
+            flex: 1,
             marginLeft: 8,
             display: 'inline-block',
             verticalAlign: 'middle',
