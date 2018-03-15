@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import { findDOMNode } from 'react-dom'
 import { Link } from 'react-router-dom'
+import Media from 'react-media'
 import { css, keyframes } from 'glamor'
 import { Block, Flex, Column } from 'glamor/jsxstyle'
 import User from './User'
@@ -58,20 +59,19 @@ const SignoutIcon = () => (
 // TODO: Slide to close navigation?
 
 type NavigationProps = {
-  matches: boolean,
   token: string,
   username: string,
   closeNav: Function
 }
 
 export default class extends Component<NavigationProps> {
-  static displayName = 'Nav'
+  static displayName = 'NavigationBar'
 
-  componentWillMount() {
+  componentDidMount() {
     if (document) {
       addListeners(document, 'touchstart click', this.outsideHandleClick)
 
-      if (document.body && !this.props.matches) {
+      if (document.body) {
         document.body.classList.add('__noScroll')
       }
     }
@@ -81,7 +81,7 @@ export default class extends Component<NavigationProps> {
     if (document) {
       rmListeners(document, 'touchstart click', this.outsideHandleClick)
 
-      if (document.body && !this.props.matches) {
+      if (document.body) {
         document.body.classList.remove('__noScroll')
       }
     }
@@ -94,61 +94,63 @@ export default class extends Component<NavigationProps> {
   }
 
   render() {
-    const { matches, token, username } = this.props
+    const { token, username } = this.props
     return (
-      <Flex
-        animation={`${fadeInFromLeft} .45s`}
-        component="nav"
-        boxShadow={!matches && '0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12)'}
-        width={matches ? 384 : '75%'}
-        backgroundColor="white"
-        position={!matches && 'fixed'}
-        right={!matches && 0}
-        top={!matches && 0}
-        bottom={!matches && 0}
-        height={matches ? 'calc(100vh - 4px)' : '100vh'}
-        float={matches && 'right'}>
-        <Column flex={1} justifyContent={matches && 'space-between'}>
-          <Block>
-            <User username={username} />
-            <Block paddingLeft={8} paddingRight={8} paddingTop={16} paddingBottom={16}>
-              <Link to="/" className={css(navButton, navItem)}>
-                All Entries
-              </Link>
-
-              <Link to="/new" className={css(navButton, navItem)}>
-                Create New Entry
-              </Link>
-            </Block>
-          </Block>
-
-          <Block flex={matches && 1} padding={8}>
-            <Fetch token={token}>
-              {posts =>
-                posts.length > 0 ? (
-                  <SidebarPosts matches={matches} posts={posts} />
-                ) : (
-                  <SidebarEmpty />
-                )
-              }
-            </Fetch>
-          </Block>
-
+      <Media query={{ minWidth: 500 }}>
+        {(matches: boolean) => (
           <Flex
-            borderTop="1px solid #DBDCDD"
-            justifyContent="space-between"
-            alignItems="center"
-            padding={8}
-            textAlign="right">
-            <Link to="/legal" className={css(navButton, { fontSize: 12 })}>
-              Legal
-            </Link>
-            <Link to="/signout" className={css(navButton, { fontSize: 14 })}>
-              <SignoutIcon /> <span>Sign Out</span>
-            </Link>
+            animation={`${fadeInFromLeft} .45s`}
+            component="nav"
+            boxShadow={!matches && '0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12)'}
+            width={matches ? 384 : '75%'}
+            backgroundColor="white"
+            position={'fixed'}
+            right={0}
+            top={0}
+            bottom={0}>
+            <Column flex={1} justifyContent={matches && 'space-between'}>
+              <Block>
+                <User username={username} />
+                <Block paddingLeft={8} paddingRight={8} paddingTop={16} paddingBottom={16}>
+                  <Link to="/" className={css(navButton, navItem)}>
+                    All Entries
+                  </Link>
+
+                  <Link to="/new" className={css(navButton, navItem)}>
+                    Create New Entry
+                  </Link>
+                </Block>
+              </Block>
+
+              <Block flex={matches && 1} padding={8}>
+                <Fetch token={token}>
+                  {posts =>
+                    posts.length > 0 ? (
+                      <SidebarPosts matches={matches} posts={posts} />
+                    ) : (
+                      <SidebarEmpty />
+                    )
+                  }
+                </Fetch>
+              </Block>
+
+              <Flex
+                borderTop="1px solid #DBDCDD"
+                justifyContent="space-between"
+                alignItems="center"
+                padding={8}
+                textAlign="right">
+                <Link to="/legal" className={css(navButton, { fontSize: 12 })}>
+                  Legal
+                </Link>
+                <Link to="/signout" className={css(navButton, { fontSize: 14 })}>
+                  <SignoutIcon /> <span>Sign Out</span>
+                </Link>
+              </Flex>
+            </Column>
           </Flex>
-        </Column>
-      </Flex>
+        )}
+      </Media>
     )
   }
 }

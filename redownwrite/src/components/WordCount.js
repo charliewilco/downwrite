@@ -14,7 +14,7 @@ export default class WordCounter extends Component<WordCounterers, void> {
     component: 'span'
   }
 
-  getWordCount(editorState) {
+  getWordCount(editorState: ContentState) {
     const plainText = editorState.getCurrentContent().getPlainText('')
     const regex = /(?:\r\n|\r|\n)/g // new line, carriage return, line feed
     const cleanString = plainText.replace(regex, ' ').trim() // replace above characters w/ space
