@@ -35,15 +35,17 @@ const Overlay = (props: {}) => (
 
 // TODO: Remove scrolling on open
 
-export default class extends React.Component<{
+type ModalProps = {
   closeUIModal: Function,
   children: React.Node,
   xs: boolean,
   sm: boolean
-}> {
+}
+
+export default class extends React.Component<ModalProps> {
   static displayName = 'UIModal'
 
-  componentWillMount() {
+  componentDidMount() {
     if (document.body) {
       document.body.classList.add('__noScroll')
     }
