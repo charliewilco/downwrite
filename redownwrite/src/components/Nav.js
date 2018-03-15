@@ -33,6 +33,7 @@ const fadeInFromLeft = keyframes({
 
 const addListeners = (el: Document, s: string, fn: Function) =>
   s.split(' ').forEach(e => el.addEventListener(e, fn, false))
+
 const rmListeners = (el: Document, s: string, fn: Function) =>
   s.split(' ').forEach(e => el.removeEventListener(e, fn, false))
 
