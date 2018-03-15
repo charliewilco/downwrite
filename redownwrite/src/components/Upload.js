@@ -26,6 +26,7 @@ export default class extends Component {
   onDrop = files => this.extractMarkdown(files)
 
   render() {
+    const { disabled, children } = this.props
     return (
       <Dropzone
         accept="text/markdown, text/x-markdown, text/plain"
@@ -33,9 +34,9 @@ export default class extends Component {
         style={{ border: 0, width: '100%' }}
         onDrop={this.onDrop}
         disableClick
-        disabled={this.props.disabled}>
-        {this.props.children}
-      </Dropzone>
+        disabled={disabled}
+        children={children}
+      />
     )
   }
 }
