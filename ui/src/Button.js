@@ -28,6 +28,6 @@ const btn = css({
 //   args: Object
 // }
 
-const Button = ({ ...args }) => <button className={css(btn)} {...args} />
+const Button = props => <button className={css(btn)} {...props} />
 
 export default Button
