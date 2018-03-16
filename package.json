@@ -45,13 +45,15 @@
 		"workspaces": [
 			"redownwrite",
 			"api-downwrite",
-			"graph-downwrite"
+			"graph-downwrite",
+			"ui"
 		]
 	},
 	"workspaces": [
 		"redownwrite",
 		"api-downwrite",
-		"graph-downwrite"
+		"graph-downwrite",
+		"ui"
 	],
 	"license": "MIT"
 }
