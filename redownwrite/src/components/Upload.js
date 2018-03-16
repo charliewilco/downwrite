@@ -13,13 +13,14 @@ export default class extends Component {
     reader.onload = e => {
       let md = fm(reader.result)
 
-      const state = {
+      return this.props.upload({
         title: md.attributes.title || '',
-        editorState: EditorState.createWithContent(convertFromRaw(markdownToDraft(md.body)))
-      }
-
-      return this.props.upload(state)
+        editorState: EditorState.createWithContent(
+          convertFromRaw(markdownToDraft(md.body, { preserveNewlines: true }))
+        )
+      })
     }
+
     reader.readAsText(files[0])
   }
 
