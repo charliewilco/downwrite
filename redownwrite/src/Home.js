@@ -6,7 +6,7 @@ import { css } from 'glamor'
 import { Subscribe } from 'unstated'
 import Login from './Login'
 import Register from './Register'
-import ErrorContainer from './Errors'
+import { ErrorContainer } from './containers'
 import { Logo } from './components'
 
 const hStyle = css({

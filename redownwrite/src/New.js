@@ -6,8 +6,7 @@ import { Redirect } from 'react-router-dom'
 import { EditorState, convertToRaw } from 'draft-js'
 import Media from 'react-media'
 import uuid from 'uuid/v4'
-
-import OfflineContainer from './Offline'
+import { OfflineContainer } from './containers'
 import { DWEditor, Upload, Wrapper, Input, Helpers } from './components'
 import { POST_ENDPOINT } from './utils/urls'
 
