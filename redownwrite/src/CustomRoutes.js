@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react'
-import AuthContainer from './Auth'
-import ErrorContainer from './Auth'
+import { AuthContainer, ErrorContainer } from './containers'
 import { Subscribe } from 'unstated'
 import { Route, Redirect, type Location } from 'react-router-dom'
 

@@ -4,10 +4,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Subscribe } from 'unstated'
 import Helmet from 'react-helmet'
 import Loadable from 'react-loadable'
-import AuthContainer from './Auth'
-import ErrorContainer from './Errors'
-import OfflineContainer from './Offline'
-import { Shell, UIFlash, Loading, Logger, Offline } from './components/'
+import { AuthContainer, OfflineContainer, ErrorContainer } from './containers'
+import { Shell, UIFlash, Loading, Logger, Offline } from './components'
 import { PrivateRoute } from './CustomRoutes'
 
 type LoaderOpts = {
