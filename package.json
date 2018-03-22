@@ -43,6 +43,7 @@
 	},
 	"bolt": {
 		"workspaces": [
+			"afterdown",
 			"downxt",
 			"redownwrite",
 			"api-downwrite",
@@ -51,6 +52,7 @@
 		]
 	},
 	"workspaces": [
+		"afterdown",
 		"downxt",
 		"redownwrite",
 		"api-downwrite",
