@@ -88,8 +88,12 @@ export default class extends Component<NavigationProps> {
   }
 
   outsideHandleClick = ({ target }: SyntheticInputEvent<*>) => {
-    if (!findDOMNode(this).contains(target)) {
-      return this.props.closeNav()
+    const node = findDOMNode(this)
+
+    if (node instanceof HTMLElement) {
+      if (!node.contains(target)) {
+        return this.props.closeNav()
+      }
     }
   }
 
