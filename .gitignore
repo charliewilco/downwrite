@@ -16,3 +16,4 @@ build
 npm-debug.log
 package-lock.json
 dist
+.next
