@@ -54,7 +54,19 @@ exports.getMarkdown = (req, reply) => {
       )
     } else {
       return reply({
-        content: draftToMarkdown(post.content),
+        content: draftToMarkdown(post.content, {
+          entityItems: {
+            LINK: {
+              open: entity => {
+                return '['
+              },
+
+              close: entity => {
+                return `](${entity.data.url || entity.data.href})`
+              }
+            }
+          }
+        }),
         title: post.title,
         dateAdded: post.dateAdded
       })

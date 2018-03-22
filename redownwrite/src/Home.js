@@ -6,7 +6,7 @@ import { css } from 'glamor'
 import { Subscribe } from 'unstated'
 import Login from './Login'
 import Register from './Register'
-import ErrorContainer from './Errors'
+import { ErrorContainer } from './containers'
 import { Logo } from './components'
 
 const hStyle = css({
@@ -111,9 +111,9 @@ export default class Home extends Component<{ signIn: Function }, { loginSelecte
               <Subscribe to={[ErrorContainer]}>
                 {err =>
                   loginSelected ? (
-                    <Login {...this.props} setError={err.setFlash} />
+                    <Login {...this.props} setError={err.setError} />
                   ) : (
-                    <Register {...this.props} setError={err.setFlash} />
+                    <Register {...this.props} setError={err.setError} />
                   )
                 }
               </Subscribe>

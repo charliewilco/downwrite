@@ -31,10 +31,15 @@
     "uuid": "^3.1.0"
   },
   "devDependencies": {
-    "babel-jest": "^22.2.2",
+    "babel-jest": "^22.4.0",
     "concurrently": "^3.5.0",
-    "jest": "^21.0.2",
-    "nodemon": "^1.15.0"
+    "jest": "^22.4.0",
+    "nodemon": "^1.15.1"
+  },
+  "nodemonConfig": {
+    "ignore": ["test/*", "src/*"],
+    "verbose": true,
+    "delay": "2500"
   },
   "now": {
     "alias": "api.downwrite.us",

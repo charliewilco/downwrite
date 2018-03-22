@@ -1,0 +1,17 @@
+{
+  "name": "@downwrite/ui",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "start-storybook -p 9001 -c .storybook"
+  },
+  "dependencies": {
+    "glamor": "^2.20.40",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  },
+  "devDependencies": {
+    "@storybook/react": "^3.3.15",
+    "babel-core": "^6.26.0"
+  }
+}

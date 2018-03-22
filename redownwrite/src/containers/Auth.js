@@ -66,13 +66,13 @@ export default class AuthContainer extends Container<AuthState> {
   }
 
   signOut = () => {
-    cookie.remove('DW_TOKEN')
-
-    return this.setState({
+    this.setState({
       authed: false,
       token: undefined,
       user: undefined,
       name: undefined
     })
+
+    cookie.remove('DW_TOKEN', cookieOptions)
   }
 }

@@ -8,8 +8,8 @@ exports[`Card matches snapshot 1`] = `
   font-weight: 700;
 }
 
-.glamor-4,
-[data-glamor-4] {
+.glamor-5,
+[data-glamor-5] {
   color: var(--color-2);
   border: 0;
   background: none;
@@ -24,8 +24,8 @@ exports[`Card matches snapshot 1`] = `
   font-size: 12px;
 }
 
-.glamor-8,
-[data-glamor-8] {
+.glamor-9,
+[data-glamor-9] {
   font-weight: 400;
   box-shadow: 0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12);
   background-color: white;
@@ -39,8 +39,8 @@ exports[`Card matches snapshot 1`] = `
   font-weight: 400;
 }
 
-.glamor-5 a,
-[data-glamor-5] a {
+.glamor-6 a,
+[data-glamor-6] a {
   color: #4382A1;
 }
 
@@ -170,7 +170,7 @@ exports[`Card matches snapshot 1`] = `
   <Flex
     className={
       Object {
-        "data-glamor-8": "",
+        "data-glamor-9": "",
       }
     }
     data-test="Card"
@@ -181,7 +181,7 @@ exports[`Card matches snapshot 1`] = `
     <View
       className={
         Object {
-          "data-glamor-8": "",
+          "data-glamor-9": "",
         }
       }
       component="div"
@@ -194,7 +194,7 @@ exports[`Card matches snapshot 1`] = `
       <div
         className={
           Object {
-            "data-glamor-8": "",
+            "data-glamor-9": "",
           }
         }
         data-css-m8rrnj=""
@@ -223,7 +223,11 @@ exports[`Card matches snapshot 1`] = `
                 <Link
                   to="/6acebce0-20b6-4015-87fe-951c7bb36481/edit"
                 >
-                  Starting Again
+                  <a
+                    href="/6acebce0-20b6-4015-87fe-951c7bb36481/edit"
+                  >
+                    Starting Again
+                  </a>
                 </Link>
               </h2>
               <small
@@ -272,7 +276,7 @@ exports[`Card matches snapshot 1`] = `
           backgroundColor="rgba(101, 163, 191, .125)"
           className={
             Object {
-              "data-glamor-5": "",
+              "data-glamor-6": "",
             }
           }
           fontSize={12}
@@ -284,7 +288,7 @@ exports[`Card matches snapshot 1`] = `
             backgroundColor="rgba(101, 163, 191, .125)"
             className={
               Object {
-                "data-glamor-5": "",
+                "data-glamor-6": "",
               }
             }
             component="div"
@@ -297,7 +301,7 @@ exports[`Card matches snapshot 1`] = `
             <div
               className={
                 Object {
-                  "data-glamor-5": "",
+                  "data-glamor-6": "",
                 }
               }
               data-css-chikq1=""
@@ -318,12 +322,16 @@ exports[`Card matches snapshot 1`] = `
                       }
                       to="/6acebce0-20b6-4015-87fe-951c7bb36481/edit"
                     >
-                      Edit
-                    </Link>
-                    <Link
-                      to="/6acebce0-20b6-4015-87fe-951c7bb36481/preview"
-                    >
-                      Preview
+                      <a
+                        className={
+                          Object {
+                            "data-glamor-3": "",
+                          }
+                        }
+                        href="/6acebce0-20b6-4015-87fe-951c7bb36481/edit"
+                      >
+                        Edit
+                      </a>
                     </Link>
                   </div>
                 </View>
@@ -331,7 +339,7 @@ exports[`Card matches snapshot 1`] = `
               <button
                 className={
                   Object {
-                    "data-glamor-4": "",
+                    "data-glamor-5": "",
                   }
                 }
                 data-test="cardDelete"

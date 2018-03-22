@@ -1,14 +1,13 @@
 // @flow
-import * as React from 'react'
-import withOfflineState from 'react-offline-hoc'
+import React, { Fragment, Component } from 'react'
+import { Subscribe } from 'unstated'
 import Helmet from 'react-helmet'
-import { EditorState, convertToRaw } from 'draft-js'
-import { DWEditor } from './components'
-import Upload from './components/Upload'
 import { Redirect } from 'react-router-dom'
+import { EditorState, convertToRaw } from 'draft-js'
 import Media from 'react-media'
-import { Wrapper, Input, Button, Helpers } from './components'
 import uuid from 'uuid/v4'
+import { OfflineContainer } from './containers'
+import { DWEditor, Upload, Wrapper, Input, Helpers } from './components'
 import { POST_ENDPOINT } from './utils/urls'
 
 type NewPostSt = {
@@ -24,14 +23,13 @@ type NewPostSt = {
 
 type NewPostProps = { token: string, user: string }
 
-class NewX extends React.Component<NewPostProps, NewPostSt> {
+export default class NewX extends Component<NewPostProps, NewPostSt> {
   state = {
     editorState: EditorState.createEmpty(),
     title: '',
     id: uuid(),
     dateAdded: new Date(),
     error: '',
-    drafts: [],
     saved: false
   }
 
@@ -60,7 +58,7 @@ class NewX extends React.Component<NewPostProps, NewPostSt> {
   saveLocalDraft = (id: string, post: Object) =>
     localStorage.setItem('Draft ' + id, JSON.stringify(post))
 
-  addNewPost = () => {
+  addNewPost = (offline: boolean) => {
     let { id, title, editorState, dateAdded } = this.state
     const ContentState = editorState.getCurrentContent()
     const content = JSON.stringify(convertToRaw(ContentState))
@@ -75,7 +73,7 @@ class NewX extends React.Component<NewPostProps, NewPostSt> {
       user
     }
 
-    return this.addNew(post)
+    return offline ? this.saveLocalDraft(id, post) : this.addNew(post)
   }
 
   upload = (content: { title: string, editorState: EditorState }) => this.setState(content)
@@ -89,31 +87,40 @@ class NewX extends React.Component<NewPostProps, NewPostSt> {
       <Media query={{ minWidth: 500 }}>
         {m => (
           <Wrapper paddingTop={128} sm>
-            {error.length > 0 && <span className="f6 u-center">{error}</span>}
-            <Helmet
-              title={this.state.title.length > 0 ? this.state.title : 'New'}
-              titleTemplate="%s | Downwrite"
-            />
-            {!this.props.isOnline && <span>You're Offline Right Now</span>}
-            <Helpers render={() => <Button onClick={this.addNewPost}>Add</Button>} />
-            <Wrapper sm paddingLeft={4} paddingRight={4}>
-              <Upload upload={this.upload}>
-                <Input
-                  placeholder="Untitled Document"
-                  value={title}
-                  onChange={e => this.setState({ title: e.target.value })}
-                />
-                <DWEditor
-                  editorState={editorState}
-                  onChange={editorState => this.setState({ editorState })}
-                />
-              </Upload>
-            </Wrapper>
+            <Subscribe to={[OfflineContainer]}>
+              {network => (
+                <Fragment>
+                  {network.state.offline && <span>You're Offline Right Now</span>}
+                  <Helmet
+                    title={title.length > 0 ? title : 'New'}
+                    titleTemplate="%s | Downwrite"
+                  />
+
+                  <Helpers
+                    disabled={network.state.offline}
+                    buttonText="Add"
+                    onChange={() => this.addNewPost(network.state.offline)}
+                  />
+                  <Wrapper sm paddingLeft={4} paddingRight={4}>
+                    {error.length > 0 && <span className="f6 u-center">{error}</span>}
+                    <Upload upload={this.upload}>
+                      <Input
+                        placeholder="Untitled Document"
+                        value={title}
+                        onChange={e => this.setState({ title: e.target.value })}
+                      />
+                      <DWEditor
+                        editorState={editorState}
+                        onChange={editorState => this.setState({ editorState })}
+                      />
+                    </Upload>
+                  </Wrapper>
+                </Fragment>
+              )}
+            </Subscribe>
           </Wrapper>
         )}
       </Media>
     )
   }
 }
-
-export default withOfflineState(NewX)

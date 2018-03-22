@@ -7,8 +7,13 @@ export default class extends Component {
     posts: []
   }
 
+  static defaultProps = {
+    sortResponse: x => x,
+    endpoint: POST_ENDPOINT
+  }
+
   getPosts = async () => {
-    const req = await fetch(POST_ENDPOINT, {
+    const req = await fetch(this.props.endpoint, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${this.props.token}`
@@ -22,6 +27,8 @@ export default class extends Component {
     this.setState({ posts })
   }
 
+  // TODO: Move this to React Suspense!!
+  // TODO: Or move to componentDidMount and add loading State
   componentWillMount() {
     this.getPosts()
   }

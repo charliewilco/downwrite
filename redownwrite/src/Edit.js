@@ -1,16 +1,14 @@
 // @flow
 
-import * as React from 'react'
+import React, { Component, Fragment } from 'react'
 import { css } from 'glamor'
-import { EditorState, convertToRaw } from 'draft-js'
-import type { ContentState } from 'draft-js'
+import { EditorState, convertToRaw, type ContentState } from 'draft-js'
 import Helmet from 'react-helmet'
 import Media from 'react-media'
-import { matchPath } from 'react-router-dom'
-import type { Location, Match } from 'react-router'
+import { matchPath, type Location, type Match } from 'react-router-dom'
 import { Block } from 'glamor/jsxstyle'
 import {
-  Button,
+  Autosaving,
   Input,
   NightMode,
   Loading,
@@ -18,9 +16,9 @@ import {
   Helpers,
   DWEditor,
   Export,
-  Privacy
+  Privacy,
+  WordCounter
 } from './components'
-import Autosaving from './components/AutosavingNotification.js'
 import format from 'date-fns/format'
 import isEmpty from 'lodash/isEmpty'
 import debounce from 'lodash/debounce'
@@ -47,11 +45,13 @@ type EditorPr = {
   token: string,
   user: string,
   location: Location,
-  match: {
-    params: {
-      id: string
-    }
-  }
+  match:
+    | {
+        params: {
+          id: string
+        }
+      }
+    | Match
 }
 
 // TODO: Document this
@@ -60,9 +60,7 @@ type EditorPr = {
 // - EditorState changes
 // - Updating the post on the server
 
-const { Component, Fragment } = React
-
-class Edit extends Component<EditorPr, EditorSt> {
+export default class Edit extends Component<EditorPr, EditorSt> {
   static displayName = 'Edit'
 
   titleInput: HTMLInputElement
@@ -204,8 +202,6 @@ class Edit extends Component<EditorPr, EditorSt> {
     const { title, post, loaded, editorState, publicStatus, autosaving } = this.state
     const { match } = this.props
 
-    console.log(this.props)
-
     return !loaded ? (
       <Loading />
     ) : (
@@ -216,12 +212,7 @@ class Edit extends Component<EditorPr, EditorSt> {
             <Fragment>
               {autosaving && <Autosaving />}
               <Wrapper sm>
-                <Helpers
-                  render={() => (
-                    <Block maxWidth={96}>
-                      <Button onClick={() => this.updatePostContent()}>Save</Button>
-                    </Block>
-                  )}>
+                <Helpers onChange={this.updatePostContent} buttonText="Save">
                   <Export editorState={editorState} title={title} date={post.dateAdded} />
                   <Privacy
                     id={match.params.id}
@@ -233,6 +224,7 @@ class Edit extends Component<EditorPr, EditorSt> {
                       }))
                     }
                   />
+                  <WordCounter component={Block} editorState={editorState} />
                 </Helpers>
                 <Wrapper sm paddingTop={0} paddingLeft={8} paddingRight={8}>
                   <Block className={css(meta)} marginBottom={8}>
@@ -260,5 +252,3 @@ class Edit extends Component<EditorPr, EditorSt> {
     )
   }
 }
-
-export default Edit

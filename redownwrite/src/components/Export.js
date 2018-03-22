@@ -6,7 +6,7 @@ import { Flex, Block } from 'glamor/jsxstyle'
 import { convertToRaw, EditorState } from 'draft-js'
 import { draftToMarkdown } from 'markdown-draft-js'
 
-import Markdown from './ExportIcons/MD'
+import Markdown from './ExportMarkdownIcon'
 
 import type { ContentState } from 'draft-js'
 
@@ -37,6 +37,23 @@ export default class extends React.Component<ExportPr> {
     })
   }
 
+  customDraft = (content: ContentState) =>
+    draftToMarkdown(content, {
+      entityItems: {
+        LINK: {
+          open: entity => {
+            console.log(entity)
+            return '['
+          },
+
+          close: entity => {
+            console.log(entity)
+            return `](${entity.data.url || entity.data.href})`
+          }
+        }
+      }
+    })
+
   toMarkdown = async ({ title, content, date }: ExportCb) => {
     let markdown = `
 ---
@@ -44,10 +61,12 @@ title: ${title}
 dateAdded: ${date.toString()}
 ---
 
-${draftToMarkdown(content)}
+${this.customDraft(content)}
 `
 
     const contents = new Blob([markdown.trim()], { type: 'text/markdown; charset=UTF-8' })
+
+    console.log(markdown)
 
     saveAs(contents, `${title.replace(/\s+/g, '-').toLowerCase()}.md`)
   }

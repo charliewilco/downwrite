@@ -1,18 +1,14 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Block } from 'glamor/jsxstyle'
+import color from 'rcolor'
 
-class RandomColor extends React.Component {
-  state = {
-    a: null,
-    b: null
-  }
+const initialState = {
+  a: color() || `#FEB692`,
+  b: color() || `#EA5455`
+}
 
-  componentWillMount() {
-    this.setState({
-      a: `#FEB692`,
-      b: `#EA5455`
-    })
-  }
+class RandomColor extends Component {
+  state = initialState
 
   render() {
     return this.props.children(this.state.a, this.state.b)
