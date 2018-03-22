@@ -1,8 +1,15 @@
+// @flow
 import React from 'react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, type Location } from 'react-router-dom'
 import compose from './utils/compose'
 
-export default ({ location, signOut, toggleNav }) => {
+type SnoType = {
+  location: Location,
+  signOut: Function,
+  toggleNav: Function
+}
+
+export default ({ location, signOut, toggleNav }: SnoType) => {
   let seq = compose(toggleNav, signOut)
 
   seq()

@@ -56,7 +56,7 @@ export default class extends React.Component<PreviewProps, PreviewState> {
   // I'm gonna need to take that back at some point
   // Will Next.js fix this?
 
-  componentWillReceiveProps({ location }: { location: Location }) {
+  componentWillReceiveProps({ location }) {
     if (location !== this.props.location) {
       const match: Match = matchPath(location.pathname, { path: '/:id/preview' })
       this.getPreview(match.params.id).then(post => this.setState({ error: post.error, post }))

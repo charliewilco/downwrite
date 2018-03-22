@@ -1,12 +1,12 @@
 // @flow
 
-import React, { Component } from 'react'
+import React, { Component, type ComponentType } from 'react'
 import type { ContentState } from 'draft-js'
 
 type WordCounterers = {
   limit: number,
   editorState: ContentState,
-  component: React.Node
+  component: ComponentType<any>
 }
 
 export default class WordCounter extends Component<WordCounterers, void> {
@@ -31,15 +31,15 @@ export default class WordCounter extends Component<WordCounterers, void> {
   // }
 
   render() {
-    const { editorState, component: Component } = this.props
+    const { editorState, component: Cx } = this.props
     const count = this.getWordCount(editorState)
 
     return (
-      <Component>
+      <Cx>
         <small>
           <pre>Word Count: {count}</pre>
         </small>
-      </Component>
+      </Cx>
     )
   }
 }

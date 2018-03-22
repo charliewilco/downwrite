@@ -42,7 +42,7 @@ type MainState = {
   posts: Res,
   loaded: boolean,
   layout: 'grid' | 'list',
-  selectedPost?: Post | {},
+  selectedPost: ?Post | {},
   modalOpen: boolean,
   error: string
 }

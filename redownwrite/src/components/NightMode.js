@@ -1,17 +1,20 @@
 // @flow
 
-import React, { Component } from 'react'
+import React, { Component, type ComponentType } from 'react'
 import { Flex, Block } from 'glamor/jsxstyle'
 import Check from './Checkbox'
 
 const NIGHT_MODE: string = 'NightMDX'
 
-export default class extends Component<{ children: any }, { night: boolean }> {
+let nightMode: boolean = JSON.parse(localStorage.getItem('nightMode'))
+
+export default class extends Component<{ children: ComponentType<any> }, { night: boolean }> {
   state = {
-    night: JSON.parse(localStorage.getItem('nightMode')) || false
+    night: nightMode || false
   }
 
   // TODO: Remove
+  // TODO: Move to Theme
   // componentWillMount() {
   //   // TODO: there should be a better:
   //   const night = JSON.parse(localStorage.getItem('nightMode')) || false
@@ -24,12 +27,11 @@ export default class extends Component<{ children: any }, { night: boolean }> {
   // }
 
   setNight = (status: boolean) => {
-    if (document.body) {
+    const { body } = document
+    if (body instanceof HTMLElement) {
       localStorage.setItem('nightMode', status.toString())
 
-      status
-        ? document.body.classList.add(NIGHT_MODE)
-        : document.body.classList.remove(NIGHT_MODE)
+      status ? body.classList.add(NIGHT_MODE) : body.classList.remove(NIGHT_MODE)
     }
   }
 
@@ -45,8 +47,10 @@ export default class extends Component<{ children: any }, { night: boolean }> {
       document.body.classList.remove(NIGHT_MODE)
     }
   }
+
   render() {
     const { night } = this.state
+    const { children } = this.props
     return (
       <Block
         className={night ? 'NightMode' : ''}
@@ -67,7 +71,7 @@ export default class extends Component<{ children: any }, { night: boolean }> {
             <small style={{ marginLeft: 8 }}>Night Mode</small>
           </Flex>
         </Block>
-        <Block>{this.props.children}</Block>
+        <Block>{children}</Block>
       </Block>
     )
   }
