@@ -5,14 +5,11 @@ import { Subscribe } from 'unstated'
 import Helmet from 'react-helmet'
 import Loadable from 'react-loadable'
 import { AuthContainer, OfflineContainer, ErrorContainer } from './containers'
-import { Shell, UIFlash, Loading, Logger, Offline } from './components'
+import * as DW from './components'
 import { PrivateRoute } from './CustomRoutes'
 
-type LoaderOpts = {
-  loader: Function
-}
-
-const Ldx = (opts: LoaderOpts) => Loadable(Object.assign({ loading: Loading }, opts))
+const Ldx = (opts: { loader: Function }) =>
+  Loadable(Object.assign({}, { loading: DW.Loading }, opts))
 
 const New = Ldx({ loader: () => import('./New') })
 const Edit = Ldx({ loader: () => import('./Edit') })
@@ -23,10 +20,10 @@ const SignOut = Ldx({ loader: () => import('./SignOut') })
 const Preview = Ldx({ loader: () => import('./Preview') })
 const Legal = Ldx({ loader: () => import('./Legal') })
 
-const ErrorMessage = () => (
+const UIErrorMessage = () => (
   <Subscribe to={[ErrorContainer]}>
     {err =>
-      err.state.content.length > 0 && <UIFlash {...err.state} onClose={err.clearFlash} />
+      err.state.content.length > 0 && <DW.UIFlash {...err.state} onClose={err.clearFlash} />
     }
   </Subscribe>
 )
@@ -35,11 +32,11 @@ export default () => (
   <Subscribe to={[AuthContainer, OfflineContainer]}>
     {(auth, offline) => (
       <React.Fragment>
-        <Offline onChange={offline.handleChange} />
-        <Logger value={[auth, offline]} />
+        <DW.Offline onChange={offline.handleChange} />
+        <DW.Logger value={[auth, offline]} />
         <Helmet title="Downwrite" />
         <Router>
-          <Shell auth={auth} renderErrors={() => <ErrorMessage />}>
+          <DW.Shell auth={auth} renderErrors={() => <UIErrorMessage />}>
             {closeNav => (
               <Switch>
                 <Route
@@ -72,7 +69,7 @@ export default () => (
                 <Route component={NotFound} />
               </Switch>
             )}
-          </Shell>
+          </DW.Shell>
         </Router>
       </React.Fragment>
     )}
