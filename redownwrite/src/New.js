@@ -23,14 +23,15 @@ type NewPostSt = {
 
 type NewPostProps = { token: string, user: string }
 
-export default class NewX extends Component<NewPostProps, NewPostSt> {
+export default class NewEditor extends Component<NewPostProps, NewPostSt> {
   state = {
     editorState: EditorState.createEmpty(),
     title: '',
     id: uuid(),
     dateAdded: new Date(),
     error: '',
-    saved: false
+    saved: false,
+    drafts: []
   }
 
   static displayName = 'NewPostEditor'

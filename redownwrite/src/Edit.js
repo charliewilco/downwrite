@@ -45,13 +45,7 @@ type EditorPr = {
   token: string,
   user: string,
   location: Location,
-  match:
-    | {
-        params: {
-          id: string
-        }
-      }
-    | Match
+  match: Match
 }
 
 // TODO: Document this
@@ -120,6 +114,18 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     return post
   }
 
+  updatePost = (body: Object) => {
+    const { token, match } = this.props
+    return fetch(`${POST_ENDPOINT}/${match.params.id}`, {
+      method: 'put',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(body)
+    })
+  }
+
   shouldComponentUpdate(nextProps: Object, nextState: { post: Object }) {
     return isEmpty(nextState.post) || isEmpty(nextState.post.content.blocks)
   }
@@ -131,7 +137,8 @@ export default class Edit extends Component<EditorPr, EditorSt> {
   // TODO: Consider this lifecycle hook is deprecated
 
   async componentWillMount() {
-    const post = await this.getPost(this.props.match.params.id)
+    const { match } = this.props
+    const post = await this.getPost(match.params.id)
     const content = await superConverter(post.content)
 
     this.setState({
@@ -161,28 +168,14 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     })
   }
 
-  updatePost = (body: Object) => {
-    const { token, match } = this.props
-    return fetch(`${POST_ENDPOINT}/${match.params.id}`, {
-      method: 'put',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(body)
-    })
-  }
-
   // TODO: Refactor this to do something smarter to render this component
   // See this is where recompose might be cool
   // I'm gonna need to take that back at some point
   // Will Next.js fix this?
 
-  // TODO: Consider this lifecycle hook is deprecated
-
-  componentWillReceiveProps({ location }: { location: Location }) {
-    if (location !== this.props.location) {
-      const { params: { id } } = matchPath(location.pathname, { path: '/:id/edit' })
+  componentWillReceiveProps(nextProps: EditorPr) {
+    if (nextProps.location !== this.props.location) {
+      const { params: { id } } = matchPath(nextProps.location.pathname, { path: '/:id/edit' })
 
       this.getPost(id).then(post =>
         this.setState({
