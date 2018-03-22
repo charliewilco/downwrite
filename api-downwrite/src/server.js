@@ -48,6 +48,8 @@ server.register(require('hapi-auth-jwt'), err => {
 server.start(err => {
   if (err) {
     throw err
+
+    process.exit(1)
   }
 
   server.log('info', 'Server running at: ' + server.info.uri)

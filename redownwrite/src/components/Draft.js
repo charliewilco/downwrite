@@ -1,6 +1,6 @@
 import { RichUtils } from 'draft-js'
 import Editor from 'draft-js-plugins-editor'
-import React from 'react'
+import React, { Component } from 'react'
 import Prism from 'prismjs'
 import { css } from 'glamor'
 import Toolbar from './Toolbar'
@@ -25,7 +25,7 @@ const editorShell = css({
   paddingBottom: 128
 })
 
-export default class extends React.Component {
+export default class extends Component {
   static displayName = 'DWEditor'
 
   state = {

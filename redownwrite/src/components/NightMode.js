@@ -1,33 +1,36 @@
-import React from 'react'
+// @flow
+
+import React, { Component } from 'react'
 import { Flex, Block } from 'glamor/jsxstyle'
 import Check from './Checkbox'
 
-const NIGHT_MODE = 'NightMDX'
+const NIGHT_MODE: string = 'NightMDX'
 
-export default class extends React.Component {
+export default class extends Component<{ children: any }, { night: boolean }> {
   state = {
-    night: false
+    night: JSON.parse(localStorage.getItem('nightMode')) || false
   }
 
-  componentWillMount() {
-    // TODO: there should be a better:
-    const night = JSON.parse(localStorage.getItem('nightMode')) || false
+  // TODO: Remove
+  // componentWillMount() {
+  //   // TODO: there should be a better:
+  //   const night = JSON.parse(localStorage.getItem('nightMode')) || false
+  //
+  //   this.setState({ night: night }, () => {
+  //     if (night && !this.containsClass()) {
+  //       document.body.classList.add(NIGHT_MODE)
+  //     }
+  //   })
+  // }
 
-    this.setState({ night: night }, () => {
-      if (night && !this.containsClass()) {
-        document.body.classList.add(NIGHT_MODE)
-      }
-    })
-  }
+  setNight = (status: boolean) => {
+    if (document.body) {
+      localStorage.setItem('nightMode', status.toString())
 
-  containsClass = () => document.body.classList.contains(NIGHT_MODE)
-
-  setNight = status => {
-    localStorage.setItem('nightMode', status)
-
-    status
-      ? document.body.classList.add(NIGHT_MODE)
-      : document.body.classList.remove(NIGHT_MODE)
+      status
+        ? document.body.classList.add(NIGHT_MODE)
+        : document.body.classList.remove(NIGHT_MODE)
+    }
   }
 
   onChange = () => {

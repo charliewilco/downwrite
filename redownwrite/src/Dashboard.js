@@ -3,7 +3,7 @@ import React, { Fragment, Component } from 'react'
 import { Flex, Block } from 'glamor/jsxstyle'
 import orderBy from 'lodash/orderBy'
 import isEmpty from 'lodash/isEmpty'
-import type { ContentState } from 'draft-js'
+import { type ContentState } from 'draft-js'
 import {
   Modal,
   Cancel,
@@ -95,7 +95,7 @@ export default class Main extends Component<MainPr, MainState> {
 
   closeUIModal = () => this.setState({ modalOpen: false })
 
-  onDelete = async (post: Post, cb: ?Function) => {
+  onDelete = async (post: Post, cb?: Function) => {
     const { token } = this.props
 
     const config = {

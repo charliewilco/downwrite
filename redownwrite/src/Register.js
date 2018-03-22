@@ -14,7 +14,8 @@ type RegisterType = {
 }
 
 type LoginProps = {
-  signIn: Function
+  signIn: Function,
+  setError: Function
 }
 
 class Register extends React.Component<LoginProps, RegisterType> {
@@ -38,7 +39,12 @@ class Register extends React.Component<LoginProps, RegisterType> {
       body: JSON.stringify({ username, password, email })
     })
 
-    const user: { userID: string, id_token: string, username: string } = await response.json()
+    const user: {
+      userID: string,
+      id_token: string,
+      username: string,
+      message?: string
+    } = await response.json()
 
     if (user.userID) {
       this.props.signIn(user.id_token !== undefined, user.id_token)

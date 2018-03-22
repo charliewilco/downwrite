@@ -1,6 +1,12 @@
+// @flow
+
 import React from 'react'
 
-export default class extends React.Component {
+type LocalDraftTypes = {
+  drafts: Array<*>
+}
+
+export default class extends React.Component<void, LocalDraftTypes> {
   state = {
     drafts: []
   }

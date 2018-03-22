@@ -13,19 +13,21 @@ export default class extends Component {
     reader.onload = e => {
       let md = fm(reader.result)
 
-      const state = {
+      return this.props.upload({
         title: md.attributes.title || '',
-        editorState: EditorState.createWithContent(convertFromRaw(markdownToDraft(md.body)))
-      }
-
-      return this.props.upload(state)
+        editorState: EditorState.createWithContent(
+          convertFromRaw(markdownToDraft(md.body, { preserveNewlines: true }))
+        )
+      })
     }
+
     reader.readAsText(files[0])
   }
 
   onDrop = files => this.extractMarkdown(files)
 
   render() {
+    const { disabled, children } = this.props
     return (
       <Dropzone
         accept="text/markdown, text/x-markdown, text/plain"
@@ -33,9 +35,9 @@ export default class extends Component {
         style={{ border: 0, width: '100%' }}
         onDrop={this.onDrop}
         disableClick
-        disabled={this.props.disabled}>
-        {this.props.children}
-      </Dropzone>
+        disabled={disabled}
+        children={children}
+      />
     )
   }
 }

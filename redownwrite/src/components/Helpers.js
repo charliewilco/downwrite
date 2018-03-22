@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import { Block, Flex } from 'glamor/jsxstyle'
-import { Toggle } from './'
+import { Toggle, Button } from './'
 import Media from 'react-media'
 
 export const Chevron = ({ open }: { open: boolean }) => (
@@ -23,10 +23,16 @@ export const Chevron = ({ open }: { open: boolean }) => (
   </svg>
 )
 
-export default class extends Component<{ children?: Node, render: Function }> {
+export default class extends Component<{
+  children?: Node,
+  disabled: boolean,
+  onChange: Function,
+  buttonText: string
+}> {
   static displayName = 'HelperToolbar'
+
   render() {
-    const { children, render } = this.props
+    const { children, buttonText, onChange, disabled } = this.props
     return (
       <Media query={{ minWidth: 950 }}>
         {match => (
@@ -46,7 +52,9 @@ export default class extends Component<{ children?: Node, render: Function }> {
                         <Chevron open={open} />
                       </button>
                     )}{' '}
-                  {render && render()}
+                  <Block maxWidth={96}>
+                    <Button disabled={disabled} children={buttonText} onClick={onChange} />
+                  </Block>
                 </Flex>
                 {(match || open) && (
                   <Flex

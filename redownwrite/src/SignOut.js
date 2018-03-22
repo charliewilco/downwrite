@@ -1,15 +1,11 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
+import compose from './utils/compose'
 
-export default class SignOut extends React.Component {
-  componentWillMount() {
-    this.props.signOut()
-    this.props.toggleNav()
-  }
+export default ({ location, signOut, toggleNav }) => {
+  let seq = compose(toggleNav, signOut)
 
-  render() {
-    return (
-      <Redirect to={{ pathname: '/', state: { from: this.props.location, authed: false } }} />
-    )
-  }
+  seq()
+
+  return <Redirect to={{ pathname: '/', state: { from: location } }} />
 }
