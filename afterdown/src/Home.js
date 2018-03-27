@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Link from 'react-router-dom/Link'
+import { Helmet } from 'react-helmet'
 import 'universal-fetch'
 import './Home.css'
 
@@ -17,10 +18,18 @@ export default class Home extends Component {
     props.prefetch()
   }
 
+  static defaultProps = {
+    posts: []
+  }
+
   render() {
     const { posts } = this.props
     return (
       <div className="Home">
+        <Helmet>
+          <title>Repos</title>
+          <meta name="description" content="All the repos" />
+        </Helmet>
         <div className="Home-header">
           <h2>Welcome to After.js</h2>
         </div>

@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import { Helmet } from 'react-helmet'
 import 'universal-fetch'
 
 export default class extends Component {
@@ -6,7 +7,6 @@ export default class extends Component {
     const { user, repo } = match.params
     const response = await fetch(`https://api.github.com/repos/${user}/${repo}`)
     const post = await response.json()
-
     return { post, user, repo }
   }
 
@@ -17,6 +17,10 @@ export default class extends Component {
       <article style={{ padding: 16, marginLeft: 'auto', marginRight: 'auto', maxWidth: 528 }}>
         {post ? (
           <Fragment>
+            <Helmet>
+              <title>{post.full_name + ' | ' + post.owner.login}</title>
+              <meta name="description" content={post.description} />
+            </Helmet>
             <header>
               <h3>{post.name}</h3>
               <h4>{post.language}</h4>

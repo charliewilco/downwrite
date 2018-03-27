@@ -1,10 +1,11 @@
 import express from 'express'
 import { render } from '@jaredpalmer/after'
 import routes from './routes'
-
+import Container from './Container'
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST)
 
 const server = express()
+
 server
   .disable('x-powered-by')
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
@@ -15,10 +16,7 @@ server
         res,
         routes,
         assets,
-        // Anything else you add here will be made available
-        // within getInitialProps(ctx)
-        // e.g a redux store...
-        customThing: 'thing'
+        document: Container
       })
       res.send(html)
     } catch (error) {
