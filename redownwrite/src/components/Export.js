@@ -42,12 +42,10 @@ export default class extends React.Component<ExportPr> {
       entityItems: {
         LINK: {
           open: entity => {
-            console.log(entity)
             return '['
           },
 
           close: entity => {
-            console.log(entity)
             return `](${entity.data.url || entity.data.href})`
           }
         }

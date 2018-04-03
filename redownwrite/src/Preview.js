@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import React, { Component } from 'react'
 import { matchPath, type Match, type Location } from 'react-router-dom'
 import { Block } from 'glamor/jsxstyle'
 import { PREVIEW_ENDPOINT } from './utils/urls'
@@ -22,10 +22,10 @@ type PreviewProps = {
 type PreviewState = {
   loading: boolean,
   error: boolean,
-  post?: Post | { message: string, error: string } | Object
+  post?: Post | { message: string, error: string } | {}
 }
 
-export default class extends React.Component<PreviewProps, PreviewState> {
+export default class extends Component<PreviewProps, PreviewState> {
   state = {
     loading: true,
     error: false,
@@ -61,6 +61,12 @@ export default class extends React.Component<PreviewProps, PreviewState> {
       const match: Match = matchPath(location.pathname, { path: '/:id/preview' })
       this.getPreview(match.params.id).then(post => this.setState({ error: post.error, post }))
     }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log(prevProps, prevState)
+
+    console.log(this.props)
   }
 
   render() {

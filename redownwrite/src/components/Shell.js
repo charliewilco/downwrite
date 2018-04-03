@@ -9,7 +9,7 @@ export default class Shell extends Component {
       <Toggle>
         {(navOpen, toggleNav, closeNav) => (
           <Block minHeight="100%" fontFamily="var(--primary-font)">
-            {renderErrors()}
+            {renderErrors && renderErrors()}
             <Block height="100%" className="u-cf">
               <Block minHeight="100%">
                 <Header
