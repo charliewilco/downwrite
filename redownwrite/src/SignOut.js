@@ -10,9 +10,9 @@ type SnoType = {
 }
 
 export default ({ location, signOut, toggleNav }: SnoType) => {
-  let seq = compose(toggleNav, signOut)
+  let sequenced = compose(toggleNav, signOut)
 
-  seq()
+  sequenced()
 
   return <Redirect to={{ pathname: '/', state: { from: location } }} />
 }
