@@ -9,7 +9,7 @@
     "predev": "yarn build",
     "deploy": "now && now alias",
     "start": "node dist/server.js",
-    "dev": "concurrently -c 'blue,yellow' --names 'Babel,Nodemon' 'yarn build -w' 'nodemon dist/server.js'",
+    "dev": "concurrently -c 'blue,yellow' --names 'Babel,Nodemon' 'yarn build -w' 'node dist/server.js'",
     "test": "jest"
   },
   "license": "MIT",
