@@ -57,12 +57,12 @@ export default class extends Component<{
     const { children, buttonText, onChange, disabled } = this.props
     return (
       <Media query={{ minWidth: 950 }}>
-        {match => (
-          <Toggle defaultOpen={match}>
+        {matches => (
+          <Toggle defaultOpen={matches}>
             {(open, toggle) => (
               <HelperContainer>
                 <HelperButtons spaced={children}>
-                  {!match &&
+                  {!matches &&
                     children && (
                       <ChevronButton onClick={toggle}>
                         <Chevron open={open} />
@@ -72,7 +72,7 @@ export default class extends Component<{
                     {buttonText}
                   </StyledButton>
                 </HelperButtons>
-                {(match || open) && <HelperContent>{children}</HelperContent>}
+                {(matches || open) && <HelperContent>{children}</HelperContent>}
               </HelperContainer>
             )}
           </Toggle>
