@@ -1,68 +1,100 @@
-import React from 'react'
-import { css } from 'glamor'
-import { Flex, Block } from 'glamor/jsxstyle'
+import React, { Fragment } from 'react'
+import styled from 'styled-components'
 import Card from './Card'
 import LayoutControl from './LayoutControl'
 import ListItem from './PostListItem'
 
-const s = {
-  main: css({
-    paddingTop: 16,
-    marginBottom: 24,
-    fontWeight: 400
-  }),
-  title: css({
-    fontWeight: 500,
-    fontSize: 18,
-    '@media (min-width: 57.75rem)': {
-      fontSize: 24
-    }
-  }),
-  grid: css({
-    '@media (min-width: 48rem)': { marginLeft: -20 }
-  }),
-  gridItem: css({
-    marginBottom: 24,
-    width: '100%',
-    '@media (min-width: 48rem)': { paddingLeft: 20, width: '50%' },
-    '@media (min-width: 57.75rem)': { width: `${100 / 3}%` },
-    '@media (min-width: 75rem)': { width: `${100 / 4}%` },
-    '@media (min-width: 112.5rem)': { width: `${100 / 5}%` },
-    '@media (min-width: 150rem)': { width: `${100 / 6}%` },
-    '@media (min-width: 187.5rem)': { width: `${100 / 7}%` }
-  }),
-  listItem: css({
-    padding: '16px 0',
-    width: '100%',
-    flex: 1,
-    '&:not(:last-of-type)': {
-      borderBottom: `1px solid #CCC`
-    }
-  })
-}
+const Title = styled.h1`
+  font-weight: 500;
+  font-size: 18px;
+
+  @media (min-width: 57.75rem) {
+    font-size: 24px;
+  }
+`
+
+const Grid = styled.ul`
+  list-style: none inside;
+  display: flex;
+  flex-wrap: wrap;
+  @media (min-width: 48rem) {
+    margin-left: -20px;
+  }
+`
+
+const GridItem = styled.li`
+  margin-bottom: 24px;
+  width: 100%;
+
+  @media (min-width: 48rem) {
+    padding-left: 20px;
+    width: 50%;
+  }
+
+  @media (min-width: 57.75rem) {
+    width: ${`${100 / 3}%`};
+  }
+
+  @media (min-width: 75rem) {
+    width: ${`${100 / 4}%`};
+  }
+
+  @media (min-width: 112.5rem) {
+    width: ${`${100 / 5}%`};
+  }
+
+  @media (min-width: 150rem) {
+    width: ${`${100 / 6}%`};
+  }
+
+  @media (min-width: 187.5rem) {
+    width: ${`${100 / 7}%`};
+  }
+`
+
+const ListHeader = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+`
+
+const ListItemContainer = styled.li`
+  padding: 16px 0;
+  width: 100%;
+  flex: 1;
+
+  &:not(:last-of-type) {
+    border-bottom: 1px solid #ccc;
+  }
+`
+
+const List = styled.ul`
+  list-style: inside none;
+`
 
 export default ({ posts, layout, layoutChange, onDelete }) => (
-  <Block>
-    <Flex justifyContent="space-between" alignItems="center" marginBottom={24}>
-      <h1 className={css(s.title)}>Posts</h1>
+  <Fragment>
+    <ListHeader>
+      <Title>Posts</Title>
       <LayoutControl layout={layout} layoutChange={layoutChange} />
-    </Flex>
+    </ListHeader>
     {layout === 'grid' ? (
-      <Flex component="ul" flexWrap="wrap" className={css(s.grid)} listStyle="none inside">
+      <Grid>
         {posts.map(p => (
-          <Block key={p.id} component="li" className={css(s.gridItem)}>
+          <GridItem key={p.id}>
             <Card {...p} onDelete={() => onDelete(p)} />
-          </Block>
+          </GridItem>
         ))}
-      </Flex>
+      </Grid>
     ) : (
-      <Block>
+      <List>
         {posts.map(p => (
-          <Block key={p.id} component="li" className={css(s.listItem)}>
+          <ListItemContainer key={p.id}>
             <ListItem {...p} onDelete={() => onDelete(p)} />
-          </Block>
+          </ListItemContainer>
         ))}
-      </Block>
+      </List>
     )}
-  </Block>
+  </Fragment>
 )

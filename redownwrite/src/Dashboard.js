@@ -1,6 +1,6 @@
 // @flow
 import React, { Fragment, Component } from 'react'
-import { Flex, Block } from 'glamor/jsxstyle'
+import styled from 'styled-components'
 import orderBy from 'lodash/orderBy'
 import isEmpty from 'lodash/isEmpty'
 import { type ContentState } from 'draft-js'
@@ -46,6 +46,20 @@ type MainState = {
   modalOpen: boolean,
   error: string
 }
+
+const ListContainer = styled.div`
+  padding: 16px 8px;
+  height: 100%;
+`
+
+const DeleteTray = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`
+
+const DeleteBody = styled.div`
+  margin-bottom: 16px;
+`
 
 export default class Main extends Component<MainPr, MainState> {
   static displayName = 'Dashboard'
@@ -127,26 +141,21 @@ export default class Main extends Component<MainPr, MainState> {
         {modalOpen &&
           !isEmpty(selectedPost) && (
             <Modal closeUIModal={this.closeUIModal} sm>
-              <Block>
-                <Block marginBottom={16}>
+              <div>
+                <DeleteBody>
                   <p className="h5">
                     Are you sure you want to delete <strong>"{selectedPost.title}"</strong>?
                   </p>
-                </Block>
+                </DeleteBody>
                 <hr />
-                <Flex justifyContent="flex-end">
+                <DeleteTray>
                   <Cancel onClick={this.cancelDelete}>Cancel</Cancel>
                   <Button onClick={() => this.onDelete(selectedPost)}>Delete</Button>
-                </Flex>
-              </Block>
+                </DeleteTray>
+              </div>
             </Modal>
           )}
-        <Block
-          paddingLeft={8}
-          paddingRight={8}
-          paddingTop={16}
-          paddingBottom={16}
-          height="100%">
+        <ListContainer>
           {loaded ? (
             Array.isArray(posts) && posts.length > 0 ? (
               <PostList
@@ -163,7 +172,7 @@ export default class Main extends Component<MainPr, MainState> {
           ) : (
             <Loading size={100} />
           )}
-        </Block>
+        </ListContainer>
       </Fragment>
     )
   }

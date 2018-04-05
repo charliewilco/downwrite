@@ -1,9 +1,11 @@
 import React from 'react'
+import styled from 'styled-components'
 import Helmet from 'react-helmet'
 import Markdown from 'react-markdown'
 import PrismCode from 'react-prism'
 import 'prismjs'
-import { Wrapper, NightMode } from './'
+import NightMode from './NightMode'
+import Wrapper from './Wrapper'
 import './ganymede.css'
 import format from 'date-fns/format'
 
@@ -17,23 +19,28 @@ CodeBlock.defaultProps = {
   language: 'javascript'
 }
 
+const WrapperExtended = styled(Wrapper)`
+  padding: 32px 0;
+  max-width: 512px;
+  font-family: Sentinel SSm A, Sentinel SSm B, Charter, Georgia, serif;
+`
+const ContentBody = styled(Wrapper)`
+  text-align: left;
+`
+
 export default ({ title, dateAdded, content }) => (
   <NightMode>
     <Helmet title={title} titleTemplate="%s | Downwrite" />
-    <Wrapper
-      paddingTop={32}
-      paddingBottom={32}
-      maxWidth={512}
-      fontFamily="Sentinel SSm A, Sentinel SSm B,	Charter, Georgia, serif">
+    <WrapperExtended>
       <article className="harticle">
         <header className="PreviewHeader">
           <h1 className="u-center f4">{title}</h1>
           {dateAdded && <time dateTime={dateAdded}>{format(dateAdded, 'DD MMMM YYYY')}</time>}
         </header>
-        <Wrapper textAlign="left" className="PreviewBody">
+        <ContentBody className="PreviewBody">
           <Markdown source={content} renderers={{ code: CodeBlock }} />
-        </Wrapper>
+        </ContentBody>
       </article>
-    </Wrapper>
+    </WrapperExtended>
   </NightMode>
 )

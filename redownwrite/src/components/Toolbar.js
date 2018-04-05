@@ -1,24 +1,26 @@
 import React from 'react'
 import StyleButton from './ToolbarButton'
+import styled from 'styled-components'
 import Media from 'react-media'
-import { css } from 'glamor'
-import { Flex } from 'glamor/jsxstyle'
 
-const toolbarStyle = css({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  paddingTop: 8,
-  paddingBottom: 8,
-  paddingRight: 16,
-  paddingLeft: 16,
-  fontFamily: 'var(--secondary-font)',
-  background: 'white',
-  borderBottomWidth: 1,
-  borderBottomStyle: 'solid',
-  borderBottomColor: 'rgba(0, 0, 0, .125)'
-})
+const ToolbarWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-right: 16px;
+  padding-left: 16px;
+  font-family: var(--secondary-font);
+  background: white;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(0, 0, 0, 0.125);
+`
 
 const BLOCK_TYPES = [
   { label: 'H1', style: 'header-one' },
@@ -45,7 +47,7 @@ const FullToolBar = ({
   currentStyle,
   blockType
 }) => (
-  <Flex className={css(toolbarStyle)} flexWrap="wrap" alignItems="center">
+  <ToolbarWrapper>
     {BLOCK_TYPES.map(type => (
       <StyleButton
         key={type.label}
@@ -64,7 +66,7 @@ const FullToolBar = ({
         style={type.style}
       />
     ))}
-  </Flex>
+  </ToolbarWrapper>
 )
 
 const SelectionToolBar = ({
@@ -75,7 +77,7 @@ const SelectionToolBar = ({
   onToggleBlockType,
   blockType
 }) => (
-  <Flex className={css(toolbarStyle)} flexWrap="wrap" alignItems="center">
+  <ToolbarWrapper>
     {selectedText.length > 0
       ? INLINE_STYLES.map(type => (
           <StyleButton
@@ -95,7 +97,7 @@ const SelectionToolBar = ({
             style={type.style}
           />
         ))}
-  </Flex>
+  </ToolbarWrapper>
 )
 
 const Toolbar = ({ children, editorState, onToggleBlockType, onToggleInlineStyle }) => {

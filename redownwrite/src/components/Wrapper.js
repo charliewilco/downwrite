@@ -1,11 +1,11 @@
-import React from 'react'
-import { Block } from 'glamor/jsxstyle'
+import styled from 'styled-components'
 
-export default ({ sm, xs, ...props }) => (
-  <Block
-    maxWidth={sm ? 768 : xs ? 384 : 1088}
-    marginRight="auto"
-    marginLeft="auto"
-    {...props}
-  />
-)
+const Wrapper = styled.div`
+  margin-left: auto;
+  margin-right: auto;
+  max-width: ${({ sm, xs }) => (sm ? '768px' : xs ? '384px' : '1088px')};
+`
+
+Wrapper.displayName = `Wrapper`
+
+export default Wrapper

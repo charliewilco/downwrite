@@ -1,21 +1,25 @@
 // @flow
 import React from 'react'
-import { InlineBlock, Block } from 'glamor/jsxstyle'
+import styled from 'styled-components'
 import Avatar from './Avatar'
 
 type UserBlock = { username: string }
 
+const UserBlockContainer = styled.div`
+  text-align: center;
+  padding: 32px 8px;
+  border-bottom: 1px solid #dbdcdd;
+`
+
+const DisplayUser = styled.span`
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 700;
+`
+
 export default ({ username }: UserBlock) => (
-  <Block
-    textAlign="center"
-    paddingTop={32}
-    paddingBottom={32}
-    paddingLeft={8}
-    paddingRight={8}
-    borderBottom="1px solid #DBDCDD">
+  <UserBlockContainer>
     <Avatar />
-    <InlineBlock component="span" fontSize={16} fontWeight={700}>
-      {username}
-    </InlineBlock>
-  </Block>
+    <DisplayUser>{username}</DisplayUser>
+  </UserBlockContainer>
 )

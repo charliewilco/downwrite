@@ -1,44 +1,44 @@
 // @flow
 import * as React from 'react'
 import uuid from 'uuid/v4'
-import { css } from 'glamor'
+import styled from 'styled-components'
 
-const styles = {
-  container: css({
-    display: 'block',
-    ':not(:last-of-type)': {
-      marginBottom: 16
-    }
-  }),
-  label: css({
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    color: '#B4B4B4',
-    transition: 'color 250ms ease-in-out'
-  }),
-  labelActive: css({
-    color: 'var(--color-6)'
-  }),
-  input: css({
-    fontFamily: 'var(--primary-font)',
-    fontSize: 16,
-    appearance: 'none',
-    display: 'block',
-    border: 0,
-    width: '100%',
-    borderRadius: 0,
-    borderBottom: `2px solid #B4B4B4`,
-    transition: 'border-bottom 250ms ease-in-out',
-    ':focus': {
-      outline: 'none',
-      borderBottom: `2px solid var(--color-6)`
-    },
-    '&::placeholder': {
-      color: '#D9D9D9',
-      fontStyle: 'italic'
-    }
-  })
-}
+const StyledInput = styled.input`
+  font-family: var(--primary-font);
+  font-size: 16px;
+  appearance: none;
+  display: block;
+  border: 0px;
+  width: 100%;
+  border-radius: 0px;
+  border-bottom: ${`2px solid #B4B4B4`};
+  transition: border-bottom 250ms ease-in-out;
+
+  &:focus {
+    outline: none;
+    border-bottom: ${`2px solid var(--color-6)`};
+  }
+
+  &::placeholder {
+    color: #d9d9d9;
+    font-style: italic;
+  }
+`
+
+const InputContainer = styled.label`
+  display: block;
+
+  &:not(:last-of-type) {
+    margin-bottom: 16px;
+  }
+`
+
+const InputLabel = styled.small`
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: ${props => (props.active ? 'var(--color-6)' : '#b4b4b4')};
+  transition: color 250ms ease-in-out;
+`
 
 type InputType = {
   label: string,
@@ -59,18 +59,15 @@ export default class extends React.Component<InputType, { active: boolean }> {
     const { active } = this.state
     const { label } = this.props
     return (
-      <label htmlFor={id} className={css(styles.container)}>
-        <input
+      <InputContainer htmlFor={id}>
+        <StyledInput
           onFocus={() => this.setState({ active: true })}
           onBlur={() => this.setState({ active: false })}
-          className={css(styles.input)}
           id={id}
           {...this.props}
         />
-        <small className={css(active ? [styles.label, styles.labelActive] : styles.label)}>
-          {label}
-        </small>
-      </label>
+        <InputLabel active={active}>{label}</InputLabel>
+      </InputContainer>
     )
   }
 }

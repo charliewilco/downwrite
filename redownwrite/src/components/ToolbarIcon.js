@@ -1,5 +1,9 @@
 import React from 'react'
-import { InlineBlock } from 'glamor/jsxstyle'
+import styled from 'styled-components'
+
+const Span = styled.span`
+  display: inline-block;
+`
 
 export const activeStyle = active => (active ? '#2584A5' : '#A9C2CA')
 
@@ -160,6 +164,4 @@ export const Mono = ({ active }) => (
   </svg>
 )
 
-export const Label = ({ label, active }) => (
-  <InlineBlock color={activeStyle(active)}>{label}</InlineBlock>
-)
+export const Label = ({ label, active }) => <Span color={activeStyle(active)}>{label}</Span>

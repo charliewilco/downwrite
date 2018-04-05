@@ -1,22 +1,36 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { Block } from 'glamor/jsxstyle'
-import { css } from 'glamor'
+import React, { Fragment } from 'react'
+import Media from 'react-media'
+import Link from 'react-router-dom/Link'
+import styled from 'styled-components'
 import Card from './Card'
 
+const SidebarEntriesTitle = styled.h6`
+  font-size: 12px;
+  margin-bottom: 8px;
+`
+
+const Separator = styled.div`
+  margin-bottom: 1rem;
+`
+
 export default ({ matches, posts }) => (
-  <Block>
-    <h6 className={css({ fontSize: 12, marginBottom: 8 })}>Recent Entries</h6>
-    {posts.slice(0, 2).map((post, i) => (
-      <Block key={i} marginBottom={16}>
-        {matches ? (
-          <Card {...post} />
-        ) : (
-          <Link to={`/${post.id}/edit`} className="small">
-            {post.title}
-          </Link>
-        )}
-      </Block>
-    ))}
-  </Block>
+  <Media query={{ minWidth: 500 }}>
+    {matches => (
+      <Fragment>
+        <SidebarEntriesTitle>Recent Entries</SidebarEntriesTitle>
+
+        {posts.slice(0, 2).map((post, i) => (
+          <Separator key={i}>
+            {matches ? (
+              <Card {...post} />
+            ) : (
+              <Link to={`/${post.id}/edit`} className="small">
+                {post.title}
+              </Link>
+            )}
+          </Separator>
+        ))}
+      </Fragment>
+    )}
+  </Media>
 )

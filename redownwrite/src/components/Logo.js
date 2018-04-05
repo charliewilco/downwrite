@@ -1,12 +1,15 @@
 import React from 'react'
-import { css } from 'glamor'
+import styled from 'styled-components'
 import logo from './logo.svg'
 
-const logoStyle = css({
-  maxWidth: 20,
-  '@media (min-width: 57.75rem)': { maxWidth: 33 }
-})
+const Image = styled.img`
+  max-width: 20px;
 
-const Logo = () => <img className={logoStyle} src={logo} alt="logo" />
+  @media (min-width: 57.75rem) {
+    max-width: 33px;
+  }
+`
+
+const Logo = () => <Image src={logo} alt="logo" />
 
 export default Logo

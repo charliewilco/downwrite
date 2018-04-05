@@ -1,32 +1,31 @@
 // @flow
 
 import React from 'react'
+import styled from 'styled-components'
 import Wrapper from './components/Wrapper'
-import { InlineBlock } from 'glamor/jsxstyle'
 
-type NoMatchTitle = { name: string }
 type NoMatchType = {
   location: {
     pathname: string
   }
 }
 
-const Title = ({ name }: NoMatchTitle) => (
-  <InlineBlock
-    component="h2"
-    marginBottom={32}
-    fontWeight={100}
-    fontSize={84}
-    lineHeight={1}
-    children={name}
-  />
-)
+const CenteredWrapper = styled(Wrapper)`
+  text-align: center;
+  padding: 8rem 1rem;
+`
+
+const Title = styled.h2`
+  display: inline-block;
+  margin-bottom: 32px;
+  font-size: 84px;
+  line-height: 1;
+  font-weight: 100;
+`
 
 export default ({ location }: NoMatchType) => (
-  <div>
-    <Wrapper textAlign="center" padding={`8rem 1rem`}>
-      <Title name="404" />
-      <p>Sorry but {location.pathname} didn’t match any pages</p>
-    </Wrapper>
-  </div>
+  <CenteredWrapper>
+    <Title children="404" />
+    <p>Sorry but {location.pathname} didn’t match any pages</p>
+  </CenteredWrapper>
 )

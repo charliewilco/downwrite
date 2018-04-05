@@ -1,6 +1,7 @@
 // @flow
 import React, { Fragment, Component } from 'react'
 import { Subscribe } from 'unstated'
+import styled from 'styled-components'
 import Helmet from 'react-helmet'
 import { Redirect } from 'react-router-dom'
 import { EditorState, convertToRaw } from 'draft-js'
@@ -22,6 +23,14 @@ type NewPostSt = {
 }
 
 type NewPostProps = { token: string, user: string }
+
+const SpacedWrapper = styled(Wrapper)`
+  padding-top: 128px;
+`
+
+const EditorContainer = styled(Wrapper)`
+  padding: 0 4px;
+`
 
 export default class NewEditor extends Component<NewPostProps, NewPostSt> {
   state = {
@@ -87,7 +96,7 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
     ) : (
       <Media query={{ minWidth: 500 }}>
         {m => (
-          <Wrapper paddingTop={128} sm>
+          <SpacedWrapper sm>
             <Subscribe to={[OfflineContainer]}>
               {network => (
                 <Fragment>
@@ -102,7 +111,7 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
                     buttonText="Add"
                     onChange={() => this.addNewPost(network.state.offline)}
                   />
-                  <Wrapper sm paddingLeft={4} paddingRight={4}>
+                  <EditorContainer sm>
                     {error.length > 0 && <span className="f6 u-center">{error}</span>}
                     <Upload upload={this.upload}>
                       <Input
@@ -115,11 +124,11 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
                         onChange={editorState => this.setState({ editorState })}
                       />
                     </Upload>
-                  </Wrapper>
+                  </EditorContainer>
                 </Fragment>
               )}
             </Subscribe>
-          </Wrapper>
+          </SpacedWrapper>
         )}
       </Media>
     )

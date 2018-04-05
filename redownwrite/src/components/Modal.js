@@ -1,39 +1,68 @@
 // @flow
 import * as React from 'react'
-import { Flex, Row } from 'glamor/jsxstyle'
-import { css, keyframes } from 'glamor'
-import { Wrapper, CloseIcon } from './'
+import styled, { keyframes } from 'styled-components'
+import LockScroll from './LockScroll'
+import Wrapper from './Wrapper'
+import { CloseIcon } from './'
 
-const modalCloseButton: string = css({
-  position: 'absolute',
-  right: 16,
-  top: 16,
-  border: 0,
-  background: 'none',
-  appearance: 'none',
-  display: 'block',
-  margin: 0
-})
+const fadein = keyframes`
+  0% {
+    transform: translate(0, 75%);
+    opacity: 0;
+  }
 
-const fadein: string = keyframes({
-  '0%': { transform: 'translate(0, 75%)', opacity: 0 },
-  '100%': { transform: 'translate(0, 0)', opacity: 1 }
-})
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+`
 
-const Overlay = (props: {}) => (
-  <Flex
-    zIndex={999}
-    justifyContent="center"
-    alignItems="center"
-    flexDirection="Column"
-    backgroundColor="rgba(21, 69, 93, 0.925)"
-    width="100%"
-    backgroundBlendMode="multiply"
-    {...props}
-  />
-)
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  background-color: rgba(21, 69, 93, 0.925);
+  background-blend-mode: multiply;
+`
+const ModalContainer = styled(Wrapper)`
+  animation: ${fadein} 0.45s;
+  background: white;
+  width: 100%;
+  height: 50%;
+  position: relative;
+  color: var(--text);
+  display: flex;
+`
 
-// TODO: Remove scrolling on open
+const ModalCloseButton = styled.button`
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  border: 0px;
+  background: none;
+  appearance: none;
+  display: block;
+  margin: 0px;
+`
+
+const ModalInnerContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+`
+
+const ModalBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+`
 
 type ModalProps = {
   closeUIModal: Function,
@@ -42,45 +71,24 @@ type ModalProps = {
   sm: boolean
 }
 
-export default class extends React.Component<ModalProps> {
+export default class extends React.Component<ModalProps, void> {
   static displayName = 'UIModal'
 
-  componentDidMount() {
-    if (document.body) {
-      document.body.classList.add('__noScroll')
-    }
-  }
-
-  componentWillUnmount() {
-    if (document.body) {
-      document.body.classList.remove('__noScroll')
-    }
-  }
-
   render() {
+    const { closeUIModal, children, sm, xs } = this.props
     return (
-      <Overlay position="fixed" top={0} bottom={0}>
-        <Wrapper
-          animation={`${fadein} .45s`}
-          background="white"
-          width="100%"
-          height="50%"
-          position="relative"
-          color="var(--text)"
-          display="flex"
-          sm={this.props.sm}
-          xs={this.props.xs}>
-          <button onClick={this.props.closeUIModal} className={css(modalCloseButton)}>
-            <CloseIcon />
-          </button>
-
-          <Flex flexDirection="column" justifyContent="center" flex={1}>
-            <Row padding={8} justifyContent="space-around" flexWrap="wrap">
-              {this.props.children}
-            </Row>
-          </Flex>
-        </Wrapper>
-      </Overlay>
+      <LockScroll>
+        <Overlay>
+          <ModalContainer sm={sm} xs={xs}>
+            <ModalCloseButton onClick={closeUIModal}>
+              <CloseIcon />
+            </ModalCloseButton>
+            <ModalBody>
+              <ModalInnerContainer children={children} />
+            </ModalBody>
+          </ModalContainer>
+        </Overlay>
+      </LockScroll>
     )
   }
 }
