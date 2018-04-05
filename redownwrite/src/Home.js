@@ -1,77 +1,76 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Block, Flex } from 'glamor/jsxstyle'
-import { css } from 'glamor'
+import styled from 'styled-components'
 import { Subscribe } from 'unstated'
 import Login from './Login'
 import Register from './Register'
 import { ErrorContainer } from './containers'
 import { Logo } from './components'
 
-const hStyle = css({
-  marginBottom: 32,
-  textAlign: 'center',
-  fontSize: 18,
-  fontWeight: 400
-})
+const SelectedTitle = styled.h2`
+  margin-bottom: 32px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 400;
+`
 
-const navStyle = css({
-  width: '50%',
-  border: 0,
-  appearance: 'none',
-  borderRadius: 0,
-  borderBottomWidth: 3,
-  borderBottomStyle: 'solid',
-  paddingTop: 16,
-  paddingBottom: 16,
-  borderBottomColor: 'transparent'
-})
+const ToggleLoginButton = styled.button`
+  width: 50%;
+  border: 0px;
+  appearance: none;
+  border-radius: 0px;
+  border-bottom-width: 3px;
+  border-bottom-style: solid;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  border-bottom-color: ${props => (props.active ? 'var(--color-6)' : 'transparent')};
+  color: ${props => (props.active ? 'var(--color-6)' : 'inherit')};
+`
 
-const introStyle = css({
-  textAlign: 'center',
-  marginBottom: 32,
-  '@media (min-width: 57.75rem)': {
-    paddingTop: 144,
-    textAlign: 'left',
-    marginBottom: 0
+const Intro = styled.div`
+  text-align: center;
+  color: var(--color-4);
+  margin-bottom: 32px;
+
+  @media (min-width: 57.75rem) {
+    padding-top: 144px;
+    text-align: left;
+    margin-bottom: 0px;
   }
-})
+`
 
-const navStyleAction = css({
-  color: `var(--color-6)`,
-  borderBottomColor: `var(--color-6)`
-})
+const IntroTitle = styled.h1`
+  font-size: 32px;
+  margin-top: 16px;
+  margin-bottom: 4px;
+`
 
-const Intro = () => (
-  <Block color="var(--color-4)" className={css(introStyle)}>
-    <Logo />
-    <h1
-      data-test="Login Page Container"
-      className={css({
-        fontSize: 32,
-        marginTop: 16,
-        marginBottom: 4
-      })}>
-      Downwrite
-    </h1>
-    <span>A place to write</span>
-  </Block>
-)
+const Container = styled.main`
+  display: flex;
+  flex-wrap: wrap;
+  width: 95%;
+  margin: auto;
+  justify-content: space-around;
+  position: absolute;
+  top: 64px;
+  left: 0;
+  right: 0;
+`
 
-const Container = ({ children }) => (
-  <Flex
-    flexWrap="wrap"
-    width="95%"
-    margin="auto"
-    justifyContent="space-around"
-    position="absolute"
-    top={64}
-    left={0}
-    right={0}
-    children={children}
-  />
-)
+const ToggleButtonContainer = styled.div`
+  display: flex;
+`
+
+const LoginFormWrapper = styled.div`
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
+  max-width: 544px;
+  width: 100%;
+  background: white;
+`
+const HomeBannerMarker = styled.div`
+  position: relative;
+`
 
 export default class Home extends Component<{ signIn: Function }, { loginSelected: boolean }> {
   state = {
@@ -81,32 +80,32 @@ export default class Home extends Component<{ signIn: Function }, { loginSelecte
   render() {
     const { loginSelected } = this.state
     return (
-      <Block position="relative">
-        <Block className="HomeBanner" />
+      <HomeBannerMarker>
+        <div className="HomeBanner" />
         <Container>
-          <Intro />
-          <Block
-            boxShadow="0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12)"
-            maxWidth={544}
-            width="100%"
-            background="white">
-            <Flex>
-              <button
-                className={css(!loginSelected ? [navStyle, navStyleAction] : navStyle)}
+          <Intro>
+            <Logo />
+            <IntroTitle data-test="Login Page Container">Downwrite</IntroTitle>
+            <span>A place to write</span>
+          </Intro>
+          <LoginFormWrapper>
+            <ToggleButtonContainer>
+              <ToggleLoginButton
+                active={!loginSelected}
                 onClick={() => this.setState({ loginSelected: false })}>
                 Register
-              </button>
-              <button
-                className={css(loginSelected ? [navStyle, navStyleAction] : navStyle)}
+              </ToggleLoginButton>
+              <ToggleLoginButton
+                active={loginSelected}
                 onClick={() => this.setState({ loginSelected: true })}>
                 Login
-              </button>
-            </Flex>
-            <Block>
+              </ToggleLoginButton>
+            </ToggleButtonContainer>
+            <div>
               <header style={{ padding: 16 }}>
-                <h2 className={css(hStyle)}>
+                <SelectedTitle>
                   {loginSelected ? 'Welcome Back!' : 'Sign Up as a New User'}
-                </h2>
+                </SelectedTitle>
               </header>
               <Subscribe to={[ErrorContainer]}>
                 {err =>
@@ -117,10 +116,10 @@ export default class Home extends Component<{ signIn: Function }, { loginSelecte
                   )
                 }
               </Subscribe>
-            </Block>
-          </Block>
+            </div>
+          </LoginFormWrapper>
         </Container>
-      </Block>
+      </HomeBannerMarker>
     )
   }
 }

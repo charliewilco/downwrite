@@ -1,38 +1,38 @@
 import React from 'react'
-import { InlineBlock, Block } from 'glamor/jsxstyle'
-import { css } from 'glamor'
+import styled, { css } from 'styled-components'
 
-const s = {
-  active: css({
-    '&:after': {
-      content: '""',
-      display: 'block',
-      borderBottom: `5px solid var(--link)`
-    }
-  })
-}
+const activeMarker = css`
+  &:after {
+    content: '';
+    display: block;
+    border-bottom: 5px solid var(--link);
+  }
+`
+
+const Box = styled.div``
+
+const LayoutTrigger = styled.div`
+  display: inline-block;
+  margin: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  color: ${props => (props.active ? '#383838' : '#989898')};
+  ${props => props.active && activeMarker};
+`
 
 const LayoutControl = ({ layout, layoutChange }) => (
-  <Block>
-    <InlineBlock
-      margin={8}
-      cursor="pointer"
-      fontSize={12}
-      color={layout === 'grid' ? '#383838' : '#989898'}
-      className={css(layout === 'grid' && s.active)}
+  <Box>
+    <LayoutTrigger
+      active={layout === 'grid'}
       onClick={() => layoutChange('grid')}
       children="Grid"
     />
-    <InlineBlock
-      margin={8}
-      cursor="pointer"
-      fontSize={12}
-      color={layout === 'list' ? '#383838' : '#989898'}
-      className={css(layout === 'list' && s.active)}
+    <LayoutTrigger
+      active={layout === 'list'}
       onClick={() => layoutChange('list')}
       children="List"
     />
-  </Block>
+  </Box>
 )
 
 export default LayoutControl

@@ -1,12 +1,38 @@
 // @flow
 
 import React, { Component, type ComponentType } from 'react'
-import { Flex, Block } from 'glamor/jsxstyle'
+import styled from 'styled-components'
 import Check from './Checkbox'
 
 const NIGHT_MODE: string = 'NightMDX'
 
 let nightMode: boolean = JSON.parse(localStorage.getItem('nightMode'))
+
+const NightContainer = styled.div`
+  padding-top: 16px;
+  position: relative;
+  min-height: 100%;
+`
+
+const NightToggle = styled.div`
+  color: var(--text);
+  padding: 8px;
+  margin: 32px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
+  background: white;
+  bottom: 0;
+  z-index: 50;
+  position: fixed;
+`
+
+const NightLabel = styled.small`
+  margin-left: 8px;
+`
+
+const NightController = styled.label`
+  display: flex;
+  align-items: center;
+`
 
 export default class extends Component<{ children: ComponentType<any> }, { night: boolean }> {
   state = {
@@ -52,27 +78,15 @@ export default class extends Component<{ children: ComponentType<any> }, { night
     const { night } = this.state
     const { children } = this.props
     return (
-      <Block
-        className={night ? 'NightMode' : ''}
-        minHeight="100%"
-        position="relative"
-        paddingTop={16}>
-        <Block
-          color="var(--text)"
-          padding={8}
-          margin={16 * 2}
-          boxShadow="0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12)"
-          background="white"
-          bottom={0}
-          zIndex={50}
-          position="fixed">
-          <Flex alignItems="center" component="label">
+      <NightContainer className={night ? 'NightMode' : ''}>
+        <NightToggle>
+          <NightController>
             <Check checked={night} onChange={this.onChange} />
-            <small style={{ marginLeft: 8 }}>Night Mode</small>
-          </Flex>
-        </Block>
-        <Block>{children}</Block>
-      </Block>
+            <NightLabel>Night Mode</NightLabel>
+          </NightController>
+        </NightToggle>
+        <div>{children}</div>
+      </NightContainer>
     )
   }
 }

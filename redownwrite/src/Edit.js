@@ -1,12 +1,11 @@
 // @flow
 
 import React, { Component, Fragment } from 'react'
-import { css } from 'glamor'
+import styled from 'styled-components'
 import { EditorState, convertToRaw, type ContentState } from 'draft-js'
 import Helmet from 'react-helmet'
 import Media from 'react-media'
 import { matchPath, type Location, type Match } from 'react-router-dom'
-import { Block } from 'glamor/jsxstyle'
 import {
   Autosaving,
   Input,
@@ -25,10 +24,11 @@ import debounce from 'lodash/debounce'
 import { superConverter } from './utils/responseHandler'
 import { POST_ENDPOINT } from './utils/urls'
 
-const meta = css({
-  opacity: 0.5,
-  fontSize: 'small'
-})
+const Meta = styled.div`
+  opacity: 0.5;
+  font-size: small;
+  margin-bottom: 8px;
+`
 
 type EditorSt = {
   title: string,
@@ -47,6 +47,14 @@ type EditorPr = {
   location: Location,
   match: Match
 }
+
+const OuterEditor = styled.div`
+  padding: 0 8px;
+`
+
+const Time = ({ dateAdded }) => (
+  <time dateTime={dateAdded}>{format(dateAdded, 'DD MMMM YYYY')}</time>
+)
 
 // TODO: Document this
 // - Initial render
@@ -217,15 +225,12 @@ export default class Edit extends Component<EditorPr, EditorSt> {
                       }))
                     }
                   />
-                  <WordCounter component={Block} editorState={editorState} />
+                  <WordCounter component={Meta} editorState={editorState} />
                 </Helpers>
-                <Wrapper sm paddingTop={0} paddingLeft={8} paddingRight={8}>
-                  <Block className={css(meta)} marginBottom={8}>
-                    Added on{' '}
-                    <time dateTime={post.dateAdded}>
-                      {format(post.dateAdded, 'DD MMMM YYYY')}
-                    </time>
-                  </Block>
+                <OuterEditor sm>
+                  <Meta>
+                    Added on <Time dateAdded={post.dateAdded} />
+                  </Meta>
                   <Input
                     inputRef={input => (this.titleInput = input)}
                     value={title}
@@ -236,7 +241,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
                       <DWEditor editorState={editorState} onChange={this.onChange} />
                     )}
                   </div>
-                </Wrapper>
+                </OuterEditor>
               </Wrapper>
             </Fragment>
           )}

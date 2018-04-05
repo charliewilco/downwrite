@@ -1,27 +1,49 @@
 // @flow
 import React, { Component } from 'react'
-import { Block, Flex } from 'glamor/jsxstyle'
-import { Toggle, Button } from './'
+import styled from 'styled-components'
+import { Toggle, Chevron, Button } from './'
 import Media from 'react-media'
 
-export const Chevron = ({ open }: { open: boolean }) => (
-  <svg
-    className="Chevron"
-    viewBox="0 0 16 16"
-    width="16"
-    height="16"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}>
-    <path
-      d={
-        open
-          ? 'M1.0606601717798212 11 L8 4.060660171779821 L14.939339828220179 11'
-          : 'M1.0606601717798212 5 L8 11.939339828220179 L14.939339828220179 5'
-      }
-    />
-  </svg>
-)
+const HelperContainer = styled.div`
+  @media (min-width: 950px) {
+    float: right;
+    margin-right: -208px;
+    width: 192px;
+  }
+`
+
+const HelperButtons = styled.div`
+  display: flex;
+  justify-content: ${({ spaced }) => (spaced ? 'space-between' : 'flex-end')};
+  padding: 8px;
+  @media (min-width: 950px) {
+    padding: 0;
+  }
+`
+
+const ChevronButton = styled.button`
+  outline: 0;
+  border: 0;
+  appearance: none;
+`
+
+const HelperContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  justify-content: space-between;
+  padding: 0 8px;
+
+  @media (min-width: 950px) {
+    justify-content: flex-start;
+    padding: 0;
+  }
+`
+const StyledButton = Button.extend`
+  @media (min-width: 950px) {
+    margin-bottom: 16px;
+  }
+`
 
 export default class extends Component<{
   children?: Node,
@@ -38,35 +60,20 @@ export default class extends Component<{
         {match => (
           <Toggle defaultOpen={match}>
             {(open, toggle) => (
-              <Block
-                float={match ? 'right' : 'none'}
-                marginRight={match && -208}
-                width={match && 192}>
-                <Flex
-                  marginBottom={16}
-                  justifyContent={children ? 'space-between' : 'flex-end'}
-                  padding={!match && 8}>
+              <HelperContainer>
+                <HelperButtons spaced={children}>
                   {!match &&
                     children && (
-                      <button style={{ outline: 0, border: 0 }} onClick={toggle}>
+                      <ChevronButton onClick={toggle}>
                         <Chevron open={open} />
-                      </button>
-                    )}{' '}
-                  <Block maxWidth={96}>
-                    <Button disabled={disabled} children={buttonText} onClick={onChange} />
-                  </Block>
-                </Flex>
-                {(match || open) && (
-                  <Flex
-                    marginBottom={16}
-                    flexDirection="column"
-                    justifyContent={!match && 'space-between'}
-                    paddingLeft={!match && 8}
-                    paddingRight={!match && 8}>
-                    {children}
-                  </Flex>
-                )}
-              </Block>
+                      </ChevronButton>
+                    )}
+                  <StyledButton disabled={disabled} onClick={onChange}>
+                    {buttonText}
+                  </StyledButton>
+                </HelperButtons>
+                {(match || open) && <HelperContent>{children}</HelperContent>}
+              </HelperContainer>
             )}
           </Toggle>
         )}

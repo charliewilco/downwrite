@@ -1,6 +1,5 @@
 import React, { Component, createElement as h } from 'react'
-import { css } from 'glamor'
-import { InlineBlock } from 'glamor/jsxstyle'
+import styled from 'styled-components'
 import {
   BlockQuote,
   BulletedList,
@@ -13,14 +12,15 @@ import {
   Label
 } from './ToolbarIcon'
 
-const btnStyle = css({
-  padding: 8,
-  flex: '1 1 auto',
-  textAlign: 'center',
-  color: 'var(--color-2)',
-  fontSize: 12,
-  transition: 'all 250ms ease-in-out'
-})
+const ToolbarButton = styled.div`
+  display: inline-block;
+  padding: 8px;
+  flex: 1 1 auto;
+  text-align: center;
+  color: var(--color-2);
+  font-size: 12px;
+  transition: all 250ms ease-in-out;
+`
 
 export default class StyleButton extends Component {
   findIcon = (label, active) => {
@@ -55,9 +55,7 @@ export default class StyleButton extends Component {
     const { active, label } = this.props
 
     return (
-      <InlineBlock className={css(btnStyle)} onMouseDown={this.onToggle}>
-        {this.findIcon(label, active)}
-      </InlineBlock>
+      <ToolbarButton onMouseDown={this.onToggle}>{this.findIcon(label, active)}</ToolbarButton>
     )
   }
 }

@@ -1,41 +1,48 @@
 import React from 'react'
-import { Flex, Block } from 'glamor/jsxstyle'
-import { css } from 'glamor'
+import styled from 'styled-components'
 import { CloseIcon } from './'
 
-const closeAlert = css({
-  appearance: 'none',
-  border: 0,
-  color: 'inherit'
-})
+const UIFlashContainer = styled.div`
+  display: flex;
+  border-left: 5px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
+  z-index: 900;
+  max-width: ${props => props.width}px;
+  left: 0px;
+  right: 0px;
+  background: var(--color-6);
+  color: var(--text);
+  position: fixed;
+  top: 20px;
+  margin: auto;
+  text-align: ${props => props.centered && 'center'};
+  padding-top: 8px;
+  padding-right: 16px;
+  padding-bottom: 8px;
+  padding-left: 16px;
+`
+
+const Stretch = styled.div`
+  flex: 1;
+`
+
+const CloseButton = styled.button`
+  appearance: none;
+  border: 0px;
+  color: inherit;
+`
 
 const UIFlash = ({ width = 512, onClose, content, type }) => (
-  <Flex
-    borderLeft="5px solid rgba(0, 0, 0, .25)"
-    boxShadow="0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12)"
-    zIndex={900}
-    maxWidth={width}
-    left={0}
-    right={0}
-    background="var(--color-6)"
-    color="var(--text)"
-    position="fixed"
-    top={20}
-    margin="auto"
-    textAlign={!onClose && 'center'}
-    paddingTop={8}
-    paddingRight={16}
-    paddingBottom={8}
-    paddingLeft={16}>
-    <Block flex={1}>
+  <UIFlashContainer width={width} centered={!onClose}>
+    <Stretch>
       {type && `${type.length > 0 && type.toUpperCase()}:`} {content}
-    </Block>
+    </Stretch>
     {onClose && (
-      <button className={css(closeAlert)} onClick={onClose}>
+      <CloseButton onClick={onClose}>
         <CloseIcon fill="currentColor" />
-      </button>
+      </CloseButton>
     )}
-  </Flex>
+  </UIFlashContainer>
 )
 
 export default UIFlash

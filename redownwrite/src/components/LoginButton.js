@@ -1,20 +1,21 @@
 // @flow
 
 import * as React from 'react'
-import { css } from 'glamor'
+import styled from 'styled-components'
 
-const lbtnStyle = css({
-  padding: 8,
-  color: `var(--color-6)`,
-  border: 0,
-  background: 'none',
-  fontFamily: 'inherit',
-  fontWeight: 700,
-  fontStyle: 'italic',
-  ':hover': {
-    color: `var(--color-7)`
+const StyledLoginButton = styled.button`
+  padding: 8px;
+  color: var(--color-6);
+  border: 0px;
+  background: none;
+  font-family: inherit;
+  font-weight: 700;
+  font-style: italic;
+
+  :hover {
+    color: var(--color-7);
   }
-})
+`
 
 export default class extends React.Component<{ onClick: Function, label: string }, void> {
   static displayName = 'LoginButton'
@@ -25,10 +26,6 @@ export default class extends React.Component<{ onClick: Function, label: string 
 
   render() {
     const { label, onClick } = this.props
-    return (
-      <button className={css(lbtnStyle)} onClick={onClick}>
-        {label}
-      </button>
-    )
+    return <StyledLoginButton onClick={onClick}>{label}</StyledLoginButton>
   }
 }

@@ -1,6 +1,31 @@
 import React, { Component } from 'react'
-import { Block } from 'glamor/jsxstyle'
+import styled from 'styled-components'
 import { Nav, Toggle, Header } from './'
+
+const ClearFixed = styled.div`
+  height: 100%;
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+`
+
+ClearFixed.displayName = 'ClearFixed'
+
+const Container = styled.div`
+  min-height: 100%;
+`
+
+Container.displayName = 'Container'
+
+const AppContainer = styled.div`
+  min-height: 100%;
+  display: block;
+  font-family: var(--primary-font);
+`
+
+AppContainer.displayName = 'AppContainer'
 
 export default class Shell extends Component {
   render() {
@@ -8,10 +33,10 @@ export default class Shell extends Component {
     return (
       <Toggle>
         {(navOpen, toggleNav, closeNav) => (
-          <Block minHeight="100%" fontFamily="var(--primary-font)">
+          <AppContainer>
             {renderErrors && renderErrors()}
-            <Block height="100%" className="u-cf">
-              <Block minHeight="100%">
+            <ClearFixed>
+              <Container>
                 <Header
                   name="Downwrite"
                   authed={auth.state.authed}
@@ -19,7 +44,7 @@ export default class Shell extends Component {
                   onClick={toggleNav}
                 />
                 {children(closeNav)}
-              </Block>
+              </Container>
               {navOpen && (
                 <Nav
                   closeNav={closeNav}
@@ -28,8 +53,8 @@ export default class Shell extends Component {
                   username={auth.state.name}
                 />
               )}
-            </Block>
-          </Block>
+            </ClearFixed>
+          </AppContainer>
         )}
       </Toggle>
     )

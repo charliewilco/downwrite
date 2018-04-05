@@ -2,16 +2,22 @@
 
 import React, { Component } from 'react'
 import { matchPath, type Match, type Location } from 'react-router-dom'
-import { Block } from 'glamor/jsxstyle'
+import styled from 'styled-components'
 import { PREVIEW_ENDPOINT } from './utils/urls'
 import { Content } from './components'
 import type { Post } from './Dashboard'
 
-const ErrorSt = ({ error, message }) => (
-  <Block maxWidth={528} margin="auto" padding={8}>
+const ErrorContainer = styled.div`
+  margin: 0 auto;
+  padding: 8px;
+  max-width: 512px;
+`
+
+const ErrorState = ({ error, message }) => (
+  <ErrorContainer>
     <p className="f6">{error}. Ummm... something went horribly wrong.</p>
     <i>{message}</i>
-  </Block>
+  </ErrorContainer>
 )
 
 type PreviewProps = {
@@ -71,6 +77,6 @@ export default class extends Component<PreviewProps, PreviewState> {
 
   render() {
     const { post, error, loading } = this.state
-    return !loading && (error ? <ErrorSt {...post} /> : <Content {...post} />)
+    return !loading && (error ? <ErrorState {...post} /> : <Content {...post} />)
   }
 }
