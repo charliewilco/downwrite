@@ -23,14 +23,19 @@ export const InlineBlock = styled.span`
 `
 
 const LegalInfo = styled.small`
-  margin-left: 16;
-  display: inline-block;
-  vertical-align: middle;
-  line-height: 1.1;
+  flex: 1;
+  line-height: 1.2;
 `
 
-const LegalContainer = styled.div`
+const LegalCheck = styled(Check)`
+  margin-right: 16px;
+  display: block;
+  max-width: 20px;
+`
+
+const LegalContainer = styled.label`
   display: flex;
+  align-items: center;
   margin: 16px;
   background: #d8eaf1;
   padding: 8px;
@@ -115,12 +120,10 @@ class Register extends React.Component<LoginProps, RegisterType> {
           />
         </Padded>
         <LegalContainer>
-          <label>
-            <Check checked={checked} value={checked} onChange={this.toggleChecked} />
-            <LegalInfo>
-              I'm agreeing to abide in all the <Link to="/legal">legal stuff</Link>.
-            </LegalInfo>
-          </label>
+          <LegalCheck checked={checked} value={checked} onChange={this.toggleChecked} />
+          <LegalInfo>
+            I'm agreeing to abide in all the <Link to="/legal">legal stuff</Link>.
+          </LegalInfo>
         </LegalContainer>
 
         <Padded align="right">
