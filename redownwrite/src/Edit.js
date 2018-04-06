@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import styled from 'styled-components'
 import { EditorState, convertToRaw, type ContentState } from 'draft-js'
 import Helmet from 'react-helmet'
@@ -209,7 +209,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
         <Helmet title={title} titleTemplate="%s | Downwrite" />
 
         {autosaving && <Autosaving />}
-        <Wrapper sm>
+        <Wrapper sm={true}>
           <Helpers onChange={this.updatePostContent} buttonText="Save">
             <Export editorState={editorState} title={title} date={post.dateAdded} />
             <Privacy
