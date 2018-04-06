@@ -2734,6 +2734,14 @@ clipboard@^1.7.1:
     select "^1.1.2"
     tiny-emitter "^2.0.0"
 
+clipboard@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/clipboard/-/clipboard-2.0.0.tgz#4661dc972fb72a4c4770b8db78aa9b1caef52b50"
+  dependencies:
+    good-listener "^1.2.2"
+    select "^1.1.2"
+    tiny-emitter "^2.0.0"
+
 clipboardy@1.2.3:
   version "1.2.3"
   resolved "https://registry.npmjs.org/clipboardy/-/clipboardy-1.2.3.tgz#0526361bf78724c1f20be248d428e365433c07ef"
@@ -3666,9 +3674,9 @@ draft-js-checkable-list-item@^2.0.5:
   dependencies:
     draft-js-modifiers "^0.1.5"
 
-draft-js-markdown-plugin@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.npmjs.org/draft-js-markdown-plugin/-/draft-js-markdown-plugin-1.2.0.tgz#ba01cf1673d27166a67f6c025880d0181a062d34"
+draft-js-markdown-plugin@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.npmjs.org/draft-js-markdown-plugin/-/draft-js-markdown-plugin-1.3.0.tgz#6b57d7ffe18ff285e1650cdabe79d6e659f41b70"
   dependencies:
     decorate-component-with-props "^1.0.2"
     draft-js "~0.10.1"
@@ -9302,7 +9310,13 @@ pretty-format@^22.4.0:
     ansi-regex "^3.0.0"
     ansi-styles "^3.2.0"
 
-prismjs@^1.5.0, prismjs@^1.8.4:
+prismjs@^1.13.0:
+  version "1.13.0"
+  resolved "https://registry.npmjs.org/prismjs/-/prismjs-1.13.0.tgz#edcc14a90bbd72a03e5ffd2bab81a04c79a607a6"
+  optionalDependencies:
+    clipboard "^2.0.0"
+
+prismjs@^1.5.0:
   version "1.11.0"
   resolved "https://registry.npmjs.org/prismjs/-/prismjs-1.11.0.tgz#297aef33eb79421bfdb19273a5092ca515970d29"
   optionalDependencies:
@@ -12000,9 +12014,9 @@ unset-value@^1.0.0:
     has-value "^0.3.1"
     isobject "^3.0.0"
 
-unstated@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/unstated/-/unstated-1.1.0.tgz#022931b6ea41aab3ca7f491603cba2d551247e56"
+unstated@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npmjs.org/unstated/-/unstated-1.2.0.tgz#5c57cc077473d2cce411ec0930da285cef3df306"
   dependencies:
     create-react-context "^0.1.5"
 
