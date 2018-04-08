@@ -48,7 +48,8 @@
 			"redownwrite",
 			"api-downwrite",
 			"graph-downwrite",
-			"ui"
+			"ui",
+			"highway"
 		]
 	},
 	"workspaces": [
@@ -57,7 +58,8 @@
 		"redownwrite",
 		"api-downwrite",
 		"graph-downwrite",
-		"ui"
+		"ui",
+		"highway"
 	],
 	"license": "MIT"
 }
