@@ -1,0 +1,28 @@
+{
+  "name": "highway",
+  "version": "0.1.0",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
+    "react-helmet": "^5.2.0",
+    "react-helmet-async": "^0.0.5",
+    "react-loadable": "^5.3.1",
+    "react-router-dom": "^4.2.2",
+    "styled-components": "^3.2.5"
+  },
+  "devDependencies": {
+    "backpack-core": "^0.7.0"
+  },
+  "babel": {
+    "presets": ["backpack"],
+    "plugins": [
+      ["styled-components", { "ssr": true }],
+      "react-loadable/babel"
+    ]
+}
