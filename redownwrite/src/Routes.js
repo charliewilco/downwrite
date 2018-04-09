@@ -4,17 +4,17 @@ import Loadable from 'react-loadable'
 import { PrivateRoute } from './CustomRoutes'
 import * as DW from './components'
 
-const Ldx = (opts: { loader: Function }) =>
+const Lx = (opts: { loader: Function }) =>
   Loadable(Object.assign({}, { loading: DW.Loading }, opts))
 
-const NewEditor = Ldx({ loader: () => import('./New') })
-const PostEditor = Ldx({ loader: () => import('./Edit') })
-const Home = Ldx({ loader: () => import('./Home') })
-const Dashboard = Ldx({ loader: () => import('./Dashboard') })
-const NotFound = Ldx({ loader: () => import('./NoMatch') })
-const SignOut = Ldx({ loader: () => import('./SignOut') })
-const Preview = Ldx({ loader: () => import('./Preview') })
-const Legal = Ldx({ loader: () => import('./Legal') })
+const NewEditor = Lx({ loader: () => import('./New') })
+const PostEditor = Lx({ loader: () => import('./Edit') })
+const Home = Lx({ loader: () => import('./Home') })
+const Dashboard = Lx({ loader: () => import('./Dashboard') })
+const NotFound = Lx({ loader: () => import('./NoMatch') })
+const SignOut = Lx({ loader: () => import('./SignOut') })
+const Preview = Lx({ loader: () => import('./Preview') })
+const Legal = Lx({ loader: () => import('./Legal') })
 
 export default ({ auth, closeNav }) => (
   <Switch>
