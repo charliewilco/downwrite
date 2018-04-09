@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"devDependencies": {
+		"concurrently": "^3.5.0",
 		"enzyme": "^3.1.0",
 		"enzyme-adapter-react-16": "^1.0.2",
 		"enzyme-to-json": "^3.1.4",
@@ -16,6 +17,8 @@
 		"w3c-xmlhttprequest": "^2.1.2"
 	},
 	"dependencies": {
+		"backpack-core": "^0.7.0",
+		"express": "^4.16.3",
 		"date-fns": "^1.29.0",
 		"draft-js": "^0.10.4",
 		"draft-js-markdown-plugin": "^1.4.0",
@@ -35,6 +38,7 @@
 		"react-dom": "^16.2.0",
 		"react-dropzone": "^4.2.9",
 		"react-helmet": "^5.2.0",
+		"react-helmet-async": "^0.0.5",
 		"react-loadable": "^5.3.1",
 		"react-markdown": "^3.3.0",
 		"react-media": "^1.8.0",
@@ -44,13 +48,16 @@
 		"serve": "^6.5.0",
 		"styled-components": "^3.2.5",
 		"universal-cookie": "^2.1.0",
+		"universal-cookie-express": "^2.1.2",
+		"universal-fetch": "^1.0.0",
 		"unstated": "^1.2.0",
 		"uuid": "^3.1.0"
 	},
 	"scripts": {
 		"start": "serve -s build",
 		"build": "react-scripts build",
-		"dev": "PORT=4000 react-scripts start",
+		"postbuild": "backpack build",
+		"dev": "concurrently -c 'blue,yellow' --names 'CRA,Back' 'PORT=4000 react-scripts start' 'backpack dev'",
 		"test": "react-scripts test --env=jsdom --verbose",
 		"lint": "yarn eslint ./src/**/*.js",
 		"format": "prettier --write 'src/**/*.js' --parser flow",

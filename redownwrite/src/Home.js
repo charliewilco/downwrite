@@ -72,6 +72,25 @@ const HomeBannerMarker = styled.div`
   position: relative;
 `
 
+const HomeBanner = styled.div`
+  width: 100%;
+  height: 75vh;
+  overflow: hidden;
+  transform: skewY(-8.25deg);
+  transform-origin: 0;
+  background: linear-gradient(
+    150deg,
+    var(--color-1) 15%,
+    var(--color-2) 70%,
+    var(--color-1) 94%
+  );
+  background: linear-gradient(150deg, var(--color-1), var(--color-2));
+
+  @media (min-width: 81rem) {
+    height: calc(65vh + 5rem);
+  }
+`
+
 export default class Home extends Component<{ signIn: Function }, { loginSelected: boolean }> {
   state = {
     loginSelected: true
@@ -81,7 +100,7 @@ export default class Home extends Component<{ signIn: Function }, { loginSelecte
     const { loginSelected } = this.state
     return (
       <HomeBannerMarker>
-        <div className="HomeBanner" />
+        <HomeBanner />
         <Container>
           <Intro>
             <Logo />

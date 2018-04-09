@@ -6,7 +6,7 @@ import PrismCode from 'react-prism'
 import 'prismjs'
 import NightMode from './NightMode'
 import Wrapper from './Wrapper'
-import './ganymede.css'
+import './ganymede.css.js'
 import format from 'date-fns/format'
 
 const CodeBlock = ({ language, value, ...props }) => (

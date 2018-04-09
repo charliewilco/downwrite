@@ -1,33 +1,23 @@
 import React from 'react'
-import { css } from 'glamor'
 import colors from './palette'
+import styled from 'styled-components'
 
-const btn = css({
-  display: 'block',
-  fontSize: 14,
-  backgroundColor: colors.darkYellow,
-  transition: 'background-color 250ms ease-in-out',
-  color: colors.defaultGray,
-  fontWeight: 700,
-  border: 0,
-  paddingTop: 4,
-  paddingLeft: 18,
-  paddingRight: 18,
-  paddingBottom: 4,
-  borderRadius: 4,
-  boxShadow: '0 0 4px rgba(0,0,0,.037), 0 4px 8px rgba(0,0,0,.07)',
-  ':hover': {
-    backgroundColor: colors.defaultYellow
-  },
-  '[disabled]': {
-    filter: `grayscale(100%)`
+export default styled.button`
+  display: block;
+  font-size: 14px;
+  background-color: ${colors.darkYellow};
+  transition: background-color 250ms ease-in-out;
+  color: ${colors.defaultGray};
+  font-weight: 700;
+  border: 0;
+  padding: 0.25rem 1.125rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.037), 0 4px 8px rgba(0, 0, 0, 0.07);
+  &:hover {
+    background-color: ${colors.defaultYellow};
   }
-})
 
-// type Props = {
-//   args: Object
-// }
-
-const Button = props => <button className={css(btn)} {...props} />
-
-export default Button
+  &:[disabled] {
+    filter: grayscale(100%);
+  }
+`
