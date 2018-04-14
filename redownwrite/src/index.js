@@ -17,6 +17,16 @@ const App = () => (
   </BrowserRouter>
 )
 
+// if (module.hot) {
+//   module.hot.accept('./App', () => {
+//     const NextApp = require('./App').default
+//     ReactDOM.render(
+//       <NextApp renderer={renderer} />,
+//       rootEl
+//     )
+//   })
+// }
+
 render(<App />, container)
 
 loadCSS(PREVIEW_FONTS, styleEntry)
