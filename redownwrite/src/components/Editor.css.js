@@ -86,6 +86,10 @@ export default injectGlobal`
     font-size: 13px;
   }
 
+  .NightMode .RichEditor-editor pre {
+    color: #4c4c4c;
+  }
+
   .public-DraftStyleDefault-orderedListItem > *,
   .public-DraftStyleDefault-unorderedListItem > * {
     display: inline;
