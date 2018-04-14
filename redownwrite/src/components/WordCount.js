@@ -10,34 +10,52 @@ type WordCounterers = {
 }
 
 export default class WordCounter extends Component<WordCounterers, void> {
+  static displayName = 'DraftEditorWordCounter'
+
   static defaultProps = {
     component: 'span'
   }
 
-  getWordCount(editorState: ContentState) {
-    const plainText = editorState.getCurrentContent().getPlainText('')
-    const regex = /(?:\r\n|\r|\n)/g // new line, carriage return, line feed
-    const cleanString = plainText.replace(regex, ' ').trim() // replace above characters w/ space
-    const wordArray = cleanString.match(/\S+/g) // matches words according to whitespace
+  getSelectionCount(editorState: ContentState): number {
+    let selectionState = editorState.getSelection()
+    let anchorKey = selectionState.getAnchorKey()
+    let currentContent = editorState.getCurrentContent()
+    let currentContentBlock = currentContent.getBlockForKey(anchorKey)
+    let start = selectionState.getStartOffset()
+    let end = selectionState.getEndOffset()
+    let selectedText = currentContentBlock.getText().slice(start, end)
+
+    return this.createWordCount(selectedText)
+  }
+
+  createWordCount(str: string): number {
+    let regex = /(?:\r\n|\r|\n)/g // new line, carriage return, line feed
+    let cleanString = str.replace(regex, ' ').trim() // replace above characters w/ space
+    let wordArray = cleanString.match(/\S+/g) // matches words according to whitespace
+
     return wordArray ? wordArray.length : 0
   }
 
-  // getClassNames(count, limit) {
-  //   const { theme = {}, className } = this.props;
-  //   const defaultStyle = unionClassNames(theme.counter, className);
-  //   const overLimitStyle = unionClassNames(theme.counterOverLimit, className);
-  //   return count > limit ? overLimitStyle : defaultStyle;
-  //   const classNames = this.getClassNames(count, limit);
-  // }
+  getWordCount(editorState: ContentState): number {
+    let plainText = editorState.getCurrentContent().getPlainText('')
+
+    return this.createWordCount(plainText)
+  }
+
+  // NOTE: Use snapshoting in 16.3
 
   render() {
-    const { editorState, component: Cx } = this.props
-    const count = this.getWordCount(editorState)
+    let { editorState, component: Cx } = this.props
+
+    let count = this.getWordCount(editorState)
+    let selectionCount = this.getSelectionCount(editorState)
+
+    let displayCount = selectionCount > 0 ? selectionCount : count
 
     return (
       <Cx>
         <small>
-          <pre>Word Count: {count}</pre>
+          <pre>Word Count: {displayCount}</pre>
         </small>
       </Cx>
     )

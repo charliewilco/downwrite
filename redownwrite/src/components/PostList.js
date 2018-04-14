@@ -76,7 +76,7 @@ const List = styled.ul`
 export default ({ posts, layout, layoutChange, onDelete }) => (
   <Fragment>
     <ListHeader>
-      <Title>Posts</Title>
+      <Title>Entries</Title>
       <LayoutControl layout={layout} layoutChange={layoutChange} />
     </ListHeader>
     {layout === 'grid' ? (
