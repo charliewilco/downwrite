@@ -23,24 +23,27 @@ export default class WordCounter extends Component<WordCounterers, void> {
     let end = selectionState.getEndOffset()
     let selectedText = currentContentBlock.getText().slice(start, end)
 
-    const regex = /(?:\r\n|\r|\n)/g // new line, carriage return, line feed
-    const cleanString = selectedText.replace(regex, ' ').trim() // replace above characters w/ space
-    const wordArray = cleanString.match(/\S+/g) // matches words according to whitespace
+    return this.createWordCount(selectedText)
+  }
+
+  createWordCount(str: string): number {
+    let regex = /(?:\r\n|\r|\n)/g // new line, carriage return, line feed
+    let cleanString = str.replace(regex, ' ').trim() // replace above characters w/ space
+    let wordArray = cleanString.match(/\S+/g) // matches words according to whitespace
+
     return wordArray ? wordArray.length : 0
   }
 
   getWordCount(editorState: ContentState): number {
-    const plainText = editorState.getCurrentContent().getPlainText('')
-    const regex = /(?:\r\n|\r|\n)/g // new line, carriage return, line feed
-    const cleanString = plainText.replace(regex, ' ').trim() // replace above characters w/ space
-    const wordArray = cleanString.match(/\S+/g) // matches words according to whitespace
-    return wordArray ? wordArray.length : 0
+    let plainText = editorState.getCurrentContent().getPlainText('')
+
+    return this.createWordCount(plainText)
   }
 
   // NOTE: Use snapshoting in 16.3
 
   render() {
-    const { editorState, component: Cx } = this.props
+    let { editorState, component: Cx } = this.props
 
     let count = this.getWordCount(editorState)
     let selectionCount = this.getSelectionCount(editorState)
