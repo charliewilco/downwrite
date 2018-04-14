@@ -11,7 +11,6 @@
 		"fbjs": "^0.8.16",
 		"jest-fetch-mock": "^1.4.1",
 		"jest-styled-components": "^5.0.1",
-		"puppeteer": "^1.2.0",
 		"react-addons-test-utils": "^15.6.2",
 		"react-test-renderer": "^16.0.0",
 		"w3c-xmlhttprequest": "^2.1.2"

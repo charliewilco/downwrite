@@ -1,0 +1,8 @@
+{
+  "name": "union",
+  "private": true,
+  "version": "0.1.0",
+  "dependencies": {
+    "puppeteer": "^1.2.0"
+  }
+}
