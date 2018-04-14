@@ -37,13 +37,8 @@ export default class Shell extends Component {
             {renderErrors && renderErrors()}
             <ClearFixed>
               <Container>
-                <Header
-                  name="Downwrite"
-                  authed={auth.state.authed}
-                  open={navOpen}
-                  onClick={toggleNav}
-                />
-                {children(closeNav)}
+                <Header authed={auth.state.authed} open={navOpen} onClick={toggleNav} />
+                {children}
               </Container>
               {navOpen && (
                 <Nav

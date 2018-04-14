@@ -24,7 +24,7 @@ const Downwrite = () => (
           <DW.Shell
             auth={auth}
             renderErrors={() => <UIErrorMessage {...err.state} onClose={err.clearFlash} />}>
-            {closeNav => <Routes auth={auth} closeNav={closeNav} />}
+            <Routes auth={auth} />
           </DW.Shell>
         </React.Fragment>
       )}

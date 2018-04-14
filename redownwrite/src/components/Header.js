@@ -109,13 +109,13 @@ const Header = styled.header`
 `
 
 export default withRouter(
-  ({ name, authed, onClick, open, match }: HeaderProps) =>
+  ({ authed, onClick, open, match }: HeaderProps) =>
     !(match.isExact && match.path === '/' && !authed) ? (
       <Header>
         <MenuContainer>
           <Logo />
           <HomeButton to="/">
-            <HeaderTitle children={name} />
+            <HeaderTitle>Downwrite</HeaderTitle>
           </HomeButton>
         </MenuContainer>
         {authed ? <Menu open={open} toggleNav={onClick} /> : <LoginSignUp />}

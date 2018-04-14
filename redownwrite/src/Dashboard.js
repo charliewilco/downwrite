@@ -104,7 +104,6 @@ export default class Main extends Component<MainPr, MainState> {
 
   componentDidMount() {
     this.getPosts()
-    this.props.closeNav()
   }
 
   closeUIModal = () => this.setState({ modalOpen: false })
