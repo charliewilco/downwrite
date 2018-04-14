@@ -17,11 +17,12 @@ export default class Logger extends Component {
     }
   }
 
-  componentWillReceiveProps({ value, clear }) {
+  componentDidUpdate({ value, clear }) {
     if (__IS_DEV__) {
+      const { value, clear } = this.props
       this.logger(value)
 
-      clear && console.clear()
+      clear && clear()
     }
   }
 
