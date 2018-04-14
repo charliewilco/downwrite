@@ -1,6 +1,9 @@
 //
 
 global.window = {
+  navigator: {
+    onLine: false
+  },
   location: {
     protocol: 'https:',
     host: 'downwrite.us',

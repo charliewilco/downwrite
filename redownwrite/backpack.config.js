@@ -9,7 +9,6 @@ module.exports = {
     config.entry.main = ['./src/server.js']
 
     config.plugins.push(new webpack.IgnorePlugin(/\.(css|img|svg)$/))
-    config.plugins.push(new ReactLoadablePlugin({ filename: './dist/react-loadable' }))
 
     return config
   }
