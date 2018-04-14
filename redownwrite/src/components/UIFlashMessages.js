@@ -45,6 +45,8 @@ const UIFlash = ({ width = 512, onClose, content, type }) => (
   </UIFlashContainer>
 )
 
+UIFlash.displayName = 'UIFlashMessage'
+
 export default UIFlash
 
 // TODO: This needs a few tests and these functions need to be documented

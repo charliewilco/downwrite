@@ -10,6 +10,8 @@ type WordCounterers = {
 }
 
 export default class WordCounter extends Component<WordCounterers, void> {
+  static displayName = 'DraftEditorWordCounter'
+
   static defaultProps = {
     component: 'span'
   }
