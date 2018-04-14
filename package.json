@@ -46,11 +46,13 @@
 			"redownwrite",
 			"api-downwrite",
 			"graph-downwrite",
-			"ui"
+			"ui",
+			"union"
 		]
 	},
 	"workspaces": [
 		"redownwrite",
+		"union",
 		"api-downwrite",
 		"graph-downwrite",
 		"ui"
