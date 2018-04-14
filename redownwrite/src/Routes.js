@@ -16,19 +16,14 @@ const SignOut = Lx({ loader: () => import('./SignOut') })
 const Preview = Lx({ loader: () => import('./Preview') })
 const Legal = Lx({ loader: () => import('./Legal') })
 
-export default ({ auth, closeNav }) => (
+export default ({ auth }) => (
   <Switch>
     <Route
       exact
       path="/"
       render={(props: Object) =>
         auth.state.authed === true ? (
-          <Dashboard
-            token={auth.state.token}
-            user={auth.state.user}
-            closeNav={closeNav}
-            {...props}
-          />
+          <Dashboard token={auth.state.token} user={auth.state.user} {...props} />
         ) : (
           <Home {...props} signIn={auth.signIn} signOut={auth.signOut} />
         )
@@ -37,11 +32,7 @@ export default ({ auth, closeNav }) => (
     <PrivateRoute path="/new" component={NewEditor} />
     <PrivateRoute path="/:id/edit" component={PostEditor} />
     <Route exact path="/:id/preview" component={Preview} />
-    <Route
-      exact
-      path="/signout"
-      render={() => <SignOut toggleNav={closeNav} signOut={auth.signOut} />}
-    />
+    <Route exact path="/signout" render={() => <SignOut signOut={auth.signOut} />} />
     <Route path="/legal" component={Legal} />
     <Route component={NotFound} />
   </Switch>

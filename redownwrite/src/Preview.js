@@ -60,7 +60,6 @@ export default class extends Component<PreviewProps, PreviewState> {
   // TODO: Refactor this to do something smarter to render this component
   // See this is where recompose might be cool
   // I'm gonna need to take that back at some point
-  // Will Next.js fix this?
 
   componentWillReceiveProps({ location }) {
     if (location !== this.props.location) {
@@ -69,11 +68,11 @@ export default class extends Component<PreviewProps, PreviewState> {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    console.log(prevProps, prevState)
-
-    console.log(this.props)
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log(prevProps, prevState)
+  //
+  //   console.log(this.props)
+  // }
 
   render() {
     const { post, error, loading } = this.state

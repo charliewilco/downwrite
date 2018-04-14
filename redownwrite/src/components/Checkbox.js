@@ -1,10 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const icon = `data:image/svg+xml;utf8,<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
-<path fill='white' d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z "></path></svg>`
+const base64Icon = `data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkx
+JQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy
+9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yM
+DAwL3N2ZyIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiPgo8cGF0
+aCBmaWxsPSd3aGl0ZScgZD0iTTkgMTYuMTdMNC44MyAxMmwtMS40MiAxLjQxTDkgMTkgMjEgN2w
+tMS40MS0xLjQxeiAiPjwvcGF0aD48L3N2Zz4=`
 
 const Inp = styled.input`
   display: inline-block;
@@ -13,9 +15,13 @@ const Inp = styled.input`
   width: 20px;
   height: 20px;
   appearance: none;
-  border: 0px;
-  background: ${({ checked }) =>
-    checked ? `var(--color-1) url(${icon}) no-repeat center center` : '#D0D0D0'};
+  border: ${props => (props.checked ? 1 : 0)}px;
+  background: ${props =>
+    props.checked ? `var(--color-1) url("${base64Icon}") no-repeat center center` : '#D0D0D0'};
 `
 
-export default props => <Inp type="checkbox" {...props} />
+const Checkbox = props => <Inp type="checkbox" {...props} />
+
+Checkbox.displayName = 'UICheckbox'
+
+export default Checkbox

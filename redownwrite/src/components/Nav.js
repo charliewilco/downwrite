@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import Link from 'react-router-dom/Link'
+import withRouter from 'react-router-dom/withRouter'
 import styled, { keyframes } from 'styled-components'
 import User from './User'
 import Fetch from './CollectionFetch'
@@ -110,8 +111,14 @@ const NavLabel = styled.span`
   vertical-align: middle;
 `
 
-export default class extends Component<NavigationProps> {
+class NavBar extends Component<NavigationProps> {
   static displayName = 'NavigationBar'
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.key !== this.props.location.key) {
+      this.props.closeNav()
+    }
+  }
 
   render() {
     const { closeNav, token, username } = this.props
@@ -149,3 +156,5 @@ export default class extends Component<NavigationProps> {
     )
   }
 }
+
+export default withRouter(NavBar)
