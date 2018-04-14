@@ -28,6 +28,8 @@ const AppContainer = styled.div`
 AppContainer.displayName = 'AppContainer'
 
 export default class Shell extends Component {
+  static displayName = 'UIShell'
+
   render() {
     const { children, renderErrors, auth } = this.props
     return (
