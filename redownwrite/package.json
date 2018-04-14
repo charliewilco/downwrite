@@ -58,8 +58,8 @@
 	"scripts": {
 		"start": "serve -s build",
 		"build": "react-scripts build",
-		"postbuild": "backpack build",
-		"dev": "concurrently -c 'blue,yellow' --names 'CRA,Back' 'PORT=4000 react-scripts start' 'backpack dev'",
+		"_postbuild": "backpack build",
+		"dev": "PORT=4000 react-scripts start",
 		"test": "react-scripts test --env=jsdom --verbose",
 		"lint": "yarn eslint ./src/**/*.js",
 		"format": "prettier --write 'src/**/*.js' --parser flow",

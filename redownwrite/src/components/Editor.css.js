@@ -80,6 +80,12 @@ export default injectGlobal`
     font-size: 100%;
   }
 
+  .RichEditor-editor pre {
+    background: #f4f5f5;
+    padding: .75rem;
+    font-size: 13px;
+  }
+
   .public-DraftStyleDefault-orderedListItem > *,
   .public-DraftStyleDefault-unorderedListItem > * {
     display: inline;
