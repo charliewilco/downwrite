@@ -1,8 +1,8 @@
 // @flow
 
 import * as React from 'react'
-import { Link } from 'react-router-dom'
-import { Flex, Block, InlineBlock } from 'glamor/jsxstyle'
+import Link from 'react-router-dom/Link'
+import styled from 'styled-components'
 import { LoginInput, Button, Check } from './components'
 import { USER_ENDPOINT } from './utils/urls'
 
@@ -17,6 +17,34 @@ type LoginProps = {
   signIn: Function,
   setError: Function
 }
+
+export const InlineBlock = styled.span`
+  display: inline-block;
+`
+
+const LegalInfo = styled.small`
+  flex: 1;
+  line-height: 1.2;
+`
+
+const LegalCheck = styled(Check)`
+  margin-right: 16px;
+  display: block;
+  max-width: 20px;
+`
+
+const LegalContainer = styled.label`
+  display: flex;
+  align-items: center;
+  margin: 16px;
+  background: #d8eaf1;
+  padding: 8px;
+`
+
+export const Padded = styled.div`
+  padding: 16px;
+  text-align: ${props => props.align};
+`
 
 class Register extends React.Component<LoginProps, RegisterType> {
   state = {
@@ -53,11 +81,13 @@ class Register extends React.Component<LoginProps, RegisterType> {
     }
   }
 
+  toggleChecked = () => this.setState(({ checked }) => ({ checked: !checked }))
+
   render() {
     const { username, password, email, checked } = this.state
     return (
       <form onSubmit={this.onSubmit}>
-        <Block padding={16}>
+        <Padded>
           <LoginInput
             placeholder="Try for something unique"
             label="Username"
@@ -88,33 +118,21 @@ class Register extends React.Component<LoginProps, RegisterType> {
               this.setState({ password: target.value })
             }
           />
-        </Block>
-        <Flex margin={16} backgroundColor="#d8eaf1" padding={8}>
-          <label>
-            <Check
-              checked={checked}
-              value={checked}
-              onChange={() => this.setState(({ checked }) => ({ checked: !checked }))}
-            />
-            <small
-              style={{
-                marginLeft: 16,
-                display: 'inline-block',
-                verticalAlign: 'middle',
-                lineHeight: 1.1
-              }}>
-              I'm agreeing to abide in all the <Link to="/legal">legal stuff</Link>.
-            </small>
-          </label>
-        </Flex>
+        </Padded>
+        <LegalContainer>
+          <LegalCheck checked={checked} value={checked} onChange={this.toggleChecked} />
+          <LegalInfo>
+            I'm agreeing to abide in all the <Link to="/legal">legal stuff</Link>.
+          </LegalInfo>
+        </LegalContainer>
 
-        <Block padding={16} textAlign="right">
+        <Padded align="right">
           <InlineBlock>
             <Button disabled={!checked} onClick={this.onSubmit}>
               Register
             </Button>
           </InlineBlock>
-        </Block>
+        </Padded>
       </form>
     )
   }

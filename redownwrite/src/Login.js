@@ -1,9 +1,9 @@
 // @flow
 
 import * as React from 'react'
-import { Block, InlineBlock } from 'glamor/jsxstyle'
 import { LoginInput, Button } from './components'
 import { AUTH_ENDPOINT } from './utils/urls'
+import { Padded, InlineBlock } from './Register'
 
 type LoginState = {
   user: string,
@@ -46,7 +46,7 @@ export default class Login extends React.Component<LoginProps, LoginState> {
   render() {
     const { user, password } = this.state
     return (
-      <Block padding={16}>
+      <Padded>
         <form onSubmit={this.onSubmit}>
           <LoginInput
             placeholder="user@email.com"
@@ -63,13 +63,13 @@ export default class Login extends React.Component<LoginProps, LoginState> {
             autoComplete="current-password"
             onChange={e => this.setState({ password: e.target.value })}
           />
-          <Block paddingTop={16} textAlign="right">
+          <Padded align="right">
             <InlineBlock>
               <Button onClick={this.onSubmit}>Login</Button>
             </InlineBlock>
-          </Block>
+          </Padded>
         </form>
-      </Block>
+      </Padded>
     )
   }
 }

@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { css } from 'glamor'
+import styled from 'styled-components'
 
 const SettingsIcon: React.ElementType = () => (
   <svg width="16" height="16" viewBox="0 0 16 16">
@@ -20,18 +20,19 @@ const SettingsIcon: React.ElementType = () => (
   </svg>
 )
 
-const settingsIc = css({
-  border: 0,
-  background: 'none',
-  appearance: 'none',
-  '@media (min-width: 500px)': {
-    textAlign: 'left',
-    marginTop: 16
+const SettingsButton = styled.button`
+  border: 0px;
+  background: none;
+  appearance: none;
+
+  @media (min-width: 500px) {
+    text-align: left;
+    margin-top: 16px;
   }
-})
+`
 
 export default ({ onClick }: { onClick: Function }) => (
-  <button onClick={onClick} className={css(settingsIc)}>
+  <SettingsButton onClick={onClick}>
     <SettingsIcon />
-  </button>
+  </SettingsButton>
 )

@@ -1,17 +1,23 @@
 // @flow
 
-import React from 'react'
+import React, { Component } from 'react'
 import { matchPath, type Match, type Location } from 'react-router-dom'
-import { Block } from 'glamor/jsxstyle'
+import styled from 'styled-components'
 import { PREVIEW_ENDPOINT } from './utils/urls'
 import { Content } from './components'
 import type { Post } from './Dashboard'
 
-const ErrorSt = ({ error, message }) => (
-  <Block maxWidth={528} margin="auto" padding={8}>
+const ErrorContainer = styled.div`
+  margin: 0 auto;
+  padding: 8px;
+  max-width: 512px;
+`
+
+const ErrorState = ({ error, message }) => (
+  <ErrorContainer>
     <p className="f6">{error}. Ummm... something went horribly wrong.</p>
     <i>{message}</i>
-  </Block>
+  </ErrorContainer>
 )
 
 type PreviewProps = {
@@ -22,10 +28,10 @@ type PreviewProps = {
 type PreviewState = {
   loading: boolean,
   error: boolean,
-  post?: Post | { message: string, error: string } | Object
+  post?: Post | { message: string, error: string } | {}
 }
 
-export default class extends React.Component<PreviewProps, PreviewState> {
+export default class extends Component<PreviewProps, PreviewState> {
   state = {
     loading: true,
     error: false,
@@ -45,7 +51,7 @@ export default class extends React.Component<PreviewProps, PreviewState> {
     return post
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     const req = await this.getPreview(this.props.match.params.id)
     // TODO: This could be more function-like
     this.setState({ error: req.error, loading: false, post: req })
@@ -56,15 +62,21 @@ export default class extends React.Component<PreviewProps, PreviewState> {
   // I'm gonna need to take that back at some point
   // Will Next.js fix this?
 
-  componentWillReceiveProps({ location }: { location: Location }) {
+  componentWillReceiveProps({ location }) {
     if (location !== this.props.location) {
       const match: Match = matchPath(location.pathname, { path: '/:id/preview' })
       this.getPreview(match.params.id).then(post => this.setState({ error: post.error, post }))
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    console.log(prevProps, prevState)
+
+    console.log(this.props)
+  }
+
   render() {
     const { post, error, loading } = this.state
-    return !loading && (error ? <ErrorSt {...post} /> : <Content {...post} />)
+    return !loading && (error ? <ErrorState {...post} /> : <Content {...post} />)
   }
 }

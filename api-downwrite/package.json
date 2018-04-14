@@ -9,7 +9,7 @@
     "predev": "yarn build",
     "deploy": "now && now alias",
     "start": "node dist/server.js",
-    "dev": "concurrently -c 'blue,yellow' --names 'Babel,Nodemon' 'yarn build -w' 'nodemon dist/server.js'",
+    "dev": "concurrently -c 'blue,yellow' --names 'Babel,Server' 'yarn build -w' 'node dist/server.js'",
     "test": "jest"
   },
   "license": "MIT",
@@ -33,8 +33,7 @@
   "devDependencies": {
     "babel-jest": "^22.4.0",
     "concurrently": "^3.5.0",
-    "jest": "^22.4.0",
-    "nodemon": "^1.15.1"
+    "jest": "^22.4.0"
   },
   "nodemonConfig": {
     "ignore": ["test/*", "src/*"],

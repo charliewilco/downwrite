@@ -1,32 +1,41 @@
 import React from 'react'
-import { css } from 'glamor'
-import { Block, Flex } from 'glamor/jsxstyle'
-import { Link } from 'react-router-dom'
+import styled from 'styled-components'
+import Link from 'react-router-dom/Link'
 
-const f2 = css({
-  fontSize: 16,
-  fontWeight: 500,
-  '@media (min-width: 57.75rem)': { fontSize: 24 },
-  '@media (min-width: 75rem)': { fontSize: 36 }
-})
+const PostsTitle = styled.h2`
+  font-size: 16px;
+  font-weight: 500;
 
-const deleteButton = css({
-  appearance: 'none',
-  border: 0
-})
+  @media (min-width: 57.75rem) {
+    font-size: 24px;
+  }
+  @media (min-width: 75rem) {
+    font-size: 36px;
+  }
+`
+
+const DeleteButton = styled.button`
+  appearance: none;
+  border: 0px;
+`
+
+const FlexBetween = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
 
 const ListItem = ({ title, id, onDelete }) => (
-  <Flex justifyContent="space-between">
-    <Block>
+  <FlexBetween>
+    <div>
       <Link to={`/${id}/edit`}>
-        <h2 className={css(f2)}>{title}</h2>
+        <PostsTitle>{title}</PostsTitle>
       </Link>
-    </Block>
+    </div>
 
-    <button className={css(deleteButton)} onClick={onDelete}>
+    <DeleteButton onClick={onDelete}>
       <small>Delete</small>
-    </button>
-  </Flex>
+    </DeleteButton>
+  </FlexBetween>
 )
 
 export default ListItem
