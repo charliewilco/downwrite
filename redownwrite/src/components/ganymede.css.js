@@ -2,6 +2,10 @@
 Name:   Duotone Ganymede
 */
 
+import { injectGlobal } from 'styled-components'
+
+export default injectGlobal`
+
 :root {
   --keyword: #3274a9;
   --tag: #e2a500;
@@ -152,3 +156,4 @@ pre > code.highlight {
   outline: 0.4em solid #34659d;
   outline-offset: 0.4em;
 }
+`

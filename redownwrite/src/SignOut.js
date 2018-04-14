@@ -1,11 +1,18 @@
+// @flow
 import React from 'react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, type Location } from 'react-router-dom'
 import compose from './utils/compose'
 
-export default ({ location, signOut, toggleNav }) => {
-  let seq = compose(toggleNav, signOut)
+type SnoType = {
+  location: Location,
+  signOut: Function,
+  toggleNav: Function
+}
 
-  seq()
+export default ({ location, signOut, toggleNav }: SnoType) => {
+  let sequenced = compose(toggleNav, signOut)
+
+  sequenced()
 
   return <Redirect to={{ pathname: '/', state: { from: location } }} />
 }

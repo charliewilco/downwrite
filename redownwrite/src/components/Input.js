@@ -1,24 +1,24 @@
-import React from 'react'
-import { css } from 'glamor'
+import React, { Component } from 'react'
+import styled from 'styled-components'
 
-let styles = css({
-  display: 'block',
-  width: '100%',
-  appearance: 'none',
-  fontWeight: 700,
-  fontSize: '125%',
-  borderWidth: 0,
-  borderBottom: 1,
-  borderStyle: 'solid',
-  borderRadius: 0,
-  borderColor: 'rgba(0, 0, 0, .125)',
-  paddingLeft: 0,
-  paddingRight: 0,
-  paddingTop: 8,
-  paddingBottom: 8
-})
+const StyledInput = styled.input`
+  display: block;
+  width: 100%;
+  appearance: none;
+  font-weight: 700;
+  font-size: 125%;
+  border-width: 0px;
+  border-bottom: 1px;
+  border-style: solid;
+  border-radius: 0px;
+  border-color: rgba(0, 0, 0, 0.125);
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+`
 
-export default class Input extends React.Component {
+export default class Input extends Component {
   static defaultProps = {
     type: 'text'
   }
@@ -26,6 +26,6 @@ export default class Input extends React.Component {
   render() {
     const { onChange, type, inputRef, ...args } = this.props
 
-    return <input className={css(styles)} ref={inputRef} onChange={onChange} {...args} />
+    return <StyledInput ref={inputRef} onChange={onChange} {...args} />
   }
 }

@@ -1,19 +1,33 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { Provider } from 'unstated'
-import App from './App'
+import { render } from 'react-dom'
+import Downwrite from './App'
+import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import { loadCSS } from 'fg-loadcss'
 import registerServiceWorker from './registerServiceWorker'
 
-const PREVIEW_FONTS = 'https://cloud.typography.com/7107912/7471392/css/fonts.css'
+let PREVIEW_FONTS = 'https://cloud.typography.com/7107912/7471392/css/fonts.css'
 
-const Downwrite = () => (
-  <Provider>
-    <App />
-  </Provider>
+let container = document.getElementById('root')
+let styleEntry = document.getElementById('loadcss')
+
+const App = () => (
+  <BrowserRouter>
+    <Downwrite />
+  </BrowserRouter>
 )
 
-ReactDOM.render(<Downwrite />, document.getElementById('root'))
-loadCSS(PREVIEW_FONTS, document.getElementById('loadcss'))
+// if (module.hot) {
+//   module.hot.accept('./App', () => {
+//     const NextApp = require('./App').default
+//     ReactDOM.render(
+//       <NextApp renderer={renderer} />,
+//       rootEl
+//     )
+//   })
+// }
+
+render(<App />, container)
+
+loadCSS(PREVIEW_FONTS, styleEntry)
 registerServiceWorker()

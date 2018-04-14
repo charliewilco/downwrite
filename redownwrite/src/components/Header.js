@@ -1,50 +1,12 @@
 // @flow
 
 import React from 'react'
+import styled from 'styled-components'
 import { withRouter, Link } from 'react-router-dom'
 import type { Match } from 'react-router-dom'
 import Logo from './Logo'
-import { css } from 'glamor'
-import { Flex, Row } from 'glamor/jsxstyle'
 
-const hdr: Object = {
-  link: css({
-    marginLeft: 12,
-    display: 'block',
-    transition: 'color 375ms ease-in-out',
-    '&:hover': {
-      color: `var(--color-2)`
-    }
-  }),
-  title: css({
-    fontSize: 16,
-    fontStyle: 'normal',
-    lineHeight: 1,
-    fontWeight: 500,
-    '@media (min-width: 57.75rem)': {
-      fontSize: 20
-    }
-  }),
-  new: css({
-    fontSize: 14,
-    lineHeight: 1.1,
-    opacity: 0.5,
-    color: 'var(--text)',
-    marginRight: 32,
-    '&:hover, &:focus': {
-      color: 'var(--text)',
-      opacity: 1
-    }
-  }),
-  toggleButton: css({
-    appearance: 'none',
-    outline: 'none',
-    border: 0,
-    background: 'none'
-  })
-}
-
-type Header = {
+type HeaderProps = {
   authed: boolean,
   name: string,
   onClick: Function,
@@ -52,20 +14,52 @@ type Header = {
   match: Match
 }
 
+const MenuContainer = styled.nav`
+  display: flex;
+  align-items: center;
+`
+
+const NewButton = styled(Link)`
+  font-size: 14px;
+  line-height: 1.1;
+  opacity: 0.5;
+  color: var(--text);
+  margin-right: 32px;
+
+  &:hover,
+  &:focus {
+    color: var(--text);
+    opacity: 1;
+  }
+`
+
+const HomeButton = styled(Link)`
+  margin-left: 12px;
+  display: block;
+  transition: color 375ms ease-in-out;
+
+  &:hover {
+    color: ${`var(--color-2)`};
+  }
+`
+
+const ToggleButton = styled.button`
+  appearance: none;
+  outline: none;
+  border: 0px;
+  background: none;
+`
+
 const LoginSignUp = () => (
-  <Flex alignItems="center">
-    <Link to="/" className={css(hdr.new, { marginRight: 0 })}>
-      Login or Sign Up
-    </Link>
-  </Flex>
+  <MenuContainer>
+    <NewButton to="/">Login or Sign Up</NewButton>
+  </MenuContainer>
 )
 
 const Menu = ({ toggleNav, open }) => (
-  <Flex alignItems="center">
-    <Link to="/new" className={css(hdr.new)}>
-      New
-    </Link>
-    <button onClick={toggleNav} className={css(hdr.toggleButton)}>
+  <MenuContainer>
+    <NewButton to="/new">New</NewButton>
+    <ToggleButton onClick={toggleNav}>
       <svg width="20px" height="9px" viewBox="0 0 20 9">
         <desc>Navicon</desc>
         <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -88,30 +82,44 @@ const Menu = ({ toggleNav, open }) => (
           </g>
         </g>
       </svg>
-    </button>
-  </Flex>
+    </ToggleButton>
+  </MenuContainer>
 )
 
+const HeaderTitle = styled.h1`
+  font-size: 16px;
+  font-style: normal;
+  line-height: 1;
+  font-weight: 500;
+
+  @media (min-width: 57.75rem) {
+    font-size: 20px;
+  }
+`
+
+const Header = styled.header`
+  display: flex;
+  background: #f9fbfc;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  padding-left: 8px;
+  padding-right: 8px;
+`
+
 export default withRouter(
-  ({ name, authed, onClick, open, match }: Header) =>
+  ({ name, authed, onClick, open, match }: HeaderProps) =>
     !(match.isExact && match.path === '/' && !authed) ? (
-      <Row
-        component="header"
-        background="#f9fbfc"
-        alignItems="center"
-        justifyContent="space-between"
-        paddingTop={16}
-        paddingBottom={16}
-        paddingLeft={8}
-        paddingRight={8}>
-        <Flex alignItems="center">
+      <Header>
+        <MenuContainer>
           <Logo />
-          <Link className={css(hdr.link)} to="/">
-            <h1 className={css(hdr.title)} children={name} />
-          </Link>
-        </Flex>
+          <HomeButton to="/">
+            <HeaderTitle children={name} />
+          </HomeButton>
+        </MenuContainer>
         {authed ? <Menu open={open} toggleNav={onClick} /> : <LoginSignUp />}
-      </Row>
+      </Header>
     ) : (
       <div />
     )

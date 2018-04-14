@@ -1,0 +1,10 @@
+{
+  "presets": [
+    "backpack-core/babel",
+    "react"
+  ],
+  "plugins": [
+    "transform-flow-strip-types",
+    "syntax-dynamic-import"
+  ]
+}

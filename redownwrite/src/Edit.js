@@ -1,12 +1,10 @@
 // @flow
 
-import React, { Component, Fragment } from 'react'
-import { css } from 'glamor'
+import React, { Component } from 'react'
+import styled from 'styled-components'
 import { EditorState, convertToRaw, type ContentState } from 'draft-js'
 import Helmet from 'react-helmet'
-import Media from 'react-media'
 import { matchPath, type Location, type Match } from 'react-router-dom'
-import { Block } from 'glamor/jsxstyle'
 import {
   Autosaving,
   Input,
@@ -25,10 +23,11 @@ import debounce from 'lodash/debounce'
 import { superConverter } from './utils/responseHandler'
 import { POST_ENDPOINT } from './utils/urls'
 
-const meta = css({
-  opacity: 0.5,
-  fontSize: 'small'
-})
+const Meta = styled.div`
+  opacity: 0.5;
+  font-size: small;
+  margin-bottom: 8px;
+`
 
 type EditorSt = {
   title: string,
@@ -45,14 +44,16 @@ type EditorPr = {
   token: string,
   user: string,
   location: Location,
-  match:
-    | {
-        params: {
-          id: string
-        }
-      }
-    | Match
+  match: Match
 }
+
+const OuterEditor = styled.div`
+  padding: 0 8px;
+`
+
+const Time = ({ dateAdded }) => (
+  <time dateTime={dateAdded}>{format(dateAdded, 'DD MMMM YYYY')}</time>
+)
 
 // TODO: Document this
 // - Initial render
@@ -120,6 +121,18 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     return post
   }
 
+  updatePost = (body: Object) => {
+    const { token, match } = this.props
+    return fetch(`${POST_ENDPOINT}/${match.params.id}`, {
+      method: 'put',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(body)
+    })
+  }
+
   shouldComponentUpdate(nextProps: Object, nextState: { post: Object }) {
     return isEmpty(nextState.post) || isEmpty(nextState.post.content.blocks)
   }
@@ -131,7 +144,8 @@ export default class Edit extends Component<EditorPr, EditorSt> {
   // TODO: Consider this lifecycle hook is deprecated
 
   async componentWillMount() {
-    const post = await this.getPost(this.props.match.params.id)
+    const { match } = this.props
+    const post = await this.getPost(match.params.id)
     const content = await superConverter(post.content)
 
     this.setState({
@@ -161,28 +175,14 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     })
   }
 
-  updatePost = (body: Object) => {
-    const { token, match } = this.props
-    return fetch(`${POST_ENDPOINT}/${match.params.id}`, {
-      method: 'put',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(body)
-    })
-  }
-
   // TODO: Refactor this to do something smarter to render this component
   // See this is where recompose might be cool
   // I'm gonna need to take that back at some point
   // Will Next.js fix this?
 
-  // TODO: Consider this lifecycle hook is deprecated
-
-  componentWillReceiveProps({ location }: { location: Location }) {
-    if (location !== this.props.location) {
-      const { params: { id } } = matchPath(location.pathname, { path: '/:id/edit' })
+  componentWillReceiveProps(nextProps: EditorPr) {
+    if (nextProps.location !== this.props.location) {
+      const { params: { id } } = matchPath(nextProps.location.pathname, { path: '/:id/edit' })
 
       this.getPost(id).then(post =>
         this.setState({
@@ -207,47 +207,39 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     ) : (
       <NightMode>
         <Helmet title={title} titleTemplate="%s | Downwrite" />
-        <Media query={{ minWidth: 500 }}>
-          {m => (
-            <Fragment>
-              {autosaving && <Autosaving />}
-              <Wrapper sm>
-                <Helpers onChange={this.updatePostContent} buttonText="Save">
-                  <Export editorState={editorState} title={title} date={post.dateAdded} />
-                  <Privacy
-                    id={match.params.id}
-                    title={title}
-                    publicStatus={publicStatus}
-                    onChange={() =>
-                      this.setState(({ publicStatus }) => ({
-                        publicStatus: !publicStatus
-                      }))
-                    }
-                  />
-                  <WordCounter component={Block} editorState={editorState} />
-                </Helpers>
-                <Wrapper sm paddingTop={0} paddingLeft={8} paddingRight={8}>
-                  <Block className={css(meta)} marginBottom={8}>
-                    Added on{' '}
-                    <time dateTime={post.dateAdded}>
-                      {format(post.dateAdded, 'DD MMMM YYYY')}
-                    </time>
-                  </Block>
-                  <Input
-                    inputRef={input => (this.titleInput = input)}
-                    value={title}
-                    onChange={e => this.updateTitle(e)}
-                  />
-                  <div>
-                    {editorState !== null && (
-                      <DWEditor editorState={editorState} onChange={this.onChange} />
-                    )}
-                  </div>
-                </Wrapper>
-              </Wrapper>
-            </Fragment>
-          )}
-        </Media>
+
+        {autosaving && <Autosaving />}
+        <Wrapper sm={true}>
+          <Helpers onChange={this.updatePostContent} buttonText="Save">
+            <Export editorState={editorState} title={title} date={post.dateAdded} />
+            <Privacy
+              id={match.params.id}
+              title={title}
+              publicStatus={publicStatus}
+              onChange={() =>
+                this.setState(({ publicStatus }) => ({
+                  publicStatus: !publicStatus
+                }))
+              }
+            />
+            <WordCounter component={Meta} editorState={editorState} />
+          </Helpers>
+          <OuterEditor sm>
+            <Meta>
+              Added on <Time dateAdded={post.dateAdded} />
+            </Meta>
+            <Input
+              inputRef={input => (this.titleInput = input)}
+              value={title}
+              onChange={e => this.updateTitle(e)}
+            />
+            <div>
+              {editorState !== null && (
+                <DWEditor editorState={editorState} onChange={this.onChange} />
+              )}
+            </div>
+          </OuterEditor>
+        </Wrapper>
       </NightMode>
     )
   }

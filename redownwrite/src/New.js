@@ -1,10 +1,10 @@
 // @flow
 import React, { Fragment, Component } from 'react'
 import { Subscribe } from 'unstated'
+import styled from 'styled-components'
 import Helmet from 'react-helmet'
 import { Redirect } from 'react-router-dom'
 import { EditorState, convertToRaw } from 'draft-js'
-import Media from 'react-media'
 import uuid from 'uuid/v4'
 import { OfflineContainer } from './containers'
 import { DWEditor, Upload, Wrapper, Input, Helpers } from './components'
@@ -23,14 +23,23 @@ type NewPostSt = {
 
 type NewPostProps = { token: string, user: string }
 
-export default class NewX extends Component<NewPostProps, NewPostSt> {
+const SpacedWrapper = styled(Wrapper)`
+  padding-top: 128px;
+`
+
+const EditorContainer = styled(Wrapper)`
+  padding: 0 4px;
+`
+
+export default class NewEditor extends Component<NewPostProps, NewPostSt> {
   state = {
     editorState: EditorState.createEmpty(),
     title: '',
     id: uuid(),
     dateAdded: new Date(),
     error: '',
-    saved: false
+    saved: false,
+    drafts: []
   }
 
   static displayName = 'NewPostEditor'
@@ -84,43 +93,39 @@ export default class NewX extends Component<NewPostProps, NewPostSt> {
     return saved ? (
       <Redirect to={`/${id}/edit`} />
     ) : (
-      <Media query={{ minWidth: 500 }}>
-        {m => (
-          <Wrapper paddingTop={128} sm>
-            <Subscribe to={[OfflineContainer]}>
-              {network => (
-                <Fragment>
-                  {network.state.offline && <span>You're Offline Right Now</span>}
-                  <Helmet
-                    title={title.length > 0 ? title : 'New'}
-                    titleTemplate="%s | Downwrite"
-                  />
+      <SpacedWrapper sm>
+        <Subscribe to={[OfflineContainer]}>
+          {network => (
+            <Fragment>
+              {network.state.offline && <span>You're Offline Right Now</span>}
+              <Helmet
+                title={title.length > 0 ? title : 'New'}
+                titleTemplate="%s | Downwrite"
+              />
 
-                  <Helpers
-                    disabled={network.state.offline}
-                    buttonText="Add"
-                    onChange={() => this.addNewPost(network.state.offline)}
+              <Helpers
+                disabled={network.state.offline}
+                buttonText="Add"
+                onChange={() => this.addNewPost(network.state.offline)}
+              />
+              <EditorContainer sm>
+                {error.length > 0 && <span className="f6 u-center">{error}</span>}
+                <Upload upload={this.upload}>
+                  <Input
+                    placeholder="Untitled Document"
+                    value={title}
+                    onChange={e => this.setState({ title: e.target.value })}
                   />
-                  <Wrapper sm paddingLeft={4} paddingRight={4}>
-                    {error.length > 0 && <span className="f6 u-center">{error}</span>}
-                    <Upload upload={this.upload}>
-                      <Input
-                        placeholder="Untitled Document"
-                        value={title}
-                        onChange={e => this.setState({ title: e.target.value })}
-                      />
-                      <DWEditor
-                        editorState={editorState}
-                        onChange={editorState => this.setState({ editorState })}
-                      />
-                    </Upload>
-                  </Wrapper>
-                </Fragment>
-              )}
-            </Subscribe>
-          </Wrapper>
-        )}
-      </Media>
+                  <DWEditor
+                    editorState={editorState}
+                    onChange={editorState => this.setState({ editorState })}
+                  />
+                </Upload>
+              </EditorContainer>
+            </Fragment>
+          )}
+        </Subscribe>
+      </SpacedWrapper>
     )
   }
 }

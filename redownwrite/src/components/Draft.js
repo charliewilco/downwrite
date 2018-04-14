@@ -2,28 +2,28 @@ import { RichUtils } from 'draft-js'
 import Editor from 'draft-js-plugins-editor'
 import React, { Component } from 'react'
 import Prism from 'prismjs'
-import { css } from 'glamor'
+import styled from 'styled-components'
 import Toolbar from './Toolbar'
 import createMarkdownPlugin from 'draft-js-markdown-plugin'
 import createPrismPlugin from 'draft-js-prism-plugin'
-import './Editor.css'
-import './ganymede.css'
+import './Editor.css.js'
+import './ganymede.css.js'
 
-const editorStyle = css({
-  paddingLeft: 0,
-  paddingRight: 0,
-  paddingTop: 16,
-  paddingBottom: 16,
-  height: '100%',
-  width: '100%'
-})
+const EditorWrapper = styled.div`
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  height: 100%;
+  width: 100%;
+`
 
-const editorShell = css({
-  borderTop: 0,
-  position: 'relative',
-  paddingTop: 24,
-  paddingBottom: 128
-})
+const EditorShell = styled.div`
+  border-top: 0px;
+  position: relative;
+  padding-top: 24px;
+  padding-bottom: 128px;
+`
 
 export default class extends Component {
   static displayName = 'DWEditor'
@@ -77,7 +77,7 @@ export default class extends Component {
     }
 
     return (
-      <div className={css(editorShell)}>
+      <EditorShell>
         {this.props.toolbar && (
           <Toolbar
             editorState={editorState}
@@ -87,7 +87,7 @@ export default class extends Component {
           />
         )}
 
-        <div className={`${css(editorStyle)} ${className}`} onClick={this.focus}>
+        <EditorWrapper className={className} onClick={this.focus}>
           <Editor
             blockStyleFn={getBlockStyle}
             customStyleMap={styleMap}
@@ -100,8 +100,8 @@ export default class extends Component {
             spellCheck={true}
             plugins={this.state.plugins}
           />
-        </div>
-      </div>
+        </EditorWrapper>
+      </EditorShell>
     )
   }
 }
