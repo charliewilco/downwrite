@@ -2,25 +2,90 @@ import './shims'
 import React, { Fragment } from 'react'
 import express from 'express'
 import { renderToString } from 'react-dom/server'
-import { StaticRouter } from 'react-router-dom'
+import { StaticRouter, Switch, matchPath } from 'react-router-dom'
 import Loadable from 'react-loadable'
 import { getBundles } from 'react-loadable/webpack'
-import stats from '../../build/react-loadable.json'
 import { ServerStyleSheet } from 'styled-components'
 import Downwrite from './App'
+import stats from '../build/react-loadable.json'
+import { PrivateRoute, PublicRoute, IndexRoute } from './CustomRoutes'
+import NoMatch from './NoMatch'
 
 // NOTE:
 // Working through this with backpack I'm noticing that the modules in `redownwrite` aren't accepting babel transform
 // Wonder if taking it into the redownwrite repository would help.
 // Spectrum does this by parsing them from the root of their monorepo.
-
 // Okay that worked
 // Need to update client-side config to use `new ReactLoadablePlugin({ filename: './dist/react-loadable' })`
 
+// NOTE:
+// Map through routes
+// const active = routes.find(route => matchPath(req.url, route));
+// const requestInitialData = active.component.requestInitialData && activeRoute.component.requestInitialData();
+// Promise.resolve(requestInitialData).then(initialData => {
+//   const context = { initialData };
+//   const markup = renderToString(
+//     <StaticRouter location={req.url} context={context}>
+//       <App />
+//     </StaticRouter>
+//   );
+// }).catch(next)
+//
+// Needs to go in renderToString()
+// <script>window.__initialData__ = ${serialize(initialData)}</script>
+//
+
+// TODO:
+// - [ ] Use CORS
+// - [ ] Remove Loadable and start without it and iterate to it.
+// - [ ] Use universal-cookie and pass that into the context. requestInitialData(context: { bearer token })
+// - [ ] work through serilizaed data to pull from the staticContext
+// constructor(props) {
+//   super(props)
+//
+//   let repos
+//   if (__isBrowser__) {
+//     repos = window.__INITIAL_DATA__
+//     delete window.__INITIAL_DATA__
+//   } else {
+//     repos = props.staticContext.data
+//   }
+//
+
+// NOTE:
+// The other thing that could be done is the extend Component to a "Container" that preloads
+// the `static method()` from the component and then renders the component
+// or a HOC that can do something similar
+// FWIW, Suspense will fix this
+
 const createScriptTag = ({ src }) => `<script defer="defer" src="${src}"></script>`
+const createLinkTag = ({ href }) => `<link rel="stylesheet" type="text/css" href="${href}" /> `
+
 const mainBundleRegex = new RegExp(
   `${process.env.NODE_ENV === 'production' ? 'main' : 'bundle'}\.(?:.*\.)?js$`
 )
+
+const staticCSSRegex = new RegExp(
+  `${process.env.NODE_ENV === 'production' ? 'main' : 'bundle'}\.(?:.*\.)?css$`
+)
+
+const HWY = ({ body, styles: { tags, link }, scripts, bundles }) => `
+  <!DOCTYPE html>
+    <head>
+      <meta name='theme-color' content='#4FA5C2' />
+      <title>Downwrite</title>
+      ${tags}
+      ${createLinkTag({ href: `/static/css/${link}` })}
+    </head>
+    <body>
+      <div id="root">
+        ${body}
+      </div>
+      ${bundles.map(src => createScriptTag({ src }))}
+      ${createScriptTag({ src: `/static/js/${scripts}` })}
+    </body>
+  </html>
+`
 
 const app = express()
 
@@ -33,6 +98,15 @@ app.get('/*', (req, res) => {
 
   let modules = []
   let context = {}
+
+  const bundles = getBundles(stats, modules)
+    // Create <script defer> tags from bundle objects
+    .map(bundle => `/${bundle.file.replace(/\.map$/, '')}`)
+    // Make sure only unique bundles are included
+    .filter((value, index, self) => self.indexOf(value) === index)
+
+  const mainBundle = bundles.find(bundle => mainBundleRegex.test(bundle))
+  const mainStyles = bundles.find(bundle => staticCSSRegex.test(bundle))
 
   const sheet = new ServerStyleSheet()
 
@@ -48,38 +122,41 @@ app.get('/*', (req, res) => {
 
   const styleTags = sheet.getStyleTags()
 
-  const bundles = getBundles(stats, modules)
-    // Create <script defer> tags from bundle objects
-    .map(bundle => `/${bundle.file.replace(/\.map$/, '')}`)
-    // Make sure only unique bundles are included
-    .filter((value, index, self) => self.indexOf(value) === index)
-
   try {
-    let html = `
-    <!DOCTYPE html>
-      <head>
-        <title>Downwrite</title>
-        ${styleTags}
-      </head>
-      <body>
-        <div id="root">
-          ${markup}
-        </div>
-        ${bundles.map(src => createScriptTag({ src }))}
-        ${createScriptTag({ src: `/static/js/${mainBundle}` })}
-      </body>
-    </html>
-  `
+    const renderer = {
+      styles: {
+        link: mainStyles,
+        tags: styleTags
+      },
+      body: markup,
+      scripts: mainBundle,
+      bundles
+    }
+
+    let html = HWY(renderer)
 
     res.send(html)
 
     console.log(modules)
   } catch (error) {
-    res.json(error)
+    let errSheet = new ServerStyleSheet()
+    let errorContainer = renderToString(
+      errSheet.collectStyles(<NoMatch location={{ pathname: req.url }} />)
+    )
+
+    let errStyles = errSheet.getStyleTags()
+    let errMarkup = HWY({
+      body: errorContainer,
+      styles: { tags: errStyles, link: mainStyles },
+      scripts: mainBundle,
+      bundles
+    })
+
+    res.send(errMarkup)
   }
 })
 
-app.listen(PORT, () => console.log(`Highway is running on PORT: ${PORT}`))
+app.listen(PORT, () => console.log(`Downwrite SSR is running on PORT: ${PORT}`))
 
 // Need some mechanism for handing initial state and resolving data-fetching
 // static getInitialProps() to handle and resolve on the client when routes
