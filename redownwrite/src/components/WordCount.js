@@ -14,7 +14,22 @@ export default class WordCounter extends Component<WordCounterers, void> {
     component: 'span'
   }
 
-  getWordCount(editorState: ContentState) {
+  getSelectionCount(editorState: ContentState): Number {
+    let selectionState = editorState.getSelection()
+    let anchorKey = selectionState.getAnchorKey()
+    let currentContent = editorState.getCurrentContent()
+    let currentContentBlock = currentContent.getBlockForKey(anchorKey)
+    let start = selectionState.getStartOffset()
+    let end = selectionState.getEndOffset()
+    let selectedText = currentContentBlock.getText().slice(start, end)
+
+    const regex = /(?:\r\n|\r|\n)/g // new line, carriage return, line feed
+    const cleanString = selectedText.replace(regex, ' ').trim() // replace above characters w/ space
+    const wordArray = cleanString.match(/\S+/g) // matches words according to whitespace
+    return wordArray ? wordArray.length : 0
+  }
+
+  getWordCount(editorState: ContentState): Number {
     const plainText = editorState.getCurrentContent().getPlainText('')
     const regex = /(?:\r\n|\r|\n)/g // new line, carriage return, line feed
     const cleanString = plainText.replace(regex, ' ').trim() // replace above characters w/ space
@@ -30,14 +45,18 @@ export default class WordCounter extends Component<WordCounterers, void> {
   //   const classNames = this.getClassNames(count, limit);
   // }
 
+  // NOTE: Use snapshoting in 16.3
+
   render() {
     const { editorState, component: Cx } = this.props
-    const count = this.getWordCount(editorState)
+
+    let count = this.getWordCount(editorState)
+    let selectionCount = this.getSelectionCount(editorState)
 
     return (
       <Cx>
         <small>
-          <pre>Word Count: {count}</pre>
+          <pre>Word Count: {selectionCount > 0 ? selectionCount : count}</pre>
         </small>
       </Cx>
     )
