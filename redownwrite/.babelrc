@@ -3,6 +3,7 @@
     "razzle/babel"
   ],
   "plugins": [
+    "react-loadable/babel",
     "transform-flow-strip-types",
     "syntax-dynamic-import"
   ]

@@ -7,3 +7,17 @@ export const superConverter: Function = (content: ContentState) => {
     ? convertFromRaw(content)
     : convertFromRaw({ blocks: content.blocks, entityMap: {} })
 }
+
+export const createHeader: Function = (token: string, method: string) => {
+  const h = new Headers()
+
+  h.set('Authorization', `Bearer ${token}`)
+  h.set('Content-Type', 'application/json')
+
+  return {
+    method,
+    headers: h,
+    mode: 'cors',
+    cache: 'default'
+  }
+}
