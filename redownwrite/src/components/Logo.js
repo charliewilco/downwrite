@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import logo from './logo.svg'
 
 const Image = styled.img`
   max-width: 20px;
@@ -9,6 +10,6 @@ const Image = styled.img`
   }
 `
 
-const Logo = () => <Image src={process.env.PUBLIC_URL + '/logo.svg'} alt="logo" />
+const Logo = () => <Image src={logo} alt="logo" />
 
 export default Logo
