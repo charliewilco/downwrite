@@ -1,6 +1,6 @@
 // @flow
 
-import __IS_DEV__ from './dev'
+import { __IS_DEV__ } from './dev'
 
 const DEV_URL = 'http://localhost:4411'
 const PROD_URL = 'https://api.downwrite.us'

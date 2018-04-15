@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import __IS_DEV__ from '../utils/dev'
+import { __IS_DEV__ } from '../utils/dev'
 import Null from './Null'
 
 export default class Logger extends Component {

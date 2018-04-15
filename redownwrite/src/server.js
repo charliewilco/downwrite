@@ -2,16 +2,16 @@ import './shims'
 import React, { Fragment } from 'react'
 import express from 'express'
 import cookieMiddleware from 'universal-cookie-express'
-import serialize from 'serialize-javascript'
+import isEmpty from 'lodash/isEmpty'
 import { renderToString } from 'react-dom/server'
-import { StaticRouter, Switch, matchPath } from 'react-router-dom'
+import { StaticRouter } from 'react-router-dom'
 import Loadable from 'react-loadable'
 import { getBundles } from 'react-loadable/webpack'
 import { ServerStyleSheet } from 'styled-components'
 import Downwrite from './App'
 import stats from '../build/react-loadable.json'
-import { PrivateRoute, PublicRoute, IndexRoute } from './CustomRoutes'
 import NoMatch from './NoMatch'
+import renderer from './utils/renderer'
 
 // NOTE:
 // Working through this with backpack I'm noticing that the modules in `redownwrite` aren't accepting babel transform
@@ -39,8 +39,8 @@ import NoMatch from './NoMatch'
 
 // TODO:
 // - [ ] Use CORS
-// - [ ] Remove Loadable and start without it and iterate to it.
-// - [ ] Use universal-cookie and pass that into the context. requestInitialData(context: { bearer token })
+// - [x] Remove Loadable and start without it and iterate to it.
+// - [z] Use universal-cookie and pass that into the context. requestInitialData(context: { bearer token })
 // - [ ] work through serilizaed data to pull from the staticContext
 // constructor(props) {
 //   super(props)
@@ -60,137 +60,14 @@ import NoMatch from './NoMatch'
 // or a HOC that can do something similar
 // FWIW, Suspense will fix this
 
-const assets = require(process.env.RAZZLE_ASSETS_MANIFEST)
-
-const createScriptTag = ({ src }) => `<script defer="defer" src="${src}"></script>`
-const createLinkTag = ({ href }) => `<link rel="stylesheet" type="text/css" href="${href}" /> `
-
-const mainBundleRegex = new RegExp(
-  `${process.env.NODE_ENV === 'production' ? 'main' : 'bundle'}\.(?:.*\.)?js$`
-)
-
-const staticCSSRegex = new RegExp(
-  `${process.env.NODE_ENV === 'production' ? 'main' : 'bundle'}\.(?:.*\.)?css$`
-)
-
-const HWY = ({
-  body,
-  styles: { tags, link },
-  scripts,
-  bundles,
-  initialData
-}) => `<!doctype html>
-  <head>
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <meta charset="utf-8" />
-      <meta name='theme-color' content='#4FA5C2' />
-      <title>Downwrite</title>
-      ${tags}
-      ${assets.client.css ? createLinkTag({ href: assets.client.css }) : ''}
-      <link rel='manifest' href='/manifest.json' />
-      <link rel="preload" as="style" type="text/css" href="https://cloud.typography.com/7107912/7996792/css/fonts.css" />
-      <link rel="stylesheet" type="text/css" href="https://cloud.typography.com/7107912/7996792/css/fonts.css" />
-    </head>
-    <body>
-      <div class='Root' id="root">${body}</div>
-      ${bundles.map(src => createScriptTag({ src }))}
-      ${
-        process.env.NODE_ENV === 'production'
-          ? `<script src="${assets.client.js}" defer></script>`
-          : `<script src="${assets.client.js}" defer crossorigin></script>`
-      }
-      <script>window.__initialData__ = ${serialize(initialData)}</script>
-    </body>
-  </html>`
-
-const app = express()
-
-const PORT = 4100
-
-app.disable('x-powered-by')
-app.use(express.static(process.env.RAZZLE_PUBLIC_DIR))
-app.use(cookieMiddleware())
-
-app.get('/*', (req, res) => {
-  res.setHeader('Content-Type', 'text/html; charset=utf-8')
-
-  const cookie = req.universalCookies.get('DW_TOKEN')
-
-  let modules = []
-
-  const sheet = new ServerStyleSheet()
-
-  // TODO:
-  // Need to inject default state of auth, which we can check by getting the `cookie`
-  // We can decode it, can pass everything into the constructor of the Container in unstated
-
-  let markup = renderToString(
-    sheet.collectStyles(
-      <Loadable.Capture report={m => modules.push(m)}>
-        <StaticRouter location={req.url} context={{ cookie }}>
-          <Downwrite />
-        </StaticRouter>
-      </Loadable.Capture>
-    )
-  )
-
-  // NOTE:
-  // Create <script defer> tags from bundle objects
-  // Make sure only unique bundles are included
-
-  const bundles = getBundles(stats, modules)
-    .map(bundle => `/${bundle.file.replace(/\.map$/, '')}`)
-    .filter((value, index, self) => self.indexOf(value) === index)
-
-  const mainBundle = bundles.find(bundle => mainBundleRegex.test(bundle))
-  const mainStyles = bundles.find(bundle => staticCSSRegex.test(bundle))
-
-  const styleTags = sheet.getStyleTags()
-
-  try {
-    const renderer = {
-      styles: {
-        link: mainStyles,
-        tags: styleTags
-      },
-      body: markup,
-      scripts: mainBundle,
-      bundles,
-      initialData: {
-        cookie,
-        authed: cookie
-      }
-    }
-
-    let html = HWY(renderer)
-
-    res.send(html)
-
-    console.log(modules)
-  } catch (error) {
-    let errSheet = new ServerStyleSheet()
-    let errorContainer = renderToString(
-      errSheet.collectStyles(<NoMatch location={{ pathname: req.url }} />)
-    )
-
-    let errStyles = errSheet.getStyleTags()
-    let errMarkup = HWY({
-      body: errorContainer,
-      styles: { tags: errStyles, link: mainStyles },
-      scripts: mainBundle,
-      bundles
-    })
-
-    res.send(errMarkup)
-  }
-})
-
-export default app
-
 // NOTE:
 // Need some mechanism for handing initial state and resolving data-fetching
 // static getInitialProps() to handle and resolve on the client when routes
 // are transitioned to.
+
+// TODO:
+// Need to inject default state of auth, which we can check by getting the `cookie`
+// We can decode it, can pass everything into the constructor of the Container in unstated
 
 // IDEA:
 // <RouteContainer />
@@ -217,3 +94,66 @@ export default app
 // }
 //
 // class RouteContainer extends Component {}
+
+// NOTE:
+// Create <script defer> tags from bundle objects
+// Make sure only unique bundles are included
+
+const assets = require(process.env.RAZZLE_ASSETS_MANIFEST)
+
+const app = express()
+
+const PORT = 4100
+
+app.disable('x-powered-by')
+app.use(express.static(process.env.RAZZLE_PUBLIC_DIR))
+app.use(cookieMiddleware())
+
+app.get('/*', (req, res) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8')
+
+  const cookie = req.universalCookies.get('DW_TOKEN')
+
+  let modules = []
+  let context = {}
+  let serverContext = {
+    state: { token: cookie, authed: !isEmpty(cookie) },
+    signIn: () => {},
+    signOut: () => {}
+  }
+
+  const sheet = new ServerStyleSheet()
+
+  let markup = renderToString(
+    sheet.collectStyles(
+      <Loadable.Capture report={moduleName => modules.push(moduleName)}>
+        <StaticRouter location={req.url} context={context}>
+          <Downwrite serverContext={serverContext} />
+        </StaticRouter>
+      </Loadable.Capture>
+    )
+  )
+
+  const styleTags = sheet.getStyleTags()
+
+  const bundles = getBundles(stats, modules)
+  const chunks = bundles.filter(bundle => bundle.file.endsWith('.js'))
+
+  try {
+    let html = renderer(styleTags, markup, chunks, serverContext)
+
+    res.send(html)
+  } catch (error) {
+    let errSheet = new ServerStyleSheet()
+    let errorContainer = renderToString(
+      errSheet.collectStyles(<NoMatch location={{ pathname: req.url }} />)
+    )
+
+    let errStyles = errSheet.getStyleTags()
+    let errMarkup = renderer(errStyles, errorContainer, chunks, {})
+
+    res.send(errMarkup)
+  }
+})
+
+export default app
