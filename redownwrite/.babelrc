@@ -1,7 +1,6 @@
 {
   "presets": [
-    "backpack-core/babel",
-    "react"
+    "razzle/babel"
   ],
   "plugins": [
     "transform-flow-strip-types",
