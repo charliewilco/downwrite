@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react'
+// @flow
+import React, { Fragment, Component } from 'react'
 import styled from 'styled-components'
 import Card from './Card'
 import LayoutControl from './LayoutControl'
@@ -73,28 +74,42 @@ const List = styled.ul`
   list-style: inside none;
 `
 
-export default ({ posts, layout, layoutChange, onDelete }) => (
-  <Fragment>
-    <ListHeader>
-      <Title>Entries</Title>
-      <LayoutControl layout={layout} layoutChange={layoutChange} />
-    </ListHeader>
-    {layout === 'grid' ? (
-      <Grid>
-        {posts.map(p => (
-          <GridItem key={p.id}>
-            <Card {...p} onDelete={() => onDelete(p)} />
-          </GridItem>
-        ))}
-      </Grid>
-    ) : (
-      <List>
-        {posts.map(p => (
-          <ListItemContainer key={p.id}>
-            <ListItem {...p} onDelete={() => onDelete(p)} />
-          </ListItemContainer>
-        ))}
-      </List>
-    )}
-  </Fragment>
-)
+export default class PostList extends Component<any, { layout: 'grid' | 'list' }> {
+  state = {
+    layout: 'grid'
+  }
+
+  layoutChange = (x: 'grid' | 'list') => {
+    return this.setState({ layout: x })
+  }
+
+  render() {
+    const { posts, onDelete } = this.props
+    const { layout } = this.state
+    return (
+      <Fragment>
+        <ListHeader>
+          <Title>Entries</Title>
+          <LayoutControl layout={layout} layoutChange={this.layoutChange} />
+        </ListHeader>
+        {layout === 'grid' ? (
+          <Grid>
+            {posts.map(p => (
+              <GridItem key={p.id}>
+                <Card {...p} onDelete={() => onDelete(p)} />
+              </GridItem>
+            ))}
+          </Grid>
+        ) : (
+          <List>
+            {posts.map(p => (
+              <ListItemContainer key={p.id}>
+                <ListItem {...p} onDelete={() => onDelete(p)} />
+              </ListItemContainer>
+            ))}
+          </List>
+        )}
+      </Fragment>
+    )
+  }
+}

@@ -33,6 +33,7 @@ export type PostError = {
 type Res = PostError | Array<Post>
 
 type MainPr = {
+  posts: Array<any>,
   user: string,
   token: string,
   closeNav: Function
@@ -41,7 +42,6 @@ type MainPr = {
 type MainState = {
   posts: Res,
   loaded: boolean,
-  layout: 'grid' | 'list',
   selectedPost: ?Post | {},
   modalOpen: boolean,
   error: string
@@ -64,17 +64,22 @@ const DeleteBody = styled.div`
 export default class Main extends Component<MainPr, MainState> {
   static displayName = 'Dashboard'
 
+  static defaultProps = {
+    posts: []
+  }
+
+  static getInitialData() {
+    return {
+      posts: []
+    }
+  }
+
   state = {
-    posts: [],
+    posts: this.props.posts,
     loaded: false,
-    layout: 'grid',
     modalOpen: false,
     selectedPost: {},
     error: ''
-  }
-
-  layoutChange = (x: 'grid' | 'list') => {
-    return this.setState({ layout: x })
   }
 
   getPosts = async (close: ?boolean) => {
@@ -134,7 +139,7 @@ export default class Main extends Component<MainPr, MainState> {
   // TODO: refactor to have selected post, deletion to be handled by a lower level component
   // should be opened at this level and be handed a token and post to delete
   render() {
-    const { modalOpen, loaded, posts, layout, error, selectedPost } = this.state
+    const { modalOpen, loaded, posts, error, selectedPost } = this.state
     return (
       <Fragment>
         {modalOpen &&
@@ -157,12 +162,7 @@ export default class Main extends Component<MainPr, MainState> {
         <ListContainer>
           {loaded ? (
             Array.isArray(posts) && posts.length > 0 ? (
-              <PostList
-                layout={layout}
-                onDelete={this.confirmDelete}
-                layoutChange={this.layoutChange}
-                posts={posts}
-              />
+              <PostList onDelete={this.confirmDelete} posts={posts} />
             ) : error.length > 0 ? (
               <InvalidToken error={error} />
             ) : (
