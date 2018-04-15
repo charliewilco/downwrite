@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
+import { Subscribe } from 'unstated'
+import { ErrorContainer } from '../containers'
 import styled from 'styled-components'
-import { Nav, Toggle, Header } from './'
+import { Nav, Toggle, Header, UIFlash, Null } from './'
 
 const ClearFixed = styled.div`
   height: 100%;
@@ -27,16 +29,25 @@ const AppContainer = styled.div`
 
 AppContainer.displayName = 'AppContainer'
 
+const UIErrorMessage = ({ content, type, onClose }) =>
+  content.length > 0 ? <UIFlash content={content} type={type} onClose={onClose} /> : <Null />
+
+const UIErrorBanner = () => (
+  <Subscribe to={[ErrorContainer]}>
+    {err => <UIErrorMessage {...err.state} onClose={err.clearFlash} />}
+  </Subscribe>
+)
+
 export default class Shell extends Component {
   static displayName = 'UIShell'
 
   render() {
-    const { children, renderErrors, auth } = this.props
+    const { children, auth } = this.props
     return (
       <Toggle>
         {(navOpen, toggleNav, closeNav) => (
           <AppContainer>
-            {renderErrors && renderErrors()}
+            <UIErrorBanner />
             <ClearFixed>
               <Container>
                 <Header authed={auth.state.authed} open={navOpen} onClick={toggleNav} />

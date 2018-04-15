@@ -2,10 +2,12 @@
 import * as React from 'react'
 import { AuthContainer, ErrorContainer } from './containers'
 import { Subscribe } from 'unstated'
-import { Route, Redirect, type Location } from 'react-router-dom'
+import type { Location } from 'react-router-dom'
+import Route from 'react-router-dom/Route'
+import Redirect from 'react-router-dom/Redirect'
 
 type CustomRouteProps = {
-  defaultComponent: ?React.ElementType,
+  defaultComponent: React.ElementType,
   component: React.ElementType,
   args: Array<number>
 }
