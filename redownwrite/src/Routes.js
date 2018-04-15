@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import Loadable from 'react-loadable'
-import { PrivateRoute } from './CustomRoutes'
+import { IndexRoute, PrivateRoute } from './CustomRoutes'
 import * as DW from './components'
 
 const Lx = (opts: { loader: Function }) =>
@@ -16,24 +16,18 @@ const SignOut = Lx({ loader: () => import('./SignOut') })
 const Preview = Lx({ loader: () => import('./Preview') })
 const Legal = Lx({ loader: () => import('./Legal') })
 
+// NOTE:
+// Componentizing <IndexRoute /> caused issues in ordering so it was moved to
+// least specific route.
+
 export default ({ auth }) => (
   <Switch>
-    <Route
-      exact
-      path="/"
-      render={(props: Object) =>
-        auth.state.authed === true ? (
-          <Dashboard token={auth.state.token} user={auth.state.user} {...props} />
-        ) : (
-          <Home {...props} signIn={auth.signIn} signOut={auth.signOut} />
-        )
-      }
-    />
     <PrivateRoute path="/new" component={NewEditor} />
     <PrivateRoute path="/:id/edit" component={PostEditor} />
     <Route exact path="/:id/preview" component={Preview} />
-    <Route exact path="/signout" render={() => <SignOut signOut={auth.signOut} />} />
+    <Route exact path="/signout" component={SignOut} />
     <Route path="/legal" component={Legal} />
+    <IndexRoute component={Dashboard} defaultComponent={Home} />
     <Route component={NotFound} />
   </Switch>
 )
