@@ -45,13 +45,10 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
   static displayName = 'NewPostEditor'
 
   addNew = async (body: Object) => {
-    const { token } = this.props
+    const config = this.createHeader('POST')
+
     const response = await fetch(POST_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
+      ...config,
       body: JSON.stringify(body)
     })
 
@@ -61,6 +58,21 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
       this.setState({ saved: true })
     } else {
       this.setState({ error: newPost.message })
+    }
+  }
+
+  createHeader = (method: string) => {
+    const h = new Headers()
+    const { token } = this.props
+
+    h.set('Authorization', `Bearer ${token}`)
+    h.set('Content-Type', 'application/json')
+
+    return {
+      method,
+      headers: h,
+      mode: 'cors',
+      cache: 'default'
     }
   }
 

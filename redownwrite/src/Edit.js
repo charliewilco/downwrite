@@ -15,19 +15,13 @@ import {
   DWEditor,
   Export,
   Privacy,
-  WordCounter
+  WordCounter,
+  TimeMarker
 } from './components'
-import format from 'date-fns/format'
 import isEmpty from 'lodash/isEmpty'
 import debounce from 'lodash/debounce'
 import { superConverter } from './utils/responseHandler'
 import { POST_ENDPOINT } from './utils/urls'
-
-const Meta = styled.div`
-  opacity: 0.5;
-  font-size: small;
-  margin-bottom: 8px;
-`
 
 type EditorSt = {
   title: string,
@@ -50,10 +44,6 @@ type EditorPr = {
 const OuterEditor = styled.div`
   padding: 0 8px;
 `
-
-const Time = ({ dateAdded }) => (
-  <time dateTime={dateAdded}>{format(dateAdded, 'DD MMMM YYYY')}</time>
-)
 
 // TODO: Document this
 // - Initial render
@@ -102,18 +92,23 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     )
   }
 
-  getPost = async (id: string) => {
+  createHeader = (method: string) => {
     const h = new Headers()
     const { token } = this.props
 
     h.set('Authorization', `Bearer ${token}`)
+    h.set('Content-Type', 'application/json')
 
-    const config = {
-      method: 'GET',
+    return {
+      method,
       headers: h,
       mode: 'cors',
       cache: 'default'
     }
+  }
+
+  getPost = async (id: string) => {
+    const config = this.createHeader('GET')
 
     const req = await fetch(`${POST_ENDPOINT}/${id}`, config)
     const post: Object = await req.json()
@@ -122,28 +117,24 @@ export default class Edit extends Component<EditorPr, EditorSt> {
   }
 
   updatePost = (body: Object) => {
-    const { token, match } = this.props
-    return fetch(`${POST_ENDPOINT}/${match.params.id}`, {
-      method: 'put',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(body)
-    })
+    const { match } = this.props
+    const config = this.createHeader('PUT')
+    const payload = { ...config, body: JSON.stringify(body) }
+
+    return fetch(`${POST_ENDPOINT}/${match.params.id}`, payload)
   }
 
   shouldComponentUpdate(nextProps: Object, nextState: { post: Object }) {
     return isEmpty(nextState.post) || isEmpty(nextState.post.content.blocks)
   }
 
+  // NOTE: Maybe this should only handle the fetch and not update the UI
   autoSave = debounce(() => {
     this.setState({ autosaving: true }, this.updatePostContent)
   }, 5000)
 
   // TODO: Consider this lifecycle hook is deprecated
-
-  async componentWillMount() {
+  async componentDidMount() {
     const { match } = this.props
     const post = await this.getPost(match.params.id)
     const content = await superConverter(post.content)
@@ -198,6 +189,14 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     }
   }
 
+  // Removes the no-op error when transitioning Location
+  // Will need to account for any type of transitioning or auto updating other posts
+  componentWillUnmount() {
+    this.autoSave.flush()
+  }
+
+  updatePrivacy = () => this.setState(({ publicStatus }) => ({ publicStatus: !publicStatus }))
+
   render() {
     const { title, post, loaded, editorState, publicStatus, autosaving } = this.state
     const { match } = this.props
@@ -207,7 +206,6 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     ) : (
       <NightMode>
         <Helmet title={title} titleTemplate="%s | Downwrite" />
-
         {autosaving && <Autosaving />}
         <Wrapper sm={true}>
           <Helpers onChange={this.updatePostContent} buttonText="Save">
@@ -216,18 +214,12 @@ export default class Edit extends Component<EditorPr, EditorSt> {
               id={match.params.id}
               title={title}
               publicStatus={publicStatus}
-              onChange={() =>
-                this.setState(({ publicStatus }) => ({
-                  publicStatus: !publicStatus
-                }))
-              }
+              onChange={this.updatePrivacy}
             />
-            <WordCounter component={Meta} editorState={editorState} />
+            <WordCounter editorState={editorState} />
           </Helpers>
           <OuterEditor sm>
-            <Meta>
-              Added on <Time dateAdded={post.dateAdded} />
-            </Meta>
+            <TimeMarker dateAdded={post.dateAdded} />
             <Input
               inputRef={input => (this.titleInput = input)}
               value={title}
