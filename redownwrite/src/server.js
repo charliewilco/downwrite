@@ -1,6 +1,7 @@
 import './shims'
 import React, { Fragment } from 'react'
 import express from 'express'
+import cookieMiddleware from 'universal-cookie-express'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter, Switch, matchPath } from 'react-router-dom'
 import Loadable from 'react-loadable'
@@ -57,6 +58,7 @@ import NoMatch from './NoMatch'
 // the `static method()` from the component and then renders the component
 // or a HOC that can do something similar
 // FWIW, Suspense will fix this
+const assets = require(process.env.RAZZLE_ASSETS_MANIFEST)
 
 const createScriptTag = ({ src }) => `<script defer="defer" src="${src}"></script>`
 const createLinkTag = ({ href }) => `<link rel="stylesheet" type="text/css" href="${href}" /> `
@@ -69,35 +71,43 @@ const staticCSSRegex = new RegExp(
   `${process.env.NODE_ENV === 'production' ? 'main' : 'bundle'}\.(?:.*\.)?css$`
 )
 
-const HWY = ({ body, styles: { tags, link }, scripts, bundles }) => `
-  <!DOCTYPE html>
-    <head>
+const HWY = ({ body, styles: { tags, link }, scripts, bundles }) => `<!doctype html>
+  <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta charset="utf-8" />
       <meta name='theme-color' content='#4FA5C2' />
       <title>Downwrite</title>
       ${tags}
-      ${createLinkTag({ href: `/static/css/${link}` })}
+      ${assets.client.css ? createLinkTag({ href: assets.client.css }) : ''}
+      <link rel="preload" as="style" type="text/css" href="https://cloud.typography.com/7107912/7996792/css/fonts.css" />
+      <link rel="stylesheet" type="text/css" href="https://cloud.typography.com/7107912/7996792/css/fonts.css" />
     </head>
     <body>
-      <div id="root">
-        ${body}
-      </div>
+      <div class='Root' id="root">${body}</div>
       ${bundles.map(src => createScriptTag({ src }))}
-      ${createScriptTag({ src: `/static/js/${scripts}` })}
+      ${
+        process.env.NODE_ENV === 'production'
+          ? `<script src="${assets.client.js}" defer></script>`
+          : `<script src="${assets.client.js}" defer crossorigin></script>`
+      }
     </body>
-  </html>
-`
+  </html>`
 
 const app = express()
 
 const PORT = 4100
 
 app.disable('x-powered-by')
+app.use(express.static(process.env.RAZZLE_PUBLIC_DIR))
+app.use(cookieMiddleware())
 
 app.get('/*', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8')
 
+  const cookie = req.universalCookies.get('DW_TOKEN')
+  console.log()
   let modules = []
-  let context = {}
+  let context = { cookie }
 
   const bundles = getBundles(stats, modules)
     // Create <script defer> tags from bundle objects
@@ -156,7 +166,7 @@ app.get('/*', (req, res) => {
   }
 })
 
-app.listen(PORT, () => console.log(`Downwrite SSR is running on PORT: ${PORT}`))
+export default app
 
 // Need some mechanism for handing initial state and resolving data-fetching
 // static getInitialProps() to handle and resolve on the client when routes
