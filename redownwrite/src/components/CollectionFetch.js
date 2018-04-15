@@ -1,27 +1,47 @@
+// @flow
 import { Component } from 'react'
 import orderBy from 'lodash/orderBy'
 import { POST_ENDPOINT } from '../utils/urls'
 
-export default class extends Component {
+type FetchProps = {
+  sortResponse: ?Function,
+  token: string,
+  endpoint: string,
+  children: Function
+}
+
+type FetchState = {
+  posts: Array<*>
+}
+
+export default class extends Component<FetchProps, FetchState> {
   state = {
     posts: []
   }
 
   static defaultProps = {
-    sortResponse: x => x,
+    sortResponse: (x: Array<*>) => x,
     endpoint: POST_ENDPOINT
   }
 
-  getPosts = async () => {
-    const req = await fetch(this.props.endpoint, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${this.props.token}`
-      },
+  createHeader = (method: string) => {
+    const h = new Headers()
+    const { token } = this.props
+
+    h.set('Authorization', `Bearer ${token}`)
+    h.set('Content-Type', 'application/json')
+
+    return {
+      method,
+      headers: h,
       mode: 'cors',
       cache: 'default'
-    })
+    }
+  }
 
+  getPosts = async () => {
+    const config = this.createHeader('GET')
+    const req = await fetch(this.props.endpoint, config)
     const posts = orderBy(await req.json(), ['dateAdded'], ['desc'])
 
     this.setState({ posts })
@@ -29,7 +49,7 @@ export default class extends Component {
 
   // TODO: Move this to React Suspense!!
   // TODO: Or move to componentDidMount and add loading State
-  componentWillMount() {
+  componentDidMount() {
     this.getPosts()
   }
 

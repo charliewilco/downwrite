@@ -76,11 +76,13 @@ ${this.customDraft(content)}
     saveAs(contents, `${title.replace(/\s+/g, '-').toLowerCase()}.md`)
   }
 
+  onChange = () => this.export(this.toMarkdown)
+
   render() {
     return (
       <ExportContainer>
         <ExportTitle className="small">Export</ExportTitle>
-        <Markdown onClick={() => this.export(this.toMarkdown)} />
+        <Markdown onClick={this.onChange} />
       </ExportContainer>
     )
   }
