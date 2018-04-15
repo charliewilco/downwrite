@@ -2,6 +2,7 @@ import './shims'
 import React, { Fragment } from 'react'
 import express from 'express'
 import cookieMiddleware from 'universal-cookie-express'
+import serialize from 'serialize-javascript'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter, Switch, matchPath } from 'react-router-dom'
 import Loadable from 'react-loadable'
@@ -58,6 +59,7 @@ import NoMatch from './NoMatch'
 // the `static method()` from the component and then renders the component
 // or a HOC that can do something similar
 // FWIW, Suspense will fix this
+
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST)
 
 const createScriptTag = ({ src }) => `<script defer="defer" src="${src}"></script>`
@@ -71,7 +73,13 @@ const staticCSSRegex = new RegExp(
   `${process.env.NODE_ENV === 'production' ? 'main' : 'bundle'}\.(?:.*\.)?css$`
 )
 
-const HWY = ({ body, styles: { tags, link }, scripts, bundles }) => `<!doctype html>
+const HWY = ({
+  body,
+  styles: { tags, link },
+  scripts,
+  bundles,
+  initialData
+}) => `<!doctype html>
   <head>
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta charset="utf-8" />
@@ -79,6 +87,7 @@ const HWY = ({ body, styles: { tags, link }, scripts, bundles }) => `<!doctype h
       <title>Downwrite</title>
       ${tags}
       ${assets.client.css ? createLinkTag({ href: assets.client.css }) : ''}
+      <link rel='manifest' href='/manifest.json' />
       <link rel="preload" as="style" type="text/css" href="https://cloud.typography.com/7107912/7996792/css/fonts.css" />
       <link rel="stylesheet" type="text/css" href="https://cloud.typography.com/7107912/7996792/css/fonts.css" />
     </head>
@@ -90,6 +99,7 @@ const HWY = ({ body, styles: { tags, link }, scripts, bundles }) => `<!doctype h
           ? `<script src="${assets.client.js}" defer></script>`
           : `<script src="${assets.client.js}" defer crossorigin></script>`
       }
+      <script>window.__initialData__ = ${serialize(initialData)}</script>
     </body>
   </html>`
 
@@ -105,30 +115,35 @@ app.get('/*', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8')
 
   const cookie = req.universalCookies.get('DW_TOKEN')
-  console.log()
+
   let modules = []
-  let context = { cookie }
-
-  const bundles = getBundles(stats, modules)
-    // Create <script defer> tags from bundle objects
-    .map(bundle => `/${bundle.file.replace(/\.map$/, '')}`)
-    // Make sure only unique bundles are included
-    .filter((value, index, self) => self.indexOf(value) === index)
-
-  const mainBundle = bundles.find(bundle => mainBundleRegex.test(bundle))
-  const mainStyles = bundles.find(bundle => staticCSSRegex.test(bundle))
 
   const sheet = new ServerStyleSheet()
+
+  // TODO:
+  // Need to inject default state of auth, which we can check by getting the `cookie`
+  // We can decode it, can pass everything into the constructor of the Container in unstated
 
   let markup = renderToString(
     sheet.collectStyles(
       <Loadable.Capture report={m => modules.push(m)}>
-        <StaticRouter location={req.url} context={context}>
+        <StaticRouter location={req.url} context={{ cookie }}>
           <Downwrite />
         </StaticRouter>
       </Loadable.Capture>
     )
   )
+
+  // NOTE:
+  // Create <script defer> tags from bundle objects
+  // Make sure only unique bundles are included
+
+  const bundles = getBundles(stats, modules)
+    .map(bundle => `/${bundle.file.replace(/\.map$/, '')}`)
+    .filter((value, index, self) => self.indexOf(value) === index)
+
+  const mainBundle = bundles.find(bundle => mainBundleRegex.test(bundle))
+  const mainStyles = bundles.find(bundle => staticCSSRegex.test(bundle))
 
   const styleTags = sheet.getStyleTags()
 
@@ -140,7 +155,11 @@ app.get('/*', (req, res) => {
       },
       body: markup,
       scripts: mainBundle,
-      bundles
+      bundles,
+      initialData: {
+        cookie,
+        authed: cookie
+      }
     }
 
     let html = HWY(renderer)
@@ -168,10 +187,12 @@ app.get('/*', (req, res) => {
 
 export default app
 
+// NOTE:
 // Need some mechanism for handing initial state and resolving data-fetching
 // static getInitialProps() to handle and resolve on the client when routes
 // are transitioned to.
 
+// IDEA:
 // <RouteContainer />
 // This grabs a route array from a route config.
 // async function loadInitialProps(routes, pathname, ctx) {
@@ -194,5 +215,5 @@ export default app
 //     data: (await Promise.all(promises))[0]
 //   }
 // }
-
+//
 // class RouteContainer extends Component {}
