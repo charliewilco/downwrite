@@ -2,7 +2,13 @@
 
 import React, { Component, type ComponentType } from 'react'
 import type { ContentState } from 'draft-js'
+import styled from 'styled-components'
 
+const Meta = styled.div`
+  opacity: 0.5;
+  font-size: small;
+  margin-bottom: 8px;
+`
 type WordCounterers = {
   limit: number,
   editorState: ContentState,
@@ -13,7 +19,7 @@ export default class WordCounter extends Component<WordCounterers, void> {
   static displayName = 'DraftEditorWordCounter'
 
   static defaultProps = {
-    component: 'span'
+    component: Meta
   }
 
   getSelectionCount(editorState: ContentState): number {
