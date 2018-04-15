@@ -16,7 +16,6 @@
 		"w3c-xmlhttprequest": "^2.1.2"
 	},
 	"dependencies": {
-		"backpack-core": "^0.7.0",
 		"date-fns": "^1.29.0",
 		"draft-js": "^0.10.4",
 		"draft-js-markdown-plugin": "^1.4.2",
@@ -59,7 +58,6 @@
 	"scripts": {
 		"start": "serve -s build",
 		"build": "react-scripts build",
-		"_postbuild": "backpack build",
 		"dev": "PORT=4000 razzle start",
 		"test": "react-scripts test --env=jsdom --verbose",
 		"lint": "yarn eslint ./src/**/*.js",
