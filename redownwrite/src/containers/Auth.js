@@ -4,6 +4,10 @@ import jwt from 'jwt-decode'
 import Cookies from 'universal-cookie'
 import addDays from 'date-fns/add_days'
 
+// import unstatedDebug from 'unstated-debug'
+// const makeDebuggable = unstatedDebug({ isEnabled: __IS_DEV__ })
+
+// NOTE:
 // This component should passdown the state of authed from withAuthCheck() HOC
 // There is only one single point of state that needs to be rendered
 
@@ -60,19 +64,21 @@ export default class AuthContainer extends Container<AuthState> {
 
   signIn = (authed: boolean, token: string) => {
     const { user, name } = jwt(token)
-    cookie.set('DW_TOKEN', token, cookieOptions)
-
-    return this.setState({ authed, token, user, name })
+    return this.setState(
+      { authed, token, user, name },
+      cookie.set('DW_TOKEN', token, cookieOptions)
+    )
   }
 
   signOut = () => {
-    this.setState({
-      authed: false,
-      token: undefined,
-      user: undefined,
-      name: undefined
-    })
-
-    cookie.remove('DW_TOKEN', cookieOptions)
+    return this.setState(
+      {
+        authed: false,
+        token: undefined,
+        user: undefined,
+        name: undefined
+      },
+      cookie.remove('DW_TOKEN', cookieOptions)
+    )
   }
 }
