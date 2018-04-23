@@ -10,9 +10,6 @@ global.window = {
     host: 'downwrite.us',
     hash: ''
   },
-  saveAs: {
-    createElementNS: () => {}
-  },
   matchMedia: () => ({
     matches: false,
     addListener: () => {},
@@ -30,9 +27,9 @@ global.FileReader = class {
   }
 }
 
-global.factory = {
-  createElementNS: () => {}
-}
+// global.factory = {
+//   createElementNS: () => {}
+// }
 
 global.localStorage = {
   getItem: () => null,

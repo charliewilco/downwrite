@@ -3372,10 +3372,6 @@ deep-is@~0.1.3:
   version "0.1.3"
   resolved "https://registry.npmjs.org/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
 
-deep-object-diff@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/deep-object-diff/-/deep-object-diff-1.1.0.tgz#d6fabf476c2ed1751fc94d5ca693d2ed8c18bc5a"
-
 default-require-extensions@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/default-require-extensions/-/default-require-extensions-1.0.0.tgz#f37ea15d3e13ffd9b437d33e1a75b5fb97874cb8"
@@ -11816,12 +11812,6 @@ unset-value@^1.0.0:
   dependencies:
     has-value "^0.3.1"
     isobject "^3.0.0"
-
-unstated-debug@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.npmjs.org/unstated-debug/-/unstated-debug-0.1.1.tgz#781a313e204c4a7064570ad462a0d94bb4c69860"
-  dependencies:
-    deep-object-diff "^1.1.0"
 
 unstated@^2.0.2:
   version "2.0.2"

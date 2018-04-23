@@ -1,9 +1,10 @@
 // @flow
 
 import * as React from 'react'
-import { saveAs } from 'file-saver'
+import FileSaver from 'file-saver'
 import { convertToRaw, EditorState } from 'draft-js'
 import { draftToMarkdown } from 'markdown-draft-js'
+import format from 'date-fns/format'
 import styled from 'styled-components'
 import Markdown from './ExportMarkdownIcon'
 
@@ -31,6 +32,17 @@ const ExportContainer = styled.div`
 const ExportTitle = styled.h3`
   margin-bottom: 16px;
 `
+
+const createMarkdown = (title, content, date) => `
+---
+title: ${title}
+dateAdded: ${format(date.toString(), 'DD MMMM YYYY')}
+---
+
+${content}
+`
+
+const fileType = { type: 'text/markdown; charset=UTF-8' }
 
 export default class extends React.Component<ExportPr> {
   static displayName = 'Export'
@@ -63,17 +75,11 @@ export default class extends React.Component<ExportPr> {
     })
 
   toMarkdown = ({ title, content, date }: ExportCb) => {
-    let markdown = `
----
-title: ${title}
-dateAdded: ${date.toString()}
----
+    let markdown = createMarkdown(title, this.customDraft(content), date)
 
-${this.customDraft(content)}
-`
-    const contents = new Blob([markdown.trim()], { type: 'text/markdown; charset=UTF-8' })
+    let blob = new Blob([markdown.trim()], fileType)
 
-    saveAs(contents, `${title.replace(/\s+/g, '-').toLowerCase()}.md`)
+    return FileSaver(blob, `${title.replace(/\s+/g, '-').toLowerCase()}.md`)
   }
 
   onChange = () => this.export(this.toMarkdown)
