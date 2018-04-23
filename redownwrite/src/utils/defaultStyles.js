@@ -12,6 +12,18 @@ export const colors = {
   yellow500: '#ffc200'
 }
 
+// let colorsDefaults = {
+//   defaultBlue: '#4fa5c2' /* Main Color */,
+//   darkBlue: '#185a70' /* Darker Main Color */,
+//   liteBlue: '#d8eaf1' /* Lighter Main Color */,
+//   offWhite: '#f9fbfc' /* Background */,
+//   liteGray: '#868686' /* Meta Highlighting Color */,
+//   defaultGray: '#282828',
+//   textGray: '#4c4c4c',
+//   darkYellow: '#ffb600',
+//   defaultYellow: '#ffc200'
+// }
+
 export const fonts = {
   monospace: `'Operator Mono SSm A', 'Operator Mono SSm B', 'Input Mono Condensed',
     Roboto Mono, monospace`,

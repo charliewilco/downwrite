@@ -46,7 +46,6 @@
 			"redownwrite",
 			"api-downwrite",
 			"graph-downwrite",
-			"ui",
 			"union"
 		]
 	},
@@ -54,8 +53,7 @@
 		"redownwrite",
 		"union",
 		"api-downwrite",
-		"graph-downwrite",
-		"ui"
+		"graph-downwrite"
 	],
 	"license": "MIT"
 }
