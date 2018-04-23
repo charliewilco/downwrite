@@ -7,7 +7,7 @@ const createScriptTag = (src, options) =>
   `<script src="${src}" ${options.crossorigin && 'crossorigin'}></script>`
 const createLinkTag = href => `<link rel="stylesheet" type="text/css" href="${href}" />`
 
-export default (tags, markup, chunks, context) => `
+export default (tags, markup, chunks, globals) => `
 <!doctype html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -27,7 +27,7 @@ export default (tags, markup, chunks, context) => `
         ? createScriptTag(assets.client.js)
         : createScriptTag(assets.client.js, { crossorigin: true })
     }
-    <script>window.__initialData__ = ${serialize(context)}</script>
+    <script>window.__initialData__ = ${serialize(globals.initialData)}</script>
     ${chunks
       .map(
         chunk =>
@@ -38,6 +38,7 @@ export default (tags, markup, chunks, context) => `
               )
       )
       .join('\n')}
+    <script>window.main();</script>
   </body>
 </html>
 `

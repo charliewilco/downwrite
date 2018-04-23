@@ -9,11 +9,10 @@ import Loadable from 'react-loadable'
 import { getBundles } from 'react-loadable/webpack'
 import { ServerStyleSheet } from 'styled-components'
 import 'universal-fetch'
-
 import Downwrite from './App'
 import stats from '../build/react-loadable.json'
 import NoMatch from './NoMatch'
-import renderer from './utils/renderer'
+import template from './utils/template'
 import { routes, findRoute } from './utils/routeMap'
 
 const app = express()
@@ -30,7 +29,7 @@ app.get('/*', (req, res) => {
   const token = req.universalCookies.get('DW_TOKEN')
   const authed = !isEmpty(token)
   const query = matchPath(req.url, activeRx.path)
-
+  const serverContext = { token, authed }
   let modules = []
   let context = {}
 
@@ -47,8 +46,8 @@ app.get('/*', (req, res) => {
           sheet.collectStyles(
             <Loadable.Capture report={moduleName => modules.push(moduleName)}>
               <StaticRouter location={req.url} context={context}>
-                <Downwrite serverContext={{ token, authed }}>
-                  <Switch location={req.url}>{findRoute(routes, authed, initialData)}</Switch>
+                <Downwrite defaultContext={serverContext}>
+                  <Switch>{findRoute(routes, authed, initialData)}</Switch>
                 </Downwrite>
               </StaticRouter>
             </Loadable.Capture>
@@ -59,7 +58,10 @@ app.get('/*', (req, res) => {
 
         const bundles = getBundles(stats, modules)
         const chunks = bundles.filter(bundle => bundle.file.endsWith('.js'))
-        let html = renderer(styleTags, markup, chunks, { token, authed })
+        const globals = { initialData: initialData, context: serverContext }
+
+        let html = template(styleTags, markup, chunks, globals)
+
         return res.send(html)
       })
       .catch(err => console.error(err))
@@ -73,7 +75,7 @@ app.get('/*', (req, res) => {
     const chunks = bundles.filter(bundle => bundle.file.endsWith('.js'))
 
     let errStyles = errSheet.getStyleTags()
-    let errMarkup = renderer(errStyles, errorContainer, chunks, {})
+    let errMarkup = template(errStyles, errorContainer, chunks, {})
 
     res.send(errMarkup)
   }
