@@ -43,7 +43,7 @@ export default class Shell extends Component {
   static displayName = 'UIShell'
 
   render() {
-    const { children, auth } = this.props
+    const { children, authed, token, user, name } = this.props
     return (
       <Toggle>
         {(navOpen, toggleNav, closeNav) => (
@@ -51,16 +51,11 @@ export default class Shell extends Component {
             <UIErrorBanner />
             <ClearFixed>
               <Container>
-                <Header authed={auth.state.authed} open={navOpen} onClick={toggleNav} />
+                <Header authed={authed} open={navOpen} onClick={toggleNav} />
                 {children}
               </Container>
               {navOpen && (
-                <Nav
-                  closeNav={closeNav}
-                  token={auth.state.token}
-                  user={auth.state.user}
-                  username={auth.state.name}
-                />
+                <Nav closeNav={closeNav} token={token} user={user} username={name} />
               )}
             </ClearFixed>
           </AppContainer>
