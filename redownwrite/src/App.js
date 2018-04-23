@@ -22,11 +22,11 @@ export default class extends Component<{
   static displayName = 'Downwrite'
 
   render() {
-    const { serverContext, children } = this.props
+    const { defaultContext, children } = this.props
 
     return (
       <Provider>
-        <Auth {...serverContext}>
+        <Auth {...defaultContext}>
           <OfflineListener>
             <Fragment>
               <Helmet title="Downwrite" />

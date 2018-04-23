@@ -43,12 +43,16 @@ export const chooseRoute = route =>
 export const chooseComponent = (route, authed) =>
   !authed && route.defaultComponent ? route.defaultComponent : route.component
 
+// NOTE:
+// Initially it might've been easier to map through only the active route.
+// .filter(route => activeRoute.path === route.path)
+
 export const findRoute = (routes, authed, initialData) => {
   return routes.map((route, i) => {
     const Route = chooseRoute(route)
     const Cx = chooseComponent(route, authed)
 
-    const SSRCx = () => <Cx {...initialData} />
+    const SSRCx = props => <Cx {...props} {...initialData} />
 
     return <Route key={i} {...route} component={SSRCx} />
   })
