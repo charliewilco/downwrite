@@ -1,12 +1,10 @@
 // @flow
 import React, { Fragment, Component } from 'react'
-import { Subscribe } from 'unstated'
 import styled from 'styled-components'
 import Helmet from 'react-helmet'
 import { Redirect } from 'react-router-dom'
 import { EditorState, convertToRaw } from 'draft-js'
 import uuid from 'uuid/v4'
-import { OfflineContainer } from './containers'
 import { DWEditor, Upload, Wrapper, Input, Helpers } from './components'
 import { POST_ENDPOINT } from './utils/urls'
 
@@ -21,7 +19,11 @@ type NewPostSt = {
   error: string
 }
 
-type NewPostProps = { token: string, user: string }
+type NewPostProps = {
+  offline?: boolean,
+  token: string,
+  user: string
+}
 
 const SpacedWrapper = styled(Wrapper)`
   padding-top: 128px;
@@ -101,42 +103,33 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
 
   render() {
     const { error, editorState, title, saved, id } = this.state
+    const { offline } = this.props
 
     return saved ? (
       <Redirect to={`/${id}/edit`} />
     ) : (
       <SpacedWrapper sm>
-        <Subscribe to={[OfflineContainer]}>
-          {network => (
-            <Fragment>
-              {network.state.offline && <span>You're Offline Right Now</span>}
-              <Helmet
-                title={title.length > 0 ? title : 'New'}
-                titleTemplate="%s | Downwrite"
-              />
+        <Fragment>
+          {offline && <span>You're Offline Right Now</span>}
+          <Helmet title={title.length > 0 ? title : 'New'} titleTemplate="%s | Downwrite" />
 
-              <Helpers
-                disabled={network.state.offline}
-                buttonText="Add"
-                onChange={() => this.addNewPost(network.state.offline)}
+          <Helpers disabled={offline} buttonText="Add" onChange={this.addNewPost} />
+          <EditorContainer sm>
+            {error.length > 0 && <span className="f6 u-center">{error}</span>}
+            <Upload upload={this.upload}>
+              <Input
+                placeholder="Untitled Document"
+                value={title}
+                onChange={e => this.setState({ title: e.target.value })}
               />
-              <EditorContainer sm>
-                {error.length > 0 && <span className="f6 u-center">{error}</span>}
-                <Upload upload={this.upload}>
-                  <Input
-                    placeholder="Untitled Document"
-                    value={title}
-                    onChange={e => this.setState({ title: e.target.value })}
-                  />
-                  <DWEditor
-                    editorState={editorState}
-                    onChange={editorState => this.setState({ editorState })}
-                  />
-                </Upload>
-              </EditorContainer>
-            </Fragment>
-          )}
-        </Subscribe>
+              <DWEditor
+                editorState={editorState}
+                onChange={editorState => this.setState({ editorState })}
+              />
+            </Upload>
+          </EditorContainer>
+        </Fragment>
+        )}
       </SpacedWrapper>
     )
   }
