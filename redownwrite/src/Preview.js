@@ -1,9 +1,11 @@
 // @flow
 
 import React, { Component } from 'react'
+import isEmpty from 'lodash/isEmpty'
 import { matchPath, type Match, type Location } from 'react-router-dom'
 import styled from 'styled-components'
 import { PREVIEW_ENDPOINT } from './utils/urls'
+import { createHeader } from './utils/responseHandler'
 import { Content } from './components'
 import type { Post } from './Dashboard'
 
@@ -33,12 +35,24 @@ type PreviewState = {
 
 export default class extends Component<PreviewProps, PreviewState> {
   state = {
-    loading: true,
+    loading: isEmpty(this.props.post),
     error: false,
-    post: {}
+    post: !isEmpty(this.props.post) ? this.props.post : {}
   }
 
   static displayName = 'Preview'
+
+  static async getInitialData({ query }, token) {
+    const config = createHeader()
+    const { id } = query.params
+
+    console.log(query)
+    return {
+      posts: await fetch(`${PREVIEW_ENDPOINT}/${id}`, config)
+        .then(res => res.json())
+        .then(data => data)
+    }
+  }
 
   getPreview = async (id: string) => {
     const req = await fetch(`${PREVIEW_ENDPOINT}/${id}`, {
