@@ -46,20 +46,17 @@ export default class extends Component<PreviewProps, PreviewState> {
     const config = createHeader()
     const { id } = query.params
 
-    console.log(query)
     return {
-      posts: await fetch(`${PREVIEW_ENDPOINT}/${id}`, config)
+      post: await fetch(`${PREVIEW_ENDPOINT}/${id}`, config)
         .then(res => res.json())
         .then(data => data)
     }
   }
 
   getPreview = async (id: string) => {
-    const req = await fetch(`${PREVIEW_ENDPOINT}/${id}`, {
-      mode: 'cors',
-      cache: 'default'
-    })
+    const config = createHeader()
 
+    const req = await fetch(`${PREVIEW_ENDPOINT}/${id}`, config)
     const post = await req.json()
 
     return post
@@ -71,22 +68,19 @@ export default class extends Component<PreviewProps, PreviewState> {
     this.setState({ error: req.error, loading: false, post: req })
   }
 
-  // TODO: Refactor this to do something smarter to render this component
-  // See this is where recompose might be cool
-  // I'm gonna need to take that back at some point
+  async componentDidUpdate({ location }) {
+    const currentLocation = this.props.location
+    if (currentLocation !== location) {
+      const match: Match = matchPath(currentLocation.pathname, { path: '/:id/preview' })
+      const post = await this.getPreview(match.params.id)
 
-  componentWillReceiveProps({ location }) {
-    if (location !== this.props.location) {
-      const match: Match = matchPath(location.pathname, { path: '/:id/preview' })
-      this.getPreview(match.params.id).then(post => this.setState({ error: post.error, post }))
+      if (!post.error) {
+        this.setState({ post })
+      } else {
+        this.setState({ error: post.error })
+      }
     }
   }
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   console.log(prevProps, prevState)
-  //
-  //   console.log(this.props)
-  // }
 
   render() {
     const { post, error, loading } = this.state
