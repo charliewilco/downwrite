@@ -171,11 +171,14 @@ export default class Edit extends Component<EditorPr, EditorSt> {
   // I'm gonna need to take that back at some point
   // Will Next.js fix this?
 
-  componentWillReceiveProps(nextProps: EditorPr) {
-    if (nextProps.location !== this.props.location) {
-      const { params: { id } } = matchPath(nextProps.location.pathname, { path: '/:id/edit' })
+  componentDidUpdate(prevProps: EditorPr) {
+    const { location } = this.props
+    if (prevProps.location !== this.props.location) {
+      this.autoSave.flush()
 
-      this.getPost(id).then(post =>
+      const newMatch = matchPath(location.pathname, { path: '/:id/edit' })
+
+      this.getPost(newMatch.params.id).then(post =>
         this.setState({
           post: {
             ...post,
