@@ -69,6 +69,9 @@ app.get('/*', (req, res) => {
       errSheet.collectStyles(<NoMatch location={{ pathname: req.url }} />)
     )
 
+    const bundles = getBundles(stats, modules)
+    const chunks = bundles.filter(bundle => bundle.file.endsWith('.js'))
+
     let errStyles = errSheet.getStyleTags()
     let errMarkup = renderer(errStyles, errorContainer, chunks, {})
 

@@ -4,6 +4,10 @@
   ],
   "plugins": [
     "react-loadable/babel",
+    ["styled-components", {
+      "displayName": false,
+      "ssr": true
+      }],
     "transform-flow-strip-types",
     "syntax-dynamic-import"
   ]
