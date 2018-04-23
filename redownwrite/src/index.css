@@ -28,27 +28,6 @@ LG = @media only screen and (min-width: 57.75rem)
     monospace;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: inherit;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  height: 100%;
-  tab-size: 2;
-  box-sizing: border-box;
-  text-size-adjust: 100%;
-  background-color: #f9fbfc;
-  font: 400 100%/1.6 var(--primary-font);
-  color: var(--text);
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: transparent;
-}
-
 /*---------Reset----------*/
 
 /*
@@ -56,17 +35,6 @@ html {
 */
 
 /* Base Reset */
-
-* {
-  margin: 0;
-  padding: 0;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: inherit;
-}
 
 body,
 .Root {
@@ -442,144 +410,7 @@ ol {
   list-style-position: inside;
 }
 
-/*---------Link Defaults / Anchor Element----------*/
-
-:root {
-  --link: var(--color-1);
-  --link-hover: var(--color-3);
-}
-
-a {
-  background-color: transparent;
-  text-decoration: none;
-  color: var(--link);
-}
-
-a:active,
-a:hover {
-  color: var(--link-hover);
-  outline: 0;
-}
-
 .HomeBanner {
-}
-
-.Root::before {
-  content: '';
-  display: block;
-  height: 4px;
-  width: 100%;
-  background-image: linear-gradient(to right, #2584a5, #4fa5c2);
-}
-
-.__noScroll {
-  overflow: hidden !important;
-  position: fixed !important;
-}
-
-@media (min-width: 48rem) {
-}
-
-.Export {
-  border: 0;
-  display: flex;
-  align-items: center;
-}
-
-.Export__subtitle {
-  font-size: 12px;
-  font-style: italic;
-  font-weight: 400;
-  margin-bottom: 8;
-  opacity: 0.75;
-}
-
-.Export__icon {
-  display: block;
-  margin-right: 8px;
-}
-
-.Export__label {
-  font-size: 12px;
-}
-
-.Export__list > button:not(:last-of-type) {
-  margin-right: 16px;
-}
-
-.PreviewHeader {
-  text-align: center;
-  margin-bottom: 32px;
-}
-
-.PreviewHeader time {
-  font-style: italic;
-  opacity: 0.75;
-}
-
-.PreviewBody {
-  padding: 8px;
-  margin-bottom: 64px;
-}
-
-.PreviewBody h2 {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 12px;
-}
-
-.PreviewBody h3 {
-  font-weight: 600;
-  font-size: 20px;
-  margin-bottom: 12px;
-  text-align: center;
-}
-
-.PreviewBody ul,
-.PreviewBody ol,
-.PreviewBody pre,
-.PreviewBody p {
-  margin-bottom: 24.6px;
-}
-
-.PreviewBody p,
-.PreviewBody li {
-  line-height: 1.65;
-  font-size: 14.6667px;
-}
-
-.PreviewBody blockquote {
-  font-style: italic;
-  margin-bottom: 24px;
-  background: var(--color-3);
-  margin-left: -8px;
-  margin-right: -8px;
-}
-
-/* TODO: There at some point be a notch to separate the content */
-.PreviewBody blockquote::after {
-}
-
-.PreviewBody blockquote p {
-  padding: 16px;
-  font-size: 106.25%;
-}
-
-@media (min-width: 48rem) {
-  .PreviewBody pre,
-  .PreviewBody blockquote {
-    margin-left: -80px;
-    margin-right: -80px;
-  }
-
-  .PreviewBody blockquote p {
-    font-size: 112.5%;
-  }
-
-  .PreviewBody p,
-  .PreviewBody li {
-    font-size: 15.625px;
-  }
 }
 
 .NightMDX {

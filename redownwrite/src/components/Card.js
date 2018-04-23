@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Link from 'react-router-dom/Link'
 import distance from 'date-fns/distance_in_words_to_now'
+import { colors } from '../utils/defaultStyles'
 
 const CardContainer = styled.div`
   display: flex;
@@ -25,14 +26,14 @@ const CardTitle = styled.h2`
 
 const CardHeader = styled.header`
   display: block;
-  border-bottom: 1px solid #dbdcdd;
+  border-bottom: 1px solid ${colors.gray200};
   padding: 12px 8px;
 `
 
 const CardMeta = styled.small`
   font-size: 12px;
   display: block;
-  color: #757575;
+  color: ${colors.gray300};
   font-weight: 400;
 `
 
@@ -44,8 +45,8 @@ const CardTray = styled.footer`
   justify-content: space-between;
   background-color: rgba(101, 163, 191, 0.125);
 
-  & a: {
-    color: '#4382A1';
+  & a:hover {
+    color: ${colors.blue500};
   }
 `
 
@@ -61,7 +62,7 @@ const CardBody = styled.div`
 `
 
 const CardDelete = styled.button`
-  color: var(--color-2);
+  color: ${colors.blue700};
   border: 0px;
   background: none;
   appearance: none;

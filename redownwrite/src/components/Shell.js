@@ -1,9 +1,53 @@
 import React, { Component } from 'react'
 import { Subscribe } from 'unstated'
 import { ErrorContainer } from '../containers'
-import styled from 'styled-components'
+import styled, { injectGlobal } from 'styled-components'
 import { Nav, Toggle, Header, UIFlash, Null } from './'
-import { fonts } from '../utils/defaultStyles'
+import { colors, fonts } from '../utils/defaultStyles'
+
+injectGlobal`
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+  }
+
+
+  html {
+    height: 100%;
+    tab-size: 2;
+    box-sizing: border-box;
+    text-size-adjust: 100%;
+    background-color: #f9fbfc;
+    font: 400 100%/1.6 var(--primary-font);
+    color: var(--text);
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  a {
+    background-color: transparent;
+    text-decoration: none;
+    color: ${colors.blue400};
+  }
+
+  a:active,
+  a:hover {
+    color: ${colors.blue100};
+    outline: 0;
+  }
+
+  .Root::before {
+    content: '';
+    display: block;
+    height: 4px;
+    width: 100%;
+    background-image: linear-gradient(to right, #2584a5, #4fa5c2);
+  }
+`
 
 const ClearFixed = styled.div`
   height: 100%;
