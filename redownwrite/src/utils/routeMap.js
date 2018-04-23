@@ -4,8 +4,6 @@ import NewEditor from './New'
 import PostEditor from './Edit'
 import Home from './Home'
 import Dashboard from './Dashboard'
-import NotFound from './NoMatch'
-import SignOut from './SignOut'
 import Preview from './Preview'
 import Legal from './Legal'
 
