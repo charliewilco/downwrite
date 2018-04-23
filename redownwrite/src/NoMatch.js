@@ -26,6 +26,6 @@ const Title = styled.h2`
 export default ({ location }: NoMatchType) => (
   <CenteredWrapper>
     <Title children="404" />
-    <p>Sorry but {location.pathname} didn’t match any pages</p>
+    <p>Sorry but {location ? location.pathname : 'undefined'} didn’t match any pages</p>
   </CenteredWrapper>
 )

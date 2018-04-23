@@ -1,39 +1,42 @@
 // @flow
-import React, { Fragment, Component } from 'react'
+import React, { Fragment, Component, type ComponentType } from 'react'
 import { Provider, Subscribe } from 'unstated'
 import Helmet from 'react-helmet'
-import { AuthContainer, OfflineContainer } from './containers'
+import { OfflineContainer } from './containers'
+import Auth, { withAuth } from './AuthContext'
 import * as DW from './components'
 import Routes from './Routes'
 
 type ServerProps = {
-  state: {
-    token: string,
-    authed: boolean
-  },
-  signIn: Function,
-  signOut: Function
+  token: string,
+  authed: boolean
 }
 
-export default class extends Component<{ serverContext: ServerProps }> {
+const AuthedShell = withAuth(DW.Shell)
+const AuthedRoutes = withAuth(Routes)
+
+export default class extends Component<{
+  serverContext: ServerProps,
+  children: ComponentType<*>
+}> {
   static displayName = 'Downwrite'
 
   render() {
-    const { serverContext } = this.props
+    const { serverContext, children } = this.props
 
     return (
       <Provider>
-        <Subscribe to={[AuthContainer, OfflineContainer]}>
-          {(auth, offline) => (
-            <Fragment>
-              <DW.Offline onChange={offline.handleChange} />
-              <Helmet title="Downwrite" />
-              <DW.Shell auth={serverContext ? serverContext : auth}>
-                <Routes auth={serverContext ? serverContext : auth} />
-              </DW.Shell>
-            </Fragment>
-          )}
-        </Subscribe>
+        <Auth {...serverContext}>
+          <Subscribe to={[OfflineContainer]}>
+            {offline => (
+              <Fragment>
+                <DW.Offline onChange={offline.handleChange} />
+                <Helmet title="Downwrite" />
+                <AuthedShell>{children ? children : <AuthedRoutes />}</AuthedShell>
+              </Fragment>
+            )}
+          </Subscribe>
+        </Auth>
       </Provider>
     )
   }
