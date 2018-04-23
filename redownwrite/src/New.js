@@ -129,7 +129,6 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
             </Upload>
           </EditorContainer>
         </Fragment>
-        )}
       </SpacedWrapper>
     )
   }
