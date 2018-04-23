@@ -120,7 +120,5 @@ export default withRouter(
         </MenuContainer>
         {authed ? <Menu open={open} toggleNav={onClick} /> : <LoginSignUp />}
       </Header>
-    ) : (
-      <div />
-    )
+    ) : null
 )
