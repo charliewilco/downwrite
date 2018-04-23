@@ -8,10 +8,12 @@ export const superConverter: Function = (content: ContentState) => {
     : convertFromRaw({ blocks: content.blocks, entityMap: {} })
 }
 
-export const createHeader: Function = (token: string, method: string) => {
+type HeaderMethod = 'GET' | 'PUT' | 'POST' | 'DELETE'
+
+export const createHeader: Function = (method: HeaderMethod = 'GET', token: string) => {
   const h = new Headers()
 
-  h.set('Authorization', `Bearer ${token}`)
+  token && h.set('Authorization', `Bearer ${token}`)
   h.set('Content-Type', 'application/json')
 
   return {

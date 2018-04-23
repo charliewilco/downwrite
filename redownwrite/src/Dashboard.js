@@ -13,6 +13,7 @@ import {
   EmptyPosts,
   InvalidToken
 } from './components'
+import { createHeader } from './utils/responseHandler'
 import { POST_ENDPOINT } from './utils/urls'
 
 export type Post = {
@@ -68,15 +69,33 @@ export default class Main extends Component<MainPr, MainState> {
     posts: []
   }
 
-  static getInitialData() {
+  static async getInitialData(params, token) {
+    const config = createHeader('GET', token)
     return {
-      posts: []
+      posts: await fetch(POST_ENDPOINT, config)
+        .then(res => res.json())
+        .then(data => data)
+    }
+  }
+
+  createHeader = (method: string) => {
+    const h = new Headers()
+    const { token } = this.props
+
+    h.set('Authorization', `Bearer ${token}`)
+    h.set('Content-Type', 'application/json')
+
+    return {
+      method,
+      headers: h,
+      mode: 'cors',
+      cache: 'default'
     }
   }
 
   state = {
     posts: this.props.posts,
-    loaded: false,
+    loaded: this.props.posts.length > 0,
     modalOpen: false,
     selectedPost: {},
     error: ''
