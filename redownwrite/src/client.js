@@ -25,7 +25,3 @@ window.main = () => {
   loadCSS(PREVIEW_FONTS, styleEntry)
   registerServiceWorker()
 }
-
-if (module.hot) {
-  module.hot.accept()
-}
