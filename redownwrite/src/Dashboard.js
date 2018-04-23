@@ -33,14 +33,14 @@ export type PostError = {
 
 type Res = PostError | Array<Post>
 
-type MainPr = {
+type DashboardPr = {
   posts: Array<any>,
   user: string,
   token: string,
   closeNav: Function
 }
 
-type MainState = {
+type DashboardState = {
   posts: Res,
   loaded: boolean,
   selectedPost: ?Post | {},
@@ -62,7 +62,7 @@ const DeleteBody = styled.div`
   margin-bottom: 16px;
 `
 
-export default class Main extends Component<MainPr, MainState> {
+export default class Dashboard extends Component<DashboardPr, DashboardState> {
   static displayName = 'Dashboard'
 
   static defaultProps = {

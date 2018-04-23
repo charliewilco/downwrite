@@ -11,7 +11,6 @@ class RandomColor extends Component {
   state = initialState
 
   render() {
-    console.log(...this.state)
     return this.props.children(this.state)
   }
 }

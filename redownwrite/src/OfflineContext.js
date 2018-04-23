@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, createContext, type ComponentType } from 'react'
+import React, { Component, createContext, type ElementType } from 'react'
 
 type OfflineAtrx = {
   offline: boolean
@@ -9,7 +9,7 @@ type OfflineAtrx = {
 export const { Provider, Consumer } = createContext()
 
 export default class OfflineListener extends Component<
-  { children: ComponentType<*> },
+  { children: ElementType<*> },
   OfflineAtrx
 > {
   static displayName = 'OfflineListener'
