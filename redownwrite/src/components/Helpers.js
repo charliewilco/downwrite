@@ -1,8 +1,9 @@
 // @flow
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { Toggle, Chevron, Button } from './'
 import Media from 'react-media'
+import { Toggle, Chevron, Button } from './'
+import fakeMedia from '../utils/fakeMatchMedia'
 
 const HelperContainer = styled.div`
   @media (min-width: 950px) {
@@ -56,7 +57,7 @@ export default class extends Component<{
   render() {
     const { children, buttonText, onChange, disabled } = this.props
     return (
-      <Media query={{ minWidth: 950 }}>
+      <Media query={{ minWidth: 950 }} targetWindow={window ? window : fakeMedia}>
         {matches => (
           <Toggle defaultOpen={matches}>
             {(open, toggle) => (

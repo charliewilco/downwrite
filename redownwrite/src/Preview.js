@@ -47,9 +47,7 @@ export default class extends Component<PreviewProps, PreviewState> {
     const { id } = query.params
 
     return {
-      post: await fetch(`${PREVIEW_ENDPOINT}/${id}`, config)
-        .then(res => res.json())
-        .then(data => data)
+      post: await fetch(`${PREVIEW_ENDPOINT}/${id}`, config).then(res => res.json())
     }
   }
 

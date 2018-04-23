@@ -1,4 +1,4 @@
-import './shims'
+import './utils/shims'
 import React from 'react'
 import express from 'express'
 import cookieMiddleware from 'universal-cookie-express'

@@ -72,9 +72,7 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
   static async getInitialData(params, token) {
     const config = createHeader('GET', token)
     return {
-      posts: await fetch(POST_ENDPOINT, config)
-        .then(res => res.json())
-        .then(data => data)
+      posts: await fetch(POST_ENDPOINT, config).then(res => res.json())
     }
   }
 

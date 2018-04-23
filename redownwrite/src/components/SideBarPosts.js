@@ -3,6 +3,7 @@ import Media from 'react-media'
 import Link from 'react-router-dom/Link'
 import styled from 'styled-components'
 import Card from './Card'
+import fakeMedia from '../utils/fakeMatchMedia'
 
 const SidebarEntriesTitle = styled.h6`
   font-size: 12px;
@@ -14,7 +15,7 @@ const Separator = styled.div`
 `
 
 export default ({ matches, posts }) => (
-  <Media query={{ minWidth: 500 }}>
+  <Media query={{ minWidth: 500 }} targetWindow={window ? window : fakeMedia}>
     {matches => (
       <Fragment>
         <SidebarEntriesTitle>Recent Entries</SidebarEntriesTitle>

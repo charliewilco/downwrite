@@ -1,6 +1,7 @@
 //
 
 global.window = {
+  addEventListener: () => {},
   navigator: {
     onLine: false
   },
@@ -11,7 +12,12 @@ global.window = {
   },
   saveAs: {
     createElementNS: () => {}
-  }
+  },
+  matchMedia: () => ({
+    matches: false,
+    addListener: () => {},
+    removeListener: () => {}
+  })
 }
 
 global.FileReader = class {
@@ -33,6 +39,7 @@ global.localStorage = {
   setItem: () => {},
   removeItem: () => {}
 }
+
 global.navigator = {
   userAgent: ''
 }
