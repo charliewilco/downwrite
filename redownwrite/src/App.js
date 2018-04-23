@@ -1,9 +1,9 @@
 // @flow
 import React, { Fragment, Component, type ComponentType } from 'react'
-import { Provider, Subscribe } from 'unstated'
+import { Provider } from 'unstated'
 import Helmet from 'react-helmet'
-import { OfflineContainer } from './containers'
 import Auth, { withAuth } from './AuthContext'
+import OfflineListener from './OfflineContext'
 import * as DW from './components'
 import Routes from './Routes'
 
@@ -27,15 +27,12 @@ export default class extends Component<{
     return (
       <Provider>
         <Auth {...serverContext}>
-          <Subscribe to={[OfflineContainer]}>
-            {offline => (
-              <Fragment>
-                <DW.Offline onChange={offline.handleChange} />
-                <Helmet title="Downwrite" />
-                <AuthedShell>{children ? children : <AuthedRoutes />}</AuthedShell>
-              </Fragment>
-            )}
-          </Subscribe>
+          <OfflineListener>
+            <Fragment>
+              <Helmet title="Downwrite" />
+              <AuthedShell>{children ? children : <AuthedRoutes />}</AuthedShell>
+            </Fragment>
+          </OfflineListener>
         </Auth>
       </Provider>
     )

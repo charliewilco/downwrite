@@ -6,6 +6,25 @@ import addDays from 'date-fns/add_days'
 
 const AuthContext = createContext()
 
+// NOTE:
+// This component should passdown the state of authed from withAuthCheck() HOC
+// There is only one single point of state that needs to be rendered
+
+// One other pattern we could consider is passing down user and token as state
+// and login and logout functions from authed. this would allow an initial check
+// of the cookie on a refresh and as the user is logged in have an updated source of the token
+// this would solve that single point of state to be updated.
+// We would pass down signIn and signOut to <Login /> & <Register />
+
+/*
+	<Auth>
+		{(authed, login, logout, token, user) => <App {...args} />}
+	</Auth>
+*/
+
+// state needs to evaluate the existence of
+// token + decode the content of the token
+
 const cookie = new Cookies()
 const COOKIE_EXPIRATION = 180
 const cookieOptions = {

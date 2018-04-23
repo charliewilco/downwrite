@@ -13,6 +13,8 @@ type CustomRouteProps = {
   authed?: boolean,
   token?: string,
   user?: string,
+  signIn?: Function,
+  signOut?: Function,
   component: React.ElementType,
   args: Array<number>
 }
