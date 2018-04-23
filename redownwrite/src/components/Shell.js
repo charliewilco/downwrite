@@ -3,6 +3,7 @@ import { Subscribe } from 'unstated'
 import { ErrorContainer } from '../containers'
 import styled from 'styled-components'
 import { Nav, Toggle, Header, UIFlash, Null } from './'
+import { fonts } from '../utils/defaultStyles'
 
 const ClearFixed = styled.div`
   height: 100%;
@@ -24,7 +25,7 @@ Container.displayName = 'Container'
 const AppContainer = styled.div`
   min-height: 100%;
   display: block;
-  font-family: var(--primary-font);
+  font-family: ${fonts.monospace};
 `
 
 AppContainer.displayName = 'AppContainer'

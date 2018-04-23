@@ -8,6 +8,7 @@ import NightMode from './NightMode'
 import Wrapper from './Wrapper'
 import './ganymede.css.js'
 import format from 'date-fns/format'
+import { fonts } from '../utils/defaultStyles'
 
 const CodeBlock = ({ language, value, ...props }) => (
   <pre>
@@ -22,7 +23,7 @@ CodeBlock.defaultProps = {
 const WrapperExtended = styled(Wrapper)`
   padding: 32px 0;
   max-width: 512px;
-  font-family: Sentinel SSm A, Sentinel SSm B, Charter, Georgia, serif;
+  font-family: ${fonts.serif};
 `
 const ContentBody = styled(Wrapper)`
   text-align: left;
