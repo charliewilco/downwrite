@@ -1,13 +1,13 @@
 import React from 'react'
 
-import NewEditor from './New'
-import PostEditor from './Edit'
-import Home from './Home'
-import Dashboard from './Dashboard'
-import Preview from './Preview'
-import Legal from './Legal'
+import NewEditor from '../New'
+import PostEditor from '../Edit'
+import Home from '../Home'
+import Dashboard from '../Dashboard'
+import Preview from '../Preview'
+import Legal from '../Legal'
 
-import { IndexRoute, PublicRoute, PrivateRoute } from './CustomRoutes'
+import { IndexRoute, PublicRoute, PrivateRoute } from '../CustomRoutes'
 
 export const routes = [
   {
