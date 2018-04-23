@@ -38,7 +38,6 @@ export default (tags, markup, chunks, context) => `
               )
       )
       .join('\n')}
-    <script>window.main();</script>
   </body>
 </html>
 `
