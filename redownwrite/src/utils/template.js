@@ -13,8 +13,12 @@ export default (tags, markup, chunks, globals, helmet) => `
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta charset="utf-8" />
-    <meta name='theme-color' content='#4FA5C2' />
     ${helmet.title ? helmet.title.toString() : defaultTitleTag}
+    <meta name='theme-color' content='#4FA5C2' />
+    <meta name='description' content='Downwrite is a place to write' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <link rel='shortcut icon' href='/favicon.ico' />
+
     ${tags}
     ${assets.client.css ? createLinkTag(assets.client.css) : ''}
     <style>
@@ -34,6 +38,7 @@ export default (tags, markup, chunks, globals, helmet) => `
         ? createScriptTag(assets.client.js)
         : createScriptTag(assets.client.js, { crossorigin: true })
     }
+    <script id='loadcss'></script>
     <script>window.__initialData__ = ${serialize(globals.initialData)}</script>
     ${chunks
       .map(
