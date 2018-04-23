@@ -2,6 +2,7 @@ import React from 'react'
 import StyleButton from './ToolbarButton'
 import styled from 'styled-components'
 import Media from 'react-media'
+import fakeMedia from '../utils/fakeMatchMedia'
 
 const ToolbarWrapper = styled.div`
   display: flex;
@@ -115,7 +116,7 @@ const Toolbar = ({ children, editorState, onToggleBlockType, onToggleInlineStyle
     .getType()
 
   return (
-    <Media query={{ minWidth: 500 }}>
+    <Media query={{ minWidth: 500 }} targetWindow={window ? window : fakeMedia}>
       {matches =>
         !matches ? (
           <SelectionToolBar
