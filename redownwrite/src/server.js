@@ -5,6 +5,7 @@ import cookieMiddleware from 'universal-cookie-express'
 import isEmpty from 'lodash/isEmpty'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter, Switch, matchPath } from 'react-router-dom'
+import Helmet from 'react-helmet'
 import Loadable from 'react-loadable'
 import { getBundles } from 'react-loadable/webpack'
 import { ServerStyleSheet } from 'styled-components'
@@ -54,13 +55,14 @@ app.get('/*', (req, res) => {
           )
         )
 
+        const helmet = Helmet.renderStatic()
         const styleTags = sheet.getStyleTags()
 
         const bundles = getBundles(stats, modules)
         const chunks = bundles.filter(bundle => bundle.file.endsWith('.js'))
         const globals = { initialData: initialData, context: serverContext }
 
-        let html = template(styleTags, markup, chunks, globals)
+        let html = template(styleTags, markup, chunks, globals, helmet)
 
         return res.send(html)
       })

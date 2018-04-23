@@ -6,16 +6,23 @@ const assets = require(process.env.RAZZLE_ASSETS_MANIFEST)
 const createScriptTag = (src, options) =>
   `<script src="${src}" ${options.crossorigin && 'crossorigin'}></script>`
 const createLinkTag = href => `<link rel="stylesheet" type="text/css" href="${href}" />`
+const defaultTitleTag = '<title>Downwrite</title>'
 
-export default (tags, markup, chunks, globals) => `
+export default (tags, markup, chunks, globals, helmet) => `
 <!doctype html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta charset="utf-8" />
     <meta name='theme-color' content='#4FA5C2' />
-    <title>Downwrite</title>
+    ${helmet.title ? helmet.title.toString() : defaultTitleTag}
     ${tags}
     ${assets.client.css ? createLinkTag(assets.client.css) : ''}
+    <style>
+      .__noScroll {
+        overflow: hidden !important;
+        position: fixed !important;
+      }
+    </style>
     <link rel='manifest' href='/manifest.json' />
     <link rel="preload" as="style" type="text/css" href="https://cloud.typography.com/7107912/7996792/css/fonts.css" />
     ${createLinkTag('https://cloud.typography.com/7107912/7996792/css/fonts.css')}
