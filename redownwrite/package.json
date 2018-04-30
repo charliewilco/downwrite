@@ -33,9 +33,9 @@
 		"prop-types": "^15.5.0",
 		"razzle": "^2.0.0-alpha.9",
 		"rcolor": "^1.0.1",
-		"react": "^16.3.1",
+		"react": "^16.3.2",
 		"react-app-rewired": "^1.5.0",
-		"react-dom": "^16.3.1",
+		"react-dom": "^16.3.2",
 		"react-dropzone": "^4.2.9",
 		"react-helmet": "^5.2.0",
 		"react-helmet-async": "^0.0.5",
@@ -80,6 +80,11 @@
 			"enzyme-to-json/serializer"
 		]
 	},
+	"browserslist": [
+		">0.25%",
+		"not ie 11",
+		"not op_mini all"
+	],
 	"repository": "charlespeters/downwrite",
 	"author": "Charles ⚡ <charlespeters42@gmail.com>"
 }

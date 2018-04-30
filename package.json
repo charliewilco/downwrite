@@ -14,11 +14,11 @@
 		"clean": "bolt ws exec -- 'rm -rf node_modules'"
 	},
 	"devDependencies": {
-		"bolt": "^0.20.0",
-		"flow-bin": "^0.68.0",
+		"bolt": "^0.20.5",
+		"flow-bin": "^0.70.0",
 		"glow": "^1.2.2",
 		"husky": "^0.14.3",
-		"lint-staged": "^7.0.0",
+		"lint-staged": "^7.0.4",
 		"prettier": "^1.11.1"
 	},
 	"prettier": {
