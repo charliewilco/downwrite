@@ -2,6 +2,7 @@
 import { Component } from 'react'
 import orderBy from 'lodash/orderBy'
 import { POST_ENDPOINT } from '../utils/urls'
+import { createHeader } from '../utils/responseHandler'
 
 type FetchProps = {
   sortResponse: ?Function,
@@ -24,24 +25,12 @@ export default class extends Component<FetchProps, FetchState> {
     endpoint: POST_ENDPOINT
   }
 
-  createHeader = (method: string) => {
-    const h = new Headers()
+  getPosts = async () => {
     const { token } = this.props
 
-    h.set('Authorization', `Bearer ${token}`)
-    h.set('Content-Type', 'application/json')
-
-    return {
-      method,
-      headers: h,
-      mode: 'cors',
-      cache: 'default'
-    }
-  }
-
-  getPosts = async () => {
-    const config = this.createHeader('GET')
+    const config = createHeader('GET', token)
     const req = await fetch(this.props.endpoint, config)
+
     const posts = orderBy(await req.json(), ['dateAdded'], ['desc'])
 
     this.setState({ posts })

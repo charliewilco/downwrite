@@ -2,10 +2,10 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import Loadable from 'react-loadable'
 import { IndexRoute, PrivateRoute } from './CustomRoutes'
-import * as DW from './components'
+import { Loading } from './components'
 
 const Lx = (opts: { loader: Function }) =>
-  Loadable(Object.assign({}, { loading: DW.Loading }, opts))
+  Loadable(Object.assign({}, { loading: Loading }, opts))
 
 const NewEditor = Lx({ loader: () => import('./New') })
 const PostEditor = Lx({ loader: () => import('./Edit') })

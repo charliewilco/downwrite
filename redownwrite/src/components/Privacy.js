@@ -3,11 +3,7 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import Check from './Checkbox'
 
-const WARNING = `
-  All posts are private by default, by selecting this option
-  you're allowing anyone who
-  has a URL to see the content.
-`
+const WARNING = `All posts are private by default, by selecting this option you're allowing anyone who has a URL to see the content.`
 
 const PrivacyContainer = styled.div`
   width: 100%;
@@ -35,7 +31,7 @@ const Title = styled.h3`
 `
 
 const Warning = styled.small`
-  font-size: 11px
+  font-size: 11px;
   font-style: italic;
 `
 

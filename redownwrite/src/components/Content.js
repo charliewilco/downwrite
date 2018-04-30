@@ -90,11 +90,11 @@ const ContentBody = styled(Wrapper)`
 const ContentHeader = styled.header`
   text-align: center;
   margin-bottom: 32px;
+`
 
-  time {
-    font-style: italic;
-    opacity: 0.75;
-  }
+const ContentTime = styled.time`
+  font-style: italic;
+  opacity: 0.75;
 `
 
 export default ({ title, dateAdded, content }) => (
@@ -104,7 +104,9 @@ export default ({ title, dateAdded, content }) => (
       <article className="harticle">
         <ContentHeader>
           <h1 className="u-center f4">{title}</h1>
-          {dateAdded && <time dateTime={dateAdded}>{format(dateAdded, 'DD MMMM YYYY')}</time>}
+          {dateAdded && (
+            <ContentTime dateTime={dateAdded}>{format(dateAdded, 'DD MMMM YYYY')}</ContentTime>
+          )}
         </ContentHeader>
         <ContentBody className="PreviewBody">
           <Markdown source={content} renderers={{ code: CodeBlock }} />
