@@ -3,10 +3,7 @@
 global.window = {
   addEventListener: () => {},
   navigator: {
-    onLine: false,
-    saveAs: {
-      createElementNS: () => {}
-    }
+    onLine: false
   },
   location: {
     protocol: 'https:',
@@ -30,16 +27,8 @@ global.FileReader = class {
   }
 }
 
-global.factory = {
-  createElementNS: () => {}
-}
-
 global.localStorage = {
   getItem: () => null,
   setItem: () => {},
   removeItem: () => {}
-}
-
-global.navigator = {
-  userAgent: ''
 }

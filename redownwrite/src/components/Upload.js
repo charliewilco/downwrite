@@ -4,14 +4,14 @@ import { convertFromRaw, EditorState } from 'draft-js'
 import Dropzone from 'react-dropzone'
 import { markdownToDraft } from 'markdown-draft-js'
 
-let reader = new FileReader()
-
 export default class extends Component {
   state = { files: [] }
 
+  reader = new FileReader()
+
   extractMarkdown = files => {
-    reader.onload = e => {
-      let md = fm(reader.result)
+    this.reader.onload = e => {
+      let md = fm(this.reader.result)
 
       return this.props.upload({
         title: md.attributes.title || '',
@@ -21,7 +21,7 @@ export default class extends Component {
       })
     }
 
-    reader.readAsText(files[0])
+    this.reader.readAsText(files[0])
   }
 
   onDrop = files => this.extractMarkdown(files)

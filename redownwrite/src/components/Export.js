@@ -1,7 +1,6 @@
 // @flow
 
 import * as React from 'react'
-import FileSaver from 'file-saver'
 import { convertToRaw, EditorState } from 'draft-js'
 import { draftToMarkdown } from 'markdown-draft-js'
 import styled from 'styled-components'
@@ -9,6 +8,12 @@ import Markdown from './ExportMarkdownIcon'
 import { createMarkdown } from '../utils/markdownTemplate'
 
 import type { ContentState } from 'draft-js'
+
+const shimFileSave = {
+  saveAs: () => {}
+}
+
+let FileSaver = process.env.BUILD_TARGET === 'client' ? require('file-saver') : shimFileSave
 
 type ExportPr = {
   title: string,

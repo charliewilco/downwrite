@@ -6,8 +6,6 @@ import Check from './Checkbox'
 
 const NIGHT_MODE: string = 'NightMDX'
 
-let nightMode: boolean = JSON.parse(localStorage.getItem('nightMode'))
-
 const NightContainer = styled.div`
   padding-top: 16px;
   position: relative;
@@ -36,7 +34,7 @@ const NightController = styled.label`
 
 export default class extends Component<{ children: ComponentType<any> }, { night: boolean }> {
   state = {
-    night: nightMode || false
+    night: JSON.parse(localStorage.getItem('nightMode')) || false
   }
 
   // TODO: Remove

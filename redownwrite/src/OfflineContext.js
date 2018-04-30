@@ -1,5 +1,4 @@
 // @flow
-
 import React, { Component, createContext, type ElementType } from 'react'
 
 type OfflineAtrx = {
@@ -24,17 +23,22 @@ export default class OfflineListener extends Component<
     })
 
   componentDidMount() {
-    window.addEventListener('offline', this.handleChange)
-    window.addEventListener('online', this.handleChange)
+    if (window) {
+      window.addEventListener('offline', this.handleChange)
+      window.addEventListener('online', this.handleChange)
+    }
   }
 
   componentWillUnmount() {
-    window.removeEventListener('offline', this.handleChange)
-    window.removeEventListener('online', this.handleChange)
+    if (window) {
+      window.removeEventListener('offline', this.handleChange)
+      window.removeEventListener('online', this.handleChange)
+    }
   }
 
   render() {
     const { offline } = this.state
-    return <Provider value={{ offline }}>{this.props.children}</Provider>
+    const { children } = this.props
+    return <Provider value={{ offline }} children={children} />
   }
 }
