@@ -60,6 +60,8 @@ const DeleteTray = styled.div`
 
 const DeleteBody = styled.div`
   margin-bottom: 16px;
+  padding: 16px;
+  max-width: 480px;
 `
 
 export default class Dashboard extends Component<DashboardPr, DashboardState> {
@@ -76,21 +78,6 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
     }
   }
 
-  createHeader = (method: string) => {
-    const h = new Headers()
-    const { token } = this.props
-
-    h.set('Authorization', `Bearer ${token}`)
-    h.set('Content-Type', 'application/json')
-
-    return {
-      method,
-      headers: h,
-      mode: 'cors',
-      cache: 'default'
-    }
-  }
-
   state = {
     posts: this.props.posts,
     loaded: this.props.posts.length > 0,
@@ -100,14 +87,8 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
   }
 
   getPosts = async (close: ?boolean) => {
-    const config = {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${this.props.token}`
-      },
-      mode: 'cors',
-      cache: 'default'
-    }
+    const { token } = this.props
+    const config = createHeader('GET', token)
 
     const response = await fetch(POST_ENDPOINT, config)
     const posts: Res = await response.json()

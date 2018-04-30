@@ -30,7 +30,7 @@ export default class extends Component {
 
   state = {
     editorState: this.props.editorState,
-    plugins: [createMarkdownPlugin(), createPrismPlugin({ prism: Prism })]
+    plugins: [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()]
   }
 
   focus = () => this.refs.editor.focus()

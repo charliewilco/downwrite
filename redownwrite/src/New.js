@@ -7,6 +7,7 @@ import { EditorState, convertToRaw } from 'draft-js'
 import uuid from 'uuid/v4'
 import { DWEditor, Upload, Wrapper, Input, Helpers } from './components'
 import { POST_ENDPOINT } from './utils/urls'
+import { createHeader } from './utils/responseHandler'
 
 type NewPostSt = {
   drafts: Array<any>,
@@ -47,7 +48,8 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
   static displayName = 'NewPostEditor'
 
   addNew = async (body: Object) => {
-    const config = this.createHeader('POST')
+    const { token } = this.props
+    const config = createHeader('POST', token)
 
     const response = await fetch(POST_ENDPOINT, {
       ...config,
@@ -60,21 +62,6 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
       this.setState({ saved: true })
     } else {
       this.setState({ error: newPost.message })
-    }
-  }
-
-  createHeader = (method: string) => {
-    const h = new Headers()
-    const { token } = this.props
-
-    h.set('Authorization', `Bearer ${token}`)
-    h.set('Content-Type', 'application/json')
-
-    return {
-      method,
-      headers: h,
-      mode: 'cors',
-      cache: 'default'
     }
   }
 
@@ -113,7 +100,7 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
           {offline && <span>You're Offline Right Now</span>}
           <Helmet title={title.length > 0 ? title : 'New'} titleTemplate="%s | Downwrite" />
 
-          <Helpers disabled={offline} buttonText="Add" onChange={this.addNewPost} />
+          <Helpers disabled={offline} buttonText="Add" onChange={() => this.addNewPost()} />
           <EditorContainer sm>
             {error.length > 0 && <span className="f6 u-center">{error}</span>}
             <Upload upload={this.upload}>
