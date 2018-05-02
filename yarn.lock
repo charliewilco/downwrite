@@ -1259,9 +1259,9 @@ babel-preset-jest@^22.2.0:
     babel-plugin-jest-hoist "^22.2.0"
     babel-plugin-syntax-object-rest-spread "^6.13.0"
 
-babel-preset-razzle@^2.0.0-y.0:
-  version "2.0.0-y.0"
-  resolved "https://registry.npmjs.org/babel-preset-razzle/-/babel-preset-razzle-2.0.0-y.0.tgz#278bb69171a0f994d9bc42c8fe1cf9a70d19fc6f"
+babel-preset-razzle@^2.0.0-alpha.12:
+  version "2.0.0-alpha.12"
+  resolved "https://registry.npmjs.org/babel-preset-razzle/-/babel-preset-razzle-2.0.0-alpha.12.tgz#acb14d169775633a52f4899a75d3ca31032e5e70"
   dependencies:
     babel-plugin-dynamic-import-node "1.0.1"
     babel-plugin-syntax-dynamic-import "6.18.0"
@@ -2970,7 +2970,7 @@ dotenv-expand@4.2.0:
   version "4.2.0"
   resolved "https://registry.npmjs.org/dotenv-expand/-/dotenv-expand-4.2.0.tgz#def1f1ca5d6059d24a766e587942c21106ce1275"
 
-dotenv@4.0.0, dotenv@^4.0.0:
+dotenv@4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
 
@@ -3947,19 +3947,19 @@ file-entry-cache@^2.0.0:
     flat-cache "^1.2.1"
     object-assign "^4.0.1"
 
-file-loader@1.1.11:
-  version "1.1.11"
-  resolved "https://registry.npmjs.org/file-loader/-/file-loader-1.1.11.tgz#6fe886449b0f2a936e43cabaac0cdbfb369506f8"
-  dependencies:
-    loader-utils "^1.0.2"
-    schema-utils "^0.4.5"
-
 file-loader@1.1.5:
   version "1.1.5"
   resolved "https://registry.npmjs.org/file-loader/-/file-loader-1.1.5.tgz#91c25b6b6fbe56dae99f10a425fd64933b5c9daa"
   dependencies:
     loader-utils "^1.0.2"
     schema-utils "^0.3.0"
+
+file-loader@^1.1.11:
+  version "1.1.11"
+  resolved "https://registry.npmjs.org/file-loader/-/file-loader-1.1.11.tgz#6fe886449b0f2a936e43cabaac0cdbfb369506f8"
+  dependencies:
+    loader-utils "^1.0.2"
+    schema-utils "^0.4.5"
 
 file-saver@^1.3.4:
   version "1.3.8"
@@ -8550,18 +8550,18 @@ raw-body@2.3.2, raw-body@^2.3.2:
     iconv-lite "0.4.19"
     unpipe "1.0.0"
 
-razzle-dev-utils@^2.0.0-y.0:
-  version "2.0.0-y.0"
-  resolved "https://registry.npmjs.org/razzle-dev-utils/-/razzle-dev-utils-2.0.0-y.0.tgz#612646a80fa00e36c475ec6ad6d6b949c82f0405"
+razzle-dev-utils@^2.0.0-alpha.12:
+  version "2.0.0-alpha.12"
+  resolved "https://registry.npmjs.org/razzle-dev-utils/-/razzle-dev-utils-2.0.0-alpha.12.tgz#e2cff1cc6825a10eca0370e91e518d0e2369f63d"
   dependencies:
     chalk "1.1.3"
     react-dev-utils "4.1.0"
     sockjs-client "1.1.4"
     strip-ansi "4.0.0"
 
-razzle@^2.0.0-alpha.9:
-  version "2.0.0-y.0"
-  resolved "https://registry.npmjs.org/razzle/-/razzle-2.0.0-y.0.tgz#e9336ea719f86d5c40e5632a2ff93a0130b776b8"
+razzle@^2.0.0-alpha.12:
+  version "2.0.0-alpha.12"
+  resolved "https://registry.npmjs.org/razzle/-/razzle-2.0.0-alpha.12.tgz#de72f0c5b3108ecae9fe82918ada3c85bdcf4237"
   dependencies:
     assets-webpack-plugin "3.5.1"
     autoprefixer "7.1.1"
@@ -8569,7 +8569,7 @@ razzle@^2.0.0-alpha.9:
     babel-eslint "7.2.3"
     babel-jest "20.0.3"
     babel-loader "7.1.1"
-    babel-preset-razzle "^2.0.0-y.0"
+    babel-preset-razzle "^2.0.0-alpha.12"
     chalk "1.1.3"
     consola "^1.2.0"
     css-loader "0.28.11"
@@ -8581,7 +8581,7 @@ razzle@^2.0.0-alpha.9:
     eslint-plugin-import "^2.7.0"
     eslint-plugin-jsx-a11y "^5.1.1"
     eslint-plugin-react "^7.3.0"
-    file-loader "1.1.11"
+    file-loader "^1.1.11"
     fs-extra "3.0.1"
     jest "20.0.4"
     mini-css-extract-plugin "^0.4.0"
@@ -8590,7 +8590,7 @@ razzle@^2.0.0-alpha.9:
     postcss-loader "^2.1.3"
     promise "^8.0.1"
     raf "^3.4.0"
-    razzle-dev-utils "^2.0.0-y.0"
+    razzle-dev-utils "^2.0.0-alpha.12"
     react-dev-utils "^4.0.0"
     react-error-overlay "^2.0.0"
     start-server-webpack-plugin "2.2.5"
@@ -8598,8 +8598,8 @@ razzle@^2.0.0-alpha.9:
     thread-loader "1.1.5"
     uglifyjs-webpack-plugin "1.2.4"
     url-loader "^1.0.1"
-    webpack "^4.4.1"
-    webpack-dev-server "3.0.0"
+    webpack "^4.6.0"
+    webpack-dev-server-speedy "^3.1.1"
     webpack-node-externals "1.6.0"
     webpackbar "^2.4.0"
     whatwg-fetch "^2.0.3"
@@ -8620,13 +8620,6 @@ rcolor@^1.0.1:
 react-addons-test-utils@^15.6.2:
   version "15.6.2"
   resolved "https://registry.npmjs.org/react-addons-test-utils/-/react-addons-test-utils-15.6.2.tgz#c12b6efdc2247c10da7b8770d185080a7b047156"
-
-react-app-rewired@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.npmjs.org/react-app-rewired/-/react-app-rewired-1.5.0.tgz#8889d2f9ae8d8af16b340ca5424ffd5a07d23af2"
-  dependencies:
-    cross-spawn "^5.1.0"
-    dotenv "^4.0.0"
 
 react-click-outside@^3.0.1:
   version "3.0.1"
@@ -10845,9 +10838,9 @@ urix@^0.1.0, urix@~0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/urix/-/urix-0.1.0.tgz#da937f7a62e21fec1fd18d49b35c2935067a6c72"
 
-url-join@^2.0.2:
-  version "2.0.5"
-  resolved "https://registry.npmjs.org/url-join/-/url-join-2.0.5.tgz#5af22f18c052a000a48d7b82c5e9c2e2feeda728"
+url-join@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/url-join/-/url-join-4.0.0.tgz#4d3340e807d3773bda9991f8305acdcc2a665d2a"
 
 url-loader@0.6.2:
   version "0.6.2"
@@ -11066,16 +11059,16 @@ webidl-conversions@^4.0.0, webidl-conversions@^4.0.1, webidl-conversions@^4.0.2:
   version "4.0.2"
   resolved "https://registry.npmjs.org/webidl-conversions/-/webidl-conversions-4.0.2.tgz#a855980b1f0b6b359ba1d5d9fb39ae941faa63ad"
 
-webpack-dev-middleware@2.0.6:
-  version "2.0.6"
-  resolved "https://registry.npmjs.org/webpack-dev-middleware/-/webpack-dev-middleware-2.0.6.tgz#a51692801e8310844ef3e3790e1eacfe52326fd4"
+webpack-dev-middleware@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.npmjs.org/webpack-dev-middleware/-/webpack-dev-middleware-3.0.1.tgz#7ffd6d0192883c83d3f262e8d7dec822493c6166"
   dependencies:
     loud-rejection "^1.6.0"
     memory-fs "~0.4.1"
     mime "^2.1.0"
     path-is-absolute "^1.0.0"
     range-parser "^1.0.3"
-    url-join "^2.0.2"
+    url-join "^4.0.0"
     webpack-log "^1.0.1"
 
 webpack-dev-middleware@^1.11.0:
@@ -11087,6 +11080,39 @@ webpack-dev-middleware@^1.11.0:
     path-is-absolute "^1.0.0"
     range-parser "^1.0.3"
     time-stamp "^2.0.0"
+
+webpack-dev-server-speedy@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.npmjs.org/webpack-dev-server-speedy/-/webpack-dev-server-speedy-3.1.1.tgz#51d4b863b2f51b176a42b0f15161faa7a7d98894"
+  dependencies:
+    ansi-html "0.0.7"
+    array-includes "^3.0.3"
+    bonjour "^3.5.0"
+    chokidar "^2.0.0"
+    compression "^1.5.2"
+    connect-history-api-fallback "^1.3.0"
+    debug "^3.1.0"
+    del "^3.0.0"
+    express "^4.16.2"
+    html-entities "^1.2.0"
+    http-proxy-middleware "~0.17.4"
+    import-local "^1.0.0"
+    internal-ip "1.2.0"
+    ip "^1.1.5"
+    killable "^1.0.0"
+    loglevel "^1.4.1"
+    opn "^5.1.0"
+    portfinder "^1.0.9"
+    selfsigned "^1.9.1"
+    serve-index "^1.7.2"
+    sockjs "0.3.19"
+    sockjs-client "1.1.4"
+    spdy "^3.4.1"
+    strip-ansi "^3.0.0"
+    supports-color "^5.1.0"
+    webpack-dev-middleware "3.0.1"
+    webpack-log "^1.1.2"
+    yargs "9.0.1"
 
 webpack-dev-server@2.9.4:
   version "2.9.4"
@@ -11120,39 +11146,7 @@ webpack-dev-server@2.9.4:
     webpack-dev-middleware "^1.11.0"
     yargs "^6.6.0"
 
-webpack-dev-server@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.npmjs.org/webpack-dev-server/-/webpack-dev-server-3.0.0.tgz#0ca2d293dc7a7b1a94fc5fd62cfca2a9fa61bcf7"
-  dependencies:
-    ansi-html "0.0.7"
-    array-includes "^3.0.3"
-    bonjour "^3.5.0"
-    chokidar "^2.0.0"
-    compression "^1.5.2"
-    connect-history-api-fallback "^1.3.0"
-    debug "^3.1.0"
-    del "^3.0.0"
-    express "^4.16.2"
-    html-entities "^1.2.0"
-    http-proxy-middleware "~0.17.4"
-    import-local "^1.0.0"
-    internal-ip "1.2.0"
-    ip "^1.1.5"
-    killable "^1.0.0"
-    loglevel "^1.4.1"
-    opn "^5.1.0"
-    portfinder "^1.0.9"
-    selfsigned "^1.9.1"
-    serve-index "^1.7.2"
-    sockjs "0.3.19"
-    sockjs-client "1.1.4"
-    spdy "^3.4.1"
-    strip-ansi "^3.0.0"
-    supports-color "^5.1.0"
-    webpack-dev-middleware "2.0.6"
-    yargs "9.0.1"
-
-webpack-log@^1.0.1:
+webpack-log@^1.0.1, webpack-log@^1.1.2:
   version "1.2.0"
   resolved "https://registry.npmjs.org/webpack-log/-/webpack-log-1.2.0.tgz#a4b34cda6b22b518dbb0ab32e567962d5c72a43d"
   dependencies:
@@ -11206,7 +11200,7 @@ webpack@3.8.1:
     webpack-sources "^1.0.1"
     yargs "^8.0.2"
 
-webpack@^4.4.1:
+webpack@^4.6.0:
   version "4.6.0"
   resolved "https://registry.npmjs.org/webpack/-/webpack-4.6.0.tgz#363eafa733710eb0ed28c512b2b9b9f5fb01e69b"
   dependencies:
