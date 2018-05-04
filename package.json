@@ -18,7 +18,7 @@
 		"flow-bin": "^0.70.0",
 		"glow": "^1.2.2",
 		"husky": "^0.14.3",
-		"lint-staged": "^7.0.4",
+		"lint-staged": "^7.0.5",
 		"prettier": "^1.11.1"
 	},
 	"prettier": {
