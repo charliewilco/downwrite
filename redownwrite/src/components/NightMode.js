@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component, type ComponentType } from 'react'
-import styled from 'styled-components'
+import styled, { injectGlobal } from 'styled-components'
 import Check from './Checkbox'
 
 const NIGHT_MODE: string = 'NightMDX'
@@ -30,6 +30,34 @@ const NightLabel = styled.small`
 const NightController = styled.label`
   display: flex;
   align-items: center;
+`
+// TODO: use color variables from utils instead of code smells and custom properties
+
+injectGlobal`
+  .NightMDX {
+    background: #1f5671;
+  }
+
+  .NightMode a {
+    color: var(--color-6);
+  }
+
+  .NightMode {
+    transition: background 375ms ease-in-out;
+    background: #1f5671;
+    color: var(--color-4);
+  }
+
+  .NightMode svg:not(.Chevron),
+  .NightMode svg:not(.Chevron) path {
+    fill: var(--color-1) !important;
+  }
+
+  .NightMode .PreviewBody blockquote,
+  .NightMode blockquote {
+    background: none;
+    color: var(--color-3) !important;
+  }
 `
 
 export default class extends Component<{ children: ComponentType<any> }, { night: boolean }> {
