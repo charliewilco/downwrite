@@ -1,13 +1,18 @@
 import { Button } from '../components'
+import { render, Simulate, wait } from 'react-testing-library'
 
 const onClickHandler = jest.fn()
-const wrapper = mount(<Button onClick={onClickHandler} />)
+const { getByText, container } = render(
+  <Button data-testid="TESTING_BUTTON" onClick={onClickHandler}>
+    Button
+  </Button>
+)
 
-describe('Button', () => {
+describe('<Button />', () => {
   it('Fires onClick', () => {
-    wrapper.simulate('click')
+    Simulate.click(getByText('Button'))
     expect(onClickHandler).toHaveBeenCalled()
   })
 
-  it('matches snapshot', () => expect(wrapper).toMatchSnapshot())
+  it('matches snapshot', () => expect(container.firstChild).toMatchSnapshot())
 })

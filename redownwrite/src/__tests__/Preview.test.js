@@ -1,5 +1,7 @@
 import Preview from '../Preview'
 import { Content } from '../components/'
+import { render, wait } from 'react-testing-library'
+import 'dom-testing-library/extend-expect'
 
 const id = '6acebce0-20b6-4015-87fe-951c7bb36481'
 const post = {
@@ -8,14 +10,19 @@ const post = {
   title: 'React Testing',
   dateAdded: '2017-11-18T05:12:36.265Z'
 }
-let container = mount(<Content {...post} />)
 describe('<Preview />', () => {
-  it('loads server content', () => {
+  it('loads server content', async () => {
     fetch.mockResponse(JSON.stringify(post))
-    let wrapper = mount(<Preview match={{ params: { id: id } }} />)
-    wrapper.setState({ post: post, loaded: true })
-    expect(wrapper.exists()).toBe(true)
-    expect(wrapper.state('post')).toEqual(post)
-    expect(container.find('.f4').text()).toBe('React Testing')
+    let FetchContent = render(<Preview match={{ params: { id: id } }} />)
+    await wait(() => FetchContent.getByTestId('PREVIEW_ENTRTY_TITLE'))
+    expect(FetchContent.container).toBeTruthy()
+    expect(FetchContent.getByTestId('PREVIEW_ENTRTY_TITLE')).toHaveTextContent('React Testing')
+    expect(FetchContent.getByTestId('PREVIEW_ENTRTY_BODY')).toBeInTheDOM()
+  })
+  it('takes static content', () => {
+    let StaticContent = render(<Content {...post} />)
+    expect(StaticContent.getByTestId('PREVIEW_ENTRTY_TITLE')).toHaveTextContent(
+      'React Testing'
+    )
   })
 })
