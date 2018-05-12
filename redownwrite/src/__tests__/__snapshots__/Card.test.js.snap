@@ -1,357 +1,60 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Card matches snapshot 1`] = `
-.glamor-0,
-[data-glamor-0] {
-  font-size: 14px;
-  margin-bottom: 0;
-  font-weight: 700;
-}
-
-.glamor-5,
-[data-glamor-5] {
-  color: var(--color-2);
-  border: 0;
-  background: none;
-  appearance: none;
-  -webkit-font-smoothing: antialiased;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-.glamor-2,
-[data-glamor-2] {
-  font-size: 12px;
-}
-
-.glamor-9,
-[data-glamor-9] {
-  font-weight: 400;
-  box-shadow: 0 0 2px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.12);
-  background-color: white;
-}
-
-.glamor-1,
-[data-glamor-1] {
-  font-size: 12px;
-  display: block;
-  color: #757575;
-  font-weight: 400;
-}
-
-.glamor-6 a,
-[data-glamor-6] a {
-  color: #4382A1;
-}
-
-.glamor-3,
-[data-glamor-3] {
-  margin-right: 8px;
-}
-
-.css-m8rrnj,
-[data-css-m8rrnj] {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  height: 192px;
-  flex-direction: column;
-  justify-content: space-between;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-}
-
-.css-usmh8e,
-[data-css-usmh8e] {
-  display: block;
-  border-bottom: 1px solid #DBDCDD;
-  padding: 12px 8px;
-}
-
-.css-p2oddx,
-[data-css-p2oddx] {
-  display: block;
-  padding: 8px;
-  flex: 1;
-  overflow: hidden;
-  -webkit-flex: 1;
-}
-
-.css-chikq1,
-[data-css-chikq1] {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  padding: 8px;
-  font-weight: 700;
-  font-size: 12px;
-  justify-content: space-between;
-  background-color: rgba(101, 163, 191, .125);
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-}
-
-.css-fisw11,
-[data-css-fisw11] {
-  display: block;
-}
-
-@media (min-width: 57.75rem) {
-  .glamor-0,
-  [data-glamor-0] {
-    font-size: 18px;
-  }
-}
-
-<Card
-  content={
-    Object {
-      "blocks": Array [
-        Object {
-          "data": Object {},
-          "depth": 0,
-          "entityRanges": Array [],
-          "inlineStyleRanges": Array [],
-          "key": "er5rb",
-          "text": "What am i really going to do here?",
-          "type": "unstyled",
-        },
-        Object {
-          "data": Object {},
-          "depth": 0,
-          "entityRanges": Array [],
-          "inlineStyleRanges": Array [],
-          "key": "ds3fg",
-          "text": "",
-          "type": "unstyled",
-        },
-        Object {
-          "data": Object {},
-          "depth": 0,
-          "entityRanges": Array [],
-          "inlineStyleRanges": Array [],
-          "key": "9sgm6",
-          "text": "I am trying to write a thing",
-          "type": "unstyled",
-        },
-        Object {
-          "data": Object {},
-          "depth": 0,
-          "entityRanges": Array [],
-          "inlineStyleRanges": Array [],
-          "key": "a0t8m",
-          "text": "",
-          "type": "unstyled",
-        },
-        Object {
-          "data": Object {},
-          "depth": 0,
-          "entityRanges": Array [],
-          "inlineStyleRanges": Array [],
-          "key": "2ok0",
-          "text": "With many lines",
-          "type": "unstyled",
-        },
-      ],
-      "entityMap": Object {},
-    }
-  }
-  id="6acebce0-20b6-4015-87fe-951c7bb36481"
-  onDelete={[Function]}
-  title="Starting Again"
+exports[`<Card /> matches snapshot 1`] = `
+<div
+  class="sc-bxivhb dtPQok"
+  data-testid="CARD"
 >
-  <Flex
-    className={
-      Object {
-        "data-glamor-9": "",
-      }
-    }
-    data-test="Card"
-    flexDirection="column"
-    height={192}
-    justifyContent="space-between"
+  <header
+    class="sc-EHOje joXwQh"
   >
-    <View
-      className={
-        Object {
-          "data-glamor-9": "",
-        }
-      }
-      component="div"
-      data-test="Card"
-      display="flex"
-      flexDirection="column"
-      height={192}
-      justifyContent="space-between"
+    <h2
+      class="sc-ifAKCX gJykYQ"
+      data-testid="CARD_TITLE"
     >
-      <div
-        className={
-          Object {
-            "data-glamor-9": "",
-          }
-        }
-        data-css-m8rrnj=""
-        data-test="Card"
+      <a
+        href="/6acebce0-20b6-4015-87fe-951c7bb36481/edit"
       >
-        <Block
-          borderBottom="1px solid #DBDCDD"
-          padding="12px 8px"
-        >
-          <View
-            borderBottom="1px solid #DBDCDD"
-            component="div"
-            display="block"
-            padding="12px 8px"
-          >
-            <div
-              data-css-usmh8e=""
-            >
-              <h2
-                className={
-                  Object {
-                    "data-glamor-0": "",
-                  }
-                }
-              >
-                <Link
-                  to="/6acebce0-20b6-4015-87fe-951c7bb36481/edit"
-                >
-                  <a
-                    href="/6acebce0-20b6-4015-87fe-951c7bb36481/edit"
-                  >
-                    Starting Again
-                  </a>
-                </Link>
-              </h2>
-              <small
-                className={
-                  Object {
-                    "data-glamor-1": "",
-                  }
-                }
-              >
-                added 
-                almost NaN years
-                 ago
-              </small>
-            </div>
-          </View>
-        </Block>
-        <Block
-          flex={1}
-          overflow="hidden"
-          padding={8}
-        >
-          <View
-            component="div"
-            display="block"
-            flex={1}
-            overflow="hidden"
-            padding={8}
-          >
-            <div
-              data-css-p2oddx=""
-            >
-              <p
-                className={
-                  Object {
-                    "data-glamor-2": "",
-                  }
-                }
-                data-test="snippet"
-              >
-                What am i really going to do here?
-              </p>
-            </div>
-          </View>
-        </Block>
-        <Flex
-          backgroundColor="rgba(101, 163, 191, .125)"
-          className={
-            Object {
-              "data-glamor-6": "",
-            }
-          }
-          fontSize={12}
-          fontWeight={700}
-          justifyContent="space-between"
-          padding={8}
-        >
-          <View
-            backgroundColor="rgba(101, 163, 191, .125)"
-            className={
-              Object {
-                "data-glamor-6": "",
-              }
-            }
-            component="div"
-            display="flex"
-            fontSize={12}
-            fontWeight={700}
-            justifyContent="space-between"
-            padding={8}
-          >
-            <div
-              className={
-                Object {
-                  "data-glamor-6": "",
-                }
-              }
-              data-css-chikq1=""
-            >
-              <Block>
-                <View
-                  component="div"
-                  display="block"
-                >
-                  <div
-                    data-css-fisw11=""
-                  >
-                    <Link
-                      className={
-                        Object {
-                          "data-glamor-3": "",
-                        }
-                      }
-                      to="/6acebce0-20b6-4015-87fe-951c7bb36481/edit"
-                    >
-                      <a
-                        className={
-                          Object {
-                            "data-glamor-3": "",
-                          }
-                        }
-                        href="/6acebce0-20b6-4015-87fe-951c7bb36481/edit"
-                      >
-                        Edit
-                      </a>
-                    </Link>
-                  </div>
-                </View>
-              </Block>
-              <button
-                className={
-                  Object {
-                    "data-glamor-5": "",
-                  }
-                }
-                data-test="cardDelete"
-                onClick={[Function]}
-              >
-                Delete
-              </button>
-            </div>
-          </View>
-        </Flex>
-      </div>
-    </View>
-  </Flex>
-</Card>
+        Starting Again
+      </a>
+    </h2>
+    <small
+      class="sc-bZQynM dRBtPy"
+    >
+      added 
+      almost NaN years
+      ago
+    </small>
+  </header>
+  <div
+    class="sc-dnqmqq iCsdIC"
+  >
+    <p
+      class="sc-htoDjs bVWJue"
+      data-test="snippet"
+    >
+      What am i really going to do here?
+    </p>
+  </div>
+  <footer
+    class="sc-gzVnrw jkKyhX"
+  >
+    <div
+      data-testid="CARD_EXCERPT"
+    >
+      <a
+        href="/6acebce0-20b6-4015-87fe-951c7bb36481/edit"
+        class="sc-gZMcBi fTZhYM"
+      >
+        Edit
+      </a>
+    </div>
+    <button
+      class="sc-iwsKbI hGypMr"
+      data-testid="CARD_DELETE_BUTTON"
+    >
+      Delete
+    </button>
+  </footer>
+</div>
 `;

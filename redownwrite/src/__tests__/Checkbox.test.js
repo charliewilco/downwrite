@@ -1,18 +1,23 @@
+import { render, Simulate, wait } from 'react-testing-library'
+import 'dom-testing-library/extend-expect'
 import { Check } from '../components'
 
 const checkFire = jest.fn()
 
-let wrapper = mount(
-  <label>
-    <Check checked onChange={checkFire} />
+let { getByTestId, container } = render(
+  <label data-testid="TEST_CHECKBOX_LABEL">
+    <Check data-testid="TEST_CHECKBOX" />
   </label>
 )
 
 describe('<Check />', () => {
-  it('checks', () => {
-    wrapper.find('input').simulate('toggle')
-    expect(checkFire).toHaveBeenCalled()
+  xit('checks', () => {
+    expect(container.querySelector('input:checked')).not.toBeInTheDOM()
+    Simulate.click(getByTestId('TEST_CHECKBOX_LABEL'))
+    expect(container.querySelector('input:checked')).toBeInTheDOM()
   })
 
-  it('matches snapshot', () => expect(wrapper).toMatchSnapshot())
+  it('matches snapshot', () => {
+    expect(container.firstChild).toMatchSnapshot()
+  })
 })

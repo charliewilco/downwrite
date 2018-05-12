@@ -103,12 +103,16 @@ export default ({ title, dateAdded, content }) => (
     <WrapperExtended>
       <article className="harticle">
         <ContentHeader>
-          <h1 className="u-center f4">{title}</h1>
+          <h1 data-testid="PREVIEW_ENTRTY_TITLE" className="u-center f4">
+            {title}
+          </h1>
           {dateAdded && (
-            <ContentTime dateTime={dateAdded}>{format(dateAdded, 'DD MMMM YYYY')}</ContentTime>
+            <ContentTime data-testid="PREVIEW_ENTRTY_META" dateTime={dateAdded}>
+              {format(dateAdded, 'DD MMMM YYYY')}
+            </ContentTime>
           )}
         </ContentHeader>
-        <ContentBody className="PreviewBody">
+        <ContentBody data-testid="PREVIEW_ENTRTY_BODY" className="PreviewBody">
           <Markdown source={content} renderers={{ code: CodeBlock }} />
         </ContentBody>
       </article>

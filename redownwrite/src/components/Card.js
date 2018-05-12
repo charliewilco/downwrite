@@ -74,9 +74,9 @@ const SxLink = styled(Link)`
 `
 
 const Card = ({ title, id, content, dateAdded, onDelete, ...args }) => (
-  <CardContainer data-test="Card">
+  <CardContainer data-testid="CARD">
     <CardHeader>
-      <CardTitle>
+      <CardTitle data-testid="CARD_TITLE">
         <Link to={`/${id}/edit`}>{title}</Link>
       </CardTitle>
       <CardMeta>added {distance(dateAdded)} ago</CardMeta>
@@ -88,12 +88,12 @@ const Card = ({ title, id, content, dateAdded, onDelete, ...args }) => (
       )}
     </CardBody>
     <CardTray>
-      <div>
+      <div data-testid="CARD_EXCERPT">
         <SxLink to={`/${id}/edit`}>Edit</SxLink>
         {args.public && <Link to={`/${id}/preview`}>Preview</Link>}
       </div>
       {onDelete && (
-        <CardDelete data-test="cardDelete" onClick={onDelete}>
+        <CardDelete data-testid="CARD_DELETE_BUTTON" onClick={onDelete}>
           Delete
         </CardDelete>
       )}

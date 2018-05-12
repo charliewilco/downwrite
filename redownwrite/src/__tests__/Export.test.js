@@ -1,13 +1,11 @@
 import { Export } from '../components'
+import { render, Simulate } from 'react-testing-library'
+import 'dom-testing-library/extend-expect'
 
-const spy = jest.spyOn(Export.prototype, 'export')
-
-const wrapper = mount(<Export />)
+const { container } = render(<Export />)
 
 describe('<Export />', () => {
-  it('')
-
-  afterEach(() => {
-    spy.mockClear()
+  it('renders', () => {
+    expect(container).toBeTruthy()
   })
 })

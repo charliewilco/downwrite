@@ -1,17 +1,32 @@
+import { Fragment } from 'react'
 import { Toggle } from '../components'
+import { render, Simulate } from 'react-testing-library'
+import 'dom-testing-library/extend-expect'
 
-let wrapper = mount(
-  <Toggle>{(open, toggle) => <button onClick={toggle}>Toggle</button>}</Toggle>
+let { getByText, getByTestId, container } = render(
+  <Toggle>
+    {(open, toggle) => (
+      <Fragment>
+        {open && <h1 data-testid="TOGGLE_OPEN">I am open</h1>}
+        <button data-testid="TOGGLE_BUTTON" onClick={toggle}>
+          Toggle
+        </button>
+      </Fragment>
+    )}
+  </Toggle>
 )
 
 describe('<Toggle />', () => {
-  it('starts closed and can be opened', () => {
-    expect(wrapper.state('open')).toBe(false)
-    wrapper.find('button').simulate('click')
-    expect(wrapper.state('open')).toBe(true)
+  it('starts closed', () => {
+    expect(container.querySelector(`[data-testid="TOGGLE_OPEN"]`)).not.toBeInTheDOM()
   })
 
-  it('can be open by default', () => {
-    expect(mount(<Toggle defaultOpen>{() => null}</Toggle>).state('open')).toBe(true)
+  it('can be toggled open', () => {
+    Simulate.click(getByTestId('TOGGLE_BUTTON'))
+    expect(getByTestId('TOGGLE_OPEN')).toHaveTextContent('I am open')
+  })
+
+  xit('can be open by default', () => {
+    expect(render(<Toggle defaultOpen>{() => null}</Toggle>)).toBe(true)
   })
 })

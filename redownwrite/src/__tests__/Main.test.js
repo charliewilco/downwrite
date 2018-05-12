@@ -1,38 +1,23 @@
-import Main from '../Dashboard'
-import { Card } from '../components'
+import { render, Simulate, wait } from 'react-testing-library'
+import 'dom-testing-library/extend-expect'
+import Dashboard from '../Dashboard'
 import { posts } from './db.json'
-import App from '../App'
-import { createWaitForElement } from 'enzyme-wait'
-
-const waitFor = createWaitForElement('[data-test="Card"]', 5000, 5000)
 
 describe('<Dashboard /> post lists', () => {
-  // NOTE: Hey this is now an acceptance test
-  xit('shows login form if logged out', () => {
-    let w = mount(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    )
-
-    expect(w.find("[data-test='Login Page Container']").exists()).toBe(true)
+  beforeEach(() => {
+    fetch.resetMocks()
   })
 
-  // NOTE: this should be an acceptance test
-  xit('shows list of Cards if authed and has no posts', async () => {
-    await fetch.mockResponse(JSON.stringify(posts))
+  it('shows list of Cards if authed and has posts', async () => {
+    fetch.mockResponseOnce(JSON.stringify(posts))
+    let { container, getByTestId } = render(<Dashboard user={user} token={token} />)
+    await wait(() => getByTestId('CARD'))
 
-    let main = mount(
-      <MemoryRouter>
-        <Main user={user} token={token} />
-      </MemoryRouter>
-    )
-
-    const loadedMain = await waitFor(main)
-
-    console.log(main.debug())
-
-    expect(main.exists()).toBe(true)
-    expect(main.find('h2').contains('Starting Again')).toBe(true)
+    expect(container).toBeTruthy()
+    expect(getByTestId('CARD')).toHaveTextContent('One More Thing')
   })
+
+  it('can toggle from grid to list', async () => {})
+  it('shows prompt to write more if no posts', async () => {})
+  it('can prompt to delete')
 })
