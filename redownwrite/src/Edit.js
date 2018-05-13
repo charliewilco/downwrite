@@ -60,8 +60,6 @@ export default class Edit extends Component<EditorPr, EditorSt> {
 
     const post = await fetch(`${POST_ENDPOINT}/${id}`, config).then(res => res.json())
 
-    console.log(isEmpty(post))
-
     return {
       post,
       editorState: EditorState.createWithContent(superConverter(post.content)),

@@ -23,6 +23,7 @@ const ErrorState = ({ error, message }) => (
 )
 
 type PreviewProps = {
+  post?: Post,
   match: Match | { params: { id: string } },
   location: Location
 }
@@ -37,33 +38,41 @@ export default class extends Component<PreviewProps, PreviewState> {
   state = {
     loading: isEmpty(this.props.post),
     error: false,
-    post: !isEmpty(this.props.post) ? this.props.post : {}
+    post: isEmpty(this.props.post) ? {} : this.props.post
   }
 
   static displayName = 'Preview'
 
-  static async getInitialData({ query }, token) {
+  static async getInitialData({ query }, token: string) {
     const config = createHeader()
     const { id } = query.params
+    const post = await fetch(`${PREVIEW_ENDPOINT}/${id}`, config).then(res => res.json())
 
     return {
-      post: await fetch(`${PREVIEW_ENDPOINT}/${id}`, config).then(res => res.json())
+      post
     }
   }
 
   getPreview = async (id: string) => {
     const config = createHeader()
-
     const req = await fetch(`${PREVIEW_ENDPOINT}/${id}`, config)
     const post = await req.json()
 
     return post
   }
 
+  setPost = post => {
+    if (post.error) {
+      return { error: post.error, loading: false }
+    } else {
+      return { post, loading: false }
+    }
+  }
+
   async componentDidMount() {
-    const req = await this.getPreview(this.props.match.params.id)
-    // TODO: This could be more function-like
-    this.setState({ error: req.error, loading: false, post: req })
+    const post = await this.getPreview(this.props.match.params.id)
+
+    this.setState(this.setPost(post))
   }
 
   async componentDidUpdate({ location }) {
@@ -72,11 +81,7 @@ export default class extends Component<PreviewProps, PreviewState> {
       const match: Match = matchPath(currentLocation.pathname, { path: '/:id/preview' })
       const post = await this.getPreview(match.params.id)
 
-      if (!post.error) {
-        this.setState({ post })
-      } else {
-        this.setState({ error: post.error })
-      }
+      this.setState(this.setPost(post))
     }
   }
 
