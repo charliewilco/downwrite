@@ -9,41 +9,55 @@ import { createHeader } from './utils/responseHandler'
 import { Content } from './components'
 import type { Post } from './Dashboard'
 
-const ErrorContainer = styled.div`
-  margin: 0 auto;
-  padding: 8px;
-  max-width: 512px;
-`
+type PostError = { message: string, error: string }
 
-const ErrorState = ({ error, message }) => (
-  <ErrorContainer>
-    <p className="f6">{error}. Ummm... something went horribly wrong.</p>
-    <i>{message}</i>
-  </ErrorContainer>
-)
+type StatedPost = Post | PostError | { [any]: empty }
+
+type Query = {
+  params: {
+    id: string
+  }
+}
 
 type PreviewProps = {
-  post?: Post,
-  match: Match | { params: { id: string } },
+  post: StatedPost,
+  match: Query,
   location: Location
 }
 
 type PreviewState = {
   loading: boolean,
   error: boolean,
-  post?: Post | { message: string, error: string } | {}
+  post: StatedPost
 }
+
+const ErrorContainer = styled.div`
+  margin: 0 auto;
+  padding: 8px;
+  max-width: 512px;
+`
+
+const ErrorState = ({ error, message }: PostError) => (
+  <ErrorContainer>
+    <p className="f6">{error}. Ummm... something went horribly wrong.</p>
+    <i>{message}</i>
+  </ErrorContainer>
+)
 
 export default class extends Component<PreviewProps, PreviewState> {
   state = {
     loading: isEmpty(this.props.post),
     error: false,
-    post: isEmpty(this.props.post) ? {} : this.props.post
+    post: this.props.post
+  }
+
+  static defaultProps = {
+    post: {}
   }
 
   static displayName = 'Preview'
 
-  static async getInitialData({ query }, token: string) {
+  static async getInitialData({ query }: { query: Query }, token: string) {
     const config = createHeader()
     const { id } = query.params
     const post = await fetch(`${PREVIEW_ENDPOINT}/${id}`, config).then(res => res.json())
@@ -55,13 +69,12 @@ export default class extends Component<PreviewProps, PreviewState> {
 
   getPreview = async (id: string) => {
     const config = createHeader()
-    const req = await fetch(`${PREVIEW_ENDPOINT}/${id}`, config)
-    const post = await req.json()
+    const post = await fetch(`${PREVIEW_ENDPOINT}/${id}`, config).then(res => res.json())
 
     return post
   }
 
-  setPost = post => {
+  setPost = (post: StatedPost) => {
     if (post.error) {
       return { error: post.error, loading: false }
     } else {
@@ -70,16 +83,16 @@ export default class extends Component<PreviewProps, PreviewState> {
   }
 
   async componentDidMount() {
-    const post = await this.getPreview(this.props.match.params.id)
+    const post: StatedPost = await this.getPreview(this.props.match.params.id)
 
     this.setState(this.setPost(post))
   }
 
-  async componentDidUpdate({ location }) {
+  async componentDidUpdate({ location }: { location: Location }) {
     const currentLocation = this.props.location
     if (currentLocation !== location) {
       const match: Match = matchPath(currentLocation.pathname, { path: '/:id/preview' })
-      const post = await this.getPreview(match.params.id)
+      const post: StatedPost = await this.getPreview(match.params.id)
 
       this.setState(this.setPost(post))
     }

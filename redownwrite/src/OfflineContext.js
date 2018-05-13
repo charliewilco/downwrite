@@ -8,7 +8,7 @@ type OfflineAtrx = {
 export const { Provider, Consumer } = createContext()
 
 export default class OfflineListener extends Component<
-  { children: ElementType<*> },
+  { children: ElementType },
   OfflineAtrx
 > {
   static displayName = 'OfflineListener'

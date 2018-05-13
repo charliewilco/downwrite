@@ -68,7 +68,7 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
   saveLocalDraft = (id: string, post: Object) =>
     localStorage.setItem('Draft ' + id, JSON.stringify(post))
 
-  addNewPost = (offline: boolean) => {
+  addNewPost = (offline?: boolean) => {
     let { id, title, editorState, dateAdded } = this.state
     const ContentState = editorState.getCurrentContent()
     const content = JSON.stringify(convertToRaw(ContentState))
