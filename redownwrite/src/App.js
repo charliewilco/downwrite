@@ -1,11 +1,11 @@
 // @flow
 import React, { Fragment, Component, type ComponentType } from 'react'
 import { Provider } from 'unstated'
-import Helmet from 'react-helmet'
 import Auth, { withAuth } from './AuthContext'
 import OfflineListener from './OfflineContext'
 import * as DW from './components'
 import Routes from './Routes'
+import './utils/typescale.css.js'
 
 type ServerProps = {
   token: string,
@@ -16,7 +16,7 @@ const AuthedShell = withAuth(DW.Shell)
 const AuthedRoutes = withAuth(Routes)
 
 export default class extends Component<{
-  serverContext: ServerProps,
+  defaultContext: ServerProps,
   children: ComponentType<*>
 }> {
   static displayName = 'Downwrite'
@@ -29,7 +29,6 @@ export default class extends Component<{
         <Auth {...defaultContext}>
           <OfflineListener>
             <Fragment>
-              <Helmet title="Downwrite" />
               <AuthedShell>{children ? children : <AuthedRoutes />}</AuthedShell>
             </Fragment>
           </OfflineListener>

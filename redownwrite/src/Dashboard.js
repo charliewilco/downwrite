@@ -1,5 +1,6 @@
 // @flow
 import React, { Fragment, Component } from 'react'
+import Helmet from 'react-helmet'
 import styled from 'styled-components'
 import orderBy from 'lodash/orderBy'
 import isEmpty from 'lodash/isEmpty'
@@ -71,10 +72,12 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
     posts: []
   }
 
-  static async getInitialData(params, token) {
+  static async getInitialData({ query }, token) {
     const config = createHeader('GET', token)
+    const posts = await fetch(POST_ENDPOINT, config).then(res => res.json())
+
     return {
-      posts: await fetch(POST_ENDPOINT, config).then(res => res.json())
+      posts
     }
   }
 
@@ -106,22 +109,16 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
   }
 
   componentDidMount() {
-    this.getPosts()
+    if (isEmpty(this.state.posts)) {
+      this.getPosts()
+    }
   }
 
   closeUIModal = () => this.setState({ modalOpen: false })
 
   onDelete = async (post: Post, cb?: Function) => {
     const { token } = this.props
-
-    const config = {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      mode: 'cors',
-      cache: 'default'
-    }
+    const config = createHeader('DELETE', token)
 
     const response = await fetch(`${POST_ENDPOINT}/${post.id}`, config)
 
@@ -140,6 +137,7 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
     const { modalOpen, loaded, posts, error, selectedPost } = this.state
     return (
       <Fragment>
+        <Helmet title="Downwrite" />
         {modalOpen &&
           !isEmpty(selectedPost) && (
             <Modal closeUIModal={this.closeUIModal} sm>
