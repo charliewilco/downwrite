@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, createContext } from 'react'
+import React, { Component, createContext, type ElementType } from 'react'
 import jwt from 'jwt-decode'
 import Cookies from 'universal-cookie'
 import addDays from 'date-fns/add_days'
@@ -32,6 +32,8 @@ const cookieOptions = {
   expires: addDays(Date.now(), COOKIE_EXPIRATION)
 }
 
+type AuthProps = { children: ElementType, token: string, authed: boolean }
+
 type AuthState = {
   token: string,
   user: ?string,
@@ -44,8 +46,8 @@ const EMPTY_USER = {
   name: null
 }
 
-export default class extends Component<{ token: string, authed: boolean }, AuthState> {
-  constructor(props) {
+export default class extends Component<AuthProps, AuthState> {
+  constructor(props: AuthProps) {
     super(props)
 
     let token = this.props.token || cookie.get('DW_TOKEN')
@@ -92,8 +94,8 @@ export default class extends Component<{ token: string, authed: boolean }, AuthS
   }
 }
 
-export const withAuth = Cx => {
-  return class extends Component {
+export const withAuth = (Cx: React.ElementType) => {
+  return class extends Component<any, any> {
     static displayName = `withAuthContainer(${Cx.displayName || Cx.name})`
 
     render() {

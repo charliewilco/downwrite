@@ -1,5 +1,5 @@
 // @flow
-import React, { type Element } from 'react'
+import React, { type ElementType } from 'react'
 // import Loadable from 'react-loadable'
 // import { Loading } from '../components'
 import { IndexRoute, PublicRoute, PrivateRoute } from '../CustomRoutes'
@@ -19,7 +19,7 @@ import SignOut from '../SignOut'
 // const NewEditor = Lx({ loader: () => import('../New') })
 // const PostEditor = Lx({ loader: () => import('../Edit') })
 // const Home = Lx({ loader: () => import('../Home') })
-// const Dashboard = Lx({ loader: () => import('../Dashboard') })
+// const DashboardLx = Lx({ loader: () => import('../Dashboard') })
 // const Preview = Lx({ loader: () => import('../Preview') })
 // const Legal = Lx({ loader: () => import('../Legal') })
 // const NotFound = Lx({ loader: () => import('../NoMatch') })
@@ -40,6 +40,18 @@ import SignOut from '../SignOut'
 // });
 // that might fix the issue.
 
+// Loadable.Map({
+//   loader: {
+//     Bar: () => import('./Bar'),
+//     i18n: () => fetch('./i18n/bar.json').then(res => res.json()),
+//   },
+//   render(loaded, props) {
+//     let Bar = loaded.Bar.default;
+//     let i18n = loaded.i18n;
+//     return <Bar {...props} i18n={i18n}/>;
+//   },
+// });
+
 // [2]
 // We can funnel out the Component.getInitialData some other way.
 // that might require a few issues to be resolved first.
@@ -47,15 +59,18 @@ import SignOut from '../SignOut'
 // [3]
 // Ditch react-loadable for the preset and iterate on solution 1.
 
+// [4]
+// Consider using react-loadable for components like the Editor, Export and save async routing for Suspense
+
 type RouteObject = {
   path?: string,
-  component: Element,
+  component: ElementType,
   private?: boolean,
-  defaultComponent?: Element,
+  defaultComponent?: ElementType,
   home?: boolean
 }
 
-export const routes = [
+export const routes: Array<RouteObject> = [
   {
     path: '/new',
     component: NewEditor,
