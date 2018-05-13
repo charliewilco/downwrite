@@ -35,7 +35,7 @@ export default (tags, markup, chunks, globals, helmet) => `
     <div class='Root' id="root">${markup}</div>
     ${
       __IS_PROD__
-        ? createScriptTag(assets.client.js)
+        ? createScriptTag(assets.client.js, { crossorigin: false })
         : createScriptTag(assets.client.js, { crossorigin: true })
     }
     <script id='loadcss'></script>

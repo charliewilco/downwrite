@@ -1,6 +1,7 @@
 import './utils/shims'
 import React from 'react'
 import express from 'express'
+import morgan from 'morgan'
 import cookieMiddleware from 'universal-cookie-express'
 import isEmpty from 'lodash/isEmpty'
 import { renderToString } from 'react-dom/server'
@@ -21,6 +22,7 @@ const app = express()
 app.disable('x-powered-by')
 app.use(express.static(process.env.RAZZLE_PUBLIC_DIR))
 app.use(cookieMiddleware())
+app.use(morgan('combined'))
 
 app.get('/*', (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8')
@@ -42,7 +44,6 @@ app.get('/*', (req, res) => {
     Promise.resolve(requestInitialData)
       .then(initialData => {
         const sheet = new ServerStyleSheet()
-
         let markup = renderToString(
           sheet.collectStyles(
             <Loadable.Capture report={moduleName => modules.push(moduleName)}>
@@ -57,7 +58,6 @@ app.get('/*', (req, res) => {
 
         const helmet = Helmet.renderStatic()
         const styleTags = sheet.getStyleTags()
-
         const bundles = getBundles(stats, modules)
         const chunks = bundles.filter(bundle => bundle.file.endsWith('.js'))
         const globals = { initialData: initialData, context: serverContext }
