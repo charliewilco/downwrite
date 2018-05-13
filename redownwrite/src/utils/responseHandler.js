@@ -1,6 +1,8 @@
 // @flow
+
 import { convertFromRaw } from 'draft-js'
 import type { ContentState } from 'draft-js'
+import { __IS_BROWSER__ } from './dev'
 
 export const superConverter: Function = (content: ContentState) => {
   return content.hasOwnProperty('entityMap')
@@ -22,4 +24,17 @@ export const createHeader: Function = (method: HeaderMethod = 'GET', token: stri
     mode: 'cors',
     cache: 'default'
   }
+}
+
+export const getInitialContext = staticContext => {
+  let initialData
+
+  if (__IS_BROWSER__) {
+    initialData = window.__initialData__
+    delete window.__initialData__
+  } else {
+    initialData = staticContext.initialData
+  }
+
+  return initialData
 }

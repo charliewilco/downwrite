@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import Loadable from 'react-loadable'
@@ -20,7 +22,7 @@ const Legal = Lx({ loader: () => import('./Legal') })
 // Componentizing <IndexRoute /> caused issues in ordering so it was moved to
 // least specific route.
 
-export default ({ auth }) => (
+export default () => (
   <Switch>
     <PrivateRoute path="/new" component={NewEditor} />
     <PrivateRoute path="/:id/edit" component={PostEditor} />
