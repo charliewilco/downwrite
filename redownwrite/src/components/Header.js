@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { withRouter, Link } from 'react-router-dom'
 import type { Match } from 'react-router-dom'
 import Logo from './Logo'
+import { colors } from '../utils/defaultStyles'
 
 type HeaderProps = {
   authed: boolean,
@@ -23,12 +24,12 @@ const NewButton = styled(Link)`
   font-size: 14px;
   line-height: 1.1;
   opacity: 0.5;
-  color: var(--text);
+  color: ${colors.text};
   margin-right: 32px;
 
   &:hover,
   &:focus {
-    color: var(--text);
+    color: ${colors.text};
     opacity: 1;
   }
 `
@@ -39,7 +40,7 @@ const HomeButton = styled(Link)`
   transition: color 375ms ease-in-out;
 
   &:hover {
-    color: ${`var(--color-2)`};
+    color: ${colors.blue700};
   }
 `
 
@@ -63,7 +64,7 @@ const Menu = ({ toggleNav, open }) => (
       <svg width="20px" height="9px" viewBox="0 0 20 9">
         <desc>Navicon</desc>
         <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-          <g fill={open ? '#65A3BF' : '#4C4C4C'}>
+          <g fill={colors.text}>
             <rect id="Rectangle-Copy-3" x="0" y="0" width="20" height="1" />
             <rect
               id="Rectangle-Copy-4"
@@ -99,7 +100,7 @@ const HeaderTitle = styled.h1`
 
 const Header = styled.header`
   display: flex;
-  background: #f9fbfc;
+  background: ${colors.gray100};
   align-items: center;
   justify-content: space-between;
   padding-top: 16px;

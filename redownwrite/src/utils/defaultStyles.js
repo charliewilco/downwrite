@@ -9,7 +9,8 @@ export const colors = {
   gray400: '#868686', // Meta Highlighting Color
   gray700: '#282828', // Text Color
   yellow700: '#ffb600',
-  yellow500: '#ffc200'
+  yellow500: '#ffc200',
+  text: '#4C4C4C'
 }
 
 // let colorsDefaults = {
@@ -27,5 +28,6 @@ export const colors = {
 export const fonts = {
   monospace: `'Operator Mono SSm A', 'Operator Mono SSm B', 'Input Mono Condensed',
     Roboto Mono, monospace`,
+  sans: `Roboto, Avenir, sans-serif`,
   serif: `'Sentinel SSm A', 'Sentinel SSm B', Charter, Georgia, serif`
 }

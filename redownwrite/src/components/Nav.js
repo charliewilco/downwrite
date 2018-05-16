@@ -10,6 +10,7 @@ import { SidebarEmpty } from './EmptyPosts'
 import SidebarPosts from './SideBarPosts'
 import TouchOutside from './TouchOutside'
 import LockScroll from './LockScroll'
+import { colors } from '../utils/defaultStyles'
 
 const NavColumn = styled.div`
   display: flex;
@@ -30,7 +31,7 @@ const NavButton = styled(Link)`
   }
 
   &:hover {
-    color: var(--color-2);
+    color: ${colors.blue700};
   }
 `
 
@@ -81,7 +82,7 @@ const NavTray = styled.footer`
 
 const NavItem = styled(Link)`
   display: block;
-  color: #757575;
+  color: ${colors.gray300};
   font-size: 16px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -90,7 +91,7 @@ const NavItem = styled(Link)`
   }
 
   &:hover {
-    color: var(--color-2);
+    color: ${colors.blue700};
   }
 `
 

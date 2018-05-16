@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Spinner from './Spinner'
+import { colors } from '../utils/defaultStyles'
 
 const LoadingContainer = styled.div`
   display: flex;
@@ -13,7 +14,7 @@ const LoadingContainer = styled.div`
 
 const Loading = ({ size }) => (
   <LoadingContainer>
-    <Spinner size={size} color="var(--color-1)" />
+    <Spinner size={size} color={colors.blue400} />
   </LoadingContainer>
 )
 

@@ -4,6 +4,7 @@ import styled, { keyframes } from 'styled-components'
 import LockScroll from './LockScroll'
 import Wrapper from './Wrapper'
 import { CloseIcon } from './'
+import { colors } from '../utils/defaultStyles'
 
 const fadein = keyframes`
   0% {
@@ -36,7 +37,7 @@ const ModalContainer = styled(Wrapper)`
   width: 100%;
   height: 50%;
   position: relative;
-  color: var(--text);
+  color: ${colors.text};
   display: flex;
 `
 

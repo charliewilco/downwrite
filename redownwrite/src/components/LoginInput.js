@@ -2,9 +2,10 @@
 import * as React from 'react'
 import uuid from 'uuid/v4'
 import styled from 'styled-components'
+import { colors, fonts } from '../utils/defaultStyles'
 
 const StyledInput = styled.input`
-  font-family: var(--primary-font);
+  font-family: ${fonts.monospace};
   font-size: 16px;
   appearance: none;
   display: block;
@@ -16,7 +17,7 @@ const StyledInput = styled.input`
 
   &:focus {
     outline: none;
-    border-bottom: ${`2px solid var(--color-6)`};
+    border-bottom: 2px solid ${colors.yellow700};
   }
 
   &::placeholder {
@@ -36,7 +37,7 @@ const InputContainer = styled.label`
 const InputLabel = styled.small`
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: ${props => (props.active ? 'var(--color-6)' : '#b4b4b4')};
+  color: ${props => (props.active ? colors.yellow700 : '#b4b4b4')};
   transition: color 250ms ease-in-out;
 `
 

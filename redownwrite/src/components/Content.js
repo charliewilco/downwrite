@@ -8,7 +8,7 @@ import NightMode from './NightMode'
 import Wrapper from './Wrapper'
 import './ganymede.css.js'
 import format from 'date-fns/format'
-import { fonts } from '../utils/defaultStyles'
+import { colors, fonts } from '../utils/defaultStyles'
 
 const CodeBlock = ({ language = 'javascript', value, ...props }) => (
   <pre>
@@ -55,7 +55,7 @@ const ContentBody = styled(Wrapper)`
   blockquote {
     font-style: italic;
     margin-bottom: 24px;
-    background: var(--color-3);
+    background: ${colors.blue100};
     margin-left: -8px;
     margin-right: -8px;
   }

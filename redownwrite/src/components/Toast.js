@@ -1,10 +1,11 @@
 import styled from 'styled-components'
+import { colors } from '../utils/defaultStyles'
 
 // TODO: container should have the positioning
 // Should be UI style and layout style from container
 
 export default styled.div`
-  color: var(--text);
+  color: ${colors.text};
   width: 10rem;
   text-align: center;
   top: 20px;

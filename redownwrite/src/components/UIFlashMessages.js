@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { CloseIcon } from './'
+import { colors } from '../utils/defaultStyles'
 
 const UIFlashContainer = styled.div`
   display: flex;
@@ -10,8 +11,8 @@ const UIFlashContainer = styled.div`
   max-width: ${props => props.width}px;
   left: 0px;
   right: 0px;
-  background: var(--color-6);
-  color: var(--text);
+  background: ${colors.yellow500};
+  color: ${colors.text};
   position: fixed;
   top: 20px;
   margin: auto;
