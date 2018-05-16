@@ -2,12 +2,18 @@
 import React, { Fragment, Component } from 'react'
 import styled from 'styled-components'
 import Helmet from 'react-helmet'
+import Loadable from 'react-loadable'
 import { Redirect } from 'react-router-dom'
 import { EditorState, convertToRaw } from 'draft-js'
 import uuid from 'uuid/v4'
-import { DWEditor, Upload, Wrapper, Input, Helpers } from './components'
+import { Loading, Upload, Wrapper, Input, Helpers } from './components'
 import { POST_ENDPOINT } from './utils/urls'
 import { createHeader } from './utils/responseHandler'
+
+const LazyEditor = Loadable({
+  loader: () => import('./components/Draft'),
+  loading: Loading
+})
 
 type NewPostSt = {
   drafts: Array<any>,
@@ -109,7 +115,7 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
                 value={title}
                 onChange={e => this.setState({ title: e.target.value })}
               />
-              <DWEditor
+              <LazyEditor
                 editorState={editorState}
                 onChange={editorState => this.setState({ editorState })}
               />

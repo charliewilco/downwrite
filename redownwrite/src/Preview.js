@@ -27,7 +27,7 @@ type PreviewProps = {
 
 type PreviewState = {
   loading: boolean,
-  error: boolean,
+  error?: PostError,
   post: StatedPost
 }
 
@@ -47,7 +47,7 @@ const ErrorState = ({ error, message }: PostError) => (
 export default class extends Component<PreviewProps, PreviewState> {
   state = {
     loading: isEmpty(this.props.post),
-    error: false,
+    error: {},
     post: this.props.post
   }
 
@@ -76,9 +76,9 @@ export default class extends Component<PreviewProps, PreviewState> {
 
   setPost = (post: StatedPost) => {
     if (post.error) {
-      return { error: post.error, loading: false }
+      return { error: post.error, loading: false, post: {} }
     } else {
-      return { post, loading: false }
+      return { post, loading: false, error: {} }
     }
   }
 
@@ -89,7 +89,7 @@ export default class extends Component<PreviewProps, PreviewState> {
   }
 
   async componentDidUpdate({ location }: { location: Location }) {
-    const currentLocation = this.props.location
+    const currentLocation: Location = this.props.location
     if (currentLocation !== location) {
       const match: Match = matchPath(currentLocation.pathname, { path: '/:id/preview' })
       const post: StatedPost = await this.getPreview(match.params.id)
@@ -100,6 +100,13 @@ export default class extends Component<PreviewProps, PreviewState> {
 
   render() {
     const { post, error, loading } = this.state
-    return !loading && (error ? <ErrorState {...post} /> : <Content {...post} />)
+    return (
+      !loading &&
+      (!isEmpty(error) && error.message.length > 0 ? (
+        <ErrorState {...error} />
+      ) : (
+        <Content {...post} />
+      ))
+    )
   }
 }

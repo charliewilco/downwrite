@@ -6,7 +6,7 @@
 	"repository": "charlespeters/downwrite",
 	"scripts": {
 		"precommit": "lint-staged",
-		"analysis": "glow redownwrite/**/*",
+		"analysis": "flow check",
 		"dev": "bolt ws dev",
 		"build": "bolt ws build",
 		"go": "bolt ws deploy",
@@ -16,7 +16,6 @@
 	"devDependencies": {
 		"bolt": "^0.20.5",
 		"flow-bin": "^0.72.0",
-		"glow": "^1.2.2",
 		"husky": "^0.14.3",
 		"lint-staged": "^7.0.5",
 		"prettier": "^1.12.1"
