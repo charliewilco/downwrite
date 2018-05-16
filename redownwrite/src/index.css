@@ -30,10 +30,6 @@ LG = @media only screen and (min-width: 57.75rem)
 
 /*---------Reset----------*/
 
-/*
-  NOTE: Modified from Jonathan Neal and Nicolas Gallagher's normalize.css
-*/
-
 /* Base Reset */
 
 body,
@@ -48,7 +44,6 @@ figcaption,
 figure,
 footer,
 header,
-hgroup,
 main,
 menu,
 nav,
@@ -71,17 +66,7 @@ video {
   vertical-align: baseline;
 }
 
-audio:not([controls]) {
-  display: none;
-  height: 0;
-}
-
 /* Text Selectors */
-
-abbr[title] {
-  border-bottom-width: calc(var(--base-border) / 2);
-  border-bottom-style: dotted;
-}
 
 b,
 strong {
@@ -116,17 +101,6 @@ pre {
   font-family: var(--ff-mono);
   font-size: 100%;
 }
-
-/*
-  ELEMENTS - Reset and Responsive / Extended Styling
-
-  Forms............Form Resets.
-  Headlines........H1–H6 sizes.
-  Body Text........Paragraphs.
-  Images...........Default for SVG and Images.
-  Lists............Default Listing and Reset.
-  Links............Anchors and Link Classes.
-*/
 
 /*----------Table Element----------*/
 
@@ -226,10 +200,6 @@ legend {
 
 /*----------Body Text Default Elements----------*/
 
-p {
-  font-family: var(--body-text);
-}
-
 p:not(:last-of-type) {
   margin-bottom: var(--base-spacing);
 }
@@ -263,7 +233,4 @@ li > ol {
 ul,
 ol {
   list-style-position: inside;
-}
-
-.HomeBanner {
 }

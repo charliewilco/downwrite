@@ -21,8 +21,8 @@ injectGlobal`
     box-sizing: border-box;
     text-size-adjust: 100%;
     background-color: #f9fbfc;
-    font: 400 100%/1.6 var(--primary-font);
-    color: var(--text);
+    font: 400 100%/1.6 ${fonts.monospace};
+    color: ${colors.text};
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;

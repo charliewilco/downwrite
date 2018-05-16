@@ -3,10 +3,10 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { Subscribe } from 'unstated'
-import Login from './Login'
-import Register from './Register'
+import Loadable from 'react-loadable'
 import { ErrorContainer } from './containers'
-import { Logo } from './components'
+import { Logo, Loading } from './components'
+import { colors } from './utils/defaultStyles'
 
 const SelectedTitle = styled.h2`
   margin-bottom: 32px;
@@ -24,13 +24,13 @@ const ToggleLoginButton = styled.button`
   border-bottom-style: solid;
   padding-top: 16px;
   padding-bottom: 16px;
-  border-bottom-color: ${props => (props.active ? 'var(--color-6)' : 'transparent')};
-  color: ${props => (props.active ? 'var(--color-6)' : 'inherit')};
+  border-bottom-color: ${props => (props.active ? colors.yellow700 : 'transparent')};
+  color: ${props => (props.active ? colors.yellow700 : 'inherit')};
 `
 
 const Intro = styled.div`
   text-align: center;
-  color: var(--color-4);
+  color: ${colors.gray100};
   margin-bottom: 32px;
 
   @media (min-width: 57.75rem) {
@@ -80,16 +80,19 @@ const HomeBanner = styled.div`
   transform-origin: 0;
   background: linear-gradient(
     150deg,
-    var(--color-1) 15%,
-    var(--color-2) 70%,
-    var(--color-1) 94%
+    ${colors.blue400} 15%,
+    ${colors.blue700} 70%,
+    ${colors.blue400} 94%
   );
-  background: linear-gradient(150deg, var(--color-1), var(--color-2));
+  background: linear-gradient(150deg, ${colors.blue400}, ${colors.blue700});
 
   @media (min-width: 81rem) {
     height: calc(65vh + 5rem);
   }
 `
+
+const Login = Loadable({ loader: () => import('./Login'), loading: Loading })
+const Register = Loadable({ loader: () => import('./Register'), loading: Loading })
 
 export default class Home extends Component<{ signIn: Function }, { loginSelected: boolean }> {
   state = {

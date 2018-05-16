@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { colors } from '../utils/defaultStyles'
 
 const base64Icon = `data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkx
 JQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy
@@ -17,7 +18,9 @@ const Inp = styled.input`
   appearance: none;
   border: ${props => (props.checked ? 1 : 0)}px;
   background: ${props =>
-    props.checked ? `var(--color-1) url("${base64Icon}") no-repeat center center` : '#D0D0D0'};
+    props.checked
+      ? `${colors.blue400} url("${base64Icon}") no-repeat center center`
+      : '#D0D0D0'};
 `
 
 const Checkbox = props => <Inp type="checkbox" {...props} />

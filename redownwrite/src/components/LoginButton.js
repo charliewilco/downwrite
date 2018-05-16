@@ -2,10 +2,11 @@
 
 import * as React from 'react'
 import styled from 'styled-components'
+import { colors } from '../utils/defaultStyles'
 
 const StyledLoginButton = styled.button`
   padding: 8px;
-  color: var(--color-6);
+  color: ${colors.yellow700};
   border: 0px;
   background: none;
   font-family: inherit;
@@ -13,7 +14,7 @@ const StyledLoginButton = styled.button`
   font-style: italic;
 
   :hover {
-    color: var(--color-7);
+    color: ${colors.yellow500};
   }
 `
 

@@ -1,11 +1,12 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
+import { colors } from '../utils/defaultStyles'
 
 const activeMarker = css`
   &:after {
     content: '';
     display: block;
-    border-bottom: 5px solid var(--link);
+    border-bottom: 5px solid ${colors.blue400};
   }
 `
 
