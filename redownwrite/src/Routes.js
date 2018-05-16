@@ -1,22 +1,16 @@
 // @flow
-
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
-import Loadable from 'react-loadable'
 import { IndexRoute, PrivateRoute } from './CustomRoutes'
-import { Loading } from './components'
 
-const Lx = (opts: { loader: Function }) =>
-  Loadable(Object.assign({}, { loading: Loading }, opts))
-
-const NewEditor = Lx({ loader: () => import('./New') })
-const PostEditor = Lx({ loader: () => import('./Edit') })
-const Home = Lx({ loader: () => import('./Home') })
-const Dashboard = Lx({ loader: () => import('./Dashboard') })
-const NotFound = Lx({ loader: () => import('./NoMatch') })
-const SignOut = Lx({ loader: () => import('./SignOut') })
-const Preview = Lx({ loader: () => import('./Preview') })
-const Legal = Lx({ loader: () => import('./Legal') })
+import NewEditor from './New'
+import PostEditor from './Edit'
+import Home from './Home'
+import Dashboard from './Dashboard'
+import NotFound from './NoMatch'
+import SignOut from './SignOut'
+import Preview from './Preview'
+import Legal from './Legal'
 
 // NOTE:
 // Componentizing <IndexRoute /> caused issues in ordering so it was moved to

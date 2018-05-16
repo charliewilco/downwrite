@@ -7,6 +7,7 @@ const createScriptTag = (src, options) =>
   `<script src="${src}" ${options.crossorigin && 'crossorigin'}></script>`
 const createLinkTag = href => `<link rel="stylesheet" type="text/css" href="${href}" />`
 const defaultTitleTag = '<title>Downwrite</title>'
+console.log(assets)
 
 export default (tags, markup, chunks, globals, helmet) => `
 <!doctype html>
@@ -33,20 +34,17 @@ export default (tags, markup, chunks, globals, helmet) => `
   </head>
   <body>
     <div class='Root' id="root">${markup}</div>
-    ${
-      __IS_PROD__
-        ? createScriptTag(assets.client.js, { crossorigin: false })
-        : createScriptTag(assets.client.js, { crossorigin: true })
-    }
+    ${createScriptTag(assets.client.js, { crossorigin: __IS_PROD__ })}
     <script id='loadcss'></script>
     <script>window.__initialData__ = ${serialize(globals.initialData)}</script>
     ${chunks
       .map(
         chunk =>
           __IS_PROD__
-            ? createScriptTag(chunk.file)
+            ? createScriptTag(chunk.file, { crossorigin: __IS_PROD__ })
             : createScriptTag(
-                `http://${process.env.HOST}:${process.env.PORT + 1}/${chunk.file}`
+                `http://${process.env.HOST}:${process.env.PORT + 1}/${chunk.file}`,
+                { crossorigin: __IS_PROD__ }
               )
       )
       .join('\n')}

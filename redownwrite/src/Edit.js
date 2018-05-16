@@ -12,16 +12,25 @@ import {
   Loading,
   Wrapper,
   Helpers,
-  DWEditor,
-  Export,
   Privacy,
   WordCounter,
   TimeMarker
 } from './components'
 import isEmpty from 'lodash/isEmpty'
 import debounce from 'lodash/debounce'
+import Loadable from 'react-loadable'
 import { superConverter, createHeader } from './utils/responseHandler'
 import { POST_ENDPOINT } from './utils/urls'
+
+const LazyEditor = Loadable({
+  loader: () => import('./components/Draft'),
+  loading: Loading
+})
+
+const LazyExportMarkdown = Loadable({
+  loader: () => import('./components/Export'),
+  loading: Loading
+})
 
 type EditorSt = {
   title: string,
@@ -34,11 +43,20 @@ type EditorSt = {
   autosaving: boolean
 }
 
+type Query = {
+  params: {
+    id: string
+  }
+}
+
 type EditorPr = {
   token: string,
   user: string,
   location: Location,
-  match: Match
+  match: Match | Query,
+  title?: string,
+  post?: Object,
+  editorState?: EditorState
 }
 
 const OuterEditor = styled.div`
@@ -54,7 +72,7 @@ const OuterEditor = styled.div`
 export default class Edit extends Component<EditorPr, EditorSt> {
   static displayName = 'Edit'
 
-  static async getInitialData({ query }, token) {
+  static async getInitialData({ query }: { query: Query }, token: string) {
     const config = createHeader('GET', token)
     const { id } = query.params
 
@@ -208,7 +226,11 @@ export default class Edit extends Component<EditorPr, EditorSt> {
         {autosaving && <Autosaving />}
         <Wrapper sm={true}>
           <Helpers onChange={this.updatePostContent} buttonText="Save">
-            <Export editorState={editorState} title={title} date={post.dateAdded} />
+            <LazyExportMarkdown
+              editorState={editorState}
+              title={title}
+              date={post.dateAdded}
+            />
             <Privacy
               id={match.params.id}
               title={title}
@@ -226,7 +248,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
             />
             <div>
               {editorState !== null && (
-                <DWEditor editorState={editorState} onChange={this.onChange} />
+                <LazyEditor editorState={editorState} onChange={this.onChange} />
               )}
             </div>
           </OuterEditor>
