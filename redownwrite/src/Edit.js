@@ -85,8 +85,6 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     }
   }
 
-  titleInput: HTMLInputElement
-
   state = {
     autosaving: false,
     editorState: this.props.editorState ? this.props.editorState : EditorState.createEmpty(),
@@ -150,14 +148,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     return this.updatePost(newPost).then(() => setTimeout(updater, 3500))
   }
 
-  updateTitle = ({ target: EventTarget }: { target: EventTarget }) => {
-    return this.setState(prevState => {
-      let title = this.titleInput.value
-      return {
-        title: title
-      }
-    })
-  }
+  updateTitle = ({ target }: SyntheticInputEvent<*>) => this.setState({ title: target.value })
 
   updatePrivacy = () => this.setState(({ publicStatus }) => ({ publicStatus: !publicStatus }))
 
@@ -241,11 +232,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
           </Helpers>
           <OuterEditor sm>
             <TimeMarker dateAdded={post.dateAdded} />
-            <Input
-              inputRef={input => (this.titleInput = input)}
-              value={title}
-              onChange={e => this.updateTitle(e)}
-            />
+            <Input value={title} onChange={this.updateTitle} />
             <div>
               {editorState !== null && (
                 <LazyEditor editorState={editorState} onChange={this.onChange} />
