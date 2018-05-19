@@ -24,8 +24,8 @@ export default class Input extends Component {
   }
 
   render() {
-    const { onChange, type, inputRef, ...args } = this.props
+    const { onChange, inputRef, ...args } = this.props
 
-    return <StyledInput ref={inputRef} onChange={onChange} {...args} />
+    return <StyledInput ref={inputRef} onChange={e => onChange(e)} {...args} />
   }
 }
