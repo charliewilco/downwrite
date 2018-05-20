@@ -9,8 +9,14 @@ const LogoContainer = styled.div`
   }
 `
 
+const LogoVector = styled.svg`
+  display: block;
+  max-width: 100%;
+  min-height: auto;
+`
+
 const LogoMark = props => (
-  <svg width={33} height={50} viewBox="0 0 33 50" {...props}>
+  <LogoVector width={33} height={50} viewBox="0 0 33 50" {...props}>
     <title>Downwrite Logo</title>
     <defs>
       <radialGradient fx="50%" fy="50%" r="143.827%" id="a">
@@ -36,7 +42,7 @@ const LogoMark = props => (
       />
       <path d="M32.938 50H0V0h32.938v50zM1.63 48.47h29.677V1.53H1.63v46.94z" fill="#FFC200" />
     </g>
-  </svg>
+  </LogoVector>
 )
 
 const Logo = () => (
