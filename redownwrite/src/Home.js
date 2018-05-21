@@ -1,6 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
+import Helmet from 'react-helmet'
 import styled from 'styled-components'
 import { Subscribe } from 'unstated'
 import Loadable from 'react-loadable'
@@ -104,6 +105,7 @@ export default class Home extends Component<{ signIn: Function }, { loginSelecte
     return (
       <HomeBannerMarker>
         <HomeBanner />
+        <Helmet title="Downwrite" />
         <Container>
           <Intro>
             <Logo />
