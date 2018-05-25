@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@babel/code-frame@^7.0.0-beta.35", "@babel/code-frame@^7.0.0-beta.38":
+"@babel/code-frame@^7.0.0-beta.35":
   version "7.0.0-beta.40"
   resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.0.0-beta.40.tgz#37e2b0cf7c56026b4b21d3927cadf81adec32ac6"
   dependencies:
@@ -1404,10 +1404,6 @@ bcrypt@^2.0.1:
     nan "2.10.0"
     node-pre-gyp "0.9.1"
 
-beeper@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.npmjs.org/beeper/-/beeper-1.1.1.tgz#e6d5ea8c5dad001304a70b22638447f69cb2f809"
-
 big.js@^3.1.3:
   version "3.2.0"
   resolved "https://registry.npmjs.org/big.js/-/big.js-3.2.0.tgz#a5fc298b81b9e0dca2e458824784b65c52ba588e"
@@ -1415,10 +1411,6 @@ big.js@^3.1.3:
 binary-extensions@^1.0.0:
   version "1.11.0"
   resolved "https://registry.npmjs.org/binary-extensions/-/binary-extensions-1.11.0.tgz#46aa1751fb6a2f93ee5e689bb1087d4b14c6c205"
-
-blessed@^0.1.81:
-  version "0.1.81"
-  resolved "https://registry.npmjs.org/blessed/-/blessed-0.1.81.tgz#f962d687ec2c369570ae71af843256e6d0ca1129"
 
 block-stream@*:
   version "0.0.9"
@@ -2002,10 +1994,6 @@ clean-css@4.1.x:
 clean-stack@^1.3.0:
   version "1.3.0"
   resolved "https://registry.npmjs.org/clean-stack/-/clean-stack-1.3.0.tgz#9e821501ae979986c46b1d66d2d432db2fd4ae31"
-
-clear@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.npmjs.org/clear/-/clear-0.0.1.tgz#e5186e229d99448179c130311b6f9d30bff6b0ba"
 
 cli-boxes@^1.0.0:
   version "1.0.0"
@@ -4215,27 +4203,6 @@ globby@^6.1.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
-glow@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.npmjs.org/glow/-/glow-1.2.2.tgz#41630d723483a89c4a3add3cc5871f775daa3036"
-  dependencies:
-    "@babel/code-frame" "^7.0.0-beta.38"
-    babel-runtime "^6.26.0"
-    beeper "^1.1.1"
-    blessed "^0.1.81"
-    chalk "^2.3.0"
-    chokidar "^2.0.0"
-    clear "^0.0.1"
-    find-up "^2.1.0"
-    lodash.debounce "^4.0.8"
-    meow "^4.0.0"
-    multimatch "^2.1.0"
-    read-pkg-up "^3.0.0"
-    signal-exit "^3.0.2"
-    spawndamnit "^1.0.0"
-    strip-ansi "^4.0.0"
-    util.promisify "^1.0.0"
-
 good-console@^6.4.0:
   version "6.4.1"
   resolved "https://registry.npmjs.org/good-console/-/good-console-6.4.1.tgz#5922974868bcf3bd9594372ba33818dc0d01a464"
@@ -6360,10 +6327,6 @@ lodash.camelcase@^4.3.0:
 lodash.cond@^4.3.0:
   version "4.5.2"
   resolved "https://registry.npmjs.org/lodash.cond/-/lodash.cond-4.5.2.tgz#f471a1da486be60f6ab955d17115523dd1d255d5"
-
-lodash.debounce@^4.0.8:
-  version "4.0.8"
-  resolved "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
 
 lodash.defaults@^4.2.0:
   version "4.2.0"
@@ -9565,13 +9528,6 @@ spawn-command@^0.0.2-1:
   version "0.0.2-1"
   resolved "https://registry.npmjs.org/spawn-command/-/spawn-command-0.0.2-1.tgz#62f5e9466981c1b796dc5929937e11c9c6921bd0"
 
-spawndamnit@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/spawndamnit/-/spawndamnit-1.0.0.tgz#b5d4a1a73016dbcca8f8b1e283eee76a649161b8"
-  dependencies:
-    cross-spawn "^5.1.0"
-    signal-exit "^3.0.2"
-
 spdx-correct@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/spdx-correct/-/spdx-correct-3.0.0.tgz#05a5b4d7153a195bc92c3c425b69f3b2a9524c82"
@@ -9944,7 +9900,15 @@ sw-precache-webpack-plugin@0.11.4:
     sw-precache "^5.1.1"
     uglify-js "^3.0.13"
 
-sw-precache@^5.1.1:
+sw-precache-webpack-plugin@^0.11.5:
+  version "0.11.5"
+  resolved "https://registry.npmjs.org/sw-precache-webpack-plugin/-/sw-precache-webpack-plugin-0.11.5.tgz#9b53f65a4966e3adc298e256b3cef7a55c73fdfd"
+  dependencies:
+    del "^3.0.0"
+    sw-precache "^5.2.1"
+    uglify-es "^3.3.9"
+
+sw-precache@^5.1.1, sw-precache@^5.2.1:
   version "5.2.1"
   resolved "https://registry.npmjs.org/sw-precache/-/sw-precache-5.2.1.tgz#06134f319eec68f3b9583ce9a7036b1c119f7179"
   dependencies:
@@ -10279,7 +10243,7 @@ ua-parser-js@^0.7.9:
   version "0.7.17"
   resolved "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.17.tgz#e9ec5f9498b9ec910e7ae3ac626a805c4d09ecac"
 
-uglify-es@^3.3.4:
+uglify-es@^3.3.4, uglify-es@^3.3.9:
   version "3.3.9"
   resolved "https://registry.npmjs.org/uglify-es/-/uglify-es-3.3.9.tgz#0c1c4f0700bed8dbc124cdb304d2592ca203e677"
   dependencies:
