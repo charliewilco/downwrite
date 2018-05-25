@@ -10,7 +10,7 @@ import registerServiceWorker from './registerServiceWorker'
 let PREVIEW_FONTS = 'https://cloud.typography.com/7107912/7471392/css/fonts.css'
 
 let container: ?Element = document.getElementById('root')
-let styleEntry = document.getElementById('loadcss')
+let styleEntry: ?Element = document.getElementById('loadcss')
 
 window.main = () => {
   if (container !== null) {
