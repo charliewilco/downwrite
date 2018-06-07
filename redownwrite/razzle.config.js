@@ -12,8 +12,15 @@ module.exports = {
             filename: './build/react-loadable.json'
           }),
           new SWPrecacheWebpackPlugin({
+            verbose: true,
             dontCacheBustUrlsMatching: /\.\w{8}\./,
             filename: './build/service-worker.js',
+            runtimeCaching: [
+              {
+                handler: 'networkFirst',
+                urlPattern: /^https?.*/
+              }
+            ],
             logger(message) {
               if (message.indexOf('Total precache size is') === 0) {
                 return
