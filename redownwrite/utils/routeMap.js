@@ -119,7 +119,11 @@ export const chooseComponent = (route: RouteObject, authed: boolean) =>
 // Initially it might've been easier to map through only the active route.
 // .filter(route => activeRoute.path === route.path)
 
-export const findRoute = (routes: Array<RouteObject>, authed: boolean, initialData: {}) =>
+export const findRoute = (
+  routes: Array<RouteObject>,
+  authed: boolean,
+  initialData: {}
+) =>
   routes.map((route, i) => {
     const Route = chooseRoute(route)
     const Cx = chooseComponent(route, authed)
