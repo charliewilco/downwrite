@@ -21,7 +21,7 @@
 		"prettier": "^1.12.1"
 	},
 	"prettier": {
-		"printWidth": 95,
+		"printWidth": 85,
 		"parser": "flow",
 		"semi": false,
 		"singleQuote": true,
