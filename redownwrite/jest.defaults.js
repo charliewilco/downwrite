@@ -1,9 +1,8 @@
 import React from 'react'
-import { MemoryRouter } from 'react-router-dom'
 import 'jest-styled-components'
 
 function storageMock() {
-  var storage = {}
+  let storage = {}
 
   return {
     setItem: function(key, value) {
@@ -26,7 +25,6 @@ function storageMock() {
 }
 
 global.React = React
-global.MemoryRouter = MemoryRouter
 global.fetch = require('jest-fetch-mock')
 global.localStorage = storageMock()
 
