@@ -1,5 +1,5 @@
 // @flow
-
+import Cookies from 'universal-cookie'
 import { convertFromRaw } from 'draft-js'
 import type { ContentState } from 'draft-js'
 import { __IS_BROWSER__ } from './dev'
@@ -12,7 +12,10 @@ export const superConverter: Function = (content: ContentState) => {
 
 type HeaderMethod = 'GET' | 'PUT' | 'POST' | 'DELETE'
 
-export const createHeader: Function = (method: HeaderMethod = 'GET', token: string) => {
+export const createHeader: Function = (
+  method: HeaderMethod = 'GET',
+  token: string
+) => {
   const h = new Headers()
 
   token && h.set('Authorization', `Bearer ${token}`)
@@ -37,4 +40,14 @@ export const getInitialContext = staticContext => {
   }
 
   return initialData
+}
+
+export const getToken = (req, query) => {
+  const ck = new Cookies()
+
+  const token = req
+    ? req.universalCookies.cookies.DW_TOKEN
+    : query.token || ck.get('DW_TOKEN')
+
+  return { token }
 }
