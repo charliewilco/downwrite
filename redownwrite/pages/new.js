@@ -5,7 +5,7 @@ import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import { EditorState, convertToRaw } from 'draft-js'
 import uuid from 'uuid/v4'
-import { withAuth } from '../components/auth'
+import 'universal-fetch'
 import loading from '../components/loading'
 import Wrapper from '../components/wrapper'
 import Input from '../components/input'
@@ -42,7 +42,7 @@ const EditorContainer = styled(Wrapper)`
   padding: 0 4px;
 `
 
-class NewEditor extends Component<NewPostProps, NewPostSt> {
+export default class NewEditor extends Component<NewPostProps, NewPostSt> {
   state = {
     editorState: EditorState.createEmpty(),
     title: '',
@@ -133,5 +133,3 @@ class NewEditor extends Component<NewPostProps, NewPostSt> {
     )
   }
 }
-
-export default withAuth(NewEditor)

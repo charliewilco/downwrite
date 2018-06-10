@@ -3,6 +3,7 @@
 import * as React from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
+import 'universal-fetch'
 import LoginInput from './login-input'
 import Button from './button'
 import Checkbox from './checkbox'

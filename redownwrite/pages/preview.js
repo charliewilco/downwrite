@@ -4,6 +4,7 @@ import React, { Fragment, Component } from 'react'
 import Head from 'next/head'
 import isEmpty from 'lodash/isEmpty'
 import styled from 'styled-components'
+import 'universal-fetch'
 import Content from '../components/content'
 import { PREVIEW_ENDPOINT, POST_ENDPOINT } from '../utils/urls'
 import { createHeader, getToken } from '../utils/responseHandler'
@@ -47,50 +48,6 @@ const ErrorState = ({ error, message }: PostError) => (
     <i>{message}</i>
   </ErrorContainer>
 )
-
-//
-// class Preview {
-//   state = {
-//     loading: isEmpty(this.props.entry),
-//     error: {},
-//     post: this.props.entry
-//   }
-//
-//   getPreview = async (id: string) => {
-//     const config = createHeader()
-//     const post = await fetch(`${PREVIEW_ENDPOINT}/${id}`, config).then(res =>
-//       res.json()
-//     )
-//
-//     return post
-//   }
-//
-//   setPost = (post: StatedPost) => {
-//     if (post.error) {
-//       return { error: post.error, loading: false, post: {} }
-//     } else {
-//       return { post, loading: false, error: {} }
-//     }
-//   }
-//
-//   loadNewPreview = async (id: string) => {
-//     const post: StatedPost = await this.getPreview(id)
-//
-//     this.setState(this.setPost(post))
-//   }
-//
-//   async componentDidUpdate({ location }: { location: Location }) {
-//     const currentLocation: Location = this.props.location
-//     if (currentLocation !== location) {
-//       const match: Match = matchPath(currentLocation.pathname, {
-//         path: '/:id/preview'
-//       })
-//       const post: StatedPost = await this.getPreview(match.params.id)
-//
-//       this.setState(this.setPost(post))
-//     }
-//   }
-// }
 
 export default class extends Component<PreviewProps> {
   static async getInitialProps({ req, query }) {
