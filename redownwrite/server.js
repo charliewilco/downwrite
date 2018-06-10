@@ -8,18 +8,18 @@ const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
-const { isLoggedIn } = require('./utils/middleware')
+const { isLoggedIn, isNotLoggedIn } = require('./utils/middleware')
 
 app.prepare().then(() => {
   const server = express()
 
   server.use(cookiesMiddleware())
 
-  server.get('/', isLoggedIn, (req, res) => app.render(req, res, '/', req.params))
+  server.get('/', isNotLoggedIn, (req, res) => app.render(req, res, '/', req.params))
 
-  server.get('/new', isLoggedIn, (req, res) => app.render(req, res, '/new'))
-  server.get('/login', (req, res) => app.render(req, res, '/login'))
-  server.get('/:id/edit', isLoggedIn, (req, res) =>
+  server.get('/new', isNotLoggedIn, (req, res) => app.render(req, res, '/new'))
+  server.get('/login', isLoggedIn, (req, res) => app.render(req, res, '/login'))
+  server.get('/:id/edit', isNotLoggedIn, (req, res) =>
     app.render(req, res, '/edit', req.params)
   )
   server.get('/:id/preview', (req, res) =>

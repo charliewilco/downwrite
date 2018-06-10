@@ -5,7 +5,7 @@ const verifyJWT = token =>
     resolve(jwt.verify(token, 'b2d45bbb-4277-4397-b8d2-a6c67a8003f5'))
   )
 
-const isLoggedIn = async (req, res, next) => {
+const isNotLoggedIn = async (req, res, next) => {
   const token = req.universalCookies.get('DW_TOKEN')
 
   if (token) {
@@ -17,18 +17,14 @@ const isLoggedIn = async (req, res, next) => {
   return res.redirect('/login')
 }
 
-const isNotLoggedIn = async (req, res, next) => {
+const isLoggedIn = async (req, res, next) => {
   const token = req.universalCookies.get('DW_TOKEN')
 
-  if (token) {
-    const { user } = await verifyJWT(token)
-
-    console.log('i made in the if statement')
-
-    return user && next()
+  if (!token) {
+    return res.redirect('/')
+  } else {
+    return next()
   }
-
-  return res.redirect('/login')
 }
 
 module.exports = { verifyJWT, isLoggedIn, isNotLoggedIn }
