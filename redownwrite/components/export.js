@@ -4,17 +4,11 @@ import * as React from 'react'
 import { convertToRaw, EditorState } from 'draft-js'
 import { draftToMarkdown } from 'markdown-draft-js'
 import styled from 'styled-components'
+import FileSaver from 'file-saver'
 import Markdown from './export-markdown-icon'
 import { createMarkdown } from '../utils/markdownTemplate'
 
 import type { ContentState } from 'draft-js'
-
-const shimFileSave = {
-  saveAs: () => {}
-}
-
-let FileSaver =
-  process.env.BUILD_TARGET === 'client' ? require('file-saver') : shimFileSave
 
 type ExportPr = {
   title: string,
@@ -39,7 +33,7 @@ const ExportTitle = styled.h3`
   margin-bottom: 16px;
 `
 
-const fileType = { type: 'text/markdown; charset=UTF-8' }
+const FILE_TYPE = { type: 'text/markdown; charset=UTF-8' }
 
 export default class extends React.Component<ExportPr> {
   static displayName = 'Export'
@@ -77,7 +71,7 @@ export default class extends React.Component<ExportPr> {
       // TODO: Replicate FileSaver API
       if (isFileSaverSupported) {
         let md = createMarkdown(title, this.customDraft(content), date)
-        let blob = new Blob([md.trim()], fileType)
+        let blob = new Blob([md.trim()], FILE_TYPE)
         FileSaver.saveAs(blob, `${title.replace(/\s+/g, '-').toLowerCase()}.md`)
       }
     } catch (err) {

@@ -84,7 +84,8 @@ export default class extends Component<
   }
 
   componentDidUpdate() {
-    this.setNightMode(this.state.night)
+    const { night } = this.state
+    this.setNightMode(night)
   }
 
   onChange = () => {
