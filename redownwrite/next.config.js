@@ -1,32 +1,65 @@
 // TODO: sw-precache-plugin
+// TODO: Manifest
 // TODO: Migrate all older CSS files to resets with styled-components
-// TODO: Default props `delete window.__initialData__`
-// TODO: Look into React Loadable failures
-// -- Maybe the imported component needs to be Loadble in the `findRoute()`
-// -- Maybe remove Loadable and iterate to it, there's a lot less code now Perf wise
-// TODO: Investigate vanishing div on rehydrate
 // TODO: Remove useless non-js imports
 // -- Reset.css
 // -- Moving custom properties to variables
 
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
+const withManifest = require('next-manifest')
 const withCSS = require('@zeit/next-css')
 
-module.exports = withCSS({
-  webpack: config => {
-    config.plugins.push(
-      new SWPrecacheWebpackPlugin({
-        verbose: true,
-        staticFileGlobsIgnorePatterns: [/\.next\//],
-        runtimeCaching: [
-          {
-            handler: 'networkFirst',
-            urlPattern: /^https?.*/
-          }
-        ]
-      })
-    )
+module.exports = withManifest(
+  withCSS({
+    manifest: {
+      dir: 'ltr',
+      lang: 'en',
+      short_name: 'Downwrite',
+      name: 'Downwrite',
+      display: 'standalone',
+      description: 'A place to write',
+      icons: [
+        {
+          src: 'icon192.png',
+          sizes: '192x192',
+          type: 'image/png'
+        },
+        {
+          src: 'icon256.png',
+          sizes: '256x256',
+          type: 'image/png'
+        },
+        {
+          src: 'icon512.png',
+          sizes: '512x512',
+          type: 'image/png'
+        },
+        {
+          src: 'icon1024.png',
+          sizes: '1024x1024',
+          type: 'image/png'
+        }
+      ],
+      theme_color: '#4FA5C2',
+      background_color: '#4FA5C2',
+      start_url: '/?utm_source=homescreen',
+      display: 'standalone'
+    },
+    webpack: config => {
+      config.plugins.push(
+        new SWPrecacheWebpackPlugin({
+          verbose: true,
+          staticFileGlobsIgnorePatterns: [/\.next\//],
+          runtimeCaching: [
+            {
+              handler: 'networkFirst',
+              urlPattern: /^https?.*/
+            }
+          ]
+        })
+      )
 
-    return config
-  }
-})
+      return config
+    }
+  })
+)
