@@ -15,19 +15,31 @@ const DeleteBody = styled.div`
   max-width: 480px;
 `
 
+const DeleteTrayDivider = styled.hr`
+  box-sizing: inherit;
+  border: 0;
+  height: 1px;
+`
+
+const Box = styled.div``
+
+const DeleteWarning = styled.p`
+  font-size: 16px;
+`
+
 export default ({ closeModal, title, onCancelDelete, onDelete }) => (
   <Modal closeUIModal={closeModal} sm>
-    <div>
+    <Box>
       <DeleteBody>
-        <p className="h5">
+        <DeleteWarning>
           Are you sure you want to delete <strong>"{title}"</strong>?
-        </p>
+        </DeleteWarning>
       </DeleteBody>
-      <hr />
+      <DeleteTrayDivider />
       <DeleteTray>
         <Cancel onClick={onCancelDelete}>Cancel</Cancel>
         <Button onClick={onDelete}>Delete</Button>
       </DeleteTray>
-    </div>
+    </Box>
   </Modal>
 )
