@@ -10,6 +10,7 @@ import debounce from 'lodash/debounce'
 import noop from 'lodash/noop'
 
 import Autosaving from '../components/autosaving-notification'
+import ExportMarkdown from '../components/export'
 import Input from '../components/input'
 import NightMode from '../components/night-mode'
 import loading from '../components/loading'
@@ -21,11 +22,7 @@ import TimeMarker from '../components/time-marker'
 import { getToken, createHeader, superConverter } from '../utils/responseHandler'
 import { POST_ENDPOINT } from '../utils/urls'
 
-const LazyEditor = dynamic(import('../components/editor'), { loading, ssr: false })
-const LazyExportMarkdown = dynamic(import('../components/export'), {
-  loading,
-  ssr: false
-})
+const LazyEditor = dynamic(import('../components/editor'), { loading })
 
 type EditorSt = {
   title: string,
@@ -168,11 +165,14 @@ export default class Edit extends Component {
         {autosaving && <Autosaving />}
         <Wrapper sm>
           <Helpers onChange={this.updatePostContent} buttonText="Save">
-            <LazyExportMarkdown
-              editorState={editorState}
-              title={title}
-              date={post.dateAdded}
-            />
+            {editorState !== null && (
+              <ExportMarkdown
+                editorState={editorState}
+                title={title}
+                date={post.dateAdded}
+              />
+            )}
+
             <Privacy
               id={id}
               title={title}
