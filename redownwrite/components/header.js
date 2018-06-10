@@ -107,7 +107,7 @@ class UIHeader extends Component {
           as: '/'
         }
 
-    return !(route === '/login' && !authed) ? (
+    return !(route === '/login') ? (
       <Header data-testid="APP_HEADER">
         <MenuContainer>
           <Logo />

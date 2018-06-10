@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { Subscribe } from 'unstated'
 import { ErrorContainer } from '../utils/containers'
 import Logo from '../components/logo'
+import Toggle from '../components/toggle'
 import loading from '../components/loading'
 import { colors } from '../utils/defaultStyles'
 
@@ -26,6 +27,7 @@ const ToggleLoginButton = styled.button`
   padding-top: 16px;
   padding-bottom: 16px;
   font-family: inherit;
+  font-size: 14px;
   border-bottom-color: ${props => (props.active ? colors.yellow700 : 'transparent')};
   color: ${props => (props.active ? colors.yellow700 : 'inherit')};
 `
@@ -93,60 +95,56 @@ const HomeBanner = styled.div`
   }
 `
 
-const Login = dynamic(import('../components/login-form'), { loading, ssr: false })
-const Register = dynamic(import('../components/register'), { loading, ssr: false })
+const Login = dynamic(import('../components/login-form'), { loading })
+const Register = dynamic(import('../components/register'), { loading })
 
-export default class Home extends Component<
-  { signIn: Function },
-  { loginSelected: boolean }
-> {
-  state = {
-    loginSelected: true
-  }
-
+export default class Home extends Component<{ signIn: Function }, void> {
   render() {
-    const { loginSelected } = this.state
     return (
-      <HomeBannerMarker>
-        <HomeBanner />
-        <HomeContainer>
-          <Intro>
-            <Logo />
-            <IntroTitle data-test="Login Page Container">Downwrite</IntroTitle>
-            <span>A place to write</span>
-          </Intro>
-          <LoginFormWrapper>
-            <ToggleButtonContainer>
-              <ToggleLoginButton
-                active={!loginSelected}
-                onClick={() => this.setState({ loginSelected: false })}>
-                Register
-              </ToggleLoginButton>
-              <ToggleLoginButton
-                active={loginSelected}
-                onClick={() => this.setState({ loginSelected: true })}>
-                Login
-              </ToggleLoginButton>
-            </ToggleButtonContainer>
-            <div>
-              <header style={{ padding: 16 }}>
-                <SelectedTitle>
-                  {loginSelected ? 'Welcome Back!' : 'Sign Up as a New User'}
-                </SelectedTitle>
-              </header>
-              <Subscribe to={[ErrorContainer]}>
-                {err =>
-                  loginSelected ? (
-                    <Login {...this.props} setError={err.setError} />
-                  ) : (
-                    <Register {...this.props} setError={err.setError} />
-                  )
-                }
-              </Subscribe>
-            </div>
-          </LoginFormWrapper>
-        </HomeContainer>
-      </HomeBannerMarker>
+      <Toggle defaultOpen>
+        {(isOpen, toggleInstance, closeInstance, setInstance) => (
+          <HomeBannerMarker>
+            <HomeBanner />
+            <HomeContainer>
+              <Intro>
+                <Logo />
+                <IntroTitle data-test="Login Page Container">Downwrite</IntroTitle>
+                <span>A place to write</span>
+              </Intro>
+              <LoginFormWrapper>
+                <ToggleButtonContainer>
+                  <ToggleLoginButton
+                    active={!isOpen}
+                    onClick={() => setInstance(false)}>
+                    Register
+                  </ToggleLoginButton>
+                  <ToggleLoginButton
+                    active={isOpen}
+                    onClick={() => setInstance(true)}>
+                    Login
+                  </ToggleLoginButton>
+                </ToggleButtonContainer>
+                <div>
+                  <header style={{ padding: 16 }}>
+                    <SelectedTitle>
+                      {isOpen ? 'Welcome Back!' : 'Sign Up as a New User'}
+                    </SelectedTitle>
+                  </header>
+                  <Subscribe to={[ErrorContainer]}>
+                    {err =>
+                      isOpen ? (
+                        <Login {...this.props} setError={err.setError} />
+                      ) : (
+                        <Register {...this.props} setError={err.setError} />
+                      )
+                    }
+                  </Subscribe>
+                </div>
+              </LoginFormWrapper>
+            </HomeContainer>
+          </HomeBannerMarker>
+        )}
+      </Toggle>
     )
   }
 }

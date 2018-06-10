@@ -33,7 +33,11 @@ const cookieOptions = {
   expires: addDays(Date.now(), COOKIE_EXPIRATION)
 }
 
-type AuthProps = { children: ElementType, token: string, authed: boolean }
+type AuthProps = {
+  children: ElementType,
+  token: string,
+  authed: boolean
+}
 
 type AuthState = {
   token: string,
@@ -87,6 +91,7 @@ export default class extends Component<AuthProps, AuthState> {
   componentDidUpdate(prevProps, prevState) {
     const { authed } = this.state
     if (prevState.authed !== authed) {
+      console.log('authed has changed', authed)
       Router.push({ pathname: authed ? '/' : '/login' })
     }
   }
@@ -108,7 +113,7 @@ export default class extends Component<AuthProps, AuthState> {
 
 export const withAuth = (Cx: React.ElementType) => {
   return class extends Component<any, any> {
-    static displayName = `withAuthContainer(${Cx.displayName || Cx.name})`
+    static displayName = `withAuth(${Cx.displayName || Cx.name})`
 
     static getInitialProps = Cx.getInitialProps
 
