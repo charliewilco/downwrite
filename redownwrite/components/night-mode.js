@@ -2,7 +2,7 @@
 
 import React, { Component, type ComponentType } from 'react'
 import styled, { injectGlobal } from 'styled-components'
-import Check from './checkbox'
+import Checkbox from './checkbox'
 import { colors } from '../utils/defaultStyles'
 
 const NIGHT_MODE: string = 'NightMDX'
@@ -104,7 +104,7 @@ export default class extends Component<
       <NightContainer className={night ? 'NightMode' : ''}>
         <NightToggle>
           <NightController>
-            <Check checked={night} onChange={this.onChange} />
+            <Checkbox checked={night} onChange={this.onChange} />
             <NightLabel>Night Mode</NightLabel>
           </NightController>
         </NightToggle>

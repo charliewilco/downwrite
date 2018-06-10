@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import Toolbar from './toolbar'
 import createMarkdownPlugin from 'draft-js-markdown-plugin'
 import createPrismPlugin from 'draft-js-prism-plugin'
-import { fonts } from '../utils/defaultStyles'
+import { fonts, colors } from '../utils/defaultStyles'
 import './draft.css.js'
 import './ganymede.css.js'
 
@@ -17,6 +17,15 @@ const EditorWrapper = styled.div`
   padding-bottom: 16px;
   height: 100%;
   width: 100%;
+
+  select {
+    float: right;
+    border: 0;
+    background: none;
+    color: ${colors.blue700};
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
+      sans-serif;
+  }
 `
 
 const EditorShell = styled.div`
