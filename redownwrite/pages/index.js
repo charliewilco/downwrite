@@ -6,7 +6,6 @@ import orderBy from 'lodash/orderBy'
 import isEmpty from 'lodash/isEmpty'
 import { type ContentState } from 'draft-js'
 import 'universal-fetch'
-import { withAuth } from '../components/auth'
 import DeleteModal from '../components/delete-modal'
 import Cancel from '../components/cancel'
 import Button from '../components/button'
@@ -65,7 +64,7 @@ const DeleteBody = styled.div`
   max-width: 480px;
 `
 
-class Dashboard extends Component<DashboardPr, DashboardState> {
+export default class Dashboard extends Component<DashboardPr, DashboardState> {
   static displayName = 'Dashboard'
 
   static defaultProps = {
@@ -174,5 +173,3 @@ class Dashboard extends Component<DashboardPr, DashboardState> {
     )
   }
 }
-
-export default withAuth(Dashboard)

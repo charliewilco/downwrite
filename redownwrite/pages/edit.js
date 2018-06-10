@@ -3,11 +3,13 @@
 import React, { Component } from 'react'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
+import Router from 'next/router'
 import styled from 'styled-components'
 import { EditorState, convertToRaw, type ContentState } from 'draft-js'
 import isEmpty from 'lodash/isEmpty'
 import debounce from 'lodash/debounce'
 import noop from 'lodash/noop'
+import 'universal-fetch'
 
 import Autosaving from '../components/autosaving-notification'
 import ExportMarkdown from '../components/export'
@@ -143,12 +145,19 @@ export default class Edit extends Component {
     }, 5000)
   }
 
+  componentDidUpdate(nextProps, nextState) {
+    if (nextProps.route !== this.props.route && this.autoSave.flush) {
+      this.autoSave.flush()
+    }
+  }
+
   // NOTE:
   // Removes the no-op error when transitioning Location
   // Will need to account for any type of transitioning or auto updating other posts
-
   componentWillUnmount() {
-    this.autoSave.flush && this.autoSave.flush()
+    if (this.autoSave.flush) {
+      this.autoSave.flush()
+    }
   }
 
   render() {

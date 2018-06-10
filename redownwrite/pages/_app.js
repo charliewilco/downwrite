@@ -28,7 +28,7 @@ export default class MyApp extends App {
         <Provider>
           <AuthProvider token={token} authed={authed}>
             <UIShell route={router.route}>
-              <Cx {...pageProps} />
+              <Cx {...pageProps} route={router.route} />
             </UIShell>
           </AuthProvider>
         </Provider>
