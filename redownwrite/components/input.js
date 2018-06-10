@@ -6,6 +6,7 @@ const StyledInput = styled.input`
   width: 100%;
   appearance: none;
   font-weight: 700;
+  color: inherit;
   font-family: inherit;
   background: none;
   font-size: 125%;

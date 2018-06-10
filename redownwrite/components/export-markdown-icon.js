@@ -7,6 +7,7 @@ const ExportButton = styled.button`
   align-items: center;
   font-family: inherit;
   appearance: none;
+  color: inherit;
   background: none;
 `
 
