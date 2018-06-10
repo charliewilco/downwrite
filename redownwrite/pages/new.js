@@ -1,19 +1,21 @@
 // @flow
 import React, { Fragment, Component } from 'react'
 import styled from 'styled-components'
-import Helmet from 'react-helmet'
-import Loadable from 'react-loadable'
-import { Redirect } from 'react-router-dom'
+import Head from 'next/head'
+import dynamic from 'next/dynamic'
 import { EditorState, convertToRaw } from 'draft-js'
 import uuid from 'uuid/v4'
-import { Loading, Upload, Wrapper, Input, Helpers } from './components'
-import { POST_ENDPOINT } from './utils/urls'
-import { createHeader } from './utils/responseHandler'
+import { withAuth } from '../components/auth'
+import loading from '../components/loading'
+import Wrapper from '../components/wrapper'
+import Input from '../components/input'
+import Upload from '../components/upload'
+import Helpers from '../components/helpers'
+import Editor from '../components/editor'
+import { POST_ENDPOINT } from '../utils/urls'
+import { createHeader } from '../utils/responseHandler'
 
-const LazyEditor = Loadable({
-  loader: () => import('./components/Draft'),
-  loading: Loading
-})
+const LazyEditor = dynamic(import('../components/editor'), { loading, ssr: false })
 
 type NewPostSt = {
   drafts: Array<any>,
@@ -40,7 +42,7 @@ const EditorContainer = styled(Wrapper)`
   padding: 0 4px;
 `
 
-export default class NewEditor extends Component<NewPostProps, NewPostSt> {
+class NewEditor extends Component<NewPostProps, NewPostSt> {
   state = {
     editorState: EditorState.createEmpty(),
     title: '',
@@ -65,7 +67,7 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
     const newPost = await response.json()
 
     if (!newPost.error) {
-      this.setState({ saved: true })
+      Router.push(`/${this.state.id}/edit`)
     } else {
       this.setState({ error: newPost.message })
     }
@@ -92,21 +94,26 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
     return offline ? this.saveLocalDraft(id, post) : this.addNew(post)
   }
 
-  upload = (content: { title: string, editorState: EditorState }) => this.setState(content)
+  upload = (content: { title: string, editorState: EditorState }) =>
+    this.setState(content)
 
   render() {
     const { error, editorState, title, saved, id } = this.state
     const { offline } = this.props
 
-    return saved ? (
-      <Redirect to={`/${id}/edit`} />
-    ) : (
+    return (
       <SpacedWrapper sm>
         <Fragment>
           {offline && <span>You're Offline Right Now</span>}
-          <Helmet title={title.length > 0 ? title : 'New'} titleTemplate="%s | Downwrite" />
+          <Head>
+            <title>{title.length > 0 ? title : 'New'} | Downwrite</title>
+          </Head>
 
-          <Helpers disabled={offline} buttonText="Add" onChange={() => this.addNewPost()} />
+          <Helpers
+            disabled={offline}
+            buttonText="Add"
+            onChange={() => this.addNewPost()}
+          />
           <EditorContainer sm>
             {error.length > 0 && <span className="f6 u-center">{error}</span>}
             <Upload upload={this.upload}>
@@ -126,3 +133,5 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
     )
   }
 }
+
+export default withAuth(NewEditor)

@@ -1,21 +1,21 @@
 // @flow
 import React, { Fragment, Component } from 'react'
-import Helmet from 'react-helmet'
+import Head from 'next/head'
 import styled from 'styled-components'
 import orderBy from 'lodash/orderBy'
 import isEmpty from 'lodash/isEmpty'
 import { type ContentState } from 'draft-js'
-import {
-  Modal,
-  Cancel,
-  Button,
-  PostList,
-  Loading,
-  EmptyPosts,
-  InvalidToken
-} from './components'
-import { createHeader } from './utils/responseHandler'
-import { POST_ENDPOINT } from './utils/urls'
+import 'universal-fetch'
+import { withAuth } from '../components/auth'
+import DeleteModal from '../components/delete-modal'
+import Cancel from '../components/cancel'
+import Button from '../components/button'
+import PostList from '../components/post-list'
+import Loading from '../components/loading'
+import EmptyPosts from '../components/empty-posts'
+import InvalidToken from '../components/invalid-token'
+import { getToken, createHeader } from '../utils/responseHandler'
+import { POST_ENDPOINT } from '../utils/urls'
 
 export type Post = {
   title: string,
@@ -65,25 +65,32 @@ const DeleteBody = styled.div`
   max-width: 480px;
 `
 
-export default class Dashboard extends Component<DashboardPr, DashboardState> {
+class Dashboard extends Component<DashboardPr, DashboardState> {
   static displayName = 'Dashboard'
 
   static defaultProps = {
     posts: []
   }
 
-  static async getInitialData({ query }, token) {
-    const config = createHeader('GET', token)
-    const posts = await fetch(POST_ENDPOINT, config).then(res => res.json())
+  static async getInitialProps({ req, query }) {
+    const { token } = getToken(req, query)
+
+    const config = {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${token}` },
+      mode: 'cors'
+    }
+
+    const entries = await fetch(POST_ENDPOINT, config).then(res => res.json())
 
     return {
-      posts
+      entries
     }
   }
 
   state = {
-    posts: this.props.posts,
-    loaded: this.props.posts.length > 0,
+    posts: this.props.entries,
+    loaded: this.props.entries.length > 0,
     modalOpen: false,
     selectedPost: {},
     error: ''
@@ -129,7 +136,8 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
 
   cancelDelete = () => this.setState({ selectedPost: {}, modalOpen: false })
 
-  confirmDelete = (post: Post | {}) => this.setState({ selectedPost: post, modalOpen: true })
+  confirmDelete = (post: Post | {}) =>
+    this.setState({ selectedPost: post, modalOpen: true })
 
   // TODO: refactor to have selected post, deletion to be handled by a lower level component
   // should be opened at this level and be handed a token and post to delete
@@ -137,23 +145,17 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
     const { modalOpen, loaded, posts, error, selectedPost } = this.state
     return (
       <Fragment>
-        <Helmet title="Downwrite" />
+        <Head>
+          <title>Downwrite</title>
+        </Head>
         {modalOpen &&
           !isEmpty(selectedPost) && (
-            <Modal closeUIModal={this.closeUIModal} sm>
-              <div>
-                <DeleteBody>
-                  <p className="h5">
-                    Are you sure you want to delete <strong>"{selectedPost.title}"</strong>?
-                  </p>
-                </DeleteBody>
-                <hr />
-                <DeleteTray>
-                  <Cancel onClick={this.cancelDelete}>Cancel</Cancel>
-                  <Button onClick={() => this.onDelete(selectedPost)}>Delete</Button>
-                </DeleteTray>
-              </div>
-            </Modal>
+            <DeleteModal
+              title={selectedPost.title}
+              onDelete={() => this.onDelete(selectedPost)}
+              onCancelDelete={this.cancelDelete}
+              closeModal={this.closeUIModal}
+            />
           )}
         <ListContainer>
           {loaded ? (
@@ -172,3 +174,5 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
     )
   }
 }
+
+export default withAuth(Dashboard)

@@ -1,13 +1,13 @@
 // @flow
 
 import React, { Component } from 'react'
-import Helmet from 'react-helmet'
+import dynamic from 'next/dynamic'
 import styled from 'styled-components'
 import { Subscribe } from 'unstated'
-import Loadable from 'react-loadable'
-import { ErrorContainer } from './containers'
-import { Logo, Loading } from './components'
-import { colors } from './utils/defaultStyles'
+import { ErrorContainer } from '../utils/containers'
+import Logo from '../components/logo'
+import loading from '../components/loading'
+import { colors } from '../utils/defaultStyles'
 
 const SelectedTitle = styled.h2`
   margin-bottom: 32px;
@@ -25,6 +25,7 @@ const ToggleLoginButton = styled.button`
   border-bottom-style: solid;
   padding-top: 16px;
   padding-bottom: 16px;
+  font-family: inherit;
   border-bottom-color: ${props => (props.active ? colors.yellow700 : 'transparent')};
   color: ${props => (props.active ? colors.yellow700 : 'inherit')};
 `
@@ -47,7 +48,7 @@ const IntroTitle = styled.h1`
   margin-bottom: 4px;
 `
 
-const Container = styled.main`
+const HomeContainer = styled.main`
   display: flex;
   flex-wrap: wrap;
   width: 95%;
@@ -92,10 +93,13 @@ const HomeBanner = styled.div`
   }
 `
 
-const Login = Loadable({ loader: () => import('./Login'), loading: Loading })
-const Register = Loadable({ loader: () => import('./Register'), loading: Loading })
+const Login = dynamic(import('../components/login-form'), { loading, ssr: false })
+const Register = dynamic(import('../components/register'), { loading, ssr: false })
 
-export default class Home extends Component<{ signIn: Function }, { loginSelected: boolean }> {
+export default class Home extends Component<
+  { signIn: Function },
+  { loginSelected: boolean }
+> {
   state = {
     loginSelected: true
   }
@@ -105,8 +109,7 @@ export default class Home extends Component<{ signIn: Function }, { loginSelecte
     return (
       <HomeBannerMarker>
         <HomeBanner />
-        <Helmet title="Downwrite" />
-        <Container>
+        <HomeContainer>
           <Intro>
             <Logo />
             <IntroTitle data-test="Login Page Container">Downwrite</IntroTitle>
@@ -142,7 +145,7 @@ export default class Home extends Component<{ signIn: Function }, { loginSelecte
               </Subscribe>
             </div>
           </LoginFormWrapper>
-        </Container>
+        </HomeContainer>
       </HomeBannerMarker>
     )
   }
