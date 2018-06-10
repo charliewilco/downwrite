@@ -48,12 +48,13 @@
 	},
 	"devDependencies": {
 		"@zeit/next-css": "^0.2.0",
-		"babel-plugin-transform-flow-strip-types": "^6.22.0",
 		"babel-plugin-styled-components": "^1.5.1",
+		"babel-plugin-transform-flow-strip-types": "^6.22.0",
 		"dom-testing-library": "^2.2.0",
 		"fbjs": "^0.8.16",
 		"jest-fetch-mock": "^1.4.1",
 		"jest-styled-components": "^5.0.1",
+		"next-manifest": "^1.5.0",
 		"react-addons-test-utils": "^15.6.2",
 		"react-test-renderer": "^16.4.0",
 		"react-testing-library": "^3.0.2",
@@ -87,10 +88,10 @@
 			"next.downwrite.us"
 		],
 		"scale": {
-		  "sfo1": {
-		    "min": 1,
-		    "max": 5
-		  }
+			"sfo1": {
+				"min": 1,
+				"max": 5
+			}
 		}
 	},
 	"browserslist": [

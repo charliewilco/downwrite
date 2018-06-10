@@ -1,4 +1,5 @@
 import Document, { Head, Main, NextScript } from 'next/document'
+import Manifest from 'next-manifest/manifest'
 import { ServerStyleSheet } from 'styled-components'
 
 import '../utils/global.css'
@@ -27,6 +28,7 @@ export default class MyDocument extends Document {
             content="initial-scale=1.0, width=device-width"
             key="viewport"
           />
+          <Manifest href="/static/manifest/manifest.json" themeColor="#4FA5C2" />
           <link rel="stylesheet" href="/_next/static/style.css" />
           <link
             rel="preload"
@@ -44,7 +46,6 @@ export default class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
-          <script id="loadcss" />
         </body>
       </html>
     )
