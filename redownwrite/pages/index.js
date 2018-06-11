@@ -34,14 +34,14 @@ export type PostError = {
 type Res = PostError | Array<Post>
 
 type DashboardPr = {
-  posts: Array<any>,
+  entries: Array<Post>,
   user: string,
   token: string,
   closeNav: Function
 }
 
 type DashboardState = {
-  posts: Res,
+  entries: Res,
   loaded: boolean,
   selectedPost: ?Post | {},
   modalOpen: boolean,
@@ -68,7 +68,7 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
   static displayName = 'Dashboard'
 
   static defaultProps = {
-    posts: []
+    entries: []
   }
 
   static async getInitialProps({ req, query }) {
@@ -88,7 +88,7 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
   }
 
   state = {
-    posts: this.props.entries,
+    entries: this.props.entries,
     loaded: this.props.entries.length > 0,
     modalOpen: false,
     selectedPost: {},
@@ -104,7 +104,7 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
 
     if (Array.isArray(posts) || response.ok) {
       return this.setState({
-        posts: orderBy(posts, ['dateAdded'], ['desc']),
+        entries: orderBy(posts, ['dateAdded'], ['desc']),
         selectedPost: {},
         loaded: true,
         modalOpen: !close
@@ -115,7 +115,7 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
   }
 
   componentDidMount() {
-    if (isEmpty(this.state.posts)) {
+    if (isEmpty(this.state.entries)) {
       this.getPosts()
     }
   }
@@ -141,11 +141,11 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
   // TODO: refactor to have selected post, deletion to be handled by a lower level component
   // should be opened at this level and be handed a token and post to delete
   render() {
-    const { modalOpen, loaded, posts, error, selectedPost } = this.state
+    const { modalOpen, loaded, entries, error, selectedPost } = this.state
     return (
       <Fragment>
         <Head>
-          <title>Downwrite</title>
+          <title>{entries.length} Entries | Downwrite</title>
         </Head>
         {modalOpen &&
           !isEmpty(selectedPost) && (
@@ -158,8 +158,8 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
           )}
         <ListContainer>
           {loaded ? (
-            Array.isArray(posts) && posts.length > 0 ? (
-              <PostList onDelete={this.confirmDelete} posts={posts} />
+            Array.isArray(entries) && entries.length > 0 ? (
+              <PostList onDelete={this.confirmDelete} posts={entries} />
             ) : error.length > 0 ? (
               <InvalidToken error={error} />
             ) : (
