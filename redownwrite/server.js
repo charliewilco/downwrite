@@ -2,11 +2,12 @@ const express = require('express')
 const cookiesMiddleware = require('universal-cookie-express')
 const next = require('next')
 const url = require('url')
-
+const { join } = require('path')
 const port = parseInt(process.env.PORT, 10) || 4000
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
+const root = process.cwd()
 
 const { isLoggedIn, isNotLoggedIn } = require('./utils/middleware')
 
@@ -25,6 +26,17 @@ app.prepare().then(() => {
   server.get('/:id/preview', (req, res) =>
     app.render(req, res, '/preview', req.params)
   )
+
+  server.get('/sw.js', (req, res) => {
+    let pathname = join(root, `.next/${req.url}`)
+
+    console.log('attempting /sw.js')
+    console.log(pathname)
+
+    res.setHeader('Service-Worker-Allowed', '/')
+    app.serveStatic(req, res, pathname)
+  })
+
   server.get('*', (req, res) => handle(req, res))
 
   server.listen(port, err => {
