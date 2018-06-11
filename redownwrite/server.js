@@ -19,7 +19,7 @@ app.prepare().then(() => {
   server.get('/', isNotLoggedIn, (req, res) => app.render(req, res, '/', req.params))
 
   server.get('/new', isNotLoggedIn, (req, res) => app.render(req, res, '/new'))
-  server.get('/login', isLoggedIn, (req, res) => app.render(req, res, '/login'))
+  server.get('/login', (req, res) => app.render(req, res, '/login'))
   server.get('/:id/edit', isNotLoggedIn, (req, res) =>
     app.render(req, res, '/edit', req.params)
   )
@@ -28,10 +28,7 @@ app.prepare().then(() => {
   )
 
   server.get('/sw.js', (req, res) => {
-    let pathname = join(root, `.next/${req.url}`)
-
-    console.log('attempting /sw.js')
-    console.log(pathname)
+    let pathname = join(root, `./${req.url}`)
 
     res.setHeader('Service-Worker-Allowed', '/')
     app.serveStatic(req, res, pathname)
