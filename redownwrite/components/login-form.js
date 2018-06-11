@@ -23,10 +23,7 @@ export default class Login extends React.Component<LoginProps, LoginState> {
   }
 
   onSubmit = async (evt: Event) => {
-    const {
-      signIn,
-      errorActions: { setError }
-    } = this.props
+    const { signIn, setError } = this.props
 
     evt.preventDefault()
 

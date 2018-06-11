@@ -59,10 +59,7 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
 
   onSubmit = async (evt: Event) => {
     evt.preventDefault()
-    const {
-      signIn,
-      errorActions: { setError }
-    } = this.props
+    const { signIn, setError } = this.props
 
     const { username, password, email } = this.state
 

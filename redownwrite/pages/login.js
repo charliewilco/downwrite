@@ -98,6 +98,10 @@ const Register = dynamic(import('../components/register'), { loading })
 
 export default class Home extends Component<{ signIn: Function }, void> {
   render() {
+    const {
+      signIn,
+      errorActions: { setError }
+    } = this.props
     return (
       <Toggle defaultOpen>
         {(isOpen, toggleInstance, closeInstance, setInstance) => (
@@ -128,7 +132,11 @@ export default class Home extends Component<{ signIn: Function }, void> {
                       {isOpen ? 'Welcome Back!' : 'Sign Up as a New User'}
                     </SelectedTitle>
                   </header>
-                  {isOpen ? <Login {...this.props} /> : <Register {...this.props} />}
+                  {isOpen ? (
+                    <Login setError={setError} signIn={signIn} />
+                  ) : (
+                    <Register setError={setError} signIn={signIn} />
+                  )}
                 </div>
               </LoginFormWrapper>
             </HomeContainer>
