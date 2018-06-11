@@ -1,10 +1,10 @@
 import App, { Container } from 'next/app'
 import React from 'react'
 import isEmpty from 'lodash/isEmpty'
-import { Provider } from 'unstated'
 import { getToken } from '../utils/responseHandler'
 import UIShell from '../components/ui-shell'
 import AuthProvider, { withAuth } from '../components/auth'
+import { withErrors } from '../components/ui-error'
 
 export default class MyApp extends App {
   static async getInitialProps({ Component, router, ctx }) {
@@ -22,16 +22,14 @@ export default class MyApp extends App {
   render() {
     const { Component, pageProps, token, router } = this.props
     const authed = !isEmpty(token)
-    const Cx = withAuth(Component)
+    const Cx = withAuth(withErrors(Component))
     return (
       <Container>
-        <Provider>
-          <AuthProvider token={token} authed={authed}>
-            <UIShell route={router.route}>
-              <Cx {...pageProps} route={router.route} />
-            </UIShell>
-          </AuthProvider>
-        </Provider>
+        <AuthProvider token={token} authed={authed}>
+          <UIShell route={router.route}>
+            <Cx {...pageProps} route={router.route} />
+          </UIShell>
+        </AuthProvider>
       </Container>
     )
   }

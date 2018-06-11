@@ -57,6 +57,8 @@ const OuterEditor = styled.div`
   padding: 0 8px;
 `
 
+OuterEditor.displayName = 'OuterEditor'
+
 const stateCreator = post => ({
   autosaving: false,
   post,

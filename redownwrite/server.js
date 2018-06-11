@@ -9,7 +9,7 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 const root = process.cwd()
 
-const { isLoggedIn, isNotLoggedIn } = require('./utils/middleware')
+const { isNotLoggedIn } = require('./utils/middleware')
 
 app.prepare().then(() => {
   const server = express()

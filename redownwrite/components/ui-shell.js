@@ -1,12 +1,9 @@
 import React, { Component } from 'react'
-import { Subscribe } from 'unstated'
-import { ErrorContainer } from '../utils/containers'
 import styled, { injectGlobal } from 'styled-components'
-import { withAuth } from './auth'
 import Nav from './nav'
 import Toggle from './toggle'
 import Header from './header'
-import UIFlash from './ui-flash-messages'
+import { withErrors, ErrorContainer, UIErrorBanner } from './ui-error'
 import Null from './null'
 import { colors, fonts } from '../utils/defaultStyles'
 import '../utils/typescale.css.js'
@@ -86,54 +83,43 @@ const AppContainer = styled.div`
 
 AppContainer.displayName = 'AppContainer'
 
-const UIErrorMessage = ({ content, type, onClose }) =>
-  content.length > 0 ? (
-    <UIFlash content={content} type={type} onClose={onClose} />
-  ) : (
-    <Null />
-  )
-
-const UIErrorBanner = () => (
-  <Subscribe to={[ErrorContainer]}>
-    {err => <UIErrorMessage {...err.state} onClose={err.clearFlash} />}
-  </Subscribe>
-)
-
 class UIShell extends Component {
   static displayName = 'UIShell'
 
   render() {
     const { children, authed, token, user, name, route } = this.props
     return (
-      <Toggle>
-        {(navOpen, toggleNav, closeNav) => (
-          <AppContainer>
-            <UIErrorBanner />
-            <ClearFixed>
-              <Container>
-                <Header
-                  route={route}
-                  authed={authed}
-                  open={navOpen}
-                  onClick={toggleNav}
-                />
-                {children}
-              </Container>
-              {navOpen && (
-                <Nav
-                  pathname={route}
-                  closeNav={closeNav}
-                  token={token}
-                  user={user}
-                  username={name}
-                />
-              )}
-            </ClearFixed>
-          </AppContainer>
-        )}
-      </Toggle>
+      <ErrorContainer>
+        <Toggle>
+          {(navOpen, toggleNav, closeNav) => (
+            <AppContainer>
+              <UIErrorBanner />
+              <ClearFixed>
+                <Container>
+                  <Header
+                    route={route}
+                    authed={authed}
+                    open={navOpen}
+                    onClick={toggleNav}
+                  />
+                  {children}
+                </Container>
+                {navOpen && (
+                  <Nav
+                    pathname={route}
+                    closeNav={closeNav}
+                    token={token}
+                    user={user}
+                    username={name}
+                  />
+                )}
+              </ClearFixed>
+            </AppContainer>
+          )}
+        </Toggle>
+      </ErrorContainer>
     )
   }
 }
 
-export default withAuth(UIShell)
+export default withErrors(UIShell)

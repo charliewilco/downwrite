@@ -17,14 +17,4 @@ const isNotLoggedIn = async (req, res, next) => {
   return res.redirect('/login')
 }
 
-const isLoggedIn = async (req, res, next) => {
-  const token = req.universalCookies.get('DW_TOKEN')
-
-  if (!token) {
-    return res.redirect('/')
-  } else {
-    return next()
-  }
-}
-
-module.exports = { verifyJWT, isLoggedIn, isNotLoggedIn }
+module.exports = { verifyJWT, isNotLoggedIn }
