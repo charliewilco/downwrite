@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Card /> matches snapshot 1`] = `
+<div
+  class="sc-bxivhb dtPQok"
+  data-testid="CARD"
+>
+  <header
+    class="sc-EHOje joXwQh"
+  >
+    <h2
+      class="sc-ifAKCX gJykYQ"
+      data-testid="CARD_TITLE"
+    >
+      <a
+        href="/6acebce0-20b6-4015-87fe-951c7bb36481/edit"
+      >
+        Starting Again
+      </a>
+    </h2>
+    <small
+      class="sc-bZQynM dRBtPy"
+    >
+      added 
+      almost NaN years
+      ago
+    </small>
+  </header>
+  <div
+    class="sc-dnqmqq iCsdIC"
+  >
+    <p
+      class="sc-htoDjs bVWJue"
+      data-test="snippet"
+    >
+      What am i really going to do here?
+    </p>
+  </div>
+  <footer
+    class="sc-gzVnrw jkKyhX"
+  >
+    <div
+      data-testid="CARD_EXCERPT"
+    >
+      <a
+        href="/6acebce0-20b6-4015-87fe-951c7bb36481/edit"
+        class="sc-gZMcBi fTZhYM"
+      >
+        Edit
+      </a>
+    </div>
+    <button
+      class="sc-iwsKbI hGypMr"
+      data-testid="CARD_DELETE_BUTTON"
+    >
+      Delete
+    </button>
+  </footer>
+</div>
+`;

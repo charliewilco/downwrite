@@ -50,6 +50,95 @@ In an instance of `componentWillMount` fetch a validation endpoint. If it doesn'
 
 The non-optimal choice is to decode the token on the client, and check the expiration time against the current time.
 
-Either implementation needs to handle the case for when a fetch request errors out. The user needs feedback. 
+Either implementation needs to handle the case for when a fetch request errors out. The user needs feedback.
 
 Or better option just handle the error
+
+
+---
+
+### April 2018
+
+Working through this with backpack I'm noticing that the modules in `redownwrite` aren't accepting babel transform. Wonder if taking it into the redownwrite repository would help. Spectrum does this by parsing them from the root of their monorepo.
+
+Okay that worked.
+
+Need to update client-side config to use `new ReactLoadablePlugin({ filename: './dist/react-loadable' })`
+
+Map through routes next comes from express `req, res, next`
+
+```js
+const active = routes.find(route => matchPath(req.url, route));
+const requestInitialData = active.component.requestInitialData && activeRoute.component.requestInitialData();
+
+Promise.resolve(requestInitialData).then(initialData => {
+  const context = { initialData };
+  const markup = renderToString(
+    <StaticRouter location={req.url} context={context}>
+      <App />
+    </StaticRouter>
+  );
+}).catch(next)
+```
+
+Needs to go in `renderToString()`
+
+```html
+<script>window.__initialData__ = ${serialize(initialData)}</script>
+```
+
+- [ ] Use CORS
+- [x] Remove Loadable and start without it and iterate to it.
+- [x] Use universal-cookie and pass that into the context. `requestInitialData(context: { bearer token })`
+- [ ] work through serialized data to pull from the staticContext
+
+
+```js
+constructor(props) {
+  super(props)
+
+  let repos
+  if (__isBrowser__) {
+    repos = window.__INITIAL_DATA__
+    delete window.__INITIAL_DATA__
+  } else {
+    repos = props.staticContext.data
+  }
+}
+```
+
+The other thing that could be done is the extend Component to a "Container" that preloads the `static method()` from the component and then renders the component or a HOC that can do something similar
+
+FWIW, Suspense will fix this
+
+Need some mechanism for handing initial state and resolving data-fetching `static getInitialProps()` to handle and resolve on the client when routes are transitioned to.
+
+`<RouteContainer />` This grabs a route array from a route config.
+
+```js
+async function loadInitialProps(routes, pathname, ctx) {
+  const promises = []
+  const match = routes.find(route => {
+    const match = matchPath(pathname, route)
+    if (match && route.component && route.component.getInitialProps) {
+      promises.push(
+        route.component.load
+          ? route.component
+              .load() // load it as well
+              .then(() => route.component.getInitialProps({ match, ...ctx }).catch(() => {}))
+          : route.component.getInitialProps({ match, ...ctx }).catch(() => {})
+      )
+    }
+    return match
+  })
+  return {
+    match,
+    data: (await Promise.all(promises))[0]
+  }
+}
+
+class RouteContainer extends Component {}
+
+```
+
+Need to inject default state of auth, which we can check by getting the `cookie`. We can decode it, can pass everything into the constructor of the Container in unstated
