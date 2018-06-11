@@ -23,7 +23,11 @@ declare module 'prettier' {
     [name: PrettierParserName]: (text: string, options?: Object) => AST
   }
 
-  declare type CustomParser = (text: string, parsers: PrettierParser, options: Options) => AST
+  declare type CustomParser = (
+    text: string,
+    parsers: PrettierParser,
+    options: Options
+  ) => AST
 
   declare type Options = {|
     printWidth?: number,
@@ -52,7 +56,11 @@ declare module 'prettier' {
   }
 
   declare type Parser = {
-    parse: (text: string, parsers: { [parserName: string]: Parser }, options: Object) => AST,
+    parse: (
+      text: string,
+      parsers: { [parserName: string]: Parser },
+      options: Object
+    ) => AST,
     astFormat: string
   }
 

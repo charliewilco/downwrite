@@ -65,7 +65,7 @@ export default class extends Component<PreviewProps> {
   }
 
   static defaultProps = {
-    post: {}
+    entry: {}
   }
 
   static displayName = 'Preview'
