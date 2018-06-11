@@ -72,21 +72,24 @@ export default class extends Component<PreviewProps> {
 
   render() {
     const { entry } = this.props
-    return (
+    return !isEmpty(entry.message) && entry.message.length > 0 ? (
+      <Fragment>
+        <Head>
+          <title>{entry.error} | Downwrite</title>
+        </Head>
+        <ErrorState {...entry} />
+      </Fragment>
+    ) : (
       <Fragment>
         <Head>
           <title>{entry.title} | Downwrite</title>
+          <meta description={entry.content.substr(0, 75)} />
           <link
             rel="stylesheet"
             href="https://cloud.typography.com/7107912/7471392/css/fonts.css"
           />
         </Head>
-
-        {!isEmpty(entry.message) && entry.message.length > 0 ? (
-          <ErrorState {...entry} />
-        ) : (
-          <Content {...entry} />
-        )}
+        <Content {...entry} />
       </Fragment>
     )
   }

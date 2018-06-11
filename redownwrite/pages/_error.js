@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react'
+import Head from 'next/head'
 import styled from 'styled-components'
 import Wrapper from '../components/wrapper'
 
@@ -32,6 +33,9 @@ export default class Error extends Component {
     const { statusCode } = this.props
     return (
       <CenteredWrapper>
+        <Head>
+          <title>Not Found | Downwrite</title>
+        </Head>
         <Title>404</Title>
         <StatusCode code={statusCode} />
       </CenteredWrapper>
