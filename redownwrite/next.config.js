@@ -14,28 +14,28 @@ module.exports = withManifest(
     manifest: {
       dir: 'ltr',
       lang: 'en',
-      short_name: 'Downwrite',
-      name: 'Downwrite',
+      short_name: 'DownwriteNext',
+      name: 'Downwrite Next',
       display: 'standalone',
       description: 'A place to write',
       icons: [
         {
-          src: 'icon192.png',
+          src: 'icon192-beta.png',
           sizes: '192x192',
           type: 'image/png'
         },
         {
-          src: 'icon256.png',
+          src: 'icon256-beta.png',
           sizes: '256x256',
           type: 'image/png'
         },
         {
-          src: 'icon512.png',
+          src: 'icon512-beta.png',
           sizes: '512x512',
           type: 'image/png'
         },
         {
-          src: 'icon1024.png',
+          src: 'icon1024-beta.png',
           sizes: '1024x1024',
           type: 'image/png'
         }
@@ -49,6 +49,7 @@ module.exports = withManifest(
       config.plugins.push(
         new SWPrecacheWebpackPlugin({
           verbose: true,
+          filename: 'sw.js',
           staticFileGlobsIgnorePatterns: [/\.next\//],
           runtimeCaching: [
             {

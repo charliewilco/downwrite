@@ -1,5 +1,6 @@
 import Document, { Head, Main, NextScript } from 'next/document'
 import Manifest from 'next-manifest/manifest'
+import SW from '../components/service-worker'
 import { ServerStyleSheet } from 'styled-components'
 
 import '../utils/global.css'
@@ -46,6 +47,7 @@ export default class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          <SW />
         </body>
       </html>
     )
