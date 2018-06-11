@@ -61,10 +61,12 @@ injectGlobal`
   }
 `
 
-export default class extends Component<
+export default class NightModeContainer extends Component<
   { children: ComponentType<any> },
   { night: boolean }
 > {
+  static displayName = 'NightModeContainer'
+
   state = {
     night: false
   }

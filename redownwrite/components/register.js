@@ -59,6 +59,10 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
 
   onSubmit = async (evt: Event) => {
     evt.preventDefault()
+    const {
+      signIn,
+      errorActions: { setError }
+    } = this.props
 
     const { username, password, email } = this.state
 
@@ -78,9 +82,9 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
     } = await response.json()
 
     if (user.userID) {
-      this.props.signIn(user.id_token !== undefined, user.id_token)
+      signIn(user.id_token !== undefined, user.id_token)
     } else {
-      this.props.setError(user.message, 'error')
+      setError(user.message, 'error')
     }
   }
 

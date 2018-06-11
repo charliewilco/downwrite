@@ -23,6 +23,11 @@ export default class Login extends React.Component<LoginProps, LoginState> {
   }
 
   onSubmit = async (evt: Event) => {
+    const {
+      signIn,
+      errorActions: { setError }
+    } = this.props
+
     evt.preventDefault()
 
     const authRequest = await fetch(AUTH_ENDPOINT, {
@@ -36,11 +41,11 @@ export default class Login extends React.Component<LoginProps, LoginState> {
     const auth = await authRequest.json()
 
     if (auth.error) {
-      this.props.setError(auth.message, 'error')
+      setError(auth.message, 'error')
     }
 
     if (auth.token) {
-      this.props.signIn(auth.token !== undefined, auth.token)
+      signIn(auth.token !== undefined, auth.token)
     }
   }
 
