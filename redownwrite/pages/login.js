@@ -3,8 +3,6 @@
 import React, { Component } from 'react'
 import dynamic from 'next/dynamic'
 import styled from 'styled-components'
-import { Subscribe } from 'unstated'
-import { ErrorContainer } from '../utils/containers'
 import Logo from '../components/logo'
 import Toggle from '../components/toggle'
 import loading from '../components/loading'
@@ -130,15 +128,7 @@ export default class Home extends Component<{ signIn: Function }, void> {
                       {isOpen ? 'Welcome Back!' : 'Sign Up as a New User'}
                     </SelectedTitle>
                   </header>
-                  <Subscribe to={[ErrorContainer]}>
-                    {err =>
-                      isOpen ? (
-                        <Login {...this.props} setError={err.setError} />
-                      ) : (
-                        <Register {...this.props} setError={err.setError} />
-                      )
-                    }
-                  </Subscribe>
+                  {isOpen ? <Login {...this.props} /> : <Register {...this.props} />}
                 </div>
               </LoginFormWrapper>
             </HomeContainer>
