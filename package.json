@@ -44,15 +44,13 @@
 		"workspaces": [
 			"redownwrite",
 			"api-downwrite",
-			"graph-downwrite",
 			"union"
 		]
 	},
 	"workspaces": [
 		"redownwrite",
 		"union",
-		"api-downwrite",
-		"graph-downwrite"
+		"api-downwrite"
 	],
 	"license": "MIT"
 }
