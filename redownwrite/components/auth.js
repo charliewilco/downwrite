@@ -91,7 +91,6 @@ export default class extends Component<AuthProps, AuthState> {
   componentDidUpdate(prevProps, prevState) {
     const { authed } = this.state
     if (prevState.authed !== authed) {
-      console.log('authed has changed', authed)
       Router.push({ pathname: authed ? '/' : '/login' })
     }
   }
