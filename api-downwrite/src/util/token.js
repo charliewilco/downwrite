@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken')
 const { key } = require('./config')
 
+// const fs = require('fs')
+// let key = fs.readFileSync('private.key')
+
 module.exports = function(user) {
   let scopes
 

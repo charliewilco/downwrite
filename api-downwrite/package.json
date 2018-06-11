@@ -17,7 +17,7 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.0",
-    "bcrypt": "^1.0.3",
+    "bcrypt": "^2.0.1",
     "boom": "^5.2.0",
     "good": "^7.2.0",
     "good-console": "^6.4.0",
@@ -36,7 +36,10 @@
     "jest": "^22.4.0"
   },
   "nodemonConfig": {
-    "ignore": ["test/*", "src/*"],
+    "ignore": [
+      "test/*",
+      "src/*"
+    ],
     "verbose": true,
     "delay": "2500"
   },

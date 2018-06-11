@@ -16,5 +16,5 @@ build
 npm-debug.log
 package-lock.json
 dist
+private.key
 .next
-afterdown/public/static

@@ -1,0 +1,277 @@
+/*
+SM = @media only screen and (min-width:31.25rem)
+MD = @media only screen and (min-width: 48rem)
+LG = @media only screen and (min-width: 57.75rem)
+*/
+
+:root {
+  /* Colors */
+  --color-1: #4fa5c2; /* Main Color */
+  --color-2: #185a70; /* Darker Main Color */
+  --color-3: #d8eaf1; /* Lighter Main Color */
+  --color-4: #f9fbfc; /* Background */
+  --color-5: #868686; /* Meta Highlighting Color */
+  --color-6: #ffb600;
+  --color-7: #ffc200;
+  --border: 2px solid var(--color-1);
+  --base-border: 0;
+  --base-container: 75rem;
+  --base-form-shadow: 0;
+  --base-form-radius: 0;
+  --base-form-mxw: 100%;
+  --base-spacing: 1rem;
+  --text: #4c4c4c;
+  --primary-font: 'Operator Mono SSm A', 'Operator Mono SSm B',
+    'Input Mono Condensed', Roboto Mono, monospace;
+  --secondary-font: Roboto, Avenir, sans-serif;
+  --ff-mono: 'Input Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo,
+    Courier, monospace;
+}
+
+/*---------Reset----------*/
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  tab-size: 2;
+  box-sizing: border-box;
+  text-size-adjust: 100%;
+  background-color: #f9fbfc;
+  font: 400 100%/1.6 var(--primary-font);
+  color: #4c4c4c;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  background-color: transparent;
+  text-decoration: none;
+  color: #4fa5c2;
+}
+
+a:active,
+a:hover {
+  color: #d8eaf1;
+  outline: 0;
+}
+
+#__next::before {
+  content: '';
+  display: block;
+  height: 4px;
+  width: 100%;
+  background-image: linear-gradient(to right, #2584a5, #4fa5c2);
+}
+
+/* Base Reset */
+
+body,
+#__next {
+  width: 100%;
+  height: 100%;
+}
+
+article,
+aside,
+figcaption,
+figure,
+footer,
+header,
+main,
+menu,
+nav,
+section {
+  display: block;
+}
+
+[hidden],
+template {
+  display: none;
+}
+
+/* Media */
+
+audio,
+canvas,
+progress,
+video {
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+/* Text Selectors */
+
+b,
+strong {
+  font-weight: bold;
+}
+
+i,
+em {
+  font-style: italic;
+}
+
+/* Content */
+
+figure {
+  margin: 0;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  height: var(--base-border);
+}
+
+/* Code Blocks */
+
+pre {
+  overflow: auto;
+}
+
+code,
+pre {
+  font-family: var(--ff-mono);
+  font-size: 100%;
+}
+
+/*----------Table Element----------*/
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+td,
+th {
+  padding: 0;
+}
+
+/*----------Form Reset & Form Default Elements----------*/
+
+/* All Defaults */
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  background: inherit;
+  color: inherit;
+  box-sizing: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  font-size: 100%;
+  margin: 0;
+}
+
+button[disabled],
+input[disabled] {
+  cursor: default;
+}
+
+/* Input Fields */
+
+input[type='search'],
+input[type='text'],
+input[type='number'],
+input[type='email'],
+input[type='password'] {
+  appearance: none;
+}
+
+/* Textareas */
+
+textarea {
+  overflow: auto;
+}
+
+/* Selects */
+
+select {
+  appearance: menulist;
+}
+
+optgroup {
+  font-weight: bold;
+}
+
+/* Buttons & Submissions */
+
+button {
+  overflow: visible;
+}
+
+button,
+input[type='button'],
+input[type='reset'],
+input[type='submit'] {
+  cursor: pointer;
+  appearance: none;
+}
+
+/* Other */
+
+fieldset {
+  border: 1px solid;
+  margin: 0;
+  padding: calc(var(--base-spacing) / 4);
+}
+
+legend {
+  border: 0;
+  padding: 0;
+}
+
+/*----------Headline Elements----------*/
+
+/*
+  NOTE: Originally based off the Golden Ratio and 1rem being modified at each break point
+*/
+
+/* Sizes */
+
+/*----------Body Text Default Elements----------*/
+
+p:not(:last-of-type) {
+  margin-bottom: var(--base-spacing);
+}
+
+/*----------Image Element----------*/
+
+img {
+  max-width: 100%;
+  font-style: italic;
+  vertical-align: middle;
+  border: 0;
+}
+
+svg:not(:root) {
+  overflow: hidden;
+}
+
+svg {
+  fill: currentColor;
+  pointer-events: none;
+  max-height: 100%;
+}
+
+/*----------List & List Item Elements---------*/
+
+li > ul,
+li > ol {
+  margin-bottom: 0;
+}
+
+ul,
+ol {
+  list-style-position: inside;
+}
