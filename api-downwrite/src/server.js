@@ -1,5 +1,5 @@
 // TODO: remove username from boilerplate, or use it, IDK
-
+require('dotenv').config()
 const Hapi = require('hapi')
 const jwt = require('jsonwebtoken')
 const Boom = require('boom')

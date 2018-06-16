@@ -4,17 +4,16 @@
 // TODO: Remove useless non-js imports
 // -- Reset.css
 // -- Moving custom properties to variables
-
-const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
+const withOffline = require('next-offline')
 const withManifest = require('next-manifest')
 const withCSS = require('@zeit/next-css')
 
-module.exports = withManifest(
-  withCSS({
+module.exports = withCSS(
+  withManifest({
     manifest: {
       dir: 'ltr',
       lang: 'en',
-      short_name: 'DownwriteNext',
+      short_name: 'Dwnxt',
       name: 'Downwrite Next',
       display: 'standalone',
       description: 'A place to write',
@@ -44,23 +43,6 @@ module.exports = withManifest(
       background_color: '#4FA5C2',
       start_url: '/?utm_source=homescreen',
       display: 'standalone'
-    },
-    webpack: config => {
-      config.plugins.push(
-        new SWPrecacheWebpackPlugin({
-          verbose: true,
-          filename: 'sw.js',
-          staticFileGlobsIgnorePatterns: [/\.next\//],
-          runtimeCaching: [
-            {
-              handler: 'networkFirst',
-              urlPattern: /^https?.*/
-            }
-          ]
-        })
-      )
-
-      return config
     }
   })
 )

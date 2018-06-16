@@ -1,101 +1,126 @@
 {
-	"name": "redownwrite",
-	"version": "0.1.0",
-	"private": true,
-	"repository": "charlespeters/downwrite",
-	"author": "Charles ⚡ <charlespeters42@gmail.com>",
-	"scripts": {
-		"dev": "node server.js",
-		"build": "next build",
-		"start": "NODE_ENV=production node server.js",
-		"test": "jest test --env=jsdom --verbose --silent",
-		"lint": "yarn eslint ./src/**/*.js",
-		"format": "prettier --write 'src/**/*.js' --parser flow",
-		"deploy": "now && now alias"
-	},
-	"engines": {
-		"node": "~9.11.1"
-	},
-	"dependencies": {
-		"date-fns": "^1.29.0",
-		"draft-js": "^0.10.4",
-		"draft-js-markdown-plugin": "^2.0.0",
-		"draft-js-plugins-editor": "^2.0.8",
-		"draft-js-prism-plugin": "^0.1.3",
-		"express": "^4.16.3",
-		"file-saver": "^1.3.4",
-		"front-matter": "^2.3.0",
-		"immutable": "^3.8.2",
-		"jsonwebtoken": "^8.3.0",
-		"jwt-decode": "^2.2.0",
-		"lodash": "^4.17.10",
-		"markdown-draft-js": "^1.0.1",
-		"next": "^6.0.3",
-		"prismjs": "^1.14.0",
-		"rcolor": "^1.0.1",
-		"react": "^16.4.0",
-		"react-dom": "^16.4.0",
-		"react-dropzone": "^4.2.9",
-		"react-markdown": "^3.3.2",
-		"react-media": "^1.8.0",
-		"react-prism": "^4.3.1",
-		"styled-components": "^3.3.0",
-		"universal-cookie": "^2.1.0",
-		"universal-cookie-express": "^2.1.2",
-		"universal-fetch": "^1.0.0",
-		"uuid": "^3.1.0"
-	},
-	"devDependencies": {
-		"@zeit/next-css": "^0.2.0",
-		"babel-plugin-styled-components": "^1.5.1",
-		"babel-plugin-transform-flow-strip-types": "^6.22.0",
-		"dom-testing-library": "^2.2.0",
-		"fbjs": "^0.8.16",
-		"jest-fetch-mock": "^1.4.1",
-		"jest-styled-components": "^5.0.1",
-		"next-manifest": "^1.5.0",
-		"react-addons-test-utils": "^15.6.2",
-		"react-test-renderer": "^16.4.0",
-		"react-testing-library": "^3.0.2",
-		"sw-precache-webpack-plugin": "^0.11.5"
-	},
-	"babel": {
-		"presets": [
-			"next/babel"
-		],
-		"plugins": [
-			"transform-flow-strip-types",
-			[
-				"styled-components",
-				{
-					"ssr": true,
-					"displayName": true,
-					"preprocess": false
-				}
-			]
-		]
-	},
-	"eslintConfig": {
-		"extends": "react-app"
-	},
-	"eslintIgnore": [
-		"/src/__tests__/*.test.js"
-	],
-	"now": {
-		"name": "next-downwrite",
-		"alias": [
-			"next.downwrite.us"
-		],
-		"scale": {
-			"sfo1": {
-				"min": 1,
-				"max": 5
-			}
-		}
-	},
-	"browserslist": [
-		">0.25%",
-		"not ie 11",
-		"not op_mini all"
-	]
+  "name": "redownwrite",
+  "version": "0.1.0",
+  "private": true,
+  "repository": "charlespeters/downwrite",
+  "author": "Charles ⚡ <charlespeters42@gmail.com>",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js",
+    "test": "jest test --env=jsdom --verbose --silent",
+    "lint": "yarn eslint ./src/**/*.js",
+    "format": "prettier --write 'src/**/*.js' --parser flow",
+    "deploy": "now && now alias"
+  },
+  "engines": {
+    "node": "~9.11.1"
+  },
+  "dependencies": {
+    "@zeit/next-css": "^0.2.0",
+    "babel-plugin-styled-components": "^1.5.1",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "date-fns": "^1.29.0",
+    "draft-js": "^0.10.4",
+    "draft-js-markdown-plugin": "^2.0.0",
+    "draft-js-plugins-editor": "^2.0.8",
+    "draft-js-prism-plugin": "^0.1.3",
+    "express": "^4.16.3",
+    "file-saver": "^1.3.4",
+    "front-matter": "^2.3.0",
+    "immutable": "^3.8.2",
+    "jsonwebtoken": "^8.3.0",
+    "jwt-decode": "^2.2.0",
+    "lodash": "^4.17.10",
+    "markdown-draft-js": "^1.0.1",
+    "next": "^6.0.3",
+    "next-manifest": "^1.5.0",
+    "next-offline": "^2.7.2",
+    "prismjs": "^1.14.0",
+    "rcolor": "^1.0.1",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "react-dropzone": "^4.2.9",
+    "react-markdown": "^3.3.2",
+    "react-media": "^1.8.0",
+    "react-prism": "^4.3.1",
+    "styled-components": "^3.3.0",
+    "sw-precache-webpack-plugin": "^0.11.5",
+    "universal-cookie": "^2.1.0",
+    "universal-cookie-express": "^2.1.2",
+    "universal-fetch": "^1.0.0",
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "babel-plugin-inline-dotenv": "^1.1.2",
+    "dom-testing-library": "^2.2.0",
+    "fbjs": "^0.8.16",
+    "jest-fetch-mock": "^1.4.1",
+    "jest-styled-components": "^5.0.1",
+    "react-addons-test-utils": "^15.6.2",
+    "react-test-renderer": "^16.4.0",
+    "react-testing-library": "^3.0.2"
+  },
+  "babel": {
+    "presets": ["next/babel"],
+    "plugins": [
+      "transform-flow-strip-types",
+      [
+        "styled-components",
+        {
+          "ssr": true,
+          "displayName": true,
+          "preprocess": false
+        }
+      ]
+    ],
+    "env": {
+      "development": {
+        "plugins": [
+          "transform-flow-strip-types",
+          "inline-dotenv",
+          [
+            "styled-components",
+            {
+              "ssr": true,
+              "displayName": true,
+              "preprocess": false
+            }
+          ]
+        ]
+      },
+      "production": {
+        "plugins": [
+          "transform-flow-strip-types",
+          [
+            "styled-components",
+            {
+              "ssr": true,
+              "displayName": false,
+              "preprocess": false
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "eslintIgnore": ["/src/__tests__/*.test.js"],
+  "now": {
+    "name": "next-downwrite",
+    "alias": ["next.downwrite.us"],
+    "env": {
+      "NODE_ENV": "production",
+      "SECRET_KEY": "@dw-key"
+    },
+    "scale": {
+      "sfo1": {
+        "min": 1,
+        "max": 5
+      }
+    }
+  },
+  "browserslist": [">0.25%", "not ie 11", "not op_mini all"]
 }
