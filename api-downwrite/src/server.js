@@ -9,8 +9,6 @@ const { key } = require('./util/config')
 
 const server = new Hapi.Server()
 
-console.log(process.env.SECRET_KEY)
-
 server.connection({
   port: 4411,
   host: 'localhost',

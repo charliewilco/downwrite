@@ -1,7 +1,7 @@
 const express = require('express')
 const cookiesMiddleware = require('universal-cookie-express')
 const next = require('next')
-const url = require('url')
+const { parse } = require('url')
 const { join } = require('path')
 const port = parseInt(process.env.PORT, 10) || 4000
 const dev = process.env.NODE_ENV !== 'production'
@@ -10,8 +10,6 @@ const handle = app.getRequestHandler()
 const root = process.cwd()
 
 const { isNotLoggedIn } = require('./utils/middleware')
-
-console.log(process.env.SECRET_KEY)
 
 app.prepare().then(() => {
   const server = express()
@@ -29,14 +27,18 @@ app.prepare().then(() => {
     app.render(req, res, '/preview', req.params)
   )
 
-  server.get('/sw.js', (req, res) => {
-    let pathname = join(root, `./${req.url}`)
+  server.get('*', (req, res) => {
+    const parsedUrl = parse(req.url, true)
+    const { pathname } = parsedUrl
 
-    res.setHeader('Service-Worker-Allowed', '/')
-    app.serveStatic(req, res, pathname)
+    if (pathname === '/service-worker.js') {
+      const filePath = join(__dirname, '.next', pathname)
+      res.setHeader('Service-Worker-Allowed', '/')
+      app.serveStatic(req, res, filePath)
+    } else {
+      handle(req, res, parsedUrl)
+    }
   })
-
-  server.get('*', (req, res) => handle(req, res))
 
   server.listen(port, err => {
     if (err) throw err
