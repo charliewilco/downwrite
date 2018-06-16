@@ -4,6 +4,6 @@ const address =
     : `127.0.0.1:27017/downwrite`
 
 module.exports = {
-  key: 'b2d45bbb-4277-4397-b8d2-a6c67a8003f5',
+  key: process.env.SECRET_KEY,
   dbCreds: `mongodb://${address}`
 }

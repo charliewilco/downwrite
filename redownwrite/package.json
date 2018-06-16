@@ -86,6 +86,10 @@
 		"alias": [
 			"next.downwrite.us"
 		],
+		"env": {
+			"NODE_ENV": "production",
+			"SECRET_KEY": "@dw-key"
+		},
 		"scale": {
 			"sfo1": {
 				"min": 1,

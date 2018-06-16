@@ -46,7 +46,8 @@
   "now": {
     "alias": "api.downwrite.us",
     "env": {
-      "NODE_ENV": "production"
+      "NODE_ENV": "production",
+      "SECRET_KEY": "@dw-key"
     },
     "dotenv": ".env.production"
   },
