@@ -1,56 +1,43 @@
 {
-	"private": true,
-	"name": "downwrite",
-	"description": "A place to write",
-	"author": "Charles ⚡ <charlespeters42@gmail.com>",
-	"repository": "charlespeters/downwrite",
-	"scripts": {
-		"precommit": "lint-staged",
-		"analysis": "flow check",
-		"dev": "bolt ws dev",
-		"build": "bolt ws build",
-		"go": "bolt ws deploy",
-		"test": "bolt ws test",
-		"clean": "bolt ws exec -- 'rm -rf node_modules'"
-	},
-	"devDependencies": {
-		"bolt": "^0.20.5",
-		"flow-bin": "^0.72.0",
-		"husky": "^0.14.3",
-		"lint-staged": "^7.0.5",
-		"prettier": "^1.12.1"
-	},
-	"prettier": {
-		"printWidth": 85,
-		"parser": "flow",
-		"semi": false,
-		"singleQuote": true,
-		"tabWidth": 2,
-		"useTabs": false,
-		"bracketSpacing": true,
-		"jsxBracketSameLine": true
-	},
-	"lint-staged": {
-		"*.js": [
-			"prettier --parser flow --write",
-			"git add"
-		],
-		"*.css": [
-			"prettier --parser postcss --write",
-			"git add"
-		]
-	},
-	"bolt": {
-		"workspaces": [
-			"redownwrite",
-			"api-downwrite",
-			"union"
-		]
-	},
-	"workspaces": [
-		"redownwrite",
-		"union",
-		"api-downwrite"
-	],
-	"license": "MIT"
+  "private": true,
+  "name": "downwrite",
+  "description": "A place to write",
+  "author": "Charles ⚡ <charlespeters42@gmail.com>",
+  "repository": "charlespeters/downwrite",
+  "scripts": {
+    "precommit": "lint-staged",
+    "analysis": "flow check",
+    "dev": "bolt ws dev",
+    "build": "bolt ws build",
+    "go": "bolt ws deploy",
+    "test": "bolt ws test",
+    "clean": "bolt ws exec -- 'rm -rf node_modules'"
+  },
+  "devDependencies": {
+    "bolt": "^0.20.5",
+    "flow-bin": "^0.72.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.0.5",
+    "prettier": "^1.12.1"
+  },
+  "prettier": {
+    "printWidth": 85,
+    "parser": "flow",
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "useTabs": false,
+    "bracketSpacing": true,
+    "jsxBracketSameLine": true
+  },
+  "lint-staged": {
+    "*.js": ["prettier --parser flow --write", "git add"],
+    "*.css": ["prettier --parser postcss --write", "git add"],
+    "*.json": ["prettier --parser json --write", "git add"]
+  },
+  "bolt": {
+    "workspaces": ["redownwrite", "api-downwrite", "union"]
+  },
+  "workspaces": ["redownwrite", "union", "api-downwrite"],
+  "license": "MIT"
 }

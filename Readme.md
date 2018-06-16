@@ -16,7 +16,7 @@ yarn
 ### Contents
 
 - `services/export-md` Export Markdown - Micro (removed)
-- `redownwrite` Client - React + RR + Draft.js
+- `redownwrite` Client - React + Next.js + Express + Draft.js
 - `api-downwrite` REST API - Hapi.js
 
 #### Upcoming
