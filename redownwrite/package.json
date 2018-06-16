@@ -47,6 +47,7 @@
 	},
 	"devDependencies": {
 		"@zeit/next-css": "^0.2.0",
+		"babel-plugin-inline-dotenv": "^1.1.2",
 		"babel-plugin-styled-components": "^1.5.1",
 		"babel-plugin-transform-flow-strip-types": "^6.22.0",
 		"dom-testing-library": "^2.2.0",
@@ -73,7 +74,30 @@
 					"preprocess": false
 				}
 			]
-		]
+		],
+		"env": {
+			"development": {
+				      "plugins": ["transform-flow-strip-types",
+								"inline-dotenv", [
+								"styled-components",
+								{
+									"ssr": true,
+									"displayName": true,
+									"preprocess": false
+								}
+							]]
+			},
+			"production": {
+				"plugins": ["transform-flow-strip-types", [
+					"styled-components",
+					{
+						"ssr": true,
+						"displayName": false,
+						"preprocess": false
+					}
+				]]
+			}
+		}
 	},
 	"eslintConfig": {
 		"extends": "react-app"

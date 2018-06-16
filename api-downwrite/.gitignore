@@ -1,6 +1,6 @@
-.next
-build
-node_modules
 .env
 .env.production
 .env.development
+
+node_modules
+dist

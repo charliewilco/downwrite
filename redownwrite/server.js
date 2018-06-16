@@ -11,6 +11,8 @@ const root = process.cwd()
 
 const { isNotLoggedIn } = require('./utils/middleware')
 
+console.log(process.env.SECRET_KEY)
+
 app.prepare().then(() => {
   const server = express()
 

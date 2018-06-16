@@ -1,5 +1,5 @@
 // TODO: remove username from boilerplate, or use it, IDK
-
+require('dotenv').config()
 const Hapi = require('hapi')
 const jwt = require('jsonwebtoken')
 const Boom = require('boom')
@@ -8,6 +8,8 @@ const { db } = require('./db')
 const { key } = require('./util/config')
 
 const server = new Hapi.Server()
+
+console.log(process.env.SECRET_KEY)
 
 server.connection({
   port: 4411,

@@ -4,7 +4,6 @@
 // TODO: Remove useless non-js imports
 // -- Reset.css
 // -- Moving custom properties to variables
-
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
 const withManifest = require('next-manifest')
 const withCSS = require('@zeit/next-css')
@@ -14,7 +13,7 @@ module.exports = withManifest(
     manifest: {
       dir: 'ltr',
       lang: 'en',
-      short_name: 'DownwriteNext',
+      short_name: 'Dwnxt',
       name: 'Downwrite Next',
       display: 'standalone',
       description: 'A place to write',
