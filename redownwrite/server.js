@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const express = require('express')
 const cookiesMiddleware = require('universal-cookie-express')
 const next = require('next')
@@ -7,7 +8,6 @@ const port = parseInt(process.env.PORT, 10) || 4000
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
-const root = process.cwd()
 
 const { isNotLoggedIn } = require('./utils/middleware')
 

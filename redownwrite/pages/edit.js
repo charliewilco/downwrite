@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
-import Router from 'next/router'
 import styled from 'styled-components'
 import { EditorState, convertToRaw, type ContentState } from 'draft-js'
 import isEmpty from 'lodash/isEmpty'
@@ -15,16 +14,15 @@ import Autosaving from '../components/autosaving-notification'
 import ExportMarkdown from '../components/export'
 import Input from '../components/input'
 import NightMode from '../components/night-mode'
-import loading from '../components/loading'
+import Loading from '../components/loading'
 import Helpers from '../components/helpers'
 import Wrapper from '../components/wrapper'
 import Privacy from '../components/privacy'
-import WordCounter from '../components/word-count'
 import TimeMarker from '../components/time-marker'
 import { getToken, createHeader, superConverter } from '../utils/responseHandler'
 import { POST_ENDPOINT } from '../utils/urls'
 
-const LazyEditor = dynamic(import('../components/editor'), { loading })
+const LazyEditor = dynamic(import('../components/editor'), { loading: Loading })
 
 type EditorSt = {
   title: string,
@@ -37,17 +35,10 @@ type EditorSt = {
   autosaving: boolean
 }
 
-type Query = {
-  params: {
-    id: string
-  }
-}
-
 type EditorPr = {
   token: string,
   user: string,
   location: Location,
-  match: Match | Query,
   title?: string,
   post?: Object,
   editorState?: EditorState
@@ -78,7 +69,7 @@ const stateCreator = post => ({
 // - EditorState changes
 // - Updating the post on the server
 
-export default class Edit extends Component {
+export default class Edit extends Component<EditorPr, EditorSt> {
   static async getInitialProps({ req, query }) {
     const { id } = query
     const { token } = getToken(req, query)
@@ -147,7 +138,7 @@ export default class Edit extends Component {
     }, 5000)
   }
 
-  componentDidUpdate(nextProps, nextState) {
+  componentDidUpdate(nextProps) {
     if (nextProps.route !== this.props.route && this.autoSave.flush) {
       this.autoSave.flush()
     }

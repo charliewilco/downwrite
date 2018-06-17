@@ -1,6 +1,5 @@
 import Document, { Head, Main, NextScript } from 'next/document'
 import Manifest from 'next-manifest/manifest'
-import SW from '../components/service-worker'
 import { ServerStyleSheet } from 'styled-components'
 
 import '../utils/global.css'
@@ -20,7 +19,7 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <html>
+      <html lang="en">
         <Head>
           <title>Downwrite</title>
           {this.props.styleTags}

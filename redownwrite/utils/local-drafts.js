@@ -3,5 +3,11 @@ export default class LocalDraftContainer {
     drafts: new Set()
   }
 
-  addDraft = x => this.setState({})
+  addDraft = x =>
+    this.setState(prevState => {
+      let drafts = prevState.set(x)
+      return {
+        drafts
+      }
+    })
 }

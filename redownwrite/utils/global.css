@@ -28,29 +28,6 @@ LG = @media only screen and (min-width: 57.75rem)
     Courier, monospace;
 }
 
-/*---------Reset----------*/
-
-*,
-*::before,
-*::after {
-  box-sizing: inherit;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  height: 100%;
-  tab-size: 2;
-  box-sizing: border-box;
-  text-size-adjust: 100%;
-  background-color: #f9fbfc;
-  font: 400 100%/1.6 var(--primary-font);
-  color: #4c4c4c;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: transparent;
-}
-
 a {
   background-color: transparent;
   text-decoration: none;
@@ -63,14 +40,6 @@ a:hover {
   outline: 0;
 }
 
-#__next::before {
-  content: '';
-  display: block;
-  height: 4px;
-  width: 100%;
-  background-image: linear-gradient(to right, #2584a5, #4fa5c2);
-}
-
 /* Base Reset */
 
 body,
@@ -79,16 +48,8 @@ body,
   height: 100%;
 }
 
-article,
-aside,
 figcaption,
-figure,
-footer,
-header,
-main,
-menu,
-nav,
-section {
+figure {
   display: block;
 }
 
@@ -107,28 +68,10 @@ video {
   vertical-align: baseline;
 }
 
-/* Text Selectors */
-
-b,
-strong {
-  font-weight: bold;
-}
-
-i,
-em {
-  font-style: italic;
-}
-
 /* Content */
 
 figure {
   margin: 0;
-}
-
-hr {
-  border: 0;
-  height: 1px;
-  height: var(--base-border);
 }
 
 /* Code Blocks */
@@ -231,14 +174,6 @@ legend {
   padding: 0;
 }
 
-/*----------Headline Elements----------*/
-
-/*
-  NOTE: Originally based off the Golden Ratio and 1rem being modified at each break point
-*/
-
-/* Sizes */
-
 /*----------Body Text Default Elements----------*/
 
 p:not(:last-of-type) {
@@ -262,16 +197,4 @@ svg {
   fill: currentColor;
   pointer-events: none;
   max-height: 100%;
-}
-
-/*----------List & List Item Elements---------*/
-
-li > ul,
-li > ol {
-  margin-bottom: 0;
-}
-
-ul,
-ol {
-  list-style-position: inside;
 }

@@ -26,6 +26,8 @@ const ToggleLoginButton = styled.button`
   padding-bottom: 16px;
   font-family: inherit;
   font-size: 14px;
+  background: inherit;
+  box-sizing: inherit;
   border-bottom-color: ${props => (props.active ? colors.yellow700 : 'transparent')};
   color: ${props => (props.active ? colors.yellow700 : 'inherit')};
 `
