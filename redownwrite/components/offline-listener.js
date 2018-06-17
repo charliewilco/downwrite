@@ -39,6 +39,6 @@ export default class OfflineListener extends Component<
   render() {
     const { offline } = this.state
     const { children } = this.props
-    return <Provider value={{ offline }} children={children} />
+    return <Provider value={{ offline }}>{children}</Provider>
   }
 }

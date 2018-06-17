@@ -35,8 +35,8 @@ const ExportTitle = styled.h3`
 
 const FILE_TYPE = { type: 'text/markdown; charset=UTF-8' }
 
-export default class extends React.Component<ExportPr> {
-  static displayName = 'Export'
+export default class UIMarkdownExport extends React.Component<ExportPr> {
+  static displayName = 'UIMarkdownExport'
 
   export = (cb: Function) => {
     let { title, date, editorState } = this.props
@@ -54,7 +54,7 @@ export default class extends React.Component<ExportPr> {
     draftToMarkdown(content, {
       entityItems: {
         LINK: {
-          open: entity => {
+          open: () => {
             return '['
           },
 
@@ -75,7 +75,7 @@ export default class extends React.Component<ExportPr> {
         FileSaver.saveAs(blob, `${title.replace(/\s+/g, '-').toLowerCase()}.md`)
       }
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
   }
 

@@ -73,7 +73,7 @@ type ModalProps = {
   sm: boolean
 }
 
-export default class extends React.Component<ModalProps, void> {
+export default class UIModal extends React.Component<ModalProps, void> {
   static displayName = 'UIModal'
 
   render() {
@@ -86,7 +86,7 @@ export default class extends React.Component<ModalProps, void> {
               <CloseIcon />
             </ModalCloseButton>
             <ModalBody>
-              <ModalInnerContainer children={children} />
+              <ModalInnerContainer>{children}</ModalInnerContainer>
             </ModalBody>
           </ModalContainer>
         </Overlay>

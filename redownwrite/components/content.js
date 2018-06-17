@@ -43,6 +43,16 @@ const ContentBody = styled(Wrapper)`
     text-align: center;
   }
 
+  li > ul,
+  li > ol {
+    margin-bottom: 0;
+  }
+
+  ul,
+  ol {
+    list-style-position: inside;
+  }
+
   ul,
   ol,
   pre,

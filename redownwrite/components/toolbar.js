@@ -43,7 +43,6 @@ const INLINE_STYLES = [
 
 const FullToolBar = ({
   onToggleBlockType,
-  children,
   onToggleInlineStyle,
   currentStyle,
   blockType
@@ -71,7 +70,6 @@ const FullToolBar = ({
 )
 
 const SelectionToolBar = ({
-  children,
   selectedText,
   currentStyle,
   onToggleInlineStyle,
@@ -101,12 +99,7 @@ const SelectionToolBar = ({
   </ToolbarWrapper>
 )
 
-const Toolbar = ({
-  children,
-  editorState,
-  onToggleBlockType,
-  onToggleInlineStyle
-}) => {
+const Toolbar = ({ editorState, onToggleBlockType, onToggleInlineStyle }) => {
   const selection = editorState.getSelection()
   const anchorKey = selection.getAnchorKey()
   const currentContent = editorState.getCurrentContent()
@@ -130,7 +123,6 @@ const Toolbar = ({
             currentStyle={currentStyle}
             onToggleInlineStyle={onToggleInlineStyle}
             onToggleBlockType={onToggleBlockType}
-            children={children}
           />
         ) : (
           <FullToolBar
@@ -138,7 +130,6 @@ const Toolbar = ({
             currentStyle={currentStyle}
             onToggleInlineStyle={onToggleInlineStyle}
             onToggleBlockType={onToggleBlockType}
-            children={children}
           />
         )
       }

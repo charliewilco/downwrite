@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Avatar from './avatar'
 
-type UserBlock = { username: string }
+type UserBlock = { name: string }
 
 const UserBlockContainer = styled.div`
   text-align: center;
@@ -17,9 +17,9 @@ const DisplayUser = styled.span`
   font-weight: 700;
 `
 
-export default ({ username }: UserBlock) => (
+export default ({ name }: UserBlock) => (
   <UserBlockContainer>
     <Avatar />
-    <DisplayUser>{username}</DisplayUser>
+    <DisplayUser>{name}</DisplayUser>
   </UserBlockContainer>
 )

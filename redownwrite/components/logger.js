@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import React, { Component } from 'react'
 import { __IS_DEV__ } from '../utils/dev'
 import Null from './Null'
@@ -12,17 +14,15 @@ export default class Logger extends Component {
 
   componentDidMount() {
     if (__IS_DEV__) {
-      const { value } = this.props
-      this.logger(value)
+      this.logger(this.props.value)
     }
   }
 
-  componentDidUpdate({ value, clear }) {
+  componentDidUpdate() {
     if (__IS_DEV__) {
-      const { value, clear } = this.props
-      this.logger(value)
+      this.logger(this.props.value)
 
-      clear && clear()
+      this.props.clear && console.clear()
     }
   }
 

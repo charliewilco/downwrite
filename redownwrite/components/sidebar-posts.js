@@ -13,7 +13,7 @@ const Separator = styled.div`
   margin-bottom: 1rem;
 `
 
-export default ({ matches, posts }) => (
+export default ({ posts }) => (
   <Media query={{ minWidth: 500 }}>
     {matches => (
       <Fragment>

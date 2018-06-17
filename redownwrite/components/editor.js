@@ -43,7 +43,7 @@ export default class extends Component {
     plugins: [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()]
   }
 
-  focus = () => this.refs.editor.focus()
+  focus = () => this.editor.focus()
 
   handleKeyCommand = (command, editorState) => {
     const newState = RichUtils.handleKeyCommand(editorState, command)
@@ -92,9 +92,9 @@ export default class extends Component {
           <Toolbar
             editorState={editorState}
             onToggleInlineStyle={this._toggleInlineStyle}
-            onToggleBlockType={this._toggleBlockType}
-            children={children}
-          />
+            onToggleBlockType={this._toggleBlockType}>
+            {children}
+          </Toolbar>
         )}
 
         <EditorWrapper className={className} onClick={this.focus}>
@@ -106,7 +106,7 @@ export default class extends Component {
             onChange={editorState => this.onChange(editorState)}
             onTab={this.onTab}
             placeholder="History will be kind to me for I intend to write it. — Winston Churchill"
-            ref="editor"
+            ref={x => (this.editor = x)}
             spellCheck={true}
             plugins={this.state.plugins}
           />

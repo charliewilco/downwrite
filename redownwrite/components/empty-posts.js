@@ -9,29 +9,33 @@ import Nib from './nib'
 const EmptyBlock = styled.div`
   flex: 1;
 `
-const EmptyBlockRight = EmptyBlock.extend`
-  margin-right: 16;
+const EmptyBlockRight = styled(EmptyBlock)`
+  width: 100%;
+  max-width: 384px;
+  margin-bottom: 32px;
 `
 
-const EmptyBlockLeft = EmptyBlock.extend`
-  margin-left: 16;
+const EmptyBlockLeft = styled(EmptyBlock)`
+  text-align: center;
 `
 
-const SpacedWrapper = Wrapper.extend`
+const SpacedWrapper = styled(Wrapper)`
   padding-top: 64px;
 `
 
 const GetStarted = styled.a`
   color: #757575;
+  cursor: pointer;
 `
 
 const Flex = styled.div`
   display: flex;
-  justify-content: ${({ centered }) => (centered ? 'center' : 'flex-start')};
+  align-items: center;
+  flex-direction: column;
 `
 
 const EmptyTitle = styled.h4`
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 16px;
 `
 
@@ -43,7 +47,7 @@ export const SidebarEmpty = () => (
 
 export default () => (
   <SpacedWrapper>
-    <Flex>
+    <Flex centered>
       <EmptyBlockRight>
         <Nib />
       </EmptyBlockRight>

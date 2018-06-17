@@ -1,5 +1,4 @@
 // @flow
-
 import * as React from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
@@ -49,6 +48,12 @@ export const Padded = styled.div`
   text-align: ${props => props.align};
 `
 
+const LegalLink = () => (
+  <Link href="/legal">
+    <a>legal stuff</a>
+  </Link>
+)
+
 export default class Register extends React.Component<LoginProps, RegisterType> {
   state = {
     username: '',
@@ -57,8 +62,15 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
     checked: false
   }
 
-  onSubmit = async (evt: Event) => {
-    evt.preventDefault()
+  handleSubmit = (event: Event) => {
+    if (event && event.preventDefault) {
+      event.preventDefault()
+    }
+
+    this.onSubmit()
+  }
+
+  onSubmit = async () => {
     const { signIn, setError } = this.props
 
     const { username, password, email } = this.state
@@ -90,7 +102,7 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
   render() {
     const { username, password, email, checked } = this.state
     return (
-      <form onSubmit={this.onSubmit}>
+      <form onSubmit={this.handleSubmit}>
         <Padded>
           <LoginInput
             placeholder="Try for something unique"
@@ -130,10 +142,7 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
             onChange={this.toggleChecked}
           />
           <LegalInfo>
-            I'm agreeing to abide in all the{' '}
-            <Link href="/legal">
-              <a>legal stuff</a>
-            </Link>.
+            I'm agreeing to abide in all the <LegalLink />.
           </LegalInfo>
         </LegalContainer>
 

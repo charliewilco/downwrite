@@ -5,13 +5,15 @@ import Dropzone from 'react-dropzone'
 import { markdownToDraft } from 'markdown-draft-js'
 import { __IS_BROWSER__ } from '../utils/dev'
 
-export default class extends Component {
+export default class Uploader extends Component {
+  static displayName = 'Uploader'
+
   state = { files: [] }
 
   reader = __IS_BROWSER__ && new FileReader()
 
   extractMarkdown = files => {
-    this.reader.onload = e => {
+    this.reader.onload = () => {
       let md = fm(this.reader.result)
 
       return this.props.upload({
@@ -36,9 +38,9 @@ export default class extends Component {
         style={{ border: 0, width: '100%' }}
         onDrop={this.onDrop}
         disableClick
-        disabled={disabled}
-        children={children}
-      />
+        disabled={disabled}>
+        {children}
+      </Dropzone>
     )
   }
 }

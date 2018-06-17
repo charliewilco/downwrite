@@ -7,7 +7,7 @@ const backNForth = keyframes`
   }
 
   50% {
-    transform: translate(calc(512px - 60px), 0);
+    transform: translate(calc(384px - 60px), 0);
   }
 
   100% {
