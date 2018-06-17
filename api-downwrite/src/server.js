@@ -2,10 +2,9 @@
 // TODO: remove username from boilerplate, or use it, IDK
 require('dotenv').config()
 const Hapi = require('hapi')
-const routes = require('./routes')
-const { key } = require('./util/config')
 const Mongoose = require('mongoose')
-const { dbCreds } = require('./util/config')
+const routes = require('./routes')
+const { dbCreds, key } = require('./util/config')
 
 Mongoose.Promise = global.Promise
 Mongoose.connect(dbCreds, { useMongoClient: true })
