@@ -1,5 +1,5 @@
-import Preview from '../Preview'
-import { Content } from '../components/'
+import Preview from '../pages/preview'
+import { Content } from '../components/content'
 import { render, wait } from 'react-testing-library'
 import 'dom-testing-library/extend-expect'
 
@@ -13,7 +13,7 @@ const post = {
 describe('<Preview />', () => {
   it('loads server content', async () => {
     fetch.mockResponse(JSON.stringify(post))
-    let FetchContent = render(<Preview match={{ params: { id: id } }} />)
+    let FetchContent = render(<Preview entry={post} />)
     await wait(() => FetchContent.getByTestId('PREVIEW_ENTRTY_TITLE'))
     expect(FetchContent.container).toBeTruthy()
     expect(FetchContent.getByTestId('PREVIEW_ENTRTY_TITLE')).toHaveTextContent(

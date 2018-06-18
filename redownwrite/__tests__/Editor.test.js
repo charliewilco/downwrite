@@ -1,7 +1,7 @@
 import { render, Simulate, wait } from 'react-testing-library'
 import 'dom-testing-library/extend-expect'
 
-import { DWEditor } from '../components'
+import DWEditor from '../components/editor'
 import { EditorState, convertFromRaw } from 'draft-js'
 import { posts } from './db.json'
 

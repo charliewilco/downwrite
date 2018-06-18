@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Toggle } from '../components'
+import Toggle from '../components/toggle'
 import { render, Simulate } from 'react-testing-library'
 import 'dom-testing-library/extend-expect'
 

@@ -1,4 +1,4 @@
-import { Button } from '../components'
+import Button from '../components/button'
 import { render, Simulate, wait } from 'react-testing-library'
 
 const onClickHandler = jest.fn()
