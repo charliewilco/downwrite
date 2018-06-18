@@ -1,7 +1,6 @@
 // @flow
 import { Component } from 'react'
 import orderBy from 'lodash/orderBy'
-import { withAuth } from './auth'
 import { POST_ENDPOINT } from '../utils/urls'
 import { createHeader } from '../utils/responseHandler'
 import 'universal-fetch'
@@ -17,7 +16,7 @@ type FetchState = {
   posts: Array<*>
 }
 
-class CollectionFetch extends Component<FetchProps, FetchState> {
+export default class CollectionFetch extends Component<FetchProps, FetchState> {
   state = {
     posts: []
   }
@@ -48,5 +47,3 @@ class CollectionFetch extends Component<FetchProps, FetchState> {
     return this.props.children(this.state.posts)
   }
 }
-
-export default withAuth(CollectionFetch)

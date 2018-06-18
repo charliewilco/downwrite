@@ -135,6 +135,7 @@ const SignOut = withAuth(({ signOut, children }) => (
   <NavButton onClick={signOut}>{children}</NavButton>
 ))
 
+const AuthedFetch = withAuth(Fetch)
 const AuthedUserBlock = withAuth(User)
 
 class NavBar extends Component<NavigationProps> {
@@ -147,7 +148,7 @@ class NavBar extends Component<NavigationProps> {
   }
 
   render() {
-    const { closeNav, token } = this.props
+    const { closeNav } = this.props
     return (
       <LockScroll>
         <TouchOutside onChange={closeNav}>
@@ -166,7 +167,7 @@ class NavBar extends Component<NavigationProps> {
               </div>
 
               <PostListContainer>
-                <Fetch token={token}>
+                <AuthedFetch>
                   {posts =>
                     posts.length > 0 ? (
                       <SidebarPosts posts={posts} />
@@ -174,7 +175,7 @@ class NavBar extends Component<NavigationProps> {
                       <SidebarEmpty />
                     )
                   }
-                </Fetch>
+                </AuthedFetch>
               </PostListContainer>
 
               <NavTray>
