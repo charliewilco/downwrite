@@ -59,9 +59,17 @@ const stateCreator = post => ({
   loaded: !isEmpty(post),
   unchanged: false,
   document: null,
-  publicStatus: false,
+  publicStatus: post.public,
   dateModified: new Date()
 })
+
+const stripKeys = (entity, values) => {
+  const newEntity = Object.assign({}, entity)
+
+  values.forEach(val => delete newEntity[val])
+
+  return newEntity
+}
 
 // TODO: Document this
 // - Initial render
@@ -70,6 +78,8 @@ const stateCreator = post => ({
 // - Updating the post on the server
 
 export default class Edit extends Component<EditorPr, EditorSt> {
+  static displayName = 'EntryEdit'
+
   static async getInitialProps({ req, query }) {
     const { id } = query
     const { token } = getToken(req, query)
@@ -109,7 +119,8 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     const { user } = this.props
     const cx: ContentState = editorState.getCurrentContent()
     const content = convertToRaw(cx)
-    const { _id, __v, ...postBody } = post
+
+    const postBody = stripKeys(post, ['_id', '__v'])
 
     const newPost = {
       ...postBody,
