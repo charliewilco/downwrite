@@ -3,6 +3,7 @@ import React, { Fragment, Component } from 'react'
 import styled from 'styled-components'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
+import Router from 'next/router'
 import { EditorState, convertToRaw } from 'draft-js'
 import uuid from 'uuid/v4'
 import 'universal-fetch'
@@ -11,7 +12,6 @@ import Wrapper from '../components/wrapper'
 import Input from '../components/input'
 import Upload from '../components/upload'
 import Helpers from '../components/helpers'
-import Editor from '../components/editor'
 import { POST_ENDPOINT } from '../utils/urls'
 import { createHeader } from '../utils/responseHandler'
 
@@ -98,16 +98,16 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
     this.setState(content)
 
   render() {
-    const { error, editorState, title, saved, id } = this.state
+    const { error, editorState, title } = this.state
     const { offline } = this.props
 
     return (
       <SpacedWrapper sm>
         <Fragment>
-          {offline && <span>You're Offline Right Now</span>}
           <Head>
             <title>{title.length > 0 ? title : 'New'} | Downwrite</title>
           </Head>
+          {offline && <span>You're Offline Right Now</span>}
 
           <Helpers
             disabled={offline}

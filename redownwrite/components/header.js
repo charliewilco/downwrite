@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import Link, { withRouter } from 'next/link'
+import Link from 'next/link'
 import Logo from './logo'
 import Navicon from './navicon'
 import { colors } from '../utils/defaultStyles'
@@ -49,14 +49,17 @@ const HomeButton = styled.a`
 const ToggleButton = styled.button`
   appearance: none;
   outline: none;
-  border: 0px;
+  border: 0;
   font-family: inherit;
   background: none;
+  box-sizing: inherit;
 `
 
 const LoginSignUp = () => (
   <MenuContainer>
-    <NewButton to="/">Login or Sign Up</NewButton>
+    <Link prefetch href="/login">
+      <NewButton>Login or Sign Up</NewButton>
+    </Link>
   </MenuContainer>
 )
 
@@ -93,7 +96,7 @@ const Header = styled.header`
   padding-right: 8px;
 `
 
-class UIHeader extends Component {
+class UIHeader extends Component<HeaderProps, void> {
   render() {
     const { authed, onClick, open, route } = this.props
 

@@ -7,12 +7,11 @@ const StyledPrism = styled(PrismCode)`
   font-family: ${fonts.code};
 `
 
-const CodeBlock = ({ language = 'javascript', value, ...props }) => (
+const CodeBlock = ({ language = 'javascript', value }) => (
   <pre>
-    <StyledPrism
-      className={`language-${language || 'javascript'}`}
-      children={value}
-    />
+    <StyledPrism className={`language-${language || 'javascript'}`}>
+      {value}
+    </StyledPrism>
   </pre>
 )
 

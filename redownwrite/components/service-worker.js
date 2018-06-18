@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
-import { __IS_DEV__ } from '../utils/dev'
+/* eslint-disable no-useless-escape */
 
-const unregisterScript = unregister => `
+import React, { Component } from 'react'
+
+const unregisterScript = () => `
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.ready.then(registration => {
     registration.unregister();

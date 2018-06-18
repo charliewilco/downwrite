@@ -8,6 +8,7 @@ coverage
 
 # production
 build
+.next/
 
 # misc
 .DS_Store
@@ -17,4 +18,3 @@ npm-debug.log
 package-lock.json
 dist
 private.key
-.next

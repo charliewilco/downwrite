@@ -12,8 +12,9 @@ const StyledLoginButton = styled.button`
   font-family: inherit;
   font-weight: 700;
   font-style: italic;
+  box-sizing: inherit;
 
-  :hover {
+  &:hover {
     color: ${colors.yellow500};
   }
 `

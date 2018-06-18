@@ -11,10 +11,18 @@
     "build": "bolt ws build",
     "go": "bolt ws deploy",
     "test": "bolt ws test",
+    "lint": "eslint .",
     "clean": "bolt ws exec -- 'rm -rf node_modules'"
   },
   "devDependencies": {
+    "babel-eslint": "8.2.3",
     "bolt": "^0.20.5",
+    "eslint": "4.2.0",
+    "eslint-plugin-flowtype": "^2.30.1",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jest": "^21.17.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "7.1.0",
     "flow-bin": "^0.72.0",
     "husky": "^0.14.3",
     "lint-staged": "^7.0.5",
@@ -30,6 +38,53 @@
     "bracketSpacing": true,
     "jsxBracketSameLine": true
   },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaVersion": 8,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true,
+        "impliedStrict": true,
+        "experimentalObjectRestSpread": true
+      },
+      "allowImportExportEverywhere": true
+    },
+    "plugins": ["flowtype", "react", "import", "jest", "jsx-a11y"],
+    "extends": [
+      "eslint:recommended",
+      "plugin:flowtype/recommended",
+      "plugin:import/warnings",
+      "plugin:react/recommended",
+      "plugin:jsx-a11y/recommended"
+    ],
+    "env": {
+      "es6": true,
+      "browser": true,
+      "node": true
+    },
+    "settings": {
+      "flowtype": {
+        "onlyFilesWithFlowAnnotation": true
+      }
+    },
+    "rules": {
+      "no-console": ["error", { "allow": ["warn", "error"] }],
+      "react/display-name": 0,
+      "react/react-in-jsx-scope": 0,
+      "react/prop-types": 0,
+      "react/no-unescaped-entities": 0,
+      "jsx-a11y/anchor-is-valid": 0
+    }
+  },
+  "eslintIgnore": [
+    "*.test.js",
+    "node_modules",
+    "union",
+    "dist",
+    ".next",
+    "flow-typed"
+  ],
   "lint-staged": {
     "*.js": ["prettier --parser flow --write", "git add"],
     "*.css": ["prettier --parser postcss --write", "git add"],

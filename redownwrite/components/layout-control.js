@@ -23,16 +23,12 @@ const LayoutTrigger = styled.div`
 
 const LayoutControl = ({ layout, layoutChange }) => (
   <Box>
-    <LayoutTrigger
-      active={layout === 'grid'}
-      onClick={() => layoutChange('grid')}
-      children="Grid"
-    />
-    <LayoutTrigger
-      active={layout === 'list'}
-      onClick={() => layoutChange('list')}
-      children="List"
-    />
+    <LayoutTrigger active={layout === 'grid'} onClick={() => layoutChange('grid')}>
+      Grid
+    </LayoutTrigger>
+    <LayoutTrigger active={layout === 'list'} onClick={() => layoutChange('list')}>
+      List
+    </LayoutTrigger>
   </Box>
 )
 

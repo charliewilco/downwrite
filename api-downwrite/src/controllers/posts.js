@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const Post = require('../models/Post')
 const Boom = require('boom')
 const { draftToMarkdown } = require('markdown-draft-js')
@@ -36,8 +37,13 @@ exports.getSinglePost = (req, reply) => {
 
   Post.findOne({ id: req.params.id }, (err, post) => {
     if (err) {
-      reply(Boom.internal('Internal MongoDB error', error))
+      reply(Boom.internal('Internal MongoDB error', err))
     }
+
+    if (post.author === user) {
+      console.log('Maybe this is true')
+    }
+
     reply(post)
   })
 }
@@ -54,10 +60,11 @@ exports.getMarkdown = (req, reply) => {
       )
     } else {
       return reply({
+        id: req.params.id,
         content: draftToMarkdown(post.content, {
           entityItems: {
             LINK: {
-              open: entity => {
+              open: () => {
                 return '['
               },
 
@@ -92,7 +99,7 @@ exports.createPost = (req, reply) => {
 exports.deletePost = (req, reply) => {
   Post.findOneAndRemove({ id: req.params.id }, (err, post) => {
     if (err) {
-      return reply(Boom.wrap(error, 'Internal MongoDB error'))
+      return reply(Boom.wrap(err, 'Internal MongoDB error'))
     }
     reply(`${post.title} was removed`)
   })

@@ -104,9 +104,6 @@
       }
     }
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "eslintIgnore": ["/src/__tests__/*.test.js"],
   "now": {
     "name": "next-downwrite",

@@ -3,8 +3,7 @@ import styled, { injectGlobal } from 'styled-components'
 import Nav from './nav'
 import Toggle from './toggle'
 import Header from './header'
-import { withErrors, ErrorContainer, UIErrorBanner } from './ui-error'
-import Null from './null'
+import { ErrorContainer, UIErrorBanner } from './ui-error'
 import { colors, fonts } from '../utils/defaultStyles'
 import '../utils/typescale.css.js'
 
@@ -83,11 +82,11 @@ const AppContainer = styled.div`
 
 AppContainer.displayName = 'AppContainer'
 
-class UIShell extends Component {
+export default class UIShell extends Component {
   static displayName = 'UIShell'
 
   render() {
-    const { children, authed, token, user, name, route } = this.props
+    const { children, authed, token, route } = this.props
     return (
       <ErrorContainer>
         <Toggle>
@@ -105,13 +104,7 @@ class UIShell extends Component {
                   {children}
                 </Container>
                 {navOpen && (
-                  <Nav
-                    pathname={route}
-                    closeNav={closeNav}
-                    token={token}
-                    user={user}
-                    username={name}
-                  />
+                  <Nav pathname={route} closeNav={closeNav} token={token} />
                 )}
               </ClearFixed>
             </AppContainer>
@@ -121,5 +114,3 @@ class UIShell extends Component {
     )
   }
 }
-
-export default withErrors(UIShell)

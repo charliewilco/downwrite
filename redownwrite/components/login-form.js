@@ -22,11 +22,16 @@ export default class Login extends React.Component<LoginProps, LoginState> {
     password: ''
   }
 
-  onSubmit = async (evt: Event) => {
+  handleSubmit = (event: Event) => {
+    if (event && event.preventDefault) {
+      event.preventDefault()
+    }
+
+    this.onSubmit()
+  }
+
+  onSubmit = async () => {
     const { signIn, setError } = this.props
-
-    evt.preventDefault()
-
     const authRequest = await fetch(AUTH_ENDPOINT, {
       method: 'POST',
       headers: {
@@ -48,9 +53,10 @@ export default class Login extends React.Component<LoginProps, LoginState> {
 
   render() {
     const { user, password } = this.state
+
     return (
       <Padded>
-        <form onSubmit={this.onSubmit}>
+        <form onSubmit={this.handleSubmit}>
           <LoginInput
             placeholder="user@email.com"
             label="Username or Email"

@@ -7,8 +7,6 @@ import isEmpty from 'lodash/isEmpty'
 import { type ContentState } from 'draft-js'
 import 'universal-fetch'
 import DeleteModal from '../components/delete-modal'
-import Cancel from '../components/cancel'
-import Button from '../components/button'
 import PostList from '../components/post-list'
 import Loading from '../components/loading'
 import EmptyPosts from '../components/empty-posts'
@@ -51,17 +49,6 @@ type DashboardState = {
 const ListContainer = styled.div`
   padding: 16px 8px;
   height: 100%;
-`
-
-const DeleteTray = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`
-
-const DeleteBody = styled.div`
-  margin-bottom: 16px;
-  padding: 16px;
-  max-width: 480px;
 `
 
 export default class Dashboard extends Component<DashboardPr, DashboardState> {
@@ -122,7 +109,7 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
 
   closeUIModal = () => this.setState({ modalOpen: false })
 
-  onDelete = async (post: Post, cb?: Function) => {
+  onDelete = async (post: Post) => {
     const { token } = this.props
     const config = createHeader('DELETE', token)
 

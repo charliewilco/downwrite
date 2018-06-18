@@ -71,6 +71,7 @@ const CardDelete = styled.button`
   background: none;
   appearance: none;
   font-family: inherit;
+  box-sizing: inherit;
   font-size: 12px;
   -webkit-font-smoothing: antialiased;
 `

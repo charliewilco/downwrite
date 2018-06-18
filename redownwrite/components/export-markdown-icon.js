@@ -8,7 +8,9 @@ const ExportButton = styled.button`
   font-family: inherit;
   appearance: none;
   color: inherit;
+  line-height: inherit;
   background: none;
+  box-sizing: inherit;
 `
 
 const ExportIcon = styled.svg`

@@ -30,6 +30,8 @@ const NavButton = styled.button`
   border: 0;
   appearance: none;
   font-family: inherit;
+  box-sizing: inherit;
+  background: inherit;
   & + & {
     margin-bottom: 8px;
   }
@@ -133,6 +135,9 @@ const SignOut = withAuth(({ signOut, children }) => (
   <NavButton onClick={signOut}>{children}</NavButton>
 ))
 
+const AuthedFetch = withAuth(Fetch)
+const AuthedUserBlock = withAuth(User)
+
 class NavBar extends Component<NavigationProps> {
   static displayName = 'NavigationBar'
 
@@ -143,26 +148,26 @@ class NavBar extends Component<NavigationProps> {
   }
 
   render() {
-    const { closeNav, token, username } = this.props
+    const { closeNav } = this.props
     return (
       <LockScroll>
         <TouchOutside onChange={closeNav}>
           <Nav>
             <NavColumn>
               <div>
-                <User username={username} />
+                <AuthedUserBlock />
                 <UserActionContainer>
                   <Link href="/">
                     <NavItem>All Entries</NavItem>
                   </Link>
-                  <Link href="/new">
+                  <Link href="/new" prefetch>
                     <NavItem>Create New Entry</NavItem>
                   </Link>
                 </UserActionContainer>
               </div>
 
               <PostListContainer>
-                <Fetch token={token}>
+                <AuthedFetch>
                   {posts =>
                     posts.length > 0 ? (
                       <SidebarPosts posts={posts} />
@@ -170,7 +175,7 @@ class NavBar extends Component<NavigationProps> {
                       <SidebarEmpty />
                     )
                   }
-                </Fetch>
+                </AuthedFetch>
               </PostListContainer>
 
               <NavTray>

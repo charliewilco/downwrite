@@ -27,12 +27,14 @@ const DeleteWarning = styled.p`
   font-size: 16px;
 `
 
+const quotedTitle = title => `"${title}"`
+
 export default ({ closeModal, title, onCancelDelete, onDelete }) => (
   <Modal closeUIModal={closeModal} sm>
     <Box>
       <DeleteBody>
         <DeleteWarning>
-          Are you sure you want to delete <strong>"{title}"</strong>?
+          Are you sure you want to delete <strong>{quotedTitle(title)}</strong>?
         </DeleteWarning>
       </DeleteBody>
       <DeleteTrayDivider />

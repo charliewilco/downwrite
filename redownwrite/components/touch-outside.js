@@ -9,7 +9,7 @@ const rmListeners = (el: Document, s: string, fn: Function) =>
   s.split(' ').forEach(e => el.removeEventListener(e, fn, false))
 
 // TODO: Should blur child
-export default class extends Component<{
+export default class TouchOutside extends Component<{
   onChange: Function,
   children: Element<any>
 }> {

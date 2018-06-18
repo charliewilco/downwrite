@@ -2,7 +2,6 @@ const { post, user, authUser } = require('./models')
 const PostController = require('./controllers/posts')
 const UserController = require('./controllers/users')
 const { verifyUniqueUser, verifyCredentials } = require('./util/user')
-const createToken = require('./util/token')
 
 const cors = {
   origin: ['*'],

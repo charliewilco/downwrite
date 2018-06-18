@@ -20,14 +20,19 @@ export default class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps, token, router } = this.props
+    const {
+      Component,
+      pageProps,
+      token,
+      router: { route }
+    } = this.props
     const authed = !isEmpty(token)
     const Cx = withAuth(withErrors(Component))
     return (
       <Container>
         <AuthProvider token={token} authed={authed}>
-          <UIShell route={router.route}>
-            <Cx {...pageProps} route={router.route} />
+          <UIShell route={route} token={token}>
+            <Cx {...pageProps} route={route} />
           </UIShell>
         </AuthProvider>
       </Container>

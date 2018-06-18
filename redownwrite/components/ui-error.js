@@ -10,6 +10,9 @@ type ErrorTypes = {
 
 const ErrorStateContext = createContext()
 
+ErrorStateContext.Provider.displayName = 'ErrorStateContext.Provider'
+ErrorStateContext.Consumer.displayName = 'ErrorStateContext.Consumer'
+
 const UIErrorMessage = ({
   errorState: { content, type },
   errorActions: { clearFlashMessage }
@@ -58,7 +61,7 @@ export class ErrorContainer extends Component<void, ErrorTypes> {
 
     return (
       <ErrorStateContext.Provider value={value}>
-        {this.props.children}
+        {children}
       </ErrorStateContext.Provider>
     )
   }
