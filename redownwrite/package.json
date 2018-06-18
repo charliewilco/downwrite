@@ -8,7 +8,7 @@
     "dev": "node server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
-    "test": "jest test --env=jsdom --verbose --silent",
+    "test": "NODE_ENV=test jest --env=jsdom --verbose --silent",
     "lint": "yarn eslint ./src/**/*.js",
     "format": "prettier --write 'src/**/*.js' --parser flow",
     "deploy": "now && now alias"
@@ -52,9 +52,12 @@
     "uuid": "^3.1.0"
   },
   "devDependencies": {
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "^23.0.1",
     "babel-plugin-inline-dotenv": "^1.1.2",
     "dom-testing-library": "^2.2.0",
     "fbjs": "^0.8.16",
+    "jest": "^23.1.0",
     "jest-fetch-mock": "^1.4.1",
     "jest-styled-components": "^5.0.1",
     "react-addons-test-utils": "^15.6.2",
@@ -63,17 +66,6 @@
   },
   "babel": {
     "presets": ["next/babel"],
-    "plugins": [
-      "transform-flow-strip-types",
-      [
-        "styled-components",
-        {
-          "ssr": true,
-          "displayName": true,
-          "preprocess": false
-        }
-      ]
-    ],
     "env": {
       "development": {
         "plugins": [
@@ -89,7 +81,23 @@
           ]
         ]
       },
+      "test": {
+        "presets": [["next/babel", { "preset-env": { "modules": "commonjs" } }]],
+        "plugins": [
+          "transform-flow-strip-types",
+          [
+            "styled-components",
+            {
+              "ssr": true,
+              "displayName": true,
+              "preprocess": false
+            }
+          ]
+        ]
+      },
       "production": {
+        "presets": ["next/babel"],
+
         "plugins": [
           "transform-flow-strip-types",
           [
@@ -104,6 +112,28 @@
       }
     }
   },
+  "jest": {
+    "collectCoverageFrom": ["/**/*.{js,jsx,mjs}"],
+    "setupTestFrameworkScriptFile": "<rootDir>/__tests__/config/setupTests.js",
+    "testPathIgnorePatterns": [
+      "<rootDir>/.next/",
+      "<rootDir>/node_modules/",
+      "<rootDir>/__tests__/config/"
+    ],
+    "testMatch": [
+      "<rootDir>/**/__tests__/**/*.{js,jsx,mjs}",
+      "<rootDir>/**/?(*.)(spec|test).{js,jsx,mjs}"
+    ],
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
+      "^(?!.*\\.(js|jsx|mjs|css|json)$)":
+        "<rootDir>/__tests__/config/fileTransform.js"
+    },
+    "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"],
+    "moduleFileExtensions": ["web.js", "mjs", "js", "json", "web.jsx", "jsx", "node"]
+  },
+
   "eslintIgnore": ["/src/__tests__/*.test.js"],
   "now": {
     "name": "next-downwrite",

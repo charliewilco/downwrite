@@ -1,12 +1,11 @@
 import { render, Simulate, wait } from 'react-testing-library'
 import 'dom-testing-library/extend-expect'
+import { withRouter } from 'next/router'
 
-import { Header } from '../components'
+import Header from '../components/header'
 
 let { getByTestId, container } = render(
-  <MemoryRouter>
-    <Header authed name="Downwrite" />
-  </MemoryRouter>
+  withRouter(props => <Header authed name="Downwrite" {...props} />)
 )
 
 describe('Header Component', () => {

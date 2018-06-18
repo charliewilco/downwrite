@@ -1,6 +1,8 @@
 import { render, Simulate, wait } from 'react-testing-library'
+import { withRouter } from 'next/router'
+
 import 'dom-testing-library/extend-expect'
-import Dashboard from '../Dashboard'
+import Dashboard from '../pages/index'
 import { posts } from './db.json'
 
 describe('<Dashboard /> post lists', () => {
@@ -10,7 +12,11 @@ describe('<Dashboard /> post lists', () => {
 
   it('shows list of Cards if authed and has posts', async () => {
     fetch.mockResponseOnce(JSON.stringify(posts))
-    let { container, getByTestId } = render(<Dashboard user={user} token={token} />)
+    let { container, getByTestId } = render(
+      withRouter(props => (
+        <Dashboard user={user} token={token} entries={posts} {...props} />
+      ))
+    )
     await wait(() => getByTestId('CARD'))
 
     expect(container).toBeTruthy()
