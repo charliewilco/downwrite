@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import format from 'date-fns/format'
 import Markdown from 'react-markdown'
 import 'prismjs'
-import NightMode from './night-mode'
 import CodeBlock from './code-block'
 import Wrapper from './wrapper'
 import './ganymede.css'
@@ -102,23 +101,21 @@ const ContentBody = styled(Wrapper)`
 `
 
 export default ({ title, dateAdded, content }) => (
-  <NightMode>
-    <WrapperExtended>
-      <article className="harticle">
-        <ContentHeader>
-          <h1 data-testid="PREVIEW_ENTRTY_TITLE" className="u-center f4">
-            {title}
-          </h1>
-          {dateAdded && (
-            <ContentTime data-testid="PREVIEW_ENTRTY_META" dateTime={dateAdded}>
-              {format(dateAdded, 'DD MMMM YYYY')}
-            </ContentTime>
-          )}
-        </ContentHeader>
-        <ContentBody data-testid="PREVIEW_ENTRTY_BODY" className="PreviewBody">
-          <Markdown source={content} renderers={{ code: CodeBlock }} />
-        </ContentBody>
-      </article>
-    </WrapperExtended>
-  </NightMode>
+  <WrapperExtended>
+    <article className="harticle">
+      <ContentHeader>
+        <h1 data-testid="PREVIEW_ENTRTY_TITLE" className="u-center f4">
+          {title}
+        </h1>
+        {dateAdded && (
+          <ContentTime data-testid="PREVIEW_ENTRTY_META" dateTime={dateAdded}>
+            {format(dateAdded, 'DD MMMM YYYY')}
+          </ContentTime>
+        )}
+      </ContentHeader>
+      <ContentBody data-testid="PREVIEW_ENTRTY_BODY" className="PreviewBody">
+        <Markdown source={content} renderers={{ code: CodeBlock }} />
+      </ContentBody>
+    </article>
+  </WrapperExtended>
 )

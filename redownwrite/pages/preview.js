@@ -6,6 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 import 'universal-fetch'
 import Content from '../components/content'
 import NotFound from '../components/not-found'
+import NightMode from '../components/night-mode'
 import { PREVIEW_ENDPOINT } from '../utils/urls'
 
 import type { Post } from './'
@@ -53,22 +54,26 @@ export default class PreviewEntry extends Component<PreviewProps, void> {
 
   render() {
     const { entry } = this.props
-    return !isEmpty(entry.message) && entry.message.length > 0 ? (
-      <Fragment>
-        <Head>
-          <title>{entry.error} | Downwrite</title>
-        </Head>
-        <NotFound {...entry} />
-      </Fragment>
-    ) : (
-      <Fragment>
-        <Head>
-          <title>{entry.title} | Downwrite</title>
-          <meta description={entry.content.substr(0, 75)} />
-          <link rel="stylesheet" href={PREVIEW_FONTS} />
-        </Head>
-        <Content {...entry} />
-      </Fragment>
+    return (
+      <NightMode>
+        {!isEmpty(entry.message) && entry.message.length > 0 ? (
+          <Fragment>
+            <Head>
+              <title>{entry.error} | Downwrite</title>
+            </Head>
+            <NotFound {...entry} />
+          </Fragment>
+        ) : (
+          <Fragment>
+            <Head>
+              <title>{entry.title} | Downwrite</title>
+              <meta description={entry.content.substr(0, 75)} />
+              <link rel="stylesheet" href={PREVIEW_FONTS} />
+            </Head>
+            <Content {...entry} />
+          </Fragment>
+        )}
+      </NightMode>
     )
   }
 }

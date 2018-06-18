@@ -1,11 +1,13 @@
 // @flow
-import React, { Fragment } from 'react'
+import React from 'react'
 import Head from 'next/head'
 import Content from '../components/content'
+import NightMode from '../components/night-mode'
+
 import { legalInfo } from '../utils/legalBoilerplate'
 
 export default () => (
-  <Fragment>
+  <NightMode>
     <Head>
       <title>Legal Nonsense</title>
       <link
@@ -14,5 +16,5 @@ export default () => (
       />
     </Head>
     <Content content={legalInfo} />
-  </Fragment>
+  </NightMode>
 )
