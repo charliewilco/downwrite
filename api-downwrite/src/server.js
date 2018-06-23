@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 // TODO: remove username from boilerplate, or use it, IDK
-require('dotenv').config()
 const Hapi = require('hapi')
 const Mongoose = require('mongoose')
 const routes = require('./routes')
