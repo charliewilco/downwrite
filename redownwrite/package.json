@@ -17,6 +17,7 @@
     "node": "~9.11.1"
   },
   "dependencies": {
+    "@charliewilco/sanitize-object": "^1.0.0",
     "@zeit/next-css": "^0.2.0",
     "babel-plugin-styled-components": "^1.5.1",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
@@ -82,7 +83,16 @@
         ]
       },
       "test": {
-        "presets": [["next/babel", { "preset-env": { "modules": "commonjs" } }]],
+        "presets": [
+          [
+            "next/babel",
+            {
+              "preset-env": {
+                "modules": "commonjs"
+              }
+            }
+          ]
+        ],
         "plugins": [
           "transform-flow-strip-types",
           [
@@ -97,7 +107,6 @@
       },
       "production": {
         "presets": ["next/babel"],
-
         "plugins": [
           "transform-flow-strip-types",
           [
@@ -133,11 +142,10 @@
     "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"],
     "moduleFileExtensions": ["web.js", "mjs", "js", "json", "web.jsx", "jsx", "node"]
   },
-
   "eslintIgnore": ["/src/__tests__/*.test.js"],
   "now": {
     "name": "next-downwrite",
-    "alias": ["next.downwrite.us"],
+    "alias": ["beta.downwrite.us"],
     "env": {
       "NODE_ENV": "production",
       "SECRET_KEY": "@dw-key"

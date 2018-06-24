@@ -8,6 +8,7 @@ import { EditorState, convertToRaw, type ContentState } from 'draft-js'
 import isEmpty from 'lodash/isEmpty'
 import debounce from 'lodash/debounce'
 import noop from 'lodash/noop'
+import sanitize from '@charliewilco/sanitize-object'
 import 'universal-fetch'
 
 import Autosaving from '../components/autosaving-notification'
@@ -63,14 +64,6 @@ const stateCreator = post => ({
   dateModified: new Date()
 })
 
-const stripKeys = (entity, values) => {
-  const newEntity = Object.assign({}, entity)
-
-  values.forEach(val => delete newEntity[val])
-
-  return newEntity
-}
-
 // TODO: Document this
 // - Initial render
 // - Rerouting
@@ -120,7 +113,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     const cx: ContentState = editorState.getCurrentContent()
     const content = convertToRaw(cx)
 
-    const postBody = stripKeys(post, ['_id', '__v'])
+    const postBody = sanitize(post, ['_id', '__v'])
 
     const newPost = {
       ...postBody,
