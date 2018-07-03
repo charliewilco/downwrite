@@ -51,7 +51,7 @@ const EMPTY_USER = {
   name: null
 }
 
-export default class extends Component<AuthProps, AuthState> {
+export default class AuthMegaProvider extends Component<AuthProps, AuthState> {
   constructor(props: AuthProps) {
     super(props)
 

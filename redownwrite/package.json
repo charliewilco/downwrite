@@ -14,7 +14,7 @@
     "deploy": "now && now alias"
   },
   "engines": {
-    "node": "~9.11.1"
+    "node": "~10.4.1"
   },
   "dependencies": {
     "@zeit/next-css": "^0.2.0",
@@ -54,7 +54,6 @@
   "devDependencies": {
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.0.1",
-    "babel-plugin-inline-dotenv": "^1.1.2",
     "dom-testing-library": "^2.2.0",
     "fbjs": "^0.8.16",
     "jest": "^23.1.0",
@@ -70,7 +69,6 @@
       "development": {
         "plugins": [
           "transform-flow-strip-types",
-          "inline-dotenv",
           [
             "styled-components",
             {
@@ -133,7 +131,6 @@
     "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"],
     "moduleFileExtensions": ["web.js", "mjs", "js", "json", "web.jsx", "jsx", "node"]
   },
-
   "eslintIgnore": ["/src/__tests__/*.test.js"],
   "now": {
     "name": "next-downwrite",

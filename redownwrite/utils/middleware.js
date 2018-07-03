@@ -1,7 +1,10 @@
 const jwt = require('jsonwebtoken')
 
-const verifyJWT = token =>
-  new Promise(resolve => resolve(jwt.verify(token, process.env.SECRET_KEY)))
+let key = process.env.SECRET_KEY || '1a9876c4-6642-4b83-838a-9e84ee00646a'
+
+console.log(key)
+
+const verifyJWT = token => new Promise(resolve => resolve(jwt.verify(token, key)))
 
 const isNotLoggedIn = async (req, res, next) => {
   const token = req.universalCookies.get('DW_TOKEN')
