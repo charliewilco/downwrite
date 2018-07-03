@@ -14,7 +14,7 @@
     "deploy": "now && now alias"
   },
   "engines": {
-    "node": "~9.11.1"
+    "node": "~10.4.1"
   },
   "dependencies": {
     "@zeit/next-css": "^0.2.0",
