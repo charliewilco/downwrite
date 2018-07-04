@@ -3,7 +3,7 @@ import React from 'react'
 import isEmpty from 'lodash/isEmpty'
 import { getToken } from '../utils/responseHandler'
 import UIShell from '../components/ui-shell'
-import AuthProvider, { withAuth } from '../components/auth'
+import AuthMegaProvider, { withAuth } from '../components/auth'
 import { withErrors } from '../components/ui-error'
 
 export default class MyApp extends App {
@@ -30,11 +30,11 @@ export default class MyApp extends App {
     const Cx = withAuth(withErrors(Component))
     return (
       <Container>
-        <AuthProvider token={token} authed={authed}>
+        <AuthMegaProvider token={token} authed={authed}>
           <UIShell route={route} token={token}>
             <Cx {...pageProps} route={route} />
           </UIShell>
-        </AuthProvider>
+        </AuthMegaProvider>
       </Container>
     )
   }
