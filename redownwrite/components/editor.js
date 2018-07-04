@@ -1,4 +1,3 @@
-import { RichUtils } from 'draft-js'
 import Editor from 'draft-js-plugins-editor'
 import React, { Component } from 'react'
 import Prism from 'prismjs'
@@ -45,15 +44,6 @@ export default class extends Component {
 
   focus = () => this.editor.focus()
 
-  handleKeyCommand = (command, editorState) => {
-    const newState = RichUtils.handleKeyCommand(editorState, command)
-    if (newState) {
-      this.onChange(newState)
-      return true
-    }
-    return false
-  }
-
   onChange = editorState => this.props.onChange(editorState)
 
   onTab = e => {
@@ -70,7 +60,7 @@ export default class extends Component {
   }
 
   render() {
-    const { editorState, children } = this.props
+    const { editorState, handleKeyCommand, keyBindingFn, children } = this.props
     // If the user changes block type before entering any text, we can
     // either style the placeholder or hide it. Let's just hide it now.
     let className = 'RichEditor-editor'
@@ -99,10 +89,11 @@ export default class extends Component {
 
         <EditorWrapper className={className} onClick={this.focus}>
           <Editor
+            handleKeyCommand={handleKeyCommand}
+            keyBindingFn={keyBindingFn}
             blockStyleFn={getBlockStyle}
             customStyleMap={styleMap}
             editorState={editorState}
-            handleKeyCommand={this.handleKeyCommand}
             onChange={editorState => this.onChange(editorState)}
             onTab={this.onTab}
             placeholder="History will be kind to me for I intend to write it. — Winston Churchill"
