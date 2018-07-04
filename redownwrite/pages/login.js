@@ -112,17 +112,19 @@ export default class Home extends Component<{ signIn: Function }, void> {
             <HomeContainer>
               <Intro>
                 <Logo />
-                <IntroTitle data-test="Login Page Container">Downwrite</IntroTitle>
+                <IntroTitle data-testid="LOGIN_PAGE_CONTAINER">Downwrite</IntroTitle>
                 <span>A place to write</span>
               </Intro>
               <LoginFormWrapper>
                 <ToggleButtonContainer>
                   <ToggleLoginButton
+                    data-testid="LOGIN_BUTTON_REGISTER"
                     active={!isOpen}
                     onClick={() => setInstance(false)}>
                     Register
                   </ToggleLoginButton>
                   <ToggleLoginButton
+                    data-testid="LOGIN_BUTTON_SIGNIN"
                     active={isOpen}
                     onClick={() => setInstance(true)}>
                     Login

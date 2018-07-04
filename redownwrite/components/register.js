@@ -102,7 +102,7 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
   render() {
     const { username, password, email, checked } = this.state
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={this.handleSubmit} data-testid="LOGIN_FORM_REGISTER">
         <Padded>
           <LoginInput
             placeholder="Try for something unique"

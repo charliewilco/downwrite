@@ -56,7 +56,7 @@ export default class Login extends React.Component<LoginProps, LoginState> {
 
     return (
       <Padded>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} data-testid="LOGIN_FORM_SIGNUP">
           <LoginInput
             placeholder="user@email.com"
             label="Username or Email"

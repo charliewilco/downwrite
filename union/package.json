@@ -2,7 +2,17 @@
   "name": "union",
   "private": true,
   "version": "0.1.0",
+  "scripts": { "test": "DEBUG=true jest --env=node --verbose" },
   "dependencies": {
-    "puppeteer": "^1.2.0"
+    "babel-jest": "^23.2.0",
+    "jest": "^23.2.0",
+    "puppeteer": "^1.5.0"
+  },
+  "jest": {
+    "testMatch": ["<rootDir>/**/?(*.)(test|spec).{js,jsx,mjs}"],
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    },
+    "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"]
   }
 }
