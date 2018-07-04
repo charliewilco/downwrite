@@ -688,6 +688,10 @@
     lodash "^4.17.5"
     to-fast-properties "^2.0.0"
 
+"@charliewilco/sanitize-object@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/@charliewilco/sanitize-object/-/sanitize-object-1.0.0.tgz#2e4065a6ebb09110d1191e4394f30dafaf296ba0"
+
 "@pwa/manifest-icons@^2.1.0":
   version "2.1.0"
   resolved "https://registry.npmjs.org/@pwa/manifest-icons/-/manifest-icons-2.1.0.tgz#a1eada0e3d34c03ef2acbbf0cfe16241f909d0ba"
