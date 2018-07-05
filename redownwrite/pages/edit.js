@@ -4,7 +4,14 @@ import React, { Component } from 'react'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import styled from 'styled-components'
-import { EditorState, convertToRaw, type ContentState } from 'draft-js'
+import {
+  RichUtils,
+  EditorState,
+  convertToRaw,
+  getDefaultKeyBinding,
+  KeyBindingUtil,
+  type ContentState
+} from 'draft-js'
 import isEmpty from 'lodash/isEmpty'
 import debounce from 'lodash/debounce'
 import noop from 'lodash/noop'
@@ -51,7 +58,7 @@ const OuterEditor = styled.div`
 
 OuterEditor.displayName = 'OuterEditor'
 
-const stateCreator = post => ({
+const stateCreator: EditorState = post => ({
   autosaving: false,
   post,
   title: post.title || '',
@@ -63,6 +70,16 @@ const stateCreator = post => ({
   publicStatus: post.public,
   dateModified: new Date()
 })
+
+const EDITOR_COMMAND = 'myeditor-save'
+
+function saveKeyListener(e: SyntheticKeyboardEvent): string {
+  if (e.keyCode === 83 /* `S` key */ && KeyBindingUtil.hasCommandModifier(e)) {
+    console.log(e.keyCode + 'called a save')
+    return EDITOR_COMMAND
+  }
+  return getDefaultKeyBinding(e)
+}
 
 // TODO: Document this
 // - Initial render
@@ -104,10 +121,12 @@ export default class Edit extends Component<EditorPr, EditorSt> {
 
     const payload = { ...config, body: JSON.stringify(body) }
 
+    console.log('saving!')
+
     return fetch(`${POST_ENDPOINT}/${id}`, payload)
   }
 
-  updatePostContent = () => {
+  updatePostContent = ({ autosave }) => {
     let { post, title, dateModified, editorState, publicStatus } = this.state
     const { user } = this.props
     const cx: ContentState = editorState.getCurrentContent()
@@ -126,7 +145,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
 
     const updater = () => this.setState({ autosaving: false })
 
-    return this.updatePost(newPost).then(() => setTimeout(updater, 3500))
+    return this.updatePost(newPost).then(() => autosave && setTimeout(updater, 7500))
   }
 
   updateTitle = ({ target }: SyntheticInputEvent<*>) =>
@@ -135,11 +154,26 @@ export default class Edit extends Component<EditorPr, EditorSt> {
   updatePrivacy = () =>
     this.setState(({ publicStatus }) => ({ publicStatus: !publicStatus }))
 
+  handleKeyCommand = (command: string, editorState) => {
+    const newState = RichUtils.handleKeyCommand(editorState, command)
+    if (newState) {
+      this.onChange(newState)
+      return 'handled'
+    }
+
+    if (command === EDITOR_COMMAND) {
+      this.updatePostContent({ autosave: false })
+      return 'handled'
+    }
+
+    return 'not-handled'
+  }
+
   componentDidMount() {
     // NOTE: Maybe this should only handle the fetch and not update the UI
-    this.autoSave = debounce(() => {
-      this.setState({ autosaving: true }, this.updatePostContent)
-    }, 5000)
+    // this.autoSave = debounce(() => {
+    //   this.setState({ autosaving: true }, this.updatePostContent({ autosave: true }))
+    // }, 9000)
   }
 
   componentDidUpdate(nextProps) {
@@ -192,7 +226,12 @@ export default class Edit extends Component<EditorPr, EditorSt> {
             <Input value={title} onChange={this.updateTitle} />
             <div>
               {editorState !== null && (
-                <LazyEditor editorState={editorState} onChange={this.onChange} />
+                <LazyEditor
+                  editorState={editorState}
+                  handleKeyCommand={this.handleKeyCommand}
+                  keyBindingFn={saveKeyListener}
+                  onChange={this.onChange}
+                />
               )}
             </div>
           </OuterEditor>

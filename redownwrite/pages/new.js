@@ -4,7 +4,13 @@ import styled from 'styled-components'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import Router from 'next/router'
-import { EditorState, convertToRaw } from 'draft-js'
+import {
+  RichUtils,
+  EditorState,
+  convertToRaw,
+  getDefaultKeyBinding,
+  KeyBindingUtil
+} from 'draft-js'
 import uuid from 'uuid/v4'
 import 'universal-fetch'
 import loading from '../components/loading'
@@ -41,6 +47,15 @@ const SpacedWrapper = styled(Wrapper)`
 const EditorContainer = styled(Wrapper)`
   padding: 0 4px;
 `
+
+const EDITOR_COMMAND = 'create-new-post'
+
+function saveKeyListener(e: SyntheticKeyboardEvent): string {
+  if (e.keyCode === 83 /* `S` key */ && KeyBindingUtil.hasCommandModifier(e)) {
+    return EDITOR_COMMAND
+  }
+  return getDefaultKeyBinding(e)
+}
 
 export default class NewEditor extends Component<NewPostProps, NewPostSt> {
   state = {
@@ -94,6 +109,23 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
     return offline ? this.saveLocalDraft(id, post) : this.addNew(post)
   }
 
+  onChange = editorState => this.setState({ editorState })
+
+  handleKeyCommand = (command: string, editorState) => {
+    const newState = RichUtils.handleKeyCommand(editorState, command)
+    if (newState) {
+      this.onChange(newState)
+      return 'handled'
+    }
+
+    if (command === EDITOR_COMMAND) {
+      this.addNewPost()
+      return 'handled'
+    }
+
+    return 'not-handled'
+  }
+
   upload = (content: { title: string, editorState: EditorState }) =>
     this.setState(content)
 
@@ -109,11 +141,7 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
           </Head>
           {offline && <span>You're Offline Right Now</span>}
 
-          <Helpers
-            disabled={offline}
-            buttonText="Add"
-            onChange={() => this.addNewPost()}
-          />
+          <Helpers disabled={offline} buttonText="Add" onChange={this.addNewPost} />
           <EditorContainer sm>
             {error.length > 0 && <span className="f6 u-center">{error}</span>}
             <Upload upload={this.upload}>
@@ -123,8 +151,10 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
                 onChange={e => this.setState({ title: e.target.value })}
               />
               <LazyEditor
+                handleKeyCommand={this.handleKeyCommand}
+                keyBindingFn={saveKeyListener}
                 editorState={editorState}
-                onChange={editorState => this.setState({ editorState })}
+                onChange={this.onChange}
               />
             </Upload>
           </EditorContainer>
