@@ -12,10 +12,12 @@ const auth = {
   strategy: 'jwt'
 }
 
+const urlCreator = path => `/api${path}`
+
 module.exports = [
   {
     method: 'GET',
-    path: '/posts',
+    path: urlCreator('/posts'),
     handler: PostController.getPosts,
     config: {
       cors,
@@ -24,7 +26,7 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/posts',
+    path: urlCreator('/posts'),
     handler: PostController.createPost,
     config: {
       validate: {
@@ -36,7 +38,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/posts/{id}',
+    path: urlCreator('/posts/{id}'),
     handler: PostController.getSinglePost,
     config: {
       cors,
@@ -45,7 +47,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/posts/preview/{id}',
+    path: urlCreator('/posts/preview/{id}'),
     handler: PostController.getMarkdown,
     config: {
       cors
@@ -53,7 +55,7 @@ module.exports = [
   },
   {
     method: 'DELETE',
-    path: '/posts/{id}',
+    path: urlCreator('/posts/{id}'),
     handler: PostController.deletePost,
     config: {
       cors,
@@ -62,7 +64,7 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/posts/{id}',
+    path: urlCreator('/posts/{id}'),
     handler: PostController.updatePost,
     config: {
       validate: {
@@ -74,7 +76,7 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/users',
+    path: urlCreator('/users'),
     handler: UserController.createUser,
     config: {
       pre: [{ method: verifyUniqueUser }],
@@ -86,7 +88,7 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/users/authenticate',
+    path: urlCreator('/users/authenticate'),
     config: {
       pre: [
         {

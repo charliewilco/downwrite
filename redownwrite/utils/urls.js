@@ -1,8 +1,7 @@
 // @flow
-
 import { __IS_DEV__ } from './dev'
 
-const DEV_URL = 'http://localhost:4411'
+const DEV_URL = 'http://localhost:3000/api'
 const PROD_URL = 'https://api.downwrite.us'
 
 export const POST_ENDPOINT: string = __IS_DEV__
