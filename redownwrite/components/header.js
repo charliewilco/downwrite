@@ -12,6 +12,7 @@ type HeaderProps = {
   authed: boolean,
   name: string,
   onClick: Function,
+  route: string,
   open: boolean
 }
 
@@ -25,7 +26,7 @@ const NewButton = styled.a`
   cursor: pointer;
   line-height: 1.1;
   opacity: 0.5;
-  color: ${colors.text};
+  color: ${props => props.theme.color} !important;
   margin-right: 32px;
 
   &:hover,
@@ -87,7 +88,7 @@ const HeaderTitle = styled.h1`
 
 const Header = styled.header`
   display: flex;
-  background: ${colors.gray100};
+  background: ${props => props.theme.background};
   align-items: center;
   justify-content: space-between;
   padding-top: 16px;

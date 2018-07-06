@@ -1,16 +1,15 @@
 // @flow
 
-import React, { Component, type ComponentType } from 'react'
-import styled, { injectGlobal } from 'styled-components'
+import React, { Component, createContext, type ComponentType } from 'react'
+import styled, { ThemeProvider, injectGlobal } from 'styled-components'
 import Checkbox from './checkbox'
-import { colors } from '../utils/defaultStyles'
+import { colors, nightTheme, dayTheme } from '../utils/defaultStyles'
 
 const NIGHT_MODE: string = 'NightMDX'
 
 const NightContainer = styled.div`
   padding-top: 16px;
   position: relative;
-  min-height: 100%;
 `
 
 const NightToggle = styled.div`
@@ -32,26 +31,14 @@ const NightController = styled.label`
   display: flex;
   align-items: center;
 `
-// TODO: use color variables from utils instead of code smells and custom properties
+
+const NightModeContext = createContext()
 
 injectGlobal`
-  .NightMDX {
-    background: ${colors.blue900};
-  }
-
-  .NightMode a {
-    color: ${colors.yellow700};
-  }
+  .NightMDX {}
 
   .NightMode {
     transition: background 375ms ease-in-out;
-    background: ${colors.blue900};
-    color: ${colors.gray100};
-  }
-
-  .NightMode svg:not(.Chevron),
-  .NightMode svg:not(.Chevron) path {
-    fill: ${colors.blue400} !important;
   }
 
   .NightMode .PreviewBody blockquote,
@@ -60,6 +47,22 @@ injectGlobal`
     color: ${colors.blue100} !important;
   }
 `
+
+export const NightModeTrigger = ({ children }) => (
+  <NightModeContext.Consumer>
+    {context => (
+      <NightContainer className={context.night ? 'NightMode' : ''}>
+        <NightToggle>
+          <NightController>
+            <Checkbox checked={context.night} onChange={context.action.onChange} />
+            <NightLabel>Night Mode</NightLabel>
+          </NightController>
+        </NightToggle>
+        {children}
+      </NightContainer>
+    )}
+  </NightModeContext.Consumer>
+)
 
 export default class NightModeContainer extends Component<
   { children: ComponentType<any> },
@@ -104,15 +107,12 @@ export default class NightModeContainer extends Component<
     const { night } = this.state
     const { children } = this.props
     return (
-      <NightContainer className={night ? 'NightMode' : ''}>
-        <NightToggle>
-          <NightController>
-            <Checkbox checked={night} onChange={this.onChange} />
-            <NightLabel>Night Mode</NightLabel>
-          </NightController>
-        </NightToggle>
-        <div>{children}</div>
-      </NightContainer>
+      <NightModeContext.Provider
+        value={{ night, action: { onChange: this.onChange } }}>
+        <ThemeProvider theme={night ? nightTheme : dayTheme}>
+          {children}
+        </ThemeProvider>
+      </NightModeContext.Provider>
     )
   }
 }

@@ -26,6 +26,24 @@ export const colors = {
 //   defaultYellow: '#ffc200'
 // }
 
+export const nightTheme = {
+  background: '#093F5D',
+  color: '#f9fbfc',
+  link: '#ffb600',
+  linkHover: colors.blue100,
+  cardBackground: '#356F90',
+  cardTrayBackground: 'rgba(219, 220, 221, 0.24)'
+}
+
+export const dayTheme = {
+  background: '#f9fbfc',
+  color: '#4C4C4C',
+  link: '#4fa5c2',
+  linkHover: colors.blue100,
+  cardBackground: '#FFFFFF',
+  cardTrayBackground: 'rgba(101, 163, 191, 0.125)'
+}
+
 export const fonts = {
   monospace: `'Operator Mono SSm A', 'Operator Mono SSm B', 'Input Mono Condensed',
     Roboto Mono, monospace`,

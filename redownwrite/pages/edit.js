@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import React, { Fragment, Component } from 'react'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import styled from 'styled-components'
@@ -21,7 +21,6 @@ import 'universal-fetch'
 import Autosaving from '../components/autosaving-notification'
 import ExportMarkdown from '../components/export'
 import Input from '../components/input'
-import NightMode from '../components/night-mode'
 import Loading from '../components/loading'
 import Helpers from '../components/helpers'
 import Wrapper from '../components/wrapper'
@@ -198,7 +197,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     return !loaded ? (
       <Loading />
     ) : (
-      <NightMode>
+      <Fragment>
         <Head>
           <title>{title} | Downwrite</title>
         </Head>
@@ -236,7 +235,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
             </div>
           </OuterEditor>
         </Wrapper>
-      </NightMode>
+      </Fragment>
     )
   }
 }

@@ -3,6 +3,8 @@ import styled, { injectGlobal } from 'styled-components'
 import Nav from './nav'
 import Toggle from './toggle'
 import Header from './header'
+import NightMode, { NightModeTrigger } from './night-mode'
+import UIContainer from './ui-container'
 import { ErrorContainer, UIErrorBanner } from './ui-error'
 import { colors, fonts } from '../utils/defaultStyles'
 import '../utils/typescale.css.js'
@@ -29,36 +31,35 @@ injectGlobal`
     -webkit-tap-highlight-color: transparent;
   }
 
-  a {
-    background-color: transparent;
-    text-decoration: none;
-    color: ${colors.blue400};
+  body {
+    display: flex;
+    flex-direction: column;
   }
 
-  a:active,
-  a:hover {
-    color: ${colors.blue100};
-    outline: 0;
-  }
 
   body,
   #__next {
     width: 100%;
-    height: 100%;
+  }
+
+
+  #__next {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
 
   #__next::before {
-  content: '';
-  display: block;
-  height: 4px;
-  width: 100%;
-  background-image: linear-gradient(to right, #2584a5, #4fa5c2);
-}
+    content: '';
+    display: block;
+    height: 4px;
+    width: 100%;
+    background-image: linear-gradient(to right, #2584a5, #4fa5c2);
+  }
 `
 
 const ClearFixed = styled.div`
-  height: 100%;
   &::after {
     content: '';
     display: table;
@@ -74,11 +75,7 @@ const Container = styled.div`
 
 Container.displayName = 'Container'
 
-const AppContainer = styled.div`
-  min-height: 100%;
-  display: block;
-  font-family: ${fonts.monospace};
-`
+const AppContainer = styled.div``
 
 AppContainer.displayName = 'AppContainer'
 
@@ -88,29 +85,33 @@ export default class UIShell extends Component {
   render() {
     const { children, authed, token, route } = this.props
     return (
-      <ErrorContainer>
-        <Toggle>
-          {(navOpen, toggleNav, closeNav) => (
-            <AppContainer>
-              <UIErrorBanner />
-              <ClearFixed>
-                <Container>
-                  <Header
-                    route={route}
-                    authed={authed}
-                    open={navOpen}
-                    onClick={toggleNav}
-                  />
-                  {children}
-                </Container>
-                {navOpen && (
-                  <Nav pathname={route} closeNav={closeNav} token={token} />
-                )}
-              </ClearFixed>
-            </AppContainer>
-          )}
-        </Toggle>
-      </ErrorContainer>
+      <NightMode>
+        <UIContainer>
+          <ErrorContainer>
+            <Toggle>
+              {(navOpen, toggleNav, closeNav) => (
+                <NightModeTrigger>
+                  <UIErrorBanner />
+                  <ClearFixed>
+                    <Container>
+                      <Header
+                        route={route}
+                        authed={authed}
+                        open={navOpen}
+                        onClick={toggleNav}
+                      />
+                      {children}
+                    </Container>
+                    {navOpen && (
+                      <Nav pathname={route} closeNav={closeNav} token={token} />
+                    )}
+                  </ClearFixed>
+                </NightModeTrigger>
+              )}
+            </Toggle>
+          </ErrorContainer>
+        </UIContainer>
+      </NightMode>
     )
   }
 }
