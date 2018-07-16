@@ -40,6 +40,7 @@ injectGlobal`
   body,
   #__next {
     width: 100%;
+    height: 100%;
   }
 
 
@@ -47,15 +48,7 @@ injectGlobal`
     flex: 1;
     display: flex;
     flex-direction: column;
-  }
-
-
-  #__next::before {
-    content: '';
-    display: block;
-    height: 4px;
-    width: 100%;
-    background-image: linear-gradient(to right, #2584a5, #4fa5c2);
+    position: relative;
   }
 `
 

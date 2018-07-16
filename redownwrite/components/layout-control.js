@@ -3,10 +3,11 @@ import styled, { css } from 'styled-components'
 import { colors } from '../utils/defaultStyles'
 
 const activeMarker = css`
+  opacity: 1;
   &:after {
     content: '';
     display: block;
-    border-bottom: 5px solid ${colors.blue400};
+    border-bottom: 5px solid ${props => props.theme.link || colors.blue400};
   }
 `
 
@@ -17,7 +18,8 @@ const LayoutTrigger = styled.div`
   margin: 8px;
   cursor: pointer;
   font-size: 12px;
-  color: ${props => (props.active ? '#383838' : '#989898')};
+  color: inherit;
+  opacity: 0.5;
   ${props => props.active && activeMarker};
 `
 

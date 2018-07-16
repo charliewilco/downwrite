@@ -29,19 +29,25 @@ export const colors = {
 export const nightTheme = {
   background: '#093F5D',
   color: '#f9fbfc',
+  border: '#dbdcdd',
   link: '#ffb600',
   linkHover: colors.blue100,
+  meta: colors.gray100,
   cardBackground: '#356F90',
-  cardTrayBackground: 'rgba(219, 220, 221, 0.24)'
+  cardTrayBackground: 'rgba(219, 220, 221, 0.24)',
+  headerLogoLink: '#EDF0F1'
 }
 
 export const dayTheme = {
   background: '#f9fbfc',
   color: '#4C4C4C',
+  border: '#dbdcdd',
   link: '#4fa5c2',
   linkHover: colors.blue100,
+  meta: colors.gray300,
   cardBackground: '#FFFFFF',
-  cardTrayBackground: 'rgba(101, 163, 191, 0.125)'
+  cardTrayBackground: 'rgba(101, 163, 191, 0.125)',
+  headerLogoLink: '#4fa5c2'
 }
 
 export const fonts = {

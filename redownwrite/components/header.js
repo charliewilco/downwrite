@@ -41,7 +41,7 @@ const HomeButton = styled.a`
   display: block;
   cursor: pointer;
   transition: color 375ms ease-in-out;
-
+  color: ${props => props.theme.headerLogoLink} !important;
   &:hover {
     color: ${colors.blue700};
   }
@@ -70,7 +70,7 @@ const Menu = ({ toggleNav, open }) => (
       <NewButton>New</NewButton>
     </Link>
     <ToggleButton onClick={toggleNav}>
-      <Navicon colors={colors} open={open} />
+      <Navicon open={open} />
     </ToggleButton>
   </MenuContainer>
 )
@@ -95,6 +95,10 @@ const Header = styled.header`
   padding-bottom: 16px;
   padding-left: 8px;
   padding-right: 8px;
+
+  .Navicon #NaviconGroup {
+    fill: ${props => props.theme.color};
+  }
 `
 
 class UIHeader extends Component<HeaderProps, void> {

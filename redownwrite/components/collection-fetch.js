@@ -28,11 +28,11 @@ export default class CollectionFetch extends Component<FetchProps, FetchState> {
 
   getPosts = async () => {
     const { token } = this.props
-
+    let posts = []
     const config = createHeader('GET', token)
     const req = await fetch(this.props.endpoint, config)
 
-    const posts = orderBy(await req.json(), ['dateAdded'], ['desc'])
+    posts = orderBy(await req.json(), ['dateAdded'], ['desc'])
 
     this.setState({ posts })
   }
