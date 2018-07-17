@@ -29,19 +29,6 @@ export const createHeader: Function = (
   }
 }
 
-export const getInitialContext = staticContext => {
-  let initialData
-
-  if (__IS_BROWSER__) {
-    initialData = window.__initialData__
-    delete window.__initialData__
-  } else {
-    initialData = staticContext.initialData
-  }
-
-  return initialData
-}
-
 export const getToken = (req, query) => {
   const ck = new Cookies()
 

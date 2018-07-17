@@ -27,14 +27,11 @@ export default class CollectionFetch extends Component<FetchProps, FetchState> {
   }
 
   getPosts = async () => {
-    const { token } = this.props
-    let posts = []
+    const { endpoint, token } = this.props
     const config = createHeader('GET', token)
-    const req = await fetch(this.props.endpoint, config)
+    const posts = await fetch(endpoint, config).then(res => res.json())
 
-    posts = orderBy(await req.json(), ['dateAdded'], ['desc'])
-
-    this.setState({ posts })
+    this.setState({ posts: orderBy(posts, ['dateAdded'], ['desc']) || [] })
   }
 
   // TODO: Move this to React Suspense!!

@@ -33,6 +33,7 @@ export const nightTheme = {
   link: '#ffb600',
   linkHover: colors.blue100,
   meta: colors.gray100,
+  inputBorder: 'rgba(219, 220, 221, 0.24)',
   cardBackground: '#356F90',
   cardTrayBackground: 'rgba(219, 220, 221, 0.24)',
   headerLogoLink: '#EDF0F1'
@@ -45,6 +46,7 @@ export const dayTheme = {
   link: '#4fa5c2',
   linkHover: colors.blue100,
   meta: colors.gray300,
+  inputBorder: 'rgba(0, 0, 0, 0.125)',
   cardBackground: '#FFFFFF',
   cardTrayBackground: 'rgba(101, 163, 191, 0.125)',
   headerLogoLink: '#4fa5c2'

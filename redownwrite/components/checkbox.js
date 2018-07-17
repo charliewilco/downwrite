@@ -19,7 +19,7 @@ const Inp = styled.input`
   border: ${props => (props.checked ? 1 : 0)}px;
   background: ${props =>
     props.checked
-      ? `${colors.blue400} url("${base64Icon}") no-repeat center center`
+      ? `${props.theme.link} url("${base64Icon}") no-repeat center center`
       : '#D0D0D0'};
 `
 
