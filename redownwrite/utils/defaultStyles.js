@@ -27,29 +27,33 @@ export const colors = {
 // }
 
 export const nightTheme = {
+  night: true,
   background: '#093F5D',
-  color: '#f9fbfc',
-  border: '#dbdcdd',
-  link: '#ffb600',
+  color: colors.gray100,
+  border: colors.gray200,
+  link: colors.yellow700,
   linkHover: colors.blue100,
   meta: colors.gray100,
   inputBorder: 'rgba(219, 220, 221, 0.24)',
   cardBackground: '#356F90',
   cardTrayBackground: 'rgba(219, 220, 221, 0.24)',
-  headerLogoLink: '#EDF0F1'
+  headerLogoLink: '#EDF0F1',
+  landingPageTitle: colors.blue400
 }
 
 export const dayTheme = {
-  background: '#f9fbfc',
-  color: '#4C4C4C',
-  border: '#dbdcdd',
-  link: '#4fa5c2',
+  night: false,
+  background: colors.gray100,
+  color: colors.text,
+  border: colors.gray200,
+  link: colors.blue400,
   linkHover: colors.blue100,
   meta: colors.gray300,
   inputBorder: 'rgba(0, 0, 0, 0.125)',
   cardBackground: '#FFFFFF',
   cardTrayBackground: 'rgba(101, 163, 191, 0.125)',
-  headerLogoLink: '#4fa5c2'
+  headerLogoLink: colors.blue400,
+  landingPageTitle: colors.blue900
 }
 
 export const fonts = {
