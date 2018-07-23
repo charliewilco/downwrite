@@ -1,15 +1,14 @@
 import styled from 'styled-components'
 import { colors } from '../utils/defaultStyles'
 
-const Intro = styled.div`
-  color: ${colors.blue700};
+const Intro = styled.article`
   text-align: center;
   margin-bottom: 64px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  max-width: 320px;
+  max-width: 33rem;
   width: 100%;
 
   @media (min-width: 57.75rem) {
@@ -19,15 +18,15 @@ const Intro = styled.div`
 
 const IntroContent = styled.div`
   padding: 32px 0 0;
+  margin-bottom: 64px;
   z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  color: ${props => props.theme.landingPageTitle};
 
   span {
     font-weight: 700;
+    color: ${props => props.theme.landingPageTitle};
   }
 `
 
@@ -43,12 +42,13 @@ const StyledImage = styled.img.attrs({ src: '/static/landing.png' })`
   z-index: 0;
 `
 
-export default () => (
+export default ({ children }) => (
   <Intro>
     <StyledImage />
     <IntroContent>
       <IntroTitle data-testid="Login Page Container">Downwrite</IntroTitle>
       <span>A place to write</span>
     </IntroContent>
+    {children}
   </Intro>
 )

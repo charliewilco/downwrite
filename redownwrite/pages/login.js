@@ -2,7 +2,6 @@
 import React, { Component } from 'react'
 import dynamic from 'next/dynamic'
 import styled from 'styled-components'
-import Toggle from '../components/toggle'
 import LoginContainer from '../components/login-container'
 import Landing from '../components/landing'
 import Features from '../components/landing-features'
@@ -15,7 +14,7 @@ const HomeContainer = styled.main`
   justify-content: center;
   align-items: center;
   width: 95%;
-  padding: 16px 8px;
+  padding: 0 8px 64px;
   margin: 0 auto;
 `
 
@@ -35,8 +34,9 @@ export default class Home extends Component<HomeProps, void> {
     } = this.props
     return (
       <HomeContainer>
-        <Landing />
-        <Features />
+        <Landing>
+          <Features />
+        </Landing>
         <LoginContainer>
           {isLoginOpen =>
             isLoginOpen ? (
