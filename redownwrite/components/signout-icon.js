@@ -16,7 +16,7 @@ export default () => (
         <use
           xlinkHref="#signout"
           transform="matrix(-1 0 0 1 1818.5 2684)"
-          fill="#757575"
+          fill="currentColor"
         />
       </g>
     </g>

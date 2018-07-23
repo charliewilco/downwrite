@@ -25,7 +25,9 @@ const NavColumn = styled.div`
 
 const NavButton = styled.button`
   display: block;
-  color: #757575;
+  color: {
+    props=> props.theme.night ? 'white' : '#757575';
+  }
   font-size: 12px;
   border: 0;
   appearance: none;
