@@ -15,18 +15,18 @@
     "clean": "bolt ws exec -- 'rm -rf node_modules'"
   },
   "devDependencies": {
-    "babel-eslint": "8.2.3",
-    "bolt": "^0.20.5",
-    "eslint": "4.2.0",
-    "eslint-plugin-flowtype": "^2.30.1",
-    "eslint-plugin-import": "^2.12.0",
-    "eslint-plugin-jest": "^21.17.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "7.1.0",
-    "flow-bin": "^0.72.0",
+    "babel-eslint": "^8.2.6",
+    "bolt": "^0.20.7",
+    "eslint": "^5.2.0",
+    "eslint-plugin-flowtype": "^2.50.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jest": "^21.18.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.10.0",
+    "flow-bin": "^0.77.0",
     "husky": "^0.14.3",
-    "lint-staged": "^7.0.5",
-    "prettier": "^1.12.1"
+    "lint-staged": "^7.2.0",
+    "prettier": "^1.13.7"
   },
   "prettier": {
     "printWidth": 85,
@@ -69,7 +69,12 @@
       }
     },
     "rules": {
-      "no-console": ["error", { "allow": ["warn", "error"] }],
+      "no-console": [
+        "error",
+        {
+          "allow": ["warn", "error"]
+        }
+      ],
       "react/display-name": 0,
       "react/react-in-jsx-scope": 0,
       "react/prop-types": 0,
