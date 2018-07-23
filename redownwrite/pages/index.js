@@ -48,7 +48,6 @@ type DashboardState = {
 
 const ListContainer = styled.div`
   padding: 16px 8px;
-  height: 100%;
 `
 
 export default class Dashboard extends Component<DashboardPr, DashboardState> {

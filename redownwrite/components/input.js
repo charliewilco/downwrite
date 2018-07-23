@@ -14,11 +14,17 @@ const StyledInput = styled.input`
   border-bottom: 1px;
   border-style: solid;
   border-radius: 0px;
-  border-color: rgba(0, 0, 0, 0.125);
+  border-color: ${props => props.theme.inputBorder};
   padding-left: 0px;
   padding-right: 0px;
   padding-top: 8px;
   padding-bottom: 8px;
+  outline: none;
+  transition: border-color 250ms linear;
+
+  &:focus {
+    border-color: ${props => props.theme.link};
+  }
 `
 
 export default class Input extends Component {

@@ -12,6 +12,7 @@ type HeaderProps = {
   authed: boolean,
   name: string,
   onClick: Function,
+  route: string,
   open: boolean
 }
 
@@ -25,7 +26,7 @@ const NewButton = styled.a`
   cursor: pointer;
   line-height: 1.1;
   opacity: 0.5;
-  color: ${colors.text};
+  color: ${props => props.theme.color} !important;
   margin-right: 32px;
 
   &:hover,
@@ -40,7 +41,7 @@ const HomeButton = styled.a`
   display: block;
   cursor: pointer;
   transition: color 375ms ease-in-out;
-
+  color: ${props => props.theme.headerLogoLink} !important;
   &:hover {
     color: ${colors.blue700};
   }
@@ -69,7 +70,7 @@ const Menu = ({ toggleNav, open }) => (
       <NewButton>New</NewButton>
     </Link>
     <ToggleButton onClick={toggleNav}>
-      <Navicon colors={colors} open={open} />
+      <Navicon open={open} />
     </ToggleButton>
   </MenuContainer>
 )
@@ -87,13 +88,17 @@ const HeaderTitle = styled.h1`
 
 const Header = styled.header`
   display: flex;
-  background: ${colors.gray100};
+  background: ${props => props.theme.background};
   align-items: center;
   justify-content: space-between;
   padding-top: 16px;
   padding-bottom: 16px;
   padding-left: 8px;
   padding-right: 8px;
+
+  .Navicon #NaviconGroup {
+    fill: ${props => props.theme.color};
+  }
 `
 
 class UIHeader extends Component<HeaderProps, void> {

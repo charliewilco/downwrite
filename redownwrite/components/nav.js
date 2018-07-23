@@ -25,7 +25,9 @@ const NavColumn = styled.div`
 
 const NavButton = styled.button`
   display: block;
-  color: #757575;
+  color: {
+    props=> props.theme.night ? 'white' : '#757575';
+  }
   font-size: 12px;
   border: 0;
   appearance: none;
@@ -79,7 +81,7 @@ const Nav = styled.nav`
   animation: ${fadeInFromLeft} 0.45s;
   width: 75%;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
-  background: white;
+  background: ${props => props.theme.background};
   position: fixed;
   right: 0;
   bottom: 0;
@@ -91,7 +93,7 @@ const Nav = styled.nav`
 `
 
 const NavTray = styled.footer`
-  border-top: 1px solid #dbdcdd;
+  border-top: 1px solid ${props => props.theme.border};
   text-align: right;
   padding: 8px;
   display: flex;
@@ -157,10 +159,10 @@ class NavBar extends Component<NavigationProps> {
               <div>
                 <AuthedUserBlock />
                 <UserActionContainer>
-                  <Link href="/">
+                  <Link href="/" passHref>
                     <NavItem>All Entries</NavItem>
                   </Link>
-                  <Link href="/new" prefetch>
+                  <Link href="/new" prefetch passHref>
                     <NavItem>Create New Entry</NavItem>
                   </Link>
                 </UserActionContainer>
@@ -179,7 +181,7 @@ class NavBar extends Component<NavigationProps> {
               </PostListContainer>
 
               <NavTray>
-                <Link href="/legal">
+                <Link href="/legal" passHref>
                   <NavLink>Legal</NavLink>
                 </Link>
                 <SignOut>

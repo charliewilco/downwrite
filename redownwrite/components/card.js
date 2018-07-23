@@ -11,7 +11,7 @@ const CardContainer = styled.div`
   height: 192px;
   font-weight: 400;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
-  background-color: white;
+  background-color: ${props => props.theme.cardBackground};
 
   a {
     cursor: pointer;
@@ -30,14 +30,14 @@ const CardTitle = styled.h2`
 
 const CardHeader = styled.header`
   display: block;
-  border-bottom: 1px solid ${colors.gray200};
+  border-bottom: 1px solid ${props => props.theme.border};
   padding: 12px 8px;
 `
 
 const CardMeta = styled.small`
   font-size: 12px;
   display: block;
-  color: ${colors.gray300};
+  color: ${props => props.theme.meta};
   font-weight: 400;
 `
 
@@ -47,7 +47,7 @@ const CardTray = styled.footer`
   font-weight: 700;
   font-size: 12px;
   justify-content: space-between;
-  background-color: rgba(101, 163, 191, 0.125);
+  background-color: ${props => props.theme.cardTrayBackground};
 
   & a:hover {
     color: ${colors.blue500};

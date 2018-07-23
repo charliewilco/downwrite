@@ -6,7 +6,6 @@ import isEmpty from 'lodash/isEmpty'
 import 'universal-fetch'
 import Content from '../components/content'
 import NotFound from '../components/not-found'
-import NightMode from '../components/night-mode'
 import { PREVIEW_ENDPOINT } from '../utils/urls'
 
 import type { Post } from './'
@@ -22,7 +21,7 @@ type Query = {
 }
 
 type PreviewProps = {
-  post: StatedPost,
+  entry: StatedPost,
   match: Query,
   error?: PostError,
   location: Location
@@ -54,8 +53,9 @@ export default class PreviewEntry extends Component<PreviewProps, void> {
 
   render() {
     const { entry } = this.props
+
     return (
-      <NightMode>
+      <Fragment>
         {!isEmpty(entry.message) && entry.message.length > 0 ? (
           <Fragment>
             <Head>
@@ -73,7 +73,7 @@ export default class PreviewEntry extends Component<PreviewProps, void> {
             <Content {...entry} />
           </Fragment>
         )}
-      </NightMode>
+      </Fragment>
     )
   }
 }

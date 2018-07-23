@@ -8,7 +8,7 @@ type UserBlock = { name: string }
 const UserBlockContainer = styled.div`
   text-align: center;
   padding: 32px 8px;
-  border-bottom: 1px solid #dbdcdd;
+  border-bottom: 1px solid ${props => props.theme.border};
 `
 
 const DisplayUser = styled.span`

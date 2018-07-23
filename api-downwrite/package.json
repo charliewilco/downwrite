@@ -12,8 +12,7 @@
     "predev": "yarn build",
     "deploy": "now && now alias",
     "start": "node dist/server.js",
-    "dev":
-      "concurrently -c 'blue,yellow' --names 'Babel,Server' 'yarn build -w' 'node dist/server.js'",
+    "dev": "node dist/server.js",
     "test": "jest"
   },
   "license": "MIT",

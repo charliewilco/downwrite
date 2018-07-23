@@ -1,8 +1,8 @@
-export default ({ colors, open }) => (
-  <svg width="20px" height="9px" viewBox="0 0 20 9">
+export default ({ open }) => (
+  <svg width="20px" height="9px" viewBox="0 0 20 9" className="Navicon">
     <desc>Navicon</desc>
     <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-      <g fill={colors.text}>
+      <g fill="inherit" id="NaviconGroup">
         <rect id="Rectangle-Copy-3" x="0" y="0" width="20" height="1" />
         <rect
           id="Rectangle-Copy-4"
