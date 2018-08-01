@@ -11,6 +11,10 @@ const FeatureContainer = styled.section`
     font-size: 18px;
     margin-bottom: 4px;
   }
+
+  p:not(:last-of-type) {
+    margin-bottom: 16px;
+  }
 `
 
 export default () => (

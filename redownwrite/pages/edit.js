@@ -74,7 +74,6 @@ const EDITOR_COMMAND = 'myeditor-save'
 
 function saveKeyListener(e: SyntheticKeyboardEvent): string {
   if (e.keyCode === 83 /* `S` key */ && KeyBindingUtil.hasCommandModifier(e)) {
-    console.log(e.keyCode + 'called a save')
     return EDITOR_COMMAND
   }
   return getDefaultKeyBinding(e)
@@ -119,8 +118,6 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     const config = createHeader('PUT', token)
 
     const payload = { ...config, body: JSON.stringify(body) }
-
-    console.log('saving!')
 
     return fetch(`${POST_ENDPOINT}/${id}`, payload)
   }
