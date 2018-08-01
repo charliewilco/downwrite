@@ -74,7 +74,6 @@ const EDITOR_COMMAND = 'myeditor-save'
 
 function saveKeyListener(e: SyntheticKeyboardEvent): string {
   if (e.keyCode === 83 /* `S` key */ && KeyBindingUtil.hasCommandModifier(e)) {
-    console.log(e.keyCode + 'called a save')
     return EDITOR_COMMAND
   }
   return getDefaultKeyBinding(e)
