@@ -120,8 +120,6 @@ export default class Edit extends Component<EditorPr, EditorSt> {
 
     const payload = { ...config, body: JSON.stringify(body) }
 
-    console.log('saving!')
-
     return fetch(`${POST_ENDPOINT}/${id}`, payload)
   }
 

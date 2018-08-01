@@ -15,6 +15,7 @@ const PostsTitle = styled.h2`
 `
 
 const DeleteButton = styled.button`
+  color: inherit;
   appearance: none;
   border: 0px;
   font-family: inherit;
