@@ -1,26 +1,22 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { colors } from '../utils/defaultStyles'
-
-const activeMarker = css`
-  opacity: 1;
-  &:after {
-    content: '';
-    display: block;
-    border-bottom: 5px solid ${props => props.theme.link || colors.blue400};
-  }
-`
 
 const Box = styled.div``
 
 const LayoutTrigger = styled.div`
   display: inline-block;
-  margin: 8px;
+  margin: 8px 0 8px 16px;
   cursor: pointer;
   font-size: 12px;
   color: inherit;
-  opacity: 0.5;
-  ${props => props.active && activeMarker};
+  opacity: ${props => (props.active ? 1 : 0.5)};
+  &:after {
+    content: '';
+    display: block;
+    border-bottom: 5px solid
+      ${props => (props.active ? props.theme.link || colors.blue400 : 'transparent')};
+  }
 `
 
 const LayoutControl = ({ layout, layoutChange }) => (

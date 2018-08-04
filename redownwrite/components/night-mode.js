@@ -15,7 +15,7 @@ const NightContainer = styled.div`
 const NightToggle = styled.div`
   color: ${colors.text};
   padding: 8px;
-  margin: 32px;
+  margin: 16px 8px;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
   background: white;
   bottom: 0;

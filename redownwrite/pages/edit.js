@@ -21,15 +21,13 @@ import 'universal-fetch'
 import Autosaving from '../components/autosaving-notification'
 import ExportMarkdown from '../components/export'
 import Input from '../components/input'
-import Loading from '../components/loading'
 import Helpers from '../components/helpers'
 import Wrapper from '../components/wrapper'
 import Privacy from '../components/privacy'
+import Editor from '../components/editor'
 import TimeMarker from '../components/time-marker'
 import { getToken, createHeader, superConverter } from '../utils/responseHandler'
 import { POST_ENDPOINT } from '../utils/urls'
-
-const LazyEditor = dynamic(import('../components/editor'), { loading: Loading })
 
 type EditorSt = {
   title: string,
@@ -222,7 +220,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
             <Input value={title} onChange={this.updateTitle} />
             <div>
               {editorState !== null && (
-                <LazyEditor
+                <Editor
                   editorState={editorState}
                   handleKeyCommand={this.handleKeyCommand}
                   keyBindingFn={saveKeyListener}
