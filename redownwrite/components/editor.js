@@ -6,8 +6,8 @@ import Toolbar from './toolbar'
 import createMarkdownPlugin from 'draft-js-markdown-plugin'
 import createPrismPlugin from 'draft-js-prism-plugin'
 import { fonts, colors } from '../utils/defaultStyles'
-import './draft.css.js'
-import './ganymede.css.js'
+import './draft.css'
+import './ganymede.css'
 
 const EditorWrapper = styled.div`
   padding-left: 0px;

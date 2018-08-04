@@ -7,7 +7,9 @@ import NightMode, { NightModeTrigger } from './night-mode'
 import UIContainer from './ui-container'
 import { ErrorContainer, UIErrorBanner } from './ui-error'
 import { colors, fonts } from '../utils/defaultStyles'
-import '../utils/typescale.css.js'
+
+import '../utils/global.css'
+import '../utils/typescale.css'
 
 injectGlobal`
   *,
