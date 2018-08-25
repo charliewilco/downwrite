@@ -78,6 +78,10 @@
   font-size: 100%;
 }
 
+.RichEditor-editor h6 {
+  font-size: 87.5%;
+}
+
 .RichEditor-editor pre {
   background: #f4f5f5;
   padding: 0.75rem;
