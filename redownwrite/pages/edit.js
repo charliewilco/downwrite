@@ -3,7 +3,6 @@
 import React, { Fragment, Component } from 'react'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
-import styled from 'styled-components'
 import {
   RichUtils,
   EditorState,
@@ -52,10 +51,6 @@ type EditorPr = {
   post?: Object,
   editorState?: EditorState
 }
-
-const StyledExportMarkdown = styled(ExportMarkdown)`
-  margin-right: 16px;
-`
 
 const stateCreator: EditorSt = post => ({
   autosaving: false,
@@ -212,7 +207,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
             </UtilityBar.Items>
             <UtilityBar.Items>
               {editorState !== null && (
-                <StyledExportMarkdown
+                <ExportMarkdown
                   editorState={editorState}
                   title={title}
                   date={post.dateAdded}
