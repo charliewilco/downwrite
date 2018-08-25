@@ -139,9 +139,10 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
           <Head>
             <title>{title.length > 0 ? title : 'New'} | Downwrite</title>
           </Head>
-          {offline && <span>You're Offline Right Now</span>}
 
-          <Helpers disabled={offline} buttonText="Add" onChange={this.addNewPost} />
+          <Helpers disabled={offline} buttonText="Add" onChange={this.addNewPost}>
+            {offline && <span>You're Offline Right Now</span>}
+          </Helpers>
           <EditorContainer sm>
             {error.length > 0 && <span className="f6 u-center">{error}</span>}
             <Upload upload={this.upload}>

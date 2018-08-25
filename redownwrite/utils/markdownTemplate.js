@@ -9,7 +9,7 @@ export const createMarkdown = (
 ): string => `
 ---
 title: ${title}
-dateAdded: ${format(date.toString(), 'DD MMMM YYYY')}
+dateAdded: ${format(date.toString() || new Date(), 'DD MMMM YYYY')}
 ---
 
 ${content}
