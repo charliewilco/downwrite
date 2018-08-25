@@ -1,6 +1,5 @@
 // @flow
-
-import React, { Component, type ComponentType } from 'react'
+import React, { Component } from 'react'
 import type { ContentState } from 'draft-js'
 import styled from 'styled-components'
 
@@ -9,18 +8,22 @@ const Meta = styled.div`
   font-size: small;
   margin-bottom: 8px;
 `
+
+const WordCounterContainer = styled.div`
+  padding: 8px;
+  margin: 16px 8px;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  position: fixed;
+`
 type WordCounterers = {
   limit: number,
-  editorState: ContentState,
-  component: ComponentType<any>
+  editorState: ContentState
 }
 
 export default class WordCounter extends Component<WordCounterers, void> {
   static displayName = 'DraftEditorWordCounter'
-
-  static defaultProps = {
-    component: Meta
-  }
 
   getSelectionCount(editorState: ContentState): number {
     let selectionState = editorState.getSelection()
@@ -59,11 +62,13 @@ export default class WordCounter extends Component<WordCounterers, void> {
     let displayCount = selectionCount > 0 ? selectionCount : count
 
     return (
-      <Cx>
-        <small>
-          <pre>Word Count: {displayCount}</pre>
-        </small>
-      </Cx>
+      <WordCounterContainer>
+        <Meta>
+          <small>
+            <pre>Word Count: {displayCount}</pre>
+          </small>
+        </Meta>
+      </WordCounterContainer>
     )
   }
 }

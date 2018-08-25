@@ -9,7 +9,7 @@ const StyledInput = styled.input`
   color: inherit;
   font-family: inherit;
   background: none;
-  font-size: 125%;
+  font-size: 137.5%;
   border-width: 0px;
   border-bottom: 1px;
   border-style: solid;

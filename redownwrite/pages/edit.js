@@ -20,12 +20,16 @@ import 'universal-fetch'
 
 import Autosaving from '../components/autosaving-notification'
 import ExportMarkdown from '../components/export'
+import WordCounter from '../components/word-count'
+import Button from '../components/button'
 import Input from '../components/input'
-import Helpers from '../components/helpers'
+import OuterEditor from '../components/outer-editor'
 import Wrapper from '../components/wrapper'
 import Privacy from '../components/privacy'
+import PreviewLink from '../components/preview-link'
 import Editor from '../components/editor'
 import TimeMarker from '../components/time-marker'
+import UtilityBar from '../components/utility-bar'
 import { getToken, createHeader, superConverter } from '../utils/responseHandler'
 import { POST_ENDPOINT } from '../utils/urls'
 
@@ -49,13 +53,11 @@ type EditorPr = {
   editorState?: EditorState
 }
 
-const OuterEditor = styled.div`
-  padding: 0 8px;
+const StyledExportMarkdown = styled(ExportMarkdown)`
+  margin-right: 16px;
 `
 
-OuterEditor.displayName = 'OuterEditor'
-
-const stateCreator: EditorState = post => ({
+const stateCreator: EditorSt = post => ({
   autosaving: false,
   post,
   title: post.title || '',
@@ -198,23 +200,27 @@ export default class Edit extends Component<EditorPr, EditorSt> {
         </Head>
         {autosaving && <Autosaving />}
         <Wrapper sm>
-          <Helpers onChange={this.updatePostContent} buttonText="Save">
-            {editorState !== null && (
-              <ExportMarkdown
-                editorState={editorState}
+          <UtilityBar.Container>
+            <UtilityBar.Items>
+              <Privacy
+                id={id}
                 title={title}
-                date={post.dateAdded}
+                publicStatus={publicStatus}
+                onChange={this.updatePrivacy}
               />
-            )}
-
-            <Privacy
-              id={id}
-              title={title}
-              publicStatus={publicStatus}
-              onChange={this.updatePrivacy}
-            />
-            {/* {editorState !== null && <WordCounter editorState={editorState} />} */}
-          </Helpers>
+              <PreviewLink id={id} publicStatus={publicStatus} />
+            </UtilityBar.Items>
+            <UtilityBar.Items>
+              {editorState !== null && (
+                <StyledExportMarkdown
+                  editorState={editorState}
+                  title={title}
+                  date={post.dateAdded}
+                />
+              )}
+              <Button onChange={this.updatePostContent}>Save</Button>
+            </UtilityBar.Items>
+          </UtilityBar.Container>
           <OuterEditor sm>
             <TimeMarker dateAdded={post.dateAdded} />
             <Input value={title} onChange={this.updateTitle} />
@@ -230,6 +236,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
             </div>
           </OuterEditor>
         </Wrapper>
+        {editorState !== null && <WordCounter editorState={editorState} />}
       </Fragment>
     )
   }
