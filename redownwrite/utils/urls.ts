@@ -1,4 +1,3 @@
-// @flow
 import { __IS_DEV__ } from './dev'
 
 const DEV_URL = 'http://localhost:3000/api'

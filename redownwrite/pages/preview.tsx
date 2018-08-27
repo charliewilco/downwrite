@@ -1,6 +1,4 @@
-// @flow
-
-import React, { Fragment, Component } from 'react'
+import * as React from 'react'
 import Head from 'next/head'
 import isEmpty from 'lodash/isEmpty'
 import 'universal-fetch'
@@ -8,36 +6,42 @@ import Content from '../components/content'
 import AuthorBlock from '../components/author-block'
 import NotFound from '../components/not-found'
 import { PREVIEW_ENDPOINT } from '../utils/urls'
-import type { Post } from './'
 
-type PostError = { message: string, error: string }
 
-type StatedPost = Post | PostError | { [any]: empty }
-
-type Query = {
-  params: {
-    id: string
-  }
+type AuthorType = {
+  username: string,
+  gradient: string[]
 }
 
-type PreviewProps = {
-  entry: StatedPost,
-  match: Query,
-  error?: PostError,
-  location: Location
+
+interface IEntry {
+  title: string,
+  content: string,
+  author: AuthorType,
+  dateAdded: Date
 }
 
-let PREVIEW_FONTS: string =
-  'https://cloud.typography.com/7107912/7471392/css/fonts.css'
+interface IEntryError {
+  message: string,
+  error: string,
+}
 
-export default class PreviewEntry extends Component<PreviewProps, void> {
+
+type StatedEntry = IEntry & IEntryError 
+
+interface IPreviewProps {
+  authed: boolean;
+  entry: StatedEntry;
+  id: string;
+}
+
+export default class PreviewEntry extends React.Component<IPreviewProps, void> {
   static async getInitialProps({ query }) {
     let { id } = query
 
-    const config = { method: 'GET', mode: 'cors' }
     const url = `${PREVIEW_ENDPOINT}/${id}`
 
-    const entry = await fetch(url, config).then(res => res.json())
+    const entry = await fetch(url, { method: 'GET', mode: 'cors' }).then(res => res.json())
 
     return {
       id,
@@ -58,20 +62,19 @@ export default class PreviewEntry extends Component<PreviewProps, void> {
       authed
     } = this.props
     return (
-      <Fragment>
+      <>
         {!isEmpty(entry.message) && entry.message.length > 0 ? (
-          <Fragment>
+          <>
             <Head>
               <title>{entry.error} | Downwrite</title>
             </Head>
             <NotFound {...entry} />
-          </Fragment>
+          </>
         ) : (
-          <Fragment>
+          <>
             <Head>
               <title>{entry.title} | Downwrite</title>
               <meta description={entry.content.substr(0, 75)} />
-              <link rel="stylesheet" href={PREVIEW_FONTS} />
             </Head>
             <Content {...entry}>
               <AuthorBlock
@@ -80,9 +83,9 @@ export default class PreviewEntry extends Component<PreviewProps, void> {
                 authed={authed}
               />
             </Content>
-          </Fragment>
+          </>
         )}
-      </Fragment>
+      </>
     )
   }
 }

@@ -1,40 +1,38 @@
-// @flow
-import React, { Fragment, Component } from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import Head from 'next/head'
-import dynamic from 'next/dynamic'
 import Router from 'next/router'
-import {
-  RichUtils,
-  EditorState,
-  convertToRaw,
-  getDefaultKeyBinding,
-  KeyBindingUtil
-} from 'draft-js'
+import * as Draft from 'draft-js'
 import uuid from 'uuid/v4'
 import 'universal-fetch'
-import loading from '../components/loading'
 import Wrapper from '../components/wrapper'
 import Input from '../components/input'
 import Upload from '../components/upload'
 import Helpers from '../components/helpers'
+import Editor from '../components/editor'
 import { POST_ENDPOINT } from '../utils/urls'
 import { createHeader } from '../utils/responseHandler'
 
-const LazyEditor = dynamic(import('../components/editor'), { loading, ssr: false })
+// const LazyEditor = dynamic(import('../components/editor'), { loading, ssr: false })
+//  const {
+//   RichUtils,
+//   EditorState,
+//   convertToRaw,
+//   getDefaultKeyBinding,
+//   KeyBindingUtil
+//   } = Draft
 
-type NewPostSt = {
+interface INewPostSt {
   drafts: Array<any>,
   saved: boolean,
-  editorState: EditorState,
+  editorState: Draft.EditorState,
   id: string,
   title: string,
   error?: string,
   dateAdded: Date,
-  error: string
 }
 
-type NewPostProps = {
+interface INewPostProps {
   offline?: boolean,
   token: string,
   user: string
@@ -50,16 +48,16 @@ const EditorContainer = styled(Wrapper)`
 
 const EDITOR_COMMAND = 'create-new-post'
 
-function saveKeyListener(e: SyntheticKeyboardEvent): string {
-  if (e.keyCode === 83 /* `S` key */ && KeyBindingUtil.hasCommandModifier(e)) {
+function saveKeyListener(e: React.KeyboardEvent): string {
+  if (e.keyCode === 83 /* `S` key */ && Draft.KeyBindingUtil.hasCommandModifier(e)) {
     return EDITOR_COMMAND
   }
-  return getDefaultKeyBinding(e)
+  return Draft.getDefaultKeyBinding(e)
 }
 
-export default class NewEditor extends Component<NewPostProps, NewPostSt> {
+export default class NewEditor extends React.Component<INewPostProps, INewPostSt> {
   state = {
-    editorState: EditorState.createEmpty(),
+    editorState: Draft.EditorState.createEmpty(),
     title: '',
     id: uuid(),
     dateAdded: new Date(),
@@ -94,7 +92,7 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
   addNewPost = (offline?: boolean) => {
     let { id, title, editorState, dateAdded } = this.state
     const ContentState = editorState.getCurrentContent()
-    const content = JSON.stringify(convertToRaw(ContentState))
+    const content = JSON.stringify(Draft.convertToRaw(ContentState))
     const { user } = this.props
 
     const post: Object = {
@@ -112,7 +110,7 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
   onChange = editorState => this.setState({ editorState })
 
   handleKeyCommand = (command: string, editorState) => {
-    const newState = RichUtils.handleKeyCommand(editorState, command)
+    const newState = Draft.RichUtils.handleKeyCommand(editorState, command)
     if (newState) {
       this.onChange(newState)
       return 'handled'
@@ -126,7 +124,7 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
     return 'not-handled'
   }
 
-  upload = (content: { title: string, editorState: EditorState }) =>
+  upload = (content: { title: string, editorState: Draft.EditorState }) =>
     this.setState(content)
 
   render() {
@@ -135,7 +133,7 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
 
     return (
       <SpacedWrapper sm>
-        <Fragment>
+        <>
           <Head>
             <title>{title.length > 0 ? title : 'New'} | Downwrite</title>
           </Head>
@@ -151,7 +149,7 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
                 value={title}
                 onChange={e => this.setState({ title: e.target.value })}
               />
-              <LazyEditor
+              <Editor
                 handleKeyCommand={this.handleKeyCommand}
                 keyBindingFn={saveKeyListener}
                 editorState={editorState}
@@ -159,7 +157,7 @@ export default class NewEditor extends Component<NewPostProps, NewPostSt> {
               />
             </Upload>
           </EditorContainer>
-        </Fragment>
+        </>
       </SpacedWrapper>
     )
   }

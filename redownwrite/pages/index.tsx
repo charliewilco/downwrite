@@ -1,5 +1,4 @@
-// @flow
-import React, { Fragment, Component } from 'react'
+import * as React from 'react'
 import Head from 'next/head'
 import styled from 'styled-components'
 import orderBy from 'lodash/orderBy'
@@ -50,7 +49,7 @@ const ListContainer = styled.div`
   padding: 16px 8px;
 `
 
-export default class Dashboard extends Component<DashboardPr, DashboardState> {
+export default class Dashboard extends React.Component<DashboardPr, DashboardState> {
   static displayName = 'Dashboard'
 
   static defaultProps = {
@@ -129,7 +128,7 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
   render() {
     const { modalOpen, loaded, entries, error, selectedPost } = this.state
     return (
-      <Fragment>
+      <>
         <Head>
           <title>{entries.length} Entries | Downwrite</title>
         </Head>
@@ -155,7 +154,7 @@ export default class Dashboard extends Component<DashboardPr, DashboardState> {
             <Loading size={100} />
           )}
         </ListContainer>
-      </Fragment>
+      </>
     )
   }
 }

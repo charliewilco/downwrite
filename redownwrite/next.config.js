@@ -3,10 +3,10 @@
 // TODO: Migrate all older CSS files to resets with styled-components
 // TODO: Remove useless non-js imports
 // -- Reset.css
-// -- Moving custom properties to variables
 const withOffline = require('next-offline')
 const withManifest = require('next-manifest')
 const withCSS = require('@zeit/next-css')
+const withTypescript = require('@zeit/next-typescript')
 
 const manifest = {
   dir: 'ltr',
@@ -42,4 +42,4 @@ const manifest = {
   display: 'standalone'
 }
 
-module.exports = withCSS(withManifest(withOffline({ manifest })))
+module.exports = withTypescript(withCSS(withManifest(withOffline({ manifest }))))
