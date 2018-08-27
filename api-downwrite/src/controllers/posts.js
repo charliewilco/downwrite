@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 const Post = require('../models/Post')
+const User = require('../models/User')
 const Boom = require('boom')
 const { draftToMarkdown } = require('markdown-draft-js')
 
@@ -59,23 +60,29 @@ exports.getMarkdown = (req, reply) => {
         )
       )
     } else {
-      return reply({
-        id: req.params.id,
-        content: draftToMarkdown(post.content, {
-          entityItems: {
-            LINK: {
-              open: () => {
-                return '['
-              },
+      User.findOne({ _id: post.user }, (err, user) => {
+        return reply({
+          id: req.params.id,
+          author: {
+            username: user.username,
+            avatar: user.gradient || ['#FEB692', '#EA5455']
+          },
+          content: draftToMarkdown(post.content, {
+            entityItems: {
+              LINK: {
+                open: () => {
+                  return '['
+                },
 
-              close: entity => {
-                return `](${entity.data.url || entity.data.href})`
+                close: entity => {
+                  return `](${entity.data.url || entity.data.href})`
+                }
               }
             }
-          }
-        }),
-        title: post.title,
-        dateAdded: post.dateAdded
+          }),
+          title: post.title,
+          dateAdded: post.dateAdded
+        })
       })
     }
   })

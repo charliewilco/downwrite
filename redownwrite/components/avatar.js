@@ -1,21 +1,18 @@
 import React, { Component } from 'react'
-import styled from 'styled-components'
-import color from 'rcolor'
+import styled, { css } from 'styled-components'
 
-const initialState = {
-  a: color() || `#FEB692`,
-  b: color() || `#EA5455`
-}
+export const AvatarColors = ['#FEB692', '#EA5455']
 
-class RandomColor extends Component {
-  state = initialState
+export const gradientPoints = (colors = AvatarColors) => ({
+  a: colors[0],
+  b: colors[1]
+})
 
-  render() {
-    return this.props.children(this.state)
-  }
-}
+const spaced = css`
+  margin: 0 auto 1rem;
+`
 
-const Avatar = styled.div`
+const AvatarCircle = styled.div`
   border-radius: 3rem;
   height: 3rem;
   width: 3rem;
@@ -24,9 +21,10 @@ const Avatar = styled.div`
     ${props => props.colors.a || '#FEB692'} 10%,
     ${props => props.colors.b || '#EA5455'} 100%
   );
-  margin: 0 auto 1rem;
+
+  ${props => props.centered && spaced};
 `
 
-export default () => (
-  <RandomColor>{colors => <Avatar colors={colors} />}</RandomColor>
+export default ({ colors, centered }) => (
+  <AvatarCircle centered={centered} colors={gradientPoints(colors)} />
 )
