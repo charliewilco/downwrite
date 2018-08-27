@@ -6,8 +6,8 @@ import Toolbar from './toolbar'
 import createMarkdownPlugin from 'draft-js-markdown-plugin'
 import createPrismPlugin from 'draft-js-prism-plugin'
 import { fonts, colors } from '../utils/defaultStyles'
-import './draft.css.js'
-import './ganymede.css.js'
+import './draft.css'
+import './ganymede.css'
 
 const EditorWrapper = styled.div`
   padding-left: 0px;
@@ -60,7 +60,14 @@ export default class extends Component {
   }
 
   render() {
-    const { editorState, handleKeyCommand, keyBindingFn, children } = this.props
+    const {
+      editorState,
+      toolbar,
+      handleKeyCommand,
+      keyBindingFn,
+      children
+    } = this.props
+    const { plugins } = this.state
     // If the user changes block type before entering any text, we can
     // either style the placeholder or hide it. Let's just hide it now.
     let className = 'RichEditor-editor'
@@ -78,7 +85,7 @@ export default class extends Component {
 
     return (
       <EditorShell>
-        {this.props.toolbar && (
+        {toolbar && (
           <Toolbar
             editorState={editorState}
             onToggleInlineStyle={this._toggleInlineStyle}
@@ -99,7 +106,7 @@ export default class extends Component {
             placeholder="History will be kind to me for I intend to write it. — Winston Churchill"
             ref={x => (this.editor = x)}
             spellCheck={true}
-            plugins={this.state.plugins}
+            plugins={plugins}
           />
         </EditorWrapper>
       </EditorShell>

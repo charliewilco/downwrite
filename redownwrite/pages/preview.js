@@ -5,9 +5,9 @@ import Head from 'next/head'
 import isEmpty from 'lodash/isEmpty'
 import 'universal-fetch'
 import Content from '../components/content'
+import AuthorBlock from '../components/author-block'
 import NotFound from '../components/not-found'
 import { PREVIEW_ENDPOINT } from '../utils/urls'
-
 import type { Post } from './'
 
 type PostError = { message: string, error: string }
@@ -52,8 +52,11 @@ export default class PreviewEntry extends Component<PreviewProps, void> {
   static displayName = 'PreviewEntry'
 
   render() {
-    const { entry } = this.props
-
+    const {
+      entry: { author },
+      entry,
+      authed
+    } = this.props
     return (
       <Fragment>
         {!isEmpty(entry.message) && entry.message.length > 0 ? (
@@ -70,7 +73,13 @@ export default class PreviewEntry extends Component<PreviewProps, void> {
               <meta description={entry.content.substr(0, 75)} />
               <link rel="stylesheet" href={PREVIEW_FONTS} />
             </Head>
-            <Content {...entry} />
+            <Content {...entry}>
+              <AuthorBlock
+                name={author.username}
+                colors={author.gradient}
+                authed={authed}
+              />
+            </Content>
           </Fragment>
         )}
       </Fragment>

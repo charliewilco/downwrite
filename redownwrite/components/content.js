@@ -100,7 +100,7 @@ const ContentBody = styled(Wrapper)`
   }
 `
 
-export default ({ title, dateAdded, content }) => (
+export default ({ title, dateAdded, children, content }) => (
   <WrapperExtended>
     <article className="harticle">
       <ContentHeader>
@@ -115,6 +115,7 @@ export default ({ title, dateAdded, content }) => (
       </ContentHeader>
       <ContentBody data-testid="PREVIEW_ENTRTY_BODY" className="PreviewBody">
         <Markdown source={content} renderers={{ code: CodeBlock }} />
+        {children}
       </ContentBody>
     </article>
   </WrapperExtended>

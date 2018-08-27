@@ -1,6 +1,3 @@
-import { injectGlobal } from 'styled-components'
-
-export default injectGlobal`
 :root {
   /* Line Heights */
   --lh-1: 1.125;
@@ -145,4 +142,3 @@ h6,
 .small {
   font-size: 87.5%;
 }
-`

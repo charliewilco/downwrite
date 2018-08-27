@@ -24,13 +24,7 @@ type ExportCb = {
 
 const ExportContainer = styled.div`
   display: block;
-  width: 100%;
-  max-width: 512px;
-  margin-bottom: 16px;
-`
-
-const ExportTitle = styled.h3`
-  margin-bottom: 16px;
+  margin: 0 16px;
 `
 
 const FILE_TYPE = { type: 'text/markdown; charset=UTF-8' }
@@ -82,9 +76,11 @@ export default class UIMarkdownExport extends React.Component<ExportPr> {
   onChange = () => this.export(this.toMarkdown)
 
   render() {
+    const { className } = this.props
     return (
-      <ExportContainer>
-        <ExportTitle className="small">Export</ExportTitle>
+      <ExportContainer
+        title="Export entry to a Markdown file."
+        className={className}>
         <Markdown onClick={this.onChange} />
       </ExportContainer>
     )

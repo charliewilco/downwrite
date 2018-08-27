@@ -1,27 +1,11 @@
 // @flow
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import Media from 'react-media'
 import Toggle from './toggle'
 import Button from './button'
 import Chevron from './chevron'
 
-const HelperContainer = styled.div`
-  @media (min-width: 950px) {
-    float: right;
-    margin-right: -208px;
-    width: 192px;
-  }
-`
-
-const HelperButtons = styled.div`
-  display: flex;
-  justify-content: ${({ spaced }) => (spaced ? 'space-between' : 'flex-end')};
-  padding: 8px;
-  @media (min-width: 950px) {
-    padding: 0;
-  }
-`
+const HelperButtons = styled.div``
 
 const ChevronButton = styled.button`
   outline: 0;
@@ -30,23 +14,26 @@ const ChevronButton = styled.button`
   font-family: inherit;
 `
 
-const HelperContent = styled.div`
+const HelperContainer = styled.aside`
   display: flex;
-  flex-direction: column;
   margin-bottom: 16px;
   justify-content: space-between;
+  align-items: center;
   padding: 0 8px;
+`
+const StyledButton = styled(Button)`
+  margin-left: auto;
+`
 
-  @media (min-width: 950px) {
-    justify-content: flex-start;
-    padding: 0;
-  }
-`
-const StyledButton = Button.extend`
-  @media (min-width: 950px) {
-    margin-bottom: 16px;
-  }
-`
+const Toggler = () => (
+  <Toggle defaultOpen>
+    {(open, toggle) => (
+      <ChevronButton onClick={toggle}>
+        <Chevron open={open} />
+      </ChevronButton>
+    )}
+  </Toggle>
+)
 
 export default class extends Component<{
   children?: Node,
@@ -59,28 +46,14 @@ export default class extends Component<{
   render() {
     const { children, buttonText, onChange, disabled } = this.props
     return (
-      <Media query={{ minWidth: 950 }}>
-        {matches => (
-          <Toggle defaultOpen={matches}>
-            {(open, toggle) => (
-              <HelperContainer>
-                <HelperButtons spaced={children}>
-                  {!matches &&
-                    children && (
-                      <ChevronButton onClick={toggle}>
-                        <Chevron open={open} />
-                      </ChevronButton>
-                    )}
-                  <StyledButton disabled={disabled} onClick={onChange}>
-                    {buttonText}
-                  </StyledButton>
-                </HelperButtons>
-                {(matches || open) && <HelperContent>{children}</HelperContent>}
-              </HelperContainer>
-            )}
-          </Toggle>
-        )}
-      </Media>
+      <HelperContainer>
+        {children}
+        <HelperButtons>
+          <StyledButton disabled={disabled} onClick={onChange}>
+            {buttonText}
+          </StyledButton>
+        </HelperButtons>
+      </HelperContainer>
     )
   }
 }

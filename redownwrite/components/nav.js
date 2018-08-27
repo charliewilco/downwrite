@@ -25,9 +25,7 @@ const NavColumn = styled.div`
 
 const NavButton = styled.button`
   display: block;
-  color: {
-    props=> props.theme.night ? 'white' : '#757575';
-  }
+  color: ${props => (props.theme.night ? 'white' : '#757575')};
   font-size: 12px;
   border: 0;
   appearance: none;
@@ -83,6 +81,7 @@ const Nav = styled.nav`
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
   background: ${props => props.theme.background};
   position: fixed;
+  z-index: 100;
   right: 0;
   bottom: 0;
   top: 0;
@@ -157,7 +156,7 @@ class NavBar extends Component<NavigationProps> {
           <Nav>
             <NavColumn>
               <div>
-                <AuthedUserBlock />
+                <AuthedUserBlock border />
                 <UserActionContainer>
                   <Link href="/" passHref>
                     <NavItem>All Entries</NavItem>

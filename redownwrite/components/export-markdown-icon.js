@@ -43,6 +43,6 @@ export default ({ onClick }) => (
         />
       </defs>
     </ExportIcon>
-    <ExportLabel>Markdown</ExportLabel>
+    <ExportLabel>Export</ExportLabel>
   </ExportButton>
 )

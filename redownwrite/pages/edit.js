@@ -3,7 +3,6 @@
 import React, { Fragment, Component } from 'react'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
-import styled from 'styled-components'
 import {
   RichUtils,
   EditorState,
@@ -20,16 +19,18 @@ import 'universal-fetch'
 
 import Autosaving from '../components/autosaving-notification'
 import ExportMarkdown from '../components/export'
+import WordCounter from '../components/word-count'
+import Button from '../components/button'
 import Input from '../components/input'
-import Loading from '../components/loading'
-import Helpers from '../components/helpers'
+import OuterEditor from '../components/outer-editor'
 import Wrapper from '../components/wrapper'
 import Privacy from '../components/privacy'
+import PreviewLink from '../components/preview-link'
+import Editor from '../components/editor'
 import TimeMarker from '../components/time-marker'
+import UtilityBar from '../components/utility-bar'
 import { getToken, createHeader, superConverter } from '../utils/responseHandler'
 import { POST_ENDPOINT } from '../utils/urls'
-
-const LazyEditor = dynamic(import('../components/editor'), { loading: Loading })
 
 type EditorSt = {
   title: string,
@@ -51,13 +52,7 @@ type EditorPr = {
   editorState?: EditorState
 }
 
-const OuterEditor = styled.div`
-  padding: 0 8px;
-`
-
-OuterEditor.displayName = 'OuterEditor'
-
-const stateCreator: EditorState = post => ({
+const stateCreator: EditorSt = post => ({
   autosaving: false,
   post,
   title: post.title || '',
@@ -200,29 +195,33 @@ export default class Edit extends Component<EditorPr, EditorSt> {
         </Head>
         {autosaving && <Autosaving />}
         <Wrapper sm>
-          <Helpers onChange={this.updatePostContent} buttonText="Save">
-            {editorState !== null && (
-              <ExportMarkdown
-                editorState={editorState}
-                title={title}
-                date={post.dateAdded}
-              />
-            )}
-
-            <Privacy
-              id={id}
-              title={title}
-              publicStatus={publicStatus}
-              onChange={this.updatePrivacy}
-            />
-            {/* {editorState !== null && <WordCounter editorState={editorState} />} */}
-          </Helpers>
           <OuterEditor sm>
             <TimeMarker dateAdded={post.dateAdded} />
             <Input value={title} onChange={this.updateTitle} />
+            <UtilityBar.Container>
+              <UtilityBar.Items>
+                <Privacy
+                  id={id}
+                  title={title}
+                  publicStatus={publicStatus}
+                  onChange={this.updatePrivacy}
+                />
+                <PreviewLink id={id} publicStatus={publicStatus} />
+              </UtilityBar.Items>
+              <UtilityBar.Items>
+                {editorState !== null && (
+                  <ExportMarkdown
+                    editorState={editorState}
+                    title={title}
+                    date={post.dateAdded}
+                  />
+                )}
+                <Button onChange={this.updatePostContent}>Save</Button>
+              </UtilityBar.Items>
+            </UtilityBar.Container>
             <div>
               {editorState !== null && (
-                <LazyEditor
+                <Editor
                   editorState={editorState}
                   handleKeyCommand={this.handleKeyCommand}
                   keyBindingFn={saveKeyListener}
@@ -232,6 +231,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
             </div>
           </OuterEditor>
         </Wrapper>
+        {editorState !== null && <WordCounter editorState={editorState} />}
       </Fragment>
     )
   }
