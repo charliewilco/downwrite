@@ -5,7 +5,7 @@ const UtilityBarContainer = styled.aside`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 8px 32px;
+  margin: 16px 0;
   padding: 8px;
   background: white;
   color: ${colors.text};

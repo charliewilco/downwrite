@@ -156,7 +156,7 @@ class NavBar extends Component<NavigationProps> {
           <Nav>
             <NavColumn>
               <div>
-                <AuthedUserBlock />
+                <AuthedUserBlock border />
                 <UserActionContainer>
                   <Link href="/" passHref>
                     <NavItem>All Entries</NavItem>

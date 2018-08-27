@@ -12,6 +12,6 @@ export default ({ publicStatus, id }) =>
       prefetch
       href={{ pathname: '/preview', query: { id } }}
       as={`/${id}/preview`}>
-      <PreviewAnchor className="small">Preview</PreviewAnchor>
+      <PreviewAnchor>Preview</PreviewAnchor>
     </Link>
   )

@@ -195,30 +195,30 @@ export default class Edit extends Component<EditorPr, EditorSt> {
         </Head>
         {autosaving && <Autosaving />}
         <Wrapper sm>
-          <UtilityBar.Container>
-            <UtilityBar.Items>
-              <Privacy
-                id={id}
-                title={title}
-                publicStatus={publicStatus}
-                onChange={this.updatePrivacy}
-              />
-              <PreviewLink id={id} publicStatus={publicStatus} />
-            </UtilityBar.Items>
-            <UtilityBar.Items>
-              {editorState !== null && (
-                <ExportMarkdown
-                  editorState={editorState}
-                  title={title}
-                  date={post.dateAdded}
-                />
-              )}
-              <Button onChange={this.updatePostContent}>Save</Button>
-            </UtilityBar.Items>
-          </UtilityBar.Container>
           <OuterEditor sm>
             <TimeMarker dateAdded={post.dateAdded} />
             <Input value={title} onChange={this.updateTitle} />
+            <UtilityBar.Container>
+              <UtilityBar.Items>
+                <Privacy
+                  id={id}
+                  title={title}
+                  publicStatus={publicStatus}
+                  onChange={this.updatePrivacy}
+                />
+                <PreviewLink id={id} publicStatus={publicStatus} />
+              </UtilityBar.Items>
+              <UtilityBar.Items>
+                {editorState !== null && (
+                  <ExportMarkdown
+                    editorState={editorState}
+                    title={title}
+                    date={post.dateAdded}
+                  />
+                )}
+                <Button onChange={this.updatePostContent}>Save</Button>
+              </UtilityBar.Items>
+            </UtilityBar.Container>
             <div>
               {editorState !== null && (
                 <Editor
