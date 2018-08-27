@@ -1,6 +1,5 @@
-// @flow
-import React, { Component } from 'react'
-import type { ContentState } from 'draft-js'
+import * as React from 'react'
+import * as Draft from 'draft-js'
 import styled from 'styled-components'
 
 const Meta = styled.div`
@@ -17,15 +16,15 @@ const WordCounterContainer = styled.div`
   z-index: 50;
   position: fixed;
 `
-type WordCounterers = {
-  limit: number,
-  editorState: ContentState
+interface IWordCounterers {
+  limit: number;
+  editorState: Draft.EditorState;
 }
 
-export default class WordCounter extends Component<WordCounterers, void> {
-  static displayName = 'DraftEditorWordCounter'
+export default class WordCounter extends React.Component<IWordCounterers, void> {
+  static displayName = 'WordCounter'
 
-  getSelectionCount(editorState: ContentState): number {
+  getSelectionCount(editorState: Draft.EditorState): number {
     let selectionState = editorState.getSelection()
     let anchorKey = selectionState.getAnchorKey()
     let currentContent = editorState.getCurrentContent()
@@ -45,21 +44,19 @@ export default class WordCounter extends Component<WordCounterers, void> {
     return wordArray ? wordArray.length : 0
   }
 
-  getWordCount(editorState: ContentState): number {
+  getWordCount(editorState: Draft.EditorState): number {
     let plainText = editorState.getCurrentContent().getPlainText('')
 
     return this.createWordCount(plainText)
   }
 
-  // NOTE: Use snapshoting in 16.3
-
   render() {
-    let { editorState, component: Cx } = this.props
+    const { editorState } = this.props
 
-    let count = this.getWordCount(editorState)
-    let selectionCount = this.getSelectionCount(editorState)
+    let count: number = this.getWordCount(editorState)
+    let selectionCount: number = this.getSelectionCount(editorState)
 
-    let displayCount = selectionCount > 0 ? selectionCount : count
+    let displayCount: number = selectionCount > 0 ? selectionCount : count
 
     return (
       <WordCounterContainer>

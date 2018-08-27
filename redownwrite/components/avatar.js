@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import * as React from 'react'
 import styled, { css } from 'styled-components'
 
 export const AvatarColors = ['#FEB692', '#EA5455']

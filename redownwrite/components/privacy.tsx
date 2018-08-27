@@ -20,7 +20,12 @@ const Label = styled.span`
   line-height: 1.2;
 `
 
-const Privacy = ({ id, publicStatus, onChange }) => (
+interface IPrivacyToggle {
+  publicStatus: boolean,
+  onChange: () => void
+}
+
+export const PrivacyToggle: React.SFC<IPrivacyToggle> = ({ publicStatus, onChange }) => (
   <PrivacyContainer>
     <LabelFlex>
       <Check checked={publicStatus} onChange={onChange} value={publicStatus} />
@@ -28,5 +33,3 @@ const Privacy = ({ id, publicStatus, onChange }) => (
     </LabelFlex>
   </PrivacyContainer>
 )
-
-export default Privacy

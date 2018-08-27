@@ -1,18 +1,16 @@
-// @flow
 import Cookies from 'universal-cookie'
-import { convertFromRaw } from 'draft-js'
-import type { ContentState } from 'draft-js'
+import * as Draft from 'draft-js'
 import { __IS_BROWSER__ } from './dev'
 
-export const superConverter: Function = (content: ContentState) => {
+export const superConverter: Function = (content: Draft.RawDraftContentState) => {
   return content.hasOwnProperty('entityMap')
-    ? convertFromRaw(content)
-    : convertFromRaw({ blocks: content.blocks, entityMap: {} })
+    ? Draft.convertFromRaw(content)
+    : Draft.convertFromRaw({ blocks: content.blocks, entityMap: {} })
 }
 
 type HeaderMethod = 'GET' | 'PUT' | 'POST' | 'DELETE'
 
-export const createHeader: Function = (
+export const createHeader = (
   method: HeaderMethod = 'GET',
   token: string
 ) => {

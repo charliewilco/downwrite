@@ -1,6 +1,10 @@
-export default class LocalDraftContainer {
+export class LocalDraftContainer {
   state = {
     drafts: new Set()
+  }
+
+  setState = () => {
+    return () => void
   }
 
   addDraft = x =>

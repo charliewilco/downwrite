@@ -1,5 +1,4 @@
-// @flow
-import React, { Component } from 'react'
+import * as React from 'react'
 import dynamic from 'next/dynamic'
 import styled from 'styled-components'
 import LoginContainer from '../components/login-container'
@@ -21,12 +20,12 @@ const HomeContainer = styled.main`
 const Login = dynamic(import('../components/login-form'), { loading })
 const Register = dynamic(import('../components/register'), { loading })
 
-type HomeProps = {
-  signIn: Function,
-  errorActions: { setError: Function }
+interface IHomeProps {
+  signIn: () => void;
+  errorActions: { setError: Function };
 }
 
-export default class Home extends Component<HomeProps, void> {
+export default class Home extends React.Component<IHomeProps, void> {
   render() {
     const {
       signIn,

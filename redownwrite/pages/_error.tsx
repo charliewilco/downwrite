@@ -1,5 +1,4 @@
-// @flow
-import React, { Component } from 'react'
+import * as React from 'react'
 import Head from 'next/head'
 import styled from 'styled-components'
 import Wrapper from '../components/wrapper'
@@ -23,7 +22,11 @@ const StatusCode = ({ code }) => (
   </p>
 )
 
-export default class Error extends Component {
+interface IErrorViewProps {
+  statusCode: number
+}
+
+export default class ErrorPage extends React.Component<IErrorViewProps, void> {
   static getInitialProps({ res, err }) {
     const statusCode = res ? res.statusCode : err ? err.statusCode : null
     return { statusCode }

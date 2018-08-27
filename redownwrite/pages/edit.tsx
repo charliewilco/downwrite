@@ -1,18 +1,7 @@
-// @flow
-
-import React, { Fragment, Component } from 'react'
+import * as React from 'react'
 import Head from 'next/head'
-import dynamic from 'next/dynamic'
-import {
-  RichUtils,
-  EditorState,
-  convertToRaw,
-  getDefaultKeyBinding,
-  KeyBindingUtil,
-  type ContentState
-} from 'draft-js'
+import * as Draft from 'draft-js'
 import isEmpty from 'lodash/isEmpty'
-import debounce from 'lodash/debounce'
 import noop from 'lodash/noop'
 import sanitize from '@charliewilco/sanitize-object'
 import 'universal-fetch'
@@ -21,42 +10,54 @@ import Autosaving from '../components/autosaving-notification'
 import ExportMarkdown from '../components/export'
 import WordCounter from '../components/word-count'
 import Button from '../components/button'
+import Loading from '../components/loading'
 import Input from '../components/input'
 import OuterEditor from '../components/outer-editor'
 import Wrapper from '../components/wrapper'
-import Privacy from '../components/privacy'
+import { PrivacyToggle } from '../components/privacy'
 import PreviewLink from '../components/preview-link'
 import Editor from '../components/editor'
 import TimeMarker from '../components/time-marker'
-import UtilityBar from '../components/utility-bar'
+import * as UtilityBar from '../components/utility-bar'
 import { getToken, createHeader, superConverter } from '../utils/responseHandler'
 import { POST_ENDPOINT } from '../utils/urls'
 
-type EditorSt = {
+interface Entry {
+  content: Draft.RawDraftContentState,
   title: string,
-  post: Object,
-  loaded: boolean,
-  updated: boolean,
-  editorState: EditorState,
-  dateModified: Date,
-  publicStatus: boolean,
-  autosaving: boolean
+  public: boolean,
+  dateAdded: Date
 }
 
-type EditorPr = {
+interface IEditorSt {
+  autosaving: boolean,
+  title: string,
+  post: Entry,
+  loaded: boolean,
+  updated: boolean,
+  editorState: Draft.EditorState,
+  dateModified: Date,
+  publicStatus: boolean,
+}
+
+interface IEditorPr {
   token: string,
   user: string,
   location: Location,
-  title?: string,
-  post?: Object,
-  editorState?: EditorState
+  id: string,
+  title: string,
+  post: Entry,
+  editorState?: Draft.EditorState
+  route?: {}
 }
 
-const stateCreator: EditorSt = post => ({
+
+
+const stateCreator = (post: Entry) => ({
   autosaving: false,
   post,
   title: post.title || '',
-  editorState: EditorState.createWithContent(superConverter(post.content)),
+  editorState: Draft.EditorState.createWithContent(superConverter(post.content)),
   updated: false,
   loaded: !isEmpty(post),
   unchanged: false,
@@ -67,11 +68,11 @@ const stateCreator: EditorSt = post => ({
 
 const EDITOR_COMMAND = 'myeditor-save'
 
-function saveKeyListener(e: SyntheticKeyboardEvent): string {
-  if (e.keyCode === 83 /* `S` key */ && KeyBindingUtil.hasCommandModifier(e)) {
+function saveKeyListener(e: React.KeyboardEvent): string {
+  if (e.keyCode === 83 /* `S` key */ && Draft.KeyBindingUtil.hasCommandModifier(e)) {
     return EDITOR_COMMAND
   }
-  return getDefaultKeyBinding(e)
+  return Draft.getDefaultKeyBinding(e)
 }
 
 // TODO: Document this
@@ -80,21 +81,20 @@ function saveKeyListener(e: SyntheticKeyboardEvent): string {
 // - EditorState changes
 // - Updating the post on the server
 
-export default class Edit extends Component<EditorPr, EditorSt> {
+export default class Edit extends React.Component<IEditorPr, IEditorSt> {
   static displayName = 'EntryEdit'
 
   static async getInitialProps({ req, query }) {
     const { id } = query
     const { token } = getToken(req, query)
-    const config = createHeader('GET', token)
 
-    const post = await fetch(`${POST_ENDPOINT}/${id}`, config).then(r => r.json())
+    const post = await fetch(`${POST_ENDPOINT}/${id}`, createHeader('GET', token)).then(r => r.json())
     const content = await superConverter(post.content)
 
     return {
       token,
       post,
-      editorState: EditorState.createWithContent(content),
+      editorState: Draft.EditorState.createWithContent(content),
       id
     }
   }
@@ -103,12 +103,12 @@ export default class Edit extends Component<EditorPr, EditorSt> {
 
   state = stateCreator(this.props.post)
 
-  onChange = (editorState: EditorState) => {
+  onChange = (editorState: Draft.EditorState) => {
     this.autoSave()
     this.setState({ editorState })
   }
 
-  updatePost = (body: Object) => {
+  updatePost = (body: Entry) => {
     const { id, token } = this.props
     const config = createHeader('PUT', token)
 
@@ -117,11 +117,11 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     return fetch(`${POST_ENDPOINT}/${id}`, payload)
   }
 
-  updatePostContent = ({ autosave }) => {
+  updatePostContent = () => {
     let { post, title, dateModified, editorState, publicStatus } = this.state
     const { user } = this.props
-    const cx: ContentState = editorState.getCurrentContent()
-    const content = convertToRaw(cx)
+    const cx: Draft.ContentState = editorState.getCurrentContent()
+    const content = Draft.convertToRaw(cx)
 
     const postBody = sanitize(post, ['_id', '__v'])
 
@@ -136,11 +136,11 @@ export default class Edit extends Component<EditorPr, EditorSt> {
 
     const updater = () => this.setState({ autosaving: false })
 
-    return this.updatePost(newPost).then(() => autosave && setTimeout(updater, 7500))
+    return this.updatePost(newPost).then(() => setTimeout(updater, 7500))
   }
 
-  updateTitle = ({ target }: SyntheticInputEvent<*>) =>
-    this.setState({ title: target.value })
+  updateTitle = (event: React.KeyboardEvent) =>
+    this.setState({ title: event.target.value })
 
   updatePrivacy = () =>
     this.setState(({ publicStatus }) => ({ publicStatus: !publicStatus }))
@@ -189,7 +189,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
     return !loaded ? (
       <Loading />
     ) : (
-      <Fragment>
+      <>
         <Head>
           <title>{title} | Downwrite</title>
         </Head>
@@ -200,9 +200,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
             <Input value={title} onChange={this.updateTitle} />
             <UtilityBar.Container>
               <UtilityBar.Items>
-                <Privacy
-                  id={id}
-                  title={title}
+                <PrivacyToggle
                   publicStatus={publicStatus}
                   onChange={this.updatePrivacy}
                 />
@@ -232,7 +230,7 @@ export default class Edit extends Component<EditorPr, EditorSt> {
           </OuterEditor>
         </Wrapper>
         {editorState !== null && <WordCounter editorState={editorState} />}
-      </Fragment>
+      </>
     )
   }
 }

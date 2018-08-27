@@ -1,8 +1,3 @@
-// TODO: sw-precache-plugin
-// TODO: Manifest
-// TODO: Migrate all older CSS files to resets with styled-components
-// TODO: Remove useless non-js imports
-// -- Reset.css
 const withOffline = require('next-offline')
 const withManifest = require('next-manifest')
 const withCSS = require('@zeit/next-css')
