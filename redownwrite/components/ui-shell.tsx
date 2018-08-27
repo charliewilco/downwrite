@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import * as React from 'react'
 import styled, { injectGlobal } from 'styled-components'
 import Nav from './nav'
 import Toggle from './toggle'
@@ -74,7 +74,14 @@ const AppContainer = styled.div``
 
 AppContainer.displayName = 'AppContainer'
 
-export default class UIShell extends Component {
+interface IUIShell {
+  route: string,
+  authed: boolean,
+  children: React.ReactNode,
+  token: string,
+}
+
+export default class UIShell extends React.Component<IUIShell> {
   static displayName = 'UIShell'
 
   render() {
@@ -98,7 +105,11 @@ export default class UIShell extends Component {
                       {children}
                     </Container>
                     {navOpen && (
-                      <Nav pathname={route} closeNav={closeNav} token={token} />
+                      <Nav
+                        pathname={route}
+                        closeNav={closeNav}
+                        token={token}
+                      />
                     )}
                   </ClearFixed>
                 </NightModeTrigger>

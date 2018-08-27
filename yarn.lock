@@ -797,6 +797,12 @@
     "@types/node" "*"
     "@types/react" "*"
 
+"@types/react-dropzone@^4.2.2":
+  version "4.2.2"
+  resolved "https://registry.npmjs.org/@types/react-dropzone/-/react-dropzone-4.2.2.tgz#af0a2595169700c8ab1114e9096285499beaff40"
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*", "@types/react@^16.4.12":
   version "16.4.12"
   resolved "https://registry.npmjs.org/@types/react/-/react-16.4.12.tgz#c554005770b06c7cbcd6b0b19721e180deab7a02"

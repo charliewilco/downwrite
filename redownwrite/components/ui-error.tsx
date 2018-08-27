@@ -1,19 +1,27 @@
-// @flow
-import React, { Component, createContext } from 'react'
+import * as  React from 'react'
 import UIFlash from './ui-flash-messages'
 import Null from './null'
 
-type ErrorTypes = {
+interface ErrorTypes {
   content: string,
   type: string
 }
 
-const ErrorStateContext = createContext()
+interface IErrorProps {
+  children: React.ReactNode
+}
 
-ErrorStateContext.Provider.displayName = 'ErrorStateContext.Provider'
-ErrorStateContext.Consumer.displayName = 'ErrorStateContext.Consumer'
+const ErrorStateContext = React.createContext({})
 
-const UIErrorMessage = ({
+interface IUIErrorMessage {
+  errorState: ErrorTypes,
+  errorActions: {
+    setError: (c, t) => void,
+    clearFlashMessage: () => void
+  }
+}
+
+const UIErrorMessage: React.SFC<IUIErrorMessage> = ({
   errorState: { content, type },
   errorActions: { clearFlashMessage }
 }) =>
@@ -23,33 +31,34 @@ const UIErrorMessage = ({
     <Null />
   )
 
-export const withErrors = (Cx: React.ElementType) => {
-  return class extends Component<any, any> {
-    static displayName = `withErrors(${Cx.displayName || Cx.name})`
+export const withErrors = (Component: React.ReactNode) => {
+  return class extends React.Component<any, any> {
+    static displayName = `withErrors(${Component.displayName || Component.name})`
 
     render() {
       return (
         <ErrorStateContext.Consumer>
-          {errs => <Cx {...this.props} {...errs} />}
+          {(errs: IUIErrorMessage) => <Component {...this.props} {...errs} />}
         </ErrorStateContext.Consumer>
       )
     }
   }
 }
 
-export class ErrorContainer extends Component<void, ErrorTypes> {
+export class ErrorContainer extends React.Component<IErrorProps, ErrorTypes> {
   state = {
     content: '',
     type: ''
   }
 
   setError = (content: string, type: string) => this.setState({ content, type })
+
   clearFlash = () => this.setState({ content: '', type: '' })
 
   render() {
     const { children } = this.props
 
-    const value = {
+    const value: IUIErrorMessage = {
       errorState: {
         ...this.state
       },

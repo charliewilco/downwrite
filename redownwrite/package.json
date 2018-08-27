@@ -16,6 +16,7 @@
   "dependencies": {
     "@charliewilco/sanitize-object": "^1.0.1",
     "@types/lodash": "^4.14.116",
+    "@types/react-dropzone": "^4.2.2",
     "@zeit/next-css": "^0.2.0",
     "@zeit/next-typescript": "^1.1.0",
     "babel-plugin-styled-components": "^1.5.1",

@@ -1,6 +1,11 @@
-import { Component } from 'react'
+import * as React from 'react'
 
-export default class ToggleInstance extends Component {
+interface ToggleProps {
+  defaultOpen: boolean,
+  children: (a, b, c, d) => React.ReactNode
+}
+
+export default class ToggleInstance extends React.Component<ToggleProps, { open: boolean }> {
   static defaultProps = {
     defaultOpen: false
   }
@@ -13,7 +18,7 @@ export default class ToggleInstance extends Component {
 
   closeInstance = () => this.setState({ open: false })
 
-  setInstance = value => this.setState({ open: value })
+  setInstance = (value: boolean) => this.setState({ open: value })
 
   toggleInstance = () => this.setState(({ open }) => ({ open: !open }))
 
