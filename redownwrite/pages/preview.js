@@ -52,9 +52,11 @@ export default class PreviewEntry extends Component<PreviewProps, void> {
   static displayName = 'PreviewEntry'
 
   render() {
-    const { entry, ...remaining } = this.props
-    console.log(remaining)
-    console.log(entry)
+    const {
+      entry: { author },
+      entry,
+      authed
+    } = this.props
     return (
       <Fragment>
         {!isEmpty(entry.message) && entry.message.length > 0 ? (
@@ -73,9 +75,9 @@ export default class PreviewEntry extends Component<PreviewProps, void> {
             </Head>
             <Content {...entry}>
               <AuthorBlock
-                name={entry.author.username}
-                colors={entry.author.gradient}
-                authed={this.props.authed}
+                name={author.username}
+                colors={author.gradient}
+                authed={authed}
               />
             </Content>
           </Fragment>
