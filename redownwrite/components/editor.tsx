@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as Draft from 'draft-js';
 import Prism from 'prismjs';
 import styled from 'styled-components';
-import Toolbar from './toolbar';
+
 import createMarkdownPlugin from 'draft-js-markdown-plugin';
 import createPrismPlugin from 'draft-js-prism-plugin';
 import { fonts, colors } from '../utils/defaultStyles';
@@ -82,13 +82,7 @@ export default class extends React.Component<IEditorProps, IEditorState> {
   };
 
   render() {
-    const {
-      editorState,
-      toolbar,
-      handleKeyCommand,
-      keyBindingFn,
-      children
-    } = this.props;
+    const { editorState, handleKeyCommand, keyBindingFn } = this.props;
     const { plugins } = this.state;
     // If the user changes block type before entering any text, we can
     // either style the placeholder or hide it. Let's just hide it now.
@@ -107,15 +101,6 @@ export default class extends React.Component<IEditorProps, IEditorState> {
 
     return (
       <EditorShell>
-        {toolbar && (
-          <Toolbar
-            editorState={editorState}
-            onToggleInlineStyle={this._toggleInlineStyle}
-            onToggleBlockType={this._toggleBlockType}>
-            {children}
-          </Toolbar>
-        )}
-
         <EditorWrapper className={className} onClick={this.focus}>
           <Editor
             handleKeyCommand={handleKeyCommand}
