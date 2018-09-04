@@ -6,7 +6,6 @@
   "repository": "charlespeters/downwrite",
   "scripts": {
     "precommit": "lint-staged",
-    "analysis": "flow check",
     "dev": "bolt ws dev",
     "build": "bolt ws build",
     "go": "bolt ws deploy",
@@ -23,15 +22,12 @@
     "eslint-plugin-jest": "^21.18.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.10.0",
-    "flow-bin": "^0.77.0",
     "husky": "^0.14.3",
     "lint-staged": "^7.2.0",
     "prettier": "^1.13.7"
   },
   "prettier": {
     "printWidth": 85,
-    "parser": "flow",
-    "semi": false,
     "singleQuote": true,
     "tabWidth": 2,
     "useTabs": false,

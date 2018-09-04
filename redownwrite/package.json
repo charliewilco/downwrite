@@ -15,8 +15,7 @@
   },
   "dependencies": {
     "@charliewilco/sanitize-object": "^1.0.1",
-    "@types/lodash": "^4.14.116",
-    "@types/react-dropzone": "^4.2.2",
+    "@types/prismjs": "^1.9.0",
     "@zeit/next-css": "^0.2.0",
     "@zeit/next-typescript": "^1.1.0",
     "babel-plugin-styled-components": "^1.5.1",
@@ -40,12 +39,10 @@
     "prismjs": "^1.15.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
-    "react-dropzone": "^4.2.13",
+    "react-dropzone": "^5.0.1",
     "react-markdown": "^3.3.4",
-    "react-media": "^1.8.0",
     "react-prism": "^4.3.1",
     "styled-components": "^3.4.5",
-    "sw-precache-webpack-plugin": "^0.11.5",
     "universal-cookie": "^3.0.4",
     "universal-cookie-express": "^3.0.4",
     "universal-fetch": "^1.0.0",
@@ -53,9 +50,11 @@
   },
   "devDependencies": {
     "@types/draft-js": "^0.10.24",
+    "@types/lodash": "^4.14.116",
     "@types/next": "^6.1.4",
-    "@types/react": "^16.4.12",
+    "@types/react": "^16.4.13",
     "@types/react-dom": "^16.0.7",
+    "@types/react-dropzone": "^4.2.2",
     "@types/uuid": "^3.4.3",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.4.0",
@@ -64,7 +63,6 @@
     "jest": "^23.4.1",
     "jest-fetch-mock": "^1.6.5",
     "jest-styled-components": "^5.0.1",
-    "prettier": "^1.13.7",
     "react-addons-test-utils": "^15.6.2",
     "react-test-renderer": "^16.4.1",
     "react-testing-library": "^4.1.3",
@@ -75,7 +73,6 @@
     "env": {
       "development": {
         "plugins": [
-          "transform-flow-strip-types",
           [
             "styled-components",
             {
@@ -90,6 +87,7 @@
         "presets": [
           [
             "next/babel",
+            "@zeit/next-typescript/babel",
             {
               "preset-env": {
                 "modules": "commonjs"
@@ -98,7 +96,6 @@
           ]
         ],
         "plugins": [
-          "transform-flow-strip-types",
           [
             "styled-components",
             {
