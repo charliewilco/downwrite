@@ -32,11 +32,13 @@
   },
   "devDependencies": {
     "babel-jest": "^22.4.0",
-    "concurrently": "^3.5.0",
     "jest": "^22.4.0"
   },
   "nodemonConfig": {
-    "ignore": ["test/*", "src/*"],
+    "ignore": [
+      "test/*",
+      "src/*"
+    ],
     "verbose": true,
     "delay": "2500"
   },
@@ -72,7 +74,9 @@
         }
       ]
     ],
-    "plugins": ["transform-object-rest-spread"]
+    "plugins": [
+      "transform-object-rest-spread"
+    ]
   },
   "repository": "charlespeters/downwrite",
   "author": "Charles ⚡ <charlespeters42@gmail.com>"
