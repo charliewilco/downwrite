@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 let ripple = keyframes`
@@ -17,7 +17,7 @@ let ripple = keyframes`
   }
 `
 
-let spinners = size => css`
+let spinners = (size: number) => css`
   position: absolute;
   top: ${-2}px;
   left: ${size / -2 + 1}px;
@@ -32,19 +32,27 @@ let spinners = size => css`
 const OuterRing = styled.div`
   position: relative;
   margin: auto;
-  color: ${props => props.color};
-  transform: translateY(${props => props.size / 2}px);
+  color: ${(props: ISpinnerProps) => props.color};
+  transform: translateY(${(props: ISpinnerProps) => props.size / 2}px);
 `
 
 const InnerRing = styled.div`
-  ${props => spinners(props.size)};
+  ${(props: ISpinnerProps) => spinners(props.size)};
   animation-delay: ${props => props.delay};
 `
 
-export default ({ size, color }) => (
+interface ISpinnerProps {
+  size: number;
+  color?: string;
+  delay?: string;
+}
+
+const Spinner: React.SFC<ISpinnerProps> = ({ size, color }) => (
   <OuterRing size={size} color={color}>
     <InnerRing size={size} delay="-0.6s" />
     <InnerRing size={size} delay="-0.4s" />
     <InnerRing size={size} delay="-0.2s" />
   </OuterRing>
 )
+
+export default Spinner

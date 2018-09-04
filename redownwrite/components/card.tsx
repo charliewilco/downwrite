@@ -1,4 +1,5 @@
-import React from 'react'
+import * as React from 'react'
+import * as Draft from 'draft-js'
 import styled from 'styled-components'
 import Link from 'next/link'
 import distance from 'date-fns/distance_in_words_to_now'
@@ -93,13 +94,30 @@ const EditLink = ({ id, title = 'Edit' }) => (
 const PreviewLink = ({ id }) => (
   <Link
     prefetch
+    passHref
     href={{ pathname: '/preview', query: { id } }}
     as={`/${id}/preview`}>
     <SxLink>Preview</SxLink>
   </Link>
 )
 
-const Card = ({ title, id, content, dateAdded, onDelete, ...args }) => (
+export interface ICardProps {
+  title: string;
+  content: Draft.RawDraftContentState;
+  id: string;
+  dateAdded: Date;
+  onDelete: () => void;
+  public: boolean;
+}
+
+const Card: React.SFC<ICardProps> = ({
+  title,
+  id,
+  content,
+  dateAdded,
+  onDelete,
+  public: publicStatus
+}) => (
   <CardContainer data-testid="CARD">
     <CardHeader>
       <CardTitle data-testid="CARD_TITLE">
@@ -118,7 +136,7 @@ const Card = ({ title, id, content, dateAdded, onDelete, ...args }) => (
     <CardTray>
       <div data-testid="CARD_EXCERPT">
         <EditLink id={id} />
-        {args.public && <PreviewLink id={id} />}
+        {publicStatus && <PreviewLink id={id} />}
       </div>
       {onDelete && (
         <CardDelete data-testid="CARD_DELETE_BUTTON" onClick={onDelete}>

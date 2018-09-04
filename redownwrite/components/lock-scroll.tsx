@@ -1,6 +1,6 @@
-import { Component } from 'react'
+import * as React from 'react'
 
-export default class extends Component {
+export default class LockScroll extends React.Component {
   componentDidMount() {
     if (document) {
       if (document.body) {

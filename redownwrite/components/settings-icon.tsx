@@ -1,8 +1,7 @@
-// @flow
 import * as React from 'react'
 import styled from 'styled-components'
 
-const SettingsIcon: React.ElementType = () => (
+const SettingsIcon: React.SFC<any> = () => (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <title>Settings</title>
     <g id="Canvas" transform="translate(-1700 1525)">
@@ -32,7 +31,7 @@ const SettingsButton = styled.button`
   }
 `
 
-export default ({ onClick }: { onClick: Function }) => (
+export default ({ onClick }: { onClick: () => void }) => (
   <SettingsButton onClick={onClick}>
     <SettingsIcon />
   </SettingsButton>

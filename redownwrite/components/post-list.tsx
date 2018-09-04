@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment, Component } from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import Card from './card'
 import LayoutControl from './layout-control'
@@ -74,12 +74,26 @@ const List = styled.ul`
   list-style: inside none;
 `
 
-export default class PostList extends Component<any, { layout: 'grid' | 'list' }> {
+type LayoutType = string | 'grid' | 'list'
+
+interface IPostListProps {
+  posts: any[];
+  onDelete: (post: any) => void;
+}
+
+interface IPostListState {
+  layout: LayoutType;
+}
+
+export default class PostList extends React.Component<
+  IPostListProps,
+  IPostListState
+> {
   state = {
     layout: 'grid'
   }
 
-  layoutChange = (x: 'grid' | 'list') => {
+  layoutChange = (x: LayoutType) => {
     return this.setState({ layout: x })
   }
 
@@ -87,7 +101,7 @@ export default class PostList extends Component<any, { layout: 'grid' | 'list' }
     const { posts, onDelete } = this.props
     const { layout } = this.state
     return (
-      <Fragment>
+      <>
         <ListHeader>
           <Title>Entries</Title>
           <LayoutControl layout={layout} layoutChange={this.layoutChange} />
@@ -109,7 +123,7 @@ export default class PostList extends Component<any, { layout: 'grid' | 'list' }
             ))}
           </List>
         )}
-      </Fragment>
+      </>
     )
   }
 }

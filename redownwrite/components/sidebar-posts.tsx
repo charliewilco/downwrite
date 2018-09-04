@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import PostListItem from './post-list-item'
 
@@ -11,7 +11,7 @@ const Separator = styled.div`
   margin-bottom: 1rem;
 `
 
-export default ({ posts }) => (
+const SidebarPosts: React.SFC<{ posts: any[] }> = ({ posts }) => (
   <>
     <SidebarEntriesTitle>Recent Entries</SidebarEntriesTitle>
     {posts.slice(0, 2).map((post, i) => (
@@ -21,3 +21,5 @@ export default ({ posts }) => (
     ))}
   </>
 )
+
+export default SidebarPosts

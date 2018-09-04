@@ -1,5 +1,4 @@
-// @flow
-import React, { Component } from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import Toggle from './toggle'
 import Button from './button'
@@ -35,12 +34,14 @@ const Toggler = () => (
   </Toggle>
 )
 
-export default class extends Component<{
-  children?: Node,
-  disabled: boolean,
-  onChange: Function,
-  buttonText: string
-}> {
+interface IHelperProps {
+  children?: React.ReactNode;
+  disabled: boolean;
+  onChange: () => void;
+  buttonText: string;
+}
+
+export default class extends React.Component<IHelperProps> {
   static displayName = 'HelperToolbar'
 
   render() {

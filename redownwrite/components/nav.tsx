@@ -1,5 +1,4 @@
-// @flow
-import React, { Component } from 'react'
+import * as React from 'react'
 import Link from 'next/link'
 import { withRouter } from 'next/router'
 import styled, { keyframes } from 'styled-components'
@@ -120,11 +119,11 @@ const UserActionContainer = styled.div`
 `
 
 // TODO: Slide to close navigation?
-
-type NavigationProps = {
-  token: string,
-  username: string,
-  closeNav: Function
+interface NavigationProps {
+  token: string;
+  username: string;
+  pathname: string;
+  closeNav: () => void;
 }
 
 const NavLabel = styled.span`
@@ -139,7 +138,7 @@ const SignOut = withAuth(({ signOut, children }) => (
 const AuthedFetch = withAuth(Fetch)
 const AuthedUserBlock = withAuth(User)
 
-class NavBar extends Component<NavigationProps> {
+class NavBar extends React.Component<NavigationProps> {
   static displayName = 'NavigationBar'
 
   componentDidUpdate(prevProps) {
@@ -169,7 +168,7 @@ class NavBar extends Component<NavigationProps> {
 
               <PostListContainer>
                 <AuthedFetch>
-                  {posts =>
+                  {({ posts }) =>
                     posts.length > 0 ? (
                       <SidebarPosts posts={posts} />
                     ) : (

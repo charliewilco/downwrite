@@ -1,18 +1,19 @@
-// @flow
-import React, { Fragment, Component, type Element } from 'react'
+import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 
-const addListeners = (el: Document, s: string, fn: Function) =>
+const addListeners = (el: Document, s: string, fn: () => void) =>
   s.split(' ').forEach(e => el.addEventListener(e, fn, false))
 
-const rmListeners = (el: Document, s: string, fn: Function) =>
+const rmListeners = (el: Document, s: string, fn: () => void) =>
   s.split(' ').forEach(e => el.removeEventListener(e, fn, false))
 
 // TODO: Should blur child
-export default class TouchOutside extends Component<{
-  onChange: Function,
-  children: Element<any>
-}> {
+interface ITouchOutsideProps {
+  onChange: () => void;
+  children: React.ReactNode;
+}
+
+export default class TouchOutside extends React.Component<ITouchOutsideProps> {
   static displayName = 'TouchOutside'
 
   componentDidMount() {
@@ -38,6 +39,6 @@ export default class TouchOutside extends Component<{
   }
 
   render() {
-    return <Fragment>{this.props.children}</Fragment>
+    return <>{this.props.children}</>
   }
 }

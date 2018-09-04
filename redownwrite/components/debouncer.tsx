@@ -1,15 +1,12 @@
-// @flow
-
-import { Component, type Element } from 'react'
+import * as React from 'react'
 import debounce from 'lodash/debounce'
 
-type DebounceProps = {
-  method: Function,
-  timeout: number,
-  children: Element<*>
+interface DebounceProps {
+  method: () => void;
+  timeout: number;
 }
 
-export default class extends Component<DebounceProps> {
+export default class extends React.Component<DebounceProps> {
   static displayName = 'Debouncer'
 
   static defaultProps = {
@@ -28,6 +25,6 @@ export default class extends Component<DebounceProps> {
   }
 
   render() {
-    return this.props.children
+    return null
   }
 }

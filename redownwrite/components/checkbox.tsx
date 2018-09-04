@@ -1,6 +1,4 @@
-import React from 'react'
 import styled from 'styled-components'
-import { colors } from '../utils/defaultStyles'
 
 const base64Icon = `data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkx
 JQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy
@@ -9,7 +7,7 @@ DAwL3N2ZyIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiPgo8cGF0
 aCBmaWxsPSd3aGl0ZScgZD0iTTkgMTYuMTdMNC44MyAxMmwtMS40MiAxLjQxTDkgMTkgMjEgN2w
 tMS40MS0xLjQxeiAiPjwvcGF0aD48L3N2Zz4=`
 
-const Inp = styled.input`
+const CheckboxInput = styled.input.attrs({ type: 'checkbox' })`
   display: inline-block;
   border-radius: 4px;
   vertical-align: middle;
@@ -23,8 +21,4 @@ const Inp = styled.input`
       : '#D0D0D0'};
 `
 
-const Checkbox = props => <Inp type="checkbox" {...props} />
-
-Checkbox.displayName = 'UICheckbox'
-
-export default Checkbox
+export default CheckboxInput

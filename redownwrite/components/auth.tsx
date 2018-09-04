@@ -1,11 +1,10 @@
-// @flow
-import React, { Component, createContext, type ElementType } from 'react'
+import * as React from 'react'
+import Cookies from 'universal-cookie'
 import Router from 'next/router'
 import jwt from 'jwt-decode'
-import Cookies from 'universal-cookie'
 import addDays from 'date-fns/add_days'
 
-const AuthContext = createContext()
+const AuthContext = React.createContext({})
 
 // NOTE:
 // This component should passdown the state of authed from withAuthCheck() HOC
@@ -33,17 +32,22 @@ const cookieOptions = {
   expires: addDays(Date.now(), COOKIE_EXPIRATION)
 }
 
-type AuthProps = {
-  children: ElementType,
-  token: string,
-  authed: boolean
+interface AuthProps {
+  children: React.ReactNode;
+  token: string;
+  authed: boolean;
 }
 
-type AuthState = {
-  token: string,
-  user: ?string,
-  name: ?string,
-  authed: boolean
+interface AuthState {
+  token: string;
+  user?: string;
+  name?: string;
+  authed: boolean;
+}
+
+interface AuthActions {
+  signIn: () => void;
+  signOut: () => void;
 }
 
 const EMPTY_USER = {
@@ -51,7 +55,7 @@ const EMPTY_USER = {
   name: null
 }
 
-export default class AuthMegaProvider extends Component<AuthProps, AuthState> {
+export default class AuthMegaProvider extends React.Component<AuthProps, AuthState> {
   constructor(props: AuthProps) {
     super(props)
 
@@ -110,8 +114,8 @@ export default class AuthMegaProvider extends Component<AuthProps, AuthState> {
   }
 }
 
-export const withAuth = (Cx: React.ElementType) => {
-  return class extends Component<any, any> {
+export const withAuth = (Component: React.ReactNode) => {
+  return class extends React.Component<any, any> {
     static displayName = `withAuth(${Cx.displayName || Cx.name})`
 
     static getInitialProps = Cx.getInitialProps
@@ -119,7 +123,7 @@ export const withAuth = (Cx: React.ElementType) => {
     render() {
       return (
         <AuthContext.Consumer>
-          {auth => <Cx {...this.props} {...auth} />}
+          {auth => <Component {...this.props} {...auth} />}
         </AuthContext.Consumer>
       )
     }

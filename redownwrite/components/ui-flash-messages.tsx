@@ -1,14 +1,22 @@
-import React from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import CloseIcon from './close-icon'
 import { colors } from '../utils/defaultStyles'
+
+interface IUIFlashProps {
+  onClose?: () => void;
+  width: number;
+  type?: string;
+  content?: string;
+  centered?: boolean;
+}
 
 const UIFlashContainer = styled.div`
   display: flex;
   border-left: 5px solid rgba(0, 0, 0, 0.25);
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
   z-index: 900;
-  max-width: ${props => props.width}px;
+  max-width: ${(props: IUIFlashProps) => props.width}px;
   left: 0px;
   right: 0px;
   background: ${colors.yellow500};
@@ -16,7 +24,7 @@ const UIFlashContainer = styled.div`
   position: fixed;
   top: 20px;
   margin: auto;
-  text-align: ${props => props.centered && 'center'};
+  text-align: ${(props: IUIFlashProps) => props.centered && 'center'};
   padding-top: 8px;
   padding-right: 16px;
   padding-bottom: 8px;
@@ -34,7 +42,12 @@ const CloseButton = styled.button`
   font-family: inherit;
 `
 
-const UIFlash = ({ width = 512, onClose, content, type }) => (
+const UIFlashMessage: React.SFC<IUIFlashProps> = ({
+  width = 512,
+  onClose,
+  content,
+  type
+}) => (
   <UIFlashContainer width={width} centered={!onClose}>
     <Stretch>
       {type && `${type.length > 0 && type.toUpperCase()}:`} {content}
@@ -47,9 +60,7 @@ const UIFlash = ({ width = 512, onClose, content, type }) => (
   </UIFlashContainer>
 )
 
-UIFlash.displayName = 'UIFlashMessage'
-
-export default UIFlash
+export default UIFlashMessage
 
 // TODO: This needs a few tests and these functions need to be documented
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import format from 'date-fns/format'
 import Markdown from 'react-markdown'
@@ -100,7 +100,19 @@ const ContentBody = styled(Wrapper)`
   }
 `
 
-export default ({ title, dateAdded, children, content }) => (
+interface IContentProps {
+  title: string;
+  dateAdded: Date;
+  children: React.ReactNode;
+  content: string;
+}
+
+const Content: React.SFC<IContentProps> = ({
+  title,
+  dateAdded,
+  children,
+  content
+}) => (
   <WrapperExtended>
     <article className="harticle">
       <ContentHeader>
@@ -120,3 +132,5 @@ export default ({ title, dateAdded, children, content }) => (
     </article>
   </WrapperExtended>
 )
+
+export default Content

@@ -1,4 +1,6 @@
-export default ({ open }) => (
+import * as React from 'react'
+
+const Navicon: React.SFC<{ open: boolean }> = ({ open }) => (
   <svg width="20px" height="9px" viewBox="0 0 20 9" className="Navicon">
     <desc>Navicon</desc>
     <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -22,3 +24,5 @@ export default ({ open }) => (
     </g>
   </svg>
 )
+
+export default Navicon

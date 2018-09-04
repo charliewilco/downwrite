@@ -1,8 +1,7 @@
-// @flow
-import React from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 
-type PostError = { message: string, error: string }
+interface IPostError { message: string; error: string }
 
 const ErrorContainer = styled.div`
   margin: 0 auto;
@@ -23,15 +22,18 @@ const ErrorImage = styled.img`
   max-width: 25%;
 `
 
-export default ({ error, message }: PostError) => (
+const PostError: React.SFC<IPostError> = ({ error, message }) => (
   <ErrorContainer>
     <ErrorImage
       alt="Document with an Negative mark"
       src="/static/entry-not-found.png"
     />
     <ErrorTitle>
-      {error}. <br />Ummm... something went horribly wrong.
+      {error}. <br />
+      Ummm... something went horribly wrong.
     </ErrorTitle>
     <p>{message}</p>
   </ErrorContainer>
 )
+
+export default PostError

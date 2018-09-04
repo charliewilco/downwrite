@@ -1,3 +1,4 @@
+import * as React from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
 
@@ -6,7 +7,10 @@ const PreviewAnchor = styled.a`
   font-size: 12px;
 `
 
-export default ({ publicStatus, id }) =>
+const PreviewLink: React.SFC<{ publicStatus: boolean, id: string }> = ({
+  publicStatus,
+  id
+}) =>
   publicStatus && (
     <Link
       prefetch
@@ -15,3 +19,5 @@ export default ({ publicStatus, id }) =>
       <PreviewAnchor>Preview</PreviewAnchor>
     </Link>
   )
+
+export default PreviewLink

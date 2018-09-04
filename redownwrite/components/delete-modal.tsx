@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import Modal from './modal'
 import Button from './button'
@@ -27,9 +27,21 @@ const DeleteWarning = styled.p`
   font-size: 16px;
 `
 
-const quotedTitle = title => `"${title}"`
+const quotedTitle = (title: string) => `"${title}"`
 
-export default ({ closeModal, title, onCancelDelete, onDelete }) => (
+interface IDeleteModalProps {
+  closeModal: () => void;
+  title: string;
+  onCancelDelete: () => void;
+  onDelete: () => void;
+}
+
+const DeleteModal: React.SFC<IDeleteModalProps> = ({
+  closeModal,
+  title,
+  onCancelDelete,
+  onDelete
+}) => (
   <Modal closeUIModal={closeModal} sm>
     <Box>
       <DeleteBody>
@@ -45,3 +57,5 @@ export default ({ closeModal, title, onCancelDelete, onDelete }) => (
     </Box>
   </Modal>
 )
+
+export default DeleteModal

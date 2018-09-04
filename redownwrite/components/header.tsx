@@ -1,20 +1,10 @@
-// @flow
-
-import React, { Component } from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import Logo from './logo'
 import Navicon from './navicon'
 import { colors } from '../utils/defaultStyles'
 import { withAuth } from './auth'
-
-type HeaderProps = {
-  authed: boolean,
-  name: string,
-  onClick: Function,
-  route: string,
-  open: boolean
-}
 
 const MenuContainer = styled.nav`
   display: flex;
@@ -101,7 +91,15 @@ const Header = styled.header`
   }
 `
 
-class UIHeader extends Component<HeaderProps, void> {
+interface IHeaderProps {
+  authed: boolean;
+  name: string;
+  onClick: Function;
+  route: string;
+  open: boolean;
+}
+
+class UIHeader extends React.Component<IHeaderProps, void> {
   render() {
     const { authed, onClick, open, route } = this.props
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 
 const StyledInput = styled.input`
@@ -27,7 +27,13 @@ const StyledInput = styled.input`
   }
 `
 
-export default class Input extends Component {
+interface IInputProps {
+  type: string;
+  inputRef?: React.RefObject;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+}
+
+export default class Input extends React.Component<IInputProps, any> {
   static defaultProps = {
     type: 'text'
   }

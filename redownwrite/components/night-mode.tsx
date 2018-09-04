@@ -1,6 +1,4 @@
-// @flow
-
-import React, { Component, createContext, type ComponentType } from 'react'
+import * as React from 'react'
 import styled, { ThemeProvider, injectGlobal } from 'styled-components'
 import Checkbox from './checkbox'
 import { colors, nightTheme, dayTheme } from '../utils/defaultStyles'
@@ -32,7 +30,22 @@ const NightController = styled.label`
   align-items: center;
 `
 
-const NightModeContext = createContext()
+interface INightModeContext {
+  night: boolean;
+  action: {
+    onChange: () => void
+  };
+}
+
+interface INightModeProps {
+  children: React.ReactNode;
+}
+
+interface INightModeState {
+  night: boolean;
+}
+
+const NightModeContext = React.createContext({})
 
 injectGlobal`
   .NightMDX {}
@@ -48,25 +61,9 @@ injectGlobal`
   }
 `
 
-export const NightModeTrigger = ({ children }) => (
-  <NightModeContext.Consumer>
-    {context => (
-      <NightContainer className={context.night ? 'NightMode' : ''}>
-        <NightToggle>
-          <NightController>
-            <Checkbox checked={context.night} onChange={context.action.onChange} />
-            <NightLabel>Night Mode</NightLabel>
-          </NightController>
-        </NightToggle>
-        {children}
-      </NightContainer>
-    )}
-  </NightModeContext.Consumer>
-)
-
-export default class NightModeContainer extends Component<
-  { children: ComponentType<any> },
-  { night: boolean }
+export default class NightModeContainer extends React.Component<
+  INightModeProps,
+  INightModeState
 > {
   static displayName = 'NightModeContainer'
 
@@ -116,3 +113,19 @@ export default class NightModeContainer extends Component<
     )
   }
 }
+
+export const NightModeTrigger: React.SFC<INightModeProps> = ({ children }) => (
+  <NightModeContext.Consumer>
+    {(context: INightModeContext) => (
+      <NightContainer className={context.night ? 'NightMode' : ''}>
+        <NightToggle>
+          <NightController>
+            <Checkbox checked={context.night} onChange={context.action.onChange} />
+            <NightLabel>Night Mode</NightLabel>
+          </NightController>
+        </NightToggle>
+        {children}
+      </NightContainer>
+    )}
+  </NightModeContext.Consumer>
+)

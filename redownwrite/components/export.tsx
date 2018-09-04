@@ -1,25 +1,22 @@
-// @flow
-
 import * as React from 'react'
-import { convertToRaw, EditorState } from 'draft-js'
+import * as Draft from 'draft-js'
 import { draftToMarkdown } from 'markdown-draft-js'
 import styled from 'styled-components'
 import FileSaver from 'file-saver'
 import Markdown from './export-markdown-icon'
 import { createMarkdown } from '../utils/markdownTemplate'
 
-import type { ContentState } from 'draft-js'
-
-type ExportPr = {
-  title: string,
-  date: Date,
-  editorState: EditorState
+interface ExportPr {
+  title: string;
+  className: string;
+  date: Date;
+  editorState: Draft.EditorState;
 }
 
-type ExportCb = {
-  title: string,
-  content: ContentState,
-  date: Date
+interface ExportCb {
+  title: string;
+  content: Draft.ContentState;
+  date: Date;
 }
 
 const ExportContainer = styled.div`
@@ -34,8 +31,8 @@ export default class UIMarkdownExport extends React.Component<ExportPr> {
 
   export = (cb: Function) => {
     let { title, date, editorState } = this.props
-    const cx: ContentState = editorState.getCurrentContent()
-    const content = convertToRaw(cx)
+    const cx: Draft.ContentState = editorState.getCurrentContent()
+    const content = Draft.convertToRaw(cx)
 
     return cb({
       title,
@@ -44,7 +41,7 @@ export default class UIMarkdownExport extends React.Component<ExportPr> {
     })
   }
 
-  customDraft = (content: ContentState) =>
+  customDraft = (content: Draft.ContentState) =>
     draftToMarkdown(content, {
       entityItems: {
         LINK: {

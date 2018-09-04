@@ -1,10 +1,11 @@
+import * as React from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import Avatar from './avatar'
-import { colors, fonts } from '../utils/defaultStyles'
+import { fonts } from '../utils/defaultStyles'
 
 const AuthorContainer = styled.aside`
-  display: block
+  display: block;
   max-width: 512px;
   margin: 0 auto;
   padding: 16px 8px;
@@ -38,10 +39,16 @@ const Rule = styled.hr`
   border: 0;
   background: rgba(0, 0, 0, 0.125);
 `
-const TeaserCopy = () =>
+const TeaserCopy: React.SFC<any> = () =>
   `You can write and share on Downwrite, you can sign up or log in `
 
-export default ({ colors, authed, name }) => (
+interface IAuthorProps {
+  authed: boolean;
+  name: string;
+  colors: string[];
+}
+
+const Author: React.SFC<IAuthorProps> = ({ colors, authed, name }) => (
   <AuthorContainer>
     <Header>
       <Avatar colors={colors} />
@@ -60,3 +67,5 @@ export default ({ colors, authed, name }) => (
     )}
   </AuthorContainer>
 )
+
+export default Author
