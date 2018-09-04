@@ -1,39 +1,38 @@
-// @flow
-import * as React from 'react'
-import Link from 'next/link'
-import styled from 'styled-components'
-import 'universal-fetch'
-import LoginInput from './login-input'
-import Button from './button'
-import Checkbox from './checkbox'
-import { USER_ENDPOINT } from '../utils/urls'
+import * as React from 'react';
+import Link from 'next/link';
+import styled from 'styled-components';
+import 'universal-fetch';
+import LoginInput from './login-input';
+import Button from './button';
+import Checkbox from './checkbox';
+import { USER_ENDPOINT } from '../utils/urls';
 
-type RegisterType = {
-  username: string,
-  password: string,
-  email: string,
-  checked: boolean
+interface RegisterType {
+  username: string;
+  password: string;
+  email: string;
+  checked: boolean;
 }
 
-type LoginProps = {
-  signIn: Function,
-  setError: Function
+interface LoginProps {
+  signIn: (x: boolean, y: string) => void;
+  setError: (x: string, y: string) => void;
 }
 
 export const InlineBlock = styled.span`
   display: inline-block;
-`
+`;
 
 const LegalInfo = styled.small`
   flex: 1;
   line-height: 1.2;
-`
+`;
 
 const LegalCheck = styled(Checkbox)`
   margin-right: 16px;
   display: block;
   max-width: 20px;
-`
+`;
 
 const LegalContainer = styled.label`
   display: flex;
@@ -41,18 +40,18 @@ const LegalContainer = styled.label`
   margin: 16px;
   background: #d8eaf1;
   padding: 8px;
-`
+`;
 
 export const Padded = styled.div`
   padding: 16px;
-  text-align: ${props => props.align};
-`
+  text-align: ${(props: { align?: string }) => props.align};
+`;
 
 const LegalLink = () => (
   <Link href="/legal">
     <a>legal stuff</a>
   </Link>
-)
+);
 
 export default class Register extends React.Component<LoginProps, RegisterType> {
   state = {
@@ -60,20 +59,20 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
     password: '',
     email: '',
     checked: false
-  }
+  };
 
-  handleSubmit = (event: Event) => {
+  handleSubmit = (event: React.SyntheticEvent<any>) => {
     if (event && event.preventDefault) {
-      event.preventDefault()
+      event.preventDefault();
     }
 
-    this.onSubmit()
-  }
+    this.onSubmit();
+  };
 
   onSubmit = async () => {
-    const { signIn, setError } = this.props
+    const { signIn, setError } = this.props;
 
-    const { username, password, email } = this.state
+    const { username, password, email } = this.state;
 
     const response = await fetch(USER_ENDPOINT, {
       method: 'POST',
@@ -81,26 +80,26 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ username, password, email })
-    })
+    });
 
     const user: {
-      userID: string,
-      id_token: string,
-      username: string,
-      message?: string
-    } = await response.json()
+      userID: string;
+      id_token: string;
+      username: string;
+      message?: string;
+    } = await response.json();
 
     if (user.userID) {
-      signIn(user.id_token !== undefined, user.id_token)
+      signIn(user.id_token !== undefined, user.id_token);
     } else {
-      setError(user.message, 'error')
+      setError(user.message, 'error');
     }
-  }
+  };
 
-  toggleChecked = () => this.setState(({ checked }) => ({ checked: !checked }))
+  toggleChecked = () => this.setState(({ checked }) => ({ checked: !checked }));
 
   render() {
-    const { username, password, email, checked } = this.state
+    const { username, password, email, checked } = this.state;
     return (
       <form onSubmit={this.handleSubmit}>
         <Padded>
@@ -109,7 +108,7 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
             label="Username"
             autoComplete="username"
             value={username}
-            onChange={({ target }: SyntheticInputEvent<*>) =>
+            onChange={({ target }: React.SyntheticEvent<any>) =>
               this.setState({ username: target.value })
             }
           />
@@ -119,7 +118,7 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
             label="Email"
             autoComplete="email"
             value={email}
-            onChange={({ target }: SyntheticInputEvent<*>) =>
+            onChange={({ target }: React.SyntheticEvent<any>) =>
               this.setState({ email: target.value })
             }
           />
@@ -130,7 +129,7 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
             value={password}
             autoComplete="current-password"
             type="password"
-            onChange={({ target }: SyntheticInputEvent<*>) =>
+            onChange={({ target }: React.SyntheticEvent<any>) =>
               this.setState({ password: target.value })
             }
           />
@@ -154,6 +153,6 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
           </InlineBlock>
         </Padded>
       </form>
-    )
+    );
   }
 }

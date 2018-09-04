@@ -1,10 +1,9 @@
-// @flow
-import * as React from 'react'
-import styled, { keyframes } from 'styled-components'
-import LockScroll from './lock-scroll'
-import Wrapper from './wrapper'
-import CloseIcon from './close-icon'
-import { colors } from '../utils/defaultStyles'
+import * as React from 'react';
+import styled, { keyframes } from 'styled-components';
+import LockScroll from './lock-scroll';
+import Wrapper from './wrapper';
+import CloseIcon from './close-icon';
+import { colors } from '../utils/defaultStyles';
 
 const fadein = keyframes`
   0% {
@@ -16,7 +15,7 @@ const fadein = keyframes`
     transform: translate(0, 0);
     opacity: 1;
   }
-`
+`;
 
 const Overlay = styled.div`
   position: fixed;
@@ -30,7 +29,7 @@ const Overlay = styled.div`
   width: 100%;
   background-color: rgba(21, 69, 93, 0.925);
   background-blend-mode: multiply;
-`
+`;
 const ModalContainer = styled(Wrapper)`
   animation: ${fadein} 0.45s;
   background: white;
@@ -39,7 +38,7 @@ const ModalContainer = styled(Wrapper)`
   position: relative;
   color: ${colors.text};
   display: flex;
-`
+`;
 
 const ModalCloseButton = styled.button`
   position: absolute;
@@ -51,33 +50,33 @@ const ModalCloseButton = styled.button`
   display: block;
   margin: 0px;
   font-family: inherit;
-`
+`;
 
 const ModalInnerContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-`
+`;
 
 const ModalBody = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   flex: 1;
-`
+`;
 
-type ModalProps = {
-  closeUIModal: Function,
-  children: React.Node,
-  xs: boolean,
-  sm: boolean
+interface ModalProps {
+  closeUIModal: () => void;
+  children: React.ReactNode;
+  xs: boolean;
+  sm: boolean;
 }
 
 export default class UIModal extends React.Component<ModalProps, void> {
-  static displayName = 'UIModal'
+  static displayName = 'UIModal';
 
   render() {
-    const { closeUIModal, children, sm, xs } = this.props
+    const { closeUIModal, children, sm, xs } = this.props;
     return (
       <LockScroll>
         <Overlay>
@@ -91,6 +90,6 @@ export default class UIModal extends React.Component<ModalProps, void> {
           </ModalContainer>
         </Overlay>
       </LockScroll>
-    )
+    );
   }
 }

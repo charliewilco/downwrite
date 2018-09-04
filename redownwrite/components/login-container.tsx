@@ -1,13 +1,14 @@
-import styled from 'styled-components'
-import Toggle from './toggle'
-import { colors } from '../utils/defaultStyles'
+import * as React from 'react';
+import styled from 'styled-components';
+import Toggle from './toggle';
+import { colors } from '../utils/defaultStyles';
 
 const SelectedTitle = styled.h2`
   margin-bottom: 32px;
   text-align: center;
   font-size: 18px;
   font-weight: 400;
-`
+`;
 
 const ToggleLoginButton = styled.button`
   width: 50%;
@@ -22,13 +23,15 @@ const ToggleLoginButton = styled.button`
   font-size: 14px;
   background: inherit;
   box-sizing: inherit;
-  border-bottom-color: ${props => (props.active ? colors.yellow700 : 'transparent')};
-  color: ${props => (props.active ? colors.yellow700 : 'inherit')};
-`
+  border-bottom-color: ${(props: { active: boolean }) =>
+    props.active ? colors.yellow700 : 'transparent'};
+  color: ${(props: { active: boolean }) =>
+    props.active ? colors.yellow700 : 'inherit'};
+`;
 
 const ToggleButtonContainer = styled.div`
   display: flex;
-`
+`;
 
 const LoginFormWrapper = styled.div`
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
@@ -36,11 +39,17 @@ const LoginFormWrapper = styled.div`
   width: 100%;
   background: white;
   color: ${colors.text};
-`
-
-export default ({ children }) => (
+`;
+const LoginContainer: React.SFC<{ children: (x: boolean) => React.ReactNode }> = ({
+  children
+}) => (
   <Toggle defaultOpen>
-    {(isOpen, toggleInstance, closeInstance, setInstance) => (
+    {(
+      isOpen: boolean,
+      toggleInstance: () => void,
+      closeInstance: () => void,
+      setInstance: (x: boolean) => void
+    ) => (
       <LoginFormWrapper>
         <ToggleButtonContainer>
           <ToggleLoginButton active={!isOpen} onClick={() => setInstance(false)}>
@@ -61,4 +70,6 @@ export default ({ children }) => (
       </LoginFormWrapper>
     )}
   </Toggle>
-)
+);
+
+export default LoginContainer;

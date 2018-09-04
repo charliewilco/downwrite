@@ -1,8 +1,18 @@
-// @flow
-import * as React from 'react'
-import uuid from 'uuid/v4'
-import styled from 'styled-components'
-import { colors, fonts } from '../utils/defaultStyles'
+import * as React from 'react';
+import uuid from 'uuid/v4';
+import styled from 'styled-components';
+import { colors, fonts } from '../utils/defaultStyles';
+
+interface InputType {
+  label: string;
+  onChange: () => void;
+  value: string;
+  type: string;
+}
+
+interface InputTypeState {
+  active: boolean;
+}
 
 const StyledInput = styled.input`
   font-family: ${fonts.monospace};
@@ -24,7 +34,7 @@ const StyledInput = styled.input`
     color: #d9d9d9;
     font-style: italic;
   }
-`
+`;
 
 const InputContainer = styled.label`
   display: block;
@@ -32,33 +42,26 @@ const InputContainer = styled.label`
   &:not(:last-of-type) {
     margin-bottom: 16px;
   }
-`
+`;
 
 const InputLabel = styled.small`
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: ${props => (props.active ? colors.yellow700 : '#b4b4b4')};
+  color: ${(props: InputTypeState) => (props.active ? colors.yellow700 : '#b4b4b4')};
   transition: color 250ms ease-in-out;
-`
+`;
 
-type InputType = {
-  label: string,
-  onChange: Function,
-  value: string,
-  type: string
-}
-
-export default class extends React.Component<InputType, { active: boolean }> {
+export default class extends React.Component<InputType, InputTypeState> {
   state = {
     active: false
-  }
+  };
 
-  static displayName = 'LoginInput'
+  static displayName = 'LoginInput';
 
   render() {
-    const id = uuid()
-    const { active } = this.state
-    const { label } = this.props
+    const id = uuid();
+    const { active } = this.state;
+    const { label } = this.props;
     return (
       <InputContainer htmlFor={id}>
         <StyledInput
@@ -69,6 +72,6 @@ export default class extends React.Component<InputType, { active: boolean }> {
         />
         <InputLabel active={active}>{label}</InputLabel>
       </InputContainer>
-    )
+    );
   }
 }

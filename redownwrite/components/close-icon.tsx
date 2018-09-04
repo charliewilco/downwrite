@@ -1,6 +1,11 @@
-import React from 'react'
+import * as React from 'react';
 
-const CloseIcon = ({ size, fill }) => (
+interface ICloseIconProps {
+  size: number;
+  fill: string;
+}
+
+const CloseIcon: React.SFC<ICloseIconProps> = ({ size, fill }) => (
   <svg
     width={size}
     height={size}
@@ -23,11 +28,11 @@ const CloseIcon = ({ size, fill }) => (
       />
     </defs>
   </svg>
-)
+);
 
 CloseIcon.defaultProps = {
   size: 12,
   fill: '#4382A1'
-}
+};
 
-export default CloseIcon
+export default CloseIcon;

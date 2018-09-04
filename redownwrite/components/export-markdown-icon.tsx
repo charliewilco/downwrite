@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from 'styled-components'
+import * as React from 'react';
+import styled from 'styled-components';
 
 const ExportButton = styled.button`
   border: 0;
@@ -11,18 +11,18 @@ const ExportButton = styled.button`
   line-height: inherit;
   background: none;
   box-sizing: inherit;
-`
+`;
 
 const ExportIcon = styled.svg`
   display: block;
   margin-right: 8px;
-`
+`;
 
 const ExportLabel = styled.small`
   font-size: 12px;
-`
+`;
 
-export default ({ onClick }) => (
+const ExportMarkdownButton: React.SFC<{ onClick: () => void }> = ({ onClick }) => (
   <ExportButton onClick={onClick}>
     <ExportIcon width="24" height="15" viewBox="0 0 24 15">
       <title>Markdown Symbol</title>
@@ -45,4 +45,6 @@ export default ({ onClick }) => (
     </ExportIcon>
     <ExportLabel>Export</ExportLabel>
   </ExportButton>
-)
+);
+
+export default ExportMarkdownButton;

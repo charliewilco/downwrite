@@ -1,4 +1,6 @@
-export default ({ className }) => (
+import * as React from 'react';
+
+const NamePlate: React.SFC<{ className: string }> = ({ className }) => (
   <svg
     className={className}
     width="181"
@@ -51,4 +53,6 @@ export default ({ className }) => (
       fill="inherit"
     />
   </svg>
-)
+);
+
+export default NamePlate;

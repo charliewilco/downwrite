@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react'
-import styled from 'styled-components'
+import * as React from 'react';
+import styled from 'styled-components';
 
 const FeatureContainer = styled.section`
   max-width: 33rem;
@@ -15,7 +15,7 @@ const FeatureContainer = styled.section`
   p:not(:last-of-type) {
     margin-bottom: 16px;
   }
-`
+`;
 
 export default () => (
   <FeatureContainer>
@@ -36,4 +36,4 @@ export default () => (
       <i>_Sign up below and get to writing._</i>
     </p>
   </FeatureContainer>
-)
+);

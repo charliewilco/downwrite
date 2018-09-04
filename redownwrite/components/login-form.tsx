@@ -1,58 +1,56 @@
-// @flow
+import * as React from 'react';
+import LoginInput from './login-input';
+import Button from './button';
+import { AUTH_ENDPOINT } from '../utils/urls';
+import { Padded, InlineBlock } from './register';
 
-import * as React from 'react'
-import LoginInput from './login-input'
-import Button from './button'
-import { AUTH_ENDPOINT } from '../utils/urls'
-import { Padded, InlineBlock } from './register'
-
-type LoginState = {
-  user: string,
-  password: string
+interface LoginState {
+  user: string;
+  password: string;
 }
 
-type LoginProps = {
-  setError: Function,
-  signIn: Function
+interface LoginProps {
+  setError: () => void;
+  signIn: () => void;
 }
 
 export default class Login extends React.Component<LoginProps, LoginState> {
   state = {
     user: '',
     password: ''
-  }
+  };
 
-  handleSubmit = (event: Event) => {
+  handleSubmit = (event: React.SyntheticEvent<any>) => {
     if (event && event.preventDefault) {
-      event.preventDefault()
+      event.preventDefault();
     }
 
-    this.onSubmit()
-  }
+    this.onSubmit();
+  };
 
   onSubmit = async () => {
-    const { signIn, setError } = this.props
+    const { signIn, setError } = this.props;
     const authRequest = await fetch(AUTH_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ ...this.state })
-    })
+    });
 
-    const auth = await authRequest.json()
+    const auth = await authRequest.json();
 
     if (auth.error) {
-      setError(auth.message, 'error')
+      setError(auth.message, 'error');
     }
 
     if (auth.token) {
-      signIn(auth.token !== undefined, auth.token)
+      signIn(auth.token !== undefined, auth.token);
     }
-  }
+  };
 
   render() {
-    const { user, password } = this.state
+    const { user, password } = this.state;
 
     return (
       <Padded>
@@ -62,7 +60,9 @@ export default class Login extends React.Component<LoginProps, LoginState> {
             label="Username or Email"
             autoComplete="username"
             value={user}
-            onChange={e => this.setState({ user: e.target.value })}
+            onChange={(e: React.SyntheticEvent<any>) =>
+              this.setState({ user: e.target.value })
+            }
           />
           <LoginInput
             placeholder="*********"
@@ -70,7 +70,9 @@ export default class Login extends React.Component<LoginProps, LoginState> {
             value={password}
             type="password"
             autoComplete="current-password"
-            onChange={e => this.setState({ password: e.target.value })}
+            onChange={(e: React.SyntheticEvent<any>) =>
+              this.setState({ password: e.target.value })
+            }
           />
           <Padded align="right">
             <InlineBlock>
@@ -79,6 +81,6 @@ export default class Login extends React.Component<LoginProps, LoginState> {
           </Padded>
         </form>
       </Padded>
-    )
+    );
   }
 }

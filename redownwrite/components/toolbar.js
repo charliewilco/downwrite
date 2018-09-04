@@ -1,8 +1,7 @@
-import React from 'react'
-import StyleButton from './toolbar-button'
-import styled from 'styled-components'
-import Media from 'react-media'
-import { fonts } from '../utils/defaultStyles'
+import React from 'react';
+import StyleButton from './toolbar-button';
+import styled from 'styled-components';
+import { fonts } from '../utils/defaultStyles';
 
 const ToolbarWrapper = styled.div`
   display: flex;
@@ -21,7 +20,7 @@ const ToolbarWrapper = styled.div`
   border-bottom-width: 1px;
   border-bottom-style: solid;
   border-bottom-color: rgba(0, 0, 0, 0.125);
-`
+`;
 
 const BLOCK_TYPES = [
   { label: 'H1', style: 'header-one' },
@@ -32,14 +31,14 @@ const BLOCK_TYPES = [
   { label: 'Bullets', style: 'unordered-list-item' },
   { label: 'Numbers', style: 'ordered-list-item' },
   { label: 'Code', style: 'code-block' }
-]
+];
 
 const INLINE_STYLES = [
   { label: 'Bold', style: 'BOLD' },
   { label: 'Italic', style: 'ITALIC' },
   { label: 'Underline', style: 'UNDERLINE' },
   { label: 'Mono', style: 'CODE' }
-]
+];
 
 const FullToolBar = ({
   onToggleBlockType,
@@ -67,7 +66,7 @@ const FullToolBar = ({
       />
     ))}
   </ToolbarWrapper>
-)
+);
 
 const SelectionToolBar = ({
   selectedText,
@@ -97,44 +96,47 @@ const SelectionToolBar = ({
           />
         ))}
   </ToolbarWrapper>
-)
+);
 
-const Toolbar = ({ editorState, onToggleBlockType, onToggleInlineStyle }) => {
-  const selection = editorState.getSelection()
-  const anchorKey = selection.getAnchorKey()
-  const currentContent = editorState.getCurrentContent()
-  const currentContentBlock = currentContent.getBlockForKey(anchorKey)
-  const start = selection.getStartOffset()
-  const end = selection.getEndOffset()
-  const selectedText = currentContentBlock.getText().slice(start, end)
-  const currentStyle = editorState.getCurrentInlineStyle()
+const Toolbar = ({
+  editorState,
+  onToggleBlockType,
+  onToggleInlineStyle,
+  fullBar
+}) => {
+  const selection = editorState.getSelection();
+  const anchorKey = selection.getAnchorKey();
+  const currentContent = editorState.getCurrentContent();
+  const currentContentBlock = currentContent.getBlockForKey(anchorKey);
+  const start = selection.getStartOffset();
+  const end = selection.getEndOffset();
+  const selectedText = currentContentBlock.getText().slice(start, end);
+  const currentStyle = editorState.getCurrentInlineStyle();
   const blockType = editorState
     .getCurrentContent()
     .getBlockForKey(selection.getStartKey())
-    .getType()
+    .getType();
 
   return (
-    <Media query={{ minWidth: 500 }}>
-      {matches =>
-        !matches ? (
-          <SelectionToolBar
-            selectedText={selectedText}
-            blockType={blockType}
-            currentStyle={currentStyle}
-            onToggleInlineStyle={onToggleInlineStyle}
-            onToggleBlockType={onToggleBlockType}
-          />
-        ) : (
-          <FullToolBar
-            blockType={blockType}
-            currentStyle={currentStyle}
-            onToggleInlineStyle={onToggleInlineStyle}
-            onToggleBlockType={onToggleBlockType}
-          />
-        )
-      }
-    </Media>
-  )
-}
+    <>
+      {fullBar ? (
+        <SelectionToolBar
+          selectedText={selectedText}
+          blockType={blockType}
+          currentStyle={currentStyle}
+          onToggleInlineStyle={onToggleInlineStyle}
+          onToggleBlockType={onToggleBlockType}
+        />
+      ) : (
+        <FullToolBar
+          blockType={blockType}
+          currentStyle={currentStyle}
+          onToggleInlineStyle={onToggleInlineStyle}
+          onToggleBlockType={onToggleBlockType}
+        />
+      )}
+    </>
+  );
+};
 
-export default Toolbar
+export default Toolbar;

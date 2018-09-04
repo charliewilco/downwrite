@@ -1,9 +1,8 @@
-// @flow
-import * as React from 'react'
-import styled from 'styled-components'
-import Card from './card'
-import LayoutControl from './layout-control'
-import PostListItem from './post-list-item'
+import * as React from 'react';
+import styled from 'styled-components';
+import Card from './card';
+import LayoutControl from './layout-control';
+import PostListItem from './post-list-item';
 
 const Title = styled.h1`
   font-weight: 500;
@@ -12,7 +11,7 @@ const Title = styled.h1`
   @media (min-width: 57.75rem) {
     font-size: 24px;
   }
-`
+`;
 
 const Grid = styled.ul`
   list-style: none inside;
@@ -21,7 +20,7 @@ const Grid = styled.ul`
   @media (min-width: 48rem) {
     margin-left: -20px;
   }
-`
+`;
 
 const GridItem = styled.li`
   margin-bottom: 24px;
@@ -51,14 +50,14 @@ const GridItem = styled.li`
   @media (min-width: 187.5rem) {
     width: ${`${100 / 7}%`};
   }
-`
+`;
 
 const ListHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-`
+`;
 
 const ListItemContainer = styled.li`
   padding: 16px 0;
@@ -68,13 +67,13 @@ const ListItemContainer = styled.li`
   &:not(:last-of-type) {
     border-bottom: 1px solid #ccc;
   }
-`
+`;
 
 const List = styled.ul`
   list-style: inside none;
-`
+`;
 
-type LayoutType = string | 'grid' | 'list'
+type LayoutType = string | 'grid' | 'list';
 
 interface IPostListProps {
   posts: any[];
@@ -91,15 +90,15 @@ export default class PostList extends React.Component<
 > {
   state = {
     layout: 'grid'
-  }
+  };
 
   layoutChange = (x: LayoutType) => {
-    return this.setState({ layout: x })
-  }
+    return this.setState({ layout: x });
+  };
 
   render() {
-    const { posts, onDelete } = this.props
-    const { layout } = this.state
+    const { posts, onDelete } = this.props;
+    const { layout } = this.state;
     return (
       <>
         <ListHeader>
@@ -124,6 +123,6 @@ export default class PostList extends React.Component<
           </List>
         )}
       </>
-    )
+    );
   }
 }

@@ -1,6 +1,6 @@
-import React from 'react'
-import styled from 'styled-components'
-import Link from 'next/link'
+import React from 'react';
+import styled from 'styled-components';
+import Link from 'next/link';
 
 const PostsTitle = styled.h2`
   font-size: 16px;
@@ -12,7 +12,7 @@ const PostsTitle = styled.h2`
   @media (min-width: 75rem) {
     font-size: 36px;
   }
-`
+`;
 
 const DeleteButton = styled.button`
   color: inherit;
@@ -20,14 +20,20 @@ const DeleteButton = styled.button`
   border: 0px;
   font-family: inherit;
   background: none;
-`
+`;
 
 const FlexBetween = styled.div`
   display: flex;
   justify-content: space-between;
-`
+`;
 
-const ListItem = ({ title, id, onDelete }) => (
+interface IListItemProps {
+  title: string;
+  id: string;
+  onDelete: () => void;
+}
+
+const ListItem: React.SFC<IListItemProps> = ({ title, id, onDelete }) => (
   <FlexBetween>
     <div>
       <PostsTitle>
@@ -44,6 +50,6 @@ const ListItem = ({ title, id, onDelete }) => (
       <small>Delete</small>
     </DeleteButton>
   </FlexBetween>
-)
+);
 
-export default ListItem
+export default ListItem;

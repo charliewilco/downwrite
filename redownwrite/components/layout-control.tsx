@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-import { colors } from '../utils/defaultStyles'
+import * as React from 'react';
+import styled from 'styled-components';
+import { colors } from '../utils/defaultStyles';
 
-const Box = styled.div``
+const Box = styled.div``;
 
 const LayoutTrigger = styled.div`
   display: inline-block;
@@ -15,11 +15,17 @@ const LayoutTrigger = styled.div`
     content: '';
     display: block;
     border-bottom: 5px solid
-      ${props => (props.active ? props.theme.link || colors.blue400 : 'transparent')};
+      ${(props: { active: boolean }) =>
+        props.active ? props.theme.link || colors.blue400 : 'transparent'};
   }
-`
+`;
 
-const LayoutControl = ({ layout, layoutChange }) => (
+interface ILayoutControl {
+  layout: string | 'grid' | 'list';
+  layoutChange: (x: string) => void;
+}
+
+const LayoutControl: React.SFC<ILayoutControl> = ({ layout, layoutChange }) => (
   <Box>
     <LayoutTrigger active={layout === 'grid'} onClick={() => layoutChange('grid')}>
       Grid
@@ -28,6 +34,6 @@ const LayoutControl = ({ layout, layoutChange }) => (
       List
     </LayoutTrigger>
   </Box>
-)
+);
 
-export default LayoutControl
+export default LayoutControl;

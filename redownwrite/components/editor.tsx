@@ -1,13 +1,14 @@
-import Editor from 'draft-js-plugins-editor'
-import React, { Component } from 'react'
-import Prism from 'prismjs'
-import styled from 'styled-components'
-import Toolbar from './toolbar'
-import createMarkdownPlugin from 'draft-js-markdown-plugin'
-import createPrismPlugin from 'draft-js-prism-plugin'
-import { fonts, colors } from '../utils/defaultStyles'
-import './draft.css'
-import './ganymede.css'
+import Editor from 'draft-js-plugins-editor';
+import * as React from 'react';
+import * as Draft from 'draft-js';
+import Prism from 'prismjs';
+import styled from 'styled-components';
+import Toolbar from './toolbar';
+import createMarkdownPlugin from 'draft-js-markdown-plugin';
+import createPrismPlugin from 'draft-js-prism-plugin';
+import { fonts, colors } from '../utils/defaultStyles';
+import './draft.css';
+import './ganymede.css';
 
 const EditorWrapper = styled.div`
   padding-left: 0px;
@@ -25,39 +26,60 @@ const EditorWrapper = styled.div`
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
       sans-serif;
   }
-`
+`;
 
 const EditorShell = styled.div`
   border-top: 0px;
   position: relative;
   padding-top: 24px;
   padding-bottom: 128px;
-`
+`;
 
-export default class extends Component {
-  static displayName = 'DWEditor'
+interface IEditorProps {
+  editorState: Draft.EditorState;
+  onChange: (e: Draft.EditorState) => void;
+  toolbar: boolean;
+  handleKeyCommand: () => void;
+  keyBindingFn: () => void;
+}
+
+interface IEditorState {
+  editorState: Draft.EditorState;
+  plugins: any[];
+}
+
+export default class extends React.Component<IEditorProps, IEditorState> {
+  static displayName = 'DWEditor';
+
+  static defaultProps = {
+    toolbar: false
+  };
 
   state = {
     editorState: this.props.editorState,
     plugins: [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()]
-  }
+  };
 
-  focus = () => this.editor.focus()
+  focus = () => this.editor.focus();
 
-  onChange = editorState => this.props.onChange(editorState)
+  onChange = editorState => this.props.onChange(editorState);
 
   onTab = e => {
-    const maxDepth = 4
-    this.onChange(RichUtils.onTab(e, this.props.editorState, maxDepth))
-  }
+    const maxDepth = 4;
+    this.onChange(Draft.RichUtils.onTab(e, this.props.editorState, maxDepth));
+  };
 
   _toggleBlockType = blockType => {
-    this.onChange(RichUtils.toggleBlockType(this.props.editorState, blockType))
-  }
+    this.onChange(
+      Draft.RichUtils.toggleBlockType(this.props.editorState, blockType)
+    );
+  };
 
   _toggleInlineStyle = inlineStyle => {
-    this.onChange(RichUtils.toggleInlineStyle(this.props.editorState, inlineStyle))
-  }
+    this.onChange(
+      Draft.RichUtils.toggleInlineStyle(this.props.editorState, inlineStyle)
+    );
+  };
 
   render() {
     const {
@@ -66,12 +88,12 @@ export default class extends Component {
       handleKeyCommand,
       keyBindingFn,
       children
-    } = this.props
-    const { plugins } = this.state
+    } = this.props;
+    const { plugins } = this.state;
     // If the user changes block type before entering any text, we can
     // either style the placeholder or hide it. Let's just hide it now.
-    let className = 'RichEditor-editor'
-    var contentState = editorState.getCurrentContent()
+    let className = 'RichEditor-editor';
+    var contentState = editorState.getCurrentContent();
     if (!contentState.hasText()) {
       if (
         contentState
@@ -79,7 +101,7 @@ export default class extends Component {
           .first()
           .getType() !== 'unstyled'
       ) {
-        className += ' RichEditor-hidePlaceholder'
+        className += ' RichEditor-hidePlaceholder';
       }
     }
 
@@ -104,13 +126,13 @@ export default class extends Component {
             onChange={editorState => this.onChange(editorState)}
             onTab={this.onTab}
             placeholder="History will be kind to me for I intend to write it. — Winston Churchill"
-            ref={x => (this.editor = x)}
-            spellCheck={true}
+            ref={(x: Draft.Editor) => (this.editor = x)}
+            spellCheck
             plugins={plugins}
           />
         </EditorWrapper>
       </EditorShell>
-    )
+    );
   }
 }
 
@@ -122,13 +144,13 @@ const styleMap = {
     fontSize: 14,
     padding: 2
   }
-}
+};
 
 function getBlockStyle(block) {
   switch (block.getType()) {
     case 'blockquote':
-      return 'RichEditor-blockquote'
+      return 'RichEditor-blockquote';
     default:
-      return null
+      return null;
   }
 }

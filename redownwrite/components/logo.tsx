@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from 'styled-components'
+import * as React from 'react';
+import styled from 'styled-components';
 
 const LogoContainer = styled.div`
   max-width: 20px;
@@ -7,16 +7,16 @@ const LogoContainer = styled.div`
   @media (min-width: 57.75rem) {
     max-width: 33px;
   }
-`
+`;
 
 const LogoVector = styled.svg`
   display: block;
   max-width: 100%;
   min-height: auto;
-`
+`;
 
-const LogoMark = props => (
-  <LogoVector width={33} height={50} viewBox="0 0 33 50" {...props}>
+const LogoMark = () => (
+  <LogoVector width={33} height={50} viewBox="0 0 33 50">
     <title>Downwrite Logo</title>
     <defs>
       <radialGradient fx="50%" fy="50%" r="143.827%" id="a">
@@ -46,12 +46,12 @@ const LogoMark = props => (
       />
     </g>
   </LogoVector>
-)
+);
 
-const Logo = () => (
+const Logo: JSX.Element = () => (
   <LogoContainer>
     <LogoMark />
   </LogoContainer>
-)
+);
 
-export default Logo
+export default Logo;
