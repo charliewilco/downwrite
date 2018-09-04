@@ -46,7 +46,13 @@
       },
       "allowImportExportEverywhere": true
     },
-    "plugins": ["flowtype", "react", "import", "jest", "jsx-a11y"],
+    "plugins": [
+      "flowtype",
+      "react",
+      "import",
+      "jest",
+      "jsx-a11y"
+    ],
     "extends": [
       "eslint:recommended",
       "plugin:flowtype/recommended",
@@ -68,7 +74,10 @@
       "no-console": [
         "error",
         {
-          "allow": ["warn", "error"]
+          "allow": [
+            "warn",
+            "error"
+          ]
         }
       ],
       "react/display-name": 0,
@@ -87,13 +96,26 @@
     "flow-typed"
   ],
   "lint-staged": {
-    "*.js": ["prettier --parser flow --write", "git add"],
-    "*.css": ["prettier --parser postcss --write", "git add"],
-    "*.json": ["prettier --parser json --write", "git add"]
+    "*.{js,json,ts,tsx}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.css": [
+      "prettier --parser postcss --write",
+      "git add"
+    ]
   },
   "bolt": {
-    "workspaces": ["redownwrite", "api-downwrite", "union"]
+    "workspaces": [
+      "redownwrite",
+      "api-downwrite",
+      "union"
+    ]
   },
-  "workspaces": ["redownwrite", "union", "api-downwrite"],
+  "workspaces": [
+    "redownwrite",
+    "union",
+    "api-downwrite"
+  ],
   "license": "MIT"
 }
