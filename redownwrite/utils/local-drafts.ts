@@ -1,17 +1,17 @@
 export class LocalDraftContainer {
   state = {
     drafts: new Set()
-  }
+  };
 
-  setState = () => {
-    return () => void
-  }
+  setState = state => {
+    return prevState => Object.assign({}, prevState, state);
+  };
 
   addDraft = x =>
-    this.setState(prevState => {
-      let drafts = prevState.set(x)
+    this.setState(state => {
+      let drafts = state.set(x);
       return {
         drafts
-      }
-    })
+      };
+    });
 }

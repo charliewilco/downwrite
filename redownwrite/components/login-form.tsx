@@ -10,8 +10,8 @@ interface LoginState {
 }
 
 interface LoginProps {
-  setError: () => void;
-  signIn: () => void;
+  signIn: (x: boolean, y: string) => void;
+  setError: (x: string, y: string) => void;
 }
 
 export default class Login extends React.Component<LoginProps, LoginState> {

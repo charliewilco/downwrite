@@ -38,7 +38,7 @@ const EditorShell = styled.div`
 interface IEditorProps {
   editorState: Draft.EditorState;
   onChange: (e: Draft.EditorState) => void;
-  toolbar: boolean;
+  toolbar?: boolean;
   handleKeyCommand: () => void;
   keyBindingFn: () => void;
 }

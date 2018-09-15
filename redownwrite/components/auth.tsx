@@ -1,10 +1,10 @@
-import * as React from 'react'
-import Cookies from 'universal-cookie'
-import Router from 'next/router'
-import jwt from 'jwt-decode'
-import addDays from 'date-fns/add_days'
+import * as React from 'react';
+import Cookies from 'universal-cookie';
+import Router from 'next/router';
+import jwt from 'jwt-decode';
+import addDays from 'date-fns/add_days';
 
-const AuthContext = React.createContext({})
+const AuthContext = React.createContext({});
 
 // NOTE:
 // This component should passdown the state of authed from withAuthCheck() HOC
@@ -25,12 +25,12 @@ const AuthContext = React.createContext({})
 // state needs to evaluate the existence of
 // token + decode the content of the token
 
-const cookie = new Cookies()
-const COOKIE_EXPIRATION = 180
+const cookie = new Cookies();
+const COOKIE_EXPIRATION = 180;
 const cookieOptions = {
   path: '/',
   expires: addDays(Date.now(), COOKIE_EXPIRATION)
-}
+};
 
 interface AuthProps {
   children: React.ReactNode;
@@ -53,32 +53,32 @@ interface AuthActions {
 const EMPTY_USER = {
   user: null,
   name: null
-}
+};
 
 export default class AuthMegaProvider extends React.Component<AuthProps, AuthState> {
   constructor(props: AuthProps) {
-    super(props)
+    super(props);
 
-    let token = this.props.token || cookie.get('DW_TOKEN')
+    let token = this.props.token || cookie.get('DW_TOKEN');
 
-    let __TOKEN_EXISTS__: boolean = token !== undefined && token !== 'undefined'
-    const { user, name } = __TOKEN_EXISTS__ ? jwt(token) : EMPTY_USER
+    let __TOKEN_EXISTS__: boolean = token !== undefined && token !== 'undefined';
+    const { user, name } = __TOKEN_EXISTS__ ? jwt(token) : EMPTY_USER;
 
     this.state = {
       token,
       authed: __TOKEN_EXISTS__,
       user: user || null,
       name: name || null
-    }
+    };
   }
 
   signIn = (authed: boolean, token: string) => {
-    const { user, name } = jwt(token)
+    const { user, name } = jwt(token);
     return this.setState(
       { authed, token, user, name },
       cookie.set('DW_TOKEN', token, cookieOptions)
-    )
-  }
+    );
+  };
 
   signOut = () => {
     return this.setState(
@@ -89,13 +89,13 @@ export default class AuthMegaProvider extends React.Component<AuthProps, AuthSta
         name: undefined
       },
       cookie.remove('DW_TOKEN', cookieOptions)
-    )
-  }
+    );
+  };
 
   componentDidUpdate(prevProps, prevState) {
-    const { authed } = this.state
+    const { authed } = this.state;
     if (prevState.authed !== authed) {
-      Router.push({ pathname: authed ? '/' : '/login' })
+      Router.push({ pathname: authed ? '/' : '/login' });
     }
   }
 
@@ -104,28 +104,28 @@ export default class AuthMegaProvider extends React.Component<AuthProps, AuthSta
       ...this.state,
       signIn: this.signIn,
       signOut: this.signOut
-    }
+    };
 
     return (
       <AuthContext.Provider value={value}>
         {this.props.children}
       </AuthContext.Provider>
-    )
+    );
   }
 }
 
 export const withAuth = (Component: React.ReactNode) => {
   return class extends React.Component<any, any> {
-    static displayName = `withAuth(${Cx.displayName || Cx.name})`
+    static displayName = `withAuth(${Component.displayName || Component.name})`;
 
-    static getInitialProps = Cx.getInitialProps
+    static getInitialProps = Component.getInitialProps;
 
     render() {
       return (
         <AuthContext.Consumer>
           {auth => <Component {...this.props} {...auth} />}
         </AuthContext.Consumer>
-      )
+      );
     }
-  }
-}
+  };
+};
