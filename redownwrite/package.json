@@ -9,13 +9,10 @@
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
     "test": "NODE_ENV=test jest --env=jsdom --verbose --silent",
-    "lint": "yarn eslint ./src/**/*.js",
-    "format": "prettier --write 'src/**/*.js' --parser flow",
     "deploy": "now && now alias"
   },
   "dependencies": {
     "@charliewilco/sanitize-object": "^1.0.1",
-    "@types/prismjs": "^1.9.0",
     "@zeit/next-css": "^0.2.0",
     "@zeit/next-typescript": "^1.1.0",
     "babel-plugin-styled-components": "^1.5.1",
@@ -52,9 +49,11 @@
     "@types/draft-js": "^0.10.24",
     "@types/lodash": "^4.14.116",
     "@types/next": "^6.1.4",
+    "@types/prismjs": "^1.9.0",
     "@types/react": "^16.4.13",
     "@types/react-dom": "^16.0.7",
     "@types/react-dropzone": "^4.2.2",
+    "@types/styled-components": "^3.0.1",
     "@types/uuid": "^3.4.3",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.4.0",
@@ -69,60 +68,25 @@
     "typescript": "^3.0.1"
   },
   "babel": {
-    "presets": ["next/babel", "@zeit/next-typescript/babel"],
-    "env": {
-      "development": {
-        "plugins": [
-          [
-            "styled-components",
-            {
-              "ssr": true,
-              "displayName": true,
-              "preprocess": false
-            }
-          ]
-        ]
-      },
-      "test": {
-        "presets": [
-          [
-            "next/babel",
-            "@zeit/next-typescript/babel",
-            {
-              "preset-env": {
-                "modules": "commonjs"
-              }
-            }
-          ]
-        ],
-        "plugins": [
-          [
-            "styled-components",
-            {
-              "ssr": true,
-              "displayName": true,
-              "preprocess": false
-            }
-          ]
-        ]
-      },
-      "production": {
-        "presets": ["next/babel"],
-        "plugins": [
-          [
-            "styled-components",
-            {
-              "ssr": true,
-              "displayName": false,
-              "preprocess": false
-            }
-          ]
-        ]
-      }
-    }
+    "presets": [
+      "next/babel",
+      "@zeit/next-typescript/babel"
+    ],
+    "plugins": [
+      [
+        "styled-components",
+        {
+          "ssr": true,
+          "displayName": false,
+          "preprocess": false
+        }
+      ]
+    ]
   },
   "jest": {
-    "collectCoverageFrom": ["/**/*.{js,jsx,mjs}"],
+    "collectCoverageFrom": [
+      "/**/*.{js,jsx,mjs}"
+    ],
     "setupTestFrameworkScriptFile": "<rootDir>/__tests__/config/setupTests.js",
     "testPathIgnorePatterns": [
       "<rootDir>/.next/",
@@ -138,13 +102,24 @@
       "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
       "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/__tests__/config/fileTransform.js"
     },
-    "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"],
-    "moduleFileExtensions": ["web.js", "mjs", "js", "json", "web.jsx", "jsx", "node"]
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
+    ],
+    "moduleFileExtensions": [
+      "web.js",
+      "mjs",
+      "js",
+      "json",
+      "web.jsx",
+      "jsx",
+      "node"
+    ]
   },
-  "eslintIgnore": ["/src/__tests__/*.test.js"],
   "now": {
     "name": "next-downwrite",
-    "alias": ["beta.downwrite.us"],
+    "alias": [
+      "beta.downwrite.us"
+    ],
     "env": {
       "NODE_ENV": "production",
       "SECRET_KEY": "@dw-key"
@@ -156,5 +131,9 @@
       }
     }
   },
-  "browserslist": [">0.25%", "not ie 11", "not op_mini all"]
+  "browserslist": [
+    ">0.25%",
+    "not ie 11",
+    "not op_mini all"
+  ]
 }
