@@ -1,7 +1,7 @@
-import * as React from 'react'
-import styled from 'styled-components'
-import CloseIcon from './close-icon'
-import { colors } from '../utils/defaultStyles'
+import * as React from 'react';
+import styled from 'styled-components';
+import { CloseIcon } from './icons';
+import { colors } from '../utils/defaultStyles';
 
 interface IUIFlashProps {
   onClose?: () => void;
@@ -29,18 +29,18 @@ const UIFlashContainer = styled.div`
   padding-right: 16px;
   padding-bottom: 8px;
   padding-left: 16px;
-`
+`;
 
 const Stretch = styled.div`
   flex: 1;
-`
+`;
 
 const CloseButton = styled.button`
   appearance: none;
   border: 0px;
   color: inherit;
   font-family: inherit;
-`
+`;
 
 const UIFlashMessage: React.SFC<IUIFlashProps> = ({
   width = 512,
@@ -58,9 +58,9 @@ const UIFlashMessage: React.SFC<IUIFlashProps> = ({
       </CloseButton>
     )}
   </UIFlashContainer>
-)
+);
 
-export default UIFlashMessage
+export default UIFlashMessage;
 
 // TODO: This needs a few tests and these functions need to be documented
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled, { keyframes } from 'styled-components';
 import LockScroll from './lock-scroll';
 import Wrapper from './wrapper';
-import CloseIcon from './close-icon';
+import { CloseIcon } from './icons';
 import { colors } from '../utils/defaultStyles';
 
 const fadein = keyframes`
@@ -30,6 +30,7 @@ const Overlay = styled.div`
   background-color: rgba(21, 69, 93, 0.925);
   background-blend-mode: multiply;
 `;
+
 const ModalContainer = styled(Wrapper)`
   animation: ${fadein} 0.45s;
   background: white;
@@ -82,7 +83,7 @@ export default class UIModal extends React.Component<ModalProps, void> {
         <Overlay>
           <ModalContainer sm={sm} xs={xs}>
             <ModalCloseButton onClick={closeUIModal}>
-              <CloseIcon />
+              <CloseIcon className="Modal__close" />
             </ModalCloseButton>
             <ModalBody>
               <ModalInnerContainer>{children}</ModalInnerContainer>

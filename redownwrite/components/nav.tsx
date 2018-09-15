@@ -1,16 +1,16 @@
-import * as React from 'react'
-import Link from 'next/link'
-import { withRouter } from 'next/router'
-import styled, { keyframes } from 'styled-components'
-import { withAuth } from './auth'
-import User from './user'
-import Fetch from './collection-fetch'
-import SignoutIcon from './signout-icon'
-import { SidebarEmpty } from './empty-posts'
-import SidebarPosts from './sidebar-posts'
-import TouchOutside from './touch-outside'
-import LockScroll from './lock-scroll'
-import { colors } from '../utils/defaultStyles'
+import * as React from 'react';
+import Link from 'next/link';
+import { withRouter } from 'next/router';
+import styled, { keyframes } from 'styled-components';
+import { withAuth } from './auth';
+import User from './user';
+import Fetch from './collection-fetch';
+import { SignoutIcon } from './icons';
+import { SidebarEmpty } from './empty-posts';
+import SidebarPosts from './sidebar-posts';
+import TouchOutside from './touch-outside';
+import LockScroll from './lock-scroll';
+import { colors } from '../utils/defaultStyles';
 
 const NavColumn = styled.div`
   display: flex;
@@ -20,7 +20,12 @@ const NavColumn = styled.div`
   @media (min-width: 500px) {
     justify-content: space-between;
   }
-`
+`;
+
+const StyledSignoutIcon = styled(SignoutIcon)`
+  display: inline-block;
+  vertical-align: middle;
+`;
 
 const NavButton = styled.button`
   display: block;
@@ -38,7 +43,7 @@ const NavButton = styled.button`
   &:hover {
     color: ${colors.blue700};
   }
-`
+`;
 
 const NavLink = styled.a`
   display: block;
@@ -51,7 +56,7 @@ const NavLink = styled.a`
   &:hover {
     color: ${colors.blue700};
   }
-`
+`;
 
 const PostListContainer = styled.div`
   padding: 8px;
@@ -59,7 +64,7 @@ const PostListContainer = styled.div`
   @media (min-width: 500px) {
     flex: 1;
   }
-`
+`;
 
 const fadeInFromLeft = keyframes`
   0% {
@@ -71,7 +76,7 @@ const fadeInFromLeft = keyframes`
     transform: translate(0, 0);
     opacity: 1;
   }
-`
+`;
 
 const Nav = styled.nav`
   display: flex;
@@ -88,7 +93,7 @@ const Nav = styled.nav`
   @media (min-height: 500px) {
     width: 384px;
   }
-`
+`;
 
 const NavTray = styled.footer`
   border-top: 1px solid ${props => props.theme.border};
@@ -97,7 +102,7 @@ const NavTray = styled.footer`
   display: flex;
   align-items: center;
   justify-content: space-between;
-`
+`;
 
 const NavItem = styled.a`
   display: block;
@@ -112,11 +117,11 @@ const NavItem = styled.a`
   &:hover {
     color: ${colors.blue700};
   }
-`
+`;
 
 const UserActionContainer = styled.div`
   padding: 16px 8px;
-`
+`;
 
 // TODO: Slide to close navigation?
 interface NavigationProps {
@@ -129,26 +134,26 @@ interface NavigationProps {
 const NavLabel = styled.span`
   display: inline-block;
   vertical-align: middle;
-`
+`;
 
 const SignOut = withAuth(({ signOut, children }) => (
   <NavButton onClick={signOut}>{children}</NavButton>
-))
+));
 
-const AuthedFetch = withAuth(Fetch)
-const AuthedUserBlock = withAuth(User)
+const AuthedFetch = withAuth(Fetch);
+const AuthedUserBlock = withAuth(User);
 
 class NavBar extends React.Component<NavigationProps> {
-  static displayName = 'NavigationBar'
+  static displayName = 'NavigationBar';
 
   componentDidUpdate(prevProps) {
     if (prevProps.pathname !== this.props.pathname) {
-      this.props.closeNav()
+      this.props.closeNav();
     }
   }
 
   render() {
-    const { closeNav } = this.props
+    const { closeNav } = this.props;
     return (
       <LockScroll>
         <TouchOutside onChange={closeNav}>
@@ -183,15 +188,15 @@ class NavBar extends React.Component<NavigationProps> {
                   <NavLink>Legal</NavLink>
                 </Link>
                 <SignOut>
-                  <SignoutIcon /> <NavLabel>Sign Out</NavLabel>
+                  <StyledSignoutIcon /> <NavLabel>Sign Out</NavLabel>
                 </SignOut>
               </NavTray>
             </NavColumn>
           </Nav>
         </TouchOutside>
       </LockScroll>
-    )
+    );
   }
 }
 
-export default withRouter(NavBar)
+export default withRouter(NavBar);

@@ -1,15 +1,15 @@
-import * as React from 'react'
-import styled from 'styled-components'
-import Link from 'next/link'
-import Logo from './logo'
-import Navicon from './navicon'
-import { colors } from '../utils/defaultStyles'
-import { withAuth } from './auth'
+import * as React from 'react';
+import styled from 'styled-components';
+import Link from 'next/link';
+import Logo from './logo';
+import { NavIcon } from './icons';
+import { colors } from '../utils/defaultStyles';
+import { withAuth } from './auth';
 
 const MenuContainer = styled.nav`
   display: flex;
   align-items: center;
-`
+`;
 
 const NewButton = styled.a`
   font-size: 14px;
@@ -24,7 +24,7 @@ const NewButton = styled.a`
     color: ${colors.text};
     opacity: 1;
   }
-`
+`;
 
 const HomeButton = styled.a`
   margin-left: 12px;
@@ -35,7 +35,7 @@ const HomeButton = styled.a`
   &:hover {
     color: ${colors.blue700};
   }
-`
+`;
 
 const ToggleButton = styled.button`
   appearance: none;
@@ -44,7 +44,7 @@ const ToggleButton = styled.button`
   font-family: inherit;
   background: none;
   box-sizing: inherit;
-`
+`;
 
 const LoginSignUp = () => (
   <MenuContainer>
@@ -52,18 +52,18 @@ const LoginSignUp = () => (
       <NewButton>Login or Sign Up</NewButton>
     </Link>
   </MenuContainer>
-)
+);
 
-const Menu = ({ toggleNav, open }) => (
+const Menu = ({ toggleNav }) => (
   <MenuContainer>
     <Link prefetch href="/new" as="/new">
       <NewButton>New</NewButton>
     </Link>
     <ToggleButton onClick={toggleNav}>
-      <Navicon open={open} />
+      <NavIcon className="Navicon" />
     </ToggleButton>
   </MenuContainer>
-)
+);
 
 const HeaderTitle = styled.h1`
   font-size: 16px;
@@ -74,7 +74,7 @@ const HeaderTitle = styled.h1`
   @media (min-width: 57.75rem) {
     font-size: 20px;
   }
-`
+`;
 
 const Header = styled.header`
   display: flex;
@@ -89,7 +89,7 @@ const Header = styled.header`
   .Navicon #NaviconGroup {
     fill: ${props => props.theme.color};
   }
-`
+`;
 
 interface IHeaderProps {
   authed: boolean;
@@ -101,7 +101,7 @@ interface IHeaderProps {
 
 class UIHeader extends React.Component<IHeaderProps, void> {
   render() {
-    const { authed, onClick, open, route } = this.props
+    const { authed, onClick, open, route } = this.props;
 
     const url = !authed
       ? {
@@ -111,7 +111,7 @@ class UIHeader extends React.Component<IHeaderProps, void> {
       : {
           href: '/',
           as: '/'
-        }
+        };
 
     return !(route === '/login') ? (
       <Header data-testid="APP_HEADER">
@@ -123,10 +123,10 @@ class UIHeader extends React.Component<IHeaderProps, void> {
             </Link>
           </HeaderTitle>
         </MenuContainer>
-        {authed ? <Menu open={open} toggleNav={onClick} /> : <LoginSignUp />}
+        {authed ? <Menu toggleNav={onClick} /> : <LoginSignUp />}
       </Header>
-    ) : null
+    ) : null;
   }
 }
 
-export default withAuth(UIHeader)
+export default withAuth(UIHeader);
