@@ -1,8 +1,8 @@
 {
-  "name": "union",
+  "name": "e2e",
   "private": true,
   "version": "0.1.0",
   "dependencies": {
-    "puppeteer": "^1.2.0"
+    "puppeteer": "latest"
   }
 }

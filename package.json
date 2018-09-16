@@ -107,15 +107,15 @@
   },
   "bolt": {
     "workspaces": [
-      "redownwrite",
-      "api-downwrite",
-      "union"
+      "client",
+      "api",
+      "e2e"
     ]
   },
   "workspaces": [
-    "redownwrite",
-    "union",
-    "api-downwrite"
+    "client",
+    "api",
+    "e2e"
   ],
   "license": "MIT"
 }
