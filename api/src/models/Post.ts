@@ -1,7 +1,6 @@
 const m = require('mongoose');
-const Schema = m.Schema;
 
-const PostSchema = new Schema({
+const PostSchema = new m.Schema({
   id: String,
   title: String,
   author: String,
@@ -9,7 +8,7 @@ const PostSchema = new Schema({
   public: Boolean,
   dateAdded: Date,
   dateModified: Date,
-  user: { type: Schema.Types.ObjectId, ref: 'User' }
+  user: { type: m.Schema.Types.ObjectId, ref: 'User' }
 });
 
 module.exports = m.model('Post', PostSchema);

@@ -5,7 +5,7 @@
   "main": "server.js",
   "private": true,
   "scripts": {
-    "build": "babel src --out-dir dist",
+    "build": "tsc",
     "predev": "yarn build",
     "deploy": "now && now alias",
     "start": "node dist/server.js",
@@ -14,9 +14,11 @@
   },
   "license": "MIT",
   "dependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
+    "@types/boom": "^7.2.0",
+    "@types/hapi": "^17.0.19",
+    "@types/joi": "^13.4.5",
+    "@types/mongoose": "^5.2.13",
+    "@types/uuid": "^3.4.4",
     "bcrypt": "^2.0.1",
     "boom": "^5.2.0",
     "good": "^7.2.0",
@@ -28,6 +30,7 @@
     "jsonwebtoken": "^8.3.0",
     "markdown-draft-js": "^1.0.1",
     "mongoose": "^4.11.11",
+    "typescript": "^3.0.3",
     "uuid": "^3.1.0"
   },
   "devDependencies": {
@@ -63,21 +66,6 @@
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
     }
-  },
-  "babel": {
-    "presets": [
-      [
-        "env",
-        {
-          "targets": {
-            "node": true
-          }
-        }
-      ]
-    ],
-    "plugins": [
-      "transform-object-rest-spread"
-    ]
   },
   "repository": "charlespeters/downwrite",
   "author": "Charles ⚡ <charlespeters42@gmail.com>"

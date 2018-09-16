@@ -729,6 +729,20 @@
   dependencies:
     any-observable "^0.3.0"
 
+"@types/boom@*", "@types/boom@^7.2.0":
+  version "7.2.0"
+  resolved "https://registry.npmjs.org/@types/boom/-/boom-7.2.0.tgz#19c36cbb5811a7493f0f2e37f31d42b28df1abc1"
+
+"@types/bson@*":
+  version "1.0.11"
+  resolved "https://registry.npmjs.org/@types/bson/-/bson-1.0.11.tgz#c95ad69bb0b3f5c33b4bb6cc86d86cafb273335c"
+  dependencies:
+    "@types/node" "*"
+
+"@types/catbox@*":
+  version "10.0.1"
+  resolved "https://registry.npmjs.org/@types/catbox/-/catbox-10.0.1.tgz#266679017749041fe9873fee1131dd2aaa04a07e"
+
 "@types/cookie@^0.3.1":
   version "0.3.1"
   resolved "https://registry.npmjs.org/@types/cookie/-/cookie-0.3.1.tgz#720a756ea8e760a258708b52441bd341f1ef4296"
@@ -740,13 +754,66 @@
     "@types/react" "*"
     immutable "^3.8.1"
 
+"@types/events@*":
+  version "1.2.0"
+  resolved "https://registry.npmjs.org/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
+
+"@types/hapi@^17.0.19":
+  version "17.0.19"
+  resolved "https://registry.npmjs.org/@types/hapi/-/hapi-17.0.19.tgz#056fb002765a6c70da033a7399f63e162c7defe0"
+  dependencies:
+    "@types/boom" "*"
+    "@types/catbox" "*"
+    "@types/iron" "*"
+    "@types/joi" "*"
+    "@types/mimos" "*"
+    "@types/node" "*"
+    "@types/podium" "*"
+    "@types/shot" "*"
+
+"@types/iron@*":
+  version "5.0.1"
+  resolved "https://registry.npmjs.org/@types/iron/-/iron-5.0.1.tgz#5420bbda8623c48ee51b9a78ebad05d7305b4b24"
+  dependencies:
+    "@types/node" "*"
+
 "@types/jest@^23.0.0":
   version "23.3.0"
   resolved "https://registry.npmjs.org/@types/jest/-/jest-23.3.0.tgz#5dd70033b616a6228042244ebd992f6426808810"
 
+"@types/joi@*", "@types/joi@^13.4.5":
+  version "13.4.5"
+  resolved "https://registry.npmjs.org/@types/joi/-/joi-13.4.5.tgz#1329006d79c4db16d1e201d1e35f7bf371137f64"
+
 "@types/lodash@^4.14.116":
   version "4.14.116"
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.116.tgz#5ccf215653e3e8c786a58390751033a9adca0eb9"
+
+"@types/mime-db@*":
+  version "1.27.0"
+  resolved "https://registry.npmjs.org/@types/mime-db/-/mime-db-1.27.0.tgz#9bc014a1fd1fdf47649c1a54c6dd7966b8284792"
+
+"@types/mimos@*":
+  version "3.0.1"
+  resolved "https://registry.npmjs.org/@types/mimos/-/mimos-3.0.1.tgz#59d96abe1c9e487e7463fe41e8d86d76b57a441a"
+  dependencies:
+    "@types/mime-db" "*"
+
+"@types/mongodb@*":
+  version "3.1.7"
+  resolved "https://registry.npmjs.org/@types/mongodb/-/mongodb-3.1.7.tgz#17e60d6cbca85a0aeaaf028051e99e4d99f26ea1"
+  dependencies:
+    "@types/bson" "*"
+    "@types/events" "*"
+    "@types/node" "*"
+
+"@types/mongoose@^5.2.13":
+  version "5.2.13"
+  resolved "https://registry.npmjs.org/@types/mongoose/-/mongoose-5.2.13.tgz#0792cc204ddc8e815d252cc1a6e2157219cedddc"
+  dependencies:
+    "@types/events" "*"
+    "@types/mongodb" "*"
+    "@types/node" "*"
 
 "@types/next@^6.1.4":
   version "6.1.5"
@@ -769,6 +836,10 @@
 "@types/object-assign@^4.0.30":
   version "4.0.30"
   resolved "https://registry.npmjs.org/@types/object-assign/-/object-assign-4.0.30.tgz#8949371d5a99f4381ee0f1df0a9b7a187e07e652"
+
+"@types/podium@*":
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/@types/podium/-/podium-1.0.0.tgz#bfaa2151be2b1d6109cc69f7faa9dac2cba3bb20"
 
 "@types/prismjs@^1.9.0":
   version "1.9.0"
@@ -800,6 +871,12 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
+"@types/shot@*":
+  version "3.4.0"
+  resolved "https://registry.npmjs.org/@types/shot/-/shot-3.4.0.tgz#459477c5187d3ebd303660ab099e7e9e0f3b656f"
+  dependencies:
+    "@types/node" "*"
+
 "@types/styled-components@^3.0.1":
   version "3.0.1"
   resolved "https://registry.npmjs.org/@types/styled-components/-/styled-components-3.0.1.tgz#0f591a38e005aeb10687e85eb078c92d9b988ed1"
@@ -807,7 +884,7 @@
     "@types/node" "*"
     "@types/react" "*"
 
-"@types/uuid@^3.4.3":
+"@types/uuid@^3.4.3", "@types/uuid@^3.4.4":
   version "3.4.4"
   resolved "https://registry.npmjs.org/@types/uuid/-/uuid-3.4.4.tgz#7af69360fa65ef0decb41fd150bf4ca5c0cefdf5"
   dependencies:
@@ -9776,7 +9853,7 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@^3.0.1:
+typescript@^3.0.1, typescript@^3.0.3:
   version "3.0.3"
   resolved "https://registry.npmjs.org/typescript/-/typescript-3.0.3.tgz#4853b3e275ecdaa27f78fda46dc273a7eb7fc1c8"
 
