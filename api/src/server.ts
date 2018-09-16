@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 // TODO: remove username from boilerplate, or use it, IDK
-const Hapi = require('hapi');
-const Mongoose = require('mongoose');
-const routes = require('./routes');
-const { dbCreds, key } = require('./util/config');
+import * as Hapi from 'hapi';
+import * as Mongoose from 'mongoose';
+import routes from './routes';
+import Config from './util/config';
 
-Mongoose.Promise = global.Promise;
+(<any>Mongoose).Promise = global.Promise;
 Mongoose.connect(
-  dbCreds,
+  Config.dbCreds,
   { useMongoClient: true }
 );
 
@@ -42,7 +42,7 @@ server.register({
 
 server.register(require('hapi-auth-jwt'), () => {
   server.auth.strategy('jwt', 'jwt', {
-    key,
+    key: Config.key,
     verifyOptions: {
       algorithms: ['HS256']
     }
@@ -60,11 +60,8 @@ server.start(err => {
 
   db.on('error', console.error.bind(console, 'connection error'));
   db.once('open', () => {
-    console.log(
-      `Connection with database succeeded.`,
-      `${db.host}:${db.port}/${db.name}`
-    );
+    console.log(`Connection with database succeeded.`);
   });
 });
 
-module.exports = server;
+export default server;

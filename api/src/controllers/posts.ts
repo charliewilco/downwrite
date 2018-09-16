@@ -1,12 +1,25 @@
-/* eslint-disable no-console */
-const Post = require('../models/Post');
-const User = require('../models/User');
-const Boom = require('boom');
-const { draftToMarkdown } = require('markdown-draft-js');
+import * as Hapi from 'hapi';
+import * as Boom from 'boom';
+import { draftToMarkdown } from 'markdown-draft-js';
+
+import Post from '../models/Post';
+import User from '../models/User';
+
+export interface ICredentials extends Hapi.AuthCredentials {
+  id: string;
+}
+
+export interface IRequestAuth extends Hapi.RequestAuth {
+  credentials: ICredentials;
+}
+
+export interface IRequest extends Hapi.Request {
+  auth: IRequestAuth;
+}
 
 // PUT
 
-exports.updatePost = (req, reply) => {
+export const updatePost = (req: IRequest, reply: Hapi.ResponseToolkit) => {
   const updatedPost = req.payload;
   const query = { id: updatedPost.id };
 
@@ -22,7 +35,7 @@ exports.updatePost = (req, reply) => {
 
 // GET
 
-exports.getPosts = (req, reply) => {
+export const getPosts = (req: IRequest, reply: Hapi.ResponseToolkit) => {
   const { user } = req.auth.credentials;
 
   Post.find({ user: { $eq: user } }).exec((error, posts) => {
@@ -33,7 +46,7 @@ exports.getPosts = (req, reply) => {
   });
 };
 
-exports.getSinglePost = (req, reply) => {
+export const getSinglePost = (req: IRequest, reply: Hapi.ResponseToolkit) => {
   const user = req.auth.credentials;
 
   Post.findOne({ id: req.params.id }, (err, post) => {
@@ -49,7 +62,7 @@ exports.getSinglePost = (req, reply) => {
   });
 };
 
-exports.getMarkdown = (req, reply) => {
+export const getMarkdown = (req: IRequest, reply: Hapi.ResponseToolkit) => {
   Post.findOne({ id: req.params.id }, (err, post) => {
     if (err) {
       return reply(Boom.internal('Internal MongoDB error', err));
@@ -90,8 +103,9 @@ exports.getMarkdown = (req, reply) => {
 
 // POST
 
-exports.createPost = (req, reply) => {
-  const post = new Post({ ...req.payload });
+export const createPost = (req: IRequest, reply: Hapi.ResponseToolkit) => {
+  const newPost = Object.assign({}, req.payload);
+  const post = new Post(newPost);
 
   post.save((error, post) => {
     if (error) {
@@ -103,7 +117,7 @@ exports.createPost = (req, reply) => {
 };
 
 // DELETE
-exports.deletePost = (req, reply) => {
+export const deletePost = (req: IRequest, reply: Hapi.ResponseToolkit) => {
   Post.findOneAndRemove({ id: req.params.id }, (err, post) => {
     if (err) {
       return reply(Boom.wrap(err, 'Internal MongoDB error'));

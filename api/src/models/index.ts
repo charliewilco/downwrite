@@ -1,6 +1,6 @@
-const Joi = require('joi');
+import * as Joi from 'joi';
 
-exports.post = {
+export const post = {
   id: Joi.string(),
   title: Joi.string(),
   content: Joi.object(),
@@ -11,7 +11,7 @@ exports.post = {
   public: Joi.boolean()
 };
 
-exports.user = {
+export const user = {
   username: Joi.string()
     .alphanum()
     .min(2)
@@ -23,7 +23,7 @@ exports.user = {
   password: Joi.string().required()
 };
 
-exports.ughhAuthUser = Joi.alternatives().try(
+export const ughhAuthUser = Joi.alternatives().try(
   Joi.object({
     username: Joi.string()
       .alphanum()
@@ -48,7 +48,7 @@ exports.ughhAuthUser = Joi.alternatives().try(
   })
 );
 
-exports.authUser = {
+export const authUser = {
   user: Joi.alternatives().try(
     Joi.string()
       .alphanum()

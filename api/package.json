@@ -14,10 +14,13 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@types/bcrypt": "^2.0.0",
     "@types/boom": "^7.2.0",
     "@types/hapi": "^17.0.19",
     "@types/joi": "^13.4.5",
+    "@types/jsonwebtoken": "^7.2.8",
     "@types/mongoose": "^5.2.13",
+    "@types/node": "^10.9.4",
     "@types/uuid": "^3.4.4",
     "bcrypt": "^2.0.1",
     "boom": "^5.2.0",

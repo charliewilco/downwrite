@@ -4,7 +4,6 @@
     "lib": ["es2016"],
     "module": "commonjs",
     "target": "es6",
-    "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",

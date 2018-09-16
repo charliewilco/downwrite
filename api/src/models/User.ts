@@ -1,12 +1,11 @@
-const m = require('mongoose');
-const Schema = m.Schema;
+import * as Mongoose from 'mongoose';
 
-const UserSchema = new Schema({
+const UserSchema = new Mongoose.Schema({
   username: { type: String, required: true, index: { unique: true } },
   email: { type: String, required: true, index: { unique: true } },
   password: { type: String, required: true },
   admin: { type: Boolean, required: true },
-  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }]
+  posts: [{ type: Mongoose.Schema.Types.ObjectId, ref: 'Post' }]
 });
 
-module.exports = m.model('User', UserSchema);
+export default Mongoose.model('User', UserSchema);

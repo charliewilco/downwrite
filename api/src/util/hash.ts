@@ -1,6 +1,6 @@
-const bcrypt = require('bcrypt');
+import * as bcrypt from 'bcrypt';
 
-function hashPassword(password, cb) {
+export function hashPassword(password, cb) {
   // Generate a salt at level 10 strength
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(password, salt, (err, hash) => {

@@ -1,8 +1,8 @@
-const User = require('../models/User');
-const Boom = require('boom');
-const bcrypt = require('bcrypt');
+import * as bcrypt from 'bcrypt';
+import * as Boom from 'boom';
+import User from '../models/User';
 
-exports.verifyUniqueUser = (req, res) => {
+export const verifyUniqueUser = (req, res) => {
   // Find an entry from the database that
   // matches either the email or username
 
@@ -11,6 +11,9 @@ exports.verifyUniqueUser = (req, res) => {
       $or: [{ email: req.payload.email }, { username: req.payload.username }]
     },
     (err, user) => {
+      if (err) {
+        return err;
+      }
       // Check whether the username or email
       // is already taken and error out if so
       if (user) {
@@ -28,7 +31,7 @@ exports.verifyUniqueUser = (req, res) => {
   );
 };
 
-exports.verifyCredentials = (req, res) => {
+export const verifyCredentials = (req, res) => {
   const password = req.payload.password;
   // Find an entry from the database that
   // matches either the email or username
@@ -40,6 +43,9 @@ exports.verifyCredentials = (req, res) => {
     (err, user) => {
       if (user) {
         bcrypt.compare(password, user.password, (err, isValid) => {
+          if (err) {
+            res(Boom.badRequest(err));
+          }
           if (isValid) {
             res(user);
           } else {

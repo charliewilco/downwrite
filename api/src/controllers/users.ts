@@ -1,10 +1,10 @@
-const Boom = require('boom');
-const uuid = require('uuid/v4');
-const User = require('../models/User');
-const hash = require('../util/hash');
-const createToken = require('../util/token');
+import * as Boom from 'boom';
+import * as uuid from 'uuid/v4';
+import User from '../models/User';
+import { hashPassword as hash } from '../util/hash';
+import { createToken } from '../util/token';
 
-exports.createUser = (req, reply) => {
+export const createUser = (req, reply) => {
   const user = new User();
 
   user.email = req.payload.email;
@@ -33,6 +33,6 @@ exports.createUser = (req, reply) => {
   });
 };
 
-exports.authenticateUser = (req, reply) => {
+export const authenticateUser = (req, reply) => {
   return reply({ token: createToken(req.pre.user) }).code(201);
 };

@@ -1,11 +1,10 @@
-/* eslint-disable no-console */
+import * as Mongoose from 'mongoose';
+import Config from './util/config';
 
-const Mongoose = require('mongoose');
-const { dbCreds } = require('./util/config');
+(<any>Mongoose).Promise = global.Promise;
 
-Mongoose.Promise = global.Promise;
 Mongoose.connect(
-  dbCreds,
+  Config.dbCreds,
   { useMongoClient: true }
 );
 
@@ -13,10 +12,7 @@ const db = Mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error'));
 db.once('open', () => {
-  console.log(
-    `Connection with database succeeded.`,
-    `${db.host}:${db.port}/${db.name}`
-  );
+  console.log(`Connection with database succeeded.`);
 });
 
 exports.db = db;

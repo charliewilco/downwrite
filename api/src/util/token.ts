@@ -1,10 +1,9 @@
-const jwt = require('jsonwebtoken');
-const { key } = require('./config');
+import * as jwt from 'jsonwebtoken';
+import Config from './config';
 
 // const fs = require('fs')
 // let key = fs.readFileSync('private.key')
-
-module.exports = function(user) {
+export function createToken(user) {
   let scopes;
 
   if (user.admin) {
@@ -22,5 +21,5 @@ module.exports = function(user) {
     scope: scopes
   };
 
-  return jwt.sign(data, key, jwtConfig);
-};
+  return jwt.sign(data, Config.key, jwtConfig);
+}
