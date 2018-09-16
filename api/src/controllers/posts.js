@@ -1,64 +1,64 @@
 /* eslint-disable no-console */
-const Post = require('../models/Post')
-const User = require('../models/User')
-const Boom = require('boom')
-const { draftToMarkdown } = require('markdown-draft-js')
+const Post = require('../models/Post');
+const User = require('../models/User');
+const Boom = require('boom');
+const { draftToMarkdown } = require('markdown-draft-js');
 
 // PUT
 
 exports.updatePost = (req, reply) => {
-  const updatedPost = req.payload
-  const query = { id: updatedPost.id }
+  const updatedPost = req.payload;
+  const query = { id: updatedPost.id };
 
   Post.findOneAndUpdate(query, updatedPost, { upsert: true }, (err, post) => {
     if (err) {
-      console.log(err)
-      return reply(Boom.internal('Internal MongoDB error', err))
+      console.log(err);
+      return reply(Boom.internal('Internal MongoDB error', err));
     } else {
-      return reply(post)
+      return reply(post);
     }
-  })
-}
+  });
+};
 
 // GET
 
 exports.getPosts = (req, reply) => {
-  const { user } = req.auth.credentials
+  const { user } = req.auth.credentials;
 
   Post.find({ user: { $eq: user } }).exec((error, posts) => {
     if (error) {
-      reply(Boom.internal('Internal MongoDB error', error))
+      reply(Boom.internal('Internal MongoDB error', error));
     }
-    reply(posts)
-  })
-}
+    reply(posts);
+  });
+};
 
 exports.getSinglePost = (req, reply) => {
-  const user = req.auth.credentials
+  const user = req.auth.credentials;
 
   Post.findOne({ id: req.params.id }, (err, post) => {
     if (err) {
-      reply(Boom.internal('Internal MongoDB error', err))
+      reply(Boom.internal('Internal MongoDB error', err));
     }
 
     if (post.author === user) {
-      console.log('Maybe this is true')
+      console.log('Maybe this is true');
     }
 
-    reply(post)
-  })
-}
+    reply(post);
+  });
+};
 
 exports.getMarkdown = (req, reply) => {
   Post.findOne({ id: req.params.id }, (err, post) => {
     if (err) {
-      return reply(Boom.internal('Internal MongoDB error', err))
+      return reply(Boom.internal('Internal MongoDB error', err));
     } else if (!post.public) {
       return reply(
         Boom.notFound(
           "This post is either not public or I couldn't even find it. Things are hard sometimes."
         )
-      )
+      );
     } else {
       User.findOne({ _id: post.user }, (err, user) => {
         return reply({
@@ -71,43 +71,43 @@ exports.getMarkdown = (req, reply) => {
             entityItems: {
               LINK: {
                 open: () => {
-                  return '['
+                  return '[';
                 },
 
                 close: entity => {
-                  return `](${entity.data.url || entity.data.href})`
+                  return `](${entity.data.url || entity.data.href})`;
                 }
               }
             }
           }),
           title: post.title,
           dateAdded: post.dateAdded
-        })
-      })
+        });
+      });
     }
-  })
-}
+  });
+};
 
 // POST
 
 exports.createPost = (req, reply) => {
-  const post = new Post({ ...req.payload })
+  const post = new Post({ ...req.payload });
 
   post.save((error, post) => {
     if (error) {
-      return reply(Boom.wrap(error, 'Internal MongoDB error'))
+      return reply(Boom.wrap(error, 'Internal MongoDB error'));
     }
 
-    reply(post)
-  })
-}
+    reply(post);
+  });
+};
 
 // DELETE
 exports.deletePost = (req, reply) => {
   Post.findOneAndRemove({ id: req.params.id }, (err, post) => {
     if (err) {
-      return reply(Boom.wrap(err, 'Internal MongoDB error'))
+      return reply(Boom.wrap(err, 'Internal MongoDB error'));
     }
-    reply(`${post.title} was removed`)
-  })
-}
+    reply(`${post.title} was removed`);
+  });
+};

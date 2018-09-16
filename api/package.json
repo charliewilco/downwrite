@@ -1,5 +1,5 @@
 {
-  "name": "api-downwrite",
+  "name": "api",
   "description": "REST API for downwrite",
   "version": "0.0.0",
   "main": "server.js",
@@ -43,6 +43,7 @@
     "delay": "2500"
   },
   "now": {
+    "name": "api-downwrite",
     "alias": "api.downwrite.us",
     "scale": {
       "sfo1": {

@@ -1,4 +1,4 @@
-const Joi = require('joi')
+const Joi = require('joi');
 
 exports.post = {
   id: Joi.string(),
@@ -9,7 +9,7 @@ exports.post = {
   dateModified: Joi.date(),
   user: Joi.string(),
   public: Joi.boolean()
-}
+};
 
 exports.user = {
   username: Joi.string()
@@ -21,7 +21,7 @@ exports.user = {
     .email()
     .required(),
   password: Joi.string().required()
-}
+};
 
 exports.ughhAuthUser = Joi.alternatives().try(
   Joi.object({
@@ -46,7 +46,7 @@ exports.ughhAuthUser = Joi.alternatives().try(
       .required(),
     password: Joi.string().required()
   })
-)
+);
 
 exports.authUser = {
   user: Joi.alternatives().try(
@@ -57,4 +57,4 @@ exports.authUser = {
     Joi.string().email()
   ),
   password: Joi.string().required()
-}
+};

@@ -1,18 +1,18 @@
-const { post, user, authUser } = require('./models')
-const PostController = require('./controllers/posts')
-const UserController = require('./controllers/users')
-const { verifyUniqueUser, verifyCredentials } = require('./util/user')
+const { post, user, authUser } = require('./models');
+const PostController = require('./controllers/posts');
+const UserController = require('./controllers/users');
+const { verifyUniqueUser, verifyCredentials } = require('./util/user');
 
 const cors = {
   origin: ['*'],
   credentials: true
-}
+};
 
 const auth = {
   strategy: 'jwt'
-}
+};
 
-const urlCreator = path => `/api${path}`
+const urlCreator = path => `/api${path}`;
 
 module.exports = [
   {
@@ -103,4 +103,4 @@ module.exports = [
       cors
     }
   }
-]
+];

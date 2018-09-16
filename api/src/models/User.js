@@ -1,5 +1,5 @@
-const m = require('mongoose')
-const Schema = m.Schema
+const m = require('mongoose');
+const Schema = m.Schema;
 
 const UserSchema = new Schema({
   username: { type: String, required: true, index: { unique: true } },
@@ -7,6 +7,6 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   admin: { type: Boolean, required: true },
   posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }]
-})
+});
 
-module.exports = m.model('User', UserSchema)
+module.exports = m.model('User', UserSchema);
