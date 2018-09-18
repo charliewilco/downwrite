@@ -1,6 +1,6 @@
 import * as Boom from 'boom';
 import * as uuid from 'uuid/v4';
-import User from '../models/User';
+import { UserModel as User, IUser } from '../models/User';
 import { hashPassword as hash } from '../util/hash';
 import { createToken } from '../util/token';
 

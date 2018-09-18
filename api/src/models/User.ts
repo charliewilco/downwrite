@@ -1,4 +1,5 @@
 import * as Mongoose from 'mongoose';
+import { IPost } from './Post';
 
 const UserSchema = new Mongoose.Schema({
   username: { type: String, required: true, index: { unique: true } },
@@ -9,3 +10,14 @@ const UserSchema = new Mongoose.Schema({
 });
 
 export default Mongoose.model('User', UserSchema);
+
+export interface IUser extends Mongoose.Document {
+  username: string;
+  email: string;
+  password: string;
+  admin?: boolean;
+  posts: IPost[];
+  gradient?: string[];
+}
+
+export const UserModel = Mongoose.model<IUser>('User', UserSchema);

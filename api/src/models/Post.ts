@@ -11,4 +11,15 @@ const PostSchema = new Mongoose.Schema({
   user: { type: Mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
-export default Mongoose.model('Post', PostSchema);
+export interface IPost extends Mongoose.Document {
+  id: string;
+  title: string;
+  author: string;
+  content: any;
+  public: boolean;
+  dateAdded: Date;
+  dateModified: Date;
+  user: any;
+}
+
+export const PostModel = Mongoose.model<IPost>('Post', PostSchema);

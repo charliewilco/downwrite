@@ -5,7 +5,7 @@ import Config from './util/config';
 
 Mongoose.connect(
   Config.dbCreds,
-  { useMongoClient: true }
+  { useNewUrlParser: true }
 );
 
 const db = Mongoose.connection;

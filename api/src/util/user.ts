@@ -1,34 +1,37 @@
 import * as bcrypt from 'bcrypt';
 import * as Boom from 'boom';
-import User from '../models/User';
+import { UserModel as User, IUser } from '../models/User';
+import { request } from 'https';
 
-export const verifyUniqueUser = (req, res) => {
+export const verifyUniqueUser = async (request, h) => {
   // Find an entry from the database that
   // matches either the email or username
 
-  User.findOne(
+  const state = await User.findOne(
     {
-      $or: [{ email: req.payload.email }, { username: req.payload.username }]
+      $or: [{ email: request.payload.email }, { username: request.payload.username }]
     },
-    (err, user) => {
+    (err, user: IUser) => {
       if (err) {
         return err;
       }
       // Check whether the username or email
       // is already taken and error out if so
       if (user) {
-        if (user.username === req.payload.username) {
-          res(Boom.badRequest('Username taken'));
+        if (user.username === request.payload.username) {
+          return Boom.badRequest('Username taken');
         }
-        if (user.email === req.payload.email) {
-          res(Boom.badRequest('Email taken'));
+        if (user.email === request.payload.email) {
+          return Boom.badRequest('Email taken');
         }
       }
       // If everything checks out, send the payload through
       // to the route handler
-      res(req.payload);
+      return request.payload;
     }
   );
+
+  return state;
 };
 
 export const verifyCredentials = (req, res) => {
@@ -40,20 +43,24 @@ export const verifyCredentials = (req, res) => {
     {
       $or: [{ email: req.payload.user }, { username: req.payload.user }]
     },
-    (err, user) => {
+    (err: Error, user) => {
       if (user) {
-        bcrypt.compare(password, user.password, (err, isValid) => {
-          if (err) {
-            res(Boom.badRequest(err));
+        const state = bcrypt.compare(
+          password,
+          user.password,
+          (err: Error, isValid) => {
+            if (err) {
+              return Boom.boomify(err, { statusCode: 400 });
+            }
+            if (isValid) {
+              return;
+            } else {
+              return Boom.badRequest('Incorrect password!');
+            }
           }
-          if (isValid) {
-            res(user);
-          } else {
-            res(Boom.badRequest('Incorrect password!'));
-          }
-        });
+        );
       } else {
-        res(Boom.badRequest('Incorrect username or email!'));
+        return Boom.badRequest('Incorrect username or email!');
       }
     }
   );

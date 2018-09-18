@@ -2,11 +2,12 @@ import * as Hapi from 'hapi';
 import * as Boom from 'boom';
 import { draftToMarkdown } from 'markdown-draft-js';
 
-import Post from '../models/Post';
-import User from '../models/User';
+import { PostModel as Post, IPost } from '../models/Post';
+import { UserModel as User, IUser } from '../models/User';
 
 export interface ICredentials extends Hapi.AuthCredentials {
   id: string;
+  user: string;
 }
 
 export interface IRequestAuth extends Hapi.RequestAuth {
@@ -20,108 +21,122 @@ export interface IRequest extends Hapi.Request {
 // PUT
 
 export const updatePost = (req: IRequest, reply: Hapi.ResponseToolkit) => {
-  const updatedPost = req.payload;
+  const updatedPost: IPost | any = req.payload;
   const query = { id: updatedPost.id };
 
   Post.findOneAndUpdate(query, updatedPost, { upsert: true }, (err, post) => {
     if (err) {
       console.log(err);
-      return reply(Boom.internal('Internal MongoDB error', err));
+      return Boom.internal('Internal MongoDB error', err);
     } else {
-      return reply(post);
+      return post;
     }
   });
 };
 
 // GET
 
-export const getPosts = (req: IRequest, reply: Hapi.ResponseToolkit) => {
+export const getPosts = async (req: IRequest, reply: Hapi.ResponseToolkit) => {
   const { user } = req.auth.credentials;
 
-  Post.find({ user: { $eq: user } }).exec((error, posts) => {
-    if (error) {
-      reply(Boom.internal('Internal MongoDB error', error));
-    }
-    reply(posts);
-  });
+  console.log(req.auth.credentials);
+
+  const posts: IPost[] = await Post.find({ user: { $eq: user } });
+
+  if (posts) {
+    return posts;
+  } else {
+    return Boom.notFound();
+  }
 };
 
-export const getSinglePost = (req: IRequest, reply: Hapi.ResponseToolkit) => {
+export const getSinglePost = async (
+  req: IRequest,
+  reply: Hapi.ResponseToolkit
+): Promise<IPost> => {
   const user = req.auth.credentials;
 
-  Post.findOne({ id: req.params.id }, (err, post) => {
+  const entry: IPost = await Post.findOne({ id: req.params.id }, (err, post) => {
     if (err) {
-      reply(Boom.internal('Internal MongoDB error', err));
+      return Boom.internal('Internal MongoDB error', err);
     }
 
-    if (post.author === user) {
-      console.log('Maybe this is true');
-    }
-
-    reply(post);
+    return post;
   });
+
+  return entry;
 };
 
-export const getMarkdown = (req: IRequest, reply: Hapi.ResponseToolkit) => {
-  Post.findOne({ id: req.params.id }, (err, post) => {
+export const getMarkdown = async (req: IRequest, reply: Hapi.ResponseToolkit) => {
+  const markdown = await Post.findOne({ id: req.params.id }, async (err, post) => {
     if (err) {
-      return reply(Boom.internal('Internal MongoDB error', err));
+      return Boom.internal('Internal MongoDB error', err);
     } else if (!post.public) {
-      return reply(
-        Boom.notFound(
-          "This post is either not public or I couldn't even find it. Things are hard sometimes."
-        )
+      return Boom.notFound(
+        "This post is either not public or I couldn't even find it. Things are hard sometimes."
       );
     } else {
-      User.findOne({ _id: post.user }, (err, user) => {
-        return reply({
-          id: req.params.id,
-          author: {
-            username: user.username,
-            avatar: user.gradient || ['#FEB692', '#EA5455']
-          },
-          content: draftToMarkdown(post.content, {
-            entityItems: {
-              LINK: {
-                open: () => {
-                  return '[';
-                },
+      const user = await User.findOne({ _id: post.user }, (err, user) => {
+        return user;
+      });
 
-                close: entity => {
-                  return `](${entity.data.url || entity.data.href})`;
-                }
+      return {
+        id: req.params.id,
+        author: {
+          username: user.username,
+          avatar: user.gradient || ['#FEB692', '#EA5455']
+        },
+        content: draftToMarkdown(post.content, {
+          entityItems: {
+            LINK: {
+              open: () => {
+                return '[';
+              },
+
+              close: entity => {
+                return `](${entity.data.url || entity.data.href})`;
               }
             }
-          }),
-          title: post.title,
-          dateAdded: post.dateAdded
-        });
-      });
+          }
+        }),
+        title: post.title,
+        dateAdded: post.dateAdded
+      };
     }
   });
+
+  return markdown;
 };
 
 // POST
 
-export const createPost = (req: IRequest, reply: Hapi.ResponseToolkit) => {
+export const createPost = async (req: IRequest, reply: Hapi.ResponseToolkit) => {
   const newPost = Object.assign({}, req.payload);
   const post = new Post(newPost);
 
-  post.save((error, post) => {
+  const entry = await post.save((error, post) => {
     if (error) {
-      return reply(Boom.wrap(error, 'Internal MongoDB error'));
+      return Boom.boomify(error, { message: 'Internal MongoDB error' });
     }
 
-    reply(post);
+    return post;
   });
+
+  return entry;
 };
 
 // DELETE
-export const deletePost = (req: IRequest, reply: Hapi.ResponseToolkit) => {
-  Post.findOneAndRemove({ id: req.params.id }, (err, post) => {
-    if (err) {
-      return reply(Boom.wrap(err, 'Internal MongoDB error'));
+export const deletePost = async (req: IRequest, reply: Hapi.ResponseToolkit) => {
+  const response = await Post.findOneAndRemove(
+    { id: req.params.id },
+    (err, post: IPost) => {
+      if (err) {
+        return Boom.boomify(err, { message: 'Internal MongoDB error' });
+      }
+
+      return `${post.title} was removed`;
     }
-    reply(`${post.title} was removed`);
-  });
+  );
+
+  return response;
 };
