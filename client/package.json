@@ -5,6 +5,7 @@
   "repository": "charlespeters/downwrite",
   "author": "Charles ⚡ <charlespeters42@gmail.com>",
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "dev": "node server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
