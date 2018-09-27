@@ -2,7 +2,6 @@ const withOffline = require('next-offline');
 const withManifest = require('next-manifest');
 const withCSS = require('@zeit/next-css');
 const withTypescript = require('@zeit/next-typescript');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const manifest = {
   dir: 'ltr',
@@ -42,13 +41,7 @@ module.exports = withTypescript(
   withCSS(
     withManifest(
       withOffline({
-        manifest,
-        webpack(config, options) {
-          if (options.isServer)
-            config.plugins.push(new ForkTsCheckerWebpackPlugin());
-
-          return config;
-        }
+        manifest
       })
     )
   )

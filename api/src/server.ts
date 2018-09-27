@@ -13,8 +13,6 @@ Mongoose.connect(
 
 const db = Mongoose.connection;
 
-routes.forEach(route => console.log(route.method + ' - ' + route.path));
-
 const validate = async () => ({ isValid: true });
 
 const init = async (): Promise<Hapi.Server> => {

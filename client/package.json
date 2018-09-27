@@ -60,7 +60,6 @@
     "babel-core": "7.0.0-bridge.0",
     "dom-testing-library": "^3.6.0",
     "fbjs": "^1.0.0",
-    "fork-ts-checker-webpack-plugin": "^0.4.9",
     "jest": "^23.6.0",
     "jest-fetch-mock": "^1.6.6",
     "jest-styled-components": "^6.2.1",
