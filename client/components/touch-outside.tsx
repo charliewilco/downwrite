@@ -1,12 +1,6 @@
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 
-const addListeners = (el: Document, s: string, fn: EventListener) =>
-  s.split(' ').forEach(e => el.addEventListener(e, fn, false));
-
-const rmListeners = (el: Document, s: string, fn: EventListener) =>
-  s.split(' ').forEach(e => el.removeEventListener(e, fn, false));
-
 // TODO: Should blur child
 interface ITouchOutsideProps {
   onChange: () => void;
@@ -18,17 +12,19 @@ export default class TouchOutside extends React.Component<ITouchOutsideProps> {
 
   componentDidMount() {
     if (document) {
-      addListeners(document, 'touchstart click', this.outsideHandleClick);
+      document.addEventListener('touchstart', this.outsideHandleClick);
+      document.addEventListener('click', this.outsideHandleClick);
     }
   }
 
   componentWillUnmount() {
     if (document) {
-      rmListeners(document, 'touchstart click', this.outsideHandleClick);
+      document.removeEventListener('touchstart', this.outsideHandleClick);
+      document.removeEventListener('click', this.outsideHandleClick);
     }
   }
 
-  outsideHandleClick = ({ target }: { target: HTMLElement }): void => {
+  outsideHandleClick = ({ target }): void => {
     const node = findDOMNode(this);
 
     if (node instanceof HTMLElement) {

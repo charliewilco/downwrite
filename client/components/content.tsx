@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import format from 'date-fns/format';
+import isDate from 'date-fns/is_date';
 import Markdown from 'react-markdown';
 import 'prismjs';
 import CodeBlock from './code-block';
@@ -103,7 +104,7 @@ const ContentBody = styled.section`
 
 interface IContentProps {
   title?: string;
-  dateAdded?: string | Date;
+  dateAdded?: Date;
   children?: React.ReactNode;
   content: string;
 }
@@ -121,7 +122,9 @@ const Content: React.SFC<IContentProps> = ({
           {title}
         </h1>
         {dateAdded && (
-          <ContentTime data-testid="PREVIEW_ENTRTY_META" dateTime={dateAdded}>
+          <ContentTime
+            data-testid="PREVIEW_ENTRTY_META"
+            dateTime={isDate(dateAdded) && dateAdded.toString()}>
             {format(dateAdded, 'DD MMMM YYYY')}
           </ContentTime>
         )}

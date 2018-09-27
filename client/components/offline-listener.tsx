@@ -18,7 +18,7 @@ export default class OfflineListener extends React.Component<
 
   handleChange = (x: Event) =>
     this.setState({
-      offline: !x.currentTarget.navigator.onLine
+      offline: !(x.currentTarget as Window).navigator.onLine
     });
 
   componentDidMount() {

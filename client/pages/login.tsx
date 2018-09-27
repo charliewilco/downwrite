@@ -16,8 +16,12 @@ const HomeContainer = styled.main`
   margin: 0 auto;
 `;
 
-const Login = dynamic(import('../components/login-form'), { loading });
-const Register = dynamic(import('../components/register'), { loading });
+const Login = dynamic(import('../components/login-form'), {
+  loading
+});
+const Register = dynamic(import('../components/register'), {
+  loading
+});
 
 interface IHomeProps {
   signIn: () => void;

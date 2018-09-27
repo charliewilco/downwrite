@@ -31,7 +31,7 @@ export const PrivacyToggle: React.SFC<IPrivacyToggle> = ({
 }) => (
   <PrivacyContainer>
     <LabelFlex>
-      <Check checked={publicStatus} onChange={onChange} value={publicStatus} />
+      <Check checked={publicStatus} onChange={onChange} />
       <Label>{publicStatus ? 'Public' : 'Private'}</Label>
     </LabelFlex>
   </PrivacyContainer>

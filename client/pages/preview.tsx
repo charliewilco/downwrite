@@ -73,7 +73,7 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
           <>
             <Head>
               <title>{entry.title} | Downwrite</title>
-              <meta description={entry.content.substr(0, 75)} />
+              <meta name="description" content={entry.content.substr(0, 75)} />
             </Head>
             <Content {...entry}>
               <AuthorBlock
