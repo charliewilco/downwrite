@@ -6,98 +6,48 @@
   "repository": "charlespeters/downwrite",
   "scripts": {
     "precommit": "lint-staged",
-    "analysis": "flow check",
     "dev": "bolt ws dev",
     "build": "bolt ws build",
     "go": "bolt ws deploy",
     "test": "bolt ws test",
-    "lint": "eslint .",
     "clean": "bolt ws exec -- 'rm -rf node_modules'"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.6",
-    "bolt": "^0.20.7",
-    "eslint": "^5.2.0",
-    "eslint-plugin-flowtype": "^2.50.0",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-jest": "^21.18.0",
-    "eslint-plugin-jsx-a11y": "^6.1.1",
-    "eslint-plugin-react": "^7.10.0",
-    "flow-bin": "^0.77.0",
-    "husky": "^0.14.3",
-    "lint-staged": "^7.2.0",
-    "prettier": "^1.13.7"
+    "bolt": "^0.22.2",
+    "husky": "^1.0.1",
+    "lint-staged": "^7.3.0",
+    "prettier": "^1.14.3",
+    "typescript": "^3.0.3"
   },
   "prettier": {
     "printWidth": 85,
-    "parser": "flow",
-    "semi": false,
     "singleQuote": true,
     "tabWidth": 2,
     "useTabs": false,
     "bracketSpacing": true,
     "jsxBracketSameLine": true
   },
-  "eslintConfig": {
-    "parser": "babel-eslint",
-    "parserOptions": {
-      "ecmaVersion": 8,
-      "sourceType": "module",
-      "ecmaFeatures": {
-        "jsx": true,
-        "impliedStrict": true,
-        "experimentalObjectRestSpread": true
-      },
-      "allowImportExportEverywhere": true
-    },
-    "plugins": ["flowtype", "react", "import", "jest", "jsx-a11y"],
-    "extends": [
-      "eslint:recommended",
-      "plugin:flowtype/recommended",
-      "plugin:import/warnings",
-      "plugin:react/recommended",
-      "plugin:jsx-a11y/recommended"
-    ],
-    "env": {
-      "es6": true,
-      "browser": true,
-      "node": true
-    },
-    "settings": {
-      "flowtype": {
-        "onlyFilesWithFlowAnnotation": true
-      }
-    },
-    "rules": {
-      "no-console": [
-        "error",
-        {
-          "allow": ["warn", "error"]
-        }
-      ],
-      "react/display-name": 0,
-      "react/react-in-jsx-scope": 0,
-      "react/prop-types": 0,
-      "react/no-unescaped-entities": 0,
-      "jsx-a11y/anchor-is-valid": 0
-    }
-  },
-  "eslintIgnore": [
-    "*.test.js",
-    "node_modules",
-    "union",
-    "dist",
-    ".next",
-    "flow-typed"
-  ],
   "lint-staged": {
-    "*.js": ["prettier --parser flow --write", "git add"],
-    "*.css": ["prettier --parser postcss --write", "git add"],
-    "*.json": ["prettier --parser json --write", "git add"]
+    "*.{js,json,ts,tsx}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.css": [
+      "prettier --parser postcss --write",
+      "git add"
+    ]
   },
   "bolt": {
-    "workspaces": ["redownwrite", "api-downwrite", "union"]
+    "workspaces": [
+      "client",
+      "api",
+      "e2e"
+    ]
   },
-  "workspaces": ["redownwrite", "union", "api-downwrite"],
+  "workspaces": [
+    "client",
+    "api",
+    "e2e"
+  ],
   "license": "MIT"
 }

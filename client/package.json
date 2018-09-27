@@ -1,0 +1,141 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "repository": "charlespeters/downwrite",
+  "author": "Charles ⚡ <charlespeters42@gmail.com>",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js",
+    "test": "NODE_ENV=test jest --env=jsdom --verbose --silent",
+    "deploy": "now && now alias"
+  },
+  "dependencies": {
+    "@charliewilco/sanitize-object": "^1.0.1",
+    "@zeit/next-css": "^1.0.1",
+    "@zeit/next-typescript": "^1.1.1",
+    "babel-plugin-styled-components": "^1.7.1",
+    "date-fns": "^1.29.0",
+    "draft-js": "^0.10.4",
+    "draft-js-markdown-plugin": "^3.0.5",
+    "draft-js-plugins-editor": "^2.1.1",
+    "draft-js-prism-plugin": "^0.1.3",
+    "express": "^4.16.3",
+    "file-saver": "^1.3.4",
+    "front-matter": "^2.3.0",
+    "http-proxy-middleware": "^0.19.0",
+    "immutable": "^3.8.2",
+    "jsonwebtoken": "^8.3.0",
+    "jwt-decode": "^2.2.0",
+    "lodash": "^4.17.10",
+    "markdown-draft-js": "^1.0.1",
+    "next": "^7.0.0",
+    "next-manifest": "^1.5.0",
+    "next-offline": "^3.0.1",
+    "prismjs": "^1.15.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "react-dropzone": "^5.1.1",
+    "react-markdown": "^3.3.4",
+    "react-prism": "^4.3.1",
+    "styled-components": "^3.4.9",
+    "universal-cookie": "^3.0.4",
+    "universal-cookie-express": "^3.0.4",
+    "universal-fetch": "^1.0.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/draft-js": "^0.10.24",
+    "@types/file-saver": "^1.3.0",
+    "@types/jest": "^23.3.2",
+    "@types/lodash": "^4.14.116",
+    "@types/next": "^6.1.8",
+    "@types/prismjs": "^1.9.0",
+    "@types/react": "^16.4.13",
+    "@types/react-dom": "^16.0.7",
+    "@types/react-dropzone": "^4.2.2",
+    "@types/styled-components": "^3.0.1",
+    "@types/uuid": "^3.4.3",
+    "babel-core": "7.0.0-bridge.0",
+    "dom-testing-library": "^3.6.0",
+    "fbjs": "^1.0.0",
+    "jest": "^23.6.0",
+    "jest-fetch-mock": "^1.6.6",
+    "jest-styled-components": "^6.2.1",
+    "react-addons-test-utils": "^15.6.2",
+    "react-test-renderer": "^16.5.2",
+    "react-testing-library": "^5.1.0",
+    "ts-jest": "^23.10.2",
+    "typescript": "^3.0.1"
+  },
+  "babel": {
+    "presets": [
+      "next/babel",
+      "@zeit/next-typescript/babel"
+    ],
+    "plugins": [
+      [
+        "styled-components",
+        {
+          "ssr": true,
+          "displayName": false,
+          "preprocess": false
+        }
+      ]
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "/**/*.{js,jsx,mjs}"
+    ],
+    "setupTestFrameworkScriptFile": "<rootDir>/__tests__/config/setupTests.js",
+    "testPathIgnorePatterns": [
+      "<rootDir>/.next/",
+      "<rootDir>/node_modules/",
+      "<rootDir>/__tests__/config/"
+    ],
+    "testMatch": [
+      "<rootDir>/**/__tests__/**/*.{js,jsx,mjs}",
+      "<rootDir>/**/?(*.)(spec|test).{js,jsx,mjs}"
+    ],
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
+      "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/__tests__/config/fileTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
+    ],
+    "moduleFileExtensions": [
+      "web.js",
+      "mjs",
+      "js",
+      "json",
+      "web.jsx",
+      "jsx",
+      "node"
+    ]
+  },
+  "now": {
+    "name": "next-downwrite",
+    "alias": [
+      "beta.downwrite.us"
+    ],
+    "env": {
+      "NODE_ENV": "production",
+      "SECRET_KEY": "@dw-key"
+    },
+    "scale": {
+      "sfo1": {
+        "min": 1,
+        "max": 2
+      }
+    }
+  },
+  "browserslist": [
+    ">0.25%",
+    "not ie 11",
+    "not op_mini all"
+  ]
+}

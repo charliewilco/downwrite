@@ -1,0 +1,77 @@
+{
+  "name": "api",
+  "description": "REST API for downwrite",
+  "version": "0.0.0",
+  "main": "src/server.ts",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "predev": "yarn build",
+    "deploy": "now && now alias",
+    "start": "node dist/server.js",
+    "dev": "nodemon",
+    "test": "jest"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@types/bcrypt": "^2.0.0",
+    "@types/boom": "^7.2.0",
+    "@types/hapi": "^17.0.19",
+    "@types/joi": "^13.4.5",
+    "@types/jsonwebtoken": "^7.2.8",
+    "@types/mongoose": "^5.2.13",
+    "@types/node": "^10.9.4",
+    "@types/uuid": "^3.4.4",
+    "bcrypt": "^3.0.1",
+    "boom": "^7.2.0",
+    "good": "^8.1.1",
+    "good-console": "^7.1.0",
+    "good-squeeze": "^5.1.0",
+    "hapi": "^17.6.0",
+    "hapi-auth-jwt": "^4.0.0",
+    "hapi-auth-jwt2": "^8.1.0",
+    "joi": "^13.6.0",
+    "jsonwebtoken": "^8.3.0",
+    "markdown-draft-js": "^1.0.1",
+    "mongoose": "^5.2.17",
+    "typescript": "^3.0.3",
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/mongoose": "^5.2.17",
+    "@types/node": "^10.11.0",
+    "jest": "^22.4.0",
+    "nodemon": "^1.18.4",
+    "ts-node": "^7.0.1"
+  },
+  "now": {
+    "name": "api-downwrite",
+    "alias": "api.downwrite.us",
+    "scale": {
+      "sfo1": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "env": {
+      "NODE_ENV": "production",
+      "SECRET_KEY": "@dw-key",
+      "DB_USER": "@dw-db-user",
+      "DB_PASSWORD": "@dw-db-password",
+      "DB_ADDRESS": "@dw-db-address"
+    }
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
+  },
+  "nodemonConfig": {
+    "watch": [
+      "./src/**/*.ts"
+    ],
+    "exec": "ts-node ./src/server.ts"
+  },
+  "repository": "charlespeters/downwrite",
+  "author": "Charles ⚡ <charlespeters42@gmail.com>"
+}
