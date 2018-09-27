@@ -1,7 +1,7 @@
-import { post, user, authUser } from './models';
 import * as PostController from './controllers/posts';
 import * as UserController from './controllers/users';
-import { verifyUniqueUser, verifyCredentials } from './util/user';
+import * as PostModel from './models/Post';
+import * as UserModel from './models/User';
 
 const cors = {
   origin: ['*'],
@@ -17,7 +17,7 @@ const urlCreator = (path: string) => `/api${path}`;
 const Routes = [
   {
     method: 'GET',
-    path: urlCreator('/posts'),
+    path: '/posts',
     handler: PostController.getPosts,
     config: {
       cors,
@@ -26,11 +26,11 @@ const Routes = [
   },
   {
     method: 'POST',
-    path: urlCreator('/posts'),
+    path: '/posts',
     handler: PostController.createPost,
     config: {
       validate: {
-        payload: post
+        payload: PostModel.validPost
       },
       auth,
       cors
@@ -38,7 +38,7 @@ const Routes = [
   },
   {
     method: 'GET',
-    path: urlCreator('/posts/{id}'),
+    path: '/posts/{id}',
     handler: PostController.getSinglePost,
     config: {
       cors,
@@ -47,7 +47,7 @@ const Routes = [
   },
   {
     method: 'GET',
-    path: urlCreator('/posts/preview/{id}'),
+    path: '/posts/preview/{id}',
     handler: PostController.getMarkdown,
     config: {
       cors
@@ -55,7 +55,7 @@ const Routes = [
   },
   {
     method: 'DELETE',
-    path: urlCreator('/posts/{id}'),
+    path: '/posts/{id}',
     handler: PostController.deletePost,
     config: {
       cors,
@@ -64,11 +64,11 @@ const Routes = [
   },
   {
     method: 'PUT',
-    path: urlCreator('/posts/{id}'),
+    path: '/posts/{id}',
     handler: PostController.updatePost,
     config: {
       validate: {
-        payload: post
+        payload: PostModel.validPost
       },
       auth,
       cors
@@ -76,33 +76,45 @@ const Routes = [
   },
   {
     method: 'POST',
-    path: urlCreator('/users'),
+    path: '/users',
     handler: UserController.createUser,
     config: {
-      pre: [{ method: verifyUniqueUser }],
+      pre: [{ method: UserController.verifyUniqueUser }],
       validate: {
-        payload: user
+        payload: UserModel.validUser
       },
       cors
     }
   },
   {
+    method: 'GET',
+    path: '/users/{id}',
+    handler: UserController.getDetails,
+    config: {
+      cors,
+      auth: false
+    }
+  },
+  {
     method: 'POST',
-    path: urlCreator('/users/authenticate'),
+    path: '/users/authenticate',
     config: {
       pre: [
         {
-          method: verifyCredentials,
+          method: UserController.verifyCredentials,
           assign: 'user'
         }
       ],
       handler: UserController.authenticateUser,
       validate: {
-        payload: authUser
+        payload: UserModel.validAuthenticatedUser
       },
       cors
     }
   }
 ];
 
-export default Routes;
+export default Routes.map(r => ({
+  ...r,
+  path: urlCreator(r.path)
+}));

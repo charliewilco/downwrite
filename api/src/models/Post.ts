@@ -1,4 +1,5 @@
 import * as Mongoose from 'mongoose';
+import * as Joi from 'joi';
 
 const PostSchema = new Mongoose.Schema({
   id: String,
@@ -23,3 +24,14 @@ export interface IPost extends Mongoose.Document {
 }
 
 export const PostModel = Mongoose.model<IPost>('Post', PostSchema);
+
+export const validPost = {
+  id: Joi.string(),
+  title: Joi.string(),
+  content: Joi.object(),
+  tags: Joi.array(),
+  dateAdded: Joi.date(),
+  dateModified: Joi.date(),
+  user: Joi.string(),
+  public: Joi.boolean()
+};

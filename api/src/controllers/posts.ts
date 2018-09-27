@@ -5,6 +5,10 @@ import { draftToMarkdown } from 'markdown-draft-js';
 import { PostModel as Post, IPost } from '../models/Post';
 import { UserModel as User, IUser } from '../models/User';
 
+// TODO: implement `Authorization: ${token}`
+// TODO: remove user from the payload, get it from the
+// const { user } = req.auth.credentials;
+
 export interface ICredentials extends Hapi.AuthCredentials {
   id: string;
   user: string;
@@ -20,123 +24,129 @@ export interface IRequest extends Hapi.Request {
 
 // PUT
 
-export const updatePost = (req: IRequest, reply: Hapi.ResponseToolkit) => {
-  const updatedPost: IPost | any = req.payload;
-  const query = { id: updatedPost.id };
+export const updatePost = async (request: IRequest, reply: Hapi.ResponseToolkit) => {
+  const { user } = request.auth.credentials;
+  const { id } = request.params;
+  const entry: IPost = Object.assign({}, { user }, <IPost>request.payload);
 
-  Post.findOneAndUpdate(query, updatedPost, { upsert: true }, (err, post) => {
-    if (err) {
-      console.log(err);
-      return Boom.internal('Internal MongoDB error', err);
-    } else {
-      return post;
-    }
-  });
+  try {
+    const post: IPost = await Post.findOneAndUpdate(
+      { id, user: { $eq: user } },
+      entry,
+      {
+        upsert: true
+      }
+    );
+    return post;
+  } catch (err) {
+    console.log(err);
+    return Boom.internal('Internal MongoDB error', err);
+  }
 };
 
 // GET
 
-export const getPosts = async (req: IRequest, reply: Hapi.ResponseToolkit) => {
+export const getPosts = async (
+  req: IRequest,
+  reply: Hapi.ResponseToolkit
+): Promise<IPost[] | Boom<any>> => {
   const { user } = req.auth.credentials;
 
-  console.log(req.auth.credentials);
-
-  const posts: IPost[] = await Post.find({ user: { $eq: user } });
-
-  if (posts) {
+  try {
+    const posts: IPost[] = await Post.find({ user: { $eq: user } });
     return posts;
-  } else {
+  } catch (error) {
     return Boom.notFound();
   }
 };
 
 export const getSinglePost = async (
-  req: IRequest,
-  reply: Hapi.ResponseToolkit
-): Promise<IPost> => {
-  const user = req.auth.credentials;
+  request: IRequest,
+  h: Hapi.ResponseToolkit
+): Promise<IPost | Boom<any>> => {
+  const id = request.params.id;
+  const { user } = request.auth.credentials;
 
-  const entry: IPost = await Post.findOne({ id: req.params.id }, (err, post) => {
-    if (err) {
-      return Boom.internal('Internal MongoDB error', err);
-    }
-
+  try {
+    const post: IPost = await Post.findOne({
+      id,
+      user: { $eq: user }
+    });
     return post;
-  });
-
-  return entry;
+  } catch (error) {
+    return Boom.badImplementation(error);
+  }
 };
 
-export const getMarkdown = async (req: IRequest, reply: Hapi.ResponseToolkit) => {
-  const markdown = await Post.findOne({ id: req.params.id }, async (err, post) => {
-    if (err) {
-      return Boom.internal('Internal MongoDB error', err);
-    } else if (!post.public) {
-      return Boom.notFound(
-        "This post is either not public or I couldn't even find it. Things are hard sometimes."
-      );
-    } else {
-      const user = await User.findOne({ _id: post.user }, (err, user) => {
-        return user;
-      });
+export const getMarkdown = async (req: IRequest, h: Hapi.ResponseToolkit) => {
+  const post = await Post.findOne({ id: req.params.id });
 
-      return {
-        id: req.params.id,
-        author: {
-          username: user.username,
-          avatar: user.gradient || ['#FEB692', '#EA5455']
-        },
-        content: draftToMarkdown(post.content, {
-          entityItems: {
-            LINK: {
-              open: () => {
-                return '[';
-              },
+  const user = await User.findOne({ _id: post.user });
 
-              close: entity => {
-                return `](${entity.data.url || entity.data.href})`;
-              }
-            }
+  const markdown = {
+    id: req.params.id,
+    author: {
+      username: user.username,
+      avatar: user.gradient || ['#FEB692', '#EA5455']
+    },
+    content: draftToMarkdown(post.content, {
+      entityItems: {
+        LINK: {
+          open: () => {
+            return '[';
+          },
+
+          close: entity => {
+            return `](${entity.data.url || entity.data.href})`;
           }
-        }),
-        title: post.title,
-        dateAdded: post.dateAdded
-      };
-    }
-  });
+        }
+      }
+    }),
+    title: post.title,
+    dateAdded: post.dateAdded
+  };
 
-  return markdown;
+  if (!post.public) {
+    return Boom.notFound(
+      "This post is either not public or I couldn't even find it. Things are hard sometimes."
+    );
+  } else {
+    return markdown;
+  }
 };
 
 // POST
+export const createPost = async (
+  request: IRequest,
+  h: Hapi.ResponseToolkit
+): Promise<IPost | Boom<any>> => {
+  const { user } = request.auth.credentials;
 
-export const createPost = async (req: IRequest, reply: Hapi.ResponseToolkit) => {
-  const newPost = Object.assign({}, req.payload);
-  const post = new Post(newPost);
+  const entry: IPost = Object.assign({}, <IPost>request.payload, { user });
 
-  const entry = await post.save((error, post) => {
-    if (error) {
-      return Boom.boomify(error, { message: 'Internal MongoDB error' });
-    }
-
+  try {
+    const post: IPost = await Post.create(entry);
     return post;
-  });
-
-  return entry;
+  } catch (error) {
+    return Boom.boomify(error, { message: 'Internal MongoDB error' });
+  }
 };
 
 // DELETE
-export const deletePost = async (req: IRequest, reply: Hapi.ResponseToolkit) => {
-  const response = await Post.findOneAndRemove(
-    { id: req.params.id },
-    (err, post: IPost) => {
-      if (err) {
-        return Boom.boomify(err, { message: 'Internal MongoDB error' });
-      }
+export const deletePost = async (
+  request: IRequest,
+  reply: Hapi.ResponseToolkit
+): Promise<string | Boom<any>> => {
+  const id = request.params.id;
+  const { user } = request.auth.credentials;
 
-      return `${post.title} was removed`;
-    }
-  );
-
-  return response;
+  try {
+    const post = await Post.findOneAndRemove({
+      id,
+      user: { $eq: user }
+    });
+    return `${post.title} was removed`;
+  } catch (error) {
+    return Boom.boomify(error, { message: 'Internal MongoDB error' });
+  }
 };

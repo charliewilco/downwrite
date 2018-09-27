@@ -2,14 +2,14 @@
   "name": "api",
   "description": "REST API for downwrite",
   "version": "0.0.0",
-  "main": "server.js",
+  "main": "src/server.ts",
   "private": true,
   "scripts": {
     "build": "tsc",
     "predev": "yarn build",
     "deploy": "now && now alias",
     "start": "node dist/server.js",
-    "dev": "ts-node src/server.ts",
+    "dev": "nodemon",
     "test": "jest"
   },
   "license": "MIT",
@@ -39,15 +39,8 @@
   },
   "devDependencies": {
     "jest": "^22.4.0",
+    "nodemon": "^1.18.4",
     "ts-node": "^7.0.1"
-  },
-  "nodemonConfig": {
-    "ignore": [
-      "test/*",
-      "src/*"
-    ],
-    "verbose": true,
-    "delay": "2500"
   },
   "now": {
     "name": "api-downwrite",
@@ -70,6 +63,12 @@
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
     }
+  },
+  "nodemonConfig": {
+    "watch": [
+      "./src/**/*.ts"
+    ],
+    "exec": "ts-node ./src/server.ts"
   },
   "repository": "charlespeters/downwrite",
   "author": "Charles ⚡ <charlespeters42@gmail.com>"
