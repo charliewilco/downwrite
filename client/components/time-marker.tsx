@@ -1,9 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import format from 'date-fns/format';
+import isDate from 'date-fns/is_date';
 
 interface ITimeMarkProps {
-  dateAdded: Date | string;
+  dateAdded: Date;
 }
 
 const Meta = styled.div`
@@ -12,9 +13,10 @@ const Meta = styled.div`
   margin-bottom: 8px;
 `;
 
-const Time: React.SFC<ITimeMarkProps> = ({ dateAdded }) => (
-  <time dateTime={dateAdded.toString()}>{format(dateAdded, 'DD MMMM YYYY')}</time>
-);
+const Time: React.SFC<ITimeMarkProps> = ({ dateAdded }) => {
+  let date: string = isDate(dateAdded) && dateAdded.toString();
+  return <time dateTime={date}>{format(dateAdded, 'DD MMMM YYYY')}</time>;
+};
 
 const TimeMarker: React.SFC<ITimeMarkProps> = ({ dateAdded }) => (
   <Meta>

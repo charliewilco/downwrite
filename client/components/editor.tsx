@@ -9,7 +9,6 @@ import createPrismPlugin from 'draft-js-prism-plugin';
 import { fonts, colors } from '../utils/defaultStyles';
 import './draft.css';
 import './ganymede.css';
-import PluginsEditor from 'draft-js-plugins-editor';
 
 const EditorWrapper = styled.div`
   padding-left: 0px;
@@ -49,17 +48,14 @@ interface IEditorState {
   plugins: any[];
 }
 
-export default class DwEditor<T, P = any> extends React.Component<
-  IEditorProps & T & P,
-  IEditorState
-> {
+export default class DWEditor extends React.Component<IEditorProps, IEditorState> {
   static displayName = 'DWEditor';
 
   static defaultProps = {
     toolbar: false
   };
 
-  private editor = React.createRef<PluginsEditor>();
+  private editor: Editor = null as Editor;
 
   state = {
     editorState: this.props.editorState,
@@ -90,6 +86,7 @@ export default class DwEditor<T, P = any> extends React.Component<
   render() {
     const { editorState, handleKeyCommand, keyBindingFn } = this.props;
     const { plugins } = this.state;
+
     // If the user changes block type before entering any text, we can
     // either style the placeholder or hide it. Let's just hide it now.
     let className = 'RichEditor-editor';
@@ -117,7 +114,7 @@ export default class DwEditor<T, P = any> extends React.Component<
             onChange={editorState => this.onChange(editorState)}
             onTab={this.onTab}
             placeholder="History will be kind to me for I intend to write it. — Winston Churchill"
-            ref={this.editor}
+            ref={(x: Editor) => (this.editor = x)}
             spellCheck
             plugins={plugins}
           />

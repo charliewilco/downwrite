@@ -16,6 +16,13 @@ interface IUploadProps {
   children: React.ReactNode;
 }
 
+interface IMarkdown {
+  body: string;
+  attributes: {
+    [key: string]: any;
+  };
+}
+
 export default class Uploader extends React.Component<IUploadProps, any> {
   static displayName = 'Uploader';
 
@@ -23,7 +30,7 @@ export default class Uploader extends React.Component<IUploadProps, any> {
 
   extractMarkdown = files => {
     this.reader.onload = () => {
-      let md = fm(this.reader.result);
+      let md: IMarkdown = fm(this.reader.result as string);
 
       let markdown = markdownToDraft(md.body, { preserveNewlines: true });
 

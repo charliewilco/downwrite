@@ -8,6 +8,8 @@ interface InputType {
   onChange: (x) => void;
   value: string;
   type: string;
+  placeholder?: string;
+  autoComplete?: string;
 }
 
 interface InputTypeState {
@@ -22,7 +24,7 @@ const StyledInput = styled.input`
   border: 0px;
   width: 100%;
   border-radius: 0px;
-  border-bottom: ${`2px solid #B4B4B4`};
+  border-bottom: 2px solid #b4b4b4;
   transition: border-bottom 250ms ease-in-out;
 
   &:focus {
@@ -57,6 +59,10 @@ export default class extends React.Component<InputType, InputTypeState> {
   };
 
   static displayName = 'LoginInput';
+
+  static defaultProps = {
+    type: 'text'
+  };
 
   render() {
     const id = uuid();

@@ -4,18 +4,23 @@ import { colors } from '../utils/defaultStyles';
 
 const Box = styled.div``;
 
+interface ILayoutTrigger {
+  active: boolean;
+  theme: any;
+}
+
 const LayoutTrigger = styled.div`
   display: inline-block;
   margin: 8px 0 8px 16px;
   cursor: pointer;
   font-size: 12px;
   color: inherit;
-  opacity: ${props => (props.active ? 1 : 0.5)};
+  opacity: ${(props: ILayoutTrigger) => (props.active ? 1 : 0.5)};
   &:after {
     content: '';
     display: block;
     border-bottom: 5px solid
-      ${(props: { active: boolean }) =>
+      ${(props: ILayoutTrigger) =>
         props.active ? props.theme.link || colors.blue400 : 'transparent'};
   }
 `;

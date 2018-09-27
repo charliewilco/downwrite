@@ -32,7 +32,6 @@ type Res = PostError | Post[];
 
 interface DashboardPr {
   entries: Post[];
-  user: string;
   token: string;
   closeNav: Function;
 }
@@ -59,11 +58,7 @@ export default class Dashboard extends React.Component<DashboardPr, DashboardSta
   static async getInitialProps({ req, query }) {
     const { token } = getToken(req, query);
 
-    const config = {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` },
-      mode: 'cors'
-    };
+    const config = createHeader('GET', token);
 
     const entries = await fetch(POST_ENDPOINT, config).then(res => res.json());
 
@@ -76,10 +71,11 @@ export default class Dashboard extends React.Component<DashboardPr, DashboardSta
     entries: this.props.entries,
     loaded: this.props.entries.length > 0,
     modalOpen: false,
-    selectedPost: {},
+    selectedPost: {} as Post,
     error: ''
   };
 
+  // TODO: Fix this
   getPosts = async (close?: boolean) => {
     const { token } = this.props;
     const config = createHeader('GET', token);
@@ -111,6 +107,7 @@ export default class Dashboard extends React.Component<DashboardPr, DashboardSta
 
   closeUIModal = () => this.setState({ modalOpen: false });
 
+  // TODO: Fix this
   onDelete = async (post: Post) => {
     const { token } = this.props;
     const config = createHeader('DELETE', token);

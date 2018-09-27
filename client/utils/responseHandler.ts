@@ -16,7 +16,7 @@ export const createHeader = (
 ): RequestInit => {
   const Header = new Headers();
 
-  token && Header.set('Authorization', `Bearer ${token}`);
+  token && Header.set('Authorization', token);
   Header.set('Content-Type', 'application/json');
 
   return {

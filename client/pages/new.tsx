@@ -35,7 +35,6 @@ interface INewPostSt {
 interface INewPostProps {
   offline?: boolean;
   token: string;
-  user: string;
 }
 
 const SpacedWrapper = styled(Wrapper)`
@@ -72,17 +71,15 @@ export default class NewEditor extends React.Component<INewPostProps, INewPostSt
     const { token } = this.props;
     const config = createHeader('POST', token);
 
-    const response = await fetch(POST_ENDPOINT, {
+    const post = await fetch(POST_ENDPOINT, {
       ...config,
       body: JSON.stringify(body)
-    });
+    }).then(res => res.json());
 
-    const newPost = await response.json();
-
-    if (!newPost.error) {
+    if (!post.error) {
       Router.push(`/${this.state.id}/edit`);
     } else {
-      this.setState({ error: newPost.message });
+      this.setState({ error: post.message });
     }
   };
 
@@ -93,15 +90,13 @@ export default class NewEditor extends React.Component<INewPostProps, INewPostSt
     let { id, title, editorState, dateAdded } = this.state;
     const ContentState = editorState.getCurrentContent();
     const content = JSON.stringify(Draft.convertToRaw(ContentState));
-    const { user } = this.props;
 
     const post: Object = {
       title: title.length > 0 ? title : `Untitled ${id}`,
       id,
       content,
       dateAdded,
-      public: false,
-      user
+      public: false
     };
 
     return offline ? this.saveLocalDraft(id, post) : this.addNew(post);

@@ -40,7 +40,6 @@ interface AuthProps {
 
 interface AuthState {
   token: string;
-  user?: string;
   name?: string;
   authed: boolean;
 }
@@ -55,6 +54,7 @@ const EMPTY_USER = {
   name: null
 };
 
+// Should be able to just request user details from another call
 export default class AuthMegaProvider extends React.Component<AuthProps, AuthState> {
   constructor(props: AuthProps) {
     super(props);
@@ -62,20 +62,18 @@ export default class AuthMegaProvider extends React.Component<AuthProps, AuthSta
     let token = this.props.token || cookie.get('DW_TOKEN');
 
     let __TOKEN_EXISTS__: boolean = token !== undefined && token !== 'undefined';
-    const { user, name } = __TOKEN_EXISTS__ ? jwt(token) : EMPTY_USER;
+    const { name } = __TOKEN_EXISTS__ ? jwt(token) : EMPTY_USER;
 
     this.state = {
       token,
       authed: __TOKEN_EXISTS__,
-      user: user || null,
       name: name || null
     };
   }
 
   signIn = (authed: boolean, token: string) => {
-    const { user, name } = jwt(token);
-    return this.setState(
-      { authed, token, user, name },
+    const { name } = jwt(token);
+    return this.setState({ authed, token, name }, () =>
       cookie.set('DW_TOKEN', token, cookieOptions)
     );
   };
@@ -85,10 +83,9 @@ export default class AuthMegaProvider extends React.Component<AuthProps, AuthSta
       {
         authed: false,
         token: undefined,
-        user: undefined,
         name: undefined
       },
-      cookie.remove('DW_TOKEN', cookieOptions)
+      () => cookie.remove('DW_TOKEN', cookieOptions)
     );
   };
 

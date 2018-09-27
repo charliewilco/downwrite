@@ -1,4 +1,4 @@
-import App, { Container } from 'next/app';
+import App, { Container, AppComponentProps } from 'next/app';
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
 import { getToken } from '../utils/responseHandler';
@@ -6,7 +6,7 @@ import UIShell from '../components/ui-shell';
 import AuthMegaProvider, { withAuth } from '../components/auth';
 import { withErrors } from '../components/ui-error';
 
-export default class MyApp extends App {
+export default class MyApp extends App<AppComponentProps & { token: string }, any> {
   static async getInitialProps({ Component, router, ctx }) {
     let pageProps = {};
 

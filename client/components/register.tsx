@@ -108,8 +108,8 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
             label="Username"
             autoComplete="username"
             value={username}
-            onChange={({ target }: React.SyntheticEvent<any>) =>
-              this.setState({ username: target.value })
+            onChange={({ target }) =>
+              this.setState({ username: (target as HTMLInputElement).value })
             }
           />
 
@@ -118,8 +118,8 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
             label="Email"
             autoComplete="email"
             value={email}
-            onChange={({ target }: React.SyntheticEvent<any>) =>
-              this.setState({ email: target.value })
+            onChange={({ target }) =>
+              this.setState({ email: (target as HTMLInputElement).value })
             }
           />
 
@@ -129,17 +129,13 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
             value={password}
             autoComplete="current-password"
             type="password"
-            onChange={({ target }: React.SyntheticEvent<any>) =>
-              this.setState({ password: target.value })
+            onChange={({ target }) =>
+              this.setState({ password: (target as HTMLInputElement).value })
             }
           />
         </Padded>
         <LegalContainer>
-          <LegalCheck
-            checked={checked}
-            value={checked}
-            onChange={this.toggleChecked}
-          />
+          <LegalCheck checked={checked} onChange={this.toggleChecked} />
           <LegalInfo>
             I'm agreeing to abide in all the <LegalLink />.
           </LegalInfo>

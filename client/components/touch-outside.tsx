@@ -28,12 +28,12 @@ export default class TouchOutside extends React.Component<ITouchOutsideProps> {
     }
   }
 
-  outsideHandleClick = ({ target }: React.SyntheticEvent<any>) => {
+  outsideHandleClick = ({ target }: { target: HTMLElement }): void => {
     const node = findDOMNode(this);
 
     if (node instanceof HTMLElement) {
       if (!node.contains(target)) {
-        return this.props.onChange();
+        this.props.onChange();
       }
     }
   };

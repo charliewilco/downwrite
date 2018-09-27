@@ -60,8 +60,8 @@ export default class Login extends React.Component<LoginProps, LoginState> {
             label="Username or Email"
             autoComplete="username"
             value={user}
-            onChange={(e: React.SyntheticEvent<any>) =>
-              this.setState({ user: e.target.value })
+            onChange={({ target }) =>
+              this.setState({ user: (target as HTMLInputElement).value })
             }
           />
           <LoginInput
@@ -70,8 +70,8 @@ export default class Login extends React.Component<LoginProps, LoginState> {
             value={password}
             type="password"
             autoComplete="current-password"
-            onChange={(e: React.SyntheticEvent<any>) =>
-              this.setState({ password: e.target.value })
+            onChange={({ target }) =>
+              this.setState({ password: (target as HTMLInputElement).value })
             }
           />
           <Padded align="right">

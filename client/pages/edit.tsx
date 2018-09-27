@@ -3,6 +3,7 @@ import Head from 'next/head';
 import * as Draft from 'draft-js';
 import isEmpty from 'lodash/isEmpty';
 import noop from 'lodash/noop';
+import debounce from 'lodash/debounce';
 import sanitize from '@charliewilco/sanitize-object';
 import 'universal-fetch';
 
@@ -42,7 +43,6 @@ interface IEditorSt {
 
 interface IEditorPr {
   token: string;
-  user: string;
   location: Location;
   id: string;
   title: string;
@@ -70,6 +70,7 @@ function saveKeyListener(e: React.KeyboardEvent): string {
   if (e.keyCode === 83 /* `S` key */ && Draft.KeyBindingUtil.hasCommandModifier(e)) {
     return EDITOR_COMMAND;
   }
+
   return Draft.getDefaultKeyBinding(e);
 }
 
@@ -78,6 +79,8 @@ function saveKeyListener(e: React.KeyboardEvent): string {
 // - Rerouting
 // - EditorState changes
 // - Updating the post on the server
+
+type Handler = 'handled' | 'not-handled';
 
 export default class Edit extends React.Component<IEditorPr, IEditorSt> {
   static displayName = 'EntryEdit';
@@ -100,7 +103,7 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
     };
   }
 
-  autoSave = () => noop();
+  autoSave: any = () => noop();
 
   public readonly state = stateCreator(this.props.post);
 
@@ -120,9 +123,8 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
 
   updatePostContent = (x: any) => {
     let { post, title, dateModified, editorState, publicStatus } = this.state;
-    const { user } = this.props;
-    const cx: Draft.ContentState = editorState.getCurrentContent();
-    const content = Draft.convertToRaw(cx);
+    const contentState: Draft.ContentState = editorState.getCurrentContent();
+    const content = Draft.convertToRaw(contentState);
 
     const postBody = sanitize(post, ['_id', '__v']);
 
@@ -131,23 +133,26 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
       title,
       public: publicStatus,
       content,
-      dateModified,
-      user
+      dateModified
     };
 
     const updater = () => this.setState({ autosaving: false });
-
+    console.log(x);
     return this.updatePost(newPost).then(() => setTimeout(updater, 7500));
   };
 
-  updateTitle = (event: React.KeyboardEvent) =>
-    this.setState({ title: event.target.value });
+  updateTitle = ({ target }) =>
+    this.setState({ title: (target as HTMLInputElement).value });
 
   updatePrivacy = () =>
     this.setState(({ publicStatus }) => ({ publicStatus: !publicStatus }));
 
-  handleKeyCommand = (command: string, editorState) => {
+  private handleKeyCommand = (
+    command: string,
+    editorState: Draft.EditorState
+  ): Handler => {
     const newState = Draft.RichUtils.handleKeyCommand(editorState, command);
+
     if (newState) {
       this.onChange(newState);
       return 'handled';
@@ -163,9 +168,10 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
 
   componentDidMount() {
     // NOTE: Maybe this should only handle the fetch and not update the UI
-    // this.autoSave = debounce(() => {
-    //   this.setState({ autosaving: true }, this.updatePostContent({ autosave: true }))
-    // }, 9000)
+    this.autoSave = debounce(() => {
+      this.setState({ autosaving: true });
+      this.updatePostContent({ autosave: true });
+    }, 9000);
   }
 
   componentDidUpdate(nextProps) {
@@ -195,7 +201,7 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
     const { id } = this.props;
 
     return !loaded ? (
-      <Loading />
+      <Loading size={75} />
     ) : (
       <>
         <Head>

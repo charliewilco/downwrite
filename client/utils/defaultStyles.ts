@@ -1,3 +1,5 @@
+import { __IS_DEV__ } from './dev';
+
 export const colors = {
   blue400: '#4fa5c2', // Main Color
   blue500: '#4382A1',
@@ -57,7 +59,9 @@ export const dayTheme = {
 };
 
 export const fonts = {
-  monospace: `'Operator Mono SSm A', 'Operator Mono SSm B', 'Input Mono Condensed',
+  monospace: __IS_DEV__
+    ? 'SF Mono'
+    : `'Operator Mono SSm A', 'Operator Mono SSm B', 'Input Mono Condensed',
     Roboto Mono, monospace`,
   sans: `Roboto, Avenir, sans-serif`,
   serif: `'Sentinel SSm A', 'Sentinel SSm B', Charter, Georgia, serif`,

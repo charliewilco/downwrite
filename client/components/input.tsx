@@ -31,6 +31,8 @@ interface IInputProps {
   type: string;
   inputRef?: React.RefObject<any>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
+  placeholder?: string;
+  value: any;
 }
 
 export default class Input extends React.Component<IInputProps, any> {
@@ -39,8 +41,8 @@ export default class Input extends React.Component<IInputProps, any> {
   };
 
   render() {
-    const { onChange, inputRef, ...args } = this.props;
+    const { onChange, inputRef, ...props } = this.props;
 
-    return <StyledInput ref={inputRef} onChange={e => onChange(e)} {...args} />;
+    return <StyledInput ref={inputRef} onChange={e => onChange(e)} {...props} />;
   }
 }

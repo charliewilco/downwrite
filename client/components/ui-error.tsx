@@ -31,7 +31,9 @@ const UIErrorMessage: React.SFC<IUIErrorMessage> = ({
     <Null />
   );
 
-export const withErrors = (Component: React.ReactNode) => {
+type HOComponent = React.ComponentType<any> | React.StatelessComponent<any>;
+
+export const withErrors = (Component: HOComponent) => {
   return class extends React.Component<any, any> {
     static displayName = `withErrors(${Component.displayName || Component.name})`;
 
