@@ -68,9 +68,9 @@
   },
   "nodemonConfig": {
     "watch": [
-      "./src/**/*.ts"
+      "./**/*.ts"
     ],
-    "exec": "ts-node ./src/server.ts"
+    "exec": "ts-node ./server.ts"
   },
   "repository": "charlespeters/downwrite",
   "author": "Charles ⚡ <charlespeters42@gmail.com>"
