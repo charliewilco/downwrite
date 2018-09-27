@@ -39,8 +39,8 @@ interface IEditorProps {
   editorState: Draft.EditorState;
   onChange: (e: Draft.EditorState) => void;
   toolbar?: boolean;
-  handleKeyCommand: () => void;
-  keyBindingFn: () => void;
+  handleKeyCommand: (c: string, e: Draft.EditorState) => 'handled' | 'not-handled';
+  keyBindingFn: (e: any) => string;
 }
 
 interface IEditorState {

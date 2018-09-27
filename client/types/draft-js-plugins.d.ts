@@ -6,7 +6,7 @@ declare module 'draft-js-plugins-editor' {
   }
 
   export default class PluginsEditor extends React.Component<
-    PluginsEditorProps & Draft.EditorProps,
+    Draft.EditorProps & PluginsEditorProps,
     Draft.EditorState
   > {
     focus: () => void;
