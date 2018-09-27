@@ -34,6 +34,17 @@ yarn
 
 ## Services
 
+### Stack
+
+- React
+- Draft.js
+- Next.js
+- styled-components
+- TypeScript
+- Hapi
+- MongoDB
+- JWT
+
 ### Contents
 
 - `client` Client - React + Next.js + Express + Draft.js
@@ -42,9 +53,7 @@ yarn
 
 ### Upcoming
 
-- `graph-downwrite` - GraphQL API - Express + Mongo
-- `changelog` Engineering Notes - Gatsby
-- `help` FAQ / Help Notes - Gatsby
+- `graph` - GraphQL API - Express + Mongo
 - `@downwrite/markings` Helpers for Markdown - Draft.js + Markdown
 
 ### Commands
