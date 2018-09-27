@@ -1,31 +1,11 @@
-/*
-SM = @media only screen and (min-width:31.25rem)
-MD = @media only screen and (min-width: 48rem)
-LG = @media only screen and (min-width: 57.75rem)
-*/
-
 :root {
-  /* Colors */
-  --color-1: #4fa5c2; /* Main Color */
-  --color-2: #185a70; /* Darker Main Color */
-  --color-3: #d8eaf1; /* Lighter Main Color */
-  --color-4: #f9fbfc; /* Background */
-  --color-5: #868686; /* Meta Highlighting Color */
-  --color-6: #ffb600;
-  --color-7: #ffc200;
-  --border: 2px solid var(--color-1);
-  --base-border: 0;
-  --base-container: 75rem;
-  --base-form-shadow: 0;
-  --base-form-radius: 0;
-  --base-form-mxw: 100%;
   --base-spacing: 1rem;
-  --text: #4c4c4c;
-  --primary-font: 'Operator Mono SSm A', 'Operator Mono SSm B',
-    'Input Mono Condensed', Roboto Mono, monospace;
-  --secondary-font: Roboto, Avenir, sans-serif;
-  --ff-mono: 'Input Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo,
-    Courier, monospace;
+}
+
+body,
+#__next {
+  width: 100%;
+  height: 100%;
 }
 
 a {
@@ -40,14 +20,6 @@ a:hover {
   outline: 0;
 }
 
-/* Base Reset */
-
-body,
-#__next {
-  width: 100%;
-  height: 100%;
-}
-
 figcaption,
 figure {
   display: block;
@@ -58,8 +30,6 @@ template {
   display: none;
 }
 
-/* Media */
-
 audio,
 canvas,
 progress,
@@ -68,13 +38,9 @@ video {
   vertical-align: baseline;
 }
 
-/* Content */
-
 figure {
   margin: 0;
 }
-
-/* Code Blocks */
 
 pre {
   overflow: auto;
@@ -82,11 +48,9 @@ pre {
 
 code,
 pre {
-  font-family: var(--ff-mono);
+  font-family: 'Input Mono', 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: 100%;
 }
-
-/*----------Table Element----------*/
 
 table {
   border-collapse: collapse;
@@ -97,10 +61,6 @@ td,
 th {
   padding: 0;
 }
-
-/*----------Form Reset & Form Default Elements----------*/
-
-/* All Defaults */
 
 button,
 input,
@@ -121,11 +81,7 @@ input[disabled] {
   cursor: default;
 }
 
-/* Input Fields */
-
-input[type='search'],
 input[type='text'],
-input[type='number'],
 input[type='email'],
 input[type='password'] {
   appearance: none;
@@ -151,12 +107,6 @@ optgroup {
 
 button {
   overflow: visible;
-}
-
-button,
-input[type='button'],
-input[type='reset'],
-input[type='submit'] {
   cursor: pointer;
   appearance: none;
 }
@@ -174,13 +124,9 @@ legend {
   padding: 0;
 }
 
-/*----------Body Text Default Elements----------*/
-
 p:not(:last-of-type) {
   margin-bottom: var(--base-spacing);
 }
-
-/*----------Image Element----------*/
 
 img {
   max-width: 100%;

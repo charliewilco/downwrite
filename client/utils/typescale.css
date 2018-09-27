@@ -1,70 +1,42 @@
-:root {
-  /* Line Heights */
-  --lh-1: 1.125;
-  --lh-2: 1.25;
-  --lh-3: 1.5;
+/* Multipliers */
 
-  /* Multipliers */
-  --sm-multiplier: 0.875;
-  --md-multiplier: 1;
-  --lg-multiplier: 1.125;
+/* Headline Sizes */
 
-  /* Headline Sizes */
-  --headline-1: 3.125rem;
-  --headline-2: 2.5rem;
-  --headline-3: 2.125rem;
-  --headline-4: 1.75rem;
-  --headline-5: 1.5rem;
-  --headline-6: 1.25rem;
+/* Headline Small Sizes */
 
-  /* Headline Small Sizes */
-  --headline-1-sm: calc(var(--headline-1) * var(--sm-multiplier));
-  --headline-2-sm: calc(var(--headline-2) * var(--sm-multiplier));
-  --headline-3-sm: calc(var(--headline-3) * var(--sm-multiplier));
-  --headline-4-sm: calc(var(--headline-4) * var(--sm-multiplier));
-  --headline-5-sm: calc(var(--headline-5) * var(--sm-multiplier));
-  --headline-6-sm: calc(var(--headline-6) * var(--sm-multiplier));
+/* Headline Medium Sizes */
 
-  /* Headline Medium Sizes */
-  --headline-1-md: calc(var(--headline-1) * var(--md-multiplier));
-  --headline-2-md: calc(var(--headline-2) * var(--md-multiplier));
-  --headline-3-md: calc(var(--headline-3) * var(--md-multiplier));
-  --headline-4-md: calc(var(--headline-4) * var(--md-multiplier));
-  --headline-5-md: calc(var(--headline-5) * var(--md-multiplier));
-  --headline-6-md: calc(var(--headline-6) * var(--md-multiplier));
-
-  /* Headline Large Sizes */
-  --headline-1-lg: calc(var(--headline-1) * var(--lg-multiplier));
-  --headline-2-lg: calc(var(--headline-2) * var(--lg-multiplier));
-  --headline-3-lg: calc(var(--headline-3) * var(--lg-multiplier));
-  --headline-4-lg: calc(var(--headline-4) * var(--lg-multiplier));
-  --headline-5-lg: calc(var(--headline-5) * var(--lg-multiplier));
-  --headline-6-lg: calc(var(--headline-6) * var(--lg-multiplier));
-}
+/* Headline Large Sizes */
 
 h1,
 .f1 {
-  font-size: var(--headline-1-sm);
+  font-size: 43.75px;
+  font-size: 2.73438rem;
 }
 h2,
 .f2 {
-  font-size: var(--headline-2-sm);
+  font-size: 35px;
+  font-size: 2.1875rem;
 }
 h3,
 .f3 {
-  font-size: var(--headline-3-sm);
+  font-size: 29.75px;
+  font-size: 1.85938rem;
 }
 h4,
 .f4 {
-  font-size: var(--headline-4-sm);
+  font-size: 24.5px;
+  font-size: 1.53125rem;
 }
 h5,
 .f5 {
-  font-size: var(--headline-5-sm);
+  font-size: 21px;
+  font-size: 1.3125rem;
 }
 h6,
 .f6 {
-  font-size: var(--headline-6-sm);
+  font-size: 17.5px;
+  font-size: 1.09375rem;
 }
 
 h1,
@@ -81,61 +53,60 @@ h6,
 .f6 {
   margin: 0;
   line-height: 1.5;
-  line-height: var(--lh-3);
   font-family: inherit;
 }
 
 @media only screen and (min-width: 48rem) {
   h1,
   .f1 {
-    font-size: var(--headline-1-md);
+    font-size: 3.125rem;
   }
   h2,
   .f2 {
-    font-size: var(--headline-2-md);
+    font-size: 2.5rem;
   }
   h3,
   .f3 {
-    font-size: var(--headline-3-md);
+    font-size: 2.125rem;
   }
   h4,
   .f4 {
-    font-size: var(--headline-4-md);
+    font-size: 1.75rem;
   }
   h5,
   .f5 {
-    font-size: var(--headline-5-md);
+    font-size: 1.5rem;
   }
   h6,
   .f6 {
-    font-size: var(--headline-6-md);
+    font-size: 1.25rem;
   }
 }
 
 @media only screen and (min-width: 57.75rem) {
   h1,
   .f1 {
-    font-size: var(--headline-1-lg);
+    font-size: 3.51563rem;
   }
   h2,
   .f2 {
-    font-size: var(--headline-2-lg);
+    font-size: 2.8125rem;
   }
   h3,
   .f3 {
-    font-size: var(--headline-3-lg);
+    font-size: 2.39063rem;
   }
   h4,
   .f4 {
-    font-size: var(--headline-4-lg);
+    font-size: 1.96875rem;
   }
   h5,
   .f5 {
-    font-size: var(--headline-5-lg);
+    font-size: 1.6875rem;
   }
   h6,
   .f6 {
-    font-size: var(--headline-6-lg);
+    font-size: 1.40625rem;
   }
 }
 
