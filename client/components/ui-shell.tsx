@@ -91,7 +91,7 @@ export default class UIShell extends React.Component<IUIShell, any> {
         <UIContainer>
           <ErrorContainer>
             <Toggle>
-              {(navOpen, toggleNav, closeNav) => (
+              {(navOpen, toggleInstance, closeInstance) => (
                 <NightModeTrigger>
                   <UIErrorBanner />
                   <ClearFixed>
@@ -100,12 +100,12 @@ export default class UIShell extends React.Component<IUIShell, any> {
                         route={route}
                         authed={authed}
                         open={navOpen}
-                        onClick={toggleNav}
+                        onClick={toggleInstance}
                       />
                       {children}
                     </Container>
                     {navOpen && (
-                      <Nav pathname={route} closeNav={closeNav} token={token} />
+                      <Nav pathname={route} closeNav={closeInstance} token={token} />
                     )}
                   </ClearFixed>
                 </NightModeTrigger>

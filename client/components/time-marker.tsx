@@ -14,7 +14,7 @@ const Meta = styled.div`
 `;
 
 const Time: React.SFC<ITimeMarkProps> = ({ dateAdded }) => {
-  let date: string = isDate(dateAdded) && dateAdded.toString();
+  let date: string = isDate(dateAdded) ? dateAdded.toString() : undefined;
   return <time dateTime={date}>{format(dateAdded, 'DD MMMM YYYY')}</time>;
 };
 

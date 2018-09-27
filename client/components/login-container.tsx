@@ -40,16 +40,12 @@ const LoginFormWrapper = styled.div`
   background: white;
   color: ${colors.text};
 `;
+
 const LoginContainer: React.SFC<{ children: (x: boolean) => React.ReactNode }> = ({
   children
 }) => (
   <Toggle defaultOpen>
-    {(
-      isOpen: boolean,
-      toggleInstance: () => void,
-      closeInstance: () => void,
-      setInstance: (x: boolean) => void
-    ) => (
+    {(isOpen: boolean, setInstance: (x: boolean) => void) => (
       <LoginFormWrapper>
         <ToggleButtonContainer>
           <ToggleLoginButton active={!isOpen} onClick={() => setInstance(false)}>

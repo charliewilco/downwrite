@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Link from 'next/link';
-import { withRouter, SingletonRouter } from 'next/router';
 import styled, { keyframes } from 'styled-components';
 import { withAuth } from './auth';
 import User from './user';
@@ -126,10 +125,8 @@ const UserActionContainer = styled.div`
 // TODO: Slide to close navigation?
 interface NavigationProps {
   token: string;
-  username: string;
   pathname: string;
   closeNav: () => void;
-  router: SingletonRouter;
 }
 
 const NavLabel = styled.span`
@@ -200,4 +197,4 @@ class NavBar extends React.Component<NavigationProps, any> {
   }
 }
 
-export default withRouter(NavBar);
+export default NavBar;

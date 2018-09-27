@@ -1,10 +1,10 @@
 import * as React from 'react';
-import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 import LoginContainer from '../components/login-container';
 import Landing from '../components/landing';
 import Features from '../components/landing-features';
-import loading from '../components/loading';
+import Register from '../components/register';
+import Login from '../components/login-form';
 
 const HomeContainer = styled.main`
   display: flex;
@@ -16,19 +16,28 @@ const HomeContainer = styled.main`
   margin: 0 auto;
 `;
 
-const Login = dynamic(import('../components/login-form'), {
-  loading
-});
-const Register = dynamic(import('../components/register'), {
-  loading
-});
+// TODO: Migrate back to dynamic element ASAP
+// import dynamic from 'next/dynamic';
+// import Loading from '../components/loading';
+
+// type Dynamic = Promise<React.ComponentType<{}>>;
+
+// const Login = dynamic(import('../components/login-form'), {
+//   loading: () => <Loading size={75} />
+// });
+//
+// const Register = dynamic(import('../components/register'), {
+//   loading: () => <Loading size={75} />
+// });
 
 interface IHomeProps {
-  signIn: () => void;
-  errorActions: { setError: Function };
+  signIn: (x: boolean, y: string) => void;
+  errorActions: {
+    setError: (x: string, y: string) => void;
+  };
 }
 
-export default class Home extends React.Component<IHomeProps, void> {
+export default class Home extends React.Component<IHomeProps, any> {
   render() {
     const {
       signIn,

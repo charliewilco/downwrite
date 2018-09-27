@@ -13,10 +13,10 @@
     "clean": "bolt ws exec -- 'rm -rf node_modules'"
   },
   "devDependencies": {
-    "bolt": "^0.20.7",
-    "husky": "^0.14.3",
-    "lint-staged": "^7.2.0",
-    "prettier": "^1.13.7",
+    "bolt": "^0.22.2",
+    "husky": "^1.0.1",
+    "lint-staged": "^7.3.0",
+    "prettier": "^1.14.3",
     "typescript": "^3.0.3"
   },
   "prettier": {

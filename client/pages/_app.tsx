@@ -6,7 +6,7 @@ import UIShell from '../components/ui-shell';
 import AuthMegaProvider, { withAuth } from '../components/auth';
 import { withErrors } from '../components/ui-error';
 
-export default class MyApp extends App<AppComponentProps & { token: string }, any> {
+export default class MyApp extends App<AppComponentProps & { token: string }> {
   static async getInitialProps({ Component, router, ctx }) {
     let pageProps = {};
 

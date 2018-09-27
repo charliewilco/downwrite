@@ -11,7 +11,7 @@ export default class extends React.Component<void, LocalDraftTypes> {
 
   searchLocalStorage = () => {
     return localStorage.forEach(
-      (item, iterator) => localStorage.key(iterator).contains('Draft') && item
+      (item, iterator) => localStorage.key(iterator).includes('Draft') && item
     );
   };
 
