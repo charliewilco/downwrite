@@ -1,5 +1,7 @@
 # ![Downwrite](.github/header.png)
 
+[![Build Status](https://travis-ci.com/charliewilco/downwrite.svg?token=xHEzazzpsBpPPYThuFMz&branch=master)](https://travis-ci.com/charliewilco/downwrite)
+
 ## About
 
 > _A place to write._ ✍️

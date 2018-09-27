@@ -1,3 +1,5 @@
 {
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "travis.repository": "downwrite",
+  "travis.username": "charliewilco"
 }

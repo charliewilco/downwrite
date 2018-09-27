@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - '10'
+cache:
+  yarn: true
+install:
+  - yarn
+script:
+  - yarn workspace api build
+  - yarn workspace client typecheck
+  - yarn workspace client build
