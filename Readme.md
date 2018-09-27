@@ -1,6 +1,25 @@
-# ![Downwrite](.idea/header.png)
+# ![Downwrite](.github/header.png)
 
-**_Collection of Microservices and Client Side Application for Downwrite._**
+## About
+
+> _A place to write._ ✍️
+
+So the idea here was simple build a simple markdown writing application. Markdown is a huge deal and all the cool tools kept getting shut down and naively,I thought, _how hard can this really be_? 🤔
+
+So I've had poorly designed iterations of this thing for every year, on the year as one of these services got shut down. When [Canvas](https://blog.usecanvas.com/) shut down this last year, I started to get a little more serious about this idea. 💡 ⚡
+
+During planning out some of my quarterly goals at my last job I decided to go a little more full-stack with Node and start to really work through the process of building a microservice. Since I'm never really one to learning languages and frameworks in the abstract, I decided to take up Downwrite as an excuse to build those microservices.
+
+### Why Markdown
+
+Markdown is probably the most efficient and universal tool for conveying syntax, semantics and structure across platforms.
+
+Originally coined by [John Gruber (Daring Fireball)](https://daringfireball.net/projects/markdown/) it was originally conceived as a text to HTML and is the staple of static site generators, OSS as well as a fair amount of comment sections, notetaking applications
+or any documentation tool.
+
+These shortcuts are almost as ubiquitous as `cmd + b` for bold or `cmd + i` for italics.
+
+> Bottomline: markdown is data. It is a method for describing semantics of data and is data itself.
 
 ## Setup
 
@@ -15,20 +34,16 @@ yarn
 
 ### Contents
 
-- `services/export-md` Export Markdown - Micro (removed)
-- `redownwrite` Client - React + Next.js + Express + Draft.js
-- `api-downwrite` REST API - Hapi.js
+- `client` Client - React + Next.js + Express + Draft.js
+- `api` REST API - Hapi.js
+- `e2e` End to End Tests - Jest + Puppeteer
 
-#### Upcoming
+### Upcoming
 
-- `jwt` Auth JWT - Micro (TODO) Bearer
 - `graph-downwrite` - GraphQL API - Express + Mongo
 - `changelog` Engineering Notes - Gatsby
 - `help` FAQ / Help Notes - Gatsby
-- `@downwrite/ui` UI Library - React + Glamor
-- `@downwrite/css` Shared Common Base Styles - PostCSS
 - `@downwrite/markings` Helpers for Markdown - Draft.js + Markdown
-
 
 ### Commands
 
@@ -46,11 +61,11 @@ Each new service needs the following in their `package.json`:
 {
   "private": true,
   "scripts": {
-    "build": "", // Build project, optional but should echo out it doesn't exist
-    "deploy": "now && now alias", // Deploy to Now
-    "start": "", // To start service post deployment
-    "dev": "", // Should run a watch for build and a dev server
-    "test": "jest" // Tests -- Duh!
+    "build": "",
+    "deploy": "now && now alias",
+    "start": "",
+    "dev": "",
+    "test": "jest"
   },
   "now": {
     "alias": "dwn-endpointname"
