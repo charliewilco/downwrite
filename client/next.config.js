@@ -2,6 +2,9 @@ const withOffline = require('next-offline');
 const withManifest = require('next-manifest');
 const withCSS = require('@zeit/next-css');
 const withTypescript = require('@zeit/next-typescript');
+const withMDX = require('@zeit/next-mdx')({
+  extension: /\.mdx?$/
+});
 
 const manifest = {
   dir: 'ltr',
@@ -38,11 +41,13 @@ const manifest = {
 };
 
 module.exports = withTypescript(
-  withCSS(
-    withManifest(
-      withOffline({
-        manifest
-      })
+  withMDX(
+    withCSS(
+      withManifest(
+        withOffline({
+          manifest
+        })
+      )
     )
   )
 );

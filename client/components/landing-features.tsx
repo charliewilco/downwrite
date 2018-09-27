@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import FeatureContent from '../markdown/features.md';
 
 const FeatureContainer = styled.section`
   max-width: 33rem;
@@ -19,21 +20,6 @@ const FeatureContainer = styled.section`
 
 export default () => (
   <FeatureContainer>
-    <h2>Focus on Markdown</h2>
-    <p>
-      Writing should be easy. But as each tool, each static site builder comes and
-      falls out of popularity or gets shut down, <b>**markdown**</b> remains the
-      central and portbale format.
-    </p>
-
-    <p>
-      The goal of building Downwrite was to create a place to write and share content
-      with that universal format; to be able to import and export in markdown, to
-      write in markdown and share your work.
-    </p>
-
-    <p>
-      <i>_Sign up below and get to writing._</i>
-    </p>
+    <FeatureContent />
   </FeatureContainer>
 );

@@ -7,10 +7,7 @@ const PostsTitle = styled.h2`
   font-weight: 500;
 
   @media (min-width: 57.75rem) {
-    font-size: 24px;
-  }
-  @media (min-width: 75rem) {
-    font-size: 36px;
+    font-size: 18px;
   }
 `;
 
@@ -30,7 +27,7 @@ const FlexBetween = styled.div`
 interface IListItemProps {
   title: string;
   id: string;
-  onDelete: () => void;
+  onDelete: (x: any) => void;
 }
 
 const ListItem: React.SFC<IListItemProps> = ({ title, id, onDelete }) => (

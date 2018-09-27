@@ -5,6 +5,7 @@
   "repository": "charlespeters/downwrite",
   "author": "Charles ⚡ <charlespeters42@gmail.com>",
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "dev": "node server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
@@ -13,7 +14,10 @@
   },
   "dependencies": {
     "@charliewilco/sanitize-object": "^1.0.1",
+    "@mdx-js/mdx": "^0.15.4",
+    "@mdx-js/tag": "^0.15.0",
     "@zeit/next-css": "^1.0.1",
+    "@zeit/next-mdx": "^1.2.0",
     "@zeit/next-typescript": "^1.1.1",
     "babel-plugin-styled-components": "^1.7.1",
     "date-fns": "^1.29.0",

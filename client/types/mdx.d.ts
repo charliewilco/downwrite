@@ -5,5 +5,6 @@ declare module '*.mdx' {
 }
 
 declare module '*.md' {
-  export default string;
+  let MDXComponent: (props) => JSX.Element;
+  export default MDXComponent;
 }

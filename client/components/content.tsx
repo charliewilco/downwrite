@@ -106,7 +106,7 @@ interface IContentProps {
   title?: string;
   dateAdded?: Date;
   children?: React.ReactNode;
-  content: string;
+  content?: string;
 }
 
 const Content: React.SFC<IContentProps> = ({
@@ -130,7 +130,7 @@ const Content: React.SFC<IContentProps> = ({
         )}
       </ContentHeader>
       <ContentBody data-testid="PREVIEW_ENTRTY_BODY" className="PreviewBody">
-        <Markdown source={content} renderers={{ code: CodeBlock }} />
+        {content && <Markdown source={content} renderers={{ code: CodeBlock }} />}
         {children}
       </ContentBody>
     </article>
