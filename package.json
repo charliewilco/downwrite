@@ -5,7 +5,6 @@
   "author": "Charles ⚡ <charlespeters42@gmail.com>",
   "repository": "charlespeters/downwrite",
   "scripts": {
-    "precommit": "lint-staged",
     "dev": "bolt ws dev",
     "build": "bolt ws build",
     "go": "bolt ws deploy",
@@ -36,6 +35,11 @@
       "prettier --parser postcss --write",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "bolt": {
     "workspaces": [
