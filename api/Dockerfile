@@ -7,5 +7,4 @@ WORKDIR /app
 RUN yarn global add typescript nodemon
 
 ADD ./package.json .
-ADD ./yarn.lock .
-RUN yarn
+RUN npm install
