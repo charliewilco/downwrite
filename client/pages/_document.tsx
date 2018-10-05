@@ -3,9 +3,12 @@ import Manifest from 'next-manifest/manifest';
 import { ServerStyleSheet } from 'styled-components';
 import { __IS_DEV__ } from '../utils/dev';
 
-export default class CustomDocument extends Document {
-  props: any;
-  static async getInitialProps(context) {
+interface WithStyleTags {
+  styleTags: any;
+}
+
+export default class MyDocument extends Document<WithStyleTags> {
+  public static async getInitialProps(context) {
     const initialProps = await Document.getInitialProps(context);
     const sheet = new ServerStyleSheet();
 
