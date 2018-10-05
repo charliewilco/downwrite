@@ -62,6 +62,8 @@ const ListHeader = styled.header`
 const ListItemContainer = styled.li`
   padding: 16px 0;
   width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
   flex: 1;
 
   &:not(:last-of-type) {

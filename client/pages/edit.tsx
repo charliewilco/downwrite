@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Dwnxt from '../types/downwrite';
 import Head from 'next/head';
 import * as Draft from 'draft-js';
 import isEmpty from 'lodash/isEmpty';
@@ -23,17 +24,10 @@ import * as UtilityBar from '../components/utility-bar';
 import { getToken, createHeader, superConverter } from '../utils/responseHandler';
 import { POST_ENDPOINT } from '../utils/urls';
 
-interface Entry {
-  content: Draft.RawDraftContentState;
-  title: string;
-  public: boolean;
-  dateAdded: Date;
-}
-
 interface IEditorSt {
   autosaving: boolean;
   title: string;
-  post: Entry;
+  post: Dwnxt.IPost;
   loaded: boolean;
   updated: boolean;
   editorState: Draft.EditorState;
@@ -46,12 +40,12 @@ interface IEditorPr {
   location: Location;
   id: string;
   title: string;
-  post: Entry;
+  post: Dwnxt.IPost;
   editorState?: Draft.EditorState;
   route?: {};
 }
 
-const stateCreator = (post: Entry) => ({
+const stateCreator = (post: Dwnxt.IPost) => ({
   autosaving: false,
   post,
   title: post.title || '',
@@ -112,7 +106,7 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
     this.setState({ editorState });
   };
 
-  updatePost = (body: Entry) => {
+  updatePost = (body: Dwnxt.IPost) => {
     const { id, token } = this.props;
     const config = createHeader('PUT', token);
 

@@ -5,15 +5,12 @@
   "author": "Charles ⚡ <charlespeters42@gmail.com>",
   "repository": "charlespeters/downwrite",
   "scripts": {
-    "precommit": "lint-staged",
-    "dev": "bolt ws dev",
-    "build": "bolt ws build",
-    "go": "bolt ws deploy",
-    "test": "bolt ws test",
-    "clean": "bolt ws exec -- 'rm -rf node_modules'"
+    "dev": "yarn workspaces run dev",
+    "build": "yarn workspaces run build",
+    "go": "yarn workspaces run deploy",
+    "test": "yarn workspaces run test"
   },
   "devDependencies": {
-    "bolt": "^0.22.2",
     "husky": "^1.0.1",
     "lint-staged": "^7.3.0",
     "prettier": "^1.14.3",
@@ -36,6 +33,11 @@
       "prettier --parser postcss --write",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "bolt": {
     "workspaces": [

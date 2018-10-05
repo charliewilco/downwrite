@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-// TODO: remove username from boilerplate, or use it, IDK
 import * as Hapi from 'hapi';
 import * as Mongoose from 'mongoose';
 import routes from './routes';
@@ -10,6 +8,8 @@ Mongoose.connect(
   Config.dbCreds,
   { useNewUrlParser: true }
 );
+
+console.log(Config.dbCreds, process.env.MONGO_URL);
 
 const db = Mongoose.connection;
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as Draft from 'draft-js';
+import * as Dwnxt from '../types/downwrite';
 import Head from 'next/head';
 import styled from 'styled-components';
 import orderBy from 'lodash/orderBy';
@@ -13,25 +13,10 @@ import InvalidToken from '../components/invalid-token';
 import { getToken, createHeader } from '../utils/responseHandler';
 import { POST_ENDPOINT } from '../utils/urls';
 
-export interface Post {
-  title: string;
-  id: string;
-  dateAdded: Date;
-  dateModified: Date;
-  public: boolean;
-  content: Draft.RawDraftContentState;
-}
-
-export interface PostError {
-  error: string;
-  message: string;
-  statusCode: number;
-}
-
-type Res = PostError | Post[];
+type Res = Dwnxt.IPostError | Dwnxt.IPost[];
 
 interface DashboardPr {
-  entries: Post[];
+  entries: Dwnxt.IPost[];
   token: string;
   closeNav: Function;
 }
@@ -39,7 +24,7 @@ interface DashboardPr {
 interface DashboardState {
   entries: Res;
   loaded: boolean;
-  selectedPost?: Post | {};
+  selectedPost?: Dwnxt.IPost | {};
   modalOpen: boolean;
   error: string;
 }
@@ -71,7 +56,7 @@ export default class Dashboard extends React.Component<DashboardPr, DashboardSta
     entries: this.props.entries,
     loaded: this.props.entries.length > 0,
     modalOpen: false,
-    selectedPost: {} as Post,
+    selectedPost: {} as Dwnxt.IPost,
     error: ''
   };
 
@@ -108,7 +93,7 @@ export default class Dashboard extends React.Component<DashboardPr, DashboardSta
   closeUIModal = () => this.setState({ modalOpen: false });
 
   // TODO: Fix this
-  onDelete = async (post: Post) => {
+  onDelete = async (post: Dwnxt.IPost) => {
     const { token } = this.props;
     const config = createHeader('DELETE', token);
 
@@ -121,7 +106,7 @@ export default class Dashboard extends React.Component<DashboardPr, DashboardSta
 
   cancelDelete = () => this.setState({ selectedPost: {}, modalOpen: false });
 
-  confirmDelete = (post: Post | {}) =>
+  confirmDelete = (post: Dwnxt.IPost | {}) =>
     this.setState({ selectedPost: post, modalOpen: true });
 
   // TODO: refactor to have selected post, deletion to be handled by a lower level component
