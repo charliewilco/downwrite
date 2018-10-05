@@ -14,6 +14,11 @@ WORKDIR app
 RUN chmod -R 777 .
 
 # build process
+RUN apk --no-cache --virtual build-dependencies add \
+  python \
+  make \
+  g++
+RUN npm install node-pre-gyp -g
 RUN npm install
 RUN npm run build
 RUN npm prune --production

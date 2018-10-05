@@ -12,7 +12,7 @@
     "up": "docker-compose up",
     "dev": "nodemon",
     "test": "jest",
-    "documentation": "typedoc --theme minimal --out ./docs server.ts routes.ts ./**/*.ts"
+    "documentation": "typedoc --theme minimal --out ./docs ./src/**/*.ts"
   },
   "license": "MIT",
   "dependencies": {
@@ -47,6 +47,7 @@
   "now": {
     "name": "api-downwrite",
     "alias": "api.downwrite.us",
+    "type": "npm",
     "scale": {
       "sfo1": {
         "min": 1,
@@ -68,9 +69,9 @@
   },
   "nodemonConfig": {
     "watch": [
-      "./**/*.ts"
+      "./src/**/*.ts"
     ],
-    "exec": "ts-node ./server.ts"
+    "exec": "ts-node ./src/server.ts"
   },
   "repository": "charlespeters/downwrite",
   "author": "Charles ⚡ <charlespeters42@gmail.com>"

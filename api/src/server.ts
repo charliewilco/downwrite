@@ -9,6 +9,8 @@ Mongoose.connect(
   { useNewUrlParser: true }
 );
 
+console.log(Config.dbCreds, process.env.MONGO_URL);
+
 const db = Mongoose.connection;
 
 const validate = async () => ({ isValid: true });
