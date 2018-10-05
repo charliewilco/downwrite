@@ -10,6 +10,7 @@
     "deploy": "now && now alias",
     "start": "node dist/server.js",
     "up": "docker-compose up",
+    "stop": "docker-compose stop",
     "dev": "nodemon",
     "test": "jest",
     "documentation": "typedoc --theme minimal --out ./docs ./src/**/*.ts"
