@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Head from 'next/head';
 import styled from 'styled-components';
 import LoginContainer from '../components/login-container';
 import Landing from '../components/landing';
@@ -44,20 +45,25 @@ export default class Home extends React.Component<IHomeProps, any> {
       errorActions: { setError }
     } = this.props;
     return (
-      <HomeContainer>
-        <Landing>
-          <Features />
-        </Landing>
-        <LoginContainer>
-          {isLoginOpen =>
-            isLoginOpen ? (
-              <Login setError={setError} signIn={signIn} />
-            ) : (
-              <Register setError={setError} signIn={signIn} />
-            )
-          }
-        </LoginContainer>
-      </HomeContainer>
+      <>
+        <Head>
+          <title>Downwrite</title>
+        </Head>
+        <HomeContainer>
+          <Landing>
+            <Features />
+          </Landing>
+          <LoginContainer>
+            {isLoginOpen =>
+              isLoginOpen ? (
+                <Login setError={setError} signIn={signIn} />
+              ) : (
+                <Register setError={setError} signIn={signIn} />
+              )
+            }
+          </LoginContainer>
+        </HomeContainer>
+      </>
     );
   }
 }

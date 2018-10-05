@@ -20,7 +20,6 @@ export default class MyDocument extends Document {
     return (
       <html lang="en">
         <Head>
-          <title>Downwrite</title>
           {this.props.styleTags}
           <meta
             name="viewport"

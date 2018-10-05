@@ -127,12 +127,11 @@ export default class NewEditor extends React.Component<INewPostProps, INewPostSt
     const { offline } = this.props;
 
     return (
-      <SpacedWrapper sm>
-        <>
-          <Head>
-            <title>{title.length > 0 ? title : 'New'} | Downwrite</title>
-          </Head>
-
+      <>
+        <Head>
+          <title>{title.length > 0 ? title : 'New'} | Downwrite</title>
+        </Head>
+        <SpacedWrapper sm>
           <Helpers disabled={offline} buttonText="Add" onChange={this.addNewPost}>
             {offline && <span>You're Offline Right Now</span>}
           </Helpers>
@@ -152,8 +151,8 @@ export default class NewEditor extends React.Component<INewPostProps, INewPostSt
               />
             </Upload>
           </EditorContainer>
-        </>
-      </SpacedWrapper>
+        </SpacedWrapper>
+      </>
     );
   }
 }
