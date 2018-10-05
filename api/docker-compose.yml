@@ -1,25 +1,15 @@
-api:
-  build: .
-  links:
-    - 'mongo:mongo'
-  environment:
-    NODE_ENV: 'development'
-  volumes:
-    - .:/app
-    - /app/node_modules
-  ports:
-    - '0.0.0.0:9000:9000'
-  command: sh -c "mkdir -p dist && touch ./dist/app.js && nodemon --delay 500ms ./dist/app.js"
-
-transpiler:
-  build: .
-  volumes:
-    - .:/app
-    - /app/node_modules
-  command: ['tsc', '-w']
-
-mongo:
-  image: mvertes/alpine-mongo:3.2.1
-  ports:
-    - '27017'
-  command: ['mongod']
+version: '2'
+services:
+  app:
+    build: .
+    environment:
+      - PORT=8080
+      - MONGO_URL=mongodb:27017
+    ports:
+      - '8080:8080'
+    links:
+      - mongodb
+  mongodb:
+    image: mongo:latest
+    ports:
+      - '27017:27017'

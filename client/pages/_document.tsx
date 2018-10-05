@@ -3,7 +3,8 @@ import Manifest from 'next-manifest/manifest';
 import { ServerStyleSheet } from 'styled-components';
 import { __IS_DEV__ } from '../utils/dev';
 
-export default class MyDocument extends Document {
+export default class CustomDocument extends Document {
+  props: any;
   static async getInitialProps(context) {
     const initialProps = await Document.getInitialProps(context);
     const sheet = new ServerStyleSheet();
@@ -17,10 +18,11 @@ export default class MyDocument extends Document {
   }
 
   render() {
+    const { styleTags } = this.props;
     return (
       <html lang="en">
         <Head>
-          {this.props.styleTags}
+          {styleTags}
           <meta
             name="viewport"
             content="initial-scale=1.0, width=device-width"
