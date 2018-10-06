@@ -88,11 +88,11 @@ const Routes = [
   },
   {
     method: 'GET',
-    path: '/users/{id}',
+    path: '/users',
     handler: UserController.getDetails,
     config: {
       cors,
-      auth: false
+      auth
     }
   },
   {

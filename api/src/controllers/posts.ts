@@ -9,18 +9,7 @@ import { UserModel as User, IUser } from '../models/User';
 // TODO: remove user from the payload, get it from the
 // const { user } = req.auth.credentials;
 
-export interface ICredentials extends Hapi.AuthCredentials {
-  id: string;
-  user: string;
-}
-
-export interface IRequestAuth extends Hapi.RequestAuth {
-  credentials: ICredentials;
-}
-
-export interface IRequest extends Hapi.Request {
-  auth: IRequestAuth;
-}
+import { IRequest } from './types';
 
 // PUT
 
@@ -78,13 +67,13 @@ export const getSinglePost = async (
   }
 };
 
-export const getMarkdown = async (req: IRequest, h: Hapi.ResponseToolkit) => {
-  const post = await Post.findOne({ id: req.params.id });
-
+export const getMarkdown = async (req: IRequest) => {
+  const { id } = req.params;
+  const post = await Post.findOne({ id });
   const user = await User.findOne({ _id: post.user });
 
   const markdown = {
-    id: req.params.id,
+    id,
     author: {
       username: user.username,
       avatar: user.gradient || ['#FEB692', '#EA5455']
@@ -116,10 +105,7 @@ export const getMarkdown = async (req: IRequest, h: Hapi.ResponseToolkit) => {
 };
 
 // POST
-export const createPost = async (
-  request: IRequest,
-  h: Hapi.ResponseToolkit
-): Promise<IPost | Boom<any>> => {
+export const createPost = async (request: IRequest): Promise<IPost | Boom<any>> => {
   const { user } = request.auth.credentials;
 
   const entry: IPost = Object.assign({}, <IPost>request.payload, { user });
