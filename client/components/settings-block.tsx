@@ -1,5 +1,10 @@
-import styled from 'styled-components';
-import { ToastNoPosition as Toast } from './toast';
+import styled from "styled-components";
+import { ToastNoPosition as Toast } from "./toast";
+
+const StyledToast = styled(Toast)`
+  padding: 16px;
+  margin-bottom: 32px;
+`;
 
 const SettingsTitle = styled.h4`
   font-size: 18px;
@@ -8,8 +13,8 @@ const SettingsTitle = styled.h4`
 `;
 
 export default ({ children, title }) => (
-  <Toast>
+  <StyledToast>
     <SettingsTitle>{title}</SettingsTitle>
     <div>{children}</div>
-  </Toast>
+  </StyledToast>
 );

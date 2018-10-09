@@ -1,17 +1,9 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import Card from './card';
-import LayoutControl from './layout-control';
-import PostListItem from './post-list-item';
-
-const Title = styled.h1`
-  font-weight: 500;
-  font-size: 18px;
-
-  @media (min-width: 57.75rem) {
-    font-size: 24px;
-  }
-`;
+import * as React from "react";
+import styled from "styled-components";
+import Card from "./card";
+import LayoutControl from "./layout-control";
+import PostListItem from "./post-list-item";
+import ContainerTitle from "./container-title";
 
 const Grid = styled.ul`
   list-style: none inside;
@@ -75,7 +67,7 @@ const List = styled.ul`
   list-style: inside none;
 `;
 
-type LayoutType = string | 'grid' | 'list';
+type LayoutType = string | "grid" | "list";
 
 interface IPostListProps {
   posts: any[];
@@ -91,7 +83,7 @@ export default class PostList extends React.Component<
   IPostListState
 > {
   state = {
-    layout: 'grid'
+    layout: "grid"
   };
 
   layoutChange = (x: LayoutType) => {
@@ -104,10 +96,10 @@ export default class PostList extends React.Component<
     return (
       <>
         <ListHeader>
-          <Title>Entries</Title>
+          <ContainerTitle>Entries</ContainerTitle>
           <LayoutControl layout={layout} layoutChange={this.layoutChange} />
         </ListHeader>
-        {layout === 'grid' ? (
+        {layout === "grid" ? (
           <Grid>
             {posts.map(p => (
               <GridItem key={p.id}>
