@@ -57,6 +57,7 @@
       }
     },
     "env": {
+      "PORT": 4411,
       "NODE_ENV": "production",
       "SECRET_KEY": "@dw-key",
       "DB_USER": "@dw-db-user",

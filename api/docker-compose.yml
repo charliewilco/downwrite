@@ -1,15 +1,16 @@
-version: '2'
+version: "3"
 services:
   app:
+    container_name: downwrite-api
+    restart: always
     build: .
-    environment:
-      - PORT=8080
-      - MONGO_URL=mongodb:27017
     ports:
-      - '8080:8080'
+      - "4000:4000"
     links:
-      - mongodb
-  mongodb:
+      - mongo
+    command: npm start
+  mongo:
+    container_name: downwrite-db
     image: mongo:latest
     ports:
-      - '27017:27017'
+      - "27017:27017"

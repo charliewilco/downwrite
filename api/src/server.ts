@@ -1,7 +1,7 @@
-import * as Hapi from 'hapi';
-import * as Mongoose from 'mongoose';
-import routes from './routes';
-import Config from './util/config';
+import * as Hapi from "hapi";
+import * as Mongoose from "mongoose";
+import routes from "./routes";
+import Config from "./util/config";
 
 (<any>Mongoose).Promise = global.Promise;
 Mongoose.connect(
@@ -17,37 +17,37 @@ const validate = async () => ({ isValid: true });
 
 const init = async (): Promise<Hapi.Server> => {
   const server = new Hapi.Server({
-    port: 4411,
-    host: 'localhost',
+    port: process.env.PORT,
+    host: "localhost",
     routes: { cors: true }
   });
 
   await server.register({
-    plugin: require('good'),
+    plugin: require("good"),
     options: {
       reporters: {
         console: [
           {
-            module: 'good-squeeze',
-            name: 'Squeeze',
-            args: [{ response: '*', log: '*' }]
+            module: "good-squeeze",
+            name: "Squeeze",
+            args: [{ response: "*", log: "*" }]
           },
           {
-            module: 'good-console'
+            module: "good-console"
           },
-          'stdout'
+          "stdout"
         ]
       }
     }
   });
 
-  await server.register(require('hapi-auth-jwt2'));
+  await server.register(require("hapi-auth-jwt2"));
 
-  server.auth.strategy('jwt', 'jwt', {
+  server.auth.strategy("jwt", "jwt", {
     key: Config.key,
     validate: validate,
     verifyOptions: {
-      algorithms: ['HS256']
+      algorithms: ["HS256"]
     }
   });
 
@@ -60,10 +60,10 @@ const init = async (): Promise<Hapi.Server> => {
 
 init()
   .then(server => {
-    console.log('info', 'Server running at: ' + server.info.uri);
+    console.log("info", "Server running at: " + server.info.uri);
 
-    db.on('error', console.error.bind(console, 'connection error'));
-    db.once('open', () => {
+    db.on("error", console.error.bind(console, "connection error"));
+    db.once("open", () => {
       console.log(`Connection with database succeeded.`);
     });
   })
