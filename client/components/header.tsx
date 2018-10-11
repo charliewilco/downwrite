@@ -1,10 +1,10 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import Link from 'next/link';
-import Logo from './logo';
-import { NavIcon } from './icons';
-import { colors } from '../utils/defaultStyles';
-import { withAuth } from './auth';
+import * as React from "react";
+import styled from "styled-components";
+import Link from "next/link";
+import Logo from "./logo";
+import { NavIcon } from "./icons";
+import { colors, fonts } from "../utils/defaultStyles";
+import { withAuth } from "./auth";
 
 const MenuContainer = styled.nav`
   display: flex;
@@ -68,8 +68,9 @@ const Menu = ({ toggleNav }) => (
 const HeaderTitle = styled.h1`
   font-size: 16px;
   font-style: normal;
+  font-family: ${fonts.sans};
   line-height: 1;
-  font-weight: 500;
+  font-weight: 400;
 
   @media (min-width: 57.75rem) {
     font-size: 20px;
@@ -105,15 +106,15 @@ class UIHeader extends React.Component<IHeaderProps, void> {
 
     const url = !authed
       ? {
-          href: '/login',
-          as: '/'
+          href: "/login",
+          as: "/"
         }
       : {
-          href: '/',
-          as: '/'
+          href: "/",
+          as: "/"
         };
 
-    return !(route === '/login') ? (
+    return !(route === "/login") ? (
       <Header data-testid="APP_HEADER">
         <MenuContainer>
           <Logo />

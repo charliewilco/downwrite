@@ -1,9 +1,11 @@
-import React from 'react';
-import styled from 'styled-components';
-import Link from 'next/link';
+import React from "react";
+import styled from "styled-components";
+import Link from "next/link";
+import { fonts } from "../utils/defaultStyles";
 
 const PostsTitle = styled.h2`
   font-size: 16px;
+  font-family: ${fonts.sans};
   font-weight: 500;
 
   @media (min-width: 57.75rem) {
@@ -36,7 +38,7 @@ const ListItem: React.SFC<IListItemProps> = ({ title, id, onDelete }) => (
       <PostsTitle>
         <Link
           prefetch
-          href={{ pathname: '/edit', query: { id } }}
+          href={{ pathname: "/edit", query: { id } }}
           as={`/${id}/edit`}>
           <a>{title}</a>
         </Link>

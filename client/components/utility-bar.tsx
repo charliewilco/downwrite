@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { colors } from '../utils/defaultStyles';
+import styled from "styled-components";
+import { colors, fonts } from "../utils/defaultStyles";
 
 export const Container = styled.aside`
   display: flex;
@@ -9,6 +9,7 @@ export const Container = styled.aside`
   padding: 8px;
   background: white;
   color: ${colors.text};
+  font-family: ${fonts.sans};
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
 `;
 

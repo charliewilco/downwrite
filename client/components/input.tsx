@@ -1,13 +1,14 @@
-import * as React from 'react';
-import styled from 'styled-components';
+import * as React from "react";
+import styled from "styled-components";
+import { fonts } from "../utils/defaultStyles";
 
 const StyledInput = styled.input`
   display: block;
   width: 100%;
   appearance: none;
-  font-weight: 700;
+  font-weight: 400;
   color: inherit;
-  font-family: inherit;
+  font-family: ${fonts.sans};
   background: none;
   font-size: 150%;
   border-width: 0px;
@@ -37,7 +38,7 @@ interface IInputProps {
 
 export default class Input extends React.Component<IInputProps, any> {
   static defaultProps = {
-    type: 'text'
+    type: "text"
   };
 
   render() {

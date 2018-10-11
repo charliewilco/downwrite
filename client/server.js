@@ -27,7 +27,7 @@ const isNotLoggedIn = async (req, res, next) => {
   return res.redirect("/login");
 };
 
-const API_URL = dev ? "http://0.0.0.0:4888" : "https://api.downwrite.us";
+const API_URL = dev ? "http://localhost:4411" : "https://api.downwrite.us";
 
 app.prepare().then(() => {
   const server = express();

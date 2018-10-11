@@ -1,12 +1,14 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import Modal from './modal';
-import Button from './button';
-import Cancel from './cancel';
+import * as React from "react";
+import styled from "styled-components";
+import Modal from "./modal";
+import Button from "./button";
+import Cancel from "./cancel";
+import { fonts } from "../utils/defaultStyles";
 
 const DeleteTray = styled.div`
   display: flex;
   justify-content: flex-end;
+  font-family: ${fonts.sans};
 `;
 
 const DeleteBody = styled.div`

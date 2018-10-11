@@ -1,10 +1,12 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import PostListItem from './post-list-item';
+import * as React from "react";
+import styled from "styled-components";
+import PostListItem from "./post-list-item";
+import { fonts } from "../utils/defaultStyles";
 
 const SidebarEntriesTitle = styled.h6`
   font-size: 12px;
   margin-bottom: 8px;
+  font-family: ${fonts.sans};
 `;
 
 const Separator = styled.div`
