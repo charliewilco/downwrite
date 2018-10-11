@@ -9,7 +9,7 @@ Mongoose.connect(
   { useNewUrlParser: true }
 );
 
-console.log(Config.dbCreds, process.env.MONGO_URL);
+console.log(process.env.PORT, process.env.MONGO_URL);
 
 const db = Mongoose.connection;
 
@@ -17,7 +17,7 @@ const validate = async () => ({ isValid: true });
 
 const init = async (): Promise<Hapi.Server> => {
   const server = new Hapi.Server({
-    port: process.env.PORT,
+    port: process.env.PORT || 4411,
     host: "localhost",
     routes: { cors: true }
   });

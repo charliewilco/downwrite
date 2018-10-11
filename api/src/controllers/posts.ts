@@ -1,15 +1,15 @@
-import * as Hapi from 'hapi';
-import * as Boom from 'boom';
-import { draftToMarkdown } from 'markdown-draft-js';
+import * as Hapi from "hapi";
+import * as Boom from "boom";
+import { draftToMarkdown } from "markdown-draft-js";
 
-import { PostModel as Post, IPost } from '../models/Post';
-import { UserModel as User, IUser } from '../models/User';
+import { PostModel as Post, IPost } from "../models/Post";
+import { UserModel as User, IUser } from "../models/User";
 
 // TODO: implement `Authorization: ${token}`
 // TODO: remove user from the payload, get it from the
 // const { user } = req.auth.credentials;
 
-import { IRequest } from './types';
+import { IRequest } from "./types";
 
 // PUT
 
@@ -28,8 +28,7 @@ export const updatePost = async (request: IRequest, reply: Hapi.ResponseToolkit)
     );
     return post;
   } catch (err) {
-    console.log(err);
-    return Boom.internal('Internal MongoDB error', err);
+    return Boom.internal("Internal MongoDB error", err);
   }
 };
 
@@ -76,13 +75,13 @@ export const getMarkdown = async (req: IRequest) => {
     id,
     author: {
       username: user.username,
-      avatar: user.gradient || ['#FEB692', '#EA5455']
+      avatar: user.gradient || ["#FEB692", "#EA5455"]
     },
     content: draftToMarkdown(post.content, {
       entityItems: {
         LINK: {
           open: () => {
-            return '[';
+            return "[";
           },
 
           close: entity => {
@@ -114,7 +113,7 @@ export const createPost = async (request: IRequest): Promise<IPost | Boom<any>> 
     const post: IPost = await Post.create(entry);
     return post;
   } catch (error) {
-    return Boom.boomify(error, { message: 'Internal MongoDB error' });
+    return Boom.boomify(error, { message: "Internal MongoDB error" });
   }
 };
 
@@ -133,6 +132,6 @@ export const deletePost = async (
     });
     return `${post.title} was removed`;
   } catch (error) {
-    return Boom.boomify(error, { message: 'Internal MongoDB error' });
+    return Boom.boomify(error, { message: "Internal MongoDB error" });
   }
 };

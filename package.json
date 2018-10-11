@@ -39,13 +39,6 @@
       "pre-commit": "lint-staged"
     }
   },
-  "bolt": {
-    "workspaces": [
-      "client",
-      "api",
-      "e2e"
-    ]
-  },
   "workspaces": [
     "client",
     "api",
