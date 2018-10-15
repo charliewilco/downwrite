@@ -4602,6 +4602,17 @@ gud@^1.0.0:
   resolved "https://registry.npmjs.org/gud/-/gud-1.0.0.tgz#a489581b17e6a70beca9abe3ae57de7a499852c0"
   integrity sha512-zGEOVKFM5sVPPrYs7J5/hYEw2Pof8KCyOwyhG8sAF26mCAeUFAcYPu1mwB7hhpIP29zOIBaDqwuHdLp0jvZXjw==
 
+handlebars@4.x.x, handlebars@^4.0.6:
+  version "4.0.12"
+  resolved "https://registry.npmjs.org/handlebars/-/handlebars-4.0.12.tgz#2c15c8a96d46da5e266700518ba8cb8d919d5bc5"
+  integrity sha512-RhmTekP+FZL+XNhwS1Wf+bTTZpdLougwt5pcgA1tuz6Jcx0fpH/7z0qd71RKnZHBCxIRBHfBOnio4gViPemNzA==
+  dependencies:
+    async "^2.5.0"
+    optimist "^0.6.1"
+    source-map "^0.6.1"
+  optionalDependencies:
+    uglify-js "^3.1.4"
+
 handlebars@^4.0.3:
   version "4.0.11"
   resolved "https://registry.npmjs.org/handlebars/-/handlebars-4.0.11.tgz#630a35dfe0294bc281edae6ffc5d329fc7982dcc"
@@ -4612,17 +4623,6 @@ handlebars@^4.0.3:
     source-map "^0.4.4"
   optionalDependencies:
     uglify-js "^2.6"
-
-handlebars@^4.0.6:
-  version "4.0.12"
-  resolved "https://registry.npmjs.org/handlebars/-/handlebars-4.0.12.tgz#2c15c8a96d46da5e266700518ba8cb8d919d5bc5"
-  integrity sha512-RhmTekP+FZL+XNhwS1Wf+bTTZpdLougwt5pcgA1tuz6Jcx0fpH/7z0qd71RKnZHBCxIRBHfBOnio4gViPemNzA==
-  dependencies:
-    async "^2.5.0"
-    optimist "^0.6.1"
-    source-map "^0.6.1"
-  optionalDependencies:
-    uglify-js "^3.1.4"
 
 hapi-auth-jwt2@^8.1.0:
   version "8.1.0"
@@ -5100,6 +5100,18 @@ indexof@0.0.1:
   version "0.0.1"
   resolved "https://registry.npmjs.org/indexof/-/indexof-0.0.1.tgz#82dc336d232b9062179d05ab3293a66059fd435d"
   integrity sha1-gtwzbSMrkGIXnQWrMpOmYFn9Q10=
+
+inert@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.npmjs.org/inert/-/inert-5.1.0.tgz#e9f130dc3047ccd9ffaa64b157b4c1114611035d"
+  integrity sha512-5rJZbezGEkBN4QrP/HEEwsQ0N+7YzqDZrvBZrE7B0CrNY6I4XKI434aL3UNLCmbI4HzPGQs7Ae/4h1tiTMJ6Wg==
+  dependencies:
+    ammo "3.x.x"
+    boom "7.x.x"
+    bounce "1.x.x"
+    hoek "5.x.x"
+    joi "13.x.x"
+    lru-cache "4.1.x"
 
 inflight@^1.0.4:
   version "1.0.6"
@@ -5748,6 +5760,11 @@ istanbul-reports@^1.3.0:
   integrity sha512-y2Z2IMqE1gefWUaVjrBm0mSKvUkaBy9Vqz8iwr/r40Y9hBbIteH5wqHG/9DLTfJ9xUnUT2j7A3+VVJ6EaYBllA==
   dependencies:
     handlebars "^4.0.3"
+
+items@2.x.x:
+  version "2.1.1"
+  resolved "https://registry.npmjs.org/items/-/items-2.1.1.tgz#8bd16d9c83b19529de5aea321acaada78364a198"
+  integrity sha1-i9FtnIOxlSneWuoyGsqtp4NkoZg=
 
 jest-changed-files@^22.2.0:
   version "22.2.0"
@@ -6971,6 +6988,15 @@ loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.3.1:
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
 
+lout@^11.1.0:
+  version "11.1.0"
+  resolved "https://registry.npmjs.org/lout/-/lout-11.1.0.tgz#4c48b6b068b42197acb6420d79b856095d174589"
+  integrity sha512-HAowXHOraHWEPrYPuNc7mR8v1Sn1Gnmy8uvpXYDidVHsTMlrkxqUZ1liBXGOf4eN22kVB+eG29NWymPhZG/wKg==
+  dependencies:
+    boom "7.x.x"
+    handlebars "4.x.x"
+    hoek "5.x.x"
+
 lower-case-first@^1.0.0:
   version "1.0.2"
   resolved "https://registry.npmjs.org/lower-case-first/-/lower-case-first-1.0.2.tgz#e5da7c26f29a7073be02d52bac9980e5922adfa1"
@@ -6988,7 +7014,7 @@ lowercase-keys@^1.0.0:
   resolved "https://registry.npmjs.org/lowercase-keys/-/lowercase-keys-1.0.1.tgz#6f9e30b47084d971a7c820ff15a6c5167b74c26f"
   integrity sha512-G2Lj61tXDnVFFOi8VZds+SoQjtQC3dgokKdDG2mTm1tx4m50NUHBOZSBwQQHyy0V12A0JTG4icfZQH+xPyh8VA==
 
-lru-cache@^4.0.1, lru-cache@^4.1.1, lru-cache@^4.1.3:
+lru-cache@4.1.x, lru-cache@^4.0.1, lru-cache@^4.1.1, lru-cache@^4.1.3:
   version "4.1.3"
   resolved "https://registry.npmjs.org/lru-cache/-/lru-cache-4.1.3.tgz#a1175cf3496dfc8436c156c334b4955992bce69c"
   integrity sha512-fFEhvcgzuIoJVUF8fYr5KR0YqxD238zgObTps31YdADwPPAp82a4M8TrckkWyx7ekNlf9aBcVn81cFwwXngrJA==
@@ -11099,6 +11125,16 @@ vise@3.x.x:
   integrity sha512-kBFZLmiL1Vm3rHXphkhvvAcsjgeQXRrOFCbJb0I50YZZP4HGRNH+xGzK3matIMcpbsfr3I02u9odj4oCD0TWgA==
   dependencies:
     hoek "5.x.x"
+
+vision@^5.4.0:
+  version "5.4.0"
+  resolved "https://registry.npmjs.org/vision/-/vision-5.4.0.tgz#fc620deb95227881ea8b8d8a044dc1d1fd40e584"
+  integrity sha512-f8kbjvo/dUbR4ZDF0pHPuOjQFg/6zOMlP1Tb9gK2ukCa7Ksd24174DCzubtov6AxIDhZhO5RYQeeDlF8ujlKWQ==
+  dependencies:
+    boom "7.x.x"
+    hoek "5.x.x"
+    items "2.x.x"
+    joi "13.x.x"
 
 vm-browserify@0.0.4:
   version "0.0.4"

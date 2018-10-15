@@ -41,6 +41,8 @@ const init = async (): Promise<Hapi.Server> => {
     }
   });
 
+  await server.register([require("vision"), require("inert"), require("lout")]);
+
   await server.register(require("hapi-auth-jwt2"));
 
   server.auth.strategy("jwt", "jwt", {

@@ -33,12 +33,15 @@
     "good-squeeze": "^5.1.0",
     "hapi": "^17.6.0",
     "hapi-auth-jwt2": "^8.1.0",
+    "inert": "^5.1.0",
     "joi": "^13.6.0",
     "jsonwebtoken": "^8.3.0",
+    "lout": "^11.1.0",
     "markdown-draft-js": "^1.0.1",
     "mongoose": "^5.2.17",
     "typescript": "^3.0.3",
-    "uuid": "^3.1.0"
+    "uuid": "^3.1.0",
+    "vision": "^5.4.0"
   },
   "devDependencies": {
     "jest": "^22.4.0",
