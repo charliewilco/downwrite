@@ -11,6 +11,8 @@ Mongoose.connect(
 
 console.log(process.env.PORT, process.env.MONGO_URL);
 
+const dev: boolean = process.env.NODE_ENV !== "production";
+
 const db = Mongoose.connection;
 
 const validate = async () => ({ isValid: true });
@@ -41,7 +43,9 @@ const init = async (): Promise<Hapi.Server> => {
     }
   });
 
-  await server.register([require("vision"), require("inert"), require("lout")]);
+  if (dev) {
+    await server.register([require("vision"), require("inert"), require("lout")]);
+  }
 
   await server.register(require("hapi-auth-jwt2"));
 

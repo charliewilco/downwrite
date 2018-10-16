@@ -49,6 +49,10 @@ app.prepare().then(() => {
 
   server.use("/api", proxy({ target: API_URL, changeOrigin: true }));
 
+  if (dev) {
+    server.use("/docs", proxy({ target: API_URL, changeOrigin: true }));
+  }
+
   server.get("*", (req, res) => {
     const parsedUrl = parse(req.url, true);
     const { pathname } = parsedUrl;
