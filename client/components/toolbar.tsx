@@ -1,7 +1,7 @@
-import React from 'react';
-import StyleButton from './toolbar-button';
-import styled from 'styled-components';
-import { fonts } from '../utils/defaultStyles';
+import * as React from "react";
+import StyleButton from "./toolbar-button";
+import styled from "styled-components";
+import { fonts } from "../utils/defaultStyles";
 
 const ToolbarWrapper = styled.div`
   display: flex;
@@ -23,24 +23,24 @@ const ToolbarWrapper = styled.div`
 `;
 
 const BLOCK_TYPES = [
-  { label: 'H1', style: 'header-one' },
-  { label: 'H2', style: 'header-two' },
-  { label: 'H3', style: 'header-three' },
-  { label: 'H4', style: 'header-four' },
-  { label: 'Quote', style: 'blockquote' },
-  { label: 'Bullets', style: 'unordered-list-item' },
-  { label: 'Numbers', style: 'ordered-list-item' },
-  { label: 'Code', style: 'code-block' }
+  { label: "H1", style: "header-one" },
+  { label: "H2", style: "header-two" },
+  { label: "H3", style: "header-three" },
+  { label: "H4", style: "header-four" },
+  { label: "Quote", style: "blockquote" },
+  { label: "Bullets", style: "unordered-list-item" },
+  { label: "Numbers", style: "ordered-list-item" },
+  { label: "Code", style: "code-block" }
 ];
 
 const INLINE_STYLES = [
-  { label: 'Bold', style: 'BOLD' },
-  { label: 'Italic', style: 'ITALIC' },
-  { label: 'Underline', style: 'UNDERLINE' },
-  { label: 'Mono', style: 'CODE' }
+  { label: "Bold", style: "BOLD" },
+  { label: "Italic", style: "ITALIC" },
+  { label: "Underline", style: "UNDERLINE" },
+  { label: "Mono", style: "CODE" }
 ];
 
-const FullToolBar = ({
+const FullToolBar: React.SFC<any> = ({
   onToggleBlockType,
   onToggleInlineStyle,
   currentStyle,
@@ -68,7 +68,7 @@ const FullToolBar = ({
   </ToolbarWrapper>
 );
 
-const SelectionToolBar = ({
+const SelectionToolBar: React.SFC<any> = ({
   selectedText,
   currentStyle,
   onToggleInlineStyle,
@@ -98,7 +98,7 @@ const SelectionToolBar = ({
   </ToolbarWrapper>
 );
 
-const Toolbar = ({
+const Toolbar: React.SFC<any> = ({
   editorState,
   onToggleBlockType,
   onToggleInlineStyle,

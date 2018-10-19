@@ -1,5 +1,5 @@
-import React, { Component, createElement as h } from 'react';
-import styled from 'styled-components';
+import * as React from "react";
+import styled from "styled-components";
 import {
   BlockQuote,
   BulletedList,
@@ -10,8 +10,8 @@ import {
   Mono,
   Underline,
   Label
-} from './toolbar-icons';
-import { colors } from '../utils/defaultStyles';
+} from "./toolbar-icons";
+import { colors } from "../utils/defaultStyles";
 
 const ToolbarButton = styled.div`
   display: inline-block;
@@ -23,24 +23,33 @@ const ToolbarButton = styled.div`
   transition: all 250ms ease-in-out;
 `;
 
-export default class StyleButton extends Component {
+const h = React.createElement;
+
+interface IToolbarButtonProps {
+  style: string;
+  onToggle: (x: string) => void;
+  active: boolean;
+  label: string;
+}
+
+export default class StyleButton extends React.Component<IToolbarButtonProps> {
   findIcon = (label, active) => {
     switch (label) {
-      case 'Quote':
+      case "Quote":
         return h(BlockQuote, { active });
-      case 'Bullets':
+      case "Bullets":
         return h(BulletedList, { active });
-      case 'Numbers':
+      case "Numbers":
         return h(Numbers, { active });
-      case 'Code':
+      case "Code":
         return h(Code, { active });
-      case 'Bold':
+      case "Bold":
         return h(Bold, { active });
-      case 'Italic':
+      case "Italic":
         return h(Italic, { active });
-      case 'Underline':
+      case "Underline":
         return h(Underline, { active });
-      case 'Mono':
+      case "Mono":
         return h(Mono, { active });
       default:
         return h(Label, { label, active });
