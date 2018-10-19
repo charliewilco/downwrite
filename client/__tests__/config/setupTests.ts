@@ -26,9 +26,4 @@ function storageMock() {
 }
 
 (global as any).React = React;
-(global as any).fetch = require("jest-fetch-mock");
 (global as any).localStorage = storageMock();
-
-(global as any).user = "59ed5b03992843434f6fc8bb";
-(global as any).token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU5ZWQ1YjAzOTkyODQzNDM0ZjZmYzhiYiIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTUwOTU0NjI0NSwiZXhwIjoxNTA5NzE5MDQ1fQ.Go22Ea4XIILguaM7G-Hek27-aDUI7r0OnMT6MTq72s8";

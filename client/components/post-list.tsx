@@ -48,7 +48,7 @@ export default class PostList extends React.Component<IPostListProps, {}> {
               <LayoutControl layout={isOpen} layoutChange={onSetInstance} />
             </ListHeader>
             {isOpen ? (
-              <Grid>
+              <Grid data-testid="ENTRIES_GRIDVIEW">
                 {posts.map(p => (
                   <GridItem key={p.id}>
                     <Card {...p} onDelete={() => onDelete(p)} />
@@ -56,7 +56,7 @@ export default class PostList extends React.Component<IPostListProps, {}> {
                 ))}
               </Grid>
             ) : (
-              <List>
+              <List data-testid="ENTRIES_LISTVIEW">
                 {posts.map(p => (
                   <ListItemContainer key={p.id}>
                     <PostListItem {...p} onDelete={() => onDelete(p)} />

@@ -37,10 +37,16 @@ const LayoutTrigger = trigger`
 
 const LayoutControl: React.SFC<ILayoutControl> = ({ layout, layoutChange }) => (
   <Box>
-    <LayoutTrigger active={layout} onClick={() => layoutChange(true)}>
+    <LayoutTrigger
+      data-testid="LAYOUT_CONTROL_GRID"
+      active={layout}
+      onClick={() => layoutChange(true)}>
       Grid
     </LayoutTrigger>
-    <LayoutTrigger active={!layout} onClick={() => layoutChange(false)}>
+    <LayoutTrigger
+      data-testid="LAYOUT_CONTROL_LIST"
+      active={!layout}
+      onClick={() => layoutChange(false)}>
       List
     </LayoutTrigger>
   </Box>

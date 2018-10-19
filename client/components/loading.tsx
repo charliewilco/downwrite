@@ -1,7 +1,7 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import Spinner from './spinner';
-import { colors } from '../utils/defaultStyles';
+import * as React from "react";
+import styled from "styled-components";
+import Spinner from "./spinner";
+import { colors } from "../utils/defaultStyles";
 
 interface ILoadingProps {
   size: number;
@@ -17,7 +17,7 @@ const LoadingContainer = styled.div`
 `;
 
 const Loading: React.SFC<ILoadingProps> = ({ size }) => (
-  <LoadingContainer size={size}>
+  <LoadingContainer size={size} data-testid="LOADING_SPINNER">
     <Spinner size={size} color={colors.blue400} />
   </LoadingContainer>
 );
