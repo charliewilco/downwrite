@@ -8,7 +8,7 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "removeComments": false,
     "preserveConstEnums": true,
     "sourceMap": true,
