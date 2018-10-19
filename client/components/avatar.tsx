@@ -1,9 +1,9 @@
-import * as React from 'react';
-import styled, { css } from 'styled-components';
+import * as React from "react";
+import styled, { css } from "styled-components";
 
 export type GradientColors = string[];
 
-export const AvatarColors: GradientColors = ['#FEB692', '#EA5455'];
+export const AvatarColors: GradientColors = ["#FEB692", "#EA5455"];
 
 export interface IPointedGradientColors {
   a: string;
@@ -19,27 +19,39 @@ const spaced = css`
   margin: 0 auto 1rem;
 `;
 
-export interface IAvatarProps {
+export interface IAvatarCircleProps {
   colors: IPointedGradientColors;
-  centered: boolean;
+  centered?: boolean;
+  size?: number;
 }
 
-const AvatarCircle = styled.div`
-  border-radius: 3rem;
-  height: 3rem;
-  width: 3rem;
+const AvatarCircle = styled.div<IAvatarCircleProps>`
+  border-radius: 50%;
+  height: ${props => props.size || 48}px;
+  width: ${props => props.size || 48}px;
   background: linear-gradient(
     135deg,
-    ${(props: IAvatarProps) => props.colors.a || '#FEB692'} 10%,
-    ${(props: IAvatarProps) => props.colors.b || '#EA5455'} 100%
+    ${props => props.colors.a || "#FEB692"} 10%,
+    ${props => props.colors.b || "#EA5455"} 100%
   );
 
-  ${(props: IAvatarProps) => props.centered && spaced};
+  ${props => props.centered && spaced};
 `;
 
-const Avatar: React.SFC<{ colors: GradientColors; centered?: boolean }> = ({
-  colors,
-  centered
-}) => <AvatarCircle centered={centered} colors={gradientPoints(colors)} />;
+interface IAvatarProps {
+  colors: GradientColors;
+  size?: number;
+  centered?: boolean;
+  className?: string;
+}
+
+const Avatar: React.SFC<IAvatarProps> = ({ colors, size, centered, className }) => (
+  <AvatarCircle
+    className={className}
+    size={size}
+    centered={centered}
+    colors={gradientPoints(colors)}
+  />
+);
 
 export default Avatar;

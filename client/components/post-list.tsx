@@ -4,51 +4,18 @@ import Card from "./card";
 import LayoutControl from "./layout-control";
 import PostListItem from "./post-list-item";
 import ContainerTitle from "./container-title";
-
-const Grid = styled.ul`
-  list-style: none inside;
-  display: flex;
-  flex-wrap: wrap;
-  @media (min-width: 48rem) {
-    margin-left: -20px;
-  }
-`;
-
-const GridItem = styled.li`
-  margin-bottom: 24px;
-  width: 100%;
-
-  @media (min-width: 48rem) {
-    padding-left: 20px;
-    width: 50%;
-  }
-
-  @media (min-width: 57.75rem) {
-    width: ${`${100 / 3}%`};
-  }
-
-  @media (min-width: 75rem) {
-    width: ${`${100 / 4}%`};
-  }
-
-  @media (min-width: 112.5rem) {
-    width: ${`${100 / 5}%`};
-  }
-
-  @media (min-width: 150rem) {
-    width: ${`${100 / 6}%`};
-  }
-
-  @media (min-width: 187.5rem) {
-    width: ${`${100 / 7}%`};
-  }
-`;
+import Toggle from "./toggle";
+import { Grid, GridItem } from "./post-grid";
 
 const ListHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+`;
+
+const List = styled.ul`
+  list-style: inside none;
 `;
 
 const ListItemContainer = styled.li`
@@ -63,60 +30,43 @@ const ListItemContainer = styled.li`
   }
 `;
 
-const List = styled.ul`
-  list-style: inside none;
-`;
-
-type LayoutType = string | "grid" | "list";
-
 interface IPostListProps {
   posts: any[];
   onDelete: (post: any) => void;
 }
 
-interface IPostListState {
-  layout: LayoutType;
-}
-
-export default class PostList extends React.Component<
-  IPostListProps,
-  IPostListState
-> {
-  state = {
-    layout: "grid"
-  };
-
-  layoutChange = (x: LayoutType) => {
-    return this.setState({ layout: x });
-  };
-
+export default class PostList extends React.Component<IPostListProps, {}> {
   render() {
     const { posts, onDelete } = this.props;
-    const { layout } = this.state;
+
     return (
-      <>
-        <ListHeader>
-          <ContainerTitle>Entries</ContainerTitle>
-          <LayoutControl layout={layout} layoutChange={this.layoutChange} />
-        </ListHeader>
-        {layout === "grid" ? (
-          <Grid>
-            {posts.map(p => (
-              <GridItem key={p.id}>
-                <Card {...p} onDelete={() => onDelete(p)} />
-              </GridItem>
-            ))}
-          </Grid>
-        ) : (
-          <List>
-            {posts.map(p => (
-              <ListItemContainer key={p.id}>
-                <PostListItem {...p} onDelete={() => onDelete(p)} />
-              </ListItemContainer>
-            ))}
-          </List>
+      <Toggle defaultOpen>
+        {({ isOpen, onSetInstance }) => (
+          <>
+            <ListHeader>
+              <ContainerTitle>Entries</ContainerTitle>
+              <LayoutControl layout={isOpen} layoutChange={onSetInstance} />
+            </ListHeader>
+            {isOpen ? (
+              <Grid>
+                {posts.map(p => (
+                  <GridItem key={p.id}>
+                    <Card {...p} onDelete={() => onDelete(p)} />
+                  </GridItem>
+                ))}
+              </Grid>
+            ) : (
+              <List>
+                {posts.map(p => (
+                  <ListItemContainer key={p.id}>
+                    <PostListItem {...p} onDelete={() => onDelete(p)} />
+                  </ListItemContainer>
+                ))}
+              </List>
+            )}
+          </>
         )}
-      </>
+      </Toggle>
     );
   }
 }

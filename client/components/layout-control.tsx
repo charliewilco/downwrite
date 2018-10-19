@@ -11,8 +11,8 @@ interface ILayoutTrigger {
 }
 
 interface ILayoutControl {
-  layout: string | "grid" | "list";
-  layoutChange: (x: string) => void;
+  layout: boolean;
+  layoutChange: (x: boolean) => void;
 }
 
 const trigger: StyledFunction<ILayoutTrigger & React.HTMLProps<HTMLDivElement>> =
@@ -22,7 +22,7 @@ const LayoutTrigger = trigger`
   display: inline-block;
   margin: 8px 0 8px 16px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 14px;
   font-family: ${fonts.sans};
   color: inherit;
   opacity: ${(props: ILayoutTrigger) => (props.active ? 1 : 0.5)};
@@ -37,10 +37,10 @@ const LayoutTrigger = trigger`
 
 const LayoutControl: React.SFC<ILayoutControl> = ({ layout, layoutChange }) => (
   <Box>
-    <LayoutTrigger active={layout === "grid"} onClick={() => layoutChange("grid")}>
+    <LayoutTrigger active={layout} onClick={() => layoutChange(true)}>
       Grid
     </LayoutTrigger>
-    <LayoutTrigger active={layout === "list"} onClick={() => layoutChange("list")}>
+    <LayoutTrigger active={!layout} onClick={() => layoutChange(false)}>
       List
     </LayoutTrigger>
   </Box>
