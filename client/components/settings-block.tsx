@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { ToastNoPosition as Toast } from "./toast";
+import { fonts } from "../utils/defaultStyles";
 
 const StyledToast = styled(Toast)`
   padding: 16px;
@@ -7,8 +8,12 @@ const StyledToast = styled(Toast)`
 `;
 
 const SettingsTitle = styled.h4`
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 400;
+  text-transform: uppercase;
+  opacity: 0.5;
+  letter-spacing: 0.12em;
+  font-family: ${fonts.sans};
   margin-bottom: 16px;
 `;
 

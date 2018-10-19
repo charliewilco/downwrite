@@ -66,3 +66,12 @@ export const fonts = {
   sans: `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"`,
   code: `'SF Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace`
 };
+
+export function isValidHex(hex: string): boolean {
+  let valid = /^#[0-9A-F]{6}$/i.test(hex);
+  return valid;
+}
+
+export const startColors: string[] = ["#16a085", "#f4d03f"];
+
+export const endColors: string[] = ["#16a085", "#f4d03f"];
