@@ -1,5 +1,5 @@
 import { render, Simulate, wait } from "react-testing-library";
-import "dom-testing-library/extend-expect";
+import "jest-dom/extend-expect";
 import { withRouter } from "next/router";
 
 import Header from "../components/header";

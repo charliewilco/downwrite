@@ -1,7 +1,7 @@
 import { render, Simulate, wait } from "react-testing-library";
 import { withRouter } from "next/router";
 
-import "dom-testing-library/extend-expect";
+import "jest-dom/extend-expect";
 import Dashboard from "../pages/index";
 import { posts } from "./db.json";
 

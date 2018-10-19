@@ -1,5 +1,5 @@
 import { render, Simulate, wait } from "react-testing-library";
-import "dom-testing-library/extend-expect";
+import "jest-dom/extend-expect";
 import Check from "../components/checkbox";
 
 const checkFire = jest.fn();

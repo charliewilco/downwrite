@@ -1,6 +1,6 @@
 import Toggle from "../components/toggle";
 import { render, Simulate } from "react-testing-library";
-import "dom-testing-library/extend-expect";
+import "jest-dom/extend-expect";
 
 let { getByText, getByTestId, container } = render(
   <Toggle>

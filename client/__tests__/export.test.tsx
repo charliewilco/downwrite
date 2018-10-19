@@ -1,6 +1,6 @@
 import Export from "../components/export";
 import { render, Simulate } from "react-testing-library";
-import "dom-testing-library/extend-expect";
+import "jest-dom/extend-expect";
 
 const { container } = render(<Export />);
 

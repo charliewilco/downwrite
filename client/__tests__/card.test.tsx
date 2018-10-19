@@ -1,8 +1,8 @@
 import Card from "../components/card";
 import { withRouter } from "next/router";
-import { posts } from "./db.json";
+import data from "./db.json";
 import * as Testing from "react-testing-library";
-import "dom-testing-library/extend-expect";
+import "jest-dom/extend-expect";
 
 const mockDelete = jest.fn();
 const id = "6acebce0-20b6-4015-87fe-951c7bb36481";
@@ -11,7 +11,7 @@ const { container, getByTestId } = Testing.render(
   withRouter(props => (
     <Card
       title="Starting Again"
-      content={posts[0].content}
+      content={data.posts[0].content}
       id={id}
       onDelete={mockDelete}
       {...props}
