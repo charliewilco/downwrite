@@ -18,7 +18,7 @@ type Res = Dwnxt.IPostError | Dwnxt.IPost[];
 interface DashboardPr {
   entries: Dwnxt.IPost[];
   token: string;
-  closeNav: Function;
+  closeNav: () => void;
 }
 
 interface DashboardState {

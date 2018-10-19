@@ -1,5 +1,4 @@
-import { render, Simulate, wait } from "react-testing-library";
-import "jest-dom/extend-expect";
+import { render, fireEvent } from "react-testing-library";
 import Check from "../components/checkbox";
 
 const checkFire = jest.fn();
@@ -13,7 +12,7 @@ let { getByTestId, container } = render(
 describe("<Check />", () => {
   xit("checks", () => {
     expect(container.querySelector("input:checked")).not.toBeInTheDOM();
-    Simulate.click(getByTestId("TEST_CHECKBOX_LABEL"));
+    fireEvent.click(getByTestId("TEST_CHECKBOX_LABEL"));
     expect(container.querySelector("input:checked")).toBeInTheDOM();
   });
 

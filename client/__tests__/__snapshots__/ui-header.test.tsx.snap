@@ -1,3 +1,253 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Header Component matches snapshot 1`] = `null`;
+exports[`Header Component matches snapshot 1`] = `
+.c2 {
+  max-width: 20px;
+}
+
+.c3 {
+  display: block;
+  max-width: 100%;
+  min-height: auto;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c6 {
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 1.1;
+  opacity: 0.5;
+  color: !important;
+  margin-right: 32px;
+}
+
+.c6:hover,
+.c6:focus {
+  color: #4C4C4C;
+  opacity: 1;
+}
+
+.c5 {
+  margin-left: 12px;
+  display: block;
+  cursor: pointer;
+  -webkit-transition: color 375ms ease-in-out;
+  transition: color 375ms ease-in-out;
+  color: !important;
+}
+
+.c5:hover {
+  color: #185a70;
+}
+
+.c7 {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  border: 0;
+  font-family: inherit;
+  background: none;
+  box-sizing: inherit;
+}
+
+.c4 {
+  font-size: 16px;
+  font-style: normal;
+  font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  line-height: 1;
+  font-weight: 400;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+@media (min-width:57.75rem) {
+  .c2 {
+    max-width: 33px;
+  }
+}
+
+@media (min-width:57.75rem) {
+  .c4 {
+    font-size: 20px;
+  }
+}
+
+<header
+  class="c0"
+  data-testid="APP_HEADER"
+>
+  <nav
+    class="c1"
+  >
+    <div
+      class="c2"
+    >
+      <svg
+        class="c3"
+        height="50"
+        viewBox="0 0 33 50"
+        width="33"
+      >
+        <title>
+          Downwrite Logo
+        </title>
+        <defs>
+          <radialgradient
+            fx="50%"
+            fy="50%"
+            id="a"
+            r="143.827%"
+          >
+            <stop
+              offset="0%"
+              stop-color="#FFCE00"
+            />
+            <stop
+              offset="16.39%"
+              stop-color="#FFD600"
+            />
+            <stop
+              offset="57.9%"
+              stop-color="#FFE600"
+            />
+            <stop
+              offset="100%"
+              stop-color="#FFCE00"
+            />
+          </radialgradient>
+          <radialgradient
+            fx="50%"
+            fy="50%"
+            id="b"
+            r="143.827%"
+          >
+            <stop
+              offset="0%"
+              stop-color="#FFB600"
+            />
+            <stop
+              offset="52.49%"
+              stop-color="#FFC200"
+            />
+            <stop
+              offset="100%"
+              stop-color="#F4A903"
+            />
+          </radialgradient>
+        </defs>
+        <g
+          fill="none"
+          fill-rule="evenodd"
+        >
+          <path
+            d="M16.469 5.275V30.97c1.202 0 2.176.965 2.176 2.155s-.974 2.155-2.176 2.155v9.444l10.101-9.594L16.47 5.275z"
+            fill="url(#a)"
+          />
+          <path
+            d="M14.293 33.126c0-1.19.974-2.155 2.176-2.155V5.275L6.367 35.13l10.102 9.594v-9.444a2.165 2.165 0 0 1-2.176-2.155z"
+            fill="url(#b)"
+          />
+          <path
+            d="M32.938 50H0V0h32.938v50zM1.63 48.47h29.677V1.53H1.63v46.94z"
+            fill="#FFC200"
+          />
+        </g>
+      </svg>
+    </div>
+    <h1
+      class="c4"
+      data-testid="APP_HEADER_TITLE"
+    >
+      <a
+        class="c5"
+      >
+        Downwrite
+      </a>
+    </h1>
+  </nav>
+  <nav
+    class="c1"
+  >
+    <a
+      class="c6"
+    >
+      New
+    </a>
+    <button
+      class="c7"
+    >
+      <svg
+        class="Navicon"
+        height="9px"
+        viewBox="0 0 20 9"
+        width="20px"
+      >
+        <desc>
+          Navicon
+        </desc>
+        <g
+          fill="none"
+          fill-rule="evenodd"
+          stroke="none"
+          stroke-width="1"
+        >
+          <g
+            fill="inherit"
+            id="NaviconGroup"
+          >
+            <rect
+              height="1"
+              id="Rectangle-Copy-3"
+              width="20"
+              x="0"
+              y="0"
+            />
+            <rect
+              height="1"
+              id="Rectangle-Copy-4"
+              width="10"
+              x="10"
+              y="4"
+            />
+            <rect
+              height="1"
+              id="Rectangle-Copy-5"
+              width="15"
+              x="5"
+              y="8"
+            />
+          </g>
+        </g>
+      </svg>
+    </button>
+  </nav>
+</header>
+`;

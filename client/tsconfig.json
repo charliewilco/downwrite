@@ -16,5 +16,6 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "lib": ["dom", "es2016"]
-  }
+  },
+  "exclude": ["__tests__"]
 }

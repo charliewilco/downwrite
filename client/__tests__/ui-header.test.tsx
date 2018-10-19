@@ -1,12 +1,14 @@
-import { render, Simulate, wait } from "react-testing-library";
-import "jest-dom/extend-expect";
-import { withRouter } from "next/router";
+import { render } from "react-testing-library";
 
 import Header from "../components/header";
 
-let { getByTestId, container } = render(
-  withRouter(props => <Header authed name="Downwrite" {...props} />)
-);
+let { getByTestId, container } = render(<Header authed name="Downwrite" />);
+
+jest.mock("next/link", () => {
+  return ({ children }) => {
+    return children;
+  };
+});
 
 describe("Header Component", () => {
   it("contains application name", () => {

@@ -1,13 +1,12 @@
 import Toggle from "../components/toggle";
-import { render, Simulate } from "react-testing-library";
-import "jest-dom/extend-expect";
+import { render, fireEvent } from "react-testing-library";
 
-let { getByText, getByTestId, container } = render(
+let { getByTestId, container } = render(
   <Toggle>
-    {(open, toggle) => (
+    {({ isOpen, onToggle }) => (
       <>
-        {open && <h1 data-testid="TOGGLE_OPEN">I am open</h1>}
-        <button data-testid="TOGGLE_BUTTON" onClick={toggle}>
+        {isOpen && <h1 data-testid="TOGGLE_OPEN">I am open</h1>}
+        <button data-testid="TOGGLE_BUTTON" onClick={onToggle}>
           Toggle
         </button>
       </>
@@ -23,11 +22,18 @@ describe("<Toggle />", () => {
   });
 
   it("can be toggled open", () => {
-    Simulate.click(getByTestId("TOGGLE_BUTTON"));
+    fireEvent.click(getByTestId("TOGGLE_BUTTON"));
     expect(getByTestId("TOGGLE_OPEN")).toHaveTextContent("I am open");
   });
 
-  xit("can be open by default", () => {
-    expect(render(<Toggle defaultOpen>{() => null}</Toggle>)).toBe(true);
+  it("can be open by default", () => {
+    const { container: openContainer } = render(
+      <Toggle defaultOpen>
+        {({ isOpen }) => isOpen && <h1 data-testid="TOGGLE_OPEN">I am open</h1>}
+      </Toggle>
+    );
+    expect(
+      openContainer.querySelector(`[data-testid="TOGGLE_OPEN"]`)
+    ).toBeInTheDOM();
   });
 });

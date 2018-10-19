@@ -1,5 +1,5 @@
 import Button from "../components/button";
-import { render, Simulate, wait } from "react-testing-library";
+import { render, fireEvent } from "react-testing-library";
 
 const onClickHandler = jest.fn();
 const { getByText, container } = render(
@@ -10,7 +10,7 @@ const { getByText, container } = render(
 
 describe("<Button />", () => {
   it("Fires onClick", () => {
-    Simulate.click(getByText("Button"));
+    fireEvent.click(getByText("Button"));
     expect(onClickHandler).toHaveBeenCalled();
   });
 

@@ -1,13 +1,14 @@
-import { render, Simulate, wait } from "react-testing-library";
-import "jest-dom/extend-expect";
+import * as React from "react";
+import { render, fireEvent } from "react-testing-library";
 
 import DWEditor from "../components/editor";
-import { EditorState, convertFromRaw } from "draft-js";
-import { posts } from "./db.json";
+import * as Draft from "draft-js";
+import data from "./db.json";
 
-const content = convertFromRaw(posts[0].content);
-const emptyContent = EditorState.createEmpty();
-const preloadedContent = EditorState.createWithContent(content);
+const content = Draft.convertFromRaw(data.posts[0]
+  .content as Draft.RawDraftContentState);
+const emptyContent = Draft.EditorState.createEmpty();
+const preloadedContent = Draft.EditorState.createWithContent(content);
 const mockEditor = state =>
   render(<DWEditor onChange={jest.fn()} editorState={state} />);
 
@@ -19,7 +20,9 @@ class WrappedEditor extends React.Component {
   onChange = editorState => this.setState({ editorState });
 
   render() {
-    return <DWEditor {...this.state} onChange={this.onChange} />;
+    return (
+      <DWEditor editorState={this.state.editorState} onChange={this.onChange} />
+    );
   }
 }
 
@@ -36,7 +39,7 @@ describe("<DWEditor />", () => {
 
   it("Editor takes content", () => {
     const { container } = render(<WrappedEditor />);
-    Simulate.keyDown(container);
+    fireEvent.keyDown(container);
     // expect(editor.state).toBeTruthy()
   });
 });

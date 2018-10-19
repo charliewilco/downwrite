@@ -1,23 +1,28 @@
 import Card from "../components/card";
-import { withRouter } from "next/router";
 import data from "./db.json";
-import * as Testing from "react-testing-library";
-import "jest-dom/extend-expect";
+import { fireEvent, render } from "react-testing-library";
 
 const mockDelete = jest.fn();
 const id = "6acebce0-20b6-4015-87fe-951c7bb36481";
 
-const { container, getByTestId } = Testing.render(
-  withRouter(props => (
-    <Card
-      title="Starting Again"
-      content={data.posts[0].content}
-      id={id}
-      onDelete={mockDelete}
-      {...props}
-    />
-  ))
+jest.mock("next/link", () => {
+  return ({ children }) => {
+    return children;
+  };
+});
+
+const PostedCard: React.SFC<any> = () => (
+  <Card
+    public={false}
+    dateAdded={data.posts[0].dateAdded}
+    title={data.posts[0].title}
+    content={data.posts[0].content}
+    id={id}
+    onDelete={mockDelete}
+  />
 );
+
+const { container, getByTestId } = render(<PostedCard />);
 
 describe("<Card />", () => {
   it("contains snippet from content", () => {
@@ -26,17 +31,20 @@ describe("<Card />", () => {
   });
 
   it("contains a title", () => {
-    expect(getByTestId("CARD_TITLE")).toHaveTextContent("Starting Again");
+    expect(data.posts[0].title).toBe("Starting again");
+    expect(getByTestId("CARD_TITLE")).toHaveTextContent("Starting again");
   });
 
-  // TODO: snapshots are going to be fucked for a while until
-  // converted to next.js
+  it("contains delete button", () => {
+    expect(getByTestId("CARD_DELETE_BUTTON")).toBeInTheDOM();
+  });
+
   it("matches snapshot", () => {
     expect(container.firstChild).toMatchSnapshot();
   });
 
   it("should fire a delete", () => {
-    Testing.Simulate.click(getByTestId("CARD_DELETE_BUTTON"));
+    fireEvent.click(getByTestId("CARD_DELETE_BUTTON"));
 
     expect(mockDelete).toHaveBeenCalled();
   });
