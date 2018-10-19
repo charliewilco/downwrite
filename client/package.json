@@ -62,6 +62,7 @@
     "@types/styled-components": "^3.0.1",
     "@types/uuid": "^3.4.3",
     "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "23.0.1",
     "dom-testing-library": "^3.6.0",
     "fbjs": "^1.0.0",
     "jest": "^23.6.0",
@@ -70,7 +71,6 @@
     "react-addons-test-utils": "^15.6.2",
     "react-test-renderer": "^16.5.2",
     "react-testing-library": "^5.1.0",
-    "ts-jest": "^23.10.2",
     "typescript": "^3.1.1"
   },
   "babel": {
@@ -93,33 +93,31 @@
     "collectCoverageFrom": [
       "/**/*.{js,jsx,mjs}"
     ],
-    "setupTestFrameworkScriptFile": "<rootDir>/__tests__/config/setupTests.js",
+    "setupTestFrameworkScriptFile": "<rootDir>/__tests__/config/setupTests.ts",
     "testPathIgnorePatterns": [
       "<rootDir>/.next/",
       "<rootDir>/node_modules/",
       "<rootDir>/__tests__/config/"
     ],
     "testMatch": [
-      "<rootDir>/**/__tests__/**/*.{js,jsx,mjs}",
-      "<rootDir>/**/?(*.)(spec|test).{js,jsx,mjs}"
+      "**/*.(test|spec).(ts|tsx)"
     ],
     "testEnvironment": "node",
     "transform": {
-      "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
-      "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/__tests__/config/fileTransform.js"
+      "^.+\\.tsx?$": "babel-jest"
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
     ],
     "moduleFileExtensions": [
-      "web.js",
-      "mjs",
+      "ts",
+      "tsx",
       "js",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ]
+      "json"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|less)$": "<rootDir>/__tests__/config/fileTransform.js"
+    }
   },
   "now": {
     "name": "next-downwrite",

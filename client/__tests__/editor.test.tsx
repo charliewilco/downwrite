@@ -1,9 +1,9 @@
-import { render, Simulate, wait } from 'react-testing-library';
-import 'dom-testing-library/extend-expect';
+import { render, Simulate, wait } from "react-testing-library";
+import "dom-testing-library/extend-expect";
 
-import DWEditor from '../components/editor';
-import { EditorState, convertFromRaw } from 'draft-js';
-import { posts } from './db.json';
+import DWEditor from "../components/editor";
+import { EditorState, convertFromRaw } from "draft-js";
+import { posts } from "./db.json";
 
 const content = convertFromRaw(posts[0].content);
 const emptyContent = EditorState.createEmpty();
@@ -23,18 +23,18 @@ class WrappedEditor extends React.Component {
   }
 }
 
-describe('<DWEditor />', () => {
-  it('Editor mounts', () => {
+describe("<DWEditor />", () => {
+  it("Editor mounts", () => {
     const { container } = mockEditor(emptyContent);
     expect(container).toBeTruthy();
   });
 
-  it('Editor mounts with preloaded content', () => {
+  it("Editor mounts with preloaded content", () => {
     const { container } = mockEditor(preloadedContent);
     expect(container).toBeTruthy();
   });
 
-  it('Editor takes content', () => {
+  it("Editor takes content", () => {
     const { container } = render(<WrappedEditor />);
     Simulate.keyDown(container);
     // expect(editor.state).toBeTruthy()
