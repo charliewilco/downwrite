@@ -36,7 +36,7 @@ export const updatePost = async (request: IRequest, reply: Hapi.ResponseToolkit)
 
 export const getPosts = async (
   req: IRequest,
-  reply: Hapi.ResponseToolkit
+  h: Hapi.ResponseToolkit
 ): Promise<IPost[] | Boom<any>> => {
   const { user } = req.auth.credentials;
 
