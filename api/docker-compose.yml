@@ -7,7 +7,9 @@ services:
       - "4000:4000"
     depends_on:
       - mongo
-    command: npm start
+    volumes:
+      - ./dist:/usr/src/app/dist
+
   mongo:
     image: mongo:latest
     ports:

@@ -1,6 +1,6 @@
 # ![Downwrite](.github/header.png)
 
-[![Build Status](https://travis-ci.com/charliewilco/downwrite.svg?token=xHEzazzpsBpPPYThuFMz&branch=master)](https://travis-ci.com/charliewilco/downwrite)
+[![Build Status](https://travis-ci.org/charliewilco/downwrite.svg?branch=master)](https://travis-ci.org/charliewilco/downwrite)
 
 ## About
 

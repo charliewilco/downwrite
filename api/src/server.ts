@@ -9,8 +9,6 @@ Mongoose.connect(
   { useNewUrlParser: true }
 );
 
-console.log(process.env.PORT, process.env.MONGO_URL);
-
 const dev: boolean = process.env.NODE_ENV !== "production";
 
 const db = Mongoose.connection;
@@ -20,7 +18,7 @@ const validate = async () => ({ isValid: true });
 const init = async (): Promise<Hapi.Server> => {
   const server = new Hapi.Server({
     port: process.env.PORT || 4411,
-    host: "localhost",
+    host: process.env.HOST || "localhost",
     routes: { cors: true }
   });
 
@@ -71,6 +69,8 @@ init()
     db.on("error", console.error.bind(console, "connection error"));
     db.once("open", () => {
       console.log(`Connection with database succeeded.`);
+      console.log(process.env.PORT, process.env.MONGO_URL);
+      console.log("--- DOWNWRITE API ---");
     });
   })
   .catch(err => {

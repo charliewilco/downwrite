@@ -86,10 +86,6 @@ export default class Dashboard extends React.Component<DashboardPr, DashboardSta
     }
   }
 
-  componentDidUpdate() {
-    console.log(this.state);
-  }
-
   closeUIModal = () => this.setState({ modalOpen: false });
 
   // TODO: Fix this

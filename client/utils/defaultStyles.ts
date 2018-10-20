@@ -28,7 +28,7 @@ export const colors = {
 //   defaultYellow: '#ffc200'
 // }
 
-export const nightTheme = {
+export const NIGHT_THEME = {
   night: true,
   background: "#093F5D",
   color: colors.gray100,
@@ -43,7 +43,7 @@ export const nightTheme = {
   landingPageTitle: colors.blue400
 };
 
-export const dayTheme = {
+export const DAY_THEME = {
   night: false,
   background: colors.gray100,
   color: colors.text,
@@ -72,6 +72,6 @@ export function isValidHex(hex: string): boolean {
   return valid;
 }
 
-export const startColors: string[] = ["#16a085", "#f4d03f"];
+export const startColors: string[] = ["#16a085", "#f4d03f", "#147aab", "#000000"];
 
 export const endColors: string[] = ["#16a085", "#f4d03f"];

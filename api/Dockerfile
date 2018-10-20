@@ -27,5 +27,7 @@ RUN npm prune --production
 
 ENV PORT=4000
 ENV MONGO_URL=mongo:27017
-
+ENV HOST=0.0.0.0
 EXPOSE 4000
+
+CMD ["npm", "start"]

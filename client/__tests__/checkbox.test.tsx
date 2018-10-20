@@ -10,7 +10,7 @@ let { getByTestId, container } = render(
 );
 
 describe("<Check />", () => {
-  xit("checks", () => {
+  it("checks", () => {
     expect(container.querySelector("input:checked")).not.toBeInTheDOM();
     fireEvent.click(getByTestId("TEST_CHECKBOX_LABEL"));
     expect(container.querySelector("input:checked")).toBeInTheDOM();

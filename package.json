@@ -39,10 +39,15 @@
       "pre-commit": "lint-staged"
     }
   },
-  "workspaces": [
-    "client",
-    "api",
-    "e2e"
-  ],
+  "workspaces": {
+    "packages": [
+      "client",
+      "api",
+      "e2e"
+    ],
+    "nohoist": [
+      "**/api"
+    ]
+  },
   "license": "MIT"
 }

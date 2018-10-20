@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled, { ThemeProvider, injectGlobal } from "styled-components";
 import Checkbox from "./checkbox";
-import { colors, fonts, nightTheme, dayTheme } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const NIGHT_MODE: string = "NightMDX";
 
@@ -11,9 +11,9 @@ const NightContainer = styled.div`
 `;
 
 const NightToggle = styled.div`
-  color: ${colors.text};
+  color: ${DefaultStyles.colors.text};
   padding: 8px;
-  font-family: ${fonts.sans};
+  font-family: ${DefaultStyles.fonts.sans};
   margin: 16px 8px;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
   background: white;
@@ -58,7 +58,7 @@ injectGlobal`
   .NightMode .PreviewBody blockquote,
   .NightMode blockquote {
     background: none;
-    color: ${colors.blue100} !important;
+    color: ${DefaultStyles.colors.blue100} !important;
   }
 `;
 
@@ -107,7 +107,8 @@ export default class NightModeContainer extends React.Component<
     return (
       <NightModeContext.Provider
         value={{ night, action: { onChange: this.onChange } }}>
-        <ThemeProvider theme={night ? nightTheme : dayTheme}>
+        <ThemeProvider
+          theme={night ? DefaultStyles.NIGHT_THEME : DefaultStyles.DAY_THEME}>
           {children}
         </ThemeProvider>
       </NightModeContext.Provider>
