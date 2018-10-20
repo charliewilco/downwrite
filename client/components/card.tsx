@@ -1,9 +1,9 @@
-import * as React from 'react';
-import * as Draft from 'draft-js';
-import styled from 'styled-components';
-import Link from 'next/link';
-import distance from 'date-fns/distance_in_words_to_now';
-import { colors } from '../utils/defaultStyles';
+import * as React from "react";
+import * as Draft from "draft-js";
+import styled from "styled-components";
+import Link from "next/link";
+import distance from "date-fns/distance_in_words_to_now";
+import { colors, fonts } from "../utils/defaultStyles";
 
 const CardContainer = styled.div`
   display: flex;
@@ -11,6 +11,7 @@ const CardContainer = styled.div`
   justify-content: space-between;
   height: 192px;
   font-weight: 400;
+  font-family: ${fonts.sans};
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
   background-color: ${props => props.theme.cardBackground};
 
@@ -22,7 +23,7 @@ const CardContainer = styled.div`
 const CardTitle = styled.h2`
   font-size: 14px;
   margin-bottom: 0px;
-  font-weight: 700;
+  font-weight: 500;
 
   @media (min-width: 57.75rem) {
     font-size: 18px;
@@ -81,11 +82,11 @@ const SxLink = styled.a`
   margin-right: 8px;
 `;
 
-const EditLink = ({ id, title = 'Edit' }) => (
+const EditLink = ({ id, title = "Edit" }) => (
   <Link
     prefetch
     passHref
-    href={{ pathname: '/edit', query: { id } }}
+    href={{ pathname: "/edit", query: { id } }}
     as={`/${id}/edit`}>
     <SxLink>{title}</SxLink>
   </Link>
@@ -95,7 +96,7 @@ const PreviewLink = ({ id }) => (
   <Link
     prefetch
     passHref
-    href={{ pathname: '/preview', query: { id } }}
+    href={{ pathname: "/preview", query: { id } }}
     as={`/${id}/preview`}>
     <SxLink>Preview</SxLink>
   </Link>
@@ -104,6 +105,7 @@ const PreviewLink = ({ id }) => (
 export interface ICardProps {
   title: string;
   content: Draft.RawDraftContentState;
+  excerpt?: string;
   id: string;
   dateAdded: Date;
   onDelete: () => void;

@@ -1,26 +1,15 @@
-import * as Hapi from 'hapi';
-import * as Boom from 'boom';
-import { draftToMarkdown } from 'markdown-draft-js';
+import * as Hapi from "hapi";
+import * as Boom from "boom";
+import { draftToMarkdown } from "markdown-draft-js";
 
-import { PostModel as Post, IPost } from '../models/Post';
-import { UserModel as User, IUser } from '../models/User';
+import { PostModel as Post, IPost } from "../models/Post";
+import { UserModel as User, IUser } from "../models/User";
 
 // TODO: implement `Authorization: ${token}`
 // TODO: remove user from the payload, get it from the
 // const { user } = req.auth.credentials;
 
-export interface ICredentials extends Hapi.AuthCredentials {
-  id: string;
-  user: string;
-}
-
-export interface IRequestAuth extends Hapi.RequestAuth {
-  credentials: ICredentials;
-}
-
-export interface IRequest extends Hapi.Request {
-  auth: IRequestAuth;
-}
+import { IRequest } from "./types";
 
 // PUT
 
@@ -39,8 +28,7 @@ export const updatePost = async (request: IRequest, reply: Hapi.ResponseToolkit)
     );
     return post;
   } catch (err) {
-    console.log(err);
-    return Boom.internal('Internal MongoDB error', err);
+    return Boom.internal("Internal MongoDB error", err);
   }
 };
 
@@ -48,7 +36,7 @@ export const updatePost = async (request: IRequest, reply: Hapi.ResponseToolkit)
 
 export const getPosts = async (
   req: IRequest,
-  reply: Hapi.ResponseToolkit
+  h: Hapi.ResponseToolkit
 ): Promise<IPost[] | Boom<any>> => {
   const { user } = req.auth.credentials;
 
@@ -78,22 +66,22 @@ export const getSinglePost = async (
   }
 };
 
-export const getMarkdown = async (req: IRequest, h: Hapi.ResponseToolkit) => {
-  const post = await Post.findOne({ id: req.params.id });
-
+export const getMarkdown = async (req: IRequest) => {
+  const { id } = req.params;
+  const post = await Post.findOne({ id });
   const user = await User.findOne({ _id: post.user });
 
   const markdown = {
-    id: req.params.id,
+    id,
     author: {
       username: user.username,
-      avatar: user.gradient || ['#FEB692', '#EA5455']
+      avatar: user.gradient || ["#FEB692", "#EA5455"]
     },
     content: draftToMarkdown(post.content, {
       entityItems: {
         LINK: {
           open: () => {
-            return '[';
+            return "[";
           },
 
           close: entity => {
@@ -116,10 +104,7 @@ export const getMarkdown = async (req: IRequest, h: Hapi.ResponseToolkit) => {
 };
 
 // POST
-export const createPost = async (
-  request: IRequest,
-  h: Hapi.ResponseToolkit
-): Promise<IPost | Boom<any>> => {
+export const createPost = async (request: IRequest): Promise<IPost | Boom<any>> => {
   const { user } = request.auth.credentials;
 
   const entry: IPost = Object.assign({}, <IPost>request.payload, { user });
@@ -128,7 +113,7 @@ export const createPost = async (
     const post: IPost = await Post.create(entry);
     return post;
   } catch (error) {
-    return Boom.boomify(error, { message: 'Internal MongoDB error' });
+    return Boom.boomify(error, { message: "Internal MongoDB error" });
   }
 };
 
@@ -147,6 +132,6 @@ export const deletePost = async (
     });
     return `${post.title} was removed`;
   } catch (error) {
-    return Boom.boomify(error, { message: 'Internal MongoDB error' });
+    return Boom.boomify(error, { message: "Internal MongoDB error" });
   }
 };

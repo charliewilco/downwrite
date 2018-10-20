@@ -1,8 +1,15 @@
 import * as React from 'react';
 
+interface IToggleAction {
+  isOpen: boolean;
+  onToggle: () => void;
+  onClose: () => void;
+  onSetInstance: (x: boolean) => void;
+}
+
 interface ToggleProps {
   defaultOpen: boolean;
-  children: (a, b, c, d) => React.ReactNode;
+  children: (state: IToggleAction) => React.ReactNode;
 }
 
 export default class ToggleInstance extends React.Component<
@@ -26,11 +33,11 @@ export default class ToggleInstance extends React.Component<
   toggleInstance = () => this.setState(({ open }) => ({ open: !open }));
 
   render() {
-    return this.props.children(
-      this.state.open,
-      this.toggleInstance,
-      this.closeInstance,
-      this.setInstance
-    );
+    return this.props.children({
+      isOpen: this.state.open,
+      onToggle: this.toggleInstance,
+      onClose: this.closeInstance,
+      onSetInstance: this.setInstance
+    });
   }
 }

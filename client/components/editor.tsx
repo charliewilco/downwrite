@@ -1,14 +1,14 @@
-import Editor from 'draft-js-plugins-editor';
-import * as React from 'react';
-import * as Draft from 'draft-js';
-import Prism from 'prismjs';
-import styled from 'styled-components';
+import Editor from "draft-js-plugins-editor";
+import * as React from "react";
+import * as Draft from "draft-js";
+import Prism from "prismjs";
+import styled from "styled-components";
 
-import createMarkdownPlugin from 'draft-js-markdown-plugin';
-import createPrismPlugin from 'draft-js-prism-plugin';
-import { fonts, colors } from '../utils/defaultStyles';
-import './draft.css';
-import './ganymede.css';
+import createMarkdownPlugin from "draft-js-markdown-plugin";
+import createPrismPlugin from "draft-js-prism-plugin";
+import { fonts, colors } from "../utils/defaultStyles";
+import "./draft.css";
+import "./ganymede.css";
 
 const EditorWrapper = styled.div`
   padding-left: 0px;
@@ -23,7 +23,7 @@ const EditorWrapper = styled.div`
     border: 0;
     background: none;
     color: ${colors.blue700};
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
       sans-serif;
   }
 `;
@@ -39,8 +39,8 @@ interface IEditorProps {
   editorState: Draft.EditorState;
   onChange: (e: Draft.EditorState) => void;
   toolbar?: boolean;
-  handleKeyCommand: (c: string, e: Draft.EditorState) => 'handled' | 'not-handled';
-  keyBindingFn: (e: any) => string;
+  handleKeyCommand?: (c: string, e: Draft.EditorState) => "handled" | "not-handled";
+  keyBindingFn?: (e: any) => string;
 }
 
 interface IEditorState {
@@ -49,7 +49,7 @@ interface IEditorState {
 }
 
 export default class DWEditor extends React.Component<IEditorProps, IEditorState> {
-  static displayName = 'DWEditor';
+  static displayName = "DWEditor";
 
   static defaultProps = {
     toolbar: false
@@ -89,16 +89,16 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
 
     // If the user changes block type before entering any text, we can
     // either style the placeholder or hide it. Let's just hide it now.
-    let className = 'RichEditor-editor';
+    let className = "RichEditor-editor";
     var contentState = editorState.getCurrentContent();
     if (!contentState.hasText()) {
       if (
         contentState
           .getBlockMap()
           .first()
-          .getType() !== 'unstyled'
+          .getType() !== "unstyled"
       ) {
-        className += ' RichEditor-hidePlaceholder';
+        className += " RichEditor-hidePlaceholder";
       }
     }
 
@@ -127,7 +127,7 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
 // Custom overrides for "code" style.
 const styleMap = {
   CODE: {
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    backgroundColor: "rgba(0, 0, 0, 0.05)",
     fontFamily: fonts.monospace,
     fontSize: 14,
     padding: 2
@@ -136,8 +136,8 @@ const styleMap = {
 
 function getBlockStyle(block) {
   switch (block.getType()) {
-    case 'blockquote':
-      return 'RichEditor-blockquote';
+    case "blockquote":
+      return "RichEditor-blockquote";
     default:
       return null;
   }

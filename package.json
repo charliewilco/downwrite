@@ -18,7 +18,7 @@
   },
   "prettier": {
     "printWidth": 85,
-    "singleQuote": true,
+    "singleQuote": false,
     "tabWidth": 2,
     "useTabs": false,
     "bracketSpacing": true,
@@ -38,13 +38,6 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  },
-  "bolt": {
-    "workspaces": [
-      "client",
-      "api",
-      "e2e"
-    ]
   },
   "workspaces": [
     "client",

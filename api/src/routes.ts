@@ -1,23 +1,23 @@
-import * as PostController from './controllers/posts';
-import * as UserController from './controllers/users';
-import * as PostModel from './models/Post';
-import * as UserModel from './models/User';
+import * as PostController from "./controllers/posts";
+import * as UserController from "./controllers/users";
+import * as PostModel from "./models/Post";
+import * as UserModel from "./models/User";
 
 const cors = {
-  origin: ['*'],
+  origin: ["*"],
   credentials: true
 };
 
 const auth = {
-  strategy: 'jwt'
+  strategy: "jwt"
 };
 
 const urlCreator = (path: string) => `/api${path}`;
 
 const Routes = [
   {
-    method: 'GET',
-    path: '/posts',
+    method: "GET",
+    path: "/posts",
     handler: PostController.getPosts,
     config: {
       cors,
@@ -25,8 +25,8 @@ const Routes = [
     }
   },
   {
-    method: 'POST',
-    path: '/posts',
+    method: "POST",
+    path: "/posts",
     handler: PostController.createPost,
     config: {
       validate: {
@@ -37,8 +37,8 @@ const Routes = [
     }
   },
   {
-    method: 'GET',
-    path: '/posts/{id}',
+    method: "GET",
+    path: "/posts/{id}",
     handler: PostController.getSinglePost,
     config: {
       cors,
@@ -46,16 +46,16 @@ const Routes = [
     }
   },
   {
-    method: 'GET',
-    path: '/posts/preview/{id}',
+    method: "GET",
+    path: "/posts/preview/{id}",
     handler: PostController.getMarkdown,
     config: {
       cors
     }
   },
   {
-    method: 'DELETE',
-    path: '/posts/{id}',
+    method: "DELETE",
+    path: "/posts/{id}",
     handler: PostController.deletePost,
     config: {
       cors,
@@ -63,8 +63,8 @@ const Routes = [
     }
   },
   {
-    method: 'PUT',
-    path: '/posts/{id}',
+    method: "PUT",
+    path: "/posts/{id}",
     handler: PostController.updatePost,
     config: {
       validate: {
@@ -75,8 +75,8 @@ const Routes = [
     }
   },
   {
-    method: 'POST',
-    path: '/users',
+    method: "POST",
+    path: "/users",
     handler: UserController.createUser,
     config: {
       pre: [{ method: UserController.verifyUniqueUser }],
@@ -87,22 +87,22 @@ const Routes = [
     }
   },
   {
-    method: 'GET',
-    path: '/users/{id}',
+    method: "GET",
+    path: "/users",
     handler: UserController.getDetails,
     config: {
       cors,
-      auth: false
+      auth
     }
   },
   {
-    method: 'POST',
-    path: '/users/authenticate',
+    method: "POST",
+    path: "/users/authenticate",
     config: {
       pre: [
         {
           method: UserController.verifyCredentials,
-          assign: 'user'
+          assign: "user"
         }
       ],
       handler: UserController.authenticateUser,

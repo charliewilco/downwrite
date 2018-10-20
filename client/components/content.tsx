@@ -1,29 +1,33 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import format from 'date-fns/format';
-import isDate from 'date-fns/is_date';
-import Markdown from 'react-markdown';
-import 'prismjs';
-import CodeBlock from './code-block';
-import './ganymede.css';
-import { colors, fonts } from '../utils/defaultStyles';
+import * as React from "react";
+import styled from "styled-components";
+import format from "date-fns/format";
+import isDate from "date-fns/is_date";
+import Markdown from "react-markdown";
+import "prismjs";
+import CodeBlock from "./code-block";
+import "./ganymede.css";
+import { colors, fonts } from "../utils/defaultStyles";
 
 const WrapperExtended = styled.div`
   padding: 32px 0;
   max-width: 512px;
   margin-left: auto;
   margin-right: auto;
-  font-family: ${fonts.serif};
+  font-family: ${fonts.sans};
 `;
 
 const ContentHeader = styled.header`
   text-align: center;
   margin-bottom: 32px;
+  h1 {
+    text-align: center;
+    font-weight: 400;
+  }
 `;
 
 const ContentTime = styled.time`
-  font-style: italic;
   opacity: 0.75;
+  font-size: small;
 `;
 
 const ContentBody = styled.section`
@@ -125,7 +129,7 @@ const Content: React.SFC<IContentProps> = ({
           <ContentTime
             data-testid="PREVIEW_ENTRTY_META"
             dateTime={isDate(dateAdded) && dateAdded.toString()}>
-            {format(dateAdded, 'DD MMMM YYYY')}
+            {format(dateAdded, "DD MMMM YYYY")}
           </ContentTime>
         )}
       </ContentHeader>

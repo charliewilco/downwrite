@@ -45,13 +45,13 @@ const LoginContainer: React.SFC<{ children: (x: boolean) => React.ReactNode }> =
   children
 }) => (
   <Toggle defaultOpen>
-    {(isOpen: boolean, setInstance: (x: boolean) => void) => (
+    {({ isOpen, onSetInstance }) => (
       <LoginFormWrapper>
         <ToggleButtonContainer>
-          <ToggleLoginButton active={!isOpen} onClick={() => setInstance(false)}>
+          <ToggleLoginButton active={!isOpen} onClick={() => onSetInstance(false)}>
             Register
           </ToggleLoginButton>
-          <ToggleLoginButton active={isOpen} onClick={() => setInstance(true)}>
+          <ToggleLoginButton active={isOpen} onClick={() => onSetInstance(true)}>
             Login
           </ToggleLoginButton>
         </ToggleButtonContainer>

@@ -1,24 +1,24 @@
-import * as React from 'react';
-import * as Dwnxt from '../types/downwrite';
-import Head from 'next/head';
-import styled from 'styled-components';
-import orderBy from 'lodash/orderBy';
-import isEmpty from 'lodash/isEmpty';
-import 'universal-fetch';
-import DeleteModal from '../components/delete-modal';
-import PostList from '../components/post-list';
-import Loading from '../components/loading';
-import EmptyPosts from '../components/empty-posts';
-import InvalidToken from '../components/invalid-token';
-import { getToken, createHeader } from '../utils/responseHandler';
-import { POST_ENDPOINT } from '../utils/urls';
+import * as React from "react";
+import * as Dwnxt from "../types/downwrite";
+import Head from "next/head";
+import styled from "styled-components";
+import orderBy from "lodash/orderBy";
+import isEmpty from "lodash/isEmpty";
+import "universal-fetch";
+import DeleteModal from "../components/delete-modal";
+import PostList from "../components/post-list";
+import Loading from "../components/loading";
+import EmptyPosts from "../components/empty-posts";
+import InvalidToken from "../components/invalid-token";
+import { getToken, createHeader } from "../utils/responseHandler";
+import { POST_ENDPOINT } from "../utils/urls";
 
 type Res = Dwnxt.IPostError | Dwnxt.IPost[];
 
 interface DashboardPr {
   entries: Dwnxt.IPost[];
   token: string;
-  closeNav: Function;
+  closeNav: () => void;
 }
 
 interface DashboardState {
@@ -34,7 +34,7 @@ const ListContainer = styled.div`
 `;
 
 export default class Dashboard extends React.Component<DashboardPr, DashboardState> {
-  static displayName = 'Dashboard';
+  static displayName = "Dashboard";
 
   static defaultProps = {
     entries: []
@@ -43,7 +43,7 @@ export default class Dashboard extends React.Component<DashboardPr, DashboardSta
   static async getInitialProps({ req, query }) {
     const { token } = getToken(req, query);
 
-    const config = createHeader('GET', token);
+    const config = createHeader("GET", token);
 
     const entries = await fetch(POST_ENDPOINT, config).then(res => res.json());
 
@@ -57,25 +57,25 @@ export default class Dashboard extends React.Component<DashboardPr, DashboardSta
     loaded: this.props.entries.length > 0,
     modalOpen: false,
     selectedPost: {} as Dwnxt.IPost,
-    error: ''
+    error: ""
   };
 
   // TODO: Fix this
   getPosts = async (close?: boolean) => {
     const { token } = this.props;
-    const config = createHeader('GET', token);
+    const config = createHeader("GET", token);
 
     const response = await fetch(POST_ENDPOINT, config);
     const posts: Res = await response.json();
 
     if (Array.isArray(posts) || response.ok) {
       return this.setState({
-        entries: orderBy(posts, ['dateAdded'], ['desc']),
+        entries: orderBy(posts, ["dateAdded"], ["desc"]),
         selectedPost: {},
         loaded: true,
         modalOpen: !close
       });
-    } else if (typeof posts === 'object') {
+    } else if (typeof posts === "object") {
       return this.setState({ error: posts.message, loaded: true, selectedPost: {} });
     }
   };
@@ -86,16 +86,12 @@ export default class Dashboard extends React.Component<DashboardPr, DashboardSta
     }
   }
 
-  componentDidUpdate() {
-    console.log(this.state);
-  }
-
   closeUIModal = () => this.setState({ modalOpen: false });
 
   // TODO: Fix this
   onDelete = async (post: Dwnxt.IPost) => {
     const { token } = this.props;
-    const config = createHeader('DELETE', token);
+    const config = createHeader("DELETE", token);
 
     const response = await fetch(`${POST_ENDPOINT}/${post.id}`, config);
 
@@ -113,6 +109,7 @@ export default class Dashboard extends React.Component<DashboardPr, DashboardSta
   // should be opened at this level and be handed a token and post to delete
   render() {
     const { modalOpen, loaded, entries, error, selectedPost } = this.state;
+
     return (
       <>
         <Head>

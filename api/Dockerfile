@@ -1,17 +1,19 @@
 FROM mhart/alpine-node:10
 
-MAINTAINER Talento90
+WORKDIR /usr/src/app
 
-# create a specific user to run this container
-RUN adduser -S -D user-app
+COPY package.json ./
 
-# add files to container
-ADD . /app
+# # add files to container
+# ADD . /app
 
-# specify the working directory
-WORKDIR app
+# # specify the working directory
+# WORKDIR /app
 
-RUN chmod -R 777 .
+# RUN chmod -R 777 .
+
+
+COPY . .
 
 # build process
 RUN apk --no-cache --virtual build-dependencies add \
@@ -23,10 +25,9 @@ RUN npm install
 RUN npm run build
 RUN npm prune --production
 
-# run the container using a specific user
-USER user-app
+ENV PORT=4000
+ENV MONGO_URL=mongo:27017
+ENV HOST=0.0.0.0
+EXPOSE 4000
 
-EXPOSE 8080
-
-# run application
 CMD ["npm", "start"]

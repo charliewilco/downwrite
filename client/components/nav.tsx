@@ -1,15 +1,15 @@
-import * as React from 'react';
-import Link from 'next/link';
-import styled, { keyframes } from 'styled-components';
-import { withAuth } from './auth';
-import User from './user';
-import Fetch from './collection-fetch';
-import { SignoutIcon } from './icons';
-import { SidebarEmpty } from './empty-posts';
-import SidebarPosts from './sidebar-posts';
-import TouchOutside from './touch-outside';
-import LockScroll from './lock-scroll';
-import { colors } from '../utils/defaultStyles';
+import * as React from "react";
+import Link from "next/link";
+import styled, { keyframes } from "styled-components";
+import { withAuth } from "./auth";
+import User from "./user";
+import Fetch from "./collection-fetch";
+import { SignoutIcon } from "./icons";
+import { SidebarEmpty } from "./empty-posts";
+import SidebarPosts from "./sidebar-posts";
+import TouchOutside from "./touch-outside";
+import LockScroll from "./lock-scroll";
+import { colors, fonts } from "../utils/defaultStyles";
 
 const NavColumn = styled.div`
   display: flex;
@@ -28,7 +28,7 @@ const StyledSignoutIcon = styled(SignoutIcon)`
 
 const NavButton = styled.button`
   display: block;
-  color: ${props => (props.theme.night ? 'white' : '#757575')};
+  color: ${props => (props.theme.night ? "white" : "#757575")};
   font-size: 12px;
   border: 0;
   appearance: none;
@@ -101,11 +101,13 @@ const NavTray = styled.footer`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  font-family: ${fonts.sans};
 `;
 
 const NavItem = styled.a`
   display: block;
   color: ${colors.gray300};
+  font-family: ${fonts.sans};
   font-size: 16px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -142,7 +144,7 @@ const AuthedFetch = withAuth(Fetch);
 const AuthedUserBlock = withAuth(User);
 
 class NavBar extends React.Component<NavigationProps, any> {
-  static displayName = 'NavigationBar';
+  static displayName = "NavigationBar";
 
   componentDidUpdate(prevProps) {
     if (prevProps.pathname !== this.props.pathname) {

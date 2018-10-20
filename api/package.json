@@ -9,14 +9,13 @@
     "predev": "yarn build",
     "deploy": "now && now alias",
     "start": "node dist/server.js",
-    "up": "docker-compose up",
-    "stop": "docker-compose stop",
     "dev": "nodemon",
     "test": "jest",
     "documentation": "typedoc --theme minimal --out ./docs ./src/**/*.ts"
   },
   "license": "MIT",
   "dependencies": {
+    "@charliewilco/sanitize-object": "^1.0.1",
     "@types/bcrypt": "^2.0.0",
     "@types/boom": "^7.2.0",
     "@types/hapi": "^17.0.19",
@@ -32,12 +31,15 @@
     "good-squeeze": "^5.1.0",
     "hapi": "^17.6.0",
     "hapi-auth-jwt2": "^8.1.0",
+    "inert": "^5.1.0",
     "joi": "^13.6.0",
     "jsonwebtoken": "^8.3.0",
+    "lout": "^11.1.0",
     "markdown-draft-js": "^1.0.1",
     "mongoose": "^5.2.17",
     "typescript": "^3.0.3",
-    "uuid": "^3.1.0"
+    "uuid": "^3.1.0",
+    "vision": "^5.4.0"
   },
   "devDependencies": {
     "jest": "^22.4.0",
@@ -56,6 +58,7 @@
       }
     },
     "env": {
+      "PORT": 4411,
       "NODE_ENV": "production",
       "SECRET_KEY": "@dw-key",
       "DB_USER": "@dw-db-user",
@@ -72,7 +75,7 @@
     "watch": [
       "./src/**/*.ts"
     ],
-    "exec": "ts-node ./src/server.ts"
+    "exec": "ts-node --no-cache ./src/server.ts"
   },
   "repository": "charlespeters/downwrite",
   "author": "Charles ⚡ <charlespeters42@gmail.com>"

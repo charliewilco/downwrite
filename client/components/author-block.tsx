@@ -1,8 +1,8 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import Link from 'next/link';
-import Avatar from './avatar';
-import { fonts } from '../utils/defaultStyles';
+import * as React from "react";
+import styled from "styled-components";
+import Link from "next/link";
+import Avatar from "./avatar";
+import { fonts } from "../utils/defaultStyles";
 
 const AuthorContainer = styled.aside`
   display: block;
@@ -20,7 +20,7 @@ const AuthorHeadline = styled.h6`
   margin-left: 16px;
 `;
 
-const Header = styled.header`
+const AuthorHeader = styled.header`
   display: flex;
   align-items: center;
 `;
@@ -52,10 +52,10 @@ interface IAuthorProps {
 
 const Author: React.SFC<IAuthorProps> = ({ colors, authed, name }) => (
   <AuthorContainer>
-    <Header>
+    <AuthorHeader>
       <Avatar colors={colors} />
       <AuthorHeadline>Post from {name}</AuthorHeadline>
-    </Header>
+    </AuthorHeader>
     {!authed && (
       <>
         <Rule />

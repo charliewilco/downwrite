@@ -1,10 +1,10 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import Link from 'next/link';
-import Router from 'next/router';
-import Wrapper from './wrapper';
-import Button from './button';
-import Nib from './nib';
+import * as React from "react";
+import styled from "styled-components";
+import Link from "next/link";
+import Router from "next/router";
+import Wrapper from "./wrapper";
+import Button from "./button";
+import Nib from "./nib";
 
 const EmptyBlockRight = styled.div`
   width: 100%;
@@ -38,12 +38,12 @@ const EmptyTitle = styled.h4`
 
 export const SidebarEmpty = () => (
   <Flex>
-    <Button onClick={() => Router.push('/new')}>Get Started</Button>
+    <Button onClick={() => Router.push("/new")}>Get Started</Button>
   </Flex>
 );
 
 export default () => (
-  <Wrapper>
+  <Wrapper data-testid="NO_ENTRIES_PROMPT">
     <Flex>
       <EmptyBlockRight>
         <Nib />

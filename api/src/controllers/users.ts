@@ -1,35 +1,12 @@
-import * as Hapi from 'hapi';
-import * as Boom from 'boom';
-import * as uuid from 'uuid/v4';
-import * as bcrypt from 'bcrypt';
-import { UserModel as User, IUser } from '../models/User';
-import { createToken } from '../util/token';
+import * as Hapi from "hapi";
+import * as Boom from "boom";
+import * as uuid from "uuid/v4";
+import * as bcrypt from "bcrypt";
+import * as sanitized from "@charliewilco/sanitize-object";
+import { UserModel as User, IUser } from "../models/User";
+import { createToken } from "../util/token";
 
-export interface ICredentials extends Hapi.AuthCredentials {
-  id: string;
-  user: string;
-}
-
-export interface IRequestAuth extends Hapi.RequestAuth {
-  credentials: ICredentials;
-}
-
-export interface ILoginRequest extends Hapi.Request {
-  auth: IRequestAuth;
-  payload: {
-    user: string;
-    password: string;
-  };
-}
-
-export interface IRegisterRequest extends Hapi.Request {
-  auth: IRequestAuth;
-  payload: {
-    username?: string;
-    email?: string;
-    password: string;
-  };
-}
+import { IRequest, IRegisterRequest, ILoginRequest } from "./types";
 
 export const createUser = async (
   request: IRegisterRequest,
@@ -66,8 +43,16 @@ export const authenticateUser = (request: Hapi.Request, h: Hapi.ResponseToolkit)
   return h.response({ token: createToken(request.pre.user) }).code(201);
 };
 
-export const getDetails = (request: Hapi.Request, h: Hapi.ResponseToolkit) =>
-  `Details`;
+export const getDetails = async (
+  request: IRequest,
+  h: Hapi.ResponseToolkit
+): Promise<IUser> => {
+  const { user } = request.auth.credentials;
+
+  const foundUser = await User.findById(user, ["username", "email"]).lean();
+
+  return foundUser;
+};
 
 export const verifyUniqueUser = async (request: IRegisterRequest) => {
   const user: IUser = await User.findOne({
@@ -76,10 +61,10 @@ export const verifyUniqueUser = async (request: IRegisterRequest) => {
 
   if (user) {
     if (user.username === request.payload.username) {
-      return Boom.badRequest('Username taken');
+      return Boom.badRequest("Username taken");
     }
     if (user.email === request.payload.email) {
-      return Boom.badRequest('Email taken');
+      return Boom.badRequest("Email taken");
     }
   }
 
@@ -96,12 +81,8 @@ export const verifyCredentials = async (request: ILoginRequest) => {
   if (user) {
     const isValid = await bcrypt.compare(password, user.password);
 
-    if (isValid) {
-      return user;
-    } else {
-      return Boom.badRequest('Incorrect password!');
-    }
+    return isValid ? user : Boom.badRequest("Incorrect password!");
   } else {
-    return Boom.badRequest('Incorrect username or email!');
+    return Boom.badRequest("Incorrect username or email!");
   }
 };

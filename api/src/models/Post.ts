@@ -1,5 +1,5 @@
-import * as Mongoose from 'mongoose';
-import * as Joi from 'joi';
+import * as Mongoose from "mongoose";
+import * as Joi from "joi";
 
 const PostSchema = new Mongoose.Schema({
   id: String,
@@ -9,7 +9,7 @@ const PostSchema = new Mongoose.Schema({
   public: Boolean,
   dateAdded: Date,
   dateModified: Date,
-  user: { type: Mongoose.Schema.Types.ObjectId, ref: 'User' }
+  user: { type: Mongoose.Schema.Types.ObjectId, ref: "User" }
 });
 
 export interface IPost extends Mongoose.Document {
@@ -20,10 +20,11 @@ export interface IPost extends Mongoose.Document {
   public: boolean;
   dateAdded: Date;
   dateModified: Date;
+  excerpt?: string;
   user: any;
 }
 
-export const PostModel = Mongoose.model<IPost>('Post', PostSchema);
+export const PostModel = Mongoose.model<IPost>("Post", PostSchema);
 
 export const validPost = {
   id: Joi.string(),

@@ -1,10 +1,11 @@
-import * as React from 'react';
-import Link from 'next/link';
-import styled from 'styled-components';
+import * as React from "react";
+import Link from "next/link";
+import styled from "styled-components";
 
 const PreviewAnchor = styled.a`
   display: block;
   font-size: 12px;
+  line-height: 1;
 `;
 
 const PreviewLink: React.SFC<{ publicStatus: boolean; id: string }> = ({
@@ -14,7 +15,8 @@ const PreviewLink: React.SFC<{ publicStatus: boolean; id: string }> = ({
   publicStatus && (
     <Link
       prefetch
-      href={{ pathname: '/preview', query: { id } }}
+      passHref
+      href={{ pathname: "/preview", query: { id } }}
       as={`/${id}/preview`}>
       <PreviewAnchor>Preview</PreviewAnchor>
     </Link>

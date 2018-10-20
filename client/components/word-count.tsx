@@ -1,11 +1,13 @@
-import * as React from 'react';
-import * as Draft from 'draft-js';
-import styled from 'styled-components';
+import * as React from "react";
+import * as Draft from "draft-js";
+import styled from "styled-components";
+import { fonts } from "../utils/defaultStyles";
 
 const Meta = styled.div`
   opacity: 0.5;
   font-size: small;
   margin-bottom: 8px;
+  font-family: ${fonts.sans};
 `;
 
 const WordCounterContainer = styled.div`
@@ -23,7 +25,7 @@ interface IWordCounterers {
 }
 
 export default class WordCounter extends React.Component<IWordCounterers, any> {
-  static displayName = 'WordCounter';
+  static displayName = "WordCounter";
 
   getSelectionCount(editorState: Draft.EditorState): number {
     let selectionState = editorState.getSelection();
@@ -39,14 +41,14 @@ export default class WordCounter extends React.Component<IWordCounterers, any> {
 
   createWordCount(str: string): number {
     let regex = /(?:\r\n|\r|\n)/g; // new line, carriage return, line feed
-    let cleanString = str.replace(regex, ' ').trim(); // replace above characters w/ space
+    let cleanString = str.replace(regex, " ").trim(); // replace above characters w/ space
     let wordArray = cleanString.match(/\S+/g); // matches words according to whitespace
 
     return wordArray ? wordArray.length : 0;
   }
 
   getWordCount(editorState: Draft.EditorState): number {
-    let plainText = editorState.getCurrentContent().getPlainText('');
+    let plainText = editorState.getCurrentContent().getPlainText("");
 
     return this.createWordCount(plainText);
   }
@@ -62,9 +64,7 @@ export default class WordCounter extends React.Component<IWordCounterers, any> {
     return (
       <WordCounterContainer>
         <Meta>
-          <small>
-            <pre>Word Count: {displayCount}</pre>
-          </small>
+          <small>Word Count: {displayCount}</small>
         </Meta>
       </WordCounterContainer>
     );

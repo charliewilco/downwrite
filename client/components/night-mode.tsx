@@ -1,9 +1,9 @@
-import * as React from 'react';
-import styled, { ThemeProvider, injectGlobal } from 'styled-components';
-import Checkbox from './checkbox';
-import { colors, nightTheme, dayTheme } from '../utils/defaultStyles';
+import * as React from "react";
+import styled, { ThemeProvider, injectGlobal } from "styled-components";
+import Checkbox from "./checkbox";
+import * as DefaultStyles from "../utils/defaultStyles";
 
-const NIGHT_MODE: string = 'NightMDX';
+const NIGHT_MODE: string = "NightMDX";
 
 const NightContainer = styled.div`
   padding-top: 16px;
@@ -11,8 +11,9 @@ const NightContainer = styled.div`
 `;
 
 const NightToggle = styled.div`
-  color: ${colors.text};
+  color: ${DefaultStyles.colors.text};
   padding: 8px;
+  font-family: ${DefaultStyles.fonts.sans};
   margin: 16px 8px;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
   background: white;
@@ -57,7 +58,7 @@ injectGlobal`
   .NightMode .PreviewBody blockquote,
   .NightMode blockquote {
     background: none;
-    color: ${colors.blue100} !important;
+    color: ${DefaultStyles.colors.blue100} !important;
   }
 `;
 
@@ -65,21 +66,21 @@ export default class NightModeContainer extends React.Component<
   INightModeProps,
   INightModeState
 > {
-  static displayName = 'NightModeContainer';
+  static displayName = "NightModeContainer";
 
   state = {
     night: false
   };
 
   componentDidMount() {
-    let night = JSON.parse(localStorage.getItem('nightMode')) || false;
+    let night = JSON.parse(localStorage.getItem("nightMode")) || false;
     this.setState({ night });
   }
 
   setNightMode = (status: boolean) => {
     const { body } = document;
     if (body instanceof HTMLElement) {
-      localStorage.setItem('nightMode', status.toString());
+      localStorage.setItem("nightMode", status.toString());
 
       status ? body.classList.add(NIGHT_MODE) : body.classList.remove(NIGHT_MODE);
     }
@@ -106,7 +107,8 @@ export default class NightModeContainer extends React.Component<
     return (
       <NightModeContext.Provider
         value={{ night, action: { onChange: this.onChange } }}>
-        <ThemeProvider theme={night ? nightTheme : dayTheme}>
+        <ThemeProvider
+          theme={night ? DefaultStyles.NIGHT_THEME : DefaultStyles.DAY_THEME}>
           {children}
         </ThemeProvider>
       </NightModeContext.Provider>
@@ -117,7 +119,7 @@ export default class NightModeContainer extends React.Component<
 export const NightModeTrigger: React.SFC<INightModeProps> = ({ children }) => (
   <NightModeContext.Consumer>
     {(context: INightModeContext) => (
-      <NightContainer className={context.night ? 'NightMode' : ''}>
+      <NightContainer className={context.night ? "NightMode" : ""}>
         <NightToggle>
           <NightController>
             <Checkbox checked={context.night} onChange={context.action.onChange} />
