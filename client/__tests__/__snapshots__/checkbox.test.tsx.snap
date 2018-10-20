@@ -16,10 +16,12 @@ exports[`<Check /> matches snapshot 1`] = `
 
 <label
   data-testid="TEST_CHECKBOX_LABEL"
+  for="check"
 >
   <input
     class="c0"
     data-testid="TEST_CHECKBOX"
+    id="check"
     type="checkbox"
   />
 </label>

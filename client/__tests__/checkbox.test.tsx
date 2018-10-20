@@ -4,16 +4,16 @@ import Check from "../components/checkbox";
 const checkFire = jest.fn();
 
 let { getByTestId, container } = render(
-  <label data-testid="TEST_CHECKBOX_LABEL">
-    <Check data-testid="TEST_CHECKBOX" />
+  <label data-testid="TEST_CHECKBOX_LABEL" htmlFor="check">
+    <Check data-testid="TEST_CHECKBOX" id="check" />
   </label>
 );
 
 describe("<Check />", () => {
   it("checks", () => {
-    expect(container.querySelector("input:checked")).not.toBeInTheDOM();
+    expect(getByTestId("TEST_CHECKBOX")).toBeInTheDOM();
     fireEvent.click(getByTestId("TEST_CHECKBOX_LABEL"));
-    expect(container.querySelector("input:checked")).toBeInTheDOM();
+    expect(getByTestId("TEST_CHECKBOX").checked).toBe(true);
   });
 
   it("matches snapshot", () => {
