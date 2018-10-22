@@ -1,11 +1,3 @@
-# Downwrite
+# Downwrite Integration Tests
 
-## About
-
-## Using Puppeteer API
-
-Short hand: `page` is just a representation o
-
-```js
-async () => await page;
-```
+See docs [here](https://github.com/charliewilco/downwrite#integration-testing)
