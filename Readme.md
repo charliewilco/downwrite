@@ -34,16 +34,16 @@ yarn
 
 ### Client
 
-![Logos for Related Projects](./github/Client.png)
+![Logos for Related Projects](.github/Client.png)
 
 ### API
 
-![Logos for Related Projects](./github/API.png)
+![Logos for Related Projects](.github/API.png)
 
 ### Integration Testing
 
-![Logos for Related Projects](./github/Integration.png)
+![Logos for Related Projects](.github/Integration.png)
 
 ### Workflow
 
-![Logos for Related Projects](./github/Workflow.png)
+![Logos for Related Projects](.github/Workflow.png)
