@@ -1,7 +1,7 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import Toggle from './toggle';
-import { colors } from '../utils/defaultStyles';
+import * as React from "react";
+import styled from "styled-components";
+import Toggle from "./toggle";
+import { colors } from "../utils/defaultStyles";
 
 const SelectedTitle = styled.h2`
   margin-bottom: 32px;
@@ -24,9 +24,9 @@ const ToggleLoginButton = styled.button`
   background: inherit;
   box-sizing: inherit;
   border-bottom-color: ${(props: { active: boolean }) =>
-    props.active ? colors.yellow700 : 'transparent'};
+    props.active ? colors.yellow700 : "transparent"};
   color: ${(props: { active: boolean }) =>
-    props.active ? colors.yellow700 : 'inherit'};
+    props.active ? colors.yellow700 : "inherit"};
 `;
 
 const ToggleButtonContainer = styled.div`
@@ -48,17 +48,23 @@ const LoginContainer: React.SFC<{ children: (x: boolean) => React.ReactNode }> =
     {({ isOpen, onSetInstance }) => (
       <LoginFormWrapper>
         <ToggleButtonContainer>
-          <ToggleLoginButton active={!isOpen} onClick={() => onSetInstance(false)}>
+          <ToggleLoginButton
+            data-testid="LOGIN_REGISTER_BUTTON"
+            active={!isOpen}
+            onClick={() => onSetInstance(false)}>
             Register
           </ToggleLoginButton>
-          <ToggleLoginButton active={isOpen} onClick={() => onSetInstance(true)}>
+          <ToggleLoginButton
+            data-testid="LOGIN_LOGIN_BUTTON"
+            active={isOpen}
+            onClick={() => onSetInstance(true)}>
             Login
           </ToggleLoginButton>
         </ToggleButtonContainer>
         <div>
           <header style={{ padding: 16 }}>
-            <SelectedTitle>
-              {isOpen ? 'Welcome Back!' : 'Sign Up as a New User'}
+            <SelectedTitle data-testid="LOGIN_TITLE">
+              {isOpen ? "Welcome Back!" : "Sign Up as a New User"}
             </SelectedTitle>
           </header>
           {children(isOpen)}

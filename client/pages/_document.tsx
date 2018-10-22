@@ -1,7 +1,6 @@
-import Document, { Head, Main, NextScript } from 'next/document';
-import Manifest from 'next-manifest/manifest';
-import { ServerStyleSheet } from 'styled-components';
-import { __IS_DEV__ } from '../utils/dev';
+import Document, { Head, Main, NextScript } from "next/document";
+import Manifest from "next-manifest/manifest";
+import { ServerStyleSheet } from "styled-components";
 
 interface WithStyleTags {
   styleTags: any;
@@ -33,22 +32,6 @@ export default class MyDocument extends Document<WithStyleTags> {
           />
           <Manifest href="/static/manifest/manifest.json" themeColor="#4FA5C2" />
           <link rel="stylesheet" href="/_next/static/style.css" />
-          {!__IS_DEV__ && (
-            <>
-              <link
-                rel="preload"
-                as="style"
-                type="text/css"
-                href="https://cloud.typography.com/7107912/7996792/css/fonts.css"
-              />
-              <link
-                rel="stylesheet"
-                type="text/css"
-                href="https://cloud.typography.com/7107912/7996792/css/fonts.css"
-              />
-            </>
-          )}
-
           <link rel="icon" href="/static/favicon.ico" />
         </Head>
         <body>

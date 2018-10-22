@@ -17,5 +17,5 @@
     "baseUrl": ".",
     "lib": ["dom", "es2016"]
   },
-  "exclude": ["__tests__"]
+  "exclude": ["__tests__", "server.js", "next.config.js"]
 }
