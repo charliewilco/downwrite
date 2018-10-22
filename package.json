@@ -42,7 +42,7 @@
   "workspaces": [
     "client",
     "api",
-    "e2e"
+    "integration"
   ],
   "license": "MIT"
 }

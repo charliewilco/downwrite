@@ -1,0 +1,16 @@
+{
+  "name": "integration",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^23.6.0",
+    "jest-dev-server": "^3.4.0",
+    "puppeteer": "^1.9.0"
+  },
+  "jest": {
+    "globalSetup": "<rootDir>/config/setup",
+    "globalTeardown": "<rootDir>/config/teardown"
+  }
+}
