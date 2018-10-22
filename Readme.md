@@ -150,7 +150,7 @@ This approach accomplishes two things:
 
 ![Logos for Related Projects](.github/Workflow.png)
 
-Working on this project uses Travis to run the tests and deploy the successfully built workspaces to their given endpoints.
+Working on this project uses Travis to run the tests and deploy the successfully built workspaces to their given endpoints. It uses [`now`](https://zeit.co/now) for deployments for easy rollback and immutable deployments.
 
 ## License
 
