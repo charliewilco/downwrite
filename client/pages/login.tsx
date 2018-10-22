@@ -1,11 +1,11 @@
-import * as React from 'react';
-import Head from 'next/head';
-import styled from 'styled-components';
-import LoginContainer from '../components/login-container';
-import Landing from '../components/landing';
-import Features from '../components/landing-features';
-import Register from '../components/register';
-import Login from '../components/login-form';
+import * as React from "react";
+import Head from "next/head";
+import styled from "styled-components";
+import LoginContainer from "../components/login-container";
+import Landing from "../components/landing";
+import Features from "../components/landing-features";
+import Register from "../components/register";
+import Login from "../components/login-form";
 
 const HomeContainer = styled.main`
   display: flex;
@@ -49,7 +49,7 @@ export default class Home extends React.Component<IHomeProps, any> {
         <Head>
           <title>Downwrite</title>
         </Head>
-        <HomeContainer>
+        <HomeContainer data-testid="LOGIN_PAGE_CONTAINER">
           <Landing>
             <Features />
           </Landing>
