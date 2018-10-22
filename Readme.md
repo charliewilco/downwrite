@@ -113,9 +113,9 @@ You can see the documented endpoints at `http://localhost:3000/docs`
 
 ### Integration Testing 🌈🦁🐛
 
-#### Working on the Project
-
 ![Logos for Related Projects](.github/Integration.png)
+
+#### Working on the Project
 
 ```bash
 yarn workspace integration test
