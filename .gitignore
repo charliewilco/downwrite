@@ -18,3 +18,4 @@ npm-debug.log
 package-lock.json
 dist
 private.key
+api/docs

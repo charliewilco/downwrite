@@ -34,7 +34,7 @@ This is meant to be a simple writing application with some key features:
 
 ## Setup
 
-This project uses [Yarn Workspaces](https://yarnpkg.com/blog/2017/08/02/introducing-workspaces/)
+This project uses [Yarn Workspaces](https://yarnpkg.com/blog/2017/08/02/introducing-workspaces/) and is written mostly with [TypeScript](https://www.typescriptlang.org/).
 
 ```bash
 brew cask install yarn
@@ -96,6 +96,8 @@ yarn workspace api dev
 This project depends on MongoDB so if you're not using Docker locally, you should see this [gist](https://gist.github.com/nrollr/9f523ae17ecdbb50311980503409aeb3) on how to setup MongoDB on your machine.
 
 #### Info
+
+Using hapi allows you to organize your endpoints very easiy and all the controllers are async so making database queries are fast and clean. All the routes are kept in `./api/src/routes.ts`.
 
 You can see the documented endpoints at `http://localhost:3000/docs`
 
