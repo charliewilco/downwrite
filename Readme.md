@@ -25,61 +25,25 @@ These shortcuts are almost as ubiquitous as `cmd + b` for bold or `cmd + i` for 
 
 ## Setup
 
-This project uses [Yarn Workspaces](https://yarnpkg.com/blog/2017/08/02/introducing-workspaces/) and [Bolt](https://github.com/boltpkg/bolt)
+This project uses [Yarn Workspaces](https://yarnpkg.com/blog/2017/08/02/introducing-workspaces/)
 
 ```bash
 brew cask install yarn
 yarn
 ```
 
-## Services
+### Client
 
-### Stack
+![Logos for Related Projects](./github/Client.png)
 
-- React
-- Draft.js
-- Next.js
-- styled-components
-- TypeScript
-- Hapi
-- MongoDB
-- JWT
+### API
 
-### Contents
+![Logos for Related Projects](./github/API.png)
 
-- `client` Client - React + Next.js + Express + Draft.js
-- `api` REST API - Hapi.js
-- `e2e` End to End Tests - Jest + Puppeteer
+### Integration Testing
 
-### Upcoming
+![Logos for Related Projects](./github/Integration.png)
 
-- `graph` - GraphQL API - Express + Mongo
-- `@downwrite/markings` Helpers for Markdown - Draft.js + Markdown
+### Workflow
 
-### Commands
-
-```bash
-yarn dev
-yarn build
-yarn deploy
-```
-
-### Adding New Project
-
-Each new service needs the following in their `package.json`:
-
-```json
-{
-  "private": true,
-  "scripts": {
-    "build": "",
-    "deploy": "now && now alias",
-    "start": "",
-    "dev": "",
-    "test": "jest"
-  },
-  "now": {
-    "alias": "dwn-endpointname"
-  }
-}
-```
+![Logos for Related Projects](./github/Workflow.png)
