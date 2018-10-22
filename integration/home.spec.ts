@@ -1,4 +1,4 @@
-const puppeteer = require("puppeteer");
+import * as puppeteer from "puppeteer";
 
 const BASE_URL = "http://localhost:3000";
 const getByTestID = id => `[data-testid='${id}']`;
