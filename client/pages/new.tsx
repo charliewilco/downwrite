@@ -1,26 +1,21 @@
-import * as React from 'react';
-import * as Draft from 'draft-js';
-import styled from 'styled-components';
-import Head from 'next/head';
-import Router from 'next/router';
-import uuid from 'uuid/v4';
-import 'universal-fetch';
-import Wrapper from '../components/wrapper';
-import Input from '../components/input';
-import Upload from '../components/upload';
-import Helpers from '../components/helpers';
-import Editor from '../components/editor';
-import { POST_ENDPOINT } from '../utils/urls';
-import { createHeader } from '../utils/responseHandler';
+import * as React from "react";
+import * as Draft from "draft-js";
+import styled from "styled-components";
+import Head from "next/head";
+import Router from "next/router";
+import uuid from "uuid/v4";
+import "universal-fetch";
+import Wrapper from "../components/wrapper";
+import Input from "../components/input";
+import Button from "../components/button";
+import Upload from "../components/upload";
+import Helpers from "../components/helpers";
+import Editor from "../components/editor";
+import * as UtilityBar from "../components/utility-bar";
+import { POST_ENDPOINT } from "../utils/urls";
+import { createHeader } from "../utils/responseHandler";
 
 // const LazyEditor = dynamic(import('../components/editor'), { loading, ssr: false })
-//  const {
-//   RichUtils,
-//   EditorState,
-//   convertToRaw,
-//   getDefaultKeyBinding,
-//   KeyBindingUtil
-//   } = Draft
 
 interface INewPostSt {
   drafts: Array<any>;
@@ -45,7 +40,7 @@ const EditorContainer = styled(Wrapper)`
   padding: 0 4px;
 `;
 
-const EDITOR_COMMAND = 'create-new-post';
+const EDITOR_COMMAND = "create-new-post";
 
 function saveKeyListener(e: React.KeyboardEvent): string {
   if (e.keyCode === 83 /* `S` key */ && Draft.KeyBindingUtil.hasCommandModifier(e)) {
@@ -57,19 +52,19 @@ function saveKeyListener(e: React.KeyboardEvent): string {
 export default class NewEditor extends React.Component<INewPostProps, INewPostSt> {
   public readonly state = {
     editorState: Draft.EditorState.createEmpty(),
-    title: '',
+    title: "",
     id: uuid(),
     dateAdded: new Date(),
-    error: '',
+    error: "",
     saved: false,
     drafts: []
   };
 
-  static displayName = 'NewPostEditor';
+  static displayName = "NewPostEditor";
 
   addNew = async (body: Object) => {
     const { token } = this.props;
-    const config = createHeader('POST', token);
+    const config = createHeader("POST", token);
 
     const post = await fetch(POST_ENDPOINT, {
       ...config,
@@ -83,10 +78,11 @@ export default class NewEditor extends React.Component<INewPostProps, INewPostSt
     }
   };
 
-  saveLocalDraft = (id: string, post: Object) =>
-    localStorage.setItem('Draft ' + id, JSON.stringify(post));
+  saveLocalDraft = (id: string, post: Object): void =>
+    localStorage.setItem("Draft " + id, JSON.stringify(post));
 
-  addNewPost = (offline?: boolean) => {
+  addNewPost = (offline?: boolean): Promise<any> | void => {
+    console.log(offline);
     let { id, title, editorState, dateAdded } = this.state;
     const ContentState = editorState.getCurrentContent();
     const content = JSON.stringify(Draft.convertToRaw(ContentState));
@@ -105,18 +101,19 @@ export default class NewEditor extends React.Component<INewPostProps, INewPostSt
   onChange = editorState => this.setState({ editorState });
 
   handleKeyCommand = (command: string, editorState) => {
+    const { offline } = this.props;
     const newState = Draft.RichUtils.handleKeyCommand(editorState, command);
     if (newState) {
       this.onChange(newState);
-      return 'handled';
+      return "handled";
     }
 
     if (command === EDITOR_COMMAND) {
-      this.addNewPost();
-      return 'handled';
+      this.addNewPost(offline);
+      return "handled";
     }
 
-    return 'not-handled';
+    return "not-handled";
   };
 
   upload = (content: { title: string; editorState: Draft.EditorState }) =>
@@ -129,12 +126,9 @@ export default class NewEditor extends React.Component<INewPostProps, INewPostSt
     return (
       <>
         <Head>
-          <title>{title.length > 0 ? title : 'New'} | Downwrite</title>
+          <title>{title.length > 0 ? title : "New"} | Downwrite</title>
         </Head>
         <SpacedWrapper sm>
-          <Helpers disabled={offline} buttonText="Add" onChange={this.addNewPost}>
-            {offline && <span>You're Offline Right Now</span>}
-          </Helpers>
           <EditorContainer sm>
             {error.length > 0 && <span className="f6 u-center">{error}</span>}
             <Upload upload={this.upload}>
@@ -143,6 +137,14 @@ export default class NewEditor extends React.Component<INewPostProps, INewPostSt
                 value={title}
                 onChange={e => this.setState({ title: e.target.value })}
               />
+              <UtilityBar.Container>
+                <UtilityBar.Items>
+                  {offline && <span>You're Offline Right Now</span>}
+                </UtilityBar.Items>
+                <UtilityBar.Items>
+                  <Button onClick={() => this.addNewPost(offline)}>Add New</Button>
+                </UtilityBar.Items>
+              </UtilityBar.Container>
               <Editor
                 handleKeyCommand={this.handleKeyCommand}
                 keyBindingFn={saveKeyListener}
