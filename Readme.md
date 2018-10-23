@@ -58,13 +58,13 @@ Open [`http://localhost:3000`](http://localhost:3000) in your browser.
 
 This is the client-side of the application. It uses Next.js and Express and uses [this example](https://github.com/zeit/next.js/tree/canary/examples/custom-server-express) to handle routing to different views. 👨‍💻🤜🦑🤯
 
-Downwrite needs to server side rendered to make sharing an entry as easy as possible. Next.js' data-fetching API makes it the perfect candidate. The Express server also proxies the API server `localhost:4000` under the hood. So when the page calls `Component.getInitialProps()` it fetches the data from the API server and for the initial render it has data available instead of a skeleton screen. ☠︎🕱
+Downwrite needs to server side rendered to make sharing an entry as easy as possible. Next.js' data-fetching API makes it the perfect candidate. The Express server also proxies the API server `localhost:4000` under the hood. So when the page calls `Component.getInitialProps()` it fetches the data from the API server and for the initial render it has data available instead of a skeleton screen. 🤖☠️💀
 
-For the Editor this project uses Draft.js and Draft.js Plugins. Markdown syntax is used inline and autogenerates the related rich text `_hello_` becomes "_hello_" as you type.
+For the Editor this project uses Draft.js and Draft.js Plugins. Markdown syntax is used inline and autogenerates the related rich text `_hello_` becomes "_hello_" as you type.💻⌨️🔏
 
 For styles I've used ~~Aphrodite~~, ~~JSXStyle~~, ~~glamor~~, and styled-components 💅. Most components are just `styled.div`\`\`; [managing class names hasn't really ever been my thing](https://charlespeters.net/writing/i-just-cant-with-css/). The styling also includes a Night theme that's managed through styled component's `<ThemeProvider>` and `localStorage`. 🌘🌛🌌 So it only ever renders on the client.
 
-This project is a PWA, it uses some basic service worker implementation and `manifest.json` managed by `next.config.js`.
+This project is a PWA, it uses some basic service worker implementation and `manifest.json` managed by `next.config.js`. 
 
 #### Related Documentation 📚
 
