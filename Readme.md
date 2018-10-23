@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/charliewilco/downwrite.svg?branch=master)](https://travis-ci.org/charliewilco/downwrite)
 
-## About
+## About 🤔🦄
 
 > _A place to write._ ✍️
 
@@ -22,7 +22,7 @@ These shortcuts are almost as ubiquitous as `cmd + b` for bold or `cmd + i` for 
 
 > Bottomline: markdown is data. It is a method for describing semantics of data and is data itself.
 
-## Features
+## Features ✨🔥🚀
 
 This is meant to be a simple writing application with some key features:
 
@@ -31,7 +31,7 @@ This is meant to be a simple writing application with some key features:
 - Upload a markdown file from your machine
 - Export to a static markdown file for your blog, etc.
 
-## Setup
+## Setup 📲⏳⚙️
 
 This project uses [Yarn Workspaces](https://yarnpkg.com/blog/2017/08/02/introducing-workspaces/) and is written mostly with [TypeScript](https://www.typescriptlang.org/).
 
