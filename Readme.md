@@ -2,17 +2,17 @@
 
 [![Build Status](https://travis-ci.org/charliewilco/downwrite.svg?branch=master)](https://travis-ci.org/charliewilco/downwrite)
 
-## About 🤔🦄
+## About 🤔🦄🎉
 
 > _A place to write._ ✍️
 
-So the idea here was simple build a simple markdown writing application. Markdown is a huge deal and all the cool tools kept getting shut down and naively,I thought, _how hard can this really be_? 🤔
+So the idea here was simple build a simple markdown writing application. Markdown is a huge deal and all the cool tools kept getting shut down and naively,I thought, _how hard can this really be_? 🤔📝📦
 
-So I've had poorly designed iterations of this thing for every year, on the year as one of these services got shut down. When [Canvas](https://blog.usecanvas.com/) shut down this last year, I started to get a little more serious about this idea. 💡 ⚡
+So I've had poorly designed iterations of this thing for every year, on the year as one of these services got shut down. When [Canvas](https://blog.usecanvas.com/) shut down this last year, I started to get a little more serious about this idea. 💡 ⚡🔭
 
 During planning out some of my quarterly goals at my last job I decided to go a little more full-stack with Node and start to really work through the process of building a microservice. Since I'm never really one to learning languages and frameworks in the abstract, I decided to take up Downwrite as an excuse to build those microservices. 📡💸🌎
 
-### Why Markdown 🧐🤨
+### Why Markdown 🧐🤨📋
 
 Markdown is probably the most efficient and universal tool for conveying syntax, semantics and structure across platforms. ⬇️
 
@@ -155,7 +155,7 @@ This approach accomplishes two things:
 
 Working on this project uses Travis to run the tests and deploy the successfully built workspaces to their given endpoints. It uses [`now`](https://zeit.co/now) for deployments for easy rollback and immutable deployments.
 
-## License
+## License ⚖️💣🛡⚔️
 
 MIT License
 
