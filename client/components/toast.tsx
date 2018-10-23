@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { colors } from '../utils/defaultStyles';
+import styled from "styled-components";
+import { colors } from "../utils/defaultStyles";
 
 // TODO: container should have the positioning
 // Should be UI style and layout style from container

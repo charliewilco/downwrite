@@ -1,7 +1,7 @@
-import * as React from 'react';
-import Head from 'next/head';
-import styled from 'styled-components';
-import Wrapper from '../components/wrapper';
+import * as React from "react";
+import Head from "next/head";
+import styled from "styled-components";
+import Wrapper from "../components/wrapper";
 
 const CenteredWrapper = styled(Wrapper)`
   text-align: center;
@@ -18,7 +18,7 @@ const Title = styled.h2`
 
 const StatusCode = ({ code }) => (
   <p>
-    {code ? `An error ${code} occurred on server` : 'An error occurred on client'}
+    {code ? `An error ${code} occurred on server` : "An error occurred on client"}
   </p>
 );
 

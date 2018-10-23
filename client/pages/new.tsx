@@ -9,7 +9,6 @@ import Wrapper from "../components/wrapper";
 import Input from "../components/input";
 import Button from "../components/button";
 import Upload from "../components/upload";
-import Helpers from "../components/helpers";
 import Editor from "../components/editor";
 import * as UtilityBar from "../components/utility-bar";
 import { POST_ENDPOINT } from "../utils/urls";
@@ -82,7 +81,6 @@ export default class NewEditor extends React.Component<INewPostProps, INewPostSt
     localStorage.setItem("Draft " + id, JSON.stringify(post));
 
   addNewPost = (offline?: boolean): Promise<any> | void => {
-    console.log(offline);
     let { id, title, editorState, dateAdded } = this.state;
     const ContentState = editorState.getCurrentContent();
     const content = JSON.stringify(Draft.convertToRaw(ContentState));

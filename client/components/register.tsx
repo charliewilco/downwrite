@@ -1,11 +1,11 @@
-import * as React from 'react';
-import Link from 'next/link';
-import styled from 'styled-components';
-import 'universal-fetch';
-import LoginInput from './login-input';
-import Button from './button';
-import Checkbox from './checkbox';
-import { USER_ENDPOINT } from '../utils/urls';
+import * as React from "react";
+import Link from "next/link";
+import styled from "styled-components";
+import "universal-fetch";
+import LoginInput from "./login-input";
+import Button from "./button";
+import Checkbox from "./checkbox";
+import { USER_ENDPOINT } from "../utils/urls";
 
 interface RegisterType {
   username: string;
@@ -55,9 +55,9 @@ const LegalLink = () => (
 
 export default class Register extends React.Component<LoginProps, RegisterType> {
   state = {
-    username: '',
-    password: '',
-    email: '',
+    username: "",
+    password: "",
+    email: "",
     checked: false
   };
 
@@ -75,9 +75,9 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
     const { username, password, email } = this.state;
 
     const response = await fetch(USER_ENDPOINT, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({ username, password, email })
     });
@@ -92,7 +92,7 @@ export default class Register extends React.Component<LoginProps, RegisterType> 
     if (user.userID) {
       signIn(user.id_token !== undefined, user.id_token);
     } else {
-      setError(user.message, 'error');
+      setError(user.message, "error");
     }
   };
 

@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { fonts } from '../utils/defaultStyles';
+import styled from "styled-components";
+import { fonts } from "../utils/defaultStyles";
 
 export default styled.div`
   font-family: ${fonts.monospace};
@@ -16,7 +16,7 @@ export default styled.div`
   overflow: scroll;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     right: 0;

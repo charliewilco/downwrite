@@ -1,8 +1,8 @@
-import * as React from 'react';
-import Cookies from 'universal-cookie';
-import Router from 'next/router';
-import jwt from 'jwt-decode';
-import addDays from 'date-fns/add_days';
+import * as React from "react";
+import Cookies from "universal-cookie";
+import Router from "next/router";
+import jwt from "jwt-decode";
+import addDays from "date-fns/add_days";
 
 const AuthContext = React.createContext({});
 
@@ -28,7 +28,7 @@ const AuthContext = React.createContext({});
 const cookie = new Cookies();
 const COOKIE_EXPIRATION = 180;
 const cookieOptions = {
-  path: '/',
+  path: "/",
   expires: addDays(Date.now(), COOKIE_EXPIRATION)
 };
 
@@ -59,9 +59,9 @@ export default class AuthMegaProvider extends React.Component<AuthProps, AuthSta
   constructor(props: AuthProps) {
     super(props);
 
-    let token = this.props.token || cookie.get('DW_TOKEN');
+    let token = this.props.token || cookie.get("DW_TOKEN");
 
-    let __TOKEN_EXISTS__: boolean = token !== undefined && token !== 'undefined';
+    let __TOKEN_EXISTS__: boolean = token !== undefined && token !== "undefined";
     const { name } = __TOKEN_EXISTS__ ? jwt(token) : EMPTY_USER;
 
     this.state = {
@@ -74,7 +74,7 @@ export default class AuthMegaProvider extends React.Component<AuthProps, AuthSta
   signIn = (authed: boolean, token: string) => {
     const { name } = jwt(token);
     return this.setState({ authed, token, name }, () =>
-      cookie.set('DW_TOKEN', token, cookieOptions)
+      cookie.set("DW_TOKEN", token, cookieOptions)
     );
   };
 
@@ -85,14 +85,14 @@ export default class AuthMegaProvider extends React.Component<AuthProps, AuthSta
         token: undefined,
         name: undefined
       },
-      () => cookie.remove('DW_TOKEN', cookieOptions)
+      () => cookie.remove("DW_TOKEN", cookieOptions)
     );
   };
 
   componentDidUpdate(prevState) {
     const { authed } = this.state;
     if (prevState.authed !== authed) {
-      Router.push({ pathname: authed ? '/' : '/login' });
+      Router.push({ pathname: authed ? "/" : "/login" });
     }
   }
 

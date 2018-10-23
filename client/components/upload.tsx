@@ -1,9 +1,9 @@
-import * as React from 'react';
-import fm from 'front-matter';
-import * as Draft from 'draft-js';
-import Dropzone from 'react-dropzone';
-import { markdownToDraft } from 'markdown-draft-js';
-import { __IS_BROWSER__ } from '../utils/dev';
+import * as React from "react";
+import fm from "front-matter";
+import * as Draft from "draft-js";
+import Dropzone from "react-dropzone";
+import { markdownToDraft } from "markdown-draft-js";
+import { __IS_BROWSER__ } from "../utils/dev";
 
 interface MarkdownConversion {
   title: string;
@@ -24,7 +24,7 @@ interface IMarkdown {
 }
 
 export default class Uploader extends React.Component<IUploadProps, any> {
-  static displayName = 'Uploader';
+  static displayName = "Uploader";
 
   reader: FileReader = __IS_BROWSER__ && new FileReader();
 
@@ -35,7 +35,7 @@ export default class Uploader extends React.Component<IUploadProps, any> {
       let markdown = markdownToDraft(md.body, { preserveNewlines: true });
 
       return this.props.upload({
-        title: md.attributes.title || '',
+        title: md.attributes.title || "",
         editorState: Draft.EditorState.createWithContent(
           Draft.convertFromRaw(markdown)
         )
@@ -53,7 +53,7 @@ export default class Uploader extends React.Component<IUploadProps, any> {
       <Dropzone
         accept="text/markdown, text/x-markdown, text/plain"
         multiple={false}
-        style={{ border: 0, width: '100%' }}
+        style={{ border: 0, width: "100%" }}
         onDrop={this.onDrop}
         disableClick
         disabled={disabled}>

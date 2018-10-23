@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const base64Icon = `data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkx
 JQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy
@@ -7,7 +7,7 @@ DAwL3N2ZyIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiPgo8cGF0
 aCBmaWxsPSd3aGl0ZScgZD0iTTkgMTYuMTdMNC44MyAxMmwtMS40MiAxLjQxTDkgMTkgMjEgN2w
 tMS40MS0xLjQxeiAiPjwvcGF0aD48L3N2Zz4=`;
 
-const CheckboxInput = styled.input.attrs({ type: 'checkbox' })`
+const CheckboxInput = styled.input.attrs({ type: "checkbox" })`
   display: inline-block;
   border-radius: 4px;
   vertical-align: middle;
@@ -18,7 +18,7 @@ const CheckboxInput = styled.input.attrs({ type: 'checkbox' })`
   background: ${props =>
     props.checked
       ? `${props.theme.link} url("${base64Icon}") no-repeat center center`
-      : '#D0D0D0'};
+      : "#D0D0D0"};
 `;
 
 export default CheckboxInput;

@@ -1,16 +1,16 @@
-import * as Mongoose from 'mongoose';
-import * as Joi from 'joi';
-import { IPost } from './Post';
+import * as Mongoose from "mongoose";
+import * as Joi from "joi";
+import { IPost } from "./Post";
 
 const UserSchema = new Mongoose.Schema({
   username: { type: String, required: true, index: { unique: true } },
   email: { type: String, required: true, index: { unique: true } },
   password: { type: String, required: true },
   admin: { type: Boolean, required: true },
-  posts: [{ type: Mongoose.Schema.Types.ObjectId, ref: 'Post' }]
+  posts: [{ type: Mongoose.Schema.Types.ObjectId, ref: "Post" }]
 });
 
-export default Mongoose.model('User', UserSchema);
+export default Mongoose.model("User", UserSchema);
 
 export interface IUser extends Mongoose.Document {
   username: string;
@@ -21,7 +21,7 @@ export interface IUser extends Mongoose.Document {
   gradient?: string[];
 }
 
-export const UserModel = Mongoose.model<IUser>('User', UserSchema);
+export const UserModel = Mongoose.model<IUser>("User", UserSchema);
 
 export const validUser = {
   username: Joi.string()

@@ -1,8 +1,8 @@
-import * as React from 'react';
-import styled, { keyframes } from 'styled-components';
-import LockScroll from './lock-scroll';
-import { CloseIcon } from './icons';
-import { colors } from '../utils/defaultStyles';
+import * as React from "react";
+import styled, { keyframes } from "styled-components";
+import LockScroll from "./lock-scroll";
+import { CloseIcon } from "./icons";
+import { colors } from "../utils/defaultStyles";
 
 const fadein = keyframes`
   0% {
@@ -74,7 +74,7 @@ interface ModalProps {
 }
 
 export default class UIModal extends React.Component<ModalProps, any> {
-  static displayName = 'UIModal';
+  static displayName = "UIModal";
 
   render() {
     const { closeUIModal, children } = this.props;

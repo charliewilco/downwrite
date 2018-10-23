@@ -1,7 +1,7 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import { CloseIcon } from './icons';
-import { colors } from '../utils/defaultStyles';
+import * as React from "react";
+import styled from "styled-components";
+import { CloseIcon } from "./icons";
+import { colors } from "../utils/defaultStyles";
 
 interface IUIFlashProps {
   onClose?: () => void;
@@ -24,7 +24,7 @@ const UIFlashContainer = styled.div`
   position: fixed;
   top: 20px;
   margin: auto;
-  text-align: ${(props: IUIFlashProps) => props.centered && 'center'};
+  text-align: ${(props: IUIFlashProps) => props.centered && "center"};
   padding-top: 8px;
   padding-right: 16px;
   padding-bottom: 8px;

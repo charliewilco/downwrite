@@ -1,8 +1,8 @@
-import * as React from 'react';
-import orderBy from 'lodash/orderBy';
-import { POST_ENDPOINT } from '../utils/urls';
-import { createHeader } from '../utils/responseHandler';
-import 'universal-fetch';
+import * as React from "react";
+import orderBy from "lodash/orderBy";
+import { POST_ENDPOINT } from "../utils/urls";
+import { createHeader } from "../utils/responseHandler";
+import "universal-fetch";
 
 interface FetchState {
   posts: any[];
@@ -30,11 +30,11 @@ export default class CollectionFetch extends React.Component<
 
   getPosts = async () => {
     const { endpoint, token } = this.props;
-    const config = createHeader('GET', token);
+    const config = createHeader("GET", token);
 
     const posts = await fetch(endpoint, config).then(res => res.json());
 
-    this.setState({ posts: orderBy(posts, ['dateAdded'], ['desc']) || [] });
+    this.setState({ posts: orderBy(posts, ["dateAdded"], ["desc"]) || [] });
   };
 
   // TODO: Move this to React Suspense!!

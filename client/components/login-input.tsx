@@ -1,7 +1,7 @@
-import * as React from 'react';
-import uuid from 'uuid/v4';
-import styled from 'styled-components';
-import { colors, fonts } from '../utils/defaultStyles';
+import * as React from "react";
+import uuid from "uuid/v4";
+import styled from "styled-components";
+import { colors, fonts } from "../utils/defaultStyles";
 
 interface InputType {
   label: string;
@@ -49,7 +49,7 @@ const InputContainer = styled.label`
 const InputLabel = styled.small`
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: ${(props: InputTypeState) => (props.active ? colors.yellow700 : '#b4b4b4')};
+  color: ${(props: InputTypeState) => (props.active ? colors.yellow700 : "#b4b4b4")};
   transition: color 250ms ease-in-out;
 `;
 
@@ -58,10 +58,10 @@ export default class extends React.Component<InputType, InputTypeState> {
     active: false
   };
 
-  static displayName = 'LoginInput';
+  static displayName = "LoginInput";
 
   static defaultProps = {
-    type: 'text'
+    type: "text"
   };
 
   render() {

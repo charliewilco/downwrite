@@ -47,8 +47,8 @@ interface IColorPickerProps {
 export default class ColorPicker extends React.Component<IColorPickerProps> {
   static defaultProps = {
     colors: [],
-    onPress: (color, name) => console.log(color, name),
-    name: "thing"
+    onPress: (color, name) => ({ color, name }),
+    name: "Color Picker"
   };
 
   render() {

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 interface LocalDraftTypes {
   drafts: any[];
@@ -11,7 +11,7 @@ export default class extends React.Component<void, LocalDraftTypes> {
 
   searchLocalStorage = () => {
     return localStorage.forEach(
-      (item, iterator) => localStorage.key(iterator).includes('Draft') && item
+      (item, iterator) => localStorage.key(iterator).includes("Draft") && item
     );
   };
 

@@ -1,8 +1,8 @@
-import * as React from 'react';
-import LoginInput from './login-input';
-import Button from './button';
-import { AUTH_ENDPOINT } from '../utils/urls';
-import { Padded, InlineBlock } from './register';
+import * as React from "react";
+import LoginInput from "./login-input";
+import Button from "./button";
+import { AUTH_ENDPOINT } from "../utils/urls";
+import { Padded, InlineBlock } from "./register";
 
 interface LoginState {
   user: string;
@@ -16,8 +16,8 @@ interface LoginProps {
 
 export default class Login extends React.Component<LoginProps, LoginState> {
   state = {
-    user: '',
-    password: ''
+    user: "",
+    password: ""
   };
 
   handleSubmit = (event: React.SyntheticEvent<any>) => {
@@ -31,9 +31,9 @@ export default class Login extends React.Component<LoginProps, LoginState> {
   onSubmit = async () => {
     const { signIn, setError } = this.props;
     const authRequest = await fetch(AUTH_ENDPOINT, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({ ...this.state })
     });
@@ -41,7 +41,7 @@ export default class Login extends React.Component<LoginProps, LoginState> {
     const auth = await authRequest.json();
 
     if (auth.error) {
-      setError(auth.message, 'error');
+      setError(auth.message, "error");
     }
 
     if (auth.token) {

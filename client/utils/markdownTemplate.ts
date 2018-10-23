@@ -1,4 +1,4 @@
-import format from 'date-fns/format';
+import format from "date-fns/format";
 
 export const createMarkdown = (
   title: string,
@@ -7,7 +7,7 @@ export const createMarkdown = (
 ): string => `
 ---
 title: ${title}
-dateAdded: ${format(date.toString() || new Date(), 'DD MMMM YYYY')}
+dateAdded: ${format(date.toString() || new Date(), "DD MMMM YYYY")}
 ---
 
 ${content}
