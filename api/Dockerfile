@@ -4,15 +4,6 @@ WORKDIR /usr/src/app
 
 COPY package.json ./
 
-# # add files to container
-# ADD . /app
-
-# # specify the working directory
-# WORKDIR /app
-
-# RUN chmod -R 777 .
-
-
 COPY . .
 
 # build process
