@@ -44,7 +44,7 @@ const LoginFormWrapper = styled.div`
 const LoginContainer: React.SFC<{ children: (x: boolean) => React.ReactNode }> = ({
   children
 }) => (
-  <Toggle defaultOpen>
+  <Toggle>
     {({ isOpen, onSetInstance }) => (
       <LoginFormWrapper>
         <ToggleButtonContainer>

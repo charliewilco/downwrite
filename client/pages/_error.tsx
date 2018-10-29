@@ -8,7 +8,7 @@ const CenteredWrapper = styled(Wrapper)`
   padding: 8rem 1rem;
 `;
 
-const Title = styled.h2`
+const ErrorTitle = styled.h2`
   display: inline-block;
   margin-bottom: 32px;
   font-size: 84px;
@@ -39,7 +39,7 @@ export default class ErrorPage extends React.Component<IErrorViewProps, any> {
         <Head>
           <title>Not Found | Downwrite</title>
         </Head>
-        <Title>404</Title>
+        <ErrorTitle>404</ErrorTitle>
         <StatusCode code={statusCode} />
       </CenteredWrapper>
     );

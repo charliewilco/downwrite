@@ -4,8 +4,6 @@ import Router from "next/router";
 import jwt from "jwt-decode";
 import addDays from "date-fns/add_days";
 
-const AuthContext = React.createContext({});
-
 // NOTE:
 // This component should passdown the state of authed from withAuthCheck() HOC
 // There is only one single point of state that needs to be rendered
@@ -44,15 +42,19 @@ interface AuthState {
   authed: boolean;
 }
 
-interface AuthActions {
-  signIn: () => void;
+export interface AuthActions {
+  signIn: (authed: boolean, token: string) => void;
   signOut: () => void;
 }
+
+export interface AuthContext extends AuthState, AuthActions {}
 
 const EMPTY_USER = {
   user: null,
   name: null
 };
+
+const AuthContext = React.createContext({} as AuthContext);
 
 // Should be able to just request user details from another call
 export default class AuthMegaProvider extends React.Component<AuthProps, AuthState> {
@@ -71,7 +73,7 @@ export default class AuthMegaProvider extends React.Component<AuthProps, AuthSta
     };
   }
 
-  signIn = (authed: boolean, token: string) => {
+  signIn = (authed: boolean, token: string): void => {
     const { name } = jwt(token);
     return this.setState({ authed, token, name }, () =>
       cookie.set("DW_TOKEN", token, cookieOptions)
@@ -97,21 +99,18 @@ export default class AuthMegaProvider extends React.Component<AuthProps, AuthSta
   }
 
   render() {
-    const value = {
-      ...this.state,
-      signIn: this.signIn,
-      signOut: this.signOut
-    };
-
     return (
-      <AuthContext.Provider value={value}>
+      <AuthContext.Provider
+        value={{
+          ...this.state,
+          signIn: this.signIn,
+          signOut: this.signOut
+        }}>
         {this.props.children}
       </AuthContext.Provider>
     );
   }
 }
-
-interface AuthContext extends AuthState, AuthActions {}
 
 // Component should be NextStatelessComponent type
 export const withAuth = Component => {
