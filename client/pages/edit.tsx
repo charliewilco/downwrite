@@ -61,7 +61,7 @@ const stateCreator = (post: Dwnxt.IPost) => ({
 const EDITOR_COMMAND = "myeditor-save";
 
 function saveKeyListener(e: React.KeyboardEvent): string {
-  if (e.keyCode === 83 /* `S` key */ && Draft.KeyBindingUtil.hasCommandModifier(e)) {
+  if (e.keyCode === 83 && Draft.KeyBindingUtil.hasCommandModifier(e)) {
     return EDITOR_COMMAND;
   }
 

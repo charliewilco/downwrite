@@ -42,7 +42,7 @@ const EditorContainer = styled(Wrapper)`
 const EDITOR_COMMAND = "create-new-post";
 
 function saveKeyListener(e: React.KeyboardEvent): string {
-  if (e.keyCode === 83 /* `S` key */ && Draft.KeyBindingUtil.hasCommandModifier(e)) {
+  if (e.keyCode === 83 && Draft.KeyBindingUtil.hasCommandModifier(e)) {
     return EDITOR_COMMAND;
   }
   return Draft.getDefaultKeyBinding(e);

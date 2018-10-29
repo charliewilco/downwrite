@@ -11,17 +11,6 @@ exports[`Header Component matches snapshot 1`] = `
   min-height: auto;
 }
 
-.c1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
 .c6 {
   font-size: 14px;
   cursor: pointer;
@@ -35,6 +24,17 @@ exports[`Header Component matches snapshot 1`] = `
 .c6:focus {
   color: #4C4C4C;
   opacity: 1;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
 }
 
 .c5 {

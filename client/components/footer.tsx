@@ -38,7 +38,7 @@ const FooterList = styled.ul`
 
 const FooterListItem = styled.li``;
 
-const UIFooter: React.SFC<any> = () => (
+const UIFooter: React.SFC<{}> = () => (
   <Footer>
     <Wrapper sm>
       <FooterNav>
