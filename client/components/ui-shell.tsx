@@ -3,6 +3,7 @@ import styled, { injectGlobal } from "styled-components";
 import Nav from "./nav";
 import Toggle from "./toggle";
 import Header from "./header";
+import Footer from "./footer";
 import NightMode, { NightModeTrigger } from "./night-mode";
 import UIContainer from "./ui-container";
 import { ErrorContainer, UIErrorBanner } from "./ui-error";
@@ -103,6 +104,7 @@ export default class UIShell extends React.Component<IUIShell, any> {
                         onClick={onToggle}
                       />
                       {children}
+                      <Footer />
                     </Container>
                     {isOpen && (
                       <Nav pathname={route} closeNav={onClose} token={token} />
