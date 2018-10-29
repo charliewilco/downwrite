@@ -1,17 +1,17 @@
 import * as React from "react";
 import * as Draft from "draft-js";
 import styled from "styled-components";
+import { ToastNoPosition as Toast } from "./toast";
 import { fonts } from "../utils/defaultStyles";
 
 const Meta = styled.div`
   opacity: 0.5;
   font-size: small;
-  margin-bottom: 8px;
   font-family: ${fonts.sans};
+  padding: 8px;
 `;
 
 const WordCounterContainer = styled.div`
-  padding: 8px;
   margin: 16px 8px;
   right: 0;
   bottom: 0;
@@ -63,9 +63,11 @@ export default class WordCounter extends React.Component<IWordCounterers, any> {
 
     return (
       <WordCounterContainer>
-        <Meta>
-          <small>Word Count: {displayCount}</small>
-        </Meta>
+        <Toast>
+          <Meta>
+            <small>Word Count: {displayCount}</small>
+          </Meta>
+        </Toast>
       </WordCounterContainer>
     );
   }
