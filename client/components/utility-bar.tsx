@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { colors, fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 export const Container = styled.aside`
   display: flex;
@@ -7,8 +7,7 @@ export const Container = styled.aside`
   align-items: center;
   margin: 8px 0 16px;
   padding: 8px 0;
-  color: ${colors.text};
-  font-family: ${fonts.sans};
+  font-family: ${DefaultStyles.fonts.sans};
 `;
 
 export const Items = styled.div`

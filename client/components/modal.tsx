@@ -2,7 +2,7 @@ import * as React from "react";
 import styled, { keyframes } from "styled-components";
 import LockScroll from "./lock-scroll";
 import { CloseIcon } from "./icons";
-import { colors } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const fadein = keyframes`
   0% {
@@ -36,7 +36,7 @@ const ModalContainer = styled.div`
   width: 100%;
   height: 50%;
   position: relative;
-  color: ${colors.text};
+  color: ${DefaultStyles.colors.text};
   display: flex;
   margin-left: auto;
   margin-right: auto;

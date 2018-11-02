@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { CloseIcon } from "./icons";
-import { colors } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 interface IUIFlashProps {
   onClose?: () => void;
@@ -19,8 +19,8 @@ const UIFlashContainer = styled.div`
   max-width: ${(props: IUIFlashProps) => props.width}px;
   left: 0px;
   right: 0px;
-  background: ${colors.yellow500};
-  color: ${colors.text};
+  background: ${DefaultStyles.colors.yellow500};
+  color: ${DefaultStyles.colors.text};
   position: fixed;
   top: 20px;
   margin: auto;

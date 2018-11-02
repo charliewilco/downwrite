@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import Toggle from "./toggle";
-import { colors } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const SelectedTitle = styled.h2`
   margin-bottom: 32px;
@@ -24,9 +24,9 @@ const ToggleLoginButton = styled.button`
   background: inherit;
   box-sizing: inherit;
   border-bottom-color: ${(props: { active: boolean }) =>
-    props.active ? colors.yellow700 : "transparent"};
+    props.active ? DefaultStyles.colors.yellow700 : "transparent"};
   color: ${(props: { active: boolean }) =>
-    props.active ? colors.yellow700 : "inherit"};
+    props.active ? DefaultStyles.colors.yellow700 : "inherit"};
 `;
 
 const ToggleButtonContainer = styled.div`
@@ -38,7 +38,7 @@ const LoginFormWrapper = styled.div`
   max-width: 544px;
   width: 100%;
   background: white;
-  color: ${colors.text};
+  color: ${DefaultStyles.colors.text};
 `;
 
 const LoginContainer: React.SFC<{ children: (x: boolean) => React.ReactNode }> = ({

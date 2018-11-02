@@ -104,7 +104,7 @@ export default class UserSettings extends React.Component<
         <SettingsBlock title="Avatar">
           <GradientEditor colors={colors} onColorChange={this.handleColorChange} />
         </SettingsBlock>
-        <SettingsBlock title="Markdown">
+        <SettingsBlock title="Local Settings">
           <p>Also font-family for editor</p>
           <MarkdownExtension />
         </SettingsBlock>
