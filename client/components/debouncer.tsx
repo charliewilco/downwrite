@@ -1,5 +1,5 @@
-import * as React from 'react';
-import debounce from 'lodash/debounce';
+import * as React from "react";
+import debounce from "lodash/debounce";
 
 interface DebounceProps {
   method: () => void;
@@ -7,7 +7,7 @@ interface DebounceProps {
 }
 
 export default class extends React.Component<DebounceProps> {
-  static displayName = 'Debouncer';
+  static displayName = "Debouncer";
 
   static defaultProps = {
     method: () => {},

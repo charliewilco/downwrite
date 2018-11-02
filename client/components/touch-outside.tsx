@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { findDOMNode } from 'react-dom';
+import * as React from "react";
+import { findDOMNode } from "react-dom";
 
 // TODO: Should blur child
 interface ITouchOutsideProps {
@@ -8,19 +8,19 @@ interface ITouchOutsideProps {
 }
 
 export default class TouchOutside extends React.Component<ITouchOutsideProps> {
-  static displayName = 'TouchOutside';
+  static displayName = "TouchOutside";
 
   componentDidMount() {
     if (document) {
-      document.addEventListener('touchstart', this.outsideHandleClick);
-      document.addEventListener('click', this.outsideHandleClick);
+      document.addEventListener("touchstart", this.outsideHandleClick);
+      document.addEventListener("click", this.outsideHandleClick);
     }
   }
 
   componentWillUnmount() {
     if (document) {
-      document.removeEventListener('touchstart', this.outsideHandleClick);
-      document.removeEventListener('click', this.outsideHandleClick);
+      document.removeEventListener("touchstart", this.outsideHandleClick);
+      document.removeEventListener("click", this.outsideHandleClick);
     }
   }
 

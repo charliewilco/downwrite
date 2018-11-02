@@ -1,16 +1,13 @@
 import styled from "styled-components";
-import { colors, fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 export const Container = styled.aside`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 16px 0;
-  padding: 8px;
-  background: white;
-  color: ${colors.text};
-  font-family: ${fonts.sans};
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
+  margin: 8px 0 16px;
+  padding: 8px 0;
+  font-family: ${DefaultStyles.fonts.sans};
 `;
 
 export const Items = styled.div`

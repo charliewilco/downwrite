@@ -2,6 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import Logo from "./logo";
+import AltAnchor from "./alt-anchor-link";
 import { NavIcon } from "./icons";
 import { colors, fonts } from "../utils/defaultStyles";
 import { withAuth } from "./auth";
@@ -9,21 +10,6 @@ import { withAuth } from "./auth";
 const MenuContainer = styled.nav`
   display: flex;
   align-items: center;
-`;
-
-const NewButton = styled.a`
-  font-size: 14px;
-  cursor: pointer;
-  line-height: 1.1;
-  opacity: 0.5;
-  color: ${props => props.theme.color} !important;
-  margin-right: 32px;
-
-  &:hover,
-  &:focus {
-    color: ${colors.text};
-    opacity: 1;
-  }
 `;
 
 const HomeButton = styled.a`
@@ -49,7 +35,7 @@ const ToggleButton = styled.button`
 const LoginSignUp = () => (
   <MenuContainer>
     <Link prefetch href="/login">
-      <NewButton>Login or Sign Up</NewButton>
+      <AltAnchor space="right">Login or Sign Up</AltAnchor>
     </Link>
   </MenuContainer>
 );
@@ -57,7 +43,7 @@ const LoginSignUp = () => (
 const Menu = ({ toggleNav }) => (
   <MenuContainer>
     <Link prefetch href="/new" as="/new">
-      <NewButton>New</NewButton>
+      <AltAnchor space="right">New</AltAnchor>
     </Link>
     <ToggleButton onClick={toggleNav}>
       <NavIcon className="Navicon" />

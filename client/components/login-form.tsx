@@ -1,47 +1,40 @@
-import * as React from 'react';
-import LoginInput from './login-input';
-import Button from './button';
-import { AUTH_ENDPOINT } from '../utils/urls';
-import { Padded, InlineBlock } from './register';
+import * as React from "react";
+import { Formik, Form, FormikProps, ErrorMessage } from "formik";
+import LoginInput, { LoginInputContainer } from "./login-input";
+import InputError from "./input-error";
+import Button from "./button";
+import SpacedBox from "./spaced-box";
+import { AUTH_ENDPOINT } from "../utils/urls";
+import { LoginFormSchema } from "../utils/validations";
 
-interface LoginState {
+interface ILoginForm {
   user: string;
   password: string;
 }
 
 interface LoginProps {
-  signIn: (x: boolean, y: string) => void;
+  signIn: (authed: boolean, token: string) => void;
   setError: (x: string, y: string) => void;
 }
 
-export default class Login extends React.Component<LoginProps, LoginState> {
-  state = {
-    user: '',
-    password: ''
+export default class Login extends React.Component<LoginProps, {}> {
+  handleSubmit = (values, actions) => {
+    console.log("HANDLING SUBMIT");
+    this.onSubmit(values);
   };
 
-  handleSubmit = (event: React.SyntheticEvent<any>) => {
-    if (event && event.preventDefault) {
-      event.preventDefault();
-    }
-
-    this.onSubmit();
-  };
-
-  onSubmit = async () => {
+  onSubmit = async (values: ILoginForm) => {
     const { signIn, setError } = this.props;
-    const authRequest = await fetch(AUTH_ENDPOINT, {
-      method: 'POST',
+    const auth = await fetch(AUTH_ENDPOINT, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({ ...this.state })
-    });
-
-    const auth = await authRequest.json();
+      body: JSON.stringify({ ...values })
+    }).then(res => res.json());
 
     if (auth.error) {
-      setError(auth.message, 'error');
+      setError(auth.message, "error");
     }
 
     if (auth.token) {
@@ -50,37 +43,54 @@ export default class Login extends React.Component<LoginProps, LoginState> {
   };
 
   render() {
-    const { user, password } = this.state;
-
     return (
-      <Padded>
-        <form onSubmit={this.handleSubmit}>
-          <LoginInput
-            placeholder="user@email.com"
-            label="Username or Email"
-            autoComplete="username"
-            value={user}
-            onChange={({ target }) =>
-              this.setState({ user: (target as HTMLInputElement).value })
-            }
-          />
-          <LoginInput
-            placeholder="*********"
-            label="Password"
-            value={password}
-            type="password"
-            autoComplete="current-password"
-            onChange={({ target }) =>
-              this.setState({ password: (target as HTMLInputElement).value })
-            }
-          />
-          <Padded align="right">
-            <InlineBlock>
-              <Button onClick={this.onSubmit}>Login</Button>
-            </InlineBlock>
-          </Padded>
-        </form>
-      </Padded>
+      <SpacedBox>
+        <Formik
+          validationSchema={LoginFormSchema}
+          initialValues={{
+            user: "",
+            password: ""
+          }}
+          onSubmit={this.handleSubmit}>
+          {({
+            values,
+            errors,
+            handleChange,
+            handleSubmit
+          }: FormikProps<ILoginForm>) => (
+            <Form>
+              <LoginInputContainer>
+                <LoginInput
+                  placeholder="user@email.com"
+                  label="Username or Email"
+                  name="user"
+                  autoComplete="username"
+                  value={values.user}
+                  onChange={handleChange}
+                />
+                <ErrorMessage name="user" component={InputError} />
+              </LoginInputContainer>
+              <LoginInputContainer>
+                <LoginInput
+                  placeholder="*********"
+                  name="password"
+                  label="Password"
+                  value={values.password}
+                  type="password"
+                  autoComplete="current-password"
+                  onChange={handleChange}
+                />
+                <ErrorMessage name="password" component={InputError} />
+              </LoginInputContainer>
+              <SpacedBox align="right">
+                <LoginInputContainer style={{ display: "inline-block" }}>
+                  <Button type="submit">Login</Button>
+                </LoginInputContainer>
+              </SpacedBox>
+            </Form>
+          )}
+        </Formik>
+      </SpacedBox>
     );
   }
 }

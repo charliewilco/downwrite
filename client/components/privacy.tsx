@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import Check from './checkbox';
+import React from "react";
+import styled from "styled-components";
+import Check from "./checkbox";
 
 const PrivacyContainer = styled.div`
   margin-right: 16px;
@@ -32,7 +32,7 @@ export const PrivacyToggle: React.SFC<IPrivacyToggle> = ({
   <PrivacyContainer>
     <LabelFlex>
       <Check checked={publicStatus} onChange={onChange} />
-      <Label>{publicStatus ? 'Public' : 'Private'}</Label>
+      <Label>{publicStatus ? "Public" : "Private"}</Label>
     </LabelFlex>
   </PrivacyContainer>
 );

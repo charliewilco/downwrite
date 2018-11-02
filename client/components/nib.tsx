@@ -1,5 +1,5 @@
-import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import React from "react";
+import styled, { keyframes } from "styled-components";
 
 const backNForth = keyframes`
   0% {
@@ -17,7 +17,7 @@ const backNForth = keyframes`
 
 const NibContainer = styled.div`
   &::after {
-    content: '';
+    content: "";
     margin-top: 8px;
     width: 100%;
     height: 4px;

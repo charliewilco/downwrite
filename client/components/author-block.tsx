@@ -9,7 +9,7 @@ const AuthorContainer = styled.aside`
   max-width: 512px;
   margin: 0 auto;
   padding: 16px 8px;
-  background: white;
+  background-color: ${props => props.theme.cardBackground};
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
   font-family: ${fonts.monospace};
 `;

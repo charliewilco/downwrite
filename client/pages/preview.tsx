@@ -1,11 +1,11 @@
-import * as React from 'react';
-import Head from 'next/head';
-import isEmpty from 'lodash/isEmpty';
-import 'universal-fetch';
-import Content from '../components/content';
-import AuthorBlock from '../components/author-block';
-import NotFound from '../components/not-found';
-import { PREVIEW_ENDPOINT } from '../utils/urls';
+import * as React from "react";
+import Head from "next/head";
+import isEmpty from "lodash/isEmpty";
+import "universal-fetch";
+import Content from "../components/content";
+import AuthorBlock from "../components/author-block";
+import NotFound from "../components/not-found";
+import { PREVIEW_ENDPOINT } from "../utils/urls";
 
 type AuthorType = {
   username: string;
@@ -38,7 +38,7 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
 
     const url = `${PREVIEW_ENDPOINT}/${id}`;
 
-    const entry = await fetch(url, { method: 'GET', mode: 'cors' }).then(res =>
+    const entry = await fetch(url, { method: "GET", mode: "cors" }).then(res =>
       res.json()
     );
 
@@ -52,7 +52,7 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
     entry: {}
   };
 
-  static displayName = 'PreviewEntry';
+  static displayName = "PreviewEntry";
 
   render() {
     const {

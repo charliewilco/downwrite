@@ -1,6 +1,6 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import Button from './button';
+import * as React from "react";
+import styled from "styled-components";
+import Button from "./button";
 
 const HelperButtons = styled.div``;
 
@@ -23,7 +23,7 @@ interface IHelperProps {
 }
 
 export default class extends React.Component<IHelperProps> {
-  static displayName = 'HelperToolbar';
+  static displayName = "HelperToolbar";
 
   render() {
     const { children, buttonText, onChange, disabled } = this.props;

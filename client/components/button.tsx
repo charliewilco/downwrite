@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { colors } from '../utils/defaultStyles';
+import styled from "styled-components";
+import { colors } from "../utils/defaultStyles";
 
 export default styled.button`
   background-color: ${colors.yellow700};

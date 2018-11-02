@@ -1,10 +1,10 @@
-import * as React from 'react';
-import * as Draft from 'draft-js';
-import { draftToMarkdown } from 'markdown-draft-js';
-import styled from 'styled-components';
-import FileSaver from 'file-saver';
-import Markdown from './export-markdown-button';
-import { createMarkdown } from '../utils/markdownTemplate';
+import * as React from "react";
+import * as Draft from "draft-js";
+import { draftToMarkdown } from "markdown-draft-js";
+import styled from "styled-components";
+import FileSaver from "file-saver";
+import Markdown from "./export-markdown-button";
+import { createMarkdown } from "../utils/markdownTemplate";
 
 interface ExportPr {
   title: string;
@@ -24,10 +24,10 @@ const ExportContainer = styled.div`
   margin: 0 16px;
 `;
 
-const FILE_TYPE = { type: 'text/markdown; charset=UTF-8' };
+const FILE_TYPE = { type: "text/markdown; charset=UTF-8" };
 
 export default class UIMarkdownExport extends React.Component<ExportPr, any> {
-  static displayName = 'UIMarkdownExport';
+  static displayName = "UIMarkdownExport";
 
   export = (cb: Function) => {
     let { title, date, editorState } = this.props;
@@ -46,7 +46,7 @@ export default class UIMarkdownExport extends React.Component<ExportPr, any> {
       entityItems: {
         LINK: {
           open: () => {
-            return '[';
+            return "[";
           },
 
           close: entity => {
@@ -63,7 +63,7 @@ export default class UIMarkdownExport extends React.Component<ExportPr, any> {
       if (isFileSaverSupported) {
         let md = createMarkdown(title, this.customDraft(content), date);
         let blob = new Blob([md.trim()], FILE_TYPE);
-        FileSaver.saveAs(blob, `${title.replace(/\s+/g, '-').toLowerCase()}.md`);
+        FileSaver.saveAs(blob, `${title.replace(/\s+/g, "-").toLowerCase()}.md`);
       }
     } catch (err) {
       console.error(err);

@@ -1,5 +1,5 @@
-import * as jwt from 'jsonwebtoken';
-import Config from './config';
+import * as jwt from "jsonwebtoken";
+import Config from "./config";
 
 // const fs = require('fs')
 // let key = fs.readFileSync('private.key')
@@ -7,12 +7,12 @@ export function createToken(user) {
   let scopes;
 
   if (user.admin) {
-    scopes = 'admin';
+    scopes = "admin";
   }
 
   const jwtConfig = {
-    algorithm: 'HS256',
-    expiresIn: '180 days'
+    algorithm: "HS256",
+    expiresIn: "180 days"
   };
 
   const data = {

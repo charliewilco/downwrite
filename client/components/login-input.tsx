@@ -1,12 +1,13 @@
-import * as React from 'react';
-import uuid from 'uuid/v4';
-import styled from 'styled-components';
-import { colors, fonts } from '../utils/defaultStyles';
+import * as React from "react";
+import uuid from "uuid/v4";
+import styled from "styled-components";
+import { colors, fonts } from "../utils/defaultStyles";
 
 interface InputType {
   label: string;
   onChange: (x) => void;
   value: string;
+  name?: string;
   type: string;
   placeholder?: string;
   autoComplete?: string;
@@ -40,16 +41,18 @@ const StyledInput = styled.input`
 
 const InputContainer = styled.label`
   display: block;
+`;
 
+export const LoginInputContainer = styled.div`
   &:not(:last-of-type) {
     margin-bottom: 16px;
   }
 `;
 
-const InputLabel = styled.small`
+const InputLabel = styled.small<InputTypeState>`
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: ${(props: InputTypeState) => (props.active ? colors.yellow700 : '#b4b4b4')};
+  color: ${props => (props.active ? colors.yellow700 : "#b4b4b4")};
   transition: color 250ms ease-in-out;
 `;
 
@@ -58,10 +61,10 @@ export default class extends React.Component<InputType, InputTypeState> {
     active: false
   };
 
-  static displayName = 'LoginInput';
+  static displayName = "LoginInput";
 
   static defaultProps = {
-    type: 'text'
+    type: "text"
   };
 
   render() {

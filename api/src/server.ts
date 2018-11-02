@@ -17,7 +17,7 @@ const validate = async () => ({ isValid: true });
 
 const init = async (): Promise<Hapi.Server> => {
   const server = new Hapi.Server({
-    port: process.env.PORT || 4411,
+    port: process.env.PORT || 4000,
     host: process.env.HOST || "localhost",
     routes: { cors: true }
   });

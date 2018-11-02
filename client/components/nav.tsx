@@ -9,7 +9,7 @@ import { SidebarEmpty } from "./empty-posts";
 import SidebarPosts from "./sidebar-posts";
 import TouchOutside from "./touch-outside";
 import LockScroll from "./lock-scroll";
-import { colors, fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const NavColumn = styled.div`
   display: flex;
@@ -40,7 +40,7 @@ const NavButton = styled.button`
   }
 
   &:hover {
-    color: ${colors.blue700};
+    color: ${DefaultStyles.colors.blue700};
   }
 `;
 
@@ -53,7 +53,7 @@ const NavLink = styled.a`
   }
 
   &:hover {
-    color: ${colors.blue700};
+    color: ${DefaultStyles.colors.blue700};
   }
 `;
 
@@ -101,13 +101,13 @@ const NavTray = styled.footer`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-family: ${fonts.sans};
+  font-family: ${DefaultStyles.fonts.sans};
 `;
 
 const NavItem = styled.a`
   display: block;
-  color: ${colors.gray300};
-  font-family: ${fonts.sans};
+  color: ${DefaultStyles.colors.gray300};
+  font-family: ${DefaultStyles.fonts.sans};
   font-size: 16px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -116,7 +116,7 @@ const NavItem = styled.a`
   }
 
   &:hover {
-    color: ${colors.blue700};
+    color: ${DefaultStyles.colors.blue700};
   }
 `;
 

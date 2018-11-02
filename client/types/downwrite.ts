@@ -1,4 +1,4 @@
-import * as Draft from 'draft-js';
+import * as Draft from "draft-js";
 
 export interface IPost {
   title: string;

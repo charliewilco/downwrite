@@ -1,7 +1,7 @@
-declare module 'draft-js-plugins-editor' {
+declare module "draft-js-plugins-editor" {
   export interface PluginsEditorProps {
     plugins: any;
-    handleKeyCommand: (c: string, e: Draft.EditorState) => 'handled' | 'not-handled';
+    handleKeyCommand: (c: string, e: Draft.EditorState) => "handled" | "not-handled";
     keyBindingFn: (e: any) => string;
   }
 

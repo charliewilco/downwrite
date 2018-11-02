@@ -1,6 +1,6 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import FeatureContent from '../markdown/features.md';
+import * as React from "react";
+import styled from "styled-components";
+import FeatureContent from "../markdown/features.md";
 
 const FeatureContainer = styled.section`
   max-width: 33rem;

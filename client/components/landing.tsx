@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Intro = styled.article`
   text-align: center;
@@ -30,13 +30,13 @@ const IntroContent = styled.div`
 `;
 
 const IntroTitle = styled.h1`
-  color: ${props => (props.theme.night ? 'white' : '#185A70')};
+  color: ${props => (props.theme.night ? "white" : "#185A70")};
   font-size: 24px;
   font-weight: 400;
   font-style: italic;
 `;
 
-const StyledImage = styled.img.attrs({ src: '/static/landing.png' })`
+const StyledImage = styled.img.attrs({ src: "/static/landing.png" })`
   max-width: 200px;
   z-index: 0;
 `;

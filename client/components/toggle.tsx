@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 interface IToggleAction {
   isOpen: boolean;
@@ -20,7 +20,7 @@ export default class ToggleInstance extends React.Component<
     defaultOpen: false
   };
 
-  static displayName = 'ToggleInstance';
+  static displayName = "ToggleInstance";
 
   state = {
     open: this.props.defaultOpen

@@ -73,7 +73,6 @@ exports[`<Card /> matches snapshot 1`] = `
 }
 
 .c8 {
-  color: #185a70;
   border: 0px;
   background: none;
   -webkit-appearance: none;

@@ -1,6 +1,6 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import { colors } from '../utils/defaultStyles';
+import * as React from "react";
+import styled from "styled-components";
+import { colors } from "../utils/defaultStyles";
 
 const StyledLoginButton = styled.button`
   padding: 8px;
@@ -23,10 +23,10 @@ interface ILoginButton {
 }
 
 export default class extends React.Component<ILoginButton, any> {
-  static displayName = 'LoginButton';
+  static displayName = "LoginButton";
 
   static defaultProps = {
-    label: 'Submit'
+    label: "Submit"
   };
 
   render() {

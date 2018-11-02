@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from "bcrypt";
 
 export function hashPassword(password, cb) {
   // Generate a salt at level 10 strength

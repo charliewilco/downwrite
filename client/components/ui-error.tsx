@@ -1,6 +1,6 @@
-import * as React from 'react';
-import UIFlash from './ui-flash-messages';
-import Null from './null';
+import * as React from "react";
+import UIFlash from "./ui-flash-messages";
+import Null from "./null";
 
 interface ErrorTypes {
   content: string;
@@ -49,13 +49,13 @@ export const withErrors = (Component: HOComponent) => {
 
 export class ErrorContainer extends React.Component<IErrorProps, ErrorTypes> {
   state = {
-    content: '',
-    type: ''
+    content: "",
+    type: ""
   };
 
   setError = (content: string, type: string) => this.setState({ content, type });
 
-  clearFlash = () => this.setState({ content: '', type: '' });
+  clearFlash = () => this.setState({ content: "", type: "" });
 
   render() {
     const { children } = this.props;

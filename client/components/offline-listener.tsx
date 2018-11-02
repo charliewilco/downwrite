@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 interface OfflineAtrx {
   offline: boolean;
@@ -10,7 +10,7 @@ export default class OfflineListener extends React.Component<
   { children: React.ReactNode },
   OfflineAtrx
 > {
-  static displayName = 'OfflineListener';
+  static displayName = "OfflineListener";
 
   state = {
     offline: !window.navigator.onLine
@@ -23,15 +23,15 @@ export default class OfflineListener extends React.Component<
 
   componentDidMount() {
     if (window) {
-      window.addEventListener('offline', this.handleChange);
-      window.addEventListener('online', this.handleChange);
+      window.addEventListener("offline", this.handleChange);
+      window.addEventListener("online", this.handleChange);
     }
   }
 
   componentWillUnmount() {
     if (window) {
-      window.removeEventListener('offline', this.handleChange);
-      window.removeEventListener('online', this.handleChange);
+      window.removeEventListener("offline", this.handleChange);
+      window.removeEventListener("online", this.handleChange);
     }
   }
 

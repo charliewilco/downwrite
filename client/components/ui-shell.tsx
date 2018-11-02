@@ -1,15 +1,16 @@
-import * as React from 'react';
-import styled, { injectGlobal } from 'styled-components';
-import Nav from './nav';
-import Toggle from './toggle';
-import Header from './header';
-import NightMode, { NightModeTrigger } from './night-mode';
-import UIContainer from './ui-container';
-import { ErrorContainer, UIErrorBanner } from './ui-error';
-import { colors, fonts } from '../utils/defaultStyles';
+import * as React from "react";
+import styled, { injectGlobal } from "styled-components";
+import Nav from "./nav";
+import Toggle from "./toggle";
+import Header from "./header";
+import Footer from "./footer";
+import NightMode, { NightModeTrigger } from "./night-mode";
+import UIContainer from "./ui-container";
+import { ErrorContainer, UIErrorBanner } from "./ui-error";
+import { colors, fonts } from "../utils/defaultStyles";
 
-import '../utils/global.css';
-import '../utils/typescale.css';
+import "../utils/global.css";
+import "../utils/typescale.css";
 
 injectGlobal`
   *,
@@ -56,23 +57,23 @@ injectGlobal`
 
 const ClearFixed = styled.div`
   &::after {
-    content: '';
+    content: "";
     display: table;
     clear: both;
   }
 `;
 
-ClearFixed.displayName = 'ClearFixed';
+ClearFixed.displayName = "ClearFixed";
 
 const Container = styled.div`
   min-height: 100%;
 `;
 
-Container.displayName = 'Container';
+Container.displayName = "Container";
 
 const AppContainer = styled.div``;
 
-AppContainer.displayName = 'AppContainer';
+AppContainer.displayName = "AppContainer";
 
 interface IUIShell {
   route: string;
@@ -82,7 +83,7 @@ interface IUIShell {
 }
 
 export default class UIShell extends React.Component<IUIShell, any> {
-  static displayName = 'UIShell';
+  static displayName = "UIShell";
 
   render() {
     const { children, authed, token, route } = this.props;
@@ -103,6 +104,7 @@ export default class UIShell extends React.Component<IUIShell, any> {
                         onClick={onToggle}
                       />
                       {children}
+                      <Footer />
                     </Container>
                     {isOpen && (
                       <Nav pathname={route} closeNav={onClose} token={token} />

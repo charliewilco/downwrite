@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 interface IIconAttributes {
   size?: number;
@@ -12,7 +12,7 @@ const CloseIcon: React.SFC<IIconAttributes> = ({ size, fill, className }) => (
     height={size}
     className={className}
     viewBox="0 0 12 12"
-    style={{ display: 'block' }}>
+    style={{ display: "block" }}>
     <title>Close</title>
     <g id="Canvas" transform="translate(-1561 -730)">
       <g id="Close">
@@ -86,7 +86,7 @@ const ExportIcon: React.SFC<IIconAttributes> = ({ className }) => (
 
 CloseIcon.defaultProps = {
   size: 12,
-  fill: '#4382A1'
+  fill: "#4382A1"
 };
 
 export { CloseIcon, NavIcon, ExportIcon, SignoutIcon };

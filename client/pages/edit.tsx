@@ -1,28 +1,28 @@
-import * as React from 'react';
-import * as Dwnxt from '../types/downwrite';
-import Head from 'next/head';
-import * as Draft from 'draft-js';
-import isEmpty from 'lodash/isEmpty';
-import noop from 'lodash/noop';
-import debounce from 'lodash/debounce';
-import sanitize from '@charliewilco/sanitize-object';
-import 'universal-fetch';
+import * as React from "react";
+import * as Dwnxt from "../types/downwrite";
+import Head from "next/head";
+import * as Draft from "draft-js";
+import isEmpty from "lodash/isEmpty";
+import noop from "lodash/noop";
+import debounce from "lodash/debounce";
+import sanitize from "@charliewilco/sanitize-object";
+import "universal-fetch";
 
-import Autosaving from '../components/autosaving-notification';
-import ExportMarkdown from '../components/export';
-import WordCounter from '../components/word-count';
-import Button from '../components/button';
-import Loading from '../components/loading';
-import Input from '../components/input';
-import OuterEditor from '../components/outer-editor';
-import Wrapper from '../components/wrapper';
-import { PrivacyToggle } from '../components/privacy';
-import PreviewLink from '../components/preview-link';
-import Editor from '../components/editor';
-import TimeMarker from '../components/time-marker';
-import * as UtilityBar from '../components/utility-bar';
-import { getToken, createHeader, superConverter } from '../utils/responseHandler';
-import { POST_ENDPOINT } from '../utils/urls';
+import Autosaving from "../components/autosaving-notification";
+import ExportMarkdown from "../components/export";
+import WordCounter from "../components/word-count";
+import Button from "../components/button";
+import Loading from "../components/loading";
+import Input from "../components/input";
+import OuterEditor from "../components/outer-editor";
+import Wrapper from "../components/wrapper";
+import { PrivacyToggle } from "../components/privacy";
+import PreviewLink from "../components/preview-link";
+import Editor from "../components/editor";
+import TimeMarker from "../components/time-marker";
+import * as UtilityBar from "../components/utility-bar";
+import { getToken, createHeader, superConverter } from "../utils/responseHandler";
+import { POST_ENDPOINT } from "../utils/urls";
 
 interface IEditorSt {
   autosaving: boolean;
@@ -48,7 +48,7 @@ interface IEditorPr {
 const stateCreator = (post: Dwnxt.IPost) => ({
   autosaving: false,
   post,
-  title: post.title || '',
+  title: post.title || "",
   editorState: Draft.EditorState.createWithContent(superConverter(post.content)),
   updated: false,
   loaded: !isEmpty(post),
@@ -58,10 +58,10 @@ const stateCreator = (post: Dwnxt.IPost) => ({
   dateModified: new Date()
 });
 
-const EDITOR_COMMAND = 'myeditor-save';
+const EDITOR_COMMAND = "myeditor-save";
 
 function saveKeyListener(e: React.KeyboardEvent): string {
-  if (e.keyCode === 83 /* `S` key */ && Draft.KeyBindingUtil.hasCommandModifier(e)) {
+  if (e.keyCode === 83 && Draft.KeyBindingUtil.hasCommandModifier(e)) {
     return EDITOR_COMMAND;
   }
 
@@ -74,10 +74,10 @@ function saveKeyListener(e: React.KeyboardEvent): string {
 // - EditorState changes
 // - Updating the post on the server
 
-type Handler = 'handled' | 'not-handled';
+type Handler = "handled" | "not-handled";
 
 export default class Edit extends React.Component<IEditorPr, IEditorSt> {
-  static displayName = 'EntryEdit';
+  static displayName = "EntryEdit";
 
   static async getInitialProps({ req, query }) {
     const { id } = query;
@@ -85,7 +85,7 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
 
     const post = await fetch(
       `${POST_ENDPOINT}/${id}`,
-      createHeader('GET', token)
+      createHeader("GET", token)
     ).then(r => r.json());
     const content = await superConverter(post.content);
 
@@ -108,7 +108,7 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
 
   updatePost = (body: Dwnxt.IPost) => {
     const { id, token } = this.props;
-    const config = createHeader('PUT', token);
+    const config = createHeader("PUT", token);
 
     const payload = { ...config, body: JSON.stringify(body) };
 
@@ -120,7 +120,7 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
     const contentState: Draft.ContentState = editorState.getCurrentContent();
     const content = Draft.convertToRaw(contentState);
 
-    const postBody = sanitize(post, ['_id', '__v']);
+    const postBody = sanitize(post, ["_id", "__v"]);
 
     const newPost = {
       ...postBody,
@@ -131,7 +131,6 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
     };
 
     const updater = () => this.setState({ autosaving: false });
-    console.log(x);
     return this.updatePost(newPost).then(() => setTimeout(updater, 7500));
   };
 
@@ -149,15 +148,15 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
 
     if (newState) {
       this.onChange(newState);
-      return 'handled';
+      return "handled";
     }
 
     if (command === EDITOR_COMMAND) {
       this.updatePostContent({ autosave: false });
-      return 'handled';
+      return "handled";
     }
 
-    return 'not-handled';
+    return "not-handled";
   };
 
   componentDidMount() {

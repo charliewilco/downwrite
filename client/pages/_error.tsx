@@ -1,14 +1,14 @@
-import * as React from 'react';
-import Head from 'next/head';
-import styled from 'styled-components';
-import Wrapper from '../components/wrapper';
+import * as React from "react";
+import Head from "next/head";
+import styled from "styled-components";
+import Wrapper from "../components/wrapper";
 
 const CenteredWrapper = styled(Wrapper)`
   text-align: center;
   padding: 8rem 1rem;
 `;
 
-const Title = styled.h2`
+const ErrorTitle = styled.h2`
   display: inline-block;
   margin-bottom: 32px;
   font-size: 84px;
@@ -18,7 +18,7 @@ const Title = styled.h2`
 
 const StatusCode = ({ code }) => (
   <p>
-    {code ? `An error ${code} occurred on server` : 'An error occurred on client'}
+    {code ? `An error ${code} occurred on server` : "An error occurred on client"}
   </p>
 );
 
@@ -39,7 +39,7 @@ export default class ErrorPage extends React.Component<IErrorViewProps, any> {
         <Head>
           <title>Not Found | Downwrite</title>
         </Head>
-        <Title>404</Title>
+        <ErrorTitle>404</ErrorTitle>
         <StatusCode code={statusCode} />
       </CenteredWrapper>
     );
