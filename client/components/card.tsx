@@ -3,7 +3,7 @@ import * as Draft from "draft-js";
 import styled from "styled-components";
 import Link from "next/link";
 import distance from "date-fns/distance_in_words_to_now";
-import { colors, fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const CardContainer = styled.div`
   display: flex;
@@ -11,7 +11,7 @@ const CardContainer = styled.div`
   justify-content: space-between;
   height: 192px;
   font-weight: 400;
-  font-family: ${fonts.sans};
+  font-family: ${DefaultStyles.fonts.sans};
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
   background-color: ${props => props.theme.cardBackground};
 
@@ -52,7 +52,7 @@ const CardTray = styled.footer`
   background-color: ${props => props.theme.cardTrayBackground};
 
   & a:hover {
-    color: ${colors.blue500};
+    color: ${DefaultStyles.colors.blue500};
   }
 `;
 
@@ -68,7 +68,7 @@ const CardBody = styled.div`
 `;
 
 const CardDelete = styled.button`
-  color: ${colors.blue700};
+  color: ${props => props.theme.cardDeleteButton};
   border: 0px;
   background: none;
   appearance: none;

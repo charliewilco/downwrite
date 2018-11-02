@@ -30,15 +30,16 @@ export const colors = {
 
 export const NIGHT_THEME = {
   night: true,
-  background: "#093F5D",
+  background: "#022438", // "#093F5D", "#072a3e"
   color: colors.gray100,
   border: colors.gray200,
   link: colors.yellow700,
   linkHover: colors.blue100,
   meta: colors.gray100,
   inputBorder: "rgba(219, 220, 221, 0.24)",
-  cardBackground: "#356F90",
+  cardBackground: "#093f5d",
   cardTrayBackground: "rgba(219, 220, 221, 0.24)",
+  cardDeleteButton: colors.blue100,
   headerLogoLink: "#EDF0F1",
   landingPageTitle: colors.blue400
 };
@@ -54,6 +55,7 @@ export const DAY_THEME = {
   inputBorder: "rgba(0, 0, 0, 0.125)",
   cardBackground: "#FFFFFF",
   cardTrayBackground: "rgba(101, 163, 191, 0.125)",
+  cardDeleteButton: colors.blue700,
   headerLogoLink: colors.blue400,
   landingPageTitle: colors.blue900
 };
