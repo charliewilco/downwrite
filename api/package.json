@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc",
     "predev": "yarn build",
-    "deploy": "now && now alias",
+    "deploy:ci": "now --token $NOW_TOKEN",
+    "deploy:token": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN",
     "start": "node dist/server.js",
     "dev": "nodemon",
     "test": "jest",
@@ -39,7 +40,7 @@
     "mongoose": "^5.2.17",
     "typescript": "^3.0.3",
     "uuid": "^3.1.0",
-    "vision": "^5.4.0"
+    "vision": "^5.4.2"
   },
   "devDependencies": {
     "jest": "^22.4.0",
@@ -58,7 +59,7 @@
       }
     },
     "env": {
-      "PORT": 4411,
+      "PORT": "4411",
       "NODE_ENV": "production",
       "SECRET_KEY": "@dw-key",
       "DB_USER": "@dw-db-user",

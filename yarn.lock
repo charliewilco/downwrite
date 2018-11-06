@@ -4696,6 +4696,11 @@ hoek@5.x.x:
   resolved "https://registry.npmjs.org/hoek/-/hoek-5.0.4.tgz#0f7fa270a1cafeb364a4b2ddfaa33f864e4157da"
   integrity sha512-Alr4ZQgoMlnere5FZJsIyfIjORBqZll5POhDsF4q64dPuJR6rNxXdDxtHSQq8OXRurhmx+PWYEE8bXRROY8h0w==
 
+hoek@6.x.x:
+  version "6.0.1"
+  resolved "https://registry.npmjs.org/hoek/-/hoek-6.0.1.tgz#15ae90f8d30ad114e2feabe4967567014a783078"
+  integrity sha512-3PvUwBerLNVJiIVQdpkWF9F/M0ekgb2NPJWOhsE28RXSQPsY42YSnaJ8d1kZjcAz58TZ/Fk9Tw64xJsENFlJNw==
+
 hoist-non-react-statics@2.5.5, hoist-non-react-statics@^2.1.1, hoist-non-react-statics@^2.5.0, hoist-non-react-statics@^2.5.5:
   version "2.5.5"
   resolved "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
@@ -6240,6 +6245,15 @@ joi@13.x.x, joi@^13.6.0:
   integrity sha512-xuY5VkHfeOYK3Hdi91ulocfuFopwgbSORmIwzcwHKESQhC7w1kD5jaVSPnqDxS2I8t3RZ9omCKAxNwXN5zG1/Q==
   dependencies:
     hoek "5.x.x"
+    isemail "3.x.x"
+    topo "3.x.x"
+
+joi@14.x.x:
+  version "14.0.4"
+  resolved "https://registry.npmjs.org/joi/-/joi-14.0.4.tgz#f066f79330f6bd6f3dda243be6d2c211f83a5f9b"
+  integrity sha512-KUXRcinDUMMbtlOk7YLGHQvG73dLyf8bmgE+6sBTkdJbZpeGVGAlPXEHLiQBV7KinD/VLD5OA0EUgoTTfbRAJQ==
+  dependencies:
+    hoek "6.x.x"
     isemail "3.x.x"
     topo "3.x.x"
 
@@ -10678,15 +10692,15 @@ vise@3.x.x:
   dependencies:
     hoek "5.x.x"
 
-vision@^5.4.0:
-  version "5.4.0"
-  resolved "https://registry.npmjs.org/vision/-/vision-5.4.0.tgz#fc620deb95227881ea8b8d8a044dc1d1fd40e584"
-  integrity sha512-f8kbjvo/dUbR4ZDF0pHPuOjQFg/6zOMlP1Tb9gK2ukCa7Ksd24174DCzubtov6AxIDhZhO5RYQeeDlF8ujlKWQ==
+vision@^5.4.2:
+  version "5.4.2"
+  resolved "https://registry.npmjs.org/vision/-/vision-5.4.2.tgz#09bd5821f1abab8c484022c667c06acc898b47e3"
+  integrity sha512-VMDxICq7u8SaEXIVRamhhK+RX9jvD0uK8yPYJTj80yFwPffirkxqB2A9I9ipvwi1fA+JzEIaErdgsel0SVFUZw==
   dependencies:
     boom "7.x.x"
-    hoek "5.x.x"
+    hoek "6.x.x"
     items "2.x.x"
-    joi "13.x.x"
+    joi "14.x.x"
 
 vm-browserify@0.0.4:
   version "0.0.4"
