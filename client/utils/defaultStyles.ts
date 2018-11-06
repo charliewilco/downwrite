@@ -1,5 +1,3 @@
-import { __IS_DEV__ } from "./dev";
-
 export const colors = {
   blue400: "#4fa5c2", // Main Color
   blue500: "#4382A1",
@@ -61,10 +59,7 @@ export const DAY_THEME = {
 };
 
 export const fonts = {
-  monospace: `${
-    __IS_DEV__ ? "SF Mono" : `'Operator Mono SSm A', 'Operator Mono SSm B'`
-  }, 'Input Mono Condensed',
-    Roboto Mono, monospace`,
+  monospace: `SF Mono, "Input Mono Condensed", "Roboto Mono", Menlo, monospace`,
   sans: `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"`,
   code: `'SF Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace`
 };
