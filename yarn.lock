@@ -786,6 +786,33 @@
     url-regex "^4.1.1"
     write-json-file "^2.2.0"
 
+"@reach/component-component@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.npmjs.org/@reach/component-component/-/component-component-0.1.1.tgz#62ea2ec290da32f5e3a9872fb51f9a3ae4370cc4"
+  integrity sha512-4HxyyOLo/nDg0LlgYvzgqpTGaxqKmrZB8/y5wWhtyvGzgKAb1DJzSnYRaFsgGGgkQAQmhwPXKZ0H/rOAkxXJ8Q==
+
+"@reach/dialog@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.npmjs.org/@reach/dialog/-/dialog-0.1.2.tgz#46a3639c01928e125110fd5ccb753281172e844d"
+  integrity sha512-aaBS2a4ZNKGpqsjCdZukYhjf1x75sZ1lQrYg9mJq21Nfz9kk0Yx6zn4LR7ZYxgqkGj5/CQOSciGuUPF+Z8k9nA==
+  dependencies:
+    "@reach/component-component" "^0.1.1"
+    "@reach/portal" "^0.1.1"
+    "@reach/utils" "^0.1.2"
+    focus-trap "^3.0.0"
+
+"@reach/portal@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.npmjs.org/@reach/portal/-/portal-0.1.1.tgz#94f3f9b999c5a0dfb819309912ec23e36807e70b"
+  integrity sha512-AWsOH2TLfetlUzw3wbpy6n8trnuFI7N/HB2jYjrBRP5IbG/PmgrVQiL/HFP/OsCbbOo0rK7AsKnG7qyOf0r4Tg==
+  dependencies:
+    "@reach/component-component" "^0.1.1"
+
+"@reach/utils@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.npmjs.org/@reach/utils/-/utils-0.1.2.tgz#72f547b5c9b0401a56de303d9e508abf6d3fa56a"
+  integrity sha512-HpDR5BeCApr3HufQtpg0P5b9sl0S66zikZSMtC/2jZBvrDzjVaT9O8PbKTQqW0PdkMNrnBkX1UtlrrM1TN3/Og==
+
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
   resolved "https://registry.npmjs.org/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.0.tgz#ecdf48d532c58ea477acfcab80348424f8d0662f"
@@ -4069,6 +4096,14 @@ fn-name@~2.0.1:
   version "2.0.1"
   resolved "https://registry.npmjs.org/fn-name/-/fn-name-2.0.1.tgz#5214d7537a4d06a4a301c0cc262feb84188002e7"
   integrity sha1-UhTXU3pNBqSjAcDMJi/rhBiAAuc=
+
+focus-trap@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/focus-trap/-/focus-trap-3.0.0.tgz#4d2ee044ae66bf7eb6ebc6c93bd7a1039481d7dc"
+  integrity sha512-jTFblf0tLWbleGjj2JZsAKbgtZTdL1uC48L8FcmSDl4c2vDoU4NycN1kgV5vJhuq1mxNFkw7uWZ1JAGlINWvyw==
+  dependencies:
+    tabbable "^3.1.0"
+    xtend "^4.0.1"
 
 follow-redirects@^1.0.0:
   version "1.5.9"
@@ -9843,6 +9878,11 @@ synchronous-promise@^2.0.5:
   version "2.0.6"
   resolved "https://registry.npmjs.org/synchronous-promise/-/synchronous-promise-2.0.6.tgz#de76e0ea2b3558c1e673942e47e714a930fa64aa"
   integrity sha512-TyOuWLwkmtPL49LHCX1caIwHjRzcVd62+GF6h8W/jHOeZUFHpnd2XJDVuUlaTaLPH1nuu2M69mfHr5XbQJnf/g==
+
+tabbable@^3.1.0:
+  version "3.1.1"
+  resolved "https://registry.npmjs.org/tabbable/-/tabbable-3.1.1.tgz#db7512f28a9a1ed16e4275bd190131be9d5ad8e9"
+  integrity sha512-583MHIOwictf7+zbxqO/L5fBqMN6Li4SJ1XTKQA9WzHRA7c2BB+D+Ny7Y6kGqU2u+rHK59+oRzrBvMU53aZz+A==
 
 table@^4.0.3:
   version "4.0.3"

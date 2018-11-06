@@ -17,6 +17,7 @@
     "@charliewilco/sanitize-object": "^1.0.1",
     "@mdx-js/mdx": "^0.15.5",
     "@mdx-js/tag": "^0.15.0",
+    "@reach/dialog": "^0.1.2",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-mdx": "^1.2.0",
     "@zeit/next-typescript": "^1.1.1",

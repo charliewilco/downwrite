@@ -13,7 +13,7 @@ const CardContainer = styled.div`
   font-weight: 400;
   font-family: ${DefaultStyles.fonts.sans};
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
-  background-color: ${props => props.theme.cardBackground};
+  background: ${props => props.theme.cardBackground};
 
   a {
     cursor: pointer;
@@ -23,7 +23,7 @@ const CardContainer = styled.div`
 const CardTitle = styled.h2`
   font-size: 14px;
   margin-bottom: 0px;
-  font-weight: 500;
+  font-weight: 700;
 
   @media (min-width: 57.75rem) {
     font-size: 18px;

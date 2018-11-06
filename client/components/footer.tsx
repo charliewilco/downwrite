@@ -33,7 +33,9 @@ const FooterList = styled.ul`
   margin: 0;
   display: flex;
   font-size: small;
-  justify-content: space-between;
+  justify-content: space-around;
+  max-width: 50%;
+  margin: 0 auto;
 `;
 
 const FooterListItem = styled.li``;

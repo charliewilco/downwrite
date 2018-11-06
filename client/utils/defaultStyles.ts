@@ -35,9 +35,9 @@ export const NIGHT_THEME = {
   border: colors.gray200,
   link: colors.yellow700,
   linkHover: colors.blue100,
-  meta: colors.gray100,
+  meta: colors.gray200,
   inputBorder: "rgba(219, 220, 221, 0.24)",
-  cardBackground: "#093f5d",
+  cardBackground: "#093f5d linear-gradient(45deg, #093f5d, #072A3E)",
   cardTrayBackground: "rgba(219, 220, 221, 0.24)",
   cardDeleteButton: colors.blue100,
   headerLogoLink: "#EDF0F1",
@@ -74,6 +74,6 @@ export function isValidHex(hex: string): boolean {
   return valid;
 }
 
-export const startColors: string[] = ["#16a085", "#f4d03f", "#147aab", "#000000"];
+export const startColors: string[] = ["#f2d50f", "#7117ea"];
 
-export const endColors: string[] = ["#16a085", "#f4d03f"];
+export const endColors: string[] = ["#da0641", "#ea6060"];
