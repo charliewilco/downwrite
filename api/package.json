@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc",
     "predev": "yarn build",
-    "deploy": "now && now alias",
+    "deploy:ci": "now --token $NOW_TOKEN",
+    "deploy:token": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN",
     "start": "node dist/server.js",
     "dev": "nodemon",
     "test": "jest",

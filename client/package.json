@@ -10,8 +10,8 @@
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
     "test": "NODE_ENV=test jest --env=jsdom --verbose --silent",
-    "test:integration": "jest --config=./puppeteer.json",
-    "deploy": "now && now alias"
+    "deploy:ci": "now --token $NOW_TOKEN",
+    "deploy:token": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN"
   },
   "dependencies": {
     "@charliewilco/sanitize-object": "^1.0.1",
