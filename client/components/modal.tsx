@@ -1,5 +1,6 @@
 import * as React from "react";
 import styled, { keyframes } from "styled-components";
+import * as Reach from "@reach/dialog";
 import LockScroll from "./lock-scroll";
 import { CloseIcon } from "./icons";
 import * as DefaultStyles from "../utils/defaultStyles";
@@ -16,7 +17,7 @@ const fadein = keyframes`
   }
 `;
 
-const Overlay = styled.div`
+const Overlay = styled(Reach.DialogOverlay)`
   position: fixed;
   top: 0;
   bottom: 0;
@@ -30,17 +31,17 @@ const Overlay = styled.div`
   background-blend-mode: multiply;
 `;
 
-const ModalContainer = styled.div`
+const ModalContainer = styled(Reach.DialogContent)`
   animation: ${fadein} 0.45s;
   background: white;
   width: 100%;
-  height: 50%;
+  height: auto;
   position: relative;
   color: ${DefaultStyles.colors.text};
   display: flex;
   margin-left: auto;
   margin-right: auto;
-  max-width: 768px;
+  width: auto;
 `;
 
 const ModalCloseButton = styled.button`

@@ -3,12 +3,13 @@ import styled from "styled-components";
 import Modal from "./modal";
 import Button from "./button";
 import Cancel from "./cancel";
-import { fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const DeleteTray = styled.div`
   display: flex;
   justify-content: flex-end;
-  font-family: ${fonts.sans};
+  padding: 16px 0;
+  font-family: ${DefaultStyles.fonts.sans};
 `;
 
 const DeleteBody = styled.div`
@@ -17,15 +18,12 @@ const DeleteBody = styled.div`
   max-width: 480px;
 `;
 
-const DeleteTrayDivider = styled.hr`
-  box-sizing: inherit;
-  border: 0;
-  height: 1px;
+const Box = styled.div`
+  padding: 24px 8px 0;
 `;
 
-const Box = styled.div``;
-
 const DeleteWarning = styled.p`
+  margin: 16px 0;
   font-size: 16px;
 `;
 
@@ -47,11 +45,11 @@ const DeleteModal: React.SFC<IDeleteModalProps> = ({
   <Modal closeUIModal={closeModal}>
     <Box>
       <DeleteBody>
+        <h6>Delete Post</h6>
         <DeleteWarning>
           Are you sure you want to delete <strong>{quotedTitle(title)}</strong>?
         </DeleteWarning>
       </DeleteBody>
-      <DeleteTrayDivider />
       <DeleteTray>
         <Cancel onClick={onCancelDelete}>Cancel</Cancel>
         <Button onClick={onDelete}>Delete</Button>
