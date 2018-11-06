@@ -123,6 +123,7 @@
   },
   "now": {
     "name": "next-downwrite",
+    "type": "npm",
     "alias": [
       "beta.downwrite.us"
     ],
