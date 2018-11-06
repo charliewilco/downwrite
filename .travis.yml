@@ -13,17 +13,13 @@ script:
 before_deploy: yarn global add now
 deploy:
   - provider: script # Run a custom deployment script which we will define below
-    script:
-      - yarn workspace client deploy:ci
-      - yarn workspace api deploy:ci
+    script: yarn workspaces run deploy:ci
     skip_cleanup: true
     on:
       all_branches: true
       master: false
   - provider: script
-    script:
-      - yarn workspace client deploy:token
-      - yarn workspace api deploy:token
+    script: yarn workspaces run deploy:token
     skip_cleanup: true
     on:
       master: true
