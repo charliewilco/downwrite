@@ -1,15 +1,51 @@
 import * as React from "react";
-import Input from "./input";
+import { Formik, FormikProps, Form } from "formik";
+import SettingsBlock, { SettingsFormActions } from "./settings-block";
+import LoginInput, { LoginInputContainer } from "./login-input";
+import Button from "./button";
+import { LocalSettingsSchema } from "../utils/validations";
 
-export default class MarkdownSettings extends React.Component {
-  state = {
-    fileExtension: ".md"
-  };
+interface ILocalSettings {
+  fileExtension: string;
+}
 
-  updateExtension = ({ target }) => this.setState({ fileExtension: target.value });
+interface ISettingsLocalMarkdownProps {
+  onSubmit: (settings: ILocalSettings) => void;
+}
 
+export default class SettingsLocalMarkdown extends React.Component<
+  ISettingsLocalMarkdownProps,
+  {}
+> {
+  onSubmit(values, actions) {
+    this.props.onSubmit(values);
+  }
   render() {
-    const { fileExtension } = this.state;
-    return <Input onChange={this.updateExtension} value={fileExtension} />;
+    return (
+      <Formik
+        initialValues={{ fileExtension: ".md" }}
+        validationSchema={LocalSettingsSchema}
+        onSubmit={this.onSubmit}>
+        {({ values, handleChange }: FormikProps<ILocalSettings>) => (
+          <SettingsBlock
+            title="Local Settings"
+            description="Settings only saved in your browser and won't sync across devices.">
+            <Form>
+              <LoginInputContainer>
+                <LoginInput
+                  label="File Extension"
+                  name="fileExtension"
+                  value={values.fileExtension}
+                  onChange={handleChange}
+                />
+              </LoginInputContainer>
+              <SettingsFormActions>
+                <Button type="submit">Save</Button>
+              </SettingsFormActions>
+            </Form>
+          </SettingsBlock>
+        )}
+      </Formik>
+    );
   }
 }

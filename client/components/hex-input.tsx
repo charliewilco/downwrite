@@ -55,9 +55,9 @@ export default class HexInput extends React.PureComponent<IHexInputProps> {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.state.hex !== nextState.hex;
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return this.state.hex !== nextState.hex;
+  // }
 
   render() {
     const { hex } = this.state;

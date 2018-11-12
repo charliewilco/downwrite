@@ -34,6 +34,7 @@ interface IInputProps {
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   placeholder?: string;
   value: any;
+  name?: string;
 }
 
 export default class Input extends React.Component<IInputProps, any> {

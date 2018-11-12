@@ -13,3 +13,10 @@ export const RegisterFormSchema = Yup.object().shape({
     .email()
     .required("Email is required")
 });
+
+export const LocalSettingsSchema = Yup.object().shape({
+  fileExtension: Yup.string().matches(/.(md|mdx|txt)/, {
+    message: "Must be .md, .mdx or .txt",
+    excludeEmptyString: true
+  })
+});
