@@ -25,3 +25,14 @@ export default styled.button`
     filter: grayscale(100%);
   }
 `;
+
+export const AltButton = styled.button`
+  margin-right: 1rem;
+  color: ${colors.blue700};
+  background: none;
+  font-family: inherit;
+  font-size: 100%;
+  border: 0px;
+  font-weight: 700;
+  box-sizing: inherit;
+`;

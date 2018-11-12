@@ -1,8 +1,7 @@
 import * as React from "react";
 import { Formik, Form, FormikProps, ErrorMessage } from "formik";
 import "universal-fetch";
-import LoginInput, { LoginInputContainer } from "./login-input";
-import InputError from "./input-error";
+import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import Button from "./button";
 import SpacedBox from "./spaced-box";
 import LegalBoilerplate from "./legal-boilerplate";
@@ -67,8 +66,8 @@ export default class Register extends React.Component<LoginProps, {}> {
         {({ values, errors, handleChange }: FormikProps<IRegistration>) => (
           <Form>
             <SpacedBox>
-              <LoginInputContainer>
-                <LoginInput
+              <UIInputContainer>
+                <UIInput
                   placeholder="Try for something unique"
                   label="Username"
                   autoComplete="username"
@@ -76,10 +75,10 @@ export default class Register extends React.Component<LoginProps, {}> {
                   value={values.username}
                   onChange={handleChange}
                 />
-                <ErrorMessage name="username" component={InputError} />
-              </LoginInputContainer>
-              <LoginInputContainer>
-                <LoginInput
+                <ErrorMessage name="username" component={UIInputError} />
+              </UIInputContainer>
+              <UIInputContainer>
+                <UIInput
                   placeholder="mail@email.com"
                   label="Email"
                   autoComplete="email"
@@ -87,10 +86,10 @@ export default class Register extends React.Component<LoginProps, {}> {
                   value={values.email}
                   onChange={handleChange}
                 />
-                <ErrorMessage name="email" component={InputError} />
-              </LoginInputContainer>
-              <LoginInputContainer>
-                <LoginInput
+                <ErrorMessage name="email" component={UIInputError} />
+              </UIInputContainer>
+              <UIInputContainer>
+                <UIInput
                   placeholder="*********"
                   label="Password"
                   name="password"
@@ -99,8 +98,8 @@ export default class Register extends React.Component<LoginProps, {}> {
                   type="password"
                   onChange={handleChange}
                 />
-                <ErrorMessage name="password" component={InputError} />
-              </LoginInputContainer>
+                <ErrorMessage name="password" component={UIInputError} />
+              </UIInputContainer>
             </SpacedBox>
             <LegalBoilerplate
               name="legalChecked"
@@ -108,11 +107,11 @@ export default class Register extends React.Component<LoginProps, {}> {
               onChange={handleChange}
             />
             <SpacedBox align="right">
-              <LoginInputContainer style={{ display: "inline-block" }}>
+              <UIInputContainer style={{ display: "inline-block" }}>
                 <Button disabled={!values.legalChecked} type="submit">
                   Register
                 </Button>
-              </LoginInputContainer>
+              </UIInputContainer>
             </SpacedBox>
           </Form>
         )}

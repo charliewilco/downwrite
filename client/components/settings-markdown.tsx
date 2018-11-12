@@ -1,17 +1,23 @@
 import * as React from "react";
 import { Formik, FormikProps, Form } from "formik";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
-import LoginInput, { LoginInputContainer } from "./login-input";
+import UIInput, { UIInputContainer } from "./ui-input";
 import Button from "./button";
 import { LocalSettingsSchema } from "../utils/validations";
 
 interface ILocalSettings {
   fileExtension: string;
+  fontFamily: string;
 }
 
 interface ISettingsLocalMarkdownProps {
   onSubmit: (settings: ILocalSettings) => void;
 }
+
+const initialValues = {
+  fileExtension: ".md",
+  fontFamily: "SF Mono"
+};
 
 export default class SettingsLocalMarkdown extends React.Component<
   ISettingsLocalMarkdownProps,
@@ -20,10 +26,11 @@ export default class SettingsLocalMarkdown extends React.Component<
   onSubmit(values, actions) {
     this.props.onSubmit(values);
   }
+
   render() {
     return (
       <Formik
-        initialValues={{ fileExtension: ".md" }}
+        initialValues={initialValues}
         validationSchema={LocalSettingsSchema}
         onSubmit={this.onSubmit}>
         {({ values, handleChange }: FormikProps<ILocalSettings>) => (
@@ -31,14 +38,22 @@ export default class SettingsLocalMarkdown extends React.Component<
             title="Local Settings"
             description="Settings only saved in your browser and won't sync across devices.">
             <Form>
-              <LoginInputContainer>
-                <LoginInput
+              <UIInputContainer>
+                <UIInput
                   label="File Extension"
                   name="fileExtension"
                   value={values.fileExtension}
                   onChange={handleChange}
                 />
-              </LoginInputContainer>
+              </UIInputContainer>
+              <UIInputContainer>
+                <UIInput
+                  label="Editor Font"
+                  name="fontFamily"
+                  value={values.fontFamily}
+                  onChange={handleChange}
+                />
+              </UIInputContainer>
               <SettingsFormActions>
                 <Button type="submit">Save</Button>
               </SettingsFormActions>

@@ -13,7 +13,7 @@ import ExportMarkdown from "../components/export";
 import WordCounter from "../components/word-count";
 import Button from "../components/button";
 import Loading from "../components/loading";
-import Input from "../components/input";
+import Input from "../components/editor-input";
 import OuterEditor from "../components/outer-editor";
 import Wrapper from "../components/wrapper";
 import { PrivacyToggle } from "../components/privacy";

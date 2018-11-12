@@ -3,6 +3,7 @@ import Head from "next/head";
 import styled from "styled-components";
 import "isomorphic-fetch";
 import SettingsUser from "../components/settings-user-form";
+import SettingsPassword from "../components/settings-password";
 import SettingsBlock from "../components/settings-block";
 import SettingsLocal from "../components/settings-markdown";
 import Wrapper from "../components/wrapper";
@@ -65,7 +66,7 @@ export default class Settings extends React.Component<
         </Head>
         <SettingsTitle>Settings</SettingsTitle>
         <SettingsUser user={user} />
-        <SettingsBlock title="Password">Password</SettingsBlock>
+        <SettingsPassword />
         <SettingsLocal onSubmit={this.updateLocalSettings} />
       </SettingsWrapper>
     );

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Formik, FormikProps, Form } from "formik";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
-import LoginInput, { LoginInputContainer } from "./login-input";
+import UIInput, { UIInputContainer } from "./ui-input";
 import Button from "./button";
 
 interface IUserFormValues {
@@ -21,8 +21,8 @@ const SettingsUser: React.SFC<ISettingsUserForm> = ({ user, onSubmit }) => (
     {({ values, handleChange }: FormikProps<IUserFormValues>) => (
       <SettingsBlock title="User Settings">
         <Form>
-          <LoginInputContainer>
-            <LoginInput
+          <UIInputContainer>
+            <UIInput
               placeholder="user@email.com"
               label="Username"
               name="username"
@@ -30,9 +30,9 @@ const SettingsUser: React.SFC<ISettingsUserForm> = ({ user, onSubmit }) => (
               value={values.username}
               onChange={handleChange}
             />
-          </LoginInputContainer>
-          <LoginInputContainer>
-            <LoginInput
+          </UIInputContainer>
+          <UIInputContainer>
+            <UIInput
               placeholder="user@email.com"
               label="Email"
               autoComplete="email"
@@ -40,7 +40,7 @@ const SettingsUser: React.SFC<ISettingsUserForm> = ({ user, onSubmit }) => (
               value={values.email}
               onChange={handleChange}
             />
-          </LoginInputContainer>
+          </UIInputContainer>
           <SettingsFormActions>
             <Button type="submit">Save</Button>
           </SettingsFormActions>

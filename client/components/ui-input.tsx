@@ -39,17 +39,21 @@ const StyledInput = styled.input`
   }
 `;
 
-const InputContainer = styled.label`
+const Container = styled.label`
   display: block;
 `;
 
-export const LoginInputContainer = styled.div`
+export const UIInputContainer = styled.div`
   &:not(:last-of-type) {
     margin-bottom: 16px;
   }
 `;
 
-const InputLabel = styled.small<InputTypeState>`
+export const UIInputError = styled.small`
+  color: #d04d36;
+`;
+
+const UIInputLabel = styled.small<InputTypeState>`
   text-transform: uppercase;
   letter-spacing: 1px;
   color: ${props => (props.active ? colors.yellow700 : "#b4b4b4")};
@@ -61,7 +65,7 @@ export default class extends React.Component<InputType, InputTypeState> {
     active: false
   };
 
-  static displayName = "LoginInput";
+  static displayName = "UIInput";
 
   static defaultProps = {
     type: "text"
@@ -72,15 +76,15 @@ export default class extends React.Component<InputType, InputTypeState> {
     const { active } = this.state;
     const { label } = this.props;
     return (
-      <InputContainer htmlFor={id}>
+      <Container htmlFor={id}>
         <StyledInput
           onFocus={() => this.setState({ active: true })}
           onBlur={() => this.setState({ active: false })}
           id={id}
           {...this.props}
         />
-        <InputLabel active={active}>{label}</InputLabel>
-      </InputContainer>
+        <UIInputLabel active={active}>{label}</UIInputLabel>
+      </Container>
     );
   }
 }

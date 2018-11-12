@@ -1,8 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import Modal from "./modal";
-import Button from "./button";
-import Cancel from "./cancel";
+import Button, { AltButton } from "./button";
 import * as DefaultStyles from "../utils/defaultStyles";
 
 const DeleteTray = styled.div`
@@ -51,7 +50,7 @@ const DeleteModal: React.SFC<IDeleteModalProps> = ({
         </DeleteWarning>
       </DeleteBody>
       <DeleteTray>
-        <Cancel onClick={onCancelDelete}>Cancel</Cancel>
+        <AltButton onClick={onCancelDelete}>Cancel</AltButton>
         <Button onClick={onDelete}>Delete</Button>
       </DeleteTray>
     </Box>
