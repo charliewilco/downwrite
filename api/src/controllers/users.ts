@@ -18,13 +18,10 @@ export const createUser = async (
   const hash = await bcrypt.hash(password, salt);
   const id = uuid();
 
-  const doc = Object.assign(
-    {},
-    { email, username, id, password: hash, admin: false }
-  );
-
   try {
-    let user: IUser = await User.create(doc);
+    let user: IUser = await User.create(
+      Object.assign({}, { email, username, id, password: hash, admin: false })
+    );
     let token = createToken(user);
 
     return h

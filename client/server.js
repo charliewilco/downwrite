@@ -39,10 +39,13 @@ app.prepare().then(() => {
   );
 
   server.get("/new", isNotLoggedIn, (req, res) => app.render(req, res, "/new"));
+
   server.get("/login", (req, res) => app.render(req, res, "/login"));
+
   server.get("/:id/edit", isNotLoggedIn, (req, res) =>
     app.render(req, res, "/edit", req.params)
   );
+
   server.get("/:id/preview", (req, res) =>
     app.render(req, res, "/preview", req.params)
   );

@@ -1,7 +1,7 @@
 import * as React from "react";
+import * as Draft from "draft-js";
 import * as Dwnxt from "../types/downwrite";
 import Head from "next/head";
-import * as Draft from "draft-js";
 import isEmpty from "lodash/isEmpty";
 import noop from "lodash/noop";
 import debounce from "lodash/debounce";
