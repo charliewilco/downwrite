@@ -11,4 +11,6 @@ export const PREVIEW_ENDPOINT: string = `${URL}/posts/preview`;
 
 export const USER_ENDPOINT: string = `${URL}/users`;
 
+export const SETTINGS_ENDPOINT: string = `${URL}/users/settings`;
+
 export const AUTH_ENDPOINT: string = `${URL}/users/authenticate`;

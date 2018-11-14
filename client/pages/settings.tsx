@@ -4,13 +4,11 @@ import styled from "styled-components";
 import "isomorphic-fetch";
 import SettingsUser from "../components/settings-user-form";
 import SettingsPassword from "../components/settings-password";
-import SettingsBlock from "../components/settings-block";
 import SettingsLocal from "../components/settings-markdown";
 import Wrapper from "../components/wrapper";
 import ContainerTitle from "../components/container-title";
-import { getToken, createHeader } from "../utils/responseHandler";
-import { USER_ENDPOINT } from "../utils/urls";
-import { gradientPoints } from "../components/avatar";
+import * as API from "../utils/api";
+import { getToken } from "../utils/responseHandler";
 
 const SettingsWrapper = styled(Wrapper)`
   padding: 8px;
@@ -43,18 +41,11 @@ export default class Settings extends React.Component<
   static async getInitialProps({ req, query }) {
     const { token } = getToken(req, query);
 
-    const user = await fetch(USER_ENDPOINT, createHeader("GET", token)).then(res =>
-      res.json()
-    );
-
+    const user = await API.getUserDetails({ token });
     return {
       token,
       user
     };
-  }
-
-  updateLocalSettings(values, actions) {
-    console.log(values, actions);
   }
 
   render() {
@@ -66,8 +57,8 @@ export default class Settings extends React.Component<
         </Head>
         <SettingsTitle>Settings</SettingsTitle>
         <SettingsUser user={user} />
-        <SettingsPassword />
-        <SettingsLocal onSubmit={this.updateLocalSettings} />
+        <SettingsPassword onSubmit={console.log} />
+        <SettingsLocal />
       </SettingsWrapper>
     );
   }

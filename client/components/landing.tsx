@@ -1,4 +1,6 @@
+import * as React from "react";
 import styled from "styled-components";
+import { fonts } from "../utils/defaultStyles";
 
 const Intro = styled.article`
   text-align: center;
@@ -25,6 +27,7 @@ const IntroContent = styled.div`
 
   span {
     font-weight: 700;
+    font-style: italic;
     color: ${props => props.theme.landingPageTitle};
   }
 `;
@@ -32,8 +35,8 @@ const IntroContent = styled.div`
 const IntroTitle = styled.h1`
   color: ${props => (props.theme.night ? "white" : "#185A70")};
   font-size: 24px;
-  font-weight: 400;
-  font-style: italic;
+  font-family: ${fonts.sans};
+  font-weight: 700;
 `;
 
 const StyledImage = styled.img.attrs({ src: "/static/landing.png" })`

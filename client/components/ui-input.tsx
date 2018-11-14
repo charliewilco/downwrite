@@ -20,6 +20,7 @@ interface InputTypeState {
 const StyledInput = styled.input`
   font-family: ${fonts.monospace};
   font-size: 16px;
+  font-weight: 400;
   appearance: none;
   display: block;
   border: 0px;
@@ -35,6 +36,7 @@ const StyledInput = styled.input`
 
   &::placeholder {
     color: #d9d9d9;
+    font-weight: 700;
     font-style: italic;
   }
 `;
@@ -54,8 +56,8 @@ export const UIInputError = styled.small`
 `;
 
 const UIInputLabel = styled.small<InputTypeState>`
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  font-weight: 700;
+  font-family: ${fonts.sans};
   color: ${props => (props.active ? colors.yellow700 : "#b4b4b4")};
   transition: color 250ms ease-in-out;
 `;

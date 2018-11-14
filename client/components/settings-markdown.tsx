@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Formik, FormikProps, Form } from "formik";
+import { Formik, FormikProps, ErrorMessage, Form } from "formik";
+import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
-import UIInput, { UIInputContainer } from "./ui-input";
 import Button from "./button";
 import { LocalSettingsSchema } from "../utils/validations";
 
@@ -10,52 +10,76 @@ interface ILocalSettings {
   fontFamily: string;
 }
 
-interface ISettingsLocalMarkdownProps {
-  onSubmit: (settings: ILocalSettings) => void;
-}
-
 const initialValues = {
   fileExtension: ".md",
   fontFamily: "SF Mono"
 };
 
 export default class SettingsLocalMarkdown extends React.Component<
-  ISettingsLocalMarkdownProps,
-  {}
+  {},
+  { initialValues: ILocalSettings }
 > {
+  state = { initialValues };
+
   onSubmit(values, actions) {
-    this.props.onSubmit(values);
+    localStorage.setItem("DW_FILE_EXTENSION", values.fileExtension);
+    localStorage.setItem("DW_EDITOR_FONT", values.fontFamily);
+
+    if (
+      localStorage.getItem("DW_FILE_EXTENSION") === values.fileExtension &&
+      localStorage.getItem("DW_EDITOR_FONT") === values.fontFamily
+    ) {
+      actions.setSubmitting(false);
+    }
   }
+
+  componentDidMount() {
+    let fileExtension =
+      localStorage.getItem("DW_FILE_EXTENSION") || initialValues.fileExtension;
+    let fontFamily =
+      localStorage.getItem("DW_EDITOR_FONT") || initialValues.fontFamily;
+
+    this.setState({ initialValues: { fileExtension, fontFamily } });
+  }
+
+  private inputs = [
+    {
+      label: "File Extension",
+      name: "fileExtension"
+    },
+    {
+      label: "Editor Font",
+      name: "fontFamily"
+    }
+  ];
 
   render() {
     return (
       <Formik
-        initialValues={initialValues}
+        enableReinitialize
+        initialValues={this.state.initialValues}
         validationSchema={LocalSettingsSchema}
         onSubmit={this.onSubmit}>
-        {({ values, handleChange }: FormikProps<ILocalSettings>) => (
+        {({ values, handleChange, isSubmitting }: FormikProps<ILocalSettings>) => (
           <SettingsBlock
             title="Local Settings"
             description="Settings only saved in your browser and won't sync across devices.">
             <Form>
-              <UIInputContainer>
-                <UIInput
-                  label="File Extension"
-                  name="fileExtension"
-                  value={values.fileExtension}
-                  onChange={handleChange}
-                />
-              </UIInputContainer>
-              <UIInputContainer>
-                <UIInput
-                  label="Editor Font"
-                  name="fontFamily"
-                  value={values.fontFamily}
-                  onChange={handleChange}
-                />
-              </UIInputContainer>
+              {this.inputs.map((input, idx) => (
+                <UIInputContainer key={idx}>
+                  <UIInput
+                    label={input.label}
+                    name={input.name}
+                    value={values[input.name]}
+                    onChange={handleChange}
+                  />
+                  <ErrorMessage name={input.name} component={UIInputError} />
+                </UIInputContainer>
+              ))}
               <SettingsFormActions>
-                <Button type="submit">Save</Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  Save
+                </Button>
               </SettingsFormActions>
             </Form>
           </SettingsBlock>

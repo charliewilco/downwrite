@@ -55,20 +55,48 @@ export const getDetails = async (
 };
 
 export const verifyUniqueUser = async (request: IRegisterRequest) => {
+  const { username, email } = request.payload;
   const user: IUser = await User.findOne({
-    $or: [{ email: request.payload.email }, { username: request.payload.username }]
+    $or: [{ email }, { username }]
   });
 
   if (user) {
-    if (user.username === request.payload.username) {
+    if (user.username === username) {
       return Boom.badRequest("Username taken");
     }
-    if (user.email === request.payload.email) {
+    if (user.email === email) {
       return Boom.badRequest("Email taken");
     }
   }
 
   return request.payload;
+};
+
+interface IUpdateEmailNameRequest extends IRequest {
+  payload: {
+    username: string;
+    email: string;
+  };
+}
+
+export const updateNameEmail = async (
+  request: IUpdateEmailNameRequest
+): Promise<IUser | Boom<any>> => {
+  const { user } = request.auth.credentials;
+  const { username, email } = request.payload;
+
+  try {
+    const updated = await User.findByIdAndUpdate(
+      {
+        _id: user
+      },
+      { $set: { username, email } },
+      { new: true }
+    );
+    return updated;
+  } catch (err) {
+    return Boom.internal("Internal MongoDB error", err);
+  }
 };
 
 export const verifyCredentials = async (request: ILoginRequest) => {

@@ -97,6 +97,15 @@ const Routes = [
   },
   {
     method: "POST",
+    path: "/users/settings",
+    handler: UserController.updateNameEmail,
+    config: {
+      cors,
+      auth
+    }
+  },
+  {
+    method: "POST",
     path: "/users/authenticate",
     config: {
       pre: [
