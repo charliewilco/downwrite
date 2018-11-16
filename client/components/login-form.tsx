@@ -18,7 +18,6 @@ interface LoginProps {
 
 export default class Login extends React.Component<LoginProps, {}> {
   handleSubmit = (values, actions) => {
-    console.log("HANDLING SUBMIT");
     this.onSubmit(values);
   };
 

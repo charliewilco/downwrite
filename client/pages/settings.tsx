@@ -57,7 +57,7 @@ export default class Settings extends React.Component<
         </Head>
         <SettingsTitle>Settings</SettingsTitle>
         <SettingsUser user={user} />
-        <SettingsPassword onSubmit={console.log} />
+        <SettingsPassword />
         <SettingsLocal />
       </SettingsWrapper>
     );

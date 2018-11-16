@@ -28,7 +28,6 @@ interface IUserResponse {
 
 export default class Register extends React.Component<LoginProps, {}> {
   handleSubmit = (values, actions) => {
-    console.log(actions);
     if (values.legalChecked) {
       this.onSubmit(values);
     }
