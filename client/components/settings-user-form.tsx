@@ -3,8 +3,7 @@ import { Formik, FormikProps, ErrorMessage, Form } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import Button from "./button";
-import { createHeader } from "../utils/responseHandler";
-import { SETTINGS_ENDPOINT } from "../utils/urls";
+import * as API from "../utils/api";
 import { withAuth } from "./auth";
 
 interface IUserFormValues {
@@ -19,17 +18,11 @@ interface ISettingsUserForm {
 
 class SettingsUser extends React.Component<ISettingsUserForm, {}> {
   onSubmit = async (values, actions) => {
-    const config = createHeader("POST", this.props.token);
-
-    const settings = await fetch(SETTINGS_ENDPOINT, {
-      ...config,
-      body: JSON.stringify(values)
-    })
-      .then(res => res.json())
-      .then(data => {
-        actions.setSubmitting(false);
-        return data;
-      });
+    const { token } = this.props;
+    const settings = API.updateSettings(values, { token });
+    if (settings) {
+      actions.setSubmitting(false);
+    }
   };
 
   render() {

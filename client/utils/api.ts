@@ -58,7 +58,9 @@ export async function removePost(id, options: IOptions): Promise<Response> {
   return response;
 }
 
-export async function getPosts(options: IOptions): Promise<Dwnxt.IPost[]> {
+export async function getPosts(
+  options: IOptions
+): Promise<Dwnxt.IPost[] | Dwnxt.IPostError> {
   const entries: Dwnxt.IPost[] = await fetch(
     POST_ENDPOINT,
     ResponseHandler.createHeader("GET", options.token)
