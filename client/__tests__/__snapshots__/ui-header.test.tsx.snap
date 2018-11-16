@@ -43,6 +43,7 @@ exports[`Header Component matches snapshot 1`] = `
   cursor: pointer;
   -webkit-transition: color 375ms ease-in-out;
   transition: color 375ms ease-in-out;
+  font-weight: 700;
   color: !important;
 }
 
