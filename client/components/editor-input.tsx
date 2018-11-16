@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const StyledInput = styled.input`
   display: block;
@@ -8,7 +8,7 @@ const StyledInput = styled.input`
   appearance: none;
   font-weight: 400;
   color: inherit;
-  font-family: ${fonts.sans};
+  font-family: ${DefaultStyles.fonts.sans};
   background: none;
   font-size: 150%;
   border-width: 0px;

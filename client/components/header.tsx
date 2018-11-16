@@ -4,7 +4,7 @@ import Link from "next/link";
 import Logo from "./logo";
 import AltAnchor from "./alt-anchor-link";
 import { NavIcon } from "./icons";
-import { colors, fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 import { withAuth } from "./auth";
 
 const MenuContainer = styled.nav`
@@ -20,7 +20,7 @@ const HomeLink = styled.a`
   font-weight: 700;
   color: ${props => props.theme.headerLogoLink} !important;
   &:hover {
-    color: ${colors.blue700};
+    color: ${DefaultStyles.colors.blue700};
   }
 `;
 
@@ -36,7 +36,7 @@ const ToggleButton = styled.button`
 const HeaderTitle = styled.h1`
   font-size: 16px;
   font-style: normal;
-  font-family: ${fonts.sans};
+  font-family: ${DefaultStyles.fonts.sans};
   line-height: 1;
   font-weight: 400;
 

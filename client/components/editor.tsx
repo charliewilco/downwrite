@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 import createMarkdownPlugin from "draft-js-markdown-plugin";
 import createPrismPlugin from "draft-js-prism-plugin";
-import { fonts, colors } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 import "./draft.css";
 import "./ganymede.css";
 
@@ -22,17 +22,18 @@ const EditorWrapper = styled.div`
     float: right;
     border: 0;
     background: none;
-    color: ${colors.blue700};
+    color: ${DefaultStyles.colors.blue700};
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
       sans-serif;
   }
 `;
 
-const EditorShell = styled.div`
+const EditorShell = styled.div<{ font: string }>`
   border-top: 0px;
   position: relative;
   padding-top: 24px;
   padding-bottom: 128px;
+  font-family: ${props => props.font};
 `;
 
 interface IEditorProps {
@@ -44,6 +45,7 @@ interface IEditorProps {
 }
 
 interface IEditorState {
+  font: string;
   editorState: Draft.EditorState;
   plugins: any[];
 }
@@ -58,6 +60,7 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
   private editor: Editor = null as Editor;
 
   state = {
+    font: DefaultStyles.fonts.monospace,
     editorState: this.props.editorState,
     plugins: [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()]
   };
@@ -83,6 +86,12 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
     );
   };
 
+  componentDidMount() {
+    const font = localStorage.getItem("DW_EDITOR_FONT");
+
+    this.setState(state => ({ font: [`${font},`, state.font].join(" ") }));
+  }
+
   render() {
     const { editorState, handleKeyCommand, keyBindingFn } = this.props;
     const { plugins } = this.state;
@@ -103,7 +112,7 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
     }
 
     return (
-      <EditorShell>
+      <EditorShell font={this.state.font}>
         <EditorWrapper className={className} onClick={this.focus}>
           <Editor
             handleKeyCommand={handleKeyCommand}
@@ -128,7 +137,7 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
 const styleMap = {
   CODE: {
     backgroundColor: "rgba(0, 0, 0, 0.05)",
-    fontFamily: fonts.monospace,
+    fontFamily: DefaultStyles.fonts.monospace,
     fontSize: 14,
     padding: 2
   }

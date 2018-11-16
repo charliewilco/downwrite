@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled, { StyledFunction } from "styled-components";
-import { colors, fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const Box = styled.div``;
 
@@ -23,7 +23,7 @@ const LayoutTrigger = trigger`
   margin: 8px 0 8px 16px;
   cursor: pointer;
   font-size: 14px;
-  font-family: ${fonts.sans};
+  font-family: ${DefaultStyles.fonts.sans};
   color: inherit;
   opacity: ${(props: ILayoutTrigger) => (props.active ? 1 : 0.5)};
   &:after {
@@ -31,7 +31,9 @@ const LayoutTrigger = trigger`
     display: block;
     border-bottom: 3px solid
       ${(props: ILayoutTrigger) =>
-        props.active ? props.theme.link || colors.blue400 : "transparent"};
+        props.active
+          ? props.theme.link || DefaultStyles.colors.blue400
+          : "transparent"};
   }
 `;
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const Intro = styled.article`
   text-align: center;
@@ -11,6 +11,7 @@ const Intro = styled.article`
   justify-content: center;
   max-width: 33rem;
   width: 100%;
+  font-family: ${DefaultStyles.fonts.monospace};
 
   @media (min-width: 57.75rem) {
     padding-top: 64px;
@@ -35,7 +36,7 @@ const IntroContent = styled.div`
 const IntroTitle = styled.h1`
   color: ${props => (props.theme.night ? "white" : "#185A70")};
   font-size: 24px;
-  font-family: ${fonts.sans};
+  font-family: ${DefaultStyles.fonts.sans};
   font-weight: 700;
 `;
 

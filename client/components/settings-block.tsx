@@ -1,12 +1,10 @@
 import styled from "styled-components";
 import { ToastNoPosition as Toast } from "./toast";
-import { fonts } from "../utils/defaultStyles";
 
 const StyledToast = styled(Toast)`
   display: flex;
   flex-wrap: wrap;
   padding: 16px;
-  font-family: ${fonts.sans};
   margin-bottom: 32px;
 `;
 

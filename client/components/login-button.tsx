@@ -1,10 +1,10 @@
 import * as React from "react";
 import styled from "styled-components";
-import { colors } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const StyledLoginButton = styled.button`
   padding: 8px;
-  color: ${colors.yellow700};
+  color: ${DefaultStyles.colors.yellow700};
   border: 0px;
   background: none;
   font-family: inherit;
@@ -13,7 +13,7 @@ const StyledLoginButton = styled.button`
   box-sizing: inherit;
 
   &:hover {
-    color: ${colors.yellow500};
+    color: ${DefaultStyles.colors.yellow500};
   }
 `;
 

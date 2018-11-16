@@ -1,7 +1,7 @@
 import * as React from "react";
 import uuid from "uuid/v4";
 import styled from "styled-components";
-import { colors, fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 interface InputType {
   label: string;
@@ -18,7 +18,7 @@ interface InputTypeState {
 }
 
 const StyledInput = styled.input`
-  font-family: ${fonts.monospace};
+  font-family: ${DefaultStyles.fonts.monospace};
   font-size: 16px;
   font-weight: 400;
   appearance: none;
@@ -31,7 +31,7 @@ const StyledInput = styled.input`
 
   &:focus {
     outline: none;
-    border-bottom: 2px solid ${colors.yellow700};
+    border-bottom: 2px solid ${DefaultStyles.colors.yellow700};
   }
 
   &::placeholder {
@@ -57,8 +57,8 @@ export const UIInputError = styled.small`
 
 const UIInputLabel = styled.small<InputTypeState>`
   font-weight: 700;
-  font-family: ${fonts.sans};
-  color: ${props => (props.active ? colors.yellow700 : "#b4b4b4")};
+  font-family: ${DefaultStyles.fonts.sans};
+  color: ${props => (props.active ? DefaultStyles.colors.yellow700 : "#b4b4b4")};
   transition: color 250ms ease-in-out;
 `;
 

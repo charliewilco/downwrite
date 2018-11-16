@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { colors } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const AltAnchor = styled.a<{ space?: string }>`
   font-size: 14px;
@@ -19,7 +19,7 @@ const AltAnchor = styled.a<{ space?: string }>`
           `
         : null} &:hover,
   &:focus {
-    color: ${colors.text};
+    color: ${DefaultStyles.colors.text};
     opacity: 1;
   }
 `;

@@ -1,7 +1,6 @@
 import * as React from "react";
 import StyleButton from "./toolbar-button";
 import styled from "styled-components";
-import { fonts } from "../utils/defaultStyles";
 
 const ToolbarWrapper = styled.div`
   display: flex;
@@ -15,7 +14,6 @@ const ToolbarWrapper = styled.div`
   padding-bottom: 8px;
   padding-right: 16px;
   padding-left: 16px;
-  font-family: ${fonts.sans};
   background: white;
   border-bottom-width: 1px;
   border-bottom-style: solid;

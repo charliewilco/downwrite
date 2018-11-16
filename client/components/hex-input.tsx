@@ -1,7 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-
-import { isValidHex, fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const Input = styled.input.attrs({ type: "text", spellCheck: false, maxLength: 6 })`
   display: block;
@@ -17,7 +16,7 @@ const InputWrapper = styled.div`
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 4px;
   overflow: hidden;
-  font-family: ${fonts.monospace};
+  font-family: ${DefaultStyles.fonts.monospace};
   & > span {
     max-width: 24px;
     font-size: 14px;
@@ -51,7 +50,7 @@ export default class HexInput extends React.PureComponent<IHexInputProps> {
     let prevColor = "#" + prevState.hex;
 
     if (prevColor !== color) {
-      isValidHex(color) && this.props.onChange(color);
+      DefaultStyles.isValidHex(color) && this.props.onChange(color);
     }
   }
 
