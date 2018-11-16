@@ -51,6 +51,49 @@ export const getDetails = async (
   return foundUser;
 };
 
+interface IUpdatePassword extends IRequest {
+  payload: {
+    oldPassword: string;
+    newPassword: string;
+  };
+}
+
+export const updatePassword = async (request: IUpdatePassword) => {
+  const { user } = request.auth.credentials;
+  const { oldPassword, newPassword } = request.payload;
+  const salt = await bcrypt.genSalt(10);
+  const newPasswordHash = await bcrypt.hash(newPassword, salt);
+
+  const isPasswordValid = async oldPassword => {
+    const { password } = await User.findById(user, "password").lean();
+    const result = await bcrypt.compare(oldPassword, password);
+
+    return result;
+  };
+
+  const valid = isPasswordValid(oldPassword);
+
+  if (valid) {
+    try {
+      const updated = await User.findByIdAndUpdate(
+        {
+          _id: user
+        },
+        { $set: { password: newPasswordHash } },
+        { new: true, select: "username email" }
+      );
+
+      // TODO: strip out the damn password
+
+      return updated;
+    } catch (err) {
+      return Boom.internal("Internal MongoDB error", err);
+    }
+  } else {
+    return Boom.badRequest("Old password does not match");
+  }
+};
+
 export const verifyUniqueUser = async (request: IRegisterRequest) => {
   const { username, email } = request.payload;
   const user: IUser = await User.findOne({
@@ -88,8 +131,13 @@ export const updateNameEmail = async (
         _id: user
       },
       { $set: { username, email } },
-      { new: true }
+      { new: true, select: "username email" }
     );
+
+    // TODO: strip out the damn password
+    // options.select
+    // .lean()
+
     return updated;
   } catch (err) {
     return Boom.internal("Internal MongoDB error", err);

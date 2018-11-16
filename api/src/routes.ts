@@ -76,6 +76,15 @@ const Routes = [
   },
   {
     method: "POST",
+    path: "/password",
+    handler: UserController.updatePassword,
+    config: {
+      auth,
+      cors
+    }
+  },
+  {
+    method: "POST",
     path: "/users",
     handler: UserController.createUser,
     config: {
