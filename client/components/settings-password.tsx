@@ -3,7 +3,9 @@ import { Formik, FormikProps, ErrorMessage, Form } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import Button from "./button";
+import { withAuth } from "./auth";
 import { UpdatePasswordSchema } from "../utils/validations";
+import * as API from "../utils/api";
 
 interface IPasswordSettings {
   currentPassword: string;
@@ -11,23 +13,15 @@ interface IPasswordSettings {
   confirmPassword: string;
 }
 
-interface ISettingsFormProps {
-  onSubmit: (settings: IPasswordSettings) => void;
-}
+class SettingsPassword extends React.Component<{ token: string }, {}> {
+  onSubmit = (values, actions) => {
+    const { token } = this.props;
+    const response = API.updatePassword(values, { token });
 
-const initialValues = {
-  currentPassword: "",
-  newPassword: "",
-  confirmPassword: ""
-};
-
-export default class SettingsLocalMarkdown extends React.Component<
-  ISettingsFormProps,
-  {}
-> {
-  onSubmit(values, actions) {
-    this.props.onSubmit(values);
-  }
+    if (response) {
+      actions.setSubmitting(false);
+    }
+  };
 
   private inputs = [
     {
@@ -47,27 +41,37 @@ export default class SettingsLocalMarkdown extends React.Component<
   render() {
     return (
       <Formik
-        initialValues={initialValues}
+        initialValues={{
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: ""
+        }}
         validationSchema={UpdatePasswordSchema}
         onSubmit={this.onSubmit}>
-        {({ values, handleChange }: FormikProps<IPasswordSettings>) => (
+        {({
+          values,
+          handleChange,
+          isSubmitting
+        }: FormikProps<IPasswordSettings>) => (
           <SettingsBlock title="Password">
             <Form>
-              {this.inputs.map((input, idx) => (
+              {this.inputs.map(({ name, label }, idx) => (
                 <UIInputContainer key={idx}>
                   <UIInput
-                    label={input.label}
-                    name={input.name}
+                    label={label}
+                    name={name}
                     type="password"
                     placeholder="*********"
-                    value={values[input.name]}
+                    value={values[name]}
                     onChange={handleChange}
                   />
-                  <ErrorMessage name={input.name} component={UIInputError} />
+                  <ErrorMessage name={name} component={UIInputError} />
                 </UIInputContainer>
               ))}
               <SettingsFormActions>
-                <Button type="submit">Save</Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  Save
+                </Button>
               </SettingsFormActions>
             </Form>
           </SettingsBlock>
@@ -76,3 +80,5 @@ export default class SettingsLocalMarkdown extends React.Component<
     );
   }
 }
+
+export default withAuth(SettingsPassword);

@@ -1,4 +1,9 @@
-import { USER_ENDPOINT, POST_ENDPOINT } from "./urls";
+import {
+  USER_ENDPOINT,
+  POST_ENDPOINT,
+  SETTINGS_ENDPOINT,
+  PASSWORD_ENDPOINT
+} from "./urls";
 import * as ResponseHandler from "./responseHandler";
 import * as Dwnxt from "../types/downwrite";
 
@@ -11,7 +16,26 @@ export async function getUserDetails(options: IOptions): Promise<any> {
     USER_ENDPOINT,
     ResponseHandler.createHeader("GET", options.token)
   ).then(res => res.json());
+
   return user;
+}
+
+export async function updateSettings(body, options) {
+  const settings = await fetch(SETTINGS_ENDPOINT, {
+    ...ResponseHandler.createHeader("POST", options.token),
+    body: JSON.stringify(body)
+  }).then(res => res.json());
+
+  return settings;
+}
+
+export async function updatePassword(body: any, options: IOptions): Promise<any> {
+  const password = await fetch(PASSWORD_ENDPOINT, {
+    ...ResponseHandler.createHeader("POST", options.token),
+    body: JSON.stringify(body)
+  }).then(res => res.json());
+
+  return password;
 }
 
 export async function getPost(

@@ -30,8 +30,6 @@ class SettingsUser extends React.Component<ISettingsUserForm, {}> {
         actions.setSubmitting(false);
         return data;
       });
-
-    console.log(settings);
   };
 
   render() {

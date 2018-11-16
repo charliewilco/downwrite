@@ -79,8 +79,8 @@ export const updatePassword = async (request: IUpdatePassword) => {
         {
           _id: user
         },
-        { $set: { password: newPasswordHash } },
-        { new: true, select: "username email" }
+        { new: true, select: "username email" },
+        { $set: { password: newPasswordHash } }
       );
 
       // TODO: strip out the damn password
