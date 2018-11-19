@@ -34,6 +34,7 @@
     "front-matter": "^2.3.0",
     "http-proxy-middleware": "^0.19.0",
     "immutable": "^3.8.2",
+    "isomorphic-fetch": "^2.2.1",
     "jsonwebtoken": "^8.3.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.10",
@@ -50,7 +51,6 @@
     "styled-components": "^3.4.9",
     "universal-cookie": "^3.0.4",
     "universal-cookie-express": "^3.0.4",
-    "universal-fetch": "^1.0.0",
     "uuid": "^3.3.2",
     "yup": "^0.26.6"
   },

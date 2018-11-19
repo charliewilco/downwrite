@@ -1,7 +1,7 @@
 import * as React from "react";
 import Head from "next/head";
 import isEmpty from "lodash/isEmpty";
-import "universal-fetch";
+import "isomorphic-fetch";
 import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
 import NotFound from "../components/not-found";

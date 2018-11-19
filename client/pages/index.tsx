@@ -3,7 +3,7 @@ import * as Dwnxt from "../types/downwrite";
 import Head from "next/head";
 import orderBy from "lodash/orderBy";
 import isEmpty from "lodash/isEmpty";
-import "universal-fetch";
+import "isomorphic-fetch";
 import DeleteModal from "../components/delete-modal";
 import PostList, { ListContainer } from "../components/post-list";
 import Loading from "../components/loading";

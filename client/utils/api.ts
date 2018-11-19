@@ -45,7 +45,7 @@ export async function getPost(
   const post = await fetch(
     `${POST_ENDPOINT}/${id}`,
     ResponseHandler.createHeader("GET", options.token)
-  ).then(r => r.json());
+  ).then(res => res.json());
 
   return post;
 }
@@ -70,7 +70,7 @@ export async function getPosts(
 }
 
 export async function createPost(
-  body: Dwnxt.IPost,
+  body: Dwnxt.IPostCreation,
   options: IOptions
 ): Promise<Dwnxt.IPost | Dwnxt.IPostError> {
   const post = await fetch(POST_ENDPOINT, {

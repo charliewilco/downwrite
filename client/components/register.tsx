@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Formik, Form, FormikProps, ErrorMessage } from "formik";
-import "universal-fetch";
+import "isomorphic-fetch";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import Button from "./button";
 import SpacedBox from "./spaced-box";

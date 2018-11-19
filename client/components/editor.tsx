@@ -36,17 +36,18 @@ const EditorShell = styled.div<{ font: string }>`
   font-family: ${props => props.font};
 `;
 
+type Handler = "handled" | "not-handled";
+
 interface IEditorProps {
+  editorCommand: string;
   editorState: Draft.EditorState;
   onChange: (e: Draft.EditorState) => void;
+  onSave: () => void;
   toolbar?: boolean;
-  handleKeyCommand?: (c: string, e: Draft.EditorState) => "handled" | "not-handled";
-  keyBindingFn?: (e: any) => string;
 }
 
 interface IEditorState {
   font: string;
-  editorState: Draft.EditorState;
   plugins: any[];
 }
 
@@ -61,7 +62,6 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
 
   state = {
     font: DefaultStyles.fonts.monospace,
-    editorState: this.props.editorState,
     plugins: [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()]
   };
 
@@ -86,6 +86,33 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
     );
   };
 
+  private handleKeyCommand = (
+    command: string,
+    editorState: Draft.EditorState
+  ): Handler => {
+    const newState = Draft.RichUtils.handleKeyCommand(editorState, command);
+
+    if (newState) {
+      this.onChange(newState);
+      return "handled";
+    }
+
+    if (command === this.props.editorCommand) {
+      this.props.onSave();
+      return "handled";
+    }
+
+    return "not-handled";
+  };
+
+  saveKeyListener = (e: React.KeyboardEvent): string => {
+    if (e.keyCode === 83 && Draft.KeyBindingUtil.hasCommandModifier(e)) {
+      return this.props.editorCommand;
+    }
+
+    return Draft.getDefaultKeyBinding(e);
+  };
+
   componentDidMount() {
     const font = localStorage.getItem("DW_EDITOR_FONT");
 
@@ -93,13 +120,13 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
   }
 
   render() {
-    const { editorState, handleKeyCommand, keyBindingFn } = this.props;
-    const { plugins } = this.state;
+    const { editorState } = this.props;
+    const { plugins, font } = this.state;
 
     // If the user changes block type before entering any text, we can
     // either style the placeholder or hide it. Let's just hide it now.
     let className = "RichEditor-editor";
-    var contentState = editorState.getCurrentContent();
+    let contentState = editorState.getCurrentContent();
     if (!contentState.hasText()) {
       if (
         contentState
@@ -112,15 +139,15 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
     }
 
     return (
-      <EditorShell font={this.state.font}>
+      <EditorShell font={font}>
         <EditorWrapper className={className} onClick={this.focus}>
           <Editor
-            handleKeyCommand={handleKeyCommand}
-            keyBindingFn={keyBindingFn}
+            handleKeyCommand={this.handleKeyCommand}
+            keyBindingFn={this.saveKeyListener}
             blockStyleFn={getBlockStyle}
             customStyleMap={styleMap}
             editorState={editorState}
-            onChange={editorState => this.onChange(editorState)}
+            onChange={this.onChange}
             onTab={this.onTab}
             placeholder="History will be kind to me for I intend to write it. — Winston Churchill"
             ref={(x: Editor) => (this.editor = x)}

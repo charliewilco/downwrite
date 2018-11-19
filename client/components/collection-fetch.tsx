@@ -1,8 +1,7 @@
 import * as React from "react";
 import orderBy from "lodash/orderBy";
-import { POST_ENDPOINT } from "../utils/urls";
-import { createHeader } from "../utils/responseHandler";
-import "universal-fetch";
+import * as API from "../utils/api";
+import "isomorphic-fetch";
 
 interface FetchState {
   posts: any[];
@@ -24,23 +23,15 @@ export default class CollectionFetch extends React.Component<
   };
 
   static defaultProps = {
-    sortResponse: (x: any[]) => x,
-    endpoint: POST_ENDPOINT
-  };
-
-  getPosts = async () => {
-    const { endpoint, token } = this.props;
-    const config = createHeader("GET", token);
-
-    const posts = await fetch(endpoint, config).then(res => res.json());
-
-    this.setState({ posts: orderBy(posts, ["dateAdded"], ["desc"]) || [] });
+    sortResponse: (x: any[]) => x
   };
 
   // TODO: Move this to React Suspense!!
   // TODO: Or move to componentDidMount and add loading State
-  componentDidMount() {
-    this.getPosts();
+  async componentDidMount() {
+    const posts = await API.getPosts({ token: this.props.token });
+
+    this.setState({ posts: orderBy(posts, ["dateAdded"], ["desc"]) || [] });
   }
 
   render() {
