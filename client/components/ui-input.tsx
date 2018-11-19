@@ -46,6 +46,7 @@ const Container = styled.label`
 `;
 
 export const UIInputContainer = styled.div`
+  position: relative;
   &:not(:last-of-type) {
     margin-bottom: 16px;
   }
@@ -54,6 +55,10 @@ export const UIInputContainer = styled.div`
 export const UIInputError = styled.small`
   color: #d04d36;
 `;
+
+export const UIInputToggle = styled.input.attrs({ type: "checkbox" })<{
+  isOpen: boolean;
+}>``;
 
 const UIInputLabel = styled.small<InputTypeState>`
   font-weight: 700;

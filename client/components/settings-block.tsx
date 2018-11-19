@@ -30,10 +30,10 @@ const SettingsTitle = styled.h4`
   margin-bottom: 16px;
 `;
 
-export const SettingsFormActions = styled.div`
+export const SettingsFormActions = styled.div<{ split?: boolean }>`
   margin-top: 16px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: ${props => (props.split ? "space-between" : "flex-end")};
 `;
 
 interface ISettingsBlockProps {

@@ -5,6 +5,7 @@ import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import Button from "./button";
 import * as API from "../utils/api";
 import { withAuth } from "./auth";
+import { UserSettingsSchema } from "../utils/validations";
 
 interface IUserFormValues {
   username: string;
@@ -30,7 +31,8 @@ class SettingsUser extends React.Component<ISettingsUserForm, {}> {
     return (
       <Formik
         initialValues={{ username: user.username, email: user.email }}
-        onSubmit={this.onSubmit}>
+        onSubmit={this.onSubmit}
+        validationSchema={UserSettingsSchema}>
         {({ values, handleChange, isSubmitting }: FormikProps<IUserFormValues>) => (
           <SettingsBlock title="User Settings">
             <Form>

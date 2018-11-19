@@ -79,6 +79,13 @@ const Routes = [
     path: "/password",
     handler: UserController.updatePassword,
     config: {
+      validate: { payload: UserModel.validPasswordUpdate },
+      pre: [
+        {
+          method: UserController.verifyValidPassword,
+          assign: "user"
+        }
+      ],
       auth,
       cors
     }

@@ -16,7 +16,7 @@ import Loading from "../components/loading";
 import Input from "../components/editor-input";
 import OuterEditor from "../components/outer-editor";
 import Wrapper from "../components/wrapper";
-import { PrivacyToggle } from "../components/privacy";
+import { ToggleBox } from "../components/toggle-box";
 import PreviewLink from "../components/preview-link";
 import Editor from "../components/editor";
 import TimeMarker from "../components/time-marker";
@@ -207,8 +207,9 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
             <Input value={title} onChange={this.updateTitle} />
             <UtilityBar.Container>
               <UtilityBar.Items>
-                <PrivacyToggle
-                  publicStatus={publicStatus}
+                <ToggleBox
+                  label={value => (value ? "Public" : "Private")}
+                  value={publicStatus}
                   onChange={this.updatePrivacy}
                 />
                 <PreviewLink id={id} publicStatus={publicStatus} />
