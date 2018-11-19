@@ -2,12 +2,10 @@ import * as React from "react";
 import * as Draft from "draft-js";
 import styled from "styled-components";
 import { ToastNoPosition as Toast } from "./toast";
-import { fonts } from "../utils/defaultStyles";
 
 const Meta = styled.div`
   opacity: 0.5;
   font-size: small;
-  font-family: ${fonts.sans};
   padding: 8px;
 `;
 

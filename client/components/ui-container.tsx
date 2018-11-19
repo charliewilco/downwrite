@@ -1,8 +1,6 @@
 import styled from "styled-components";
-import { fonts } from "../utils/defaultStyles";
 
 export default styled.div`
-  font-family: ${fonts.monospace};
   color: ${props => props.theme.color};
   background: ${props => props.theme.background};
   display: flex;

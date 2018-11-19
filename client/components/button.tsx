@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { colors } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 export default styled.button`
-  background-color: ${colors.yellow700};
+  background-color: ${DefaultStyles.colors.yellow700};
   border-radius: 0.25rem;
   border: 0;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.037), 0 4px 8px rgba(0, 0, 0, 0.07);
@@ -18,10 +18,21 @@ export default styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: ${colors.yellow500};
+    background-color: ${DefaultStyles.colors.yellow500};
   }
 
   &[disabled] {
     filter: grayscale(100%);
   }
+`;
+
+export const AltButton = styled.button`
+  margin-right: 1rem;
+  color: ${DefaultStyles.colors.blue700};
+  background: none;
+  font-family: inherit;
+  font-size: 100%;
+  border: 0px;
+  font-weight: 700;
+  box-sizing: inherit;
 `;

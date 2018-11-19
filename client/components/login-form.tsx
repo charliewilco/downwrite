@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Formik, Form, FormikProps, ErrorMessage } from "formik";
-import LoginInput, { LoginInputContainer } from "./login-input";
-import InputError from "./input-error";
+import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import Button from "./button";
 import SpacedBox from "./spaced-box";
 import { AUTH_ENDPOINT } from "../utils/urls";
@@ -19,7 +18,6 @@ interface LoginProps {
 
 export default class Login extends React.Component<LoginProps, {}> {
   handleSubmit = (values, actions) => {
-    console.log("HANDLING SUBMIT");
     this.onSubmit(values);
   };
 
@@ -59,8 +57,8 @@ export default class Login extends React.Component<LoginProps, {}> {
             handleSubmit
           }: FormikProps<ILoginForm>) => (
             <Form>
-              <LoginInputContainer>
-                <LoginInput
+              <UIInputContainer>
+                <UIInput
                   placeholder="user@email.com"
                   label="Username or Email"
                   name="user"
@@ -68,10 +66,10 @@ export default class Login extends React.Component<LoginProps, {}> {
                   value={values.user}
                   onChange={handleChange}
                 />
-                <ErrorMessage name="user" component={InputError} />
-              </LoginInputContainer>
-              <LoginInputContainer>
-                <LoginInput
+                <ErrorMessage name="user" component={UIInputError} />
+              </UIInputContainer>
+              <UIInputContainer>
+                <UIInput
                   placeholder="*********"
                   name="password"
                   label="Password"
@@ -80,12 +78,12 @@ export default class Login extends React.Component<LoginProps, {}> {
                   autoComplete="current-password"
                   onChange={handleChange}
                 />
-                <ErrorMessage name="password" component={InputError} />
-              </LoginInputContainer>
+                <ErrorMessage name="password" component={UIInputError} />
+              </UIInputContainer>
               <SpacedBox align="right">
-                <LoginInputContainer style={{ display: "inline-block" }}>
+                <UIInputContainer style={{ display: "inline-block" }}>
                   <Button type="submit">Login</Button>
-                </LoginInputContainer>
+                </UIInputContainer>
               </SpacedBox>
             </Form>
           )}

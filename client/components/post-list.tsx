@@ -18,6 +18,10 @@ const List = styled.ul`
   list-style: inside none;
 `;
 
+export const ListContainer = styled.div`
+  padding: 16px 8px;
+`;
+
 const ListItemContainer = styled.li`
   padding: 16px 0;
   width: 100%;

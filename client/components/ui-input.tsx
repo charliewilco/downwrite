@@ -1,7 +1,7 @@
 import * as React from "react";
 import uuid from "uuid/v4";
 import styled from "styled-components";
-import { colors, fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 interface InputType {
   label: string;
@@ -18,8 +18,9 @@ interface InputTypeState {
 }
 
 const StyledInput = styled.input`
-  font-family: ${fonts.monospace};
+  font-family: ${DefaultStyles.fonts.monospace};
   font-size: 16px;
+  font-weight: 400;
   appearance: none;
   display: block;
   border: 0px;
@@ -30,29 +31,39 @@ const StyledInput = styled.input`
 
   &:focus {
     outline: none;
-    border-bottom: 2px solid ${colors.yellow700};
+    border-bottom: 2px solid ${DefaultStyles.colors.yellow700};
   }
 
   &::placeholder {
     color: #d9d9d9;
+    font-weight: 700;
     font-style: italic;
   }
 `;
 
-const InputContainer = styled.label`
+const Container = styled.label`
   display: block;
 `;
 
-export const LoginInputContainer = styled.div`
+export const UIInputContainer = styled.div`
+  position: relative;
   &:not(:last-of-type) {
     margin-bottom: 16px;
   }
 `;
 
-const InputLabel = styled.small<InputTypeState>`
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: ${props => (props.active ? colors.yellow700 : "#b4b4b4")};
+export const UIInputError = styled.small`
+  color: #d04d36;
+`;
+
+export const UIInputToggle = styled.input.attrs({ type: "checkbox" })<{
+  isOpen: boolean;
+}>``;
+
+const UIInputLabel = styled.small<InputTypeState>`
+  font-weight: 700;
+  font-family: ${DefaultStyles.fonts.sans};
+  color: ${props => (props.active ? DefaultStyles.colors.yellow700 : "#b4b4b4")};
   transition: color 250ms ease-in-out;
 `;
 
@@ -61,7 +72,7 @@ export default class extends React.Component<InputType, InputTypeState> {
     active: false
   };
 
-  static displayName = "LoginInput";
+  static displayName = "UIInput";
 
   static defaultProps = {
     type: "text"
@@ -72,15 +83,15 @@ export default class extends React.Component<InputType, InputTypeState> {
     const { active } = this.state;
     const { label } = this.props;
     return (
-      <InputContainer htmlFor={id}>
+      <Container htmlFor={id}>
         <StyledInput
           onFocus={() => this.setState({ active: true })}
           onBlur={() => this.setState({ active: false })}
           id={id}
           {...this.props}
         />
-        <InputLabel active={active}>{label}</InputLabel>
-      </InputContainer>
+        <UIInputLabel active={active}>{label}</UIInputLabel>
+      </Container>
     );
   }
 }

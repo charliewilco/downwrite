@@ -11,7 +11,6 @@ const CardContainer = styled.div`
   justify-content: space-between;
   height: 192px;
   font-weight: 400;
-  font-family: ${DefaultStyles.fonts.sans};
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
   background: ${props => props.theme.cardBackground};
 

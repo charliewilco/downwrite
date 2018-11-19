@@ -10,6 +10,7 @@ const SelectedTitle = styled.h2`
   font-weight: 400;
 `;
 
+// Should migrate to a tabs component
 const ToggleLoginButton = styled.button`
   width: 50%;
   border: 0px;

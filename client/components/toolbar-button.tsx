@@ -11,14 +11,14 @@ import {
   Underline,
   Label
 } from "./toolbar-icons";
-import { colors } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const ToolbarButton = styled.div`
   display: inline-block;
   padding: 8px;
   flex: 1 1 auto;
   text-align: center;
-  color: ${colors.blue700};
+  color: ${DefaultStyles.colors.blue700};
   font-size: 12px;
   transition: all 250ms ease-in-out;
 `;

@@ -1,11 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import Link from "next/link";
-import { fonts } from "../utils/defaultStyles";
 
 const PostsTitle = styled.h2`
   font-size: 16px;
-  font-family: ${fonts.sans};
   font-weight: 500;
 
   @media (min-width: 57.75rem) {

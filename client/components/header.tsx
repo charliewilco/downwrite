@@ -4,7 +4,7 @@ import Link from "next/link";
 import Logo from "./logo";
 import AltAnchor from "./alt-anchor-link";
 import { NavIcon } from "./icons";
-import { colors, fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 import { withAuth } from "./auth";
 
 const MenuContainer = styled.nav`
@@ -12,14 +12,15 @@ const MenuContainer = styled.nav`
   align-items: center;
 `;
 
-const HomeButton = styled.a`
+const HomeLink = styled.a`
   margin-left: 12px;
   display: block;
   cursor: pointer;
   transition: color 375ms ease-in-out;
+  font-weight: 700;
   color: ${props => props.theme.headerLogoLink} !important;
   &:hover {
-    color: ${colors.blue700};
+    color: ${DefaultStyles.colors.blue700};
   }
 `;
 
@@ -32,29 +33,10 @@ const ToggleButton = styled.button`
   box-sizing: inherit;
 `;
 
-const LoginSignUp = () => (
-  <MenuContainer>
-    <Link prefetch href="/login">
-      <AltAnchor space="right">Login or Sign Up</AltAnchor>
-    </Link>
-  </MenuContainer>
-);
-
-const Menu = ({ toggleNav }) => (
-  <MenuContainer>
-    <Link prefetch href="/new" as="/new">
-      <AltAnchor space="right">New</AltAnchor>
-    </Link>
-    <ToggleButton onClick={toggleNav}>
-      <NavIcon className="Navicon" />
-    </ToggleButton>
-  </MenuContainer>
-);
-
 const HeaderTitle = styled.h1`
   font-size: 16px;
   font-style: normal;
-  font-family: ${fonts.sans};
+  font-family: ${DefaultStyles.fonts.sans};
   line-height: 1;
   font-weight: 400;
 
@@ -80,13 +62,11 @@ const Header = styled.header`
 
 interface IHeaderProps {
   authed: boolean;
-  name: string;
-  onClick: Function;
+  onClick: () => void;
   route: string;
-  open: boolean;
 }
 
-class UIHeader extends React.Component<IHeaderProps, void> {
+class UIHeader extends React.Component<IHeaderProps, {}> {
   render() {
     const { authed, onClick, route } = this.props;
 
@@ -106,11 +86,26 @@ class UIHeader extends React.Component<IHeaderProps, void> {
           <Logo />
           <HeaderTitle data-testid="APP_HEADER_TITLE">
             <Link {...url}>
-              <HomeButton>Downwrite</HomeButton>
+              <HomeLink>Downwrite</HomeLink>
             </Link>
           </HeaderTitle>
         </MenuContainer>
-        {authed ? <Menu toggleNav={onClick} /> : <LoginSignUp />}
+        {authed ? (
+          <MenuContainer>
+            <Link prefetch href="/new" as="/new">
+              <AltAnchor space="right">New</AltAnchor>
+            </Link>
+            <ToggleButton onClick={onClick}>
+              <NavIcon className="Navicon" />
+            </ToggleButton>
+          </MenuContainer>
+        ) : (
+          <MenuContainer>
+            <Link prefetch href="/login">
+              <AltAnchor space="right">Login or Sign Up</AltAnchor>
+            </Link>
+          </MenuContainer>
+        )}
       </Header>
     ) : null;
   }
