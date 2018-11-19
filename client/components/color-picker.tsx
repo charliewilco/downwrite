@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import HexInput from "./hex-input";
-import { fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const SwatchBox = styled.div`
   background: ${props => props.color};
@@ -34,7 +34,7 @@ const PickerTitle = styled.h4`
   opacity: 0.5;
   font-weight: 400;
   margin: 0 0 8px 0;
-  font-family: ${fonts.sans};
+  font-family: ${DefaultStyles.fonts.sans};
 `;
 
 interface IColorPickerProps {

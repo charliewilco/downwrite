@@ -23,7 +23,6 @@ export default styled.div`
 export const ToastNoPosition = styled.div`
   color: ${DefaultStyles.colors.text};
   background-color: white;
-  font-weight: 700;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
   padding: 0.25rem;
 `;

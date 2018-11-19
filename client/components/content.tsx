@@ -6,14 +6,14 @@ import Markdown from "react-markdown";
 import "prismjs";
 import CodeBlock from "./code-block";
 import "./ganymede.css";
-import { colors, fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const WrapperExtended = styled.div`
   padding: 32px 0;
   max-width: 512px;
   margin-left: auto;
   margin-right: auto;
-  font-family: ${fonts.sans};
+  font-family: ${DefaultStyles.fonts.sans};
 `;
 
 const ContentHeader = styled.header`
@@ -74,7 +74,7 @@ const ContentBody = styled.section`
   blockquote {
     font-style: italic;
     margin-bottom: 24px;
-    background: ${colors.blue100};
+    background: ${DefaultStyles.colors.blue100};
     margin-left: -8px;
     margin-right: -8px;
   }

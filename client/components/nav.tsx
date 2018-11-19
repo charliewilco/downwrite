@@ -101,13 +101,11 @@ const NavTray = styled.footer`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-family: ${DefaultStyles.fonts.sans};
 `;
 
 const NavItem = styled.a`
   display: block;
   color: ${DefaultStyles.colors.gray300};
-  font-family: ${DefaultStyles.fonts.sans};
   font-size: 16px;
   padding-top: 4px;
   padding-bottom: 4px;

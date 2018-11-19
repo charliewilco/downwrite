@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import Avatar from "./avatar";
 import ColorPicker from "./color-picker";
-import { startColors, endColors } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 interface IGradientEditorProps {
   initialColors?: any;
@@ -50,13 +50,13 @@ export default class GradientEditor extends React.Component<
             title="Start Color"
             name="a"
             onPress={this.handleColorChange}
-            colors={startColors}
+            colors={DefaultStyles.startColors}
           />
           <ColorPicker
             title="End Color"
             name="b"
             onPress={this.handleColorChange}
-            colors={endColors}
+            colors={DefaultStyles.endColors}
           />
         </Flex>
       </Container>

@@ -40,6 +40,8 @@ export const getPosts = async (
 ): Promise<IPost[] | Boom<any>> => {
   const { user } = req.auth.credentials;
 
+  // TODO: create an excerpt and not send back Draft.js stuff
+
   try {
     const posts: IPost[] = await Post.find({ user: { $eq: user } });
     return posts;

@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import Avatar from "./avatar";
-import { fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const AuthorContainer = styled.aside`
   display: block;
@@ -11,12 +11,11 @@ const AuthorContainer = styled.aside`
   padding: 16px 8px;
   background-color: ${props => props.theme.cardBackground};
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
-  font-family: ${fonts.monospace};
 `;
 
 const AuthorHeadline = styled.h6`
   font-size: 18px;
-  font-style: italic;
+  font-weight: 400;
   margin-left: 16px;
 `;
 
@@ -28,6 +27,7 @@ const AuthorHeader = styled.header`
 const Copy = styled.p`
   margin-bottom: 0 !important;
   color: red;
+  font-family: ${DefaultStyles.fonts.monospace};
   font-size: small;
   font-style: italic;
   color: #b4b4b4;

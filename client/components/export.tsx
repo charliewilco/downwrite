@@ -15,7 +15,7 @@ interface ExportPr {
 
 interface ExportCb {
   title: string;
-  content: Draft.ContentState;
+  content: Draft.RawDraftContentState;
   date: Date;
 }
 
@@ -29,19 +29,19 @@ const FILE_TYPE = { type: "text/markdown; charset=UTF-8" };
 export default class UIMarkdownExport extends React.Component<ExportPr, any> {
   static displayName = "UIMarkdownExport";
 
-  export = (cb: Function) => {
+  export = () => {
     let { title, date, editorState } = this.props;
     const cx: Draft.ContentState = editorState.getCurrentContent();
-    const content = Draft.convertToRaw(cx);
+    const content: Draft.RawDraftContentState = Draft.convertToRaw(cx);
 
-    return cb({
+    return this.toMarkdown({
       title,
       content,
       date
     });
   };
 
-  customDraft = (content: Draft.ContentState) =>
+  customDraft = (content: Draft.RawDraftContentState): string =>
     draftToMarkdown(content, {
       entityItems: {
         LINK: {
@@ -57,20 +57,24 @@ export default class UIMarkdownExport extends React.Component<ExportPr, any> {
     });
 
   toMarkdown = ({ title, content, date }: ExportCb) => {
+    let localFileExtension = localStorage.getItem("DW_FILE_EXTENSION");
+    let extension = localFileExtension.replace(/\./g, "") || "md";
+
     try {
       let isFileSaverSupported: boolean = !!new Blob();
-      // TODO: Replicate FileSaver API
+
       if (isFileSaverSupported) {
         let md = createMarkdown(title, this.customDraft(content), date);
         let blob = new Blob([md.trim()], FILE_TYPE);
-        FileSaver.saveAs(blob, `${title.replace(/\s+/g, "-").toLowerCase()}.md`);
+        FileSaver.saveAs(
+          blob,
+          `${title.replace(/\s+/g, "-").toLowerCase()}.${extension}`
+        );
       }
     } catch (err) {
       console.error(err);
     }
   };
-
-  onChange = () => this.export(this.toMarkdown);
 
   render() {
     const { className } = this.props;
@@ -78,7 +82,7 @@ export default class UIMarkdownExport extends React.Component<ExportPr, any> {
       <ExportContainer
         title="Export entry to a Markdown file."
         className={className}>
-        <Markdown onClick={this.onChange} />
+        <Markdown onClick={this.export} />
       </ExportContainer>
     );
   }

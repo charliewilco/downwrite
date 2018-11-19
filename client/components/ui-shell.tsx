@@ -7,7 +7,7 @@ import Footer from "./footer";
 import NightMode, { NightModeTrigger } from "./night-mode";
 import UIContainer from "./ui-container";
 import { ErrorContainer, UIErrorBanner } from "./ui-error";
-import { colors, fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 import "../utils/global.css";
 import "../utils/typescale.css";
@@ -27,8 +27,8 @@ injectGlobal`
     box-sizing: border-box;
     text-size-adjust: 100%;
     background-color: #f9fbfc;
-    font: 400 100%/1.6 ${fonts.monospace};
-    color: ${colors.text};
+    font: 400 100%/1.6 ${DefaultStyles.fonts.sans};
+    color: ${DefaultStyles.colors.text};
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;

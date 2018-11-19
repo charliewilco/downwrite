@@ -1,10 +1,10 @@
 import * as React from "react";
 import styled from "styled-components";
 import PrismCode from "react-prism";
-import { fonts } from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const StyledPrism = styled(PrismCode)`
-  font-family: ${fonts.code};
+  font-family: ${DefaultStyles.fonts.code};
 `;
 
 interface CodeBlockProps {

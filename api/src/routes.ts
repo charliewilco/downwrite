@@ -76,6 +76,22 @@ const Routes = [
   },
   {
     method: "POST",
+    path: "/password",
+    handler: UserController.updatePassword,
+    config: {
+      validate: { payload: UserModel.validPasswordUpdate },
+      pre: [
+        {
+          method: UserController.verifyValidPassword,
+          assign: "user"
+        }
+      ],
+      auth,
+      cors
+    }
+  },
+  {
+    method: "POST",
     path: "/users",
     handler: UserController.createUser,
     config: {
@@ -90,6 +106,15 @@ const Routes = [
     method: "GET",
     path: "/users",
     handler: UserController.getDetails,
+    config: {
+      cors,
+      auth
+    }
+  },
+  {
+    method: "POST",
+    path: "/users/settings",
+    handler: UserController.updateNameEmail,
     config: {
       cors,
       auth

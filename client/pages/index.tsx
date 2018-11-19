@@ -1,17 +1,16 @@
 import * as React from "react";
 import * as Dwnxt from "../types/downwrite";
 import Head from "next/head";
-import styled from "styled-components";
 import orderBy from "lodash/orderBy";
 import isEmpty from "lodash/isEmpty";
 import "universal-fetch";
 import DeleteModal from "../components/delete-modal";
-import PostList from "../components/post-list";
+import PostList, { ListContainer } from "../components/post-list";
 import Loading from "../components/loading";
 import EmptyPosts from "../components/empty-posts";
 import InvalidToken from "../components/invalid-token";
-import { getToken, createHeader } from "../utils/responseHandler";
-import { POST_ENDPOINT } from "../utils/urls";
+import * as API from "../utils/api";
+import { getToken } from "../utils/responseHandler";
 
 type Res = Dwnxt.IPostError | Dwnxt.IPost[];
 
@@ -29,10 +28,6 @@ interface DashboardState {
   error: string;
 }
 
-const ListContainer = styled.div`
-  padding: 16px 8px;
-`;
-
 export default class Dashboard extends React.Component<DashboardPr, DashboardState> {
   static displayName = "Dashboard";
 
@@ -42,10 +37,7 @@ export default class Dashboard extends React.Component<DashboardPr, DashboardSta
 
   static async getInitialProps({ req, query }) {
     const { token } = getToken(req, query);
-
-    const config = createHeader("GET", token);
-
-    const entries = await fetch(POST_ENDPOINT, config).then(res => res.json());
+    const entries = await API.getPosts({ token });
 
     return {
       entries
@@ -63,20 +55,22 @@ export default class Dashboard extends React.Component<DashboardPr, DashboardSta
   // TODO: Fix this
   getPosts = async (close?: boolean) => {
     const { token } = this.props;
-    const config = createHeader("GET", token);
 
-    const response = await fetch(POST_ENDPOINT, config);
-    const posts: Res = await response.json();
+    const entries = await API.getPosts({ token });
 
-    if (Array.isArray(posts) || response.ok) {
+    if (Array.isArray(entries)) {
       return this.setState({
-        entries: orderBy(posts, ["dateAdded"], ["desc"]),
+        entries: orderBy(entries, ["dateAdded"], ["desc"]),
         selectedPost: {},
         loaded: true,
         modalOpen: !close
       });
-    } else if (typeof posts === "object") {
-      return this.setState({ error: posts.message, loaded: true, selectedPost: {} });
+    } else if (typeof entries === "object") {
+      return this.setState({
+        error: entries.message,
+        loaded: true,
+        selectedPost: {}
+      });
     }
   };
 
@@ -88,12 +82,9 @@ export default class Dashboard extends React.Component<DashboardPr, DashboardSta
 
   closeUIModal = () => this.setState({ modalOpen: false });
 
-  // TODO: Fix this
-  onDelete = async (post: Dwnxt.IPost) => {
+  onDelete = async ({ id }: Dwnxt.IPost) => {
     const { token } = this.props;
-    const config = createHeader("DELETE", token);
-
-    const response = await fetch(`${POST_ENDPOINT}/${post.id}`, config);
+    const response = await API.removePost(id, { token });
 
     if (response.ok) {
       return await this.getPosts(true);

@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Link from "next/link";
 import AltAnchor from "./alt-anchor-link";
 import Wrapper from "./wrapper";
-import { fonts } from "../utils/defaultStyles";
 
 interface IPage {
   name: string;
@@ -22,7 +21,6 @@ const Footer = styled.footer`
   padding-bottom: 32px;
   padding-left: 8px;
   padding-right: 8px;
-  font-family: ${fonts.sans};
 `;
 
 const FooterNav = styled.nav``;
