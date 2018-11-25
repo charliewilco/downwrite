@@ -25,17 +25,14 @@ interface IUserSettingsProps {
   };
 }
 
-interface IUserSettingsState {
-  colors: {
-    a: string;
-    b: string;
-  };
-}
+// interface IUserSettingsState {
+//   colors: {
+//     a: string;
+//     b: string;
+//   };
+// }
 
-export default class Settings extends React.Component<
-  IUserSettingsProps,
-  IUserSettingsState
-> {
+export default class Settings extends React.Component<IUserSettingsProps, {}> {
   static displayName = "Settings";
 
   static async getInitialProps({ req, query }) {

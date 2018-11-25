@@ -62,7 +62,7 @@ export default class Register extends React.Component<LoginProps, {}> {
           email: ""
         }}
         onSubmit={this.handleSubmit}>
-        {({ values, errors, handleChange }: FormikProps<IRegistration>) => (
+        {({ values, handleChange }: FormikProps<IRegistration>) => (
           <Form>
             <SpacedBox>
               <UIInputContainer>

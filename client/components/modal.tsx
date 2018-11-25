@@ -80,18 +80,16 @@ export default class UIModal extends React.Component<ModalProps, any> {
   render() {
     const { closeUIModal, children } = this.props;
     return (
-      <LockScroll>
-        <Overlay>
-          <ModalContainer>
-            <ModalCloseButton onClick={closeUIModal}>
-              <CloseIcon className="Modal__close" />
-            </ModalCloseButton>
-            <ModalBody>
-              <ModalInnerContainer>{children}</ModalInnerContainer>
-            </ModalBody>
-          </ModalContainer>
-        </Overlay>
-      </LockScroll>
+      <Overlay>
+        <ModalContainer>
+          <ModalCloseButton onClick={closeUIModal}>
+            <CloseIcon className="Modal__close" />
+          </ModalCloseButton>
+          <ModalBody>
+            <ModalInnerContainer>{children}</ModalInnerContainer>
+          </ModalBody>
+        </ModalContainer>
+      </Overlay>
     );
   }
 }

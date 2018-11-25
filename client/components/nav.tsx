@@ -1,6 +1,7 @@
 import * as React from "react";
 import Link from "next/link";
 import styled, { keyframes } from "styled-components";
+import * as Reach from "@reach/dialog";
 import { withAuth } from "./auth";
 import User from "./user";
 import Fetch from "./collection-fetch";

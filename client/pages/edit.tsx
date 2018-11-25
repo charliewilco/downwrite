@@ -1,9 +1,10 @@
 import * as React from "react";
 import * as Draft from "draft-js";
+import Head from "next/head";
 import { Formik } from "formik";
 import * as Dwnxt from "../types/downwrite";
-import Head from "next/head";
 import isEmpty from "lodash/isEmpty";
+import debounce from "lodash/debounce";
 import sanitize from "@charliewilco/sanitize-object";
 import "isomorphic-fetch";
 
@@ -25,6 +26,7 @@ import * as API from "../utils/api";
 import { getToken, superConverter } from "../utils/responseHandler";
 
 interface IEditorSt {
+  focused: boolean;
   loaded: boolean;
   dateModified: Date;
   editorState: Draft.EditorState;
@@ -41,11 +43,8 @@ interface IEditorPr {
 const EDITOR_COMMAND = "myeditor-save";
 
 export default class Edit extends React.Component<IEditorPr, IEditorSt> {
-  static displayName = "EntryEdit";
-
   static async getInitialProps({ req, query }) {
     const { token } = getToken(req, query);
-
     const post = await API.getPost(query.id, { token });
 
     return {
@@ -55,7 +54,12 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
     };
   }
 
+  static displayName = "EntryEdit";
+
+  duration: number = 9000;
+
   public readonly state = {
+    focused: false,
     loaded: !isEmpty(this.props.post),
     dateModified: new Date(),
     editorState: Draft.EditorState.createWithContent(
@@ -82,8 +86,10 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
     return API.updatePost(id, body, { token });
   };
 
+  onFocus = () => this.setState(state => ({ focused: !state.focused }));
+
   render() {
-    const { loaded, editorState } = this.state;
+    const { loaded, focused, editorState } = this.state;
     const { id, post } = this.props;
 
     return !loaded ? (
@@ -108,7 +114,11 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
                 <Head>
                   <title>{title} | Downwrite</title>
                 </Head>
-                <Autosaving duration={9000} onUpdate={handleSubmit}>
+                <Autosaving
+                  duration={this.duration}
+                  onUpdate={() =>
+                    focused && debounce(handleSubmit, this.duration / 3)
+                  }>
                   <AutosavingNotification />
                 </Autosaving>
                 <OuterEditor>
@@ -139,6 +149,7 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
                     <Editor
                       editorState={editorState}
                       editorCommand={EDITOR_COMMAND}
+                      onFocus={this.onFocus}
                       onSave={handleSubmit}
                       onChange={editorState =>
                         setFieldValue("editorState", editorState)

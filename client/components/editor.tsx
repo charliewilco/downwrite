@@ -43,6 +43,7 @@ interface IEditorProps {
   editorState: Draft.EditorState;
   onChange: (e: Draft.EditorState) => void;
   onSave: () => void;
+  onFocus?: () => void;
   toolbar?: boolean;
 }
 
@@ -142,6 +143,7 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
       <EditorShell font={font}>
         <EditorWrapper className={className} onClick={this.focus}>
           <Editor
+            onFocus={this.props.onFocus}
             handleKeyCommand={this.handleKeyCommand}
             keyBindingFn={this.saveKeyListener}
             blockStyleFn={getBlockStyle}
