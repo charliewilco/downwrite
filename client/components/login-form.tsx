@@ -3,7 +3,7 @@ import { Formik, Form, FormikProps, ErrorMessage } from "formik";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import Button from "./button";
 import SpacedBox from "./spaced-box";
-import { AUTH_ENDPOINT } from "../utils/urls";
+import * as API from "../utils/api";
 import { LoginFormSchema } from "../utils/validations";
 
 interface ILoginForm {
@@ -23,13 +23,7 @@ export default class Login extends React.Component<LoginProps, {}> {
 
   onSubmit = async (values: ILoginForm) => {
     const { signIn, setError } = this.props;
-    const auth = await fetch(AUTH_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ ...values })
-    }).then(res => res.json());
+    const auth = await API.authUser(values);
 
     if (auth.error) {
       setError(auth.message, "error");

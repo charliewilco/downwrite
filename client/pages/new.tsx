@@ -15,7 +15,7 @@ import * as UtilityBar from "../components/utility-bar";
 import * as API from "../utils/api";
 
 interface INewPostSt {
-  drafts: Array<any>;
+  drafts: any[];
   id: string;
   error?: string;
   dateAdded: Date;
@@ -31,12 +31,8 @@ interface IFormikValues {
   editorState: Draft.EditorState;
 }
 
-const SpacedWrapper = styled(Wrapper)`
-  padding-top: 128px;
-`;
-
 const EditorContainer = styled(Wrapper)`
-  padding: 0 4px;
+  padding: 128px 4px 0;
 `;
 
 const EDITOR_COMMAND = "create-new-post";
@@ -54,7 +50,7 @@ export default class NewEditor extends React.Component<INewPostProps, INewPostSt
   saveLocalDraft = (id: string, post: Object): void =>
     localStorage.setItem("Draft " + id, JSON.stringify(post));
 
-  onSubmit = async (values, actions) => {
+  public onSubmit = async (values, actions): Promise<void> => {
     const { title, editorState } = values;
     const { token } = this.props;
     const { id, dateAdded } = this.state;
@@ -69,16 +65,12 @@ export default class NewEditor extends React.Component<INewPostProps, INewPostSt
       public: false
     };
 
-    const post = await API.createPost(body, { token });
-
-    if (!post.error) {
-      return Router.push(`/${id}/edit`);
-    } else {
-      return this.setState({ error: post.message });
-    }
+    API.createPost(body, { token })
+      .then(() => Router.push(`/${id}/edit`))
+      .catch(err => this.setState({ error: err.message }));
   };
 
-  render() {
+  public render(): JSX.Element {
     const { error } = this.state;
     const { offline } = this.props;
 
@@ -92,14 +84,14 @@ export default class NewEditor extends React.Component<INewPostProps, INewPostSt
           handleSubmit,
           handleChange
         }: FormikProps<IFormikValues>) => (
-          <SpacedWrapper sm>
+          <>
             <Head>
               <title>{title.length > 0 ? title : "New"} | Downwrite</title>
             </Head>
             <EditorContainer sm>
               {error.length > 0 && <span className="f6 u-center">{error}</span>}
               <Upload
-                upload={({ title, editorState }) => {
+                onParsed={({ title, editorState }) => {
                   setFieldValue("title", title);
                   setFieldValue("editorState", editorState);
                 }}>
@@ -125,7 +117,7 @@ export default class NewEditor extends React.Component<INewPostProps, INewPostSt
                 />
               </Upload>
             </EditorContainer>
-          </SpacedWrapper>
+          </>
         )}
       </Formik>
     );

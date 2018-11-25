@@ -11,7 +11,7 @@ interface MarkdownConversion {
 }
 
 interface IUploadProps {
-  upload: (o: MarkdownConversion) => void;
+  onParsed: (o: MarkdownConversion) => void;
   disabled?: boolean;
   children: React.ReactNode;
 }
@@ -23,18 +23,18 @@ interface IMarkdown {
   };
 }
 
-export default class Uploader extends React.Component<IUploadProps, any> {
+export default class Uploader extends React.Component<IUploadProps, {}> {
   static displayName = "Uploader";
 
   reader: FileReader = __IS_BROWSER__ && new FileReader();
 
-  extractMarkdown = files => {
+  private extractMarkdown = (files): void => {
     this.reader.onload = () => {
       let md: IMarkdown = fm(this.reader.result as string);
 
       let markdown = markdownToDraft(md.body, { preserveNewlines: true });
 
-      return this.props.upload({
+      return this.props.onParsed({
         title: md.attributes.title || "",
         editorState: Draft.EditorState.createWithContent(
           Draft.convertFromRaw(markdown)
@@ -45,9 +45,9 @@ export default class Uploader extends React.Component<IUploadProps, any> {
     this.reader.readAsText(files[0]);
   };
 
-  onDrop = files => this.extractMarkdown(files);
+  private onDrop = files => this.extractMarkdown(files);
 
-  render() {
+  public render(): JSX.Element {
     const { disabled, children } = this.props;
     return (
       <Dropzone

@@ -5,7 +5,7 @@ import "isomorphic-fetch";
 import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
 import NotFound from "../components/not-found";
-import { PREVIEW_ENDPOINT } from "../utils/urls";
+import * as API from "../utils/api";
 
 type AuthorType = {
   username: string;
@@ -36,11 +36,7 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
   static async getInitialProps({ query }) {
     let { id } = query;
 
-    const url = `${PREVIEW_ENDPOINT}/${id}`;
-
-    const entry = await fetch(url, { method: "GET", mode: "cors" }).then(res =>
-      res.json()
-    );
+    const entry = await API.findPreviewEntry(id);
 
     return {
       id,
