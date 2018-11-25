@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { ThemeProvider, injectGlobal } from "styled-components";
+import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 import Checkbox from "./checkbox";
 import * as DefaultStyles from "../utils/defaultStyles";
 
@@ -48,7 +48,7 @@ interface INightModeState {
 
 const NightModeContext = React.createContext({});
 
-injectGlobal`
+const NightModeStyles = createGlobalStyle`
   .NightMDX {}
 
   .NightMode {
@@ -117,17 +117,20 @@ export default class NightModeContainer extends React.Component<
 }
 
 export const NightModeTrigger: React.SFC<INightModeProps> = ({ children }) => (
-  <NightModeContext.Consumer>
-    {(context: INightModeContext) => (
-      <NightContainer className={context.night ? "NightMode" : ""}>
-        <NightToggle>
-          <NightController>
-            <Checkbox checked={context.night} onChange={context.action.onChange} />
-            <NightLabel>Night Mode</NightLabel>
-          </NightController>
-        </NightToggle>
-        {children}
-      </NightContainer>
-    )}
-  </NightModeContext.Consumer>
+  <>
+    <NightModeStyles />
+    <NightModeContext.Consumer>
+      {(context: INightModeContext) => (
+        <NightContainer className={context.night ? "NightMode" : ""}>
+          <NightToggle>
+            <NightController>
+              <Checkbox checked={context.night} onChange={context.action.onChange} />
+              <NightLabel>Night Mode</NightLabel>
+            </NightController>
+          </NightToggle>
+          {children}
+        </NightContainer>
+      )}
+    </NightModeContext.Consumer>
+  </>
 );

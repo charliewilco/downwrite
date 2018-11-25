@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { injectGlobal } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import Nav from "./nav";
 import Toggle from "./toggle";
 import Header from "./header";
@@ -12,7 +12,7 @@ import * as DefaultStyles from "../utils/defaultStyles";
 import "../utils/global.css";
 import "../utils/typescale.css";
 
-injectGlobal`
+const LevelStyles = createGlobalStyle`
   *,
   *::before,
   *::after {
@@ -90,6 +90,7 @@ export default class UIShell extends React.Component<IUIShell, any> {
     return (
       <NightMode>
         <UIContainer>
+          <LevelStyles />
           <ErrorContainer>
             <Toggle>
               {({ isOpen, onToggle, onClose }) => (
