@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "styled-components";
+import styled from "../types/styled-components";
 import format from "date-fns/format";
 import isDate from "date-fns/is_date";
 

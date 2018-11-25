@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import styled from "styled-components";
+import styled from "../types/styled-components";
 import Link from "next/link";
 import distance from "date-fns/distance_in_words_to_now";
 import * as DefaultStyles from "../utils/defaultStyles";

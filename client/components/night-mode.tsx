@@ -1,5 +1,8 @@
 import * as React from "react";
-import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
+import styled, {
+  ThemeProvider,
+  createGlobalStyle
+} from "../types/styled-components";
 import Checkbox from "./checkbox";
 import * as DefaultStyles from "../utils/defaultStyles";
 
@@ -38,10 +41,6 @@ interface INightModeContext {
   };
 }
 
-interface INightModeProps {
-  children: React.ReactNode;
-}
-
 interface INightModeState {
   night: boolean;
 }
@@ -63,7 +62,7 @@ const NightModeStyles = createGlobalStyle`
 `;
 
 export default class NightModeContainer extends React.Component<
-  INightModeProps,
+  { children: React.ReactChild },
   INightModeState
 > {
   static displayName = "NightModeContainer";
@@ -103,20 +102,20 @@ export default class NightModeContainer extends React.Component<
 
   render() {
     const { night } = this.state;
-    const { children } = this.props;
+    const theme: DefaultStyles.ITheme = night
+      ? DefaultStyles.NIGHT_THEME
+      : DefaultStyles.DAY_THEME;
+
     return (
       <NightModeContext.Provider
         value={{ night, action: { onChange: this.onChange } }}>
-        <ThemeProvider
-          theme={night ? DefaultStyles.NIGHT_THEME : DefaultStyles.DAY_THEME}>
-          {children}
-        </ThemeProvider>
+        <ThemeProvider theme={theme}>{this.props.children}</ThemeProvider>
       </NightModeContext.Provider>
     );
   }
 }
 
-export const NightModeTrigger: React.SFC<INightModeProps> = ({ children }) => (
+export const NightModeTrigger: React.SFC = ({ children }) => (
   <>
     <NightModeStyles />
     <NightModeContext.Consumer>

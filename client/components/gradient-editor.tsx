@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "styled-components";
+import styled from "../types/styled-components";
 import Avatar from "./avatar";
 import ColorPicker from "./color-picker";
 import * as DefaultStyles from "../utils/defaultStyles";

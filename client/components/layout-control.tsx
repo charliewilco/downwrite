@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { StyledFunction } from "styled-components";
+import styled from "../types/styled-components";
 import * as DefaultStyles from "../utils/defaultStyles";
 
 const Box = styled.div``;
@@ -15,19 +15,16 @@ interface ILayoutControl {
   layoutChange: (x: boolean) => void;
 }
 
-const trigger: StyledFunction<ILayoutTrigger & React.HTMLProps<HTMLDivElement>> =
-  styled.div;
-
-const LayoutTrigger = trigger`
+const LayoutTrigger = styled.div<ILayoutTrigger>`
   display: inline-block;
   margin: 8px 0 8px 16px;
   cursor: pointer;
   font-size: 14px;
   font-family: ${DefaultStyles.fonts.sans};
   color: inherit;
-  opacity: ${(props: ILayoutTrigger) => (props.active ? 1 : 0.5)};
+  opacity: ${props => (props.active ? 1 : 0.5)};
   &:after {
-    content: '';
+    content: "";
     display: block;
     border-bottom: 3px solid
       ${(props: ILayoutTrigger) =>

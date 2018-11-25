@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "styled-components";
+import styled from "../types/styled-components";
 import HexInput from "./hex-input";
 import * as DefaultStyles from "../utils/defaultStyles";
 

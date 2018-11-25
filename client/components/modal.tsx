@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes } from "../types/styled-components";
 import * as Reach from "@reach/dialog";
 import { CloseIcon } from "./icons";
 import * as DefaultStyles from "../utils/defaultStyles";

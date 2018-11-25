@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "../types/styled-components";
 
 const Wrapper = styled.div`
   margin-left: auto;

@@ -1,6 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes } from "../types/styled-components";
 import { withAuth } from "./auth";
 import User from "./user";
 import Fetch from "./collection-fetch";

@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "styled-components";
+import styled from "../types/styled-components";
 import Link from "next/link";
 import AltAnchor from "./alt-anchor-link";
 import Wrapper from "./wrapper";

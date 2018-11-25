@@ -2,7 +2,7 @@ import Editor from "draft-js-plugins-editor";
 import * as React from "react";
 import * as Draft from "draft-js";
 import Prism from "prismjs";
-import styled from "styled-components";
+import styled from "../types/styled-components";
 
 import createMarkdownPlugin from "draft-js-markdown-plugin";
 import createPrismPlugin from "draft-js-prism-plugin";

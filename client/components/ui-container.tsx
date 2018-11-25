@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "../types/styled-components";
 
 export default styled.div`
   color: ${props => props.theme.color};
