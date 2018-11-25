@@ -8,25 +8,6 @@ export const superConverter: Function = (content: Draft.RawDraftContentState) =>
     : Draft.convertFromRaw({ blocks: content.blocks, entityMap: {} });
 };
 
-type HeaderMethod = "GET" | "PUT" | "POST" | "DELETE";
-
-export const createHeader = (
-  method: HeaderMethod = "GET",
-  token: string
-): RequestInit => {
-  const Header = new Headers();
-
-  token && Header.set("Authorization", token);
-  Header.set("Content-Type", "application/json");
-
-  return {
-    method,
-    headers: Header,
-    mode: "cors",
-    cache: "default"
-  };
-};
-
 export const getToken = (req, query) => {
   const ck = new Cookies();
 
