@@ -56,7 +56,7 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
 
   static displayName = "EntryEdit";
 
-  duration: number = 9000;
+  duration: number = 12000;
 
   public readonly state = {
     focused: false,
