@@ -869,10 +869,10 @@
   resolved "https://registry.npmjs.org/@types/cookie/-/cookie-0.3.1.tgz#720a756ea8e760a258708b52441bd341f1ef4296"
   integrity sha512-64Uv+8bTRVZHlbB8eXQgMP9HguxPgnOOIYrQpwHWrtLDrtcG/lILKhUl7bV65NSOIJ9dXGYD7skQFXzhL8tk1A==
 
-"@types/draft-js@^0.10.24":
-  version "0.10.25"
-  resolved "https://registry.npmjs.org/@types/draft-js/-/draft-js-0.10.25.tgz#4f741ea8b7f008c3c0a06ff6b2c4427f380dc331"
-  integrity sha512-6fgNdCBuUt9SOj03ukB1ZJfsCcD/6L6xK6244aZn7xALQKynZ1GjYlc09U6SDd1OjE/vIXl1Dk5YriZ0aluiYg==
+"@types/draft-js@^0.10.26":
+  version "0.10.26"
+  resolved "https://registry.npmjs.org/@types/draft-js/-/draft-js-0.10.26.tgz#0b02324b7981cbab32d23cd0a1d968bbf576757b"
+  integrity sha512-D2P+wceBPeirQzUIUtQ844T2fUlQEK8SuOB9Jkz0VPkwa9qSicrB9x7RGtWUYeoe6ND7pmQVESviyeMuciLSSQ==
   dependencies:
     "@types/react" "*"
     immutable "^3.8.1"
@@ -3378,7 +3378,7 @@ draft-js-prism@^1.0.6:
     extend "^3.0.0"
     immutable "*"
 
-draft-js@^0.10.4, draft-js@~0.10.0:
+draft-js@^0.10.4, draft-js@^0.10.5, draft-js@~0.10.0:
   version "0.10.5"
   resolved "https://registry.npmjs.org/draft-js/-/draft-js-0.10.5.tgz#bfa9beb018fe0533dbb08d6675c371a6b08fa742"
   integrity sha512-LE6jSCV9nkPhfVX2ggcRLA4FKs6zWq9ceuO/88BpXdNCS7mjRTgs0NsV6piUCJX9YxMsB9An33wnkMmU2sD2Zg==
