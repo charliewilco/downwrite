@@ -1,19 +1,19 @@
 import * as React from "react";
 import * as Draft from "draft-js";
 import { draftToMarkdown } from "markdown-draft-js";
-import styled from "styled-components";
+import styled from "../types/styled-components";
 import FileSaver from "file-saver";
 import Markdown from "./export-markdown-button";
 import { createMarkdown } from "../utils/markdownTemplate";
 
-interface ExportPr {
+interface IExportProps {
   title: string;
   className?: string;
   date: Date;
   editorState: Draft.EditorState;
 }
 
-interface ExportCb {
+interface ExportCallback {
   title: string;
   content: Draft.RawDraftContentState;
   date: Date;
@@ -24,9 +24,7 @@ const ExportContainer = styled.div`
   margin: 0 16px;
 `;
 
-const FILE_TYPE = { type: "text/markdown; charset=UTF-8" };
-
-export default class UIMarkdownExport extends React.Component<ExportPr, any> {
+export default class UIMarkdownExport extends React.Component<IExportProps, any> {
   static displayName = "UIMarkdownExport";
 
   export = () => {
@@ -56,7 +54,7 @@ export default class UIMarkdownExport extends React.Component<ExportPr, any> {
       }
     });
 
-  toMarkdown = ({ title, content, date }: ExportCb) => {
+  toMarkdown = ({ title, content, date }: ExportCallback) => {
     let localFileExtension = localStorage.getItem("DW_FILE_EXTENSION");
     let extension = localFileExtension.replace(/\./g, "") || "md";
 
@@ -65,7 +63,7 @@ export default class UIMarkdownExport extends React.Component<ExportPr, any> {
 
       if (isFileSaverSupported) {
         let md = createMarkdown(title, this.customDraft(content), date);
-        let blob = new Blob([md.trim()], FILE_TYPE);
+        let blob = new Blob([md.trim()], { type: "text/markdown; charset=UTF-8" });
         FileSaver.saveAs(
           blob,
           `${title.replace(/\s+/g, "-").toLowerCase()}.${extension}`

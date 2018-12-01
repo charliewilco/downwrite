@@ -30,13 +30,15 @@ export default class AutosavingInterval extends React.Component<
     this.isMounted = true;
 
     this.interval = setInterval(async () => {
-      this.setState({ autosaving: true });
+      if (this.isMounted) {
+        this.setState({ autosaving: true });
 
-      this.props.onUpdate();
+        this.props.onUpdate();
 
-      await delay(this.props.delay);
+        await delay(this.props.delay);
 
-      this.setState({ autosaving: false });
+        this.setState({ autosaving: false });
+      }
     }, this.props.duration);
   }
 

@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React, { ChangeEvent } from "react";
+import styled from "../types/styled-components";
 import Check from "./checkbox";
 
 const Container = styled.div`
@@ -22,20 +22,22 @@ const Label = styled.span`
 
 interface ICheckboxToggle {
   value: boolean;
+  name?: string;
   label: (value: boolean) => string;
-  onChange: () => void;
+  onChange: (e: ChangeEvent) => void;
 }
 
 export const ToggleBox: React.SFC<ICheckboxToggle> = ({
   value,
   label,
+  name,
   onChange
 }) => {
   const text = label(value);
   return (
     <Container>
       <LabelFlex>
-        <Check checked={value} onChange={onChange} />
+        <Check name={name} checked={value} onChange={onChange} />
         <Label>{text}</Label>
       </LabelFlex>
     </Container>

@@ -1,7 +1,6 @@
 import * as React from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes } from "../types/styled-components";
 import * as Reach from "@reach/dialog";
-import LockScroll from "./lock-scroll";
 import { CloseIcon } from "./icons";
 import * as DefaultStyles from "../utils/defaultStyles";
 
@@ -80,18 +79,16 @@ export default class UIModal extends React.Component<ModalProps, any> {
   render() {
     const { closeUIModal, children } = this.props;
     return (
-      <LockScroll>
-        <Overlay>
-          <ModalContainer>
-            <ModalCloseButton onClick={closeUIModal}>
-              <CloseIcon className="Modal__close" />
-            </ModalCloseButton>
-            <ModalBody>
-              <ModalInnerContainer>{children}</ModalInnerContainer>
-            </ModalBody>
-          </ModalContainer>
-        </Overlay>
-      </LockScroll>
+      <Overlay>
+        <ModalContainer>
+          <ModalCloseButton onClick={closeUIModal}>
+            <CloseIcon className="Modal__close" />
+          </ModalCloseButton>
+          <ModalBody>
+            <ModalInnerContainer>{children}</ModalInnerContainer>
+          </ModalBody>
+        </ModalContainer>
+      </Overlay>
     );
   }
 }

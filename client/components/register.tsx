@@ -1,11 +1,11 @@
 import * as React from "react";
 import { Formik, Form, FormikProps, ErrorMessage } from "formik";
-import "universal-fetch";
+import "isomorphic-fetch";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import Button from "./button";
 import SpacedBox from "./spaced-box";
 import LegalBoilerplate from "./legal-boilerplate";
-import { USER_ENDPOINT } from "../utils/urls";
+import * as API from "../utils/api";
 import { RegisterFormSchema } from "../utils/validations";
 
 interface IRegistration {
@@ -19,12 +19,6 @@ interface LoginProps {
   signIn: (x: boolean, y: string) => void;
   setError: (x: string, y: string) => void;
 }
-interface IUserResponse {
-  userID: string;
-  id_token: string;
-  username: string;
-  message?: string;
-}
 
 export default class Register extends React.Component<LoginProps, {}> {
   handleSubmit = (values, actions) => {
@@ -36,13 +30,7 @@ export default class Register extends React.Component<LoginProps, {}> {
   onSubmit = async ({ username, email, password }: IRegistration): Promise<void> => {
     const { signIn, setError } = this.props;
 
-    const user: IUserResponse = await fetch(USER_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ username, email, password })
-    }).then(res => res.json());
+    const user = await API.createUser({ username, email, password });
 
     if (user.userID) {
       signIn(user.id_token !== undefined, user.id_token);
@@ -50,6 +38,30 @@ export default class Register extends React.Component<LoginProps, {}> {
       setError(user.message, "error");
     }
   };
+
+  private inputs = [
+    {
+      name: "username",
+      label: "Username",
+      placeholder: "Try for something unique",
+      type: "text",
+      autoComplete: "email"
+    },
+    {
+      name: "email",
+      type: "email",
+      placeholder: "mail@email.com",
+      label: "Email",
+      autoComplete: "email"
+    },
+    {
+      name: "password",
+      type: "password",
+      placeholder: "*********",
+      label: "Password",
+      autoComplete: "current-password"
+    }
+  ];
 
   render() {
     return (
@@ -62,43 +74,22 @@ export default class Register extends React.Component<LoginProps, {}> {
           email: ""
         }}
         onSubmit={this.handleSubmit}>
-        {({ values, errors, handleChange }: FormikProps<IRegistration>) => (
+        {({ values, handleChange }: FormikProps<IRegistration>) => (
           <Form>
             <SpacedBox>
-              <UIInputContainer>
-                <UIInput
-                  placeholder="Try for something unique"
-                  label="Username"
-                  autoComplete="username"
-                  name="username"
-                  value={values.username}
-                  onChange={handleChange}
-                />
-                <ErrorMessage name="username" component={UIInputError} />
-              </UIInputContainer>
-              <UIInputContainer>
-                <UIInput
-                  placeholder="mail@email.com"
-                  label="Email"
-                  autoComplete="email"
-                  name="email"
-                  value={values.email}
-                  onChange={handleChange}
-                />
-                <ErrorMessage name="email" component={UIInputError} />
-              </UIInputContainer>
-              <UIInputContainer>
-                <UIInput
-                  placeholder="*********"
-                  label="Password"
-                  name="password"
-                  value={values.password}
-                  autoComplete="current-password"
-                  type="password"
-                  onChange={handleChange}
-                />
-                <ErrorMessage name="password" component={UIInputError} />
-              </UIInputContainer>
+              {this.inputs.map(input => (
+                <UIInputContainer key={input.name}>
+                  <UIInput
+                    placeholder={input.placeholder}
+                    label={input.label}
+                    autoComplete={input.autoComplete}
+                    name={input.name}
+                    value={values[input.name]}
+                    onChange={handleChange}
+                  />
+                  <ErrorMessage name={input.name} component={UIInputError} />
+                </UIInputContainer>
+              ))}
             </SpacedBox>
             <LegalBoilerplate
               name="legalChecked"

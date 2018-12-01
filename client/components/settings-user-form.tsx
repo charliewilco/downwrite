@@ -20,7 +20,7 @@ interface ISettingsUserForm {
 class SettingsUser extends React.Component<ISettingsUserForm, {}> {
   onSubmit = async (values, actions) => {
     const { token } = this.props;
-    const settings = API.updateSettings(values, { token });
+    const settings = await API.updateSettings(values, { token });
     if (settings) {
       actions.setSubmitting(false);
     }

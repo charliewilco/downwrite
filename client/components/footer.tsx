@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "styled-components";
+import styled from "../types/styled-components";
 import Link from "next/link";
 import AltAnchor from "./alt-anchor-link";
 import Wrapper from "./wrapper";
@@ -32,11 +32,20 @@ const FooterList = styled.ul`
   display: flex;
   font-size: small;
   justify-content: space-around;
-  max-width: 50%;
+  flex-wrap: wrap;
   margin: 0 auto;
+  max-width: 600px;
 `;
 
-const FooterListItem = styled.li``;
+const FooterListItem = styled.li`
+  width: 50%;
+  text-align: center;
+  padding: 8px;
+
+  @media (min-width: 48rem) {
+    width: 25%;
+  }
+`;
 
 const UIFooter: React.SFC<{}> = () => (
   <Footer>

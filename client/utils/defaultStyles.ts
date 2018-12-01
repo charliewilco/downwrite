@@ -26,7 +26,23 @@ export const colors = {
 //   defaultYellow: '#ffc200'
 // }
 
-export const NIGHT_THEME = {
+export interface ITheme {
+  night: boolean;
+  background: string;
+  color: string;
+  border: string;
+  link: string;
+  linkHover: string;
+  meta: string;
+  inputBorder: string;
+  cardBackground: string;
+  cardTrayBackground: string;
+  cardDeleteButton: string;
+  headerLogoLink: string;
+  landingPageTitle: string;
+}
+
+export const NIGHT_THEME: ITheme = {
   night: true,
   background: "#022438", // "#093F5D", "#072a3e"
   color: colors.gray100,
@@ -42,7 +58,7 @@ export const NIGHT_THEME = {
   landingPageTitle: colors.blue400
 };
 
-export const DAY_THEME = {
+export const DAY_THEME: ITheme = {
   night: false,
   background: colors.gray100,
   color: colors.text,

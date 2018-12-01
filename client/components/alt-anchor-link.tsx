@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css } from "../types/styled-components";
 import * as DefaultStyles from "../utils/defaultStyles";
 
 const AltAnchor = styled.a<{ space?: string }>`

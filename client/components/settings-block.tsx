@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "../types/styled-components";
 import { ToastNoPosition as Toast } from "./toast";
 
 const StyledToast = styled(Toast)`

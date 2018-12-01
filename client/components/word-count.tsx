@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import styled from "styled-components";
+import styled from "../types/styled-components";
 import { ToastNoPosition as Toast } from "./toast";
 
 const Meta = styled.div`
