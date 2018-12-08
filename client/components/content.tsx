@@ -21,7 +21,7 @@ const ContentHeader = styled.header`
   margin-bottom: 32px;
   h1 {
     text-align: center;
-    font-weight: 400;
+    font-weight: 900;
   }
 `;
 
@@ -42,7 +42,7 @@ const ContentBody = styled.section`
   }
 
   h3 {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 20px;
     margin-bottom: 12px;
     text-align: center;

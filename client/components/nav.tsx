@@ -1,5 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
+import { withRouter, WithRouterProps } from "next/router";
 import styled, { keyframes } from "../types/styled-components";
 import { withAuth } from "./auth";
 import User from "./user";
@@ -123,9 +124,8 @@ const UserActionContainer = styled.div`
 `;
 
 // TODO: Slide to close navigation?
-interface NavigationProps {
+interface NavigationProps extends WithRouterProps {
   token: string;
-  pathname: string;
   closeNav: () => void;
 }
 
@@ -138,14 +138,13 @@ const SignOut = withAuth(({ signOut, children }) => (
   <NavButton onClick={signOut}>{children}</NavButton>
 ));
 
-const AuthedFetch = withAuth(Fetch);
 const AuthedUserBlock = withAuth(User);
 
 class NavBar extends React.Component<NavigationProps, any> {
   static displayName = "NavigationBar";
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.pathname !== this.props.pathname) {
+  componentDidUpdate(prevProps: NavigationProps) {
+    if (prevProps.router.pathname !== this.props.router.pathname) {
       this.props.closeNav();
     }
   }
@@ -170,7 +169,7 @@ class NavBar extends React.Component<NavigationProps, any> {
               </div>
 
               <PostListContainer>
-                <AuthedFetch>
+                <Fetch>
                   {({ posts }) =>
                     posts.length > 0 ? (
                       <SidebarPosts posts={posts} />
@@ -178,7 +177,7 @@ class NavBar extends React.Component<NavigationProps, any> {
                       <SidebarEmpty />
                     )
                   }
-                </AuthedFetch>
+                </Fetch>
               </PostListContainer>
 
               <NavTray>
@@ -197,4 +196,4 @@ class NavBar extends React.Component<NavigationProps, any> {
   }
 }
 
-export default NavBar;
+export default withRouter(NavBar);

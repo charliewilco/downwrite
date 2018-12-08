@@ -1,5 +1,6 @@
 import * as React from "react";
 import delay from "delay";
+// import debounce from "lodash/debounce";
 
 interface IAutosavingProps {
   onUpdate: (x?: any) => void;
@@ -30,12 +31,10 @@ export default class AutosavingInterval extends React.Component<
     this.isMounted = true;
 
     this.interval = setInterval(async () => {
-      if (this.isMounted) {
+      if (this.isMounted && this.props.onUpdate) {
         this.setState({ autosaving: true });
-
-        this.props.onUpdate();
-
         await delay(this.props.delay);
+        this.props.onUpdate();
 
         this.setState({ autosaving: false });
       }

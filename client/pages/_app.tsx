@@ -2,7 +2,7 @@ import App, { Container, AppComponentProps } from "next/app";
 import React from "react";
 import isEmpty from "lodash/isEmpty";
 import { getToken } from "../utils/responseHandler";
-import UIShell from "../components/ui-shell";
+import { UIShell } from "../components/ui-shell";
 import AuthMegaProvider, { AuthConsumer } from "../components/auth";
 
 export default class Downwrite extends App<AppComponentProps & { token: string }> {
