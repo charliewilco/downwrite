@@ -35,7 +35,6 @@ export default class AutosavingInterval extends React.Component<
         this.setState({ autosaving: true });
         await delay(this.props.delay);
         this.props.onUpdate();
-
         this.setState({ autosaving: false });
       }
     }, this.props.duration);
