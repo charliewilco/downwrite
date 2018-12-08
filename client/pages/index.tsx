@@ -17,7 +17,6 @@ type Res = Dwnxt.IPostError | Dwnxt.IPost[];
 interface DashboardPr {
   entries: Dwnxt.IPost[];
   token: string;
-  closeNav: () => void;
 }
 
 interface DashboardState {
@@ -106,15 +105,14 @@ export default class Dashboard extends React.Component<DashboardPr, DashboardSta
         <Head>
           <title>{entries.length} Entries | Downwrite</title>
         </Head>
-        {modalOpen &&
-          !isEmpty(selectedPost) && (
-            <DeleteModal
-              title={selectedPost.title}
-              onDelete={() => this.onDelete(selectedPost)}
-              onCancelDelete={this.cancelDelete}
-              closeModal={this.closeUIModal}
-            />
-          )}
+        {modalOpen && !isEmpty(selectedPost) && (
+          <DeleteModal
+            title={selectedPost.title}
+            onDelete={() => this.onDelete(selectedPost)}
+            onCancelDelete={this.cancelDelete}
+            closeModal={this.closeUIModal}
+          />
+        )}
         <ListContainer>
           {loaded ? (
             Array.isArray(entries) && entries.length > 0 ? (

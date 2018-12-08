@@ -2,7 +2,9 @@ import { render } from "react-testing-library";
 
 import Header from "../components/header";
 
-let { getByTestId, container } = render(<Header authed name="Downwrite" />);
+let { getByTestId, container } = render(
+  <Header router={{ route: "/" }} authed name="Downwrite" />
+);
 
 jest.mock("next/link", () => {
   return ({ children }) => {

@@ -4,9 +4,9 @@ import data from "./db.json";
 
 import * as fetchMock from "jest-fetch-mock";
 
-const PostDashboard = () => (
-  <Dashboard entries={data.posts} token="..." closeNav={() => {}} />
-);
+const entries = data.posts;
+
+const PostDashboard = () => <Dashboard entries={entries} token="..." />;
 
 jest.mock("next/link", () => {
   return ({ children }) => {
@@ -45,9 +45,7 @@ describe("<Dashboard /> post lists", () => {
 
   xit("shows error if error", async () => {
     fetchMock.mockResponseOnce(JSON.stringify([]));
-    const ErrorContainer = render(
-      <Dashboard entries={[]} token="..." closeNav={() => {}} />
-    );
+    const ErrorContainer = render(<Dashboard entries={[]} token="..." />);
     await wait(() => ErrorContainer.getByTestId("LOADING_SPINNER"));
 
     expect(ErrorContainer.getByTestId("INVALID_TOKEN_CONTAINER")).toBeInTheDOM();
