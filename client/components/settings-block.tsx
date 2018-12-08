@@ -9,7 +9,8 @@ const StyledToast = styled(Toast)`
 `;
 
 const SettingsTitleContainer = styled.header`
-  flex: 1 1 25%;
+  max-width: 192px;
+  width: 100%;
   padding-right: 32px;
   p {
     opacity: 0.75;
@@ -25,9 +26,9 @@ const SettingsContent = styled.div`
 `;
 
 const SettingsTitle = styled.h4`
-  font-size: 16px;
-  font-weight: 400;
-  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 32px;
 `;
 
 export const SettingsFormActions = styled.div<{ split?: boolean }>`
