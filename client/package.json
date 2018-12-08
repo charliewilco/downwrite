@@ -44,7 +44,7 @@
     "next-offline": "^3.2.2",
     "prismjs": "^1.15.0",
     "react": "^16.6.3",
-    "react-dom": "^16.5.2",
+    "react-dom": "^16.6.3",
     "react-dropzone": "^7.0.1",
     "react-markdown": "^4.0.4",
     "react-prism": "^4.3.1",

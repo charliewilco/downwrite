@@ -2,6 +2,7 @@ import * as React from "react";
 import Head from "next/head";
 import styled from "styled-components";
 import LoginContainer from "../components/login-container";
+import { ErrorStateContext } from "../components/ui-error";
 import Landing from "../components/landing";
 import Features from "../components/landing-features";
 import Register from "../components/register";
@@ -33,17 +34,13 @@ const HomeContainer = styled.main`
 
 interface IHomeProps {
   signIn: (x: boolean, y: string) => void;
-  errorActions: {
-    setError: (x: string, y: string) => void;
-  };
 }
 
 export default class Home extends React.Component<IHomeProps, any> {
+  static contextType = ErrorStateContext;
   render() {
-    const {
-      signIn,
-      errorActions: { setError }
-    } = this.props;
+    const { signIn } = this.props;
+    const setError = this.context.errorActions.setError;
     return (
       <>
         <Head>

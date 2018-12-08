@@ -2,6 +2,11 @@ import * as React from "react";
 import "jest-styled-components";
 import "jest-dom/extend-expect";
 
+export interface ExtendedMatchers extends jest.Matchers<void> {
+  toHaveTextContent: (htmlElement: string) => object;
+  toBeInTheDOM: () => void;
+}
+
 function storageMock() {
   let storage = {};
 

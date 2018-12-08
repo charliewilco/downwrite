@@ -4,7 +4,6 @@ import Head from "next/head";
 import { Formik } from "formik";
 import * as Dwnxt from "../types/downwrite";
 import isEmpty from "lodash/isEmpty";
-import debounce from "lodash/debounce";
 import sanitize from "@charliewilco/sanitize-object";
 import "isomorphic-fetch";
 
@@ -14,7 +13,7 @@ import ExportMarkdown from "../components/export";
 import WordCounter from "../components/word-count";
 import Button from "../components/button";
 import Loading from "../components/loading";
-import Input from "../components/editor-input";
+import { Input } from "../components/editor-input";
 import OuterEditor from "../components/outer-editor";
 import Wrapper from "../components/wrapper";
 import { ToggleBox } from "../components/toggle-box";
@@ -24,15 +23,16 @@ import TimeMarker from "../components/time-marker";
 import * as UtilityBar from "../components/utility-bar";
 import * as API from "../utils/api";
 import { getToken, superConverter } from "../utils/responseHandler";
+import { __IS_DEV__ } from "../utils/dev";
 
-interface IEditorSt {
-  focused: boolean;
+interface IEditorState {
+  initialFocus: boolean;
   loaded: boolean;
   dateModified: Date;
   editorState: Draft.EditorState;
 }
 
-interface IEditorPr {
+interface IEditorProps {
   token: string;
   id: string;
   title: string;
@@ -42,7 +42,7 @@ interface IEditorPr {
 
 const EDITOR_COMMAND = "myeditor-save";
 
-export default class Edit extends React.Component<IEditorPr, IEditorSt> {
+export default class Edit extends React.Component<IEditorProps, IEditorState> {
   static async getInitialProps({ req, query }) {
     const { token } = getToken(req, query);
     const post = await API.getPost(query.id, { token });
@@ -56,10 +56,10 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
 
   static displayName = "EntryEdit";
 
-  duration: number = 12000;
+  private readonly duration: number = __IS_DEV__ ? 30000 : 120000;
 
-  public readonly state = {
-    focused: false,
+  public readonly state: IEditorState = {
+    initialFocus: false,
     loaded: !isEmpty(this.props.post),
     dateModified: new Date(),
     editorState: Draft.EditorState.createWithContent(
@@ -67,102 +67,99 @@ export default class Edit extends React.Component<IEditorPr, IEditorSt> {
     )
   };
 
-  updatePostContent = (values, actions) => {
-    const { id, token, post } = this.props;
-    const { editorState, title, publicStatus } = values;
-    const contentState: Draft.ContentState = editorState.getCurrentContent();
+  private updatePostContent = async (values): Promise<void> => {
+    const contentState: Draft.ContentState = values.editorState.getCurrentContent();
     const content = Draft.convertToRaw(contentState);
 
-    const postBody = sanitize(post, ["_id", "__v"]);
+    const body = sanitize(this.props.post, ["_id", "__v"]);
 
-    const body = {
-      ...postBody,
-      title,
-      public: publicStatus,
-      content,
-      dateModified: this.state.dateModified
-    };
-
-    return API.updatePost(id, body, { token });
+    await API.updatePost(
+      this.props.id,
+      {
+        ...body,
+        title: values.title,
+        public: values.publicStatus,
+        content,
+        dateModified: this.state.dateModified
+      },
+      { token: this.props.token }
+    );
   };
 
-  onFocus = () => this.setState(state => ({ focused: !state.focused }));
+  private onFocus = (): void => {
+    this.setState({ initialFocus: true });
+  };
 
-  render() {
-    const { loaded, focused, editorState } = this.state;
-    const { id, post } = this.props;
+  public render(): JSX.Element {
+    const { loaded, initialFocus, editorState } = this.state;
 
     return !loaded ? (
       <Loading size={75} />
     ) : (
-      <>
-        <Wrapper sm>
-          <Formik
-            onSubmit={this.updatePostContent}
-            initialValues={{
-              editorState,
-              title: post.title,
-              publicStatus: post.public
-            }}>
-            {({
-              values: { title, editorState, publicStatus },
-              handleChange,
-              handleSubmit,
-              setFieldValue
-            }) => (
-              <>
-                <Head>
-                  <title>{title} | Downwrite</title>
-                </Head>
-                <Autosaving
-                  duration={this.duration}
-                  onUpdate={() =>
-                    focused && debounce(handleSubmit, this.duration / 3)
-                  }>
-                  <AutosavingNotification />
-                </Autosaving>
-                <OuterEditor>
-                  <TimeMarker dateAdded={post.dateAdded} />
-                  <Input value={title} name="title" onChange={handleChange} />
-                  <UtilityBar.Container>
-                    <UtilityBar.Items>
-                      <ToggleBox
-                        label={value => (value ? "Public" : "Private")}
-                        name="publicStatus"
-                        value={publicStatus}
-                        onChange={handleChange}
-                      />
-                      <PreviewLink id={id} publicStatus={publicStatus} />
-                    </UtilityBar.Items>
-                    <UtilityBar.Items>
-                      {editorState !== null && (
-                        <ExportMarkdown
-                          editorState={editorState}
-                          title={title}
-                          date={post.dateAdded}
-                        />
-                      )}
-                      <Button type="submit">Save</Button>
-                    </UtilityBar.Items>
-                  </UtilityBar.Container>
-                  {editorState !== null && (
-                    <Editor
-                      editorState={editorState}
-                      editorCommand={EDITOR_COMMAND}
-                      onFocus={this.onFocus}
-                      onSave={handleSubmit}
-                      onChange={editorState =>
-                        setFieldValue("editorState", editorState)
-                      }
+      <Wrapper sm>
+        <Formik
+          onSubmit={this.updatePostContent}
+          initialValues={{
+            editorState,
+            title: this.props.post.title,
+            publicStatus: this.props.post.public
+          }}>
+          {({
+            values: { title, editorState, publicStatus },
+            handleChange,
+            handleSubmit,
+            setFieldValue
+          }) => (
+            <>
+              <Head>
+                <title>{title} | Downwrite</title>
+              </Head>
+              <Autosaving
+                duration={this.duration}
+                onUpdate={initialFocus && handleSubmit}>
+                <AutosavingNotification />
+              </Autosaving>
+              <OuterEditor>
+                <TimeMarker dateAdded={this.props.post.dateAdded} />
+                <Input value={title} name="title" onChange={handleChange} />
+                <UtilityBar.Container>
+                  <UtilityBar.Items>
+                    <ToggleBox
+                      label={value => (value ? "Public" : "Private")}
+                      name="publicStatus"
+                      value={publicStatus}
+                      onChange={handleChange}
                     />
-                  )}
-                </OuterEditor>
-                {editorState !== null && <WordCounter editorState={editorState} />}
-              </>
-            )}
-          </Formik>
-        </Wrapper>
-      </>
+                    <PreviewLink id={this.props.id} publicStatus={publicStatus} />
+                  </UtilityBar.Items>
+                  <UtilityBar.Items>
+                    {!!editorState && (
+                      <ExportMarkdown
+                        editorState={editorState}
+                        title={title}
+                        date={this.props.post.dateAdded}
+                      />
+                    )}
+                    <Button type="submit">Save</Button>
+                  </UtilityBar.Items>
+                </UtilityBar.Container>
+                {!!editorState && (
+                  <Editor
+                    editorState={editorState}
+                    editorCommand={EDITOR_COMMAND}
+                    onFocus={this.onFocus}
+                    onSave={handleSubmit}
+                    onChange={editorState =>
+                      setFieldValue("editorState", editorState)
+                    }
+                  />
+                )}
+              </OuterEditor>
+              {!!editorState && <WordCounter editorState={editorState} />}
+            </>
+          )}
+        </Formik>
+      </Wrapper>
     );
   }
 }

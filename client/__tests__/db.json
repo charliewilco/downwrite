@@ -53,6 +53,8 @@
           }
         ]
       },
+      "public": false,
+
       "dateAdded": "2017-09-10T23:30:36.526Z",
       "dateModified": "2017-10-11T22:14:02.478Z"
     },
@@ -60,6 +62,7 @@
       "title": "2nd Post",
       "id": "0a19832e-89a8-420b-91c0-279e51757bfd",
       "author": "charlespeters",
+      "public": false,
       "content": {
         "entityMap": {},
         "blocks": [
@@ -88,6 +91,8 @@
     {
       "title": "One more thing to be done here",
       "id": "7e3c01d8-e250-4a40-a1e4-12cd5c7edd8b",
+      "public": false,
+
       "content": {
         "entityMap": {},
         "blocks": [

@@ -1,5 +1,6 @@
 import * as React from "react";
 import orderBy from "lodash/orderBy";
+import { AuthContext } from "./auth";
 import * as API from "../utils/api";
 import "isomorphic-fetch";
 
@@ -9,8 +10,6 @@ interface FetchState {
 
 interface FetchProps {
   sortResponse?: () => void;
-  token: string;
-  endpoint: string;
   children: (p: FetchState) => React.ReactNode;
 }
 
@@ -22,6 +21,8 @@ export default class CollectionFetch extends React.Component<
     posts: []
   };
 
+  static contextType = AuthContext;
+
   static defaultProps = {
     sortResponse: (x: any[]) => x
   };
@@ -29,7 +30,7 @@ export default class CollectionFetch extends React.Component<
   // TODO: Move this to React Suspense!!
   // TODO: Or move to componentDidMount and add loading State
   async componentDidMount() {
-    const posts = await API.getPosts({ token: this.props.token });
+    const posts = await API.getPosts({ token: this.context.token });
 
     this.setState({ posts: orderBy(posts, ["dateAdded"], ["desc"]) || [] });
   }

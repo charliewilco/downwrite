@@ -1,8 +1,7 @@
-import * as React from "react";
 import styled from "../types/styled-components";
 import * as DefaultStyles from "../utils/defaultStyles";
 
-const StyledInput = styled.input`
+export const Input = styled.input.attrs({ type: "text" })`
   display: block;
   width: 100%;
   appearance: none;
@@ -27,24 +26,3 @@ const StyledInput = styled.input`
     border-color: ${props => props.theme.link};
   }
 `;
-
-interface IInputProps {
-  type: string;
-  inputRef?: React.RefObject<any>;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
-  placeholder?: string;
-  value: any;
-  name?: string;
-}
-
-export default class Input extends React.Component<IInputProps, any> {
-  static defaultProps = {
-    type: "text"
-  };
-
-  render() {
-    const { onChange, inputRef, ...props } = this.props;
-
-    return <StyledInput ref={inputRef} onChange={e => onChange(e)} {...props} />;
-  }
-}

@@ -54,7 +54,7 @@ const EMPTY_USER = {
   name: null
 };
 
-const AuthContext = React.createContext({} as AuthContext);
+export const AuthContext = React.createContext({} as AuthContext);
 
 // Should be able to just request user details from another call
 export default class AuthMegaProvider extends React.Component<AuthProps, AuthState> {
@@ -111,6 +111,8 @@ export default class AuthMegaProvider extends React.Component<AuthProps, AuthSta
     );
   }
 }
+
+export const AuthConsumer = AuthContext.Consumer;
 
 // Component should be NextStatelessComponent type
 export const withAuth = Component => {

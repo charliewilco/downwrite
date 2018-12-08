@@ -6,6 +6,7 @@ import AltAnchor from "./alt-anchor-link";
 import { NavIcon } from "./icons";
 import * as DefaultStyles from "../utils/defaultStyles";
 import { withAuth } from "./auth";
+import { withRouter, WithRouterProps } from "next/router";
 
 const MenuContainer = styled.nav`
   display: flex;
@@ -17,7 +18,6 @@ const HomeLink = styled.a`
   display: block;
   cursor: pointer;
   transition: color 375ms ease-in-out;
-  font-weight: 700;
   color: ${props => props.theme.headerLogoLink} !important;
   &:hover {
     color: ${DefaultStyles.colors.blue700};
@@ -38,7 +38,7 @@ const HeaderTitle = styled.h1`
   font-style: normal;
   font-family: ${DefaultStyles.fonts.sans};
   line-height: 1;
-  font-weight: 400;
+  font-weight: 500;
 
   @media (min-width: 57.75rem) {
     font-size: 20px;
@@ -60,55 +60,50 @@ const Header = styled.header`
   }
 `;
 
-interface IHeaderProps {
+interface IHeaderProps extends WithRouterProps {
   authed: boolean;
   onClick: () => void;
-  route: string;
 }
 
-class UIHeader extends React.Component<IHeaderProps, {}> {
-  render() {
-    const { authed, onClick, route } = this.props;
+const UIHeader: React.SFC<IHeaderProps> = ({ router, authed, onClick }) => {
+  const url = !authed
+    ? {
+        href: "/login",
+        as: "/"
+      }
+    : {
+        href: "/",
+        as: "/"
+      };
 
-    const url = !authed
-      ? {
-          href: "/login",
-          as: "/"
-        }
-      : {
-          href: "/",
-          as: "/"
-        };
-
-    return !(route === "/login") ? (
-      <Header data-testid="APP_HEADER">
+  return !(router.route === "/login") ? (
+    <Header data-testid="APP_HEADER">
+      <MenuContainer>
+        <Logo />
+        <HeaderTitle data-testid="APP_HEADER_TITLE">
+          <Link {...url}>
+            <HomeLink>Downwrite</HomeLink>
+          </Link>
+        </HeaderTitle>
+      </MenuContainer>
+      {authed ? (
         <MenuContainer>
-          <Logo />
-          <HeaderTitle data-testid="APP_HEADER_TITLE">
-            <Link {...url}>
-              <HomeLink>Downwrite</HomeLink>
-            </Link>
-          </HeaderTitle>
+          <Link prefetch href="/new" as="/new">
+            <AltAnchor space="right">New</AltAnchor>
+          </Link>
+          <ToggleButton onClick={onClick}>
+            <NavIcon className="Navicon" />
+          </ToggleButton>
         </MenuContainer>
-        {authed ? (
-          <MenuContainer>
-            <Link prefetch href="/new" as="/new">
-              <AltAnchor space="right">New</AltAnchor>
-            </Link>
-            <ToggleButton onClick={onClick}>
-              <NavIcon className="Navicon" />
-            </ToggleButton>
-          </MenuContainer>
-        ) : (
-          <MenuContainer>
-            <Link prefetch href="/login">
-              <AltAnchor space="right">Login or Sign Up</AltAnchor>
-            </Link>
-          </MenuContainer>
-        )}
-      </Header>
-    ) : null;
-  }
-}
+      ) : (
+        <MenuContainer>
+          <Link prefetch href="/login">
+            <AltAnchor space="right">Login or Sign Up</AltAnchor>
+          </Link>
+        </MenuContainer>
+      )}
+    </Header>
+  ) : null;
+};
 
-export default withAuth(UIHeader);
+export default withAuth(withRouter(UIHeader));
