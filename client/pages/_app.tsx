@@ -3,8 +3,7 @@ import React from "react";
 import isEmpty from "lodash/isEmpty";
 import { getToken } from "../utils/responseHandler";
 import UIShell from "../components/ui-shell";
-import AuthMegaProvider, { withAuth } from "../components/auth";
-import { withErrors } from "../components/ui-error";
+import AuthMegaProvider, { AuthConsumer } from "../components/auth";
 
 export default class Downwrite extends App<AppComponentProps & { token: string }> {
   static async getInitialProps({ Component, router, ctx }) {
@@ -16,23 +15,19 @@ export default class Downwrite extends App<AppComponentProps & { token: string }
       pageProps = await Component.getInitialProps(ctx);
     }
 
-    return { pageProps, router, token };
+    return { pageProps, token };
   }
 
   render() {
-    const {
-      Component,
-      pageProps,
-      token,
-      router: { route }
-    } = this.props;
+    const { Component, pageProps, token } = this.props;
     const authed = !isEmpty(token);
-    const Cx = withAuth(withErrors(Component));
     return (
       <Container>
         <AuthMegaProvider token={token} authed={authed}>
-          <UIShell route={route} token={token}>
-            <Cx {...pageProps} route={route} />
+          <UIShell token={token}>
+            <AuthConsumer>
+              {auth => <Component {...pageProps} {...auth} />}
+            </AuthConsumer>
           </UIShell>
         </AuthMegaProvider>
       </Container>

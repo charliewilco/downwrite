@@ -112,6 +112,8 @@ export default class AuthMegaProvider extends React.Component<AuthProps, AuthSta
   }
 }
 
+export const AuthConsumer = AuthContext.Consumer;
+
 // Component should be NextStatelessComponent type
 export const withAuth = Component => {
   return class extends React.Component<any, any> {

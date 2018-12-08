@@ -11,7 +11,7 @@ interface IErrorProps {
   children: React.ReactNode;
 }
 
-const ErrorStateContext = React.createContext({});
+export const ErrorStateContext = React.createContext({});
 
 interface IUIErrorMessage {
   errorState: ErrorTypes;
@@ -46,6 +46,8 @@ export const withErrors = (Component: HOComponent) => {
     }
   };
 };
+
+export const UIErrorConsumer = ErrorStateContext.Consumer;
 
 export class ErrorContainer extends React.Component<IErrorProps, ErrorTypes> {
   state = {

@@ -76,7 +76,6 @@ const AppContainer = styled.div``;
 AppContainer.displayName = "AppContainer";
 
 interface IUIShell {
-  route: string;
   authed?: boolean;
   children: React.ReactNode;
   token: string;
@@ -86,7 +85,7 @@ export default class UIShell extends React.Component<IUIShell, any> {
   static displayName = "UIShell";
 
   render() {
-    const { children, authed, token, route } = this.props;
+    const { children, authed, token } = this.props;
     return (
       <NightMode>
         <UIContainer>
@@ -98,18 +97,11 @@ export default class UIShell extends React.Component<IUIShell, any> {
                   <UIErrorBanner />
                   <ClearFixed>
                     <Container>
-                      <Header
-                        route={route}
-                        authed={authed}
-                        open={isOpen}
-                        onClick={onToggle}
-                      />
+                      <Header authed={authed} open={isOpen} onClick={onToggle} />
                       {children}
                       <Footer />
                     </Container>
-                    {isOpen && (
-                      <Nav pathname={route} closeNav={onClose} token={token} />
-                    )}
+                    {isOpen && <Nav closeNav={onClose} token={token} />}
                   </ClearFixed>
                 </NightModeTrigger>
               )}
