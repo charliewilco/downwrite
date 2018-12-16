@@ -6,9 +6,8 @@
   "private": true,
   "scripts": {
     "build": "tsc",
+    "now-build": "tsc",
     "predev": "yarn build",
-    "deploy:ci": "now --token $NOW_TOKEN",
-    "deploy:token": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN",
     "start": "node dist/server.js",
     "dev": "nodemon",
     "test": "jest",
@@ -48,25 +47,6 @@
     "ts-node": "^7.0.1",
     "typedoc": "^0.12.0",
     "yesno-http": "^0.0.5"
-  },
-  "now": {
-    "name": "api-downwrite",
-    "alias": "api.downwrite.us",
-    "type": "npm",
-    "scale": {
-      "sfo1": {
-        "min": 1,
-        "max": 2
-      }
-    },
-    "env": {
-      "PORT": "4411",
-      "NODE_ENV": "production",
-      "SECRET_KEY": "@dw-key",
-      "DB_USER": "@dw-db-user",
-      "DB_PASSWORD": "@dw-db-password",
-      "DB_ADDRESS": "@dw-db-address"
-    }
   },
   "jest": {
     "transform": {

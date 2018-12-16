@@ -8,10 +8,9 @@
     "typecheck": "tsc --noEmit",
     "dev": "node server.js",
     "build": "next build",
+    "now-build": "next build",
     "start": "NODE_ENV=production node server.js",
-    "test": "NODE_ENV=test jest --env=jsdom --verbose --silent",
-    "deploy:ci": "now --token $NOW_TOKEN",
-    "deploy:token": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN"
+    "test": "NODE_ENV=test jest --env=jsdom --verbose --silent"
   },
   "dependencies": {
     "@charliewilco/sanitize-object": "^1.0.1",
@@ -120,23 +119,6 @@
     ],
     "moduleNameMapper": {
       "\\.(css|less)$": "<rootDir>/__tests__/config/fileTransform.js"
-    }
-  },
-  "now": {
-    "name": "next-downwrite",
-    "type": "npm",
-    "alias": [
-      "beta.downwrite.us"
-    ],
-    "env": {
-      "NODE_ENV": "production",
-      "SECRET_KEY": "@dw-key"
-    },
-    "scale": {
-      "sfo1": {
-        "min": 1,
-        "max": 2
-      }
     }
   },
   "browserslist": [
