@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "name": "downwrite",
+  "env": {
+    "NODE_ENV": "production",
+    "PORT": "4411",
+    "SECRET_KEY": "@dw-key",
+    "DB_USER": "@dw-db-user",
+    "DB_PASSWORD": "@dw-db-password",
+    "DB_ADDRESS": "@dw-db-address"
+  },
+  "builds": [
+    { "src": "client/next.config.js", "use": "@now/next" },
+    { "src": "api/package.json", "use": "@now/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/client/$1" }
+  ]
+}
