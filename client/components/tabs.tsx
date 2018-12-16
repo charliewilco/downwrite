@@ -1,97 +1,174 @@
 import * as React from "react";
 
-interface ITabContext {
-  activeIndex: number;
-  onSelectTab: (value: number) => void;
+interface ITabsModifier {
+  className?: string;
 }
 
-interface ITabProps {
-  isActive: boolean;
-  isDisabled?: boolean;
-  onSelect: () => void;
+interface ITabsContainerProps extends ITabsModifier {
+  [key: string]: any;
 }
+
+interface ITabsContainerState {
+  activeIndex: number;
+}
+
+interface ITabsContext extends ITabsContainerState {
+  onSelectTab: (x: number) => void;
+}
+
+/// Reference:
+// ---
+//
+// https://developers.google.com/web/fundamentals/accessibility/focus/using-tabindex
+// http://simplyaccessible.com/article/danger-aria-tabs/
+// https://inclusive-components.design/tabbed-interfaces/
 
 const TabContext = React.createContext({
   activeIndex: 0,
   onSelectTab: null
-} as ITabContext);
+} as ITabsContext);
 
-export class Container extends React.Component {
-  state = {
+export class Container extends React.Component<
+  ITabsContainerProps,
+  ITabsContainerState
+> {
+  public readonly state: ITabsContainerState = {
     activeIndex: 0
   };
 
-  getContext(): ITabContext {
+  getContext(): ITabsContext {
     return {
       activeIndex: this.state.activeIndex,
       onSelectTab: this.selectTabIndex
     };
   }
 
-  selectTabIndex = activeIndex => {
+  selectTabIndex = (activeIndex: number): void => {
     this.setState({ activeIndex });
   };
 
   render() {
     const value = this.getContext();
+    const { className, ...props } = this.props;
     return (
       <TabContext.Provider value={value}>
-        <div className="Tabs">{this.props.children}</div>;
+        <div className={className} {...props}>
+          {this.props.children}
+        </div>
       </TabContext.Provider>
     );
   }
 }
 
-export const List: React.SFC = ({ children }) => (
+interface ITabsList extends ITabsModifier {
+  [key: string]: any;
+}
+
+export const List: React.SFC<ITabsList> = ({ children, className }) => (
   <TabContext.Consumer>
-    {context => {
-      const cloned = React.Children.map(children, (child, index) => {
-        return React.cloneElement(child as React.ReactElement<any>, {
-          isActive: index === context.activeIndex,
-          onSelect: () => context.onSelectTab(index)
-        });
-      });
-      return <div className="tabs">{cloned}</div>;
+    {(context: ITabsContext): JSX.Element => {
+      const cloned = React.Children.map(
+        children,
+        (child: React.ReactElement<any>, index: number) => {
+          return React.cloneElement(child, {
+            isActive: index === context.activeIndex,
+            onSelect: () => context.onSelectTab(index)
+          });
+        }
+      );
+      return (
+        <div className={className} role="tablist">
+          {cloned}
+        </div>
+      );
     }}
   </TabContext.Consumer>
 );
 
-export const ListItem: React.SFC<ITabProps> = ({
+interface ITabsListItem extends ITabsModifier {
+  isActive?: boolean;
+  isDisabled?: boolean;
+  onSelect: () => void;
+  id: string;
+  [key: string]: any;
+}
+
+export const ListItem: React.SFC<ITabsListItem> = ({
   isActive,
   isDisabled,
-  onSelect
+  id,
+  onSelect,
+  children,
+  className,
+  ...props
 }) => (
   <div
-    className={isDisabled ? "tab disabled" : isActive ? "tab active" : "tab"}
-    onClick={isDisabled ? null : onSelect}>
-    {this.props.children}
+    id={id}
+    role="tab"
+    aria-selected={isActive}
+    tabIndex={isActive ? 0 : -1}
+    className={`${className} ${isDisabled ? "disabled" : isActive ? "active" : ""}`}
+    onClick={isDisabled ? null : onSelect}
+    onKeyPress={event => {
+      if (event.key == "Enter") {
+        return isDisabled ? null : onSelect();
+      }
+    }}
+    {...props}>
+    {children}
   </div>
 );
 
-export const Panels: React.SFC = ({ children }) => (
+interface ITabsPanels extends ITabsModifier {
+  isActive?: boolean;
+}
+
+export const Panels: React.SFC<ITabsPanels> = ({ children, className }) => (
   <TabContext.Consumer>
     {context => {
-      return <div className="panels">{children[context.activeIndex]}</div>;
+      const cloned = React.Children.map(
+        children,
+        (child: React.ReactElement<any>, index) => {
+          return React.cloneElement(child, {
+            isActive: index === context.activeIndex,
+            onSelect: () => context.onSelectTab(index)
+          });
+        }
+      );
+      return <div className={className}>{cloned}</div>;
     }}
   </TabContext.Consumer>
 );
 
-export class Panel extends React.Component {
-  render() {
-    return this.props.children;
-  }
+interface ITabsPanelProps extends ITabsModifier {
+  isActive?: boolean;
+  label: string;
 }
 
-/**
- * 
-  <Tabs.Container>
-    <Tabs.List>
-      <Tab.ListItem>Thing</Tab.ListItem>
-      <Tab.ListItem>Thing</Tab.ListItem>
-    </Tabs.List>
-    <Tabs.Panels>
-      <Tabs.Panel>Thing Content</Tabs.Panel>
-      <Tabs.Panel>Thing Content</Tabs.Panel>
-    </Tabs.Panels>
-  </Tabs.Container>
- */
+export class Panel extends React.Component<ITabsPanelProps> {
+  private ref: React.RefObject<HTMLDivElement> = React.createRef();
+
+  public componentDidUpdate(): void {
+    const node = this.ref.current;
+    if (this.props.isActive) {
+      node.focus();
+    } else {
+      node.blur();
+    }
+  }
+
+  public render(): JSX.Element {
+    const { isActive, className, children, label } = this.props;
+    return (
+      <div
+        ref={this.ref}
+        className={className}
+        role="tabpanel"
+        aria-hidden={!isActive}
+        style={{ display: isActive ? "block" : "none" }}
+        aria-labelledby={label}>
+        {children}
+      </div>
+    );
+  }
+}

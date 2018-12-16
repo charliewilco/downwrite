@@ -6,8 +6,10 @@ import styled from "../types/styled-components";
 
 import createMarkdownPlugin from "draft-js-markdown-plugin";
 import createPrismPlugin from "draft-js-prism-plugin";
+import { LocalUISettings } from "./local-ui-settings";
+
 import * as DefaultStyles from "../utils/defaultStyles";
-import "./draft.css";
+import DraftStyles from "./draft-styles";
 import "./ganymede.css";
 
 const EditorWrapper = styled.div`
@@ -48,7 +50,6 @@ interface IEditorProps {
 }
 
 interface IEditorState {
-  font: string;
   plugins: any[];
 }
 
@@ -59,10 +60,11 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
     toolbar: false
   };
 
+  static contextType = LocalUISettings;
+
   private editor: Editor = null as Editor;
 
   state = {
-    font: DefaultStyles.fonts.monospace,
     plugins: [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()]
   };
 
@@ -114,15 +116,11 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
     return Draft.getDefaultKeyBinding(e);
   };
 
-  componentDidMount() {
-    const font = localStorage.getItem("DW_EDITOR_FONT");
-
-    this.setState(state => ({ font: [`${font},`, state.font].join(" ") }));
-  }
-
   render() {
     const { editorState } = this.props;
-    const { plugins, font } = this.state;
+    const { plugins } = this.state;
+
+    const { monospace } = this.context;
 
     // If the user changes block type before entering any text, we can
     // either style the placeholder or hide it. Let's just hide it now.
@@ -140,7 +138,8 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
     }
 
     return (
-      <EditorShell font={font}>
+      <EditorShell font={monospace}>
+        <DraftStyles />
         <EditorWrapper className={className} onClick={this.focus}>
           <Editor
             onFocus={this.props.onFocus}

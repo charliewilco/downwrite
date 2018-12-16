@@ -113,7 +113,7 @@ export async function getPost(id: string, options: IOptions): Promise<APIRespons
   return post;
 }
 
-export async function removePost(id, options: IOptions): Promise<Response> {
+export async function removePost(id: string, options: IOptions): Promise<Response> {
   const response = await fetch(
     `${POST_ENDPOINT}/${id}`,
     createHeader("DELETE", options.token)

@@ -11,6 +11,7 @@ import { LevelStyles } from "./level-styles";
 
 import "../utils/global.css";
 import "../utils/typescale.css";
+import { LocalUISettingsProvider } from "./local-ui-settings";
 
 const ClearFixed = styled.div`
   &::after {
@@ -32,25 +33,27 @@ interface IUIShell {
 
 export const UIShell: React.SFC<IUIShell> = ({ children, token }) => (
   <NightMode>
-    <UIContainer>
-      <LevelStyles />
-      <ErrorContainer>
-        <Toggle>
-          {({ isOpen, onToggle, onClose }) => (
-            <NightModeTrigger>
-              <UIErrorBanner />
-              <ClearFixed>
-                <Container>
-                  <Header open={isOpen} onClick={onToggle} />
-                  {children}
-                  <Footer />
-                </Container>
-                {isOpen && <Nav closeNav={onClose} token={token} />}
-              </ClearFixed>
-            </NightModeTrigger>
-          )}
-        </Toggle>
-      </ErrorContainer>
-    </UIContainer>
+    <LocalUISettingsProvider>
+      <UIContainer>
+        <LevelStyles />
+        <ErrorContainer>
+          <Toggle>
+            {({ isOpen, onToggle, onClose }) => (
+              <NightModeTrigger>
+                <UIErrorBanner />
+                <ClearFixed>
+                  <Container>
+                    <Header open={isOpen} onClick={onToggle} />
+                    {children}
+                    <Footer />
+                  </Container>
+                  {isOpen && <Nav closeNav={onClose} token={token} />}
+                </ClearFixed>
+              </NightModeTrigger>
+            )}
+          </Toggle>
+        </ErrorContainer>
+      </UIContainer>
+    </LocalUISettingsProvider>
   </NightMode>
 );

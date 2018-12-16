@@ -9,7 +9,7 @@ interface IToggleAction {
 
 interface ToggleProps {
   defaultOpen: boolean;
-  children: (state: IToggleAction) => React.ReactNode;
+  children: (state: IToggleAction) => JSX.Element;
 }
 
 export default class ToggleInstance extends React.Component<

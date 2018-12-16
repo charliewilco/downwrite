@@ -1,3 +1,6 @@
+import { createGlobalStyle } from "../types/styled-components";
+
+const DraftStyles = createGlobalStyle`
 .RichEditor-root {
   font-size: 14px;
 }
@@ -96,3 +99,6 @@
 .public-DraftStyleDefault-unorderedListItem > * {
   display: inline;
 }
+`;
+
+export default DraftStyles;
