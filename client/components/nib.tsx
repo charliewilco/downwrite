@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { keyframes } from "../types/styled-components";
+import styled, { keyframes } from "styled-components";
 
 const backNForth = keyframes`
   0% {

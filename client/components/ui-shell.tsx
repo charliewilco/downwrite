@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 import Nav from "./nav";
 import Toggle from "./toggle";
 import Header from "./header";

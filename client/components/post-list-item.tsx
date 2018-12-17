@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 import Link from "next/link";
 
 const PostsTitle = styled.h2`

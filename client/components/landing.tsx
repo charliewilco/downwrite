@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 import { LocalUISettings } from "./local-ui-settings";
 import * as DefaultStyles from "../utils/defaultStyles";
 

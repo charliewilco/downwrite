@@ -1,8 +1,9 @@
 import * as React from "react";
 import styled, {
+  DefaultTheme,
   ThemeProvider,
   createGlobalStyle
-} from "../types/styled-components";
+} from "styled-components";
 import Checkbox from "./checkbox";
 import * as DefaultStyles from "../utils/defaultStyles";
 
@@ -102,7 +103,7 @@ export default class NightModeContainer extends React.Component<
 
   render() {
     const { night } = this.state;
-    const theme: DefaultStyles.ITheme = night
+    const theme: DefaultTheme = night
       ? DefaultStyles.NIGHT_THEME
       : DefaultStyles.DAY_THEME;
 

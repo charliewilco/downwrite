@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 import Card from "./card";
 import LayoutControl from "./layout-control";
 import PostListItem from "./post-list-item";

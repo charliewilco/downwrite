@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from "react";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 import Check from "./checkbox";
 
 const Container = styled.div`

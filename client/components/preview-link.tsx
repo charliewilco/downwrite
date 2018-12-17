@@ -1,6 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 
 const PreviewAnchor = styled.a`
   display: block;

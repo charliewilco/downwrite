@@ -1,4 +1,4 @@
-import styled, { css } from "../types/styled-components";
+import styled, { css } from "styled-components";
 import * as DefaultStyles from "../utils/defaultStyles";
 
 const AltAnchor = styled.a<{ space?: string }>`
@@ -14,10 +14,10 @@ const AltAnchor = styled.a<{ space?: string }>`
           margin-right: 32px;
         `
       : props.space === "left"
-        ? css`
-            margin-left: 32px;
-          `
-        : null} &:hover,
+      ? css`
+          margin-left: 32px;
+        `
+      : null} &:hover,
   &:focus {
     color: ${DefaultStyles.colors.text};
     opacity: 1;

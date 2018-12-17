@@ -1,3 +1,5 @@
+import { DefaultTheme } from "styled-components";
+
 export const colors = {
   blue400: "#4fa5c2", // Main Color
   blue500: "#4382A1",
@@ -26,23 +28,7 @@ export const colors = {
 //   defaultYellow: '#ffc200'
 // }
 
-export interface ITheme {
-  night: boolean;
-  background: string;
-  color: string;
-  border: string;
-  link: string;
-  linkHover: string;
-  meta: string;
-  inputBorder: string;
-  cardBackground: string;
-  cardTrayBackground: string;
-  cardDeleteButton: string;
-  headerLogoLink: string;
-  landingPageTitle: string;
-}
-
-export const NIGHT_THEME: ITheme = {
+export const NIGHT_THEME: DefaultTheme = {
   night: true,
   background: "#022438", // "#093F5D", "#072a3e"
   color: colors.gray100,
@@ -58,7 +44,7 @@ export const NIGHT_THEME: ITheme = {
   landingPageTitle: colors.blue400
 };
 
-export const DAY_THEME: ITheme = {
+export const DAY_THEME: DefaultTheme = {
   night: false,
   background: colors.gray100,
   color: colors.text,

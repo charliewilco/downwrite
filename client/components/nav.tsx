@@ -1,7 +1,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { withRouter, WithRouterProps } from "next/router";
-import styled, { keyframes } from "../types/styled-components";
+import styled, { keyframes } from "styled-components";
 import { withAuth } from "./auth";
 import User from "./user";
 import Fetch from "./collection-fetch";

@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "../types/styled-components";
+import { createGlobalStyle } from "styled-components";
 
 const DraftStyles = createGlobalStyle`
 .RichEditor-root {

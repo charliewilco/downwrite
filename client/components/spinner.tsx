@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { css, keyframes } from "../types/styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 let ripple = keyframes`
   0% {

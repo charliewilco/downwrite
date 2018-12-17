@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 import Link from "next/link";
 import Avatar from "./avatar";
 import * as DefaultStyles from "../utils/defaultStyles";
