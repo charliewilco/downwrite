@@ -37,7 +37,6 @@ interface IHomeProps {
 }
 export default class Home extends React.Component<IHomeProps, any> {
   static contextType = ErrorStateContext;
-
   render() {
     const { signIn } = this.props;
     const setError = this.context.errorActions.setError;
