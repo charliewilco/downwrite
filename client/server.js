@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const proxy = require("http-proxy-middleware");
+// const proxy = require("http-proxy-middleware");
 const cookiesMiddleware = require("universal-cookie-express");
 const next = require("next");
 const { parse } = require("url");
@@ -50,11 +50,11 @@ app.prepare().then(() => {
     app.render(req, res, "/preview", req.params)
   );
 
-  server.use("/api", proxy({ target: API_URL, changeOrigin: true }));
+  // server.use("/api", proxy({ target: API_URL, changeOrigin: true }));
 
-  if (dev) {
-    server.use("/docs", proxy({ target: API_URL, changeOrigin: true }));
-  }
+  // if (dev) {
+  //   server.use("/docs", proxy({ target: API_URL, changeOrigin: true }));
+  // }
 
   server.get("*", (req, res) => {
     const parsedUrl = parse(req.url, true);

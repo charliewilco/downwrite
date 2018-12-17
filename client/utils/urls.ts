@@ -1,6 +1,6 @@
 import { __IS_DEV__ } from "./dev";
 
-const DEV_URL = "http://localhost:3000/api";
+const DEV_URL = "http://localhost:5000/api";
 const PROD_URL = "https://beta.downwrite.us/api";
 
 const URL: string = __IS_DEV__ ? DEV_URL : PROD_URL;

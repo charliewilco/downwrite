@@ -2,6 +2,7 @@
   "version": 2,
   "name": "downwrite",
   "env": {
+    "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true",
     "NODE_ENV": "production",
     "PORT": "4411",
     "SECRET_KEY": "@dw-key",
@@ -14,7 +15,7 @@
     { "src": "api/package.json", "use": "@now/node" }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/api/(.*)", "dest": "/api/dist/$1" },
     { "src": "/(.*)", "dest": "/client/$1" }
   ]
 }
