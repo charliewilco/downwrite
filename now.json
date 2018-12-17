@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "public": true,
   "name": "downwrite",
   "env": {
     "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true",
