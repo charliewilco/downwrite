@@ -77,3 +77,5 @@ init()
     console.log(err);
     throw new Error(err) && process.exit(1);
   });
+
+export default init;
