@@ -32,14 +32,33 @@ const manifest = {
   display: "standalone"
 };
 
+const workboxOpts = {
+  swDest: "static/service-worker.js",
+  runtimeCaching: [
+    {
+      urlPattern: /^https?.*/,
+      handler: "networkFirst",
+      options: {
+        cacheName: "https-calls",
+        networkTimeoutSeconds: 15,
+        expiration: {
+          maxEntries: 150,
+          maxAgeSeconds: 30 * 24 * 60 * 60 // 1 month
+        },
+        cacheableResponse: {
+          statuses: [0, 200]
+        }
+      }
+    }
+  ]
+};
+
 const { PHASE_PRODUCTION_SERVER } =
   process.env.NODE_ENV === "development" ? {} : require("next-server/constants");
 
 const config = {
-  publicRuntimeConfig: {
-    apiUrl: process.env.API_URL,
-    mediaUrl: process.env.MEDIA_URL
-  }
+  manifest,
+  workboxOpts
 };
 
 module.exports = (phase, { defaultConfig }) => {
@@ -58,35 +77,5 @@ module.exports = (phase, { defaultConfig }) => {
     extension: /\.mdx?$/
   });
 
-  return withTypescript(
-    withMDX(
-      withCSS(
-        withManifest(
-          withOffline(config, {
-            manifest,
-            workboxOpts: {
-              swDest: "static/service-worker.js",
-              runtimeCaching: [
-                {
-                  urlPattern: /^https?.*/,
-                  handler: "networkFirst",
-                  options: {
-                    cacheName: "https-calls",
-                    networkTimeoutSeconds: 15,
-                    expiration: {
-                      maxEntries: 150,
-                      maxAgeSeconds: 30 * 24 * 60 * 60 // 1 month
-                    },
-                    cacheableResponse: {
-                      statuses: [0, 200]
-                    }
-                  }
-                }
-              ]
-            }
-          })
-        )
-      )
-    )
-  );
+  return withTypescript(withMDX(withCSS(withManifest(withOffline(config)))));
 };
