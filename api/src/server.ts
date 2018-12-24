@@ -63,7 +63,7 @@ const init = async (): Promise<Hapi.Server> => {
 };
 
 init()
-  .then(server => {
+  .then((server: Hapi.Server) => {
     console.log("info", "Server running at: " + server.info.uri);
 
     db.on("error", console.error.bind(console, "connection error"));
@@ -78,4 +78,4 @@ init()
     throw new Error(err) && process.exit(1);
   });
 
-export default init;
+export default init();
