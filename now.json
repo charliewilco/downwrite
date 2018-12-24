@@ -13,7 +13,15 @@
   },
   "builds": [
     { "src": "client/next.config.js", "use": "@now/next" },
-    { "src": "api/src/server.ts", "use": "@now/node@canary" }
+    { "src": "api/src/server.ts", "use": "@now/node@canary" },
+    {
+      "src": "^/service-worker.js$",
+      "dest": "/_next/static/service-worker.js",
+      "headers": {
+        "cache-control": "public, max-age=43200, immutable",
+        "Service-Worker-Allowed": "/"
+      }
+    }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/src/$1" },
