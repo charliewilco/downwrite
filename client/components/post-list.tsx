@@ -33,7 +33,7 @@ export default class PostList extends React.Component<IPostListProps, {}> {
     const { posts, onDelete } = this.props;
 
     return (
-      <Toggle defaultOpen={false}>
+      <Toggle defaultOpen>
         {({ isOpen, onSetInstance }) => (
           <>
             <ListHeader>
