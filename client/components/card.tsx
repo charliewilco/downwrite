@@ -81,7 +81,7 @@ const SxLink = styled.a`
   margin-right: 8px;
 `;
 
-const EditLink = ({ id, title = "Edit" }) => (
+export const EditLink = ({ id, title = "Edit" }) => (
   <Link
     prefetch
     passHref
@@ -91,7 +91,7 @@ const EditLink = ({ id, title = "Edit" }) => (
   </Link>
 );
 
-const PreviewLink = ({ id }) => (
+export const PreviewLink = ({ id }) => (
   <Link
     prefetch
     passHref

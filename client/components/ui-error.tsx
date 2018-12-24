@@ -11,15 +11,15 @@ interface IErrorProps {
   children: React.ReactNode;
 }
 
-export const ErrorStateContext = React.createContext({});
-
-interface IUIErrorMessage {
+export interface IUIErrorMessage {
   errorState: ErrorTypes;
   errorActions: {
     setError: (c, t) => void;
     clearFlashMessage: () => void;
   };
 }
+
+export const ErrorStateContext = React.createContext({} as IUIErrorMessage);
 
 const UIErrorMessage: React.SFC<IUIErrorMessage> = ({
   errorState: { content, type },
