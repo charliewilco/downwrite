@@ -7520,6 +7520,11 @@ next-offline@^3.2.2:
     webpack "^4.19.1"
     workbox-webpack-plugin "3.6.3"
 
+next-server@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.npmjs.org/next-server/-/next-server-0.0.1.tgz#50532925ba928b8e2486976ce908ace74001239f"
+  integrity sha512-krx3IYq7Mck00hGjdOBCSh5tVuoTr1N9Z6cU7/oDLZpfqlVo0GJ9CIdmPQTDTngNgOrfxKwm5QanV9+PqAmiYQ==
+
 next@^7.0.1:
   version "7.0.2"
   resolved "https://registry.npmjs.org/next/-/next-7.0.2.tgz#5ff6b3f0e6cf03ce539d5779a55dc1f8fb1759d7"
