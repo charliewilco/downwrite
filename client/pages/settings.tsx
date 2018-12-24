@@ -9,6 +9,7 @@ import Wrapper from "../components/wrapper";
 import ContainerTitle from "../components/container-title";
 import * as API from "../utils/api";
 import { getToken } from "../utils/responseHandler";
+import { NextContext } from "next";
 
 const SettingsWrapper = styled(Wrapper)`
   padding: 8px;
@@ -23,6 +24,7 @@ interface IUserSettingsProps {
     username: string;
     email: string;
   };
+  token: string;
 }
 
 // interface IUserSettingsState {
@@ -35,10 +37,14 @@ interface IUserSettingsProps {
 export default class Settings extends React.Component<IUserSettingsProps, {}> {
   static displayName = "Settings";
 
-  static async getInitialProps({ req, query }) {
+  static async getInitialProps({
+    req,
+    query
+  }: NextContext<{ token: string }>): Promise<Partial<IUserSettingsProps>> {
     const { token } = getToken(req, query);
 
     const user = await API.getUserDetails({ token });
+
     return {
       token,
       user

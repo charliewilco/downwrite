@@ -1,11 +1,12 @@
 import * as React from "react";
 import * as Draft from "draft-js";
 import Head from "next/head";
-import { Formik } from "formik";
-import * as Dwnxt from "../types/downwrite";
+import { Formik, FormikProps } from "formik";
 import isEmpty from "lodash/isEmpty";
 import sanitize from "@charliewilco/sanitize-object";
 import "isomorphic-fetch";
+
+import * as Dwnxt from "../types/downwrite";
 
 import Autosaving from "../components/autosaving-interval";
 import AutosavingNotification from "../components/autosaving-notification";
@@ -24,6 +25,7 @@ import * as UtilityBar from "../components/utility-bar";
 import * as API from "../utils/api";
 import { getToken, superConverter } from "../utils/responseHandler";
 import { __IS_DEV__ } from "../utils/dev";
+import { NextContext } from "next";
 
 interface IEditorState {
   initialFocus: boolean;
@@ -40,12 +42,23 @@ interface IEditorProps {
   route?: {};
 }
 
+interface IFields {
+  editorState: Draft.EditorState;
+  title: string;
+  publicStatus: boolean;
+}
+
 const EDITOR_COMMAND = "myeditor-save";
 
 export default class Edit extends React.Component<IEditorProps, IEditorState> {
-  static async getInitialProps({ req, query }) {
+  static async getInitialProps({
+    req,
+    query
+  }: NextContext<{ id: string; token: string }>): Promise<Partial<IEditorProps>> {
     const { token } = getToken(req, query);
-    const post = await API.getPost(query.id, { token });
+    const post = (await API.getPost(query.id, {
+      token
+    })) as Dwnxt.IPost;
 
     return {
       token,
@@ -63,11 +76,11 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
     loaded: !isEmpty(this.props.post),
     dateModified: new Date(),
     editorState: Draft.EditorState.createWithContent(
-      superConverter(this.props.post.content)
+      superConverter((this.props.post as Dwnxt.IPost).content)
     )
   };
 
-  private updatePostContent = async (values): Promise<void> => {
+  private updatePostContent = async (values: IFields): Promise<void> => {
     const contentState: Draft.ContentState = values.editorState.getCurrentContent();
     const content = Draft.convertToRaw(contentState);
 
@@ -109,7 +122,7 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
             handleChange,
             handleSubmit,
             setFieldValue
-          }) => (
+          }: FormikProps<IFields>) => (
             <>
               <Head>
                 <title>{title} | Downwrite</title>

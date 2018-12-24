@@ -6,6 +6,7 @@ import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
 import NotFound from "../components/not-found";
 import * as API from "../utils/api";
+import { NextContext } from "next";
 
 type AuthorType = {
   username: string;
@@ -33,7 +34,9 @@ interface IPreviewProps {
 }
 
 export default class PreviewEntry extends React.Component<IPreviewProps, any> {
-  static async getInitialProps({ query }) {
+  static async getInitialProps({
+    query
+  }: NextContext<{ id: string }>): Promise<Partial<IPreviewProps>> {
     let { id } = query;
 
     const entry = await API.findPreviewEntry(id);

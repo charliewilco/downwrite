@@ -3,7 +3,7 @@ import Head from "next/head";
 import Content from "../components/content";
 import About from "../markdown/about.mdx";
 
-export default () => (
+export default (): JSX.Element => (
   <>
     <Head>
       <title>About Downwrite</title>

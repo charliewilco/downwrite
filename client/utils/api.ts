@@ -41,7 +41,12 @@ export const createHeader = (
   };
 };
 
-export async function authUser({ user, password }): Promise<any> {
+export interface IAuthUserBody {
+  user: string;
+  password: string;
+}
+
+export async function authUser({ user, password }: IAuthUserBody): Promise<any> {
   const auth = await fetch(AUTH_ENDPOINT, {
     method: "POST",
     headers: {
@@ -70,11 +75,17 @@ export async function updateSettings(body, options) {
   return settings;
 }
 
+export interface ICreateUserBody {
+  username: string;
+  email: string;
+  password: string;
+}
+
 export async function createUser({
   username,
   email,
   password
-}): Promise<IUserResponse> {
+}: ICreateUserBody): Promise<IUserResponse> {
   const user = await fetch(USER_ENDPOINT, {
     method: "POST",
     headers: {

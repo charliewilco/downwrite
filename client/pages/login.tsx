@@ -2,7 +2,7 @@ import * as React from "react";
 import Head from "next/head";
 import styled from "styled-components";
 import LoginTabs from "../components/login-tabs";
-import { ErrorStateContext } from "../components/ui-error";
+import { ErrorStateContext, IUIErrorMessage } from "../components/ui-error";
 import Landing from "../components/landing";
 import Features from "../components/landing-features";
 import Register from "../components/register";
@@ -35,8 +35,10 @@ const HomeContainer = styled.main`
 interface IHomeProps {
   signIn: (x: boolean, y: string) => void;
 }
+
 export default class Home extends React.Component<IHomeProps, any> {
-  static contextType = ErrorStateContext;
+  static contextType: React.Context<IUIErrorMessage> = ErrorStateContext;
+
   render() {
     const { signIn } = this.props;
     const setError = this.context.errorActions.setError;

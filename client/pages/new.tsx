@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Formik, FormikProps } from "formik";
 import Head from "next/head";
 import Router from "next/router";
+import * as Dwnxt from "../types/downwrite";
 import uuid from "uuid/v4";
 import "isomorphic-fetch";
 import Wrapper from "../components/wrapper";
@@ -14,7 +15,7 @@ import Editor from "../components/editor";
 import * as UtilityBar from "../components/utility-bar";
 import * as API from "../utils/api";
 
-interface INewPostSt {
+interface INewPostState {
   drafts: any[];
   id: string;
   error?: string;
@@ -37,7 +38,10 @@ const EditorContainer = styled(Wrapper)`
 
 const EDITOR_COMMAND = "create-new-post";
 
-export default class NewEditor extends React.Component<INewPostProps, INewPostSt> {
+export default class NewEditor extends React.Component<
+  INewPostProps,
+  INewPostState
+> {
   public readonly state = {
     id: uuid(),
     dateAdded: new Date(),
@@ -47,17 +51,18 @@ export default class NewEditor extends React.Component<INewPostProps, INewPostSt
 
   static displayName = "NewPostEditor";
 
-  saveLocalDraft = (id: string, post: Object): void =>
-    localStorage.setItem("Draft " + id, JSON.stringify(post));
+  // private saveLocalDraft = (id: string, post: Object): void => {
+  //   localStorage.setItem("Draft " + id, JSON.stringify(post));
+  // };
 
-  public onSubmit = async (values, actions): Promise<void> => {
+  private onSubmit = async (values: IFormikValues): Promise<void> => {
     const { title, editorState } = values;
     const { token } = this.props;
     const { id, dateAdded } = this.state;
-    const ContentState = editorState.getCurrentContent();
-    const content = JSON.stringify(Draft.convertToRaw(ContentState));
+    const ContentState: Draft.ContentState = editorState.getCurrentContent();
+    const content: string = JSON.stringify(Draft.convertToRaw(ContentState));
 
-    const body = {
+    const body: Dwnxt.IPostCreation = {
       title: title.length > 0 ? title : `Untitled ${id}`,
       id,
       content,
@@ -86,7 +91,7 @@ export default class NewEditor extends React.Component<INewPostProps, INewPostSt
         }: FormikProps<IFormikValues>) => (
           <>
             <Head>
-              <title>{title.length > 0 ? title : "New"} | Downwrite</title>
+              <title>{title ? title : "New"} | Downwrite</title>
             </Head>
             <EditorContainer sm>
               {error.length > 0 && <span className="f6 u-center">{error}</span>}
