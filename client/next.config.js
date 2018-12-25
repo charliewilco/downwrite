@@ -53,8 +53,12 @@ const workboxOpts = {
   ]
 };
 
+// https://gist.github.com/roelvan/b3a9e138f2e409a1805e2a6be1c15092
+
 const { PHASE_PRODUCTION_SERVER } =
   process.env.NODE_ENV === "development"
+    ? {}
+    : !process.env.NOW
     ? require("next/constants")
     : require("next-server/constants");
 
