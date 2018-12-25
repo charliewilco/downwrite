@@ -37,7 +37,7 @@
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.10",
     "markdown-draft-js": "^1.0.1",
-    "next": "^7.0.1",
+    "next": "7.0.2-canary.49",
     "next-cookies": "^1.0.4",
     "next-manifest": "^1.5.0",
     "next-offline": "^3.2.2",
