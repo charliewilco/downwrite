@@ -6,10 +6,10 @@
   "author": "Charles ⚡ <charlespeters42@gmail.com>",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "dev": "node server.js",
+    "dev": "next dev",
     "build": "next build",
     "now-build": "next build",
-    "start": "NODE_ENV=production node server.js",
+    "start": "next start",
     "test": "NODE_ENV=test jest --env=jsdom --verbose --silent"
   },
   "dependencies": {
@@ -39,9 +39,11 @@
     "lodash": "^4.17.10",
     "markdown-draft-js": "^1.0.1",
     "next": "^7.0.1",
+    "next-cookies": "^1.0.4",
     "next-manifest": "^1.5.0",
     "next-offline": "^3.2.2",
     "next-server": "7.0.2-canary.49",
+    "nookies": "^1.2.0",
     "prismjs": "^1.15.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
@@ -58,6 +60,7 @@
     "@types/draft-js": "^0.10.26",
     "@types/file-saver": "^2.0.0",
     "@types/jest": "^23.3.2",
+    "@types/jsonwebtoken": "^8.3.0",
     "@types/lodash": "^4.14.116",
     "@types/next": "^7.0.1",
     "@types/prismjs": "^1.9.0",

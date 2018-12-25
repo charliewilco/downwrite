@@ -41,7 +41,7 @@ export default class Home extends React.Component<IHomeProps, any> {
 
   render() {
     const { signIn } = this.props;
-    const setError = this.context.errorActions.setError;
+    const { setError } = this.context.errorActions;
     return (
       <>
         <Head>

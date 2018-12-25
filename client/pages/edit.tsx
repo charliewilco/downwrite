@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Draft from "draft-js";
 import Head from "next/head";
+import { NextContext } from "next";
 import { Formik, FormikProps } from "formik";
 import isEmpty from "lodash/isEmpty";
 import sanitize from "@charliewilco/sanitize-object";
@@ -23,9 +24,9 @@ import Editor from "../components/editor";
 import TimeMarker from "../components/time-marker";
 import * as UtilityBar from "../components/utility-bar";
 import * as API from "../utils/api";
-import { getToken, superConverter } from "../utils/responseHandler";
+import { superConverter } from "../utils/responseHandler";
 import { __IS_DEV__ } from "../utils/dev";
-import { NextContext } from "next";
+import { authMiddleware } from "../utils/auth-middleware";
 
 interface IEditorState {
   initialFocus: boolean;
@@ -51,19 +52,18 @@ interface IFields {
 const EDITOR_COMMAND = "myeditor-save";
 
 export default class Edit extends React.Component<IEditorProps, IEditorState> {
-  static async getInitialProps({
-    req,
-    query
-  }: NextContext<{ id: string; token: string }>): Promise<Partial<IEditorProps>> {
-    const { token } = getToken(req, query);
-    const post = (await API.getPost(query.id, {
+  static async getInitialProps(
+    ctx: NextContext<{ id: string; token: string }>
+  ): Promise<Partial<IEditorProps>> {
+    const token = authMiddleware(ctx);
+    const post = (await API.getPost(ctx.query.id, {
       token
     })) as Dwnxt.IPost;
 
     return {
       token,
       post,
-      id: query.id
+      id: ctx.query.id
     };
   }
 

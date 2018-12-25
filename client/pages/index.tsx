@@ -1,4 +1,5 @@
 import * as React from "react";
+import { NextContext } from "next";
 import * as Dwnxt from "../types/downwrite";
 import Head from "next/head";
 import orderBy from "lodash/orderBy";
@@ -10,8 +11,7 @@ import Loading from "../components/loading";
 import EmptyPosts from "../components/empty-posts";
 import InvalidToken from "../components/invalid-token";
 import * as API from "../utils/api";
-import { getToken } from "../utils/responseHandler";
-import { NextContext } from "next";
+import { authMiddleware } from "../utils/auth-middleware";
 
 // type Res = Dwnxt.IPostError | Dwnxt.IPost[];
 
@@ -38,11 +38,10 @@ export default class Dashboard extends React.Component<
     entries: []
   };
 
-  static async getInitialProps({
-    req,
-    query
-  }: NextContext<{ token: string }>): Promise<Partial<IDashboardProps>> {
-    const { token } = getToken(req, query);
+  static async getInitialProps(
+    ctx: NextContext<{ token: string }>
+  ): Promise<Partial<IDashboardProps>> {
+    const token = authMiddleware(ctx);
     const entries = await API.getPosts({ token });
 
     return {

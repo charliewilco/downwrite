@@ -1,3 +1,6 @@
+const withOffline = require("next-offline");
+const withManifest = require("next-manifest");
+
 const manifest = {
   dir: "ltr",
   lang: "en",
@@ -54,7 +57,9 @@ const workboxOpts = {
 };
 
 const { PHASE_PRODUCTION_SERVER } =
-  process.env.NODE_ENV === "development" ? {} : require("next-server/constants");
+  process.env.NODE_ENV === "development"
+    ? require("next/constants")
+    : require("next-server/constants");
 
 const config = {
   manifest,
@@ -64,13 +69,10 @@ const config = {
 module.exports = (phase, { defaultConfig }) => {
   if (phase === PHASE_PRODUCTION_SERVER) {
     // Config used to run in production.
-    return config;
+    return withManifest(withOffline(config));
   }
-
   // ✅ Put the require call here.
 
-  const withOffline = require("next-offline");
-  const withManifest = require("next-manifest");
   const withCSS = require("@zeit/next-css");
   const withTypescript = require("@zeit/next-typescript");
   const withMDX = require("@zeit/next-mdx")({

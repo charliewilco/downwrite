@@ -1,5 +1,6 @@
 import * as React from "react";
 import Head from "next/head";
+import { NextContext } from "next";
 import styled from "styled-components";
 import "isomorphic-fetch";
 import SettingsUser from "../components/settings-user-form";
@@ -8,8 +9,7 @@ import SettingsLocal from "../components/settings-markdown";
 import Wrapper from "../components/wrapper";
 import ContainerTitle from "../components/container-title";
 import * as API from "../utils/api";
-import { getToken } from "../utils/responseHandler";
-import { NextContext } from "next";
+import { authMiddleware } from "../utils/auth-middleware";
 
 const SettingsWrapper = styled(Wrapper)`
   padding: 8px;
@@ -37,11 +37,10 @@ interface IUserSettingsProps {
 export default class Settings extends React.Component<IUserSettingsProps, {}> {
   static displayName = "Settings";
 
-  static async getInitialProps({
-    req,
-    query
-  }: NextContext<{ token: string }>): Promise<Partial<IUserSettingsProps>> {
-    const { token } = getToken(req, query);
+  static async getInitialProps(
+    ctx: NextContext<{ token: string }>
+  ): Promise<Partial<IUserSettingsProps>> {
+    const token = authMiddleware(ctx);
 
     const user = await API.getUserDetails({ token });
 
