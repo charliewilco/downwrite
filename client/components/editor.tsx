@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 import createMarkdownPlugin from "draft-js-markdown-plugin";
 import createPrismPlugin from "draft-js-prism-plugin";
-import { LocalUISettings } from "./local-ui-settings";
+import { LocalUISettings, ILocalUISettings } from "./local-ui-settings";
 
 import * as DefaultStyles from "../utils/defaultStyles";
 import DraftStyles from "./draft-styles";
@@ -60,7 +60,7 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
     toolbar: false
   };
 
-  static contextType = LocalUISettings;
+  static contextType: React.Context<ILocalUISettings> = LocalUISettings;
 
   private editor: Editor = null as Editor;
 

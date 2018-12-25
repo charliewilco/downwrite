@@ -82,21 +82,13 @@ const SxLink = styled.a`
 `;
 
 export const EditLink = ({ id, title = "Edit" }) => (
-  <Link
-    prefetch
-    passHref
-    href={{ pathname: "/edit", query: { id } }}
-    as={`/${id}/edit`}>
+  <Link prefetch passHref href={{ pathname: "/edit", query: { id } }}>
     <SxLink>{title}</SxLink>
   </Link>
 );
 
 export const PreviewLink = ({ id }) => (
-  <Link
-    prefetch
-    passHref
-    href={{ pathname: "/preview", query: { id } }}
-    as={`/${id}/preview`}>
+  <Link prefetch passHref href={{ pathname: "/preview", query: { id } }}>
     <SxLink>Preview</SxLink>
   </Link>
 );

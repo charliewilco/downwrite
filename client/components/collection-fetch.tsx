@@ -1,6 +1,6 @@
 import * as React from "react";
 import orderBy from "lodash/orderBy";
-import { AuthContext } from "./auth";
+import { AuthContext, IAuthContext } from "./auth";
 import * as API from "../utils/api";
 import "isomorphic-fetch";
 
@@ -21,7 +21,7 @@ export default class CollectionFetch extends React.Component<
     posts: []
   };
 
-  static contextType = AuthContext;
+  static contextType: React.Context<IAuthContext> = AuthContext;
 
   static defaultProps = {
     sortResponse: (x: any[]) => x

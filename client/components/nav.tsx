@@ -2,7 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 import { withRouter, WithRouterProps } from "next/router";
 import styled, { keyframes } from "styled-components";
-import { withAuth } from "./auth";
+import { AuthContext, IAuthContext } from "./auth";
 import User from "./user";
 import Fetch from "./collection-fetch";
 import { SignoutIcon } from "./icons";
@@ -134,14 +134,10 @@ const NavLabel = styled.span`
   vertical-align: middle;
 `;
 
-const SignOut = withAuth(({ signOut, children }) => (
-  <NavButton onClick={signOut}>{children}</NavButton>
-));
-
-const AuthedUserBlock = withAuth(User);
-
 class NavBar extends React.Component<NavigationProps, any> {
   static displayName = "NavigationBar";
+
+  static contextType: React.Context<IAuthContext> = AuthContext;
 
   componentDidUpdate(prevProps: NavigationProps) {
     if (prevProps.router.pathname !== this.props.router.pathname) {
@@ -151,13 +147,14 @@ class NavBar extends React.Component<NavigationProps, any> {
 
   render() {
     const { closeNav } = this.props;
+    const { signOut } = this.context;
     return (
       <LockScroll>
         <TouchOutside onChange={closeNav}>
           <Nav>
             <NavColumn>
               <div>
-                <AuthedUserBlock border />
+                <User border {...this.context} />
                 <UserActionContainer>
                   <Link href="/" passHref>
                     <NavItem>All Entries</NavItem>
@@ -184,9 +181,9 @@ class NavBar extends React.Component<NavigationProps, any> {
                 <Link href="/legal" passHref>
                   <NavLink>Legal</NavLink>
                 </Link>
-                <SignOut>
+                <NavButton onClick={signOut}>
                   <StyledSignoutIcon /> <NavLabel>Sign Out</NavLabel>
-                </SignOut>
+                </NavButton>
               </NavTray>
             </NavColumn>
           </Nav>
