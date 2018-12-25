@@ -5,16 +5,20 @@ export interface ICookie {
   DW_TOKEN: string;
 }
 
-export function cookies<T>(ctx: NextContext, options?: any): T | {} {
+export function cookies<T>(
+  context: NextContext,
+  options?: cookie.CookieParseOptions
+): T | {} {
   options = options || {};
-  if (ctx.req) {
+  if (context.req) {
     // server
-    if (!ctx.req.headers) return {}; // for Static export feature of Next.js
-    const cookies = ctx.req.headers.cookie;
+    if (!context.req.headers) return {}; // for Static export feature of Next.js
+    const cookies = context.req.headers.cookie;
     if (!cookies) return {};
     return cookie.parse(cookies, options);
   } else {
     // browser
+    // TOOD: Rethink this, should be able to use `universal-cookie`
     return require("component-cookie")();
   }
 }
