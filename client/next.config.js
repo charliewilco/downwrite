@@ -1,6 +1,3 @@
-const withOffline = require("next-offline");
-const withManifest = require("next-manifest");
-
 const manifest = {
   dir: "ltr",
   lang: "en",
@@ -67,6 +64,9 @@ const config = {
 };
 
 module.exports = (phase, { defaultConfig }) => {
+  const withOffline = require("next-offline");
+  const withManifest = require("next-manifest");
+
   if (phase === PHASE_PRODUCTION_SERVER) {
     // Config used to run in production.
     return withManifest(withOffline(config));
