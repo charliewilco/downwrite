@@ -60,7 +60,7 @@ const ListItem: React.SFC<IListItemProps> = ({
 }) => (
   <Container>
     <PostsTitle>
-      <Link prefetch href={{ pathname: "/edit", query: { id } }} as={`/${id}/edit`}>
+      <Link prefetch href={{ pathname: "/edit", query: { id } }}>
         <a>{title}</a>
       </Link>
     </PostsTitle>

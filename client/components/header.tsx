@@ -66,22 +66,12 @@ interface IHeaderProps extends WithRouterProps {
 }
 
 const UIHeader: React.SFC<IHeaderProps> = ({ router, authed, onClick }) => {
-  const url = !authed
-    ? {
-        href: "/login",
-        as: "/"
-      }
-    : {
-        href: "/",
-        as: "/"
-      };
-
   return !(router.route === "/login") ? (
     <Header data-testid="APP_HEADER">
       <MenuContainer>
         <Logo />
         <HeaderTitle data-testid="APP_HEADER_TITLE">
-          <Link {...url}>
+          <Link href={!authed ? "/login" : "/"}>
             <HomeLink>Downwrite</HomeLink>
           </Link>
         </HeaderTitle>
