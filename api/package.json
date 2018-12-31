@@ -11,7 +11,7 @@
     "start": "node dist/server.js",
     "dev": "nodemon",
     "test": "jest",
-    "documentation": "typedoc --theme minimal --out ./docs ./src/**/*.ts"
+    "documentation": "typedoc --theme minimal --out ./docs ./**/*.ts"
   },
   "license": "MIT",
   "dependencies": {
@@ -55,9 +55,13 @@
   },
   "nodemonConfig": {
     "watch": [
-      "./src/**/*.ts"
+      "./**/*.ts"
     ],
-    "exec": "ts-node --no-cache ./src/server.ts"
+    "ignore": [
+      "dist",
+      "docs"
+    ],
+    "exec": "ts-node --no-cache ./server.ts"
   },
   "repository": "charlespeters/downwrite",
   "author": "Charles ⚡ <charlespeters42@gmail.com>"
