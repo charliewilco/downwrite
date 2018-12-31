@@ -71,9 +71,10 @@ const config = {
 };
 
 module.exports = (phase, { defaultConfig }) => {
+  Object.keys(process.env).forEach(k => console.log(k, process.env[k]));
   if (phase === PHASE_PRODUCTION_SERVER) {
     // Config used to run in production.
-    return withManifest(withOffline(config));
+    return {};
   }
   // ✅ Put the require call here.
 
@@ -85,5 +86,5 @@ module.exports = (phase, { defaultConfig }) => {
 
   //
 
-  return withTypescript(withMDX(withCSS(withManifest(withOffline(config)))));
+  return withTypescript(withMDX(withCSS()));
 };
