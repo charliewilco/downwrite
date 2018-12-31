@@ -1,5 +1,5 @@
-const withOffline = require("next-offline");
-const withManifest = require("next-manifest");
+// const withOffline = require("next-offline");
+// const withManifest = require("next-manifest");
 
 const manifest = {
   dir: "ltr",
