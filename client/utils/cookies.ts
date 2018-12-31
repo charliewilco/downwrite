@@ -1,5 +1,5 @@
 import { NextContext } from "next";
-import * as cookie from "cookie";
+import Cookies, { CookieGetOptions } from "universal-cookie";
 
 export interface ICookie {
   DW_TOKEN: string;
@@ -7,18 +7,19 @@ export interface ICookie {
 
 export function cookies<T>(
   context: NextContext,
-  options?: cookie.CookieParseOptions
+  options?: CookieGetOptions
 ): T | {} {
   options = options || {};
   if (context.req) {
-    // server
+    // Server
     if (!context.req.headers) return {}; // for Static export feature of Next.js
-    const cookies = context.req.headers.cookie;
+    const cookies = new Cookies(context.req.headers.cookie);
     if (!cookies) return {};
-    return cookie.parse(cookies, options);
+    return cookies.getAll(options);
   } else {
-    // browser
-    // TOOD: Rethink this, should be able to use `universal-cookie`
-    return require("component-cookie")();
+    // Client
+    const cookies = new Cookies();
+
+    return cookies.getAll(options);
   }
 }
