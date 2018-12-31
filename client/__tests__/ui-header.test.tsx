@@ -1,5 +1,5 @@
 import { render } from "react-testing-library";
-
+import { ExtendedMatchers } from "./config/setupTests";
 import Header from "../components/header";
 
 let { getByTestId, container } = render(
