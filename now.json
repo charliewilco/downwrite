@@ -12,7 +12,7 @@
   },
   "builds": [
     { "src": "client/next.config.js", "use": "@now/next" },
-    { "src": "api/server.ts", "use": "@now/node@canary" }
+    { "src": "api/**/*.ts", "use": "@now/node@canary" }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },

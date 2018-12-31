@@ -1,21 +1,12 @@
 import * as Hapi from "hapi";
-import * as Mongoose from "mongoose";
 import routes from "./routes";
 import Config from "./util/config";
 
-(<any>Mongoose).Promise = global.Promise;
-Mongoose.connect(
-  Config.dbCreds,
-  { useNewUrlParser: true }
-);
-
-const dev: boolean = process.env.NODE_ENV !== "production";
-
-const db = Mongoose.connection;
+const __IS_DEV__: boolean = process.env.NODE_ENV !== "production";
 
 const validate = async () => ({ isValid: true });
 
-const init = async (): Promise<Hapi.Server> => {
+const createServer = async (): Promise<Hapi.Server> => {
   const server = new Hapi.Server({
     port: process.env.PORT || 4000,
     host: process.env.HOST || "localhost",
@@ -41,7 +32,7 @@ const init = async (): Promise<Hapi.Server> => {
     }
   });
 
-  if (dev) {
+  if (__IS_DEV__) {
     await server.register([require("vision"), require("inert"), require("lout")]);
   }
 
@@ -62,20 +53,4 @@ const init = async (): Promise<Hapi.Server> => {
   return server;
 };
 
-init()
-  .then((server: Hapi.Server) => {
-    console.log("info", "Server running at: " + server.info.uri);
-
-    db.on("error", console.error.bind(console, "connection error"));
-    db.once("open", () => {
-      console.log(`Connection with database succeeded.`);
-      console.log(process.env.PORT, process.env.MONGO_URL);
-      console.log("--- DOWNWRITE API ---");
-    });
-  })
-  .catch(err => {
-    console.log(err);
-    throw new Error(err) && process.exit(1);
-  });
-
-export default init();
+export default createServer;
