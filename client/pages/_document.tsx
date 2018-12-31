@@ -4,7 +4,7 @@ import Document, {
   NextScript,
   NextDocumentContext
 } from "next/document";
-// import Manifest from "next-manifest/manifest";
+import Manifest from "next-manifest/manifest";
 import { ServerStyleSheet } from "styled-components";
 
 interface WithStyleTags {
@@ -35,8 +35,7 @@ export default class MyDocument extends Document<WithStyleTags> {
             content="initial-scale=1.0, width=device-width"
             key="viewport"
           />
-          <meta name="theme-color" content="#4FA5C2" />
-          {/* <Manifest href="/static/manifest/manifest.json" themeColor="#4FA5C2" /> */}
+          <Manifest href="/static/manifest/manifest.json" themeColor="#4FA5C2" />
           <link rel="stylesheet" href="/_next/static/style.css" />
           <link rel="icon" href="/static/favicon.ico" />
         </Head>

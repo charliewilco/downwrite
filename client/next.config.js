@@ -1,3 +1,6 @@
+const withOffline = require("next-offline");
+const withManifest = require("next-manifest");
+
 const manifest = {
   dir: "ltr",
   lang: "en",
@@ -68,12 +71,9 @@ const config = {
 };
 
 module.exports = (phase, { defaultConfig }) => {
-  // const withOffline = require("next-offline");
-  // const withManifest = require("next-manifest");
-
   if (phase === PHASE_PRODUCTION_SERVER) {
     // Config used to run in production.
-    return {};
+    return withManifest(withOffline(config));
   }
   // ✅ Put the require call here.
 
@@ -83,7 +83,7 @@ module.exports = (phase, { defaultConfig }) => {
     extension: /\.mdx?$/
   });
 
-  // withManifest(withOffline(config))
+  //
 
-  return withTypescript(withMDX(withCSS()));
+  return withTypescript(withMDX(withCSS(withManifest(withOffline(config)))));
 };
