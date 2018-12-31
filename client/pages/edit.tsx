@@ -4,7 +4,6 @@ import Head from "next/head";
 import { NextContext } from "next";
 import { Formik, FormikProps } from "formik";
 import isEmpty from "lodash/isEmpty";
-import sanitize from "@charliewilco/sanitize-object";
 import "isomorphic-fetch";
 
 import * as Dwnxt from "../types/downwrite";
@@ -25,6 +24,7 @@ import TimeMarker from "../components/time-marker";
 import * as UtilityBar from "../components/utility-bar";
 import * as API from "../utils/api";
 import { superConverter } from "../utils/responseHandler";
+import { sanitize } from "../utils/sanitize";
 import { __IS_DEV__ } from "../utils/dev";
 import { authMiddleware } from "../utils/auth-middleware";
 
