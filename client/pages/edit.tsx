@@ -43,6 +43,11 @@ interface IEditorProps {
   route?: {};
 }
 
+interface ResponsePost extends Dwnxt.IPost {
+  _id: string;
+  __v: string;
+}
+
 interface IFields {
   editorState: Draft.EditorState;
   title: string;
@@ -84,7 +89,10 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
     const contentState: Draft.ContentState = values.editorState.getCurrentContent();
     const content = Draft.convertToRaw(contentState);
 
-    const body = sanitize(this.props.post, ["_id", "__v"]);
+    const body = sanitize<ResponsePost>(this.props.post, [
+      "_id",
+      "__v"
+    ]) as Dwnxt.IPost;
 
     await API.updatePost(
       this.props.id,

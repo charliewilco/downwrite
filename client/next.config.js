@@ -58,7 +58,7 @@ const workboxOpts = {
 const { PHASE_PRODUCTION_SERVER } =
   process.env.NODE_ENV === "development"
     ? {}
-    : !process.env.NOW
+    : !process.env.NOW_REGION
     ? require("next/constants")
     : require("next-server/constants");
 
@@ -68,8 +68,8 @@ const config = {
 };
 
 module.exports = (phase, { defaultConfig }) => {
-  const withOffline = require("next-offline");
-  const withManifest = require("next-manifest");
+  // const withOffline = require("next-offline");
+  // const withManifest = require("next-manifest");
 
   if (phase === PHASE_PRODUCTION_SERVER) {
     // Config used to run in production.
