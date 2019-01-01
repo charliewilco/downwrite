@@ -71,7 +71,12 @@ const config = {
 };
 
 module.exports = (phase, { defaultConfig }) => {
-  console.log(process.env.NOW_REGION, process.env.NOW_URL);
+  console.log("--- START NOW ---");
+  console.log(process.env.NOW_REGION);
+  console.log(process.env.NOW_URL);
+  console.log(process.env.NOW);
+  console.log("--- END NOW ---");
+
   if (phase === PHASE_PRODUCTION_SERVER) {
     // Config used to run in production.
     return {};
