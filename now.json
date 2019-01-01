@@ -12,10 +12,10 @@
   },
   "builds": [
     { "src": "client/next.config.js", "use": "@now/next" },
-    { "src": "api/**/*.ts", "use": "@now/node@canary" }
+    { "src": "api/src/**/*.ts", "use": "@now/node@canary" }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/api/(.*)", "dest": "/api/src/index.ts" },
     { "src": "/(.*)", "dest": "/client/$1" }
   ]
 }
