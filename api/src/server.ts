@@ -13,24 +13,24 @@ const createServer = async (): Promise<Hapi.Server> => {
     routes: { cors: true }
   });
 
-  await server.register({
-    plugin: require("good"),
-    options: {
-      reporters: {
-        console: [
-          {
-            module: "good-squeeze",
-            name: "Squeeze",
-            args: [{ response: "*", log: "*" }]
-          },
-          {
-            module: "good-console"
-          },
-          "stdout"
-        ]
-      }
-    }
-  });
+  // await server.register({
+  //   plugin: require("good"),
+  //   options: {
+  //     reporters: {
+  //       console: [
+  //         {
+  //           module: "good-squeeze",
+  //           name: "Squeeze",
+  //           args: [{ response: "*", log: "*" }]
+  //         },
+  //         {
+  //           module: "good-console"
+  //         },
+  //         "stdout"
+  //       ]
+  //     }
+  //   }
+  // });
 
   if (__IS_DEV__) {
     await server.register([require("vision"), require("inert"), require("lout")]);

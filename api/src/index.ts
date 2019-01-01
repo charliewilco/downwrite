@@ -5,15 +5,15 @@ import Config from "./util/config";
 import createServer from "./server";
 import { send, json } from "micro";
 
-(<any>Mongoose).Promise = global.Promise;
-Mongoose.connect(
-  Config.dbCreds,
-  { useNewUrlParser: true }
-);
-
-const db = Mongoose.connection;
-
 export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
+  (<any>Mongoose).Promise = global.Promise;
+  Mongoose.connect(
+    Config.dbCreds,
+    { useNewUrlParser: true }
+  );
+
+  const db = Mongoose.connection;
+
   db.on("error", () => {
     console.error("connection error");
   });

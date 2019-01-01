@@ -12,7 +12,7 @@ const auth = {
   strategy: "jwt"
 };
 
-const urlCreator = (path: string) => `/api${path}`;
+// const urlCreator = (path: string) => `/api${path}`;
 
 const Routes = [
   {
@@ -139,7 +139,4 @@ const Routes = [
   }
 ];
 
-export default Routes.map(r => ({
-  ...r,
-  path: urlCreator(r.path)
-}));
+export default Routes;
