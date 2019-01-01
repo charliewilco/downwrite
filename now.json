@@ -2,6 +2,7 @@
   "version": 2,
   "public": true,
   "name": "downwrite",
+  "alias": ["next.downwrite.us"],
   "env": {
     "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true",
     "PORT": "4411",
