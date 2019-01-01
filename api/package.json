@@ -1,26 +1,29 @@
 {
   "name": "api",
-  "description": "REST API for downwrite",
+  "description": "Serverless API for downwrite",
   "version": "0.0.0",
-  "main": "src/server.ts",
+  "main": "index.ts",
+  "repository": "charlespeters/downwrite",
+  "author": "Charles ⚡ <charlespeters42@gmail.com>",
   "private": true,
   "scripts": {
     "build": "tsc",
     "now-build": "tsc",
-    "predev": "yarn build",
-    "start": "node dist/server.js",
-    "dev": "nodemon",
+    "predev": "tsc",
+    "start": "ts-node node_modules/.bin/micro src/index.ts",
+    "dev": "ts-node --no-cache --typeCheck node_modules/.bin/micro-dev src/index.ts -p 4000",
     "test": "jest",
-    "documentation": "typedoc --theme minimal --out ./docs ./**/*.ts"
+    "documentation": "typedoc --theme minimal --out ./docs ./src/**/*.ts"
   },
   "license": "MIT",
   "dependencies": {
     "@charliewilco/sanitize-object": "^1.0.1",
-    "@types/bcrypt": "^2.0.0",
+    "@types/bcrypt": "^3.0.0",
     "@types/boom": "^7.2.0",
     "@types/hapi": "^17.0.19",
-    "@types/joi": "^13.4.5",
+    "@types/joi": "^14.0.1",
     "@types/jsonwebtoken": "^7.2.8",
+    "@types/micro": "^7.3.3",
     "@types/mongoose": "^5.2.17",
     "@types/node": "^10.11.0",
     "@types/uuid": "^3.4.4",
@@ -32,17 +35,19 @@
     "hapi": "^17.6.0",
     "hapi-auth-jwt2": "^8.1.0",
     "inert": "^5.1.0",
-    "joi": "^13.6.0",
+    "joi": "^14.3.1",
     "jsonwebtoken": "^8.3.0",
     "lout": "^11.1.0",
     "markdown-draft-js": "^1.0.1",
-    "mongoose": "^5.2.17",
+    "micro": "^9.3.3",
+    "mongoose": "^5.4.1",
     "typescript": "^3.0.3",
     "uuid": "^3.1.0",
     "vision": "^5.4.2"
   },
   "devDependencies": {
     "jest": "^22.4.0",
+    "micro-dev": "^3.0.0",
     "nodemon": "^1.18.7",
     "ts-node": "^7.0.1",
     "typedoc": "^0.12.0",
@@ -61,8 +66,6 @@
       "dist",
       "docs"
     ],
-    "exec": "ts-node --no-cache ./server.ts"
-  },
-  "repository": "charlespeters/downwrite",
-  "author": "Charles ⚡ <charlespeters42@gmail.com>"
+    "exec": "ts-node --no-cache --typeCheck node_modules/.bin/micro-dev src/index.ts -p 4000"
+  }
 }
