@@ -1,5 +1,10 @@
-import Document, { Head, Main, NextScript } from "next/document";
-import Manifest from "next-manifest/manifest";
+import Document, {
+  Head,
+  Main,
+  NextScript,
+  NextDocumentContext
+} from "next/document";
+// import Manifest from "next-manifest/manifest";
 import { ServerStyleSheet } from "styled-components";
 
 interface WithStyleTags {
@@ -7,7 +12,7 @@ interface WithStyleTags {
 }
 
 export default class MyDocument extends Document<WithStyleTags> {
-  public static async getInitialProps(context) {
+  public static async getInitialProps(context: NextDocumentContext) {
     const initialProps = await Document.getInitialProps(context);
     const sheet = new ServerStyleSheet();
 
@@ -30,7 +35,8 @@ export default class MyDocument extends Document<WithStyleTags> {
             content="initial-scale=1.0, width=device-width"
             key="viewport"
           />
-          <Manifest href="/static/manifest/manifest.json" themeColor="#4FA5C2" />
+          <meta name="theme-color" content="#4FA5C2" />
+          {/* <Manifest href="/static/manifest/manifest.json" themeColor="#4FA5C2" /> */}
           <link rel="stylesheet" href="/_next/static/style.css" />
           <link rel="icon" href="/static/favicon.ico" />
         </Head>

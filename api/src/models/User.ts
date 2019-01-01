@@ -52,12 +52,16 @@ export const validPasswordUpdate = Joi.object().keys({
 });
 
 export const validAuthenticatedUser = {
-  user: Joi.alternatives().try(
-    Joi.string()
-      .alphanum()
-      .min(2)
-      .max(30),
-    Joi.string().email()
-  ),
-  password: validPassword.required()
+  user: Joi.alternatives()
+    .try(
+      Joi.string()
+        .alphanum()
+        .min(2)
+        .max(30),
+      Joi.string().email()
+    )
+    .required(),
+  password: Joi.alternatives()
+    .try(validPassword, Joi.string())
+    .required()
 };

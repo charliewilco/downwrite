@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 import Card from "./card";
 import LayoutControl from "./layout-control";
 import PostListItem from "./post-list-item";
@@ -15,23 +15,12 @@ const ListHeader = styled.header`
 `;
 
 const List = styled.ul`
+  width: 100%;
   list-style: inside none;
 `;
 
-export const ListContainer = styled.div`
+export const PostContainer = styled.div`
   padding: 16px 8px;
-`;
-
-const ListItemContainer = styled.li`
-  padding: 16px 0;
-  width: 100%;
-  max-width: 768px;
-  margin: 0 auto;
-  flex: 1;
-
-  &:not(:last-of-type) {
-    border-bottom: 1px solid #ccc;
-  }
 `;
 
 interface IPostListProps {
@@ -62,9 +51,7 @@ export default class PostList extends React.Component<IPostListProps, {}> {
             ) : (
               <List data-testid="ENTRIES_LISTVIEW">
                 {posts.map(p => (
-                  <ListItemContainer key={p.id}>
-                    <PostListItem {...p} onDelete={() => onDelete(p)} />
-                  </ListItemContainer>
+                  <PostListItem key={p.id} {...p} onDelete={() => onDelete(p)} />
                 ))}
               </List>
             )}

@@ -21,7 +21,7 @@ export default class Login extends React.Component<LoginProps, {}> {
     this.onSubmit(values);
   };
 
-  onSubmit = async (values: ILoginForm) => {
+  private onSubmit = async (values: ILoginForm): Promise<void> => {
     const { signIn, setError } = this.props;
     const auth = await API.authUser(values);
 
@@ -34,7 +34,7 @@ export default class Login extends React.Component<LoginProps, {}> {
     }
   };
 
-  render() {
+  public render(): JSX.Element {
     return (
       <SpacedBox>
         <Formik

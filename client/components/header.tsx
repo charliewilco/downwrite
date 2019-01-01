@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 import Link from "next/link";
 import Logo from "./logo";
 import AltAnchor from "./alt-anchor-link";
@@ -66,22 +66,12 @@ interface IHeaderProps extends WithRouterProps {
 }
 
 const UIHeader: React.SFC<IHeaderProps> = ({ router, authed, onClick }) => {
-  const url = !authed
-    ? {
-        href: "/login",
-        as: "/"
-      }
-    : {
-        href: "/",
-        as: "/"
-      };
-
   return !(router.route === "/login") ? (
     <Header data-testid="APP_HEADER">
       <MenuContainer>
         <Logo />
         <HeaderTitle data-testid="APP_HEADER_TITLE">
-          <Link {...url}>
+          <Link href={!authed ? "/login" : "/"}>
             <HomeLink>Downwrite</HomeLink>
           </Link>
         </HeaderTitle>

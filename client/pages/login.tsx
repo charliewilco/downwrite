@@ -1,8 +1,8 @@
 import * as React from "react";
 import Head from "next/head";
 import styled from "styled-components";
-import LoginContainer from "../components/login-container";
-import { ErrorStateContext } from "../components/ui-error";
+import LoginTabs from "../components/login-tabs";
+import { ErrorStateContext, IUIErrorMessage } from "../components/ui-error";
 import Landing from "../components/landing";
 import Features from "../components/landing-features";
 import Register from "../components/register";
@@ -37,10 +37,11 @@ interface IHomeProps {
 }
 
 export default class Home extends React.Component<IHomeProps, any> {
-  static contextType = ErrorStateContext;
+  static contextType: React.Context<IUIErrorMessage> = ErrorStateContext;
+
   render() {
     const { signIn } = this.props;
-    const setError = this.context.errorActions.setError;
+    const { setError } = this.context.errorActions;
     return (
       <>
         <Head>
@@ -50,15 +51,10 @@ export default class Home extends React.Component<IHomeProps, any> {
           <Landing>
             <Features />
           </Landing>
-          <LoginContainer>
-            {isLoginOpen =>
-              isLoginOpen ? (
-                <Login setError={setError} signIn={signIn} />
-              ) : (
-                <Register setError={setError} signIn={signIn} />
-              )
-            }
-          </LoginContainer>
+          <LoginTabs
+            renderLogin={() => <Login setError={setError} signIn={signIn} />}
+            renderRegister={() => <Register setError={setError} signIn={signIn} />}
+          />
         </HomeContainer>
       </>
     );

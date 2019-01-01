@@ -1,4 +1,4 @@
-import styled from "../types/styled-components";
+import styled from "styled-components";
 import * as DefaultStyles from "../utils/defaultStyles";
 
 export const Container = styled.aside`

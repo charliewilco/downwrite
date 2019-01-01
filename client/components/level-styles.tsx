@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "../types/styled-components";
+import { createGlobalStyle } from "styled-components";
 import * as DefaultStyles from "../utils/defaultStyles";
 
 export const LevelStyles = createGlobalStyle`

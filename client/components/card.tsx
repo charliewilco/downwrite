@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 import Link from "next/link";
 import distance from "date-fns/distance_in_words_to_now";
 import * as DefaultStyles from "../utils/defaultStyles";
@@ -81,22 +81,14 @@ const SxLink = styled.a`
   margin-right: 8px;
 `;
 
-const EditLink = ({ id, title = "Edit" }) => (
-  <Link
-    prefetch
-    passHref
-    href={{ pathname: "/edit", query: { id } }}
-    as={`/${id}/edit`}>
+export const EditLink = ({ id, title = "Edit" }) => (
+  <Link prefetch passHref href={{ pathname: "/edit", query: { id } }}>
     <SxLink>{title}</SxLink>
   </Link>
 );
 
-const PreviewLink = ({ id }) => (
-  <Link
-    prefetch
-    passHref
-    href={{ pathname: "/preview", query: { id } }}
-    as={`/${id}/preview`}>
+export const PreviewLink = ({ id }) => (
+  <Link prefetch passHref href={{ pathname: "/preview", query: { id } }}>
     <SxLink>Preview</SxLink>
   </Link>
 );

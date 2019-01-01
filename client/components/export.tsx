@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Draft from "draft-js";
 import { draftToMarkdown } from "markdown-draft-js";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 import FileSaver from "file-saver";
 import Markdown from "./export-markdown-button";
 import { createMarkdown } from "../utils/markdownTemplate";

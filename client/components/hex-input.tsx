@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 import * as DefaultStyles from "../utils/defaultStyles";
 
 const Input = styled.input.attrs({ type: "text", spellCheck: false, maxLength: 6 })`

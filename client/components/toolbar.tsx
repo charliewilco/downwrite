@@ -1,6 +1,6 @@
 import * as React from "react";
 import StyleButton from "./toolbar-button";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 
 const ToolbarWrapper = styled.div`
   display: flex;

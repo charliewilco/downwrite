@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "public": true,
+  "name": "downwrite",
+  "alias": ["next.downwrite.us"],
+  "env": {
+    "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true",
+    "PORT": "4411",
+    "SECRET_KEY": "@dw-key",
+    "DB_USER": "@dw-db-user",
+    "DB_PASSWORD": "@dw-db-password",
+    "DB_ADDRESS": "@dw-db-address"
+  },
+  "builds": [
+    { "src": "client/next.config.js", "use": "@now/next" },
+    { "src": "api/src/**/*.ts", "use": "@now/node@canary" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/src/index.ts" },
+    { "src": "/(.*)", "dest": "/client/$1" }
+  ]
+}

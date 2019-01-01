@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { css } from "../types/styled-components";
+import styled, { css } from "styled-components";
 
 export type GradientColors = string[];
 

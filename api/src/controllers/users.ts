@@ -2,7 +2,6 @@ import * as Hapi from "hapi";
 import * as Boom from "boom";
 import * as uuid from "uuid/v4";
 import * as bcrypt from "bcrypt";
-import * as sanitized from "@charliewilco/sanitize-object";
 import { UserModel as User, IUser } from "../models/User";
 import { createToken } from "../util/token";
 

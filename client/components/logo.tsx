@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 
 const LogoContainer = styled.div`
   max-width: 20px;

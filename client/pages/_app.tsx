@@ -1,15 +1,19 @@
-import App, { Container, AppComponentProps } from "next/app";
+import App, { Container, AppComponentProps, NextAppContext } from "next/app";
 import React from "react";
 import isEmpty from "lodash/isEmpty";
-import { getToken } from "../utils/responseHandler";
 import { UIShell } from "../components/ui-shell";
 import AuthMegaProvider, { AuthConsumer } from "../components/auth";
+import { cookies, ICookie } from "../utils/auth-middleware";
 
-export default class Downwrite extends App<AppComponentProps & { token: string }> {
-  static async getInitialProps({ Component, router, ctx }) {
+interface IAppProps extends AppComponentProps {
+  token: string;
+}
+
+export default class Downwrite extends App<IAppProps> {
+  static async getInitialProps({ Component, ctx }: NextAppContext) {
     let pageProps = {};
 
-    let { token } = getToken(ctx.req, ctx.query);
+    let { DW_TOKEN: token } = cookies<ICookie>(ctx) as ICookie;
 
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);

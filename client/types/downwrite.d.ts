@@ -28,15 +28,3 @@ export interface AuthorType {
   username: string;
   gradient: string[];
 }
-
-// declare namespace
-
-// interface Entry {
-//   content: Draft.RawDraftContentState;
-//   title: string;
-//   public: boolean;
-//   dateAdded: Date;
-// }
-
-// export IPost
-// export IPostError

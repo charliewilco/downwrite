@@ -4,6 +4,7 @@ import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import Button from "./button";
 import { LocalSettingsSchema } from "../utils/validations";
+import { LocalUISettings, ILocalUISettings } from "./local-ui-settings";
 
 interface ILocalSettings {
   fileExtension: string;
@@ -21,9 +22,13 @@ export default class SettingsLocalMarkdown extends React.Component<
 > {
   state = { initialValues };
 
-  onSubmit(values, actions) {
+  static contextType: React.Context<ILocalUISettings> = LocalUISettings;
+
+  onSubmit = (values: ILocalSettings, actions) => {
     localStorage.setItem("DW_FILE_EXTENSION", values.fileExtension);
     localStorage.setItem("DW_EDITOR_FONT", values.fontFamily);
+
+    this.context.actions.updateFont(values.fontFamily);
 
     if (
       localStorage.getItem("DW_FILE_EXTENSION") === values.fileExtension &&
@@ -31,7 +36,7 @@ export default class SettingsLocalMarkdown extends React.Component<
     ) {
       actions.setSubmitting(false);
     }
-  }
+  };
 
   componentDidMount() {
     let fileExtension =

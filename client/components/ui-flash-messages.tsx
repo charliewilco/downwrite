@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 import { CloseIcon } from "./icons";
 import * as DefaultStyles from "../utils/defaultStyles";
 

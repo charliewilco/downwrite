@@ -1,6 +1,6 @@
 import * as React from "react";
 import uuid from "uuid/v4";
-import styled from "../types/styled-components";
+import styled from "styled-components";
 import * as DefaultStyles from "../utils/defaultStyles";
 
 interface InputType {

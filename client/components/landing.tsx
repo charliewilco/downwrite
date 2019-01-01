@@ -1,8 +1,9 @@
 import * as React from "react";
-import styled from "../types/styled-components";
+import styled from "styled-components";
+import { LocalUISettings } from "./local-ui-settings";
 import * as DefaultStyles from "../utils/defaultStyles";
 
-const Intro = styled.article`
+const Intro = styled.article<{ font: string }>`
   text-align: center;
   margin-bottom: 64px;
   display: flex;
@@ -11,7 +12,7 @@ const Intro = styled.article`
   justify-content: center;
   max-width: 33rem;
   width: 100%;
-  font-family: ${DefaultStyles.fonts.monospace};
+  font-family: ${props => (props.font ? props.font : DefaultStyles.fonts.monospace)};
 
   @media (min-width: 57.75rem) {
     padding-top: 64px;
@@ -37,7 +38,7 @@ const IntroTitle = styled.h1`
   color: ${props => (props.theme.night ? "white" : "#185A70")};
   font-size: 24px;
   font-family: ${DefaultStyles.fonts.sans};
-  font-weight: 700;
+  font-weight: 900;
 `;
 
 const StyledImage = styled.img.attrs({ src: "/static/landing.png" })`
@@ -46,14 +47,18 @@ const StyledImage = styled.img.attrs({ src: "/static/landing.png" })`
 `;
 
 const LandingPage: React.SFC<{ children: React.ReactNode }> = ({ children }) => (
-  <Intro>
-    <StyledImage />
-    <IntroContent>
-      <IntroTitle data-testid="Login Page Container">Downwrite</IntroTitle>
-      <span>A place to write</span>
-    </IntroContent>
-    {children}
-  </Intro>
+  <LocalUISettings.Consumer>
+    {({ monospace }) => (
+      <Intro font={monospace}>
+        <StyledImage />
+        <IntroContent>
+          <IntroTitle data-testid="Login Page Container">Downwrite</IntroTitle>
+          <span>A place to write</span>
+        </IntroContent>
+        {children}
+      </Intro>
+    )}
+  </LocalUISettings.Consumer>
 );
 
 export default LandingPage;

@@ -47,14 +47,14 @@ export interface AuthActions {
   signOut: () => void;
 }
 
-export interface AuthContext extends AuthState, AuthActions {}
+export interface IAuthContext extends AuthState, AuthActions {}
 
 const EMPTY_USER = {
   user: null,
   name: null
 };
 
-export const AuthContext = React.createContext({} as AuthContext);
+export const AuthContext = React.createContext({} as IAuthContext);
 
 // Should be able to just request user details from another call
 export default class AuthMegaProvider extends React.Component<AuthProps, AuthState> {
