@@ -797,11 +797,6 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@charliewilco/sanitize-object@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/@charliewilco/sanitize-object/-/sanitize-object-1.0.1.tgz#254ef71c99cda3af783d04070d9cd829046d233c"
-  integrity sha1-JU73HJnNo694PQQHDZzYKQRtIzw=
-
 "@emotion/is-prop-valid@^0.7.3":
   version "0.7.3"
   resolved "https://registry.npmjs.org/@emotion/is-prop-valid/-/is-prop-valid-0.7.3.tgz#a6bf4fa5387cbba59d44e698a4680f481a8da6cc"
