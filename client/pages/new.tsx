@@ -61,6 +61,7 @@ export default class NewEditor extends React.Component<
     const { id, dateAdded } = this.state;
     const ContentState: Draft.ContentState = editorState.getCurrentContent();
     const content: string = JSON.stringify(Draft.convertToRaw(ContentState));
+    const { host } = document.location;
 
     const body: Dwnxt.IPostCreation = {
       title: title.length > 0 ? title : `Untitled ${id}`,
@@ -70,7 +71,7 @@ export default class NewEditor extends React.Component<
       public: false
     };
 
-    API.createPost(body, { token })
+    API.createPost(body, { token, host })
       .then(() => Router.push(`/${id}/edit`))
       .catch(err => this.setState({ error: err.message }));
   };

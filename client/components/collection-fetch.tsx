@@ -30,7 +30,9 @@ export default class CollectionFetch extends React.Component<
   // TODO: Move this to React Suspense!!
   // TODO: Or move to componentDidMount and add loading State
   async componentDidMount() {
-    const posts = await API.getPosts({ token: this.context.token });
+    const { token } = this.context;
+    const { host } = document.location;
+    const posts = await API.getPosts({ token, host });
 
     this.setState({ posts: orderBy(posts, ["dateAdded"], ["desc"]) || [] });
   }

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Formik, FormikProps, ErrorMessage, Form } from "formik";
+import { Formik, FormikProps, ErrorMessage, Form, FormikActions } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import Toggle from "./toggle";
@@ -16,9 +16,13 @@ interface IPasswordSettings {
 }
 
 class SettingsPassword extends React.Component<{ token: string }, {}> {
-  onSubmit = (values, actions) => {
+  onSubmit = (
+    values: IPasswordSettings,
+    actions: FormikActions<IPasswordSettings>
+  ): void => {
     const { token } = this.props;
-    const response = API.updatePassword(values, { token });
+    const { host } = document.location;
+    const response = API.updatePassword(values, { token, host });
 
     if (response) {
       actions.setSubmitting(false);

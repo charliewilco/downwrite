@@ -90,6 +90,8 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
   private updatePostContent = async (values: IFields): Promise<void> => {
     const contentState: Draft.ContentState = values.editorState.getCurrentContent();
     const content = Draft.convertToRaw(contentState);
+    const { host } = document.location;
+    const { token } = this.props;
 
     const body = sanitize<ResponsePost>(this.props.post, [
       "_id",
@@ -105,7 +107,7 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
         content,
         dateModified: this.state.dateModified
       },
-      { token: this.props.token }
+      { token, host }
     );
   };
 

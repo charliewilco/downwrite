@@ -29,8 +29,13 @@ export default class Register extends React.Component<LoginProps, {}> {
 
   onSubmit = async ({ username, email, password }: IRegistration): Promise<void> => {
     const { signIn, setError } = this.props;
-
-    const user = await API.createUser({ username, email, password });
+    const { host } = document.location;
+    const user = await API.createUser(
+      { username, email, password },
+      {
+        host
+      }
+    );
 
     if (user.userID) {
       signIn(user.id_token !== undefined, user.id_token);

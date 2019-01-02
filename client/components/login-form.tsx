@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Formik, Form, FormikProps, ErrorMessage } from "formik";
+import { Formik, Form, FormikProps, ErrorMessage, FormikActions } from "formik";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import Button from "./button";
 import SpacedBox from "./spaced-box";
@@ -17,13 +17,14 @@ interface LoginProps {
 }
 
 export default class Login extends React.Component<LoginProps, {}> {
-  handleSubmit = (values, actions) => {
+  handleSubmit = (values: ILoginForm, actions: FormikActions<ILoginForm>) => {
     this.onSubmit(values);
   };
 
   private onSubmit = async (values: ILoginForm): Promise<void> => {
     const { signIn, setError } = this.props;
-    const auth = await API.authUser(values);
+    const { host } = document.location;
+    const auth = await API.authUser(values, { host });
 
     if (auth.error) {
       setError(auth.message, "error");
