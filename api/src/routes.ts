@@ -17,7 +17,7 @@ const urlCreator = (path: string) => `/api${path}`;
 const Routes = [
   {
     method: "GET",
-    path: "/posts",
+    path: "/api/posts",
     handler: PostController.getPosts,
     config: {
       cors,
@@ -26,7 +26,7 @@ const Routes = [
   },
   {
     method: "POST",
-    path: "/posts",
+    path: "/api/posts",
     handler: PostController.createPost,
     config: {
       validate: {
@@ -38,7 +38,7 @@ const Routes = [
   },
   {
     method: "GET",
-    path: "/posts/{id}",
+    path: "/api/posts/{id}",
     handler: PostController.getSinglePost,
     config: {
       cors,
@@ -47,7 +47,7 @@ const Routes = [
   },
   {
     method: "GET",
-    path: "/posts/preview/{id}",
+    path: "/api/posts/preview/{id}",
     handler: PostController.getMarkdown,
     config: {
       cors
@@ -55,7 +55,7 @@ const Routes = [
   },
   {
     method: "DELETE",
-    path: "/posts/{id}",
+    path: "/api/posts/{id}",
     handler: PostController.deletePost,
     config: {
       cors,
@@ -64,7 +64,7 @@ const Routes = [
   },
   {
     method: "PUT",
-    path: "/posts/{id}",
+    path: "/api/posts/{id}",
     handler: PostController.updatePost,
     config: {
       validate: {
@@ -76,7 +76,7 @@ const Routes = [
   },
   {
     method: "POST",
-    path: "/password",
+    path: "/api/password",
     handler: UserController.updatePassword,
     config: {
       validate: { payload: UserModel.validPasswordUpdate },
@@ -92,7 +92,7 @@ const Routes = [
   },
   {
     method: "POST",
-    path: "/users",
+    path: "/api/users",
     handler: UserController.createUser,
     config: {
       pre: [{ method: UserController.verifyUniqueUser }],
@@ -104,7 +104,7 @@ const Routes = [
   },
   {
     method: "GET",
-    path: "/users",
+    path: "/api/users",
     handler: UserController.getDetails,
     config: {
       cors,
@@ -113,7 +113,7 @@ const Routes = [
   },
   {
     method: "POST",
-    path: "/users/settings",
+    path: "/api/users/settings",
     handler: UserController.updateNameEmail,
     config: {
       cors,
@@ -122,7 +122,7 @@ const Routes = [
   },
   {
     method: "POST",
-    path: "/users/authenticate",
+    path: "/api/users/authenticate",
     config: {
       pre: [
         {
@@ -139,7 +139,4 @@ const Routes = [
   }
 ];
 
-export default Routes.map(route => ({
-  ...route,
-  url: urlCreator(route.path)
-}));
+export default Routes;

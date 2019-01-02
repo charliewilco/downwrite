@@ -5,14 +5,16 @@ import Config from "./util/config";
 import createServer from "./server";
 import { send, json } from "micro";
 
+export const __IS_DEV__: boolean = process.env.NODE_ENV === "development";
+
 export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
   (<any>Mongoose).Promise = global.Promise;
-  Mongoose.connect(
+  const m = await Mongoose.connect(
     Config.dbCreds,
     { useNewUrlParser: true }
   );
 
-  const db = Mongoose.connection;
+  const db = m.connection;
 
   db.on("error", () => {
     console.error("connection error");
@@ -30,6 +32,11 @@ export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
     headers: req.headers
   };
 
+  if (__IS_DEV__) {
+    console.log("SERVER", server);
+    console.log("INJECTION", injection);
+  }
+
   if (["POST", "PUT"].includes(req.method)) {
     try {
       const body = await json(req);
@@ -40,6 +47,9 @@ export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
   }
 
   const response = await server.inject(injection);
+  if (__IS_DEV__) {
+    console.log(response);
+  }
 
   send(res, response.statusCode, response.result);
 };
