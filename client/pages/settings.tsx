@@ -42,7 +42,9 @@ export default class Settings extends React.Component<IUserSettingsProps, {}> {
   ): Promise<Partial<IUserSettingsProps>> {
     const token = authMiddleware(ctx);
 
-    const user = await API.getUserDetails({ token });
+    const host = ctx.req.headers["x-now-deplyment-url"] as string;
+
+    const user = await API.getUserDetails({ token, host });
 
     return {
       token,

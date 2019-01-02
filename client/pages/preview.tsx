@@ -39,7 +39,9 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
   ): Promise<Partial<IPreviewProps>> {
     let { id } = ctx.query;
 
-    const entry = await API.findPreviewEntry(id);
+    const host = ctx.req.headers["x-now-deplyment-url"] as string;
+
+    const entry = await API.findPreviewEntry(id, { host });
 
     return {
       id,

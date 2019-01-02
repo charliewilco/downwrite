@@ -61,8 +61,10 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
     ctx: NextContext<{ id: string; token: string }>
   ): Promise<Partial<IEditorProps>> {
     const token = authMiddleware(ctx);
+    const host = ctx.req.headers["x-now-deplyment-url"] as string;
     const post = (await API.getPost(ctx.query.id, {
-      token
+      token,
+      host
     })) as Dwnxt.IPost;
 
     return {

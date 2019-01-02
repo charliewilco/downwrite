@@ -41,8 +41,9 @@ export default class Dashboard extends React.Component<
   static async getInitialProps(
     ctx: NextContext<{ token: string }>
   ): Promise<Partial<IDashboardProps>> {
+    const host = ctx.req.headers["x-now-deplyment-url"] as string;
     const token = authMiddleware(ctx);
-    const entries = await API.getPosts({ token });
+    const entries = await API.getPosts({ token, host });
 
     return {
       entries
