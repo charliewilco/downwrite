@@ -3,15 +3,17 @@ export class LocalDraftContainer {
     drafts: new Set()
   };
 
-  setState = state => {
-    return prevState => Object.assign({}, prevState, state);
+  setState = <T>(state: T) => {
+    const updater = (prevState: T): T => Object.assign({}, prevState, state);
+    return updater;
   };
 
-  addDraft = x =>
-    this.setState(state => {
+  addDraft = (x: any): void => {
+    this.setState<any>((state: any) => {
       let drafts = state.set(x);
       return {
         drafts
       };
     });
+  };
 }
