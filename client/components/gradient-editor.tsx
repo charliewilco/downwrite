@@ -4,13 +4,15 @@ import Avatar from "./avatar";
 import ColorPicker from "./color-picker";
 import * as DefaultStyles from "../utils/defaultStyles";
 
+interface IColors {
+  a: string;
+  b: string;
+}
+
 interface IGradientEditorProps {
   initialColors?: any;
   onColorChange: (value: string, name: string) => void;
-  colors: {
-    a: string;
-    b: string;
-  };
+  colors: IColors;
 }
 
 const Container = styled.div`
@@ -33,9 +35,10 @@ export default class GradientEditor extends React.Component<
   IGradientEditorProps,
   {}
 > {
-  handleColorChange = (value, name) => this.props.onColorChange(value, name);
+  handleColorChange = (value: string, name: string) =>
+    this.props.onColorChange(value, name);
 
-  colorsToArray({ a, b }) {
+  colorsToArray({ a, b }: IColors) {
     return [a, b];
   }
 

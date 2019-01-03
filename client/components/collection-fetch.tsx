@@ -3,21 +3,22 @@ import orderBy from "lodash/orderBy";
 import { AuthContext, IAuthContext } from "./auth";
 import * as API from "../utils/api";
 import "isomorphic-fetch";
+import { IPost } from "types/downwrite";
 
-interface FetchState {
-  posts: any[];
+interface IFetchState {
+  posts: IPost[];
 }
 
-interface FetchProps {
+interface IFetchProps {
   sortResponse?: () => void;
-  children: (p: FetchState) => React.ReactNode;
+  children: (p: IFetchState) => React.ReactNode;
 }
 
 export default class CollectionFetch extends React.Component<
-  FetchProps,
-  FetchState
+  IFetchProps,
+  IFetchState
 > {
-  state = {
+  public readonly state: IFetchState = {
     posts: []
   };
 

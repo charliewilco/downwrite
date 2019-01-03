@@ -1,8 +1,9 @@
 import * as React from "react";
 import Cookies from "universal-cookie";
 import Router from "next/router";
-import jwt from "jwt-decode";
+import * as jwt from "jwt-decode";
 import addDays from "date-fns/add_days";
+import { NextComponentClass } from "next";
 
 // NOTE:
 // This component should passdown the state of authed from withAuthCheck() HOC
@@ -30,26 +31,31 @@ const cookieOptions = {
   expires: addDays(Date.now(), COOKIE_EXPIRATION)
 };
 
-interface AuthProps {
+interface IAuthProps {
   children: React.ReactNode;
   token: string;
   authed: boolean;
 }
 
-interface AuthState {
+interface IAuthState {
   token: string;
   name?: string;
   authed: boolean;
 }
 
-export interface AuthActions {
+export interface IAuthActions {
   signIn: (authed: boolean, token: string) => void;
   signOut: () => void;
 }
 
-export interface IAuthContext extends AuthState, AuthActions {}
+export interface IAuthContext extends IAuthState, IAuthActions {}
 
-const EMPTY_USER = {
+interface IToken {
+  name: string;
+  user: string;
+}
+
+const EMPTY_USER: IToken = {
   user: null,
   name: null
 };
@@ -57,14 +63,17 @@ const EMPTY_USER = {
 export const AuthContext = React.createContext({} as IAuthContext);
 
 // Should be able to just request user details from another call
-export default class AuthMegaProvider extends React.Component<AuthProps, AuthState> {
-  constructor(props: AuthProps) {
+export default class AuthMegaProvider extends React.Component<
+  IAuthProps,
+  IAuthState
+> {
+  constructor(props: IAuthProps) {
     super(props);
 
     let token = this.props.token || cookie.get("DW_TOKEN");
 
     let __TOKEN_EXISTS__: boolean = token !== undefined && token !== "undefined";
-    const { name } = __TOKEN_EXISTS__ ? jwt(token) : EMPTY_USER;
+    const { name } = __TOKEN_EXISTS__ ? jwt<IToken>(token) : EMPTY_USER;
 
     this.state = {
       token,
@@ -91,7 +100,7 @@ export default class AuthMegaProvider extends React.Component<AuthProps, AuthSta
     );
   };
 
-  componentDidUpdate(prevState) {
+  componentDidUpdate(prevProps: IAuthProps, prevState: IAuthState): void {
     const { authed } = this.state;
     if (prevState.authed !== authed) {
       Router.push({ pathname: authed ? "/" : "/login" });
@@ -115,7 +124,7 @@ export default class AuthMegaProvider extends React.Component<AuthProps, AuthSta
 export const AuthConsumer = AuthContext.Consumer;
 
 // Component should be NextStatelessComponent type
-export const withAuth = Component => {
+export const withAuth = (Component: NextComponentClass<any>) => {
   return class extends React.Component<any, any> {
     static displayName = `withAuth(${Component.displayName || Component.name})`;
 
@@ -124,7 +133,7 @@ export const withAuth = Component => {
     render() {
       return (
         <AuthContext.Consumer>
-          {(auth: AuthActions) => <Component {...this.props} {...auth} />}
+          {(auth: IAuthActions) => <Component {...this.props} {...auth} />}
         </AuthContext.Consumer>
       );
     }

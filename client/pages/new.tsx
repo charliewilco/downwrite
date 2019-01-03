@@ -16,7 +16,7 @@ import * as UtilityBar from "../components/utility-bar";
 import * as API from "../utils/api";
 
 interface INewPostState {
-  drafts: any[];
+  drafts?: Dwnxt.IPost[];
   id: string;
   error?: string;
   dateAdded: Date;
@@ -42,7 +42,7 @@ export default class NewEditor extends React.Component<
   INewPostProps,
   INewPostState
 > {
-  public readonly state = {
+  public readonly state: INewPostState = {
     id: uuid(),
     dateAdded: new Date(),
     error: "",

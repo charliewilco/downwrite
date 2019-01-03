@@ -2,7 +2,7 @@ import * as React from "react";
 import fm from "front-matter";
 import * as Draft from "draft-js";
 import Dropzone from "react-dropzone";
-import { markdownToDraft } from "markdown-draft-js";
+import * as MD from "markdown-draft-js";
 import { __IS_BROWSER__ } from "../utils/dev";
 
 interface MarkdownConversion {
@@ -28,11 +28,11 @@ export default class Uploader extends React.Component<IUploadProps, {}> {
 
   reader: FileReader = __IS_BROWSER__ && new FileReader();
 
-  private extractMarkdown = (files): void => {
+  private extractMarkdown = (files: File[]): void => {
     this.reader.onload = () => {
       let md: IMarkdown = fm(this.reader.result as string);
 
-      let markdown = markdownToDraft(md.body, { preserveNewlines: true });
+      let markdown = MD.markdownToDraft(md.body, { preserveNewlines: true });
 
       return this.props.onParsed({
         title: md.attributes.title || "",
@@ -45,7 +45,7 @@ export default class Uploader extends React.Component<IUploadProps, {}> {
     this.reader.readAsText(files[0]);
   };
 
-  private onDrop = files => this.extractMarkdown(files);
+  private onDrop = (files: File[]) => this.extractMarkdown(files);
 
   public render(): JSX.Element {
     const { disabled, children } = this.props;

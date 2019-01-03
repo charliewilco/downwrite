@@ -33,7 +33,7 @@ interface IToolbarButtonProps {
 }
 
 export default class StyleButton extends React.Component<IToolbarButtonProps> {
-  findIcon = (label, active) => {
+  findIcon = (label: string, active: boolean) => {
     switch (label) {
       case "Quote":
         return h(BlockQuote, { active });
@@ -56,7 +56,7 @@ export default class StyleButton extends React.Component<IToolbarButtonProps> {
     }
   };
 
-  onToggle = e => {
+  onToggle = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     this.props.onToggle(this.props.style);
   };

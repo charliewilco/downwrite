@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import { draftToMarkdown } from "markdown-draft-js";
+import * as MD from "markdown-draft-js";
 import styled from "styled-components";
 import FileSaver from "file-saver";
 import Markdown from "./export-markdown-button";
@@ -40,14 +40,14 @@ export default class UIMarkdownExport extends React.Component<IExportProps, any>
   };
 
   customDraft = (content: Draft.RawDraftContentState): string =>
-    draftToMarkdown(content, {
+    MD.draftToMarkdown(content, {
       entityItems: {
         LINK: {
           open: () => {
             return "[";
           },
 
-          close: entity => {
+          close: (entity: any) => {
             return `](${entity.data.url || entity.data.href})`;
           }
         }

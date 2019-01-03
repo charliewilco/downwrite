@@ -24,7 +24,7 @@ export default class extends React.Component<DebounceProps> {
     this.autoFire.flush();
   }
 
-  render() {
+  render(): null {
     return null;
   }
 }

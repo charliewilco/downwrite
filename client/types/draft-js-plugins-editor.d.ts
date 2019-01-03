@@ -1,3 +1,5 @@
+import * as Draft from "draft-js";
+
 declare module "draft-js-plugins-editor" {
   export interface PluginsEditorProps {
     plugins: any;

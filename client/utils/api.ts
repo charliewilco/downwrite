@@ -93,7 +93,13 @@ export async function getUserDetails(options: IOptions): Promise<any> {
   return user;
 }
 
-export async function updateSettings(body, options: IOptions) {
+export async function updateSettings(
+  body: {
+    username: string;
+    email: string;
+  },
+  options: IOptions
+) {
   const url = createURL(SETTINGS_ENDPOINT, options.host);
   const settings = await fetch(url, {
     ...createHeader("POST", options.token),
