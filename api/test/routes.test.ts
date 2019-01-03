@@ -20,6 +20,8 @@ let user: any;
 
 const uid = Math.floor(Math.random() * 678) + 1;
 
+let db: any;
+
 const createdUser = {
   username: "user".concat(uid.toString()),
   email: "user".concat(uid.toString().concat("@email.com")),
@@ -30,7 +32,7 @@ jest.setTimeout(100000);
 
 describe("Server Endpoints Perform", () => {
   beforeAll(async () => {
-    await prepareDB();
+    db = await prepareDB();
     server = await createServer();
   });
 
@@ -78,5 +80,6 @@ describe("Server Endpoints Perform", () => {
 
   afterAll(async () => {
     await server.stop();
+    db.disconnect();
   });
 });
