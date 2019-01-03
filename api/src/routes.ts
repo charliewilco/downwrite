@@ -14,6 +14,14 @@ const auth = {
 
 const urlCreator = (path: string) => `/api${path}`;
 
+const Relish = require("relish")({
+  messages: {
+    "data.username": "Please enter a valid username",
+    "data.email": "email...",
+    "data.password": "this password does not work."
+  }
+});
+
 const Routes = [
   {
     method: "GET",

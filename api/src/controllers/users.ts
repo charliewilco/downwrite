@@ -7,6 +7,12 @@ import { createToken } from "../util/token";
 
 import { IRequest, IRegisterRequest, ILoginRequest } from "./types";
 
+export interface ICreateResponse {
+  userID: string;
+  id_token: string;
+  username: string;
+}
+
 export const createUser = async (
   request: IRegisterRequest,
   h: Hapi.ResponseToolkit

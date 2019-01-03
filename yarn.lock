@@ -4954,7 +4954,7 @@ hoek@4.2.x, hoek@4.x.x:
   resolved "http://registry.npmjs.org/hoek/-/hoek-4.2.1.tgz#9634502aa12c445dd5a7c5734b572bb8738aacbb"
   integrity sha512-QLg82fGkfnJ/4iy1xZ81/9SIJiq1NGFUMGs6ParyjBZr6jW2Ufj/snDqTHixNlHdPNwN2RLVD0Pi3igeK9+JfA==
 
-hoek@5.x.x:
+hoek@5.x.x, hoek@~5.0.3:
   version "5.0.4"
   resolved "https://registry.npmjs.org/hoek/-/hoek-5.0.4.tgz#0f7fa270a1cafeb364a4b2ddfaa33f864e4157da"
   integrity sha512-Alr4ZQgoMlnere5FZJsIyfIjORBqZll5POhDsF4q64dPuJR6rNxXdDxtHSQq8OXRurhmx+PWYEE8bXRROY8h0w==
@@ -8954,6 +8954,13 @@ regjsparser@^0.6.0:
   integrity sha512-RQ7YyokLiQBomUJuUG8iGVvkgOLxwyZM8k6d3q5SAXpg4r5TZJZigKFvC6PpD+qQ98bCDC5YelPeA3EucDoNeQ==
   dependencies:
     jsesc "~0.5.0"
+
+relish@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/relish/-/relish-3.0.0.tgz#101bc6138550052f2b5eb67e2981ddccdd2d2479"
+  integrity sha512-gyQja3RanwJDQn9y4vm1ihfdOy0bQDH73YSYog7uaT0SLUET30D2MvQC/PxwlGhBHojkUu92Wr6Op+94XqKrkg==
+  dependencies:
+    hoek "~5.0.3"
 
 remark-parse@^5.0.0:
   version "5.0.0"
