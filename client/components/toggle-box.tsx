@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import * as React from "react";
 import styled from "styled-components";
 import Check from "./checkbox";
 
@@ -24,7 +24,7 @@ interface ICheckboxToggle {
   value: boolean;
   name?: string;
   label: (value: boolean) => string;
-  onChange: (e: ChangeEvent) => void;
+  onChange: (e: React.ChangeEvent) => void;
 }
 
 export const ToggleBox: React.SFC<ICheckboxToggle> = ({
