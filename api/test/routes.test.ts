@@ -1,8 +1,13 @@
 import * as Hapi from "hapi";
 import * as YesNo from "yesno-http";
+import * as Draft from "draft-js";
+import * as uuid from "uuid/v4";
+
 import createServer from "../src/server";
 import { prepareDB } from "../src/util/db";
 import { ICreateResponse } from "../src/controllers/users";
+import { IPost } from "../src/models/Post";
+import { createdUser, createdPost } from "./create-mocks";
 
 // Routes to test
 // 1. GET '/posts' Lists all posts
@@ -15,18 +20,9 @@ import { ICreateResponse } from "../src/controllers/users";
 // 8. POST '/users/authenticate' Authenticate Existing User
 
 let server: Hapi.Server;
-let token: any;
-let user: any;
-
-const uid = Math.floor(Math.random() * 678) + 1;
-
+let token: string;
+let user: string;
 let db: any;
-
-const createdUser = {
-  username: "user".concat(uid.toString()),
-  email: "user".concat(uid.toString().concat("@email.com")),
-  password: "Because1234"
-};
 
 jest.setTimeout(100000);
 
@@ -45,38 +41,72 @@ describe("Server Endpoints Perform", () => {
       }
     });
 
-    console.log(user, r.statusCode, r.result, r.payload);
-
     token = (r.result as ICreateResponse).id_token;
     user = (r.result as ICreateResponse).userID;
 
     expect(r.statusCode).toBeLessThanOrEqual(300);
   });
 
-  // Create Post
+  it("can create a post", async () => {
+    const response: Hapi.ServerInjectResponse = await server.inject({
+      method: "GET",
+      url: "/api/posts",
+      payload: {
+        ...createdPost,
+        user
+      },
+      headers: {
+        Authorization: token
+      }
+    });
+
+    expect(response.statusCode).toBeLessThanOrEqual(400);
+    expect(response.statusCode).toBeGreaterThanOrEqual(200);
+  });
+
+  it("can list posts and list post", async () => {
+    const r = await server.inject({
+      method: "GET",
+      url: "/api/posts",
+      headers: {
+        Authorization: token
+      }
+    });
+
+    console.log(r.result);
+    expect(r.statusCode).toBeLessThanOrEqual(400);
+
+    expect(r.statusCode).toBeGreaterThanOrEqual(200);
+    expect(r.result).toHaveLength(1);
+
+    const p = await server.inject({
+      method: "GET",
+      url: "/api/posts/" + r.result[0].id,
+      headers: {
+        Authorization: token
+      }
+    });
+
+    expect(p.statusCode).toBeLessThanOrEqual(400);
+    expect(p.statusCode).toBeGreaterThanOrEqual(200);
+    expect(p.result).toBeTruthy();
+    expect((p.result as IPost).title).toEqual(createdPost.title);
+    console.log(p.result);
+  });
+
   // Edit Post
   // Preview Post
-  // List Posts
   // Delete Posts
   // Auth User
 
-  it("GET | status code is 400 without token", async () => {
-    const response: Hapi.ServerInjectResponse = await server.inject({
-      method: "GET",
-      url: "/posts"
-    });
+  // it("GET | PREVIEW | status code is 200 on a public post", async () => {
+  //   const r = await server.inject({
+  //     method: "GET",
+  //     url: "/posts/preview/aa3dd293-2a0e-478c-81e7-a0b9733e8b"
+  //   });
 
-    expect(response.statusCode).toBeGreaterThanOrEqual(400);
-  });
-
-  it("GET | PREVIEW | status code is 200 on a public post", async () => {
-    const r = await server.inject({
-      method: "GET",
-      url: "/posts/preview/aa3dd293-2a0e-478c-81e7-a0b9733e8b"
-    });
-
-    expect(r.statusCode).toBeGreaterThanOrEqual(200);
-  });
+  //   expect(r.statusCode).toBeGreaterThanOrEqual(200);
+  // });
 
   afterAll(async () => {
     await server.stop();

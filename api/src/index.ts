@@ -18,8 +18,7 @@ export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
   };
 
   if (__IS_DEV__) {
-    console.log("SERVER", server);
-    console.log("INJECTION", injection);
+    console.log("INJECTION", req.method, req.url);
   }
 
   if (["POST", "PUT"].includes(req.method)) {
@@ -32,8 +31,9 @@ export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
   }
 
   const response = await server.inject(injection);
+
   if (__IS_DEV__) {
-    console.log(response);
+    console.log(response.result);
   }
 
   send(res, response.statusCode, response.result);

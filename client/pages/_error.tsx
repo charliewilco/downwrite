@@ -14,7 +14,7 @@ const ErrorTitle = styled.h2`
   margin-bottom: 32px;
   font-size: 84px;
   line-height: 1;
-  font-weight: 100;
+  font-weight: 900;
 `;
 
 interface IErrorViewProps {
@@ -32,7 +32,7 @@ interface IErrorPageContext extends NextContext<any> {
 const StatusCode: React.SFC<Partial<CustomError>> = ({ statusCode }) => (
   <p>
     {statusCode
-      ? `An error ${statusCode} occurred on server`
+      ? "An error " + statusCode + "occurred on server"
       : "An error occurred on client"}
   </p>
 );

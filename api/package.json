@@ -12,7 +12,7 @@
     "predev": "tsc",
     "start": "micro dist/index.js --port 4000",
     "dev": "micro-dev dist/index.js -p 4000",
-    "test": "jest",
+    "test": "jest --verbose",
     "documentation": "typedoc --theme minimal --out ./docs ./src/**/*.ts"
   },
   "license": "MIT",
@@ -46,7 +46,9 @@
     "vision": "^5.4.2"
   },
   "devDependencies": {
+    "@types/draft-js": "^0.10.27",
     "@types/jest": "^23.3.11",
+    "draft-js": "^0.10.5",
     "jest": "^23.6.0",
     "micro-dev": "^3.0.0",
     "nodemon": "^1.18.9",
