@@ -44,7 +44,7 @@ export default class Settings extends React.Component<IUserSettingsProps, {}> {
 
     const serverURL: string =
       ctx.req && (ctx.req.headers["X-Now-Deployment-Url"] as string);
-    const host = serverURL || "http://localhost:5000/";
+    const host = serverURL;
 
     const user = await API.getUserDetails({ token, host });
 

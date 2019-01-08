@@ -2,14 +2,14 @@ import * as React from "react";
 import * as Draft from "draft-js";
 import Head from "next/head";
 import { NextContext } from "next";
-import { Formik, FormikProps } from "formik";
+import { Formik, Form, FormikProps } from "formik";
 import isEmpty from "lodash/isEmpty";
 import "isomorphic-fetch";
 
 import * as Dwnxt from "../types/downwrite";
 
 import Autosaving from "../components/autosaving-interval";
-import AutosavingNotification from "../components/autosaving-notification";
+import Toast from "../components/toast";
 import ExportMarkdown from "../components/export";
 import WordCounter from "../components/word-count";
 import Button from "../components/button";
@@ -146,9 +146,11 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
               <Autosaving
                 duration={this.duration}
                 onUpdate={initialFocus && handleSubmit}>
-                <AutosavingNotification />
+                <Toast>
+                  Autosaving <i>{title}</i>
+                </Toast>
               </Autosaving>
-              <OuterEditor>
+              <OuterEditor as={Form}>
                 <TimeMarker dateAdded={this.props.post.dateAdded} />
                 <Input value={title} name="title" onChange={handleChange} />
                 <UtilityBar.Container>
