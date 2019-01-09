@@ -2,7 +2,7 @@ import * as Hapi from "hapi";
 import * as Axios from "axios";
 import createServer from "../src/server";
 import { prepareDB } from "../src/util/db";
-import { ICreateResponse } from "../src/controllers/users";
+import { ICreateResponse, IAuthUser } from "../src/controllers/users";
 import { IPost } from "../src/models/Post";
 import { createdUser, createdPost, updatedTitle } from "./create-mocks";
 
@@ -119,27 +119,69 @@ describe("Server Endpoints Perform", () => {
     expect(R.status).toBeLessThanOrEqual(400);
     expect(R.status).toBeGreaterThanOrEqual(200);
     expect(R.data).toBeTruthy();
+    const P: Axios.AxiosResponse<IPost> = await Axios.default.get(
+      "http://localhost:9999/api/posts/" + postID,
+      {
+        headers: {
+          Authorization: token
+        }
+      }
+    );
 
     // Real checks
     expect(R.data.id).toBe(postID);
-    expect(R.data.title).toEqual(updatedTitle);
-    expect(R.data.public).toEqual(body.public);
+    expect(P.data.title).toEqual(updatedTitle);
+    expect(P.data.public).toEqual(body.public);
   });
 
   it("find a public post", async () => {
-    const url: string = "http://localhost:9999/api/posts/preview" + postID;
+    const url: string = "http://localhost:9999/api/posts/preview/" + postID;
 
-    const R: Axios.AxiosResponse<IPost> = await Axios.default.get(url, {
-      headers: {
-        Authorization: token
-      }
-    });
+    const R: Axios.AxiosResponse<IPost> = await Axios.default.get(url);
+
     expect(R.data.title).toBe(updatedTitle);
     expect(R.status).toBeGreaterThanOrEqual(200);
   });
 
   // Delete Posts
-  // Auth User
+
+  it("can delete a post", async () => {
+    const url: string = "http://localhost:9999/api/posts/" + postID;
+
+    const R: Axios.AxiosResponse<IPost> = await Axios.default.delete(url, {
+      headers: {
+        Authorization: token
+      }
+    });
+
+    expect(R.status).toBeGreaterThanOrEqual(200);
+
+    const P: Axios.AxiosResponse<IPost[]> = await Axios.default.get(
+      "http://localhost:9999/api/posts",
+      {
+        headers: {
+          Authorization: token
+        }
+      }
+    );
+
+    expect(P.data).toHaveLength(0);
+  });
+
+  it("can auth a created user", async () => {
+    const R: Axios.AxiosResponse<IAuthUser> = await Axios.default.post(
+      "http://localhost:9999/api/users/authenticate",
+      {
+        user: createdUser.username,
+        password: createdUser.password
+      }
+    );
+
+    console.log(R.data);
+
+    expect(R.status).toBeLessThanOrEqual(300);
+    expect(R.data.token).toBeTruthy();
+  });
 
   afterAll(async () => {
     await server.stop();

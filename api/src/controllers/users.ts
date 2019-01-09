@@ -41,7 +41,14 @@ export const createUser = async (
   }
 };
 
-export const authenticateUser = (request: Hapi.Request, h: Hapi.ResponseToolkit) => {
+export interface IAuthUser {
+  token: string;
+}
+
+export const authenticateUser = (
+  request: Hapi.Request,
+  h: Hapi.ResponseToolkit
+): Hapi.ResponseObject => {
   return h.response({ token: createToken(request.pre.user) }).code(201);
 };
 

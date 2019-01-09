@@ -13,7 +13,6 @@ import { IRequest } from "./types";
 // PUT
 
 export const updatePost = async (request: IRequest, reply: Hapi.ResponseToolkit) => {
-  console.log("Updating Post....");
   const { user } = request.auth.credentials;
   const { id } = request.params;
   const entry: IPost = Object.assign({}, { user }, <IPost>request.payload);
