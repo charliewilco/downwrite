@@ -1,5 +1,4 @@
-import * as Draft from "draft-js";
-import "markdown-draft-js";
+// ./types/markdown-draft.d.ts
 
 declare module "markdown-draft-js" {
   export interface MarkdownDraftOptions {
@@ -7,12 +6,12 @@ declare module "markdown-draft-js" {
     entityItems?: any;
   }
 
-  function markdownToDraft(
+  export function markdownToDraft(
     s: string,
     options: MarkdownDraftOptions
   ): Draft.RawDraftContentState;
 
-  function draftToMarkdown(
+  export function draftToMarkdown(
     d: Draft.RawDraftContentState,
     options: MarkdownDraftOptions
   ): string;

@@ -16,7 +16,8 @@
     "skipLibCheck": true,
     "noImplicitAny": true,
     "baseUrl": ".",
-    "lib": ["dom", "es2016"]
+    "lib": ["dom", "es2016"],
+    "typeRoots": ["./types"]
   },
   "exclude": ["__tests__", "server.js", "next.config.js"]
 }

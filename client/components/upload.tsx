@@ -2,7 +2,7 @@ import * as React from "react";
 import fm from "front-matter";
 import * as Draft from "draft-js";
 import Dropzone from "react-dropzone";
-import * as MD from "markdown-draft-js";
+import { markdownToDraft } from "markdown-draft-js";
 import { __IS_BROWSER__ } from "../utils/dev";
 
 interface MarkdownConversion {
@@ -32,7 +32,7 @@ export default class Uploader extends React.Component<IUploadProps, {}> {
     this.reader.onload = () => {
       let md: IMarkdown = fm(this.reader.result as string);
 
-      let markdown = MD.markdownToDraft(md.body, { preserveNewlines: true });
+      let markdown = markdownToDraft(md.body, { preserveNewlines: true });
 
       return this.props.onParsed({
         title: md.attributes.title || "",
