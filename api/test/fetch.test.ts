@@ -126,18 +126,20 @@ describe("Server Endpoints Perform", () => {
     expect(R.data.public).toEqual(body.public);
   });
 
-  // Preview Post
+  it("find a public post", async () => {
+    const url: string = "http://localhost:9999/api/posts/preview" + postID;
+
+    const R: Axios.AxiosResponse<IPost> = await Axios.default.get(url, {
+      headers: {
+        Authorization: token
+      }
+    });
+    expect(R.data.title).toBe(updatedTitle);
+    expect(R.status).toBeGreaterThanOrEqual(200);
+  });
+
   // Delete Posts
   // Auth User
-
-  // it("GET | PREVIEW | status code is 200 on a public post", async () => {
-  //   const r = await server.inject({
-  //     method: "GET",
-  //     url: "/posts/preview/aa3dd293-2a0e-478c-81e7-a0b9733e8b"
-  //   });
-
-  //   expect(r.statusCode).toBeGreaterThanOrEqual(200);
-  // });
 
   afterAll(async () => {
     await server.stop();
