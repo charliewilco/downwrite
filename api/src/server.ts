@@ -6,9 +6,9 @@ const __IS_DEV__: boolean = process.env.NODE_ENV !== "production";
 
 const validate = async () => ({ isValid: true });
 
-const createServer = async (): Promise<Hapi.Server> => {
+const createServer = async (port?: number): Promise<Hapi.Server> => {
   const server = new Hapi.Server({
-    port: process.env.PORT || 4000,
+    port: process.env.PORT || port || 4000,
     host: process.env.HOST || "localhost",
     routes: { cors: true }
   });

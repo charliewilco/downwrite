@@ -9,7 +9,7 @@ install:
   - yarn
 script:
   - yarn workspace api build
-  - yarn workspace api test
+  - yarn workspace api test --verbose
   - yarn workspace client typecheck
   - yarn workspace client build
   - yarn workspace client test

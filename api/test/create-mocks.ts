@@ -7,6 +7,7 @@ const post = Draft.EditorState.createWithContent(
 const content = Draft.convertToRaw(post.getCurrentContent());
 
 export const postTitle = "Some Post";
+export const updatedTitle = "Updated Post";
 export const createdPost = {
   title: postTitle,
   id: uuid(),

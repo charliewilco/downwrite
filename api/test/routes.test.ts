@@ -2,7 +2,7 @@ import * as Hapi from "hapi";
 import * as YesNo from "yesno-http";
 import * as Draft from "draft-js";
 import * as uuid from "uuid/v4";
-
+import * as Shot from "shot";
 import createServer from "../src/server";
 import { prepareDB } from "../src/util/db";
 import { ICreateResponse } from "../src/controllers/users";
@@ -26,11 +26,13 @@ let db: any;
 
 jest.setTimeout(100000);
 
-describe("Server Endpoints Perform", () => {
+// NOTE: Moved to axios
+// Using authentication in inject was confusing
+// https://github.com/dwyl/hapi-auth-jwt2/issues/292
+xdescribe("Server Endpoints Perform", () => {
   beforeAll(async () => {
     db = await prepareDB();
     server = await createServer();
-    await server.start();
   });
 
   it("can create a user", async () => {
@@ -49,6 +51,7 @@ describe("Server Endpoints Perform", () => {
   });
 
   it("can create a post", async () => {
+    console.log(user);
     const response: Hapi.ServerInjectResponse = await server.inject({
       method: "GET",
       url: "/api/posts",
@@ -56,25 +59,32 @@ describe("Server Endpoints Perform", () => {
         ...createdPost,
         user
       },
-      headers: {
-        Authorization: token
+      credentials: {
+        user
       }
     });
 
     expect(response.statusCode).toBeLessThanOrEqual(400);
     expect(response.statusCode).toBeGreaterThanOrEqual(200);
+
+    console.log(response.result);
   });
 
-  it("can list posts and list post", async () => {
+  xit("can list posts and list post", async () => {
     const r = await server.inject({
       method: "GET",
       url: "/api/posts",
       headers: {
         Authorization: token
+      },
+      credentials: {
+        user
       }
     });
 
+    expect(token).toBeTruthy();
     console.log(r.result);
+
     expect(r.statusCode).toBeLessThanOrEqual(400);
 
     expect(r.statusCode).toBeGreaterThanOrEqual(200);
@@ -83,6 +93,9 @@ describe("Server Endpoints Perform", () => {
     const p = await server.inject({
       method: "GET",
       url: "/api/posts/" + r.result[0].id,
+      credentials: {
+        user
+      },
       headers: {
         Authorization: token
       }
@@ -110,7 +123,6 @@ describe("Server Endpoints Perform", () => {
   // });
 
   afterAll(async () => {
-    await server.stop();
     db.disconnect();
   });
 });
