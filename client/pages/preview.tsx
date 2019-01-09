@@ -44,7 +44,6 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
       const serverURL: string =
         ctx.req && (ctx.req.headers["X-Now-Deployment-Url"] as string);
 
-      console.log(ctx.req.headers["X-Now-Deployment-Url"]);
       host = serverURL;
     }
 

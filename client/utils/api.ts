@@ -67,7 +67,6 @@ export async function authUser(
   options?: IOptions
 ): Promise<any> {
   const url = createURL(AUTH_ENDPOINT, options.host);
-  console.log("FROM FETCH", url);
   const auth = await fetch(url, {
     method: "POST",
     headers: {
@@ -81,7 +80,6 @@ export async function authUser(
 
 export async function getUserDetails(options: IOptions): Promise<any> {
   const url = createURL(USER_ENDPOINT, options.host);
-  console.log("FROM FETCH", url);
   const user = await fetch(url, createHeader("GET", options.token)).then(res =>
     res.json()
   );
@@ -97,7 +95,6 @@ export async function updateSettings(
   options: IOptions
 ) {
   const url = createURL(SETTINGS_ENDPOINT, options.host);
-  console.log("FROM FETCH", url);
   const settings = await fetch(url, {
     ...createHeader("POST", options.token),
     body: JSON.stringify(body)
@@ -117,7 +114,6 @@ export async function createUser(
   options?: IOptions
 ): Promise<IUserResponse> {
   const url = createURL(USER_ENDPOINT, options.host);
-  console.log("FROM FETCH", url);
 
   const user = await fetch(url, {
     method: "POST",
@@ -132,7 +128,6 @@ export async function createUser(
 
 export async function updatePassword(body: any, options: IOptions): Promise<any> {
   const url = createURL(PASSWORD_ENDPOINT, options.host);
-  console.log("FROM FETCH", url);
   const password = await fetch(url, {
     ...createHeader("POST", options.token),
     body: JSON.stringify(body)
@@ -146,8 +141,6 @@ export async function findPreviewEntry(
   options?: IOptions
 ): Promise<null> {
   const url = createURL(PREVIEW_ENDPOINT, options.host);
-  console.log("FROM FETCH", url);
-
   const entry = await fetch(`${url}/${id}`, {
     method: "GET",
     mode: "cors"
@@ -158,7 +151,6 @@ export async function findPreviewEntry(
 
 export async function getPost(id: string, options: IOptions): Promise<APIResponse> {
   const url = createURL(POST_ENDPOINT, options.host);
-  console.log("FROM FETCH", url);
   const post = await fetch(`${url}/${id}`, createHeader("GET", options.token)).then(
     res => res.json()
   );
@@ -168,7 +160,6 @@ export async function getPost(id: string, options: IOptions): Promise<APIRespons
 
 export async function removePost(id: string, options: IOptions): Promise<Response> {
   const url = createURL(POST_ENDPOINT, options.host);
-
   const response = await fetch(
     `${url}/${id}`,
     createHeader("DELETE", options.token)
@@ -181,7 +172,6 @@ export async function getPosts(
   host?: string
 ): Promise<Dwnxt.IPost[] | Dwnxt.IPostError> {
   const url = createURL(POST_ENDPOINT, host);
-  console.log("FROM FETCH", url);
   const entries: Dwnxt.IPost[] = await fetch(
     url,
     createHeader("GET", options.token)
@@ -196,7 +186,6 @@ export async function createPost(
   host?: string
 ): Promise<APIResponse> {
   const url = createURL(POST_ENDPOINT, host);
-  console.log("FROM FETCH", url);
   const post = await fetch(url, {
     ...createHeader("POST", options.token),
     body: JSON.stringify(body)
@@ -212,8 +201,6 @@ export async function updatePost(
   host?: string
 ): Promise<Dwnxt.IPost | Dwnxt.IPostError> {
   const url = createURL(POST_ENDPOINT, host);
-  console.log("FROM FETCH", url);
-
   const entry = await fetch(`${url}/${id}`, {
     ...createHeader("PUT", options.token),
     body: JSON.stringify(body)

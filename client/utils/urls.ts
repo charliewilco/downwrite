@@ -28,7 +28,5 @@ export const createURL = (endpoint: string, hostname?: string): string => {
     }
   }
 
-  console.log("from created", url);
-
   return url + endpoint;
 };
