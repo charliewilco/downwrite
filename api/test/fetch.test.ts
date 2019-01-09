@@ -119,6 +119,9 @@ describe("Server Endpoints Perform", () => {
     expect(R.status).toBeLessThanOrEqual(400);
     expect(R.status).toBeGreaterThanOrEqual(200);
     expect(R.data).toBeTruthy();
+
+    // NOTE: We refetch because Mongoose Does not return the updated object.
+
     const P: Axios.AxiosResponse<IPost> = await Axios.default.get(
       "http://localhost:9999/api/posts/" + postID,
       {
@@ -176,8 +179,6 @@ describe("Server Endpoints Perform", () => {
         password: createdUser.password
       }
     );
-
-    console.log(R.data);
 
     expect(R.status).toBeLessThanOrEqual(300);
     expect(R.data.token).toBeTruthy();

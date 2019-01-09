@@ -24,7 +24,7 @@ export const updatePost = async (request: IRequest, reply: Hapi.ResponseToolkit)
         upsert: true
       }
     );
-
+    // NOTE: This is not the updated entry object.
     return post;
   } catch (err) {
     return Boom.internal("Internal MongoDB error", err);
