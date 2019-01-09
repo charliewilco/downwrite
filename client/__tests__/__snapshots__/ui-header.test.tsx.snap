@@ -50,17 +50,6 @@ exports[`Header Component matches snapshot 1`] = `
   color: #185a70;
 }
 
-.c7 {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  outline: none;
-  border: 0;
-  font-family: inherit;
-  background: none;
-  box-sizing: inherit;
-}
-
 .c4 {
   font-size: 16px;
   font-style: normal;
@@ -199,55 +188,8 @@ exports[`Header Component matches snapshot 1`] = `
     <a
       class="c6"
     >
-      New
+      Login or Sign Up
     </a>
-    <button
-      class="c7"
-    >
-      <svg
-        class="Navicon"
-        height="9px"
-        viewBox="0 0 20 9"
-        width="20px"
-      >
-        <desc>
-          Navicon
-        </desc>
-        <g
-          fill="none"
-          fill-rule="evenodd"
-          stroke="none"
-          stroke-width="1"
-        >
-          <g
-            fill="inherit"
-            id="NaviconGroup"
-          >
-            <rect
-              height="1"
-              id="Rectangle-Copy-3"
-              width="20"
-              x="0"
-              y="0"
-            />
-            <rect
-              height="1"
-              id="Rectangle-Copy-4"
-              width="10"
-              x="10"
-              y="4"
-            />
-            <rect
-              height="1"
-              id="Rectangle-Copy-5"
-              width="15"
-              x="5"
-              y="8"
-            />
-          </g>
-        </g>
-      </svg>
-    </button>
   </nav>
 </header>
 `;
