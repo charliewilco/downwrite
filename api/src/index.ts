@@ -6,9 +6,35 @@ import { prepareDB } from "./util/db";
 
 export const __IS_DEV__: boolean = process.env.NODE_ENV === "development";
 
-export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
-  await prepareDB();
+// const serverlessRoutes = [
+//   { src: "/api/posts", methods: ["GET", "POST"], dest: "/src/index.ts" },
+//   {
+//     src: "/api/posts/preview/(.*)",
+//     methods: ["GET"],
+//     dest: "/src/index.ts"
+//   },
 
+//   {
+//     src: "/api/posts/(.*)",
+//     methods: ["GET", "PUT", "DELETE", "POST"],
+//     dest: "/src/index.ts"
+//   },
+//   {
+//     src: "/api/users/(.*)",
+//     methods: ["GET", "POST"],
+//     dest: "/src/index.ts"
+//   },
+//   {
+//     src: "/api/users",
+//     methods: ["GET", "POST"],
+//     dest: "/src/index.ts"
+//   },
+//   { src: "/api/password", methods: ["POST"], dest: "/src/index.ts" }
+// ];
+
+export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
+  // NOTE: Must start server & and connect to DB
+  let db = await prepareDB();
   const server: Hapi.Server = await createServer();
 
   const injection: Hapi.ServerInjectOptions = {
@@ -17,9 +43,7 @@ export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
     headers: req.headers
   };
 
-  if (__IS_DEV__) {
-    console.log("INJECTION", req.method, req.url);
-  }
+  console.log("INJECTION", req.method, req.url);
 
   if (["POST", "PUT"].includes(req.method)) {
     try {
@@ -33,8 +57,12 @@ export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
   const response = await server.inject(injection);
 
   if (__IS_DEV__) {
-    console.log(response.result);
+    console.log("RESULT", response.result);
   }
+
+  // NOTE: Must stop server & close DB
+  await server.stop();
+  db.disconnect();
 
   send(res, response.statusCode, response.result);
 };

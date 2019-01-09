@@ -9,7 +9,8 @@
     "dev": "yarn workspaces run dev",
     "build": "yarn workspaces run build",
     "go": "yarn workspaces run deploy",
-    "test": "yarn workspaces run test"
+    "test": "yarn workspaces run test",
+    "local": "now-lambda-runner"
   },
   "devDependencies": {
     "husky": "^1.0.1",
