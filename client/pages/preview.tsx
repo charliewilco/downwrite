@@ -38,11 +38,16 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
     ctx: NextContext<{ id: string }>
   ): Promise<Partial<IPreviewProps>> {
     let { id } = ctx.query;
+    let host: string;
 
-    const serverURL: string =
-      ctx.req && (ctx.req.headers["X-Now-Deployment-Url"] as string);
+    if (ctx.req) {
+      const serverURL: string =
+        ctx.req && (ctx.req.headers["X-Now-Deployment-Url"] as string);
 
-    const host = serverURL || "http://localhost:5000/";
+      console.log(ctx.req.headers["X-Now-Deployment-Url"]);
+      host = serverURL;
+    }
+
     const entry = await API.findPreviewEntry(id, { host });
 
     return {

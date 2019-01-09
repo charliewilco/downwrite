@@ -62,10 +62,16 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
   ): Promise<Partial<IEditorProps>> {
     const token = authMiddleware(ctx);
 
-    const serverURL: string =
-      ctx.req && (ctx.req.headers["X-Now-Deployment-Url"] as string);
+    let host: string;
 
-    const host = serverURL || "http://localhost:5000/";
+    if (ctx.req) {
+      const serverURL: string =
+        ctx.req && (ctx.req.headers["X-Now-Deployment-Url"] as string);
+
+      console.log(ctx.req.headers["X-Now-Deployment-Url"]);
+      host = serverURL;
+    }
+
     const post = (await API.getPost(ctx.query.id, {
       token,
       host

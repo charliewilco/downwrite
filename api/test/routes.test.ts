@@ -30,6 +30,7 @@ describe("Server Endpoints Perform", () => {
   beforeAll(async () => {
     db = await prepareDB();
     server = await createServer();
+    await server.start();
   });
 
   it("can create a user", async () => {

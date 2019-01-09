@@ -48,8 +48,6 @@ const createServer = async (): Promise<Hapi.Server> => {
 
   server.route(routes);
 
-  await server.start();
-
   return server;
 };
 
