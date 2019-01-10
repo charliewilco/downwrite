@@ -11,8 +11,6 @@ export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
   let db = await prepareDB();
   const server: Hapi.Server = await createServer();
 
-  await server.start();
-
   const injection: Hapi.ServerInjectOptions = {
     method: req.method,
     url: req.url,
@@ -31,7 +29,6 @@ export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
   const response = await server.inject(injection);
 
   // NOTE: Must stop server & close DB
-  await server.stop();
   db.disconnect();
 
   send(res, response.statusCode, response.result);

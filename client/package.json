@@ -10,7 +10,7 @@
     "build": "next build",
     "now-build": "next build",
     "start": "next start",
-    "test": "NODE_ENV=test jest --env=jsdom --verbose --silent"
+    "test": "NODE_ENV=test jest --env=jsdom"
   },
   "dependencies": {
     "@mdx-js/mdx": "^0.16.5",
