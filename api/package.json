@@ -54,7 +54,6 @@
     "draft-js": "^0.10.5",
     "jest": "^23.6.0",
     "micro-dev": "^3.0.0",
-    "nodemon": "^1.18.9",
     "shot": "^4.0.7",
     "ts-jest": "^23.10.5",
     "ts-node": "^7.0.1",
@@ -64,15 +63,5 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"
-  },
-  "nodemonConfig": {
-    "watch": [
-      "./**/*.ts"
-    ],
-    "ignore": [
-      "dist",
-      "docs"
-    ],
-    "exec": "ts-node --no-cache --typeCheck node_modules/.bin/micro-dev src/index.ts -p 4000"
   }
 }
