@@ -140,8 +140,10 @@ class NavBar extends React.Component<NavigationProps, any> {
   static contextType: React.Context<IAuthContext> = AuthContext;
 
   componentDidUpdate(prevProps: NavigationProps) {
-    if (prevProps.router.pathname !== this.props.router.pathname) {
-      this.props.closeNav();
+    if (prevProps.router && this.props.router) {
+      if (prevProps.router.pathname !== this.props.router.pathname) {
+        this.props.closeNav();
+      }
     }
   }
 

@@ -11,22 +11,19 @@ export const PASSWORD_ENDPOINT: string = `/api/password`;
 export const SETTINGS_ENDPOINT: string = `/api/users/settings`;
 export const AUTH_ENDPOINT: string = `/api/users/authenticate`;
 
-export const prefixURL = (p: string, url: string): string => p + url;
+export const prefixURL = (url: string): string => {
+  let prefix = __IS_DEV__ ? "http://" : "https://";
+  return !url.startsWith("http") ? prefix + url : url;
+};
 
 export const createURL = (endpoint: string, hostname?: string): string => {
   let url: string = "";
-
-  if (__IS_DEV__) {
-    return "http://localhost:5000" + endpoint;
-  }
+  const API_URL = __IS_DEV__ ? "http://localhost:5000" : "https://next.downwrite.us";
 
   if (hostname) {
-    url = hostname;
-
-    if (!url.startsWith("http")) {
-      url = "https://" + url;
-    }
+    url = prefixURL(__IS_DEV__ ? "localhost:5000" : hostname);
+    return url + endpoint;
   }
 
-  return url + endpoint;
+  return API_URL + endpoint;
 };

@@ -168,10 +168,10 @@ export async function removePost(id: string, options: IOptions): Promise<Respons
 }
 
 export async function getPosts(
-  options: IOptions,
-  host?: string
+  options: IOptions
 ): Promise<Dwnxt.IPost[] | Dwnxt.IPostError> {
-  const url = createURL(POST_ENDPOINT, host);
+  console.log("host from API", options.host);
+  const url = createURL(POST_ENDPOINT, options.host);
   const entries: Dwnxt.IPost[] = await fetch(
     url,
     createHeader("GET", options.token)
@@ -182,10 +182,9 @@ export async function getPosts(
 
 export async function createPost(
   body: Dwnxt.IPostCreation,
-  options: IOptions,
-  host?: string
+  options: IOptions
 ): Promise<APIResponse> {
-  const url = createURL(POST_ENDPOINT, host);
+  const url = createURL(POST_ENDPOINT, options.host);
   const post = await fetch(url, {
     ...createHeader("POST", options.token),
     body: JSON.stringify(body)
@@ -197,10 +196,9 @@ export async function createPost(
 export async function updatePost(
   id: string,
   body: Dwnxt.IPost,
-  options: IOptions,
-  host?: string
+  options: IOptions
 ): Promise<Dwnxt.IPost | Dwnxt.IPostError> {
-  const url = createURL(POST_ENDPOINT, host);
+  const url = createURL(POST_ENDPOINT, options.host);
   const entry = await fetch(`${url}/${id}`, {
     ...createHeader("PUT", options.token),
     body: JSON.stringify(body)

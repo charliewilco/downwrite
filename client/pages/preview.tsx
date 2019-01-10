@@ -42,11 +42,13 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
 
     if (ctx.req) {
       const serverURL: string =
-        ctx.req && (ctx.req.headers["X-Now-Deployment-Url"] as string);
+        ctx.req &&
+        ((ctx.req.headers["X-Now-Deployment-Url"] as string) ||
+          ctx.req.headers.host);
+      console.log(serverURL, "SERVER URL");
 
       host = serverURL;
     }
-
     const entry = await API.findPreviewEntry(id, { host });
 
     return {
@@ -61,7 +63,7 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
 
   static displayName = "PreviewEntry";
 
-  render() {
+  public render(): JSX.Element {
     const {
       entry: { author },
       entry,
