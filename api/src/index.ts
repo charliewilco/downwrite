@@ -19,8 +19,6 @@ export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
     headers: req.headers
   };
 
-  if (__IS_DEV__) console.log("INJECTION", req.method, req.url);
-
   if (["POST", "PUT"].includes(req.method)) {
     try {
       const body = await json(req);
@@ -31,8 +29,6 @@ export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
   }
 
   const response = await server.inject(injection);
-
-  if (__IS_DEV__) console.log("RESULT", response.result);
 
   // NOTE: Must stop server & close DB
   await server.stop();
