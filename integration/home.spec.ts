@@ -1,9 +1,10 @@
 import * as puppeteer from "puppeteer";
 
 const BASE_URL = "http://localhost:3000";
-const getByTestID = id => `[data-testid='${id}']`;
+const getByTestID = (id: string): string => `[data-testid='${id}']`;
 
-let browser, page;
+let browser;
+let page;
 
 beforeAll(async () => {
   browser = await puppeteer.launch({ headless: true });
@@ -24,12 +25,12 @@ describe("Login Flow", () => {
     const REGISTER_TEXT = "Sign Up as a New User";
     await page
       .waitForSelector(getByTestID("LOGIN_TITLE"))
-      .then(title => title === REGISTER_TEXT);
+      .then((title: string) => title === REGISTER_TEXT);
     await page.waitForSelector(getByTestID("LOGIN_REGISTER_BUTTON"));
     await page.click(getByTestID("LOGIN_REGISTER_BUTTON"));
     await page
       .waitForSelector(getByTestID("LOGIN_TITLE"))
-      .then(title => title === LOGIN_TEXT);
+      .then((title: string) => title === LOGIN_TEXT);
   });
 });
 

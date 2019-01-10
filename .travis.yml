@@ -12,7 +12,7 @@ script:
   - yarn workspace api test --verbose
   - yarn workspace client typecheck
   - yarn workspace client build
-  - yarn workspace client test
+  - yarn workspace client test --verbose --silent
 # before_deploy: yarn global add now
 # deploy:
 #   - provider: script # Run a custom deployment script which we will define below

@@ -170,7 +170,6 @@ export async function removePost(id: string, options: IOptions): Promise<Respons
 export async function getPosts(
   options: IOptions
 ): Promise<Dwnxt.IPost[] | Dwnxt.IPostError> {
-  console.log("host from API", options.host);
   const url = createURL(POST_ENDPOINT, options.host);
   const entries: Dwnxt.IPost[] = await fetch(
     url,

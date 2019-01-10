@@ -1,4 +1,4 @@
-import { __IS_DEV__, __IS_BROWSER__ } from "./dev";
+import { __IS_DEV__, __IS_BROWSER__, __IS_TEST__ } from "./dev";
 
 // const DEV_URL = "http://localhost:5000/api";
 // const PROD_URL = "https://next.downwrite.us/api";
@@ -12,18 +12,22 @@ export const SETTINGS_ENDPOINT: string = `/api/users/settings`;
 export const AUTH_ENDPOINT: string = `/api/users/authenticate`;
 
 export const prefixURL = (url: string): string => {
+  if (!url) {
+    return "";
+  }
+
+  if (__IS_DEV__) {
+    url = url.replace("3000", "5000");
+  }
+
   let prefix = __IS_DEV__ ? "http://" : "https://";
   return !url.startsWith("http") ? prefix + url : url;
 };
 
 export const createURL = (endpoint: string, hostname?: string): string => {
-  let url: string = "";
-  const API_URL = __IS_DEV__ ? "http://localhost:5000" : "https://next.downwrite.us";
-
-  if (hostname) {
-    url = prefixURL(__IS_DEV__ ? "localhost:5000" : hostname);
-    return url + endpoint;
+  if (__IS_BROWSER__ && !__IS_TEST__) {
+    return endpoint;
   }
-
-  return API_URL + endpoint;
+  let url: string = prefixURL(hostname) + endpoint;
+  return url;
 };

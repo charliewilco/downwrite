@@ -51,7 +51,6 @@ xdescribe("Server Endpoints Perform", () => {
   });
 
   it("can create a post", async () => {
-    console.log(user);
     const response: Hapi.ServerInjectResponse = await server.inject({
       method: "GET",
       url: "/api/posts",
@@ -66,8 +65,6 @@ xdescribe("Server Endpoints Perform", () => {
 
     expect(response.statusCode).toBeLessThanOrEqual(400);
     expect(response.statusCode).toBeGreaterThanOrEqual(200);
-
-    console.log(response.result);
   });
 
   xit("can list posts and list post", async () => {
@@ -83,7 +80,6 @@ xdescribe("Server Endpoints Perform", () => {
     });
 
     expect(token).toBeTruthy();
-    console.log(r.result);
 
     expect(r.statusCode).toBeLessThanOrEqual(400);
 
@@ -105,7 +101,6 @@ xdescribe("Server Endpoints Perform", () => {
     expect(p.statusCode).toBeGreaterThanOrEqual(200);
     expect(p.result).toBeTruthy();
     expect((p.result as IPost).title).toEqual(createdPost.title);
-    console.log(p.result);
   });
 
   // Edit Post
