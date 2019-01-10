@@ -43,7 +43,7 @@ export const UIShell: React.SFC<IUIShell> = ({ children, token }) => (
                 <UIErrorBanner />
                 <ClearFixed>
                   <Container>
-                    <Header open={isOpen} onClick={onToggle} />
+                    <Header onClick={onToggle} />
                     {children}
                     <Footer />
                   </Container>

@@ -1,10 +1,10 @@
 import * as React from "react";
-import { Formik, FormikProps, ErrorMessage, Form } from "formik";
+import { Formik, FormikProps, ErrorMessage, Form, FormikActions } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import Button from "./button";
 import * as API from "../utils/api";
-import { withAuth } from "./auth";
+import { AuthContext, IAuthContext } from "./auth";
 import { UserSettingsSchema } from "../utils/validations";
 
 interface IUserFormValues {
@@ -14,13 +14,17 @@ interface IUserFormValues {
 
 interface ISettingsUserForm {
   user: IUserFormValues;
-  token: string;
 }
 
 class SettingsUser extends React.Component<ISettingsUserForm, {}> {
-  onSubmit = async (values, actions) => {
-    const { token } = this.props;
-    const settings = await API.updateSettings(values, { token });
+  static contextType: React.Context<IAuthContext> = AuthContext;
+  onSubmit = async (
+    values: IUserFormValues,
+    actions: FormikActions<IUserFormValues>
+  ) => {
+    const { token } = this.context;
+    const { host } = document.location;
+    const settings = await API.updateSettings(values, { token, host });
     if (settings) {
       actions.setSubmitting(false);
     }
@@ -72,4 +76,4 @@ class SettingsUser extends React.Component<ISettingsUserForm, {}> {
   }
 }
 
-export default withAuth(SettingsUser);
+export default SettingsUser;

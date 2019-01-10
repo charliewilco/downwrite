@@ -47,7 +47,7 @@ export default class UIMarkdownExport extends React.Component<IExportProps, any>
             return "[";
           },
 
-          close: entity => {
+          close: (entity: any) => {
             return `](${entity.data.url || entity.data.href})`;
           }
         }

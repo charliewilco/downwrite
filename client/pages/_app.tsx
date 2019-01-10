@@ -1,5 +1,5 @@
+import * as React from "react";
 import App, { Container, AppComponentProps, NextAppContext } from "next/app";
-import React from "react";
 import isEmpty from "lodash/isEmpty";
 import { UIShell } from "../components/ui-shell";
 import AuthMegaProvider, { AuthConsumer } from "../components/auth";

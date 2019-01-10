@@ -5,7 +5,7 @@ import Logo from "./logo";
 import AltAnchor from "./alt-anchor-link";
 import { NavIcon } from "./icons";
 import * as DefaultStyles from "../utils/defaultStyles";
-import { withAuth } from "./auth";
+import { AuthConsumer } from "./auth";
 import { withRouter, WithRouterProps } from "next/router";
 
 const MenuContainer = styled.nav`
@@ -61,39 +61,44 @@ const Header = styled.header`
 `;
 
 interface IHeaderProps extends WithRouterProps {
-  authed: boolean;
   onClick: () => void;
 }
 
-const UIHeader: React.SFC<IHeaderProps> = ({ router, authed, onClick }) => {
+const UIHeader: React.SFC<IHeaderProps> = ({ router, onClick }) => {
   return !(router.route === "/login") ? (
     <Header data-testid="APP_HEADER">
-      <MenuContainer>
-        <Logo />
-        <HeaderTitle data-testid="APP_HEADER_TITLE">
-          <Link href={!authed ? "/login" : "/"}>
-            <HomeLink>Downwrite</HomeLink>
-          </Link>
-        </HeaderTitle>
-      </MenuContainer>
-      {authed ? (
-        <MenuContainer>
-          <Link prefetch href="/new" as="/new">
-            <AltAnchor space="right">New</AltAnchor>
-          </Link>
-          <ToggleButton onClick={onClick}>
-            <NavIcon className="Navicon" />
-          </ToggleButton>
-        </MenuContainer>
-      ) : (
-        <MenuContainer>
-          <Link prefetch href="/login">
-            <AltAnchor space="right">Login or Sign Up</AltAnchor>
-          </Link>
-        </MenuContainer>
-      )}
+      <AuthConsumer>
+        {context => (
+          <>
+            <MenuContainer>
+              <Logo />
+              <HeaderTitle data-testid="APP_HEADER_TITLE">
+                <Link href={!context.authed ? "/login" : "/"}>
+                  <HomeLink>Downwrite</HomeLink>
+                </Link>
+              </HeaderTitle>
+            </MenuContainer>
+            {context.authed ? (
+              <MenuContainer>
+                <Link prefetch href="/new" as="/new">
+                  <AltAnchor space="right">New</AltAnchor>
+                </Link>
+                <ToggleButton onClick={onClick}>
+                  <NavIcon className="Navicon" />
+                </ToggleButton>
+              </MenuContainer>
+            ) : (
+              <MenuContainer>
+                <Link prefetch href="/login">
+                  <AltAnchor space="right">Login or Sign Up</AltAnchor>
+                </Link>
+              </MenuContainer>
+            )}
+          </>
+        )}
+      </AuthConsumer>
     </Header>
   ) : null;
 };
 
-export default withAuth(withRouter(UIHeader));
+export default withRouter(UIHeader);

@@ -1,27 +1,14 @@
 import * as http from "http";
 import * as Hapi from "hapi";
-import * as Mongoose from "mongoose";
-import Config from "./util/config";
-import createServer from "./server";
 import { send, json } from "micro";
+import createServer from "./server";
+import { prepareDB } from "./util/db";
+
+export const __IS_DEV__: boolean = process.env.NODE_ENV === "development";
 
 export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
-  (<any>Mongoose).Promise = global.Promise;
-  Mongoose.connect(
-    Config.dbCreds,
-    { useNewUrlParser: true }
-  );
-
-  const db = Mongoose.connection;
-
-  db.on("error", () => {
-    console.error("connection error");
-  });
-  db.once("open", () => {
-    console.log(`Connection with database succeeded.`);
-    console.log("--- DOWNWRITE API ---");
-  });
-
+  // NOTE: Must start server & and connect to DB
+  let db = await prepareDB();
   const server: Hapi.Server = await createServer();
 
   const injection: Hapi.ServerInjectOptions = {
@@ -40,6 +27,9 @@ export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
   }
 
   const response = await server.inject(injection);
+
+  // NOTE: Must stop server & close DB
+  db.disconnect();
 
   send(res, response.statusCode, response.result);
 };

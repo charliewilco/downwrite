@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Formik, Form, FormikProps, ErrorMessage } from "formik";
+import { Formik, Form, FormikProps, ErrorMessage, FormikActions } from "formik";
 import "isomorphic-fetch";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import Button from "./button";
@@ -8,11 +8,23 @@ import LegalBoilerplate from "./legal-boilerplate";
 import * as API from "../utils/api";
 import { RegisterFormSchema } from "../utils/validations";
 
-interface IRegistration {
+export interface StringTMap<T> {
+  [key: string]: T;
+}
+
+interface IRegistration extends StringTMap<string | boolean> {
   username: string;
   password: string;
   legalChecked: boolean;
   email: string;
+}
+
+interface IInput extends StringTMap<string> {
+  name?: string;
+  type?: string;
+  placeholder?: string;
+  label?: string;
+  autoComplete?: string;
 }
 
 interface LoginProps {
@@ -21,7 +33,7 @@ interface LoginProps {
 }
 
 export default class Register extends React.Component<LoginProps, {}> {
-  handleSubmit = (values, actions) => {
+  handleSubmit = (values: IRegistration, actions: FormikActions<IRegistration>) => {
     if (values.legalChecked) {
       this.onSubmit(values);
     }
@@ -29,8 +41,13 @@ export default class Register extends React.Component<LoginProps, {}> {
 
   onSubmit = async ({ username, email, password }: IRegistration): Promise<void> => {
     const { signIn, setError } = this.props;
-
-    const user = await API.createUser({ username, email, password });
+    const { host } = document.location;
+    const user = await API.createUser(
+      { username, email, password },
+      {
+        host
+      }
+    );
 
     if (user.userID) {
       signIn(user.id_token !== undefined, user.id_token);
@@ -39,7 +56,7 @@ export default class Register extends React.Component<LoginProps, {}> {
     }
   };
 
-  private inputs = [
+  private inputs: IInput[] = [
     {
       name: "username",
       label: "Username",
@@ -84,7 +101,7 @@ export default class Register extends React.Component<LoginProps, {}> {
                     label={input.label}
                     autoComplete={input.autoComplete}
                     name={input.name}
-                    value={values[input.name]}
+                    value={values[input.name] as string}
                     onChange={handleChange}
                   />
                   <ErrorMessage name={input.name} component={UIInputError} />

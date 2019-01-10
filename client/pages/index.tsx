@@ -41,8 +41,17 @@ export default class Dashboard extends React.Component<
   static async getInitialProps(
     ctx: NextContext<{ token: string }>
   ): Promise<Partial<IDashboardProps>> {
+    let host: string;
+
+    if (ctx.req) {
+      const serverURL: string = ctx.req.headers.host;
+
+      host = serverURL;
+    }
+
     const token = authMiddleware(ctx);
-    const entries = await API.getPosts({ token });
+
+    const entries = await API.getPosts({ token, host });
 
     return {
       entries
@@ -60,8 +69,8 @@ export default class Dashboard extends React.Component<
   // TODO: Fix this
   private getPosts = async (close?: boolean): Promise<void> => {
     const { token } = this.props;
-
-    const entries = await API.getPosts({ token });
+    const { host } = document.location;
+    const entries = await API.getPosts({ token, host });
 
     if (Array.isArray(entries)) {
       this.setState({
@@ -91,7 +100,9 @@ export default class Dashboard extends React.Component<
 
   private onDelete = async ({ id }: Partial<Dwnxt.IPost>): Promise<void> => {
     const { token } = this.props;
-    const response = await API.removePost(id, { token });
+    const { host } = document.location;
+
+    const response = await API.removePost(id, { token, host });
 
     if (response.ok) {
       await this.getPosts(true);

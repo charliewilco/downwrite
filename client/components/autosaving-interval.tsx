@@ -19,7 +19,7 @@ export default class AutosavingInterval extends React.Component<
   state = { autosaving: false };
 
   static defaultProps = {
-    onUpdate: () => null,
+    onUpdate: () => {},
     delay: 3000,
     duration: 5000
   };

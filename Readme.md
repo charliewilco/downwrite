@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/charliewilco/downwrite.svg?branch=master)](https://travis-ci.org/charliewilco/downwrite) [![jest](https://jestjs.io/img/jest-badge.svg)](https://github.com/facebook/jest) [![style: styled-components](https://img.shields.io/badge/style-%F0%9F%92%85%20styled--components-orange.svg?colorB=daa357&colorA=db748e)](https://github.com/styled-components/styled-components)
 
-
 ## About 🤔🦄🎉
 
 > _A place to write._ ✍️
@@ -65,7 +64,7 @@ For the Editor this project uses Draft.js and Draft.js Plugins. Markdown syntax 
 
 For styles I've used ~~Aphrodite~~, ~~JSXStyle~~, ~~glamor~~, and styled-components 💅. Most components are just `styled.div`\`\`; [managing class names hasn't really ever been my thing](https://charlespeters.net/writing/i-just-cant-with-css/). The styling also includes a Night theme that's managed through styled component's `<ThemeProvider>` and `localStorage`. 🌘🌛🌌 So it only ever renders on the client.
 
-This project is a PWA, it uses some basic service worker implementation and `manifest.json` managed by `next.config.js`. 
+This project is a PWA, it uses some basic service worker implementation and `manifest.json` managed by `next.config.js`.
 
 #### Related Documentation 📚
 
@@ -99,11 +98,32 @@ This project depends on MongoDB 🍍 so if you're not using Docker 🐳🐋 loca
 
 #### Info 📝
 
-Using hapi allows you to organize your endpoints very easiy and all the controllers are async so making database queries are fast and clean. All the routes are kept in `./api/src/routes.ts`. 🛣
+Using Gapi allows you to organize your endpoints very easiy and all the controllers are async so making database queries are fast and clean. All the routes are kept in `./api/src/routes.ts`. 🛣
 
 This service handles authentication with JWT and basic CRUD functions. 🔐
 
 You can see the documented endpoints at `http://localhost:3000/docs`
+
+Using a serverless model Hapi's API allows us to expose our server as a single function that we can inject the current header, url and method into to return a result to send back. This let's us use Hapi a serverless function gets executed dynamically and on-demand to minimize the cost. It could be ported to be used on the [serverless](https://serverless.com/) framework or AWS Lambda.
+
+```typescript
+export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
+  // This function adds the Routing and Plugins for Hapi and returns that server
+  const server: Hapi.Server = await createServer();
+
+  const injection: Hapi.ServerInjectOptions = {
+    method: req.method,
+    url: req.url,
+    headers: req.headers
+  };
+
+  const response = await server.inject(injection);
+
+  return response;
+};
+```
+
+In development, I've been using [Micro](https://github.com/zeit/micro) to replicate this locally.
 
 #### Related Documentation 📚
 
@@ -111,6 +131,7 @@ You can see the documented endpoints at `http://localhost:3000/docs`
 - [MongoDB](https://docs.mongodb.com/manual/support/) & [Mongoose.js](http://mongoosejs.com)
 - [Docker](https://docs.docker.com/)
 - [JWT](https://auth0.com/blog/hapijs-authentication-secure-your-api-with-json-web-tokens/)
+- [Micro](https://zeit.co/blog/micro-8)
 
 ### Integration Testing 🌈🦁🐛
 

@@ -5,7 +5,6 @@ import { draftToMarkdown } from "markdown-draft-js";
 import { PostModel as Post, IPost } from "../models/Post";
 import { UserModel as User, IUser } from "../models/User";
 
-// TODO: implement `Authorization: ${token}`
 // TODO: remove user from the payload, get it from the
 // const { user } = req.auth.credentials;
 
@@ -17,7 +16,6 @@ export const updatePost = async (request: IRequest, reply: Hapi.ResponseToolkit)
   const { user } = request.auth.credentials;
   const { id } = request.params;
   const entry: IPost = Object.assign({}, { user }, <IPost>request.payload);
-
   try {
     const post: IPost = await Post.findOneAndUpdate(
       { id, user: { $eq: user } },
@@ -26,6 +24,7 @@ export const updatePost = async (request: IRequest, reply: Hapi.ResponseToolkit)
         upsert: true
       }
     );
+    // NOTE: This is not the updated entry object.
     return post;
   } catch (err) {
     return Boom.internal("Internal MongoDB error", err);

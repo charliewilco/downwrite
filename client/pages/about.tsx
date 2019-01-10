@@ -4,12 +4,10 @@ import Content from "../components/content";
 import About from "../markdown/about.mdx";
 
 export default (): JSX.Element => (
-  <>
+  <Content title="About Downwrite">
     <Head>
       <title>About Downwrite</title>
     </Head>
-    <Content title="About Downwrite">
-      <About />
-    </Content>
-  </>
+    <About />
+  </Content>
 );

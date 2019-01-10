@@ -1,25 +1,23 @@
 language: node_js
 node_js:
   - "10"
+services:
+  - mongodb
 cache:
   yarn: true
 install:
   - yarn
 script:
   - yarn workspace api build
+  - yarn workspace api test --silent --verbose
   - yarn workspace client typecheck
   - yarn workspace client build
-  - yarn workspace client test
+  - yarn workspace client test --silent --verbose
 # before_deploy: yarn global add now
 # deploy:
 #   - provider: script # Run a custom deployment script which we will define below
-#     script: yarn workspace client deploy:ci && yarn workspace api deploy:ci
+#     script: now alias --token $NOW_TOKEN
 #     skip_cleanup: true
 #     on:
 #       all_branches: true
 #       master: false
-#   - provider: script
-#     script: yarn workspace client deploy:token && yarn workspace api deploy:token
-#     skip_cleanup: true
-#     on:
-#      master: true

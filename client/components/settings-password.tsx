@@ -1,31 +1,46 @@
 import * as React from "react";
-import { Formik, FormikProps, ErrorMessage, Form } from "formik";
+import { Formik, FormikProps, ErrorMessage, Form, FormikActions } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import Toggle from "./toggle";
 import { ToggleBox } from "../components/toggle-box";
 import Button from "./button";
-import { withAuth } from "./auth";
+import { IAuthContext, AuthContext } from "./auth";
 import { UpdatePasswordSchema } from "../utils/validations";
 import * as API from "../utils/api";
 
-interface IPasswordSettings {
+export interface StringTMap<T> {
+  [key: string]: T;
+}
+
+interface IPasswordSettings extends StringTMap<string> {
   oldPassword: string;
   newPassword: string;
   confirmPassword: string;
 }
 
-class SettingsPassword extends React.Component<{ token: string }, {}> {
-  onSubmit = (values, actions) => {
-    const { token } = this.props;
-    const response = API.updatePassword(values, { token });
+interface IInputs {
+  name: string;
+  label: string;
+}
+
+class SettingsPassword extends React.Component<{}, {}> {
+  static contextType: React.Context<IAuthContext> = AuthContext;
+
+  onSubmit = (
+    values: IPasswordSettings,
+    actions: FormikActions<IPasswordSettings>
+  ): void => {
+    const { token } = this.context;
+    const { host } = document.location;
+    const response = API.updatePassword(values, { token, host });
 
     if (response) {
       actions.setSubmitting(false);
     }
   };
 
-  private inputs = [
+  private inputs: IInputs[] = [
     {
       label: "Current Password",
       name: "oldPassword"
@@ -59,7 +74,7 @@ class SettingsPassword extends React.Component<{ token: string }, {}> {
             <Toggle>
               {({ isOpen, onToggle }) => (
                 <Form>
-                  {this.inputs.map(({ name, label }, idx) => (
+                  {this.inputs.map(({ name, label }: IInputs, idx) => (
                     <UIInputContainer key={idx}>
                       <UIInput
                         label={label}
@@ -92,4 +107,4 @@ class SettingsPassword extends React.Component<{ token: string }, {}> {
   }
 }
 
-export default withAuth(SettingsPassword);
+export default SettingsPassword;

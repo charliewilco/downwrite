@@ -2,7 +2,7 @@
   "name": "api",
   "description": "Serverless API for downwrite",
   "version": "0.0.0",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "repository": "charlespeters/downwrite",
   "author": "Charles ⚡ <charlespeters42@gmail.com>",
   "private": true,
@@ -10,14 +10,13 @@
     "build": "tsc",
     "now-build": "tsc",
     "predev": "tsc",
-    "start": "ts-node node_modules/.bin/micro src/index.ts",
-    "dev": "ts-node --no-cache --typeCheck node_modules/.bin/micro-dev src/index.ts -p 4000",
+    "start": "micro dist/index.js --port 4000",
+    "dev": "micro-dev dist/index.js -p 4000",
     "test": "jest",
     "documentation": "typedoc --theme minimal --out ./docs ./src/**/*.ts"
   },
   "license": "MIT",
   "dependencies": {
-    "@charliewilco/sanitize-object": "^1.0.1",
     "@types/bcrypt": "^3.0.0",
     "@types/boom": "^7.2.0",
     "@types/hapi": "^17.0.19",
@@ -41,31 +40,28 @@
     "markdown-draft-js": "^1.0.1",
     "micro": "^9.3.3",
     "mongoose": "^5.4.1",
+    "relish": "^3.0.0",
     "typescript": "^3.0.3",
     "uuid": "^3.1.0",
     "vision": "^5.4.2"
   },
   "devDependencies": {
-    "jest": "^22.4.0",
+    "@types/axios": "^0.14.0",
+    "@types/draft-js": "^0.10.27",
+    "@types/jest": "^23.3.11",
+    "@types/shot": "^4.0.0",
+    "axios": "^0.18.0",
+    "draft-js": "^0.10.5",
+    "jest": "^23.6.0",
     "micro-dev": "^3.0.0",
-    "nodemon": "^1.18.7",
+    "shot": "^4.0.7",
+    "ts-jest": "^23.10.5",
     "ts-node": "^7.0.1",
     "typedoc": "^0.12.0",
     "yesno-http": "^0.0.5"
   },
   "jest": {
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest"
-    }
-  },
-  "nodemonConfig": {
-    "watch": [
-      "./**/*.ts"
-    ],
-    "ignore": [
-      "dist",
-      "docs"
-    ],
-    "exec": "ts-node --no-cache --typeCheck node_modules/.bin/micro-dev src/index.ts -p 4000"
+    "preset": "ts-jest",
+    "testEnvironment": "node"
   }
 }

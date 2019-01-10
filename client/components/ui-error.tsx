@@ -14,7 +14,7 @@ interface IErrorProps {
 export interface IUIErrorMessage {
   errorState: ErrorTypes;
   errorActions: {
-    setError: (c, t) => void;
+    setError: (c: string, t: string) => void;
     clearFlashMessage: () => void;
   };
 }

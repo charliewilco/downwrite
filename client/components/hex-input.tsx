@@ -33,18 +33,31 @@ interface IHexInputProps {
   initialValue?: string;
 }
 
-export default class HexInput extends React.PureComponent<IHexInputProps> {
+interface IHexInputState {
+  hex: string;
+}
+
+export default class HexInput extends React.PureComponent<
+  IHexInputProps,
+  IHexInputState
+> {
   state = {
     hex: this.props.initialValue || ""
   };
 
   static defaultProps = {
-    onChange: color => color
+    onChange: (color: string): void => {
+      color;
+    }
   };
 
-  handleChange = ({ target: { value: hex } }) => this.setState({ hex });
+  handleChange = ({
+    target: { value: hex }
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ hex });
+  };
 
-  componentDidUpdate(prevState) {
+  componentDidUpdate(prevProps: IHexInputProps, prevState: IHexInputState) {
     const { hex } = this.state;
     let color = "#" + hex;
     let prevColor = "#" + prevState.hex;

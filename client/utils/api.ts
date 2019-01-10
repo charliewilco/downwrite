@@ -4,13 +4,15 @@ import {
   PREVIEW_ENDPOINT,
   SETTINGS_ENDPOINT,
   PASSWORD_ENDPOINT,
-  AUTH_ENDPOINT
+  AUTH_ENDPOINT,
+  createURL
 } from "./urls";
 
 import * as Dwnxt from "../types/downwrite";
 
 interface IOptions {
-  token: string;
+  token?: string;
+  host?: string;
 }
 
 interface IUserResponse {
@@ -24,9 +26,16 @@ type APIResponse = Dwnxt.IPost | Dwnxt.IPostError;
 
 type HeaderMethod = "GET" | "PUT" | "POST" | "DELETE";
 
+import { __IS_DEV__, __IS_BROWSER__ } from "./dev";
+
+/**
+ * Creates header for Fetch request with Token
+ * @param method
+ * @param token
+ */
 export const createHeader = (
   method: HeaderMethod = "GET",
-  token: string
+  token?: string
 ): RequestInit => {
   const Header = new Headers();
 
@@ -41,13 +50,24 @@ export const createHeader = (
   };
 };
 
+/**
+ * Creates url string for both server and client based off header
+ * @param url
+ * @param hostname
+ * @returns string
+ */
+
 export interface IAuthUserBody {
   user: string;
   password: string;
 }
 
-export async function authUser({ user, password }: IAuthUserBody): Promise<any> {
-  const auth = await fetch(AUTH_ENDPOINT, {
+export async function authUser(
+  { user, password }: IAuthUserBody,
+  options?: IOptions
+): Promise<any> {
+  const url = createURL(AUTH_ENDPOINT, options.host);
+  const auth = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -59,15 +79,23 @@ export async function authUser({ user, password }: IAuthUserBody): Promise<any> 
 }
 
 export async function getUserDetails(options: IOptions): Promise<any> {
-  const user = await fetch(USER_ENDPOINT, createHeader("GET", options.token)).then(
-    res => res.json()
+  const url = createURL(USER_ENDPOINT, options.host);
+  const user = await fetch(url, createHeader("GET", options.token)).then(res =>
+    res.json()
   );
 
   return user;
 }
 
-export async function updateSettings(body, options) {
-  const settings = await fetch(SETTINGS_ENDPOINT, {
+export async function updateSettings(
+  body: {
+    username: string;
+    email: string;
+  },
+  options: IOptions
+) {
+  const url = createURL(SETTINGS_ENDPOINT, options.host);
+  const settings = await fetch(url, {
     ...createHeader("POST", options.token),
     body: JSON.stringify(body)
   }).then(res => res.json());
@@ -81,12 +109,13 @@ export interface ICreateUserBody {
   password: string;
 }
 
-export async function createUser({
-  username,
-  email,
-  password
-}: ICreateUserBody): Promise<IUserResponse> {
-  const user = await fetch(USER_ENDPOINT, {
+export async function createUser(
+  { username, email, password }: ICreateUserBody,
+  options?: IOptions
+): Promise<IUserResponse> {
+  const url = createURL(USER_ENDPOINT, options.host);
+
+  const user = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -98,7 +127,8 @@ export async function createUser({
 }
 
 export async function updatePassword(body: any, options: IOptions): Promise<any> {
-  const password = await fetch(PASSWORD_ENDPOINT, {
+  const url = createURL(PASSWORD_ENDPOINT, options.host);
+  const password = await fetch(url, {
     ...createHeader("POST", options.token),
     body: JSON.stringify(body)
   }).then(res => res.json());
@@ -106,8 +136,12 @@ export async function updatePassword(body: any, options: IOptions): Promise<any>
   return password;
 }
 
-export async function findPreviewEntry(id: string): Promise<null> {
-  const entry = await fetch(`${PREVIEW_ENDPOINT}/${id}`, {
+export async function findPreviewEntry(
+  id: string,
+  options?: IOptions
+): Promise<null> {
+  const url = createURL(PREVIEW_ENDPOINT, options.host);
+  const entry = await fetch(`${url}/${id}`, {
     method: "GET",
     mode: "cors"
   }).then(res => res.json());
@@ -116,17 +150,18 @@ export async function findPreviewEntry(id: string): Promise<null> {
 }
 
 export async function getPost(id: string, options: IOptions): Promise<APIResponse> {
-  const post = await fetch(
-    `${POST_ENDPOINT}/${id}`,
-    createHeader("GET", options.token)
-  ).then(res => res.json());
+  const url = createURL(POST_ENDPOINT, options.host);
+  const post = await fetch(`${url}/${id}`, createHeader("GET", options.token)).then(
+    res => res.json()
+  );
 
   return post;
 }
 
 export async function removePost(id: string, options: IOptions): Promise<Response> {
+  const url = createURL(POST_ENDPOINT, options.host);
   const response = await fetch(
-    `${POST_ENDPOINT}/${id}`,
+    `${url}/${id}`,
     createHeader("DELETE", options.token)
   );
   return response;
@@ -135,8 +170,9 @@ export async function removePost(id: string, options: IOptions): Promise<Respons
 export async function getPosts(
   options: IOptions
 ): Promise<Dwnxt.IPost[] | Dwnxt.IPostError> {
+  const url = createURL(POST_ENDPOINT, options.host);
   const entries: Dwnxt.IPost[] = await fetch(
-    POST_ENDPOINT,
+    url,
     createHeader("GET", options.token)
   ).then(res => res.json());
 
@@ -147,7 +183,8 @@ export async function createPost(
   body: Dwnxt.IPostCreation,
   options: IOptions
 ): Promise<APIResponse> {
-  const post = await fetch(POST_ENDPOINT, {
+  const url = createURL(POST_ENDPOINT, options.host);
+  const post = await fetch(url, {
     ...createHeader("POST", options.token),
     body: JSON.stringify(body)
   }).then(res => res.json());
@@ -160,7 +197,8 @@ export async function updatePost(
   body: Dwnxt.IPost,
   options: IOptions
 ): Promise<Dwnxt.IPost | Dwnxt.IPostError> {
-  const entry = await fetch(`${POST_ENDPOINT}/${id}`, {
+  const url = createURL(POST_ENDPOINT, options.host);
+  const entry = await fetch(`${url}/${id}`, {
     ...createHeader("PUT", options.token),
     body: JSON.stringify(body)
   }).then(res => res.json());

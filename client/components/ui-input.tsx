@@ -4,8 +4,8 @@ import styled from "styled-components";
 import * as DefaultStyles from "../utils/defaultStyles";
 
 interface InputType {
+  onChange(e: React.ChangeEvent<any>): void;
   label: string;
-  onChange: (x) => void;
   value: string;
   name?: string;
   type: string;

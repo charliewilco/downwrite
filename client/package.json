@@ -10,7 +10,7 @@
     "build": "next build",
     "now-build": "next build",
     "start": "next start",
-    "test": "NODE_ENV=test jest --env=jsdom --verbose --silent"
+    "test": "NODE_ENV=test jest --env=jsdom"
   },
   "dependencies": {
     "@mdx-js/mdx": "^0.16.5",
@@ -55,6 +55,7 @@
     "@types/file-saver": "^2.0.0",
     "@types/jest": "^23.3.2",
     "@types/jsonwebtoken": "^8.3.0",
+    "@types/jwt-decode": "^2.2.1",
     "@types/lodash": "^4.14.116",
     "@types/next": "^7.0.1",
     "@types/prismjs": "^1.9.0",

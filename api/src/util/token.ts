@@ -3,8 +3,8 @@ import Config from "./config";
 
 // const fs = require('fs')
 // let key = fs.readFileSync('private.key')
-export function createToken(user) {
-  let scopes;
+export function createToken(user): string {
+  let scopes: string;
 
   if (user.admin) {
     scopes = "admin";

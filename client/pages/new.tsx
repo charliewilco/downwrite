@@ -16,7 +16,7 @@ import * as UtilityBar from "../components/utility-bar";
 import * as API from "../utils/api";
 
 interface INewPostState {
-  drafts: any[];
+  drafts?: Dwnxt.IPost[];
   id: string;
   error?: string;
   dateAdded: Date;
@@ -42,7 +42,7 @@ export default class NewEditor extends React.Component<
   INewPostProps,
   INewPostState
 > {
-  public readonly state = {
+  public readonly state: INewPostState = {
     id: uuid(),
     dateAdded: new Date(),
     error: "",
@@ -61,6 +61,7 @@ export default class NewEditor extends React.Component<
     const { id, dateAdded } = this.state;
     const ContentState: Draft.ContentState = editorState.getCurrentContent();
     const content: string = JSON.stringify(Draft.convertToRaw(ContentState));
+    const { host } = document.location;
 
     const body: Dwnxt.IPostCreation = {
       title: title.length > 0 ? title : `Untitled ${id}`,
@@ -70,7 +71,7 @@ export default class NewEditor extends React.Component<
       public: false
     };
 
-    API.createPost(body, { token })
+    API.createPost(body, { token, host })
       .then(() => Router.push(`/${id}/edit`))
       .catch(err => this.setState({ error: err.message }));
   };

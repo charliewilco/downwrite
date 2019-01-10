@@ -28,7 +28,7 @@ export default class Uploader extends React.Component<IUploadProps, {}> {
 
   reader: FileReader = __IS_BROWSER__ && new FileReader();
 
-  private extractMarkdown = (files): void => {
+  private extractMarkdown = (files: File[]): void => {
     this.reader.onload = () => {
       let md: IMarkdown = fm(this.reader.result as string);
 
@@ -45,7 +45,7 @@ export default class Uploader extends React.Component<IUploadProps, {}> {
     this.reader.readAsText(files[0]);
   };
 
-  private onDrop = files => this.extractMarkdown(files);
+  private onDrop = (files: File[]) => this.extractMarkdown(files);
 
   public render(): JSX.Element {
     const { disabled, children } = this.props;

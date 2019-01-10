@@ -38,8 +38,14 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
     ctx: NextContext<{ id: string }>
   ): Promise<Partial<IPreviewProps>> {
     let { id } = ctx.query;
+    let host: string;
 
-    const entry = await API.findPreviewEntry(id);
+    if (ctx.req) {
+      const serverURL: string = ctx.req.headers.host;
+
+      host = serverURL;
+    }
+    const entry = await API.findPreviewEntry(id, { host });
 
     return {
       id,
@@ -53,7 +59,7 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
 
   static displayName = "PreviewEntry";
 
-  render() {
+  public render(): JSX.Element {
     const {
       entry: { author },
       entry,

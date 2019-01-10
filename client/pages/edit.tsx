@@ -2,14 +2,14 @@ import * as React from "react";
 import * as Draft from "draft-js";
 import Head from "next/head";
 import { NextContext } from "next";
-import { Formik, FormikProps } from "formik";
+import { Formik, Form, FormikProps } from "formik";
 import isEmpty from "lodash/isEmpty";
 import "isomorphic-fetch";
 
 import * as Dwnxt from "../types/downwrite";
 
 import Autosaving from "../components/autosaving-interval";
-import AutosavingNotification from "../components/autosaving-notification";
+import Toast from "../components/toast";
 import ExportMarkdown from "../components/export";
 import WordCounter from "../components/word-count";
 import Button from "../components/button";
@@ -61,8 +61,17 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
     ctx: NextContext<{ id: string; token: string }>
   ): Promise<Partial<IEditorProps>> {
     const token = authMiddleware(ctx);
+
+    let host: string;
+
+    if (ctx.req) {
+      const serverURL: string = ctx.req.headers.host;
+      host = serverURL;
+    }
+
     const post = (await API.getPost(ctx.query.id, {
-      token
+      token,
+      host
     })) as Dwnxt.IPost;
 
     return {
@@ -88,6 +97,8 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
   private updatePostContent = async (values: IFields): Promise<void> => {
     const contentState: Draft.ContentState = values.editorState.getCurrentContent();
     const content = Draft.convertToRaw(contentState);
+    const { host } = document.location;
+    const { token } = this.props;
 
     const body = sanitize<ResponsePost>(this.props.post, [
       "_id",
@@ -103,7 +114,7 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
         content,
         dateModified: this.state.dateModified
       },
-      { token: this.props.token }
+      { token, host }
     );
   };
 
@@ -138,9 +149,11 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
               <Autosaving
                 duration={this.duration}
                 onUpdate={initialFocus && handleSubmit}>
-                <AutosavingNotification />
+                <Toast>
+                  Autosaving <i>{title}</i>
+                </Toast>
               </Autosaving>
-              <OuterEditor>
+              <OuterEditor as={Form}>
                 <TimeMarker dateAdded={this.props.post.dateAdded} />
                 <Input value={title} name="title" onChange={handleChange} />
                 <UtilityBar.Container>

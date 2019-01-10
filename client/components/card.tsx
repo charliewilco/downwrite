@@ -81,13 +81,18 @@ const SxLink = styled.a`
   margin-right: 8px;
 `;
 
-export const EditLink = ({ id, title = "Edit" }) => (
+interface ICardLinks {
+  id: string;
+  title?: string;
+}
+
+export const EditLink: React.SFC<ICardLinks> = ({ id, title = "Edit" }) => (
   <Link prefetch passHref href={{ pathname: "/edit", query: { id } }}>
     <SxLink>{title}</SxLink>
   </Link>
 );
 
-export const PreviewLink = ({ id }) => (
+export const PreviewLink: React.SFC<ICardLinks> = ({ id }) => (
   <Link prefetch passHref href={{ pathname: "/preview", query: { id } }}>
     <SxLink>Preview</SxLink>
   </Link>

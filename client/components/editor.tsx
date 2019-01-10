@@ -1,4 +1,4 @@
-import Editor from "draft-js-plugins-editor";
+import PluginsEditor from "draft-js-plugins-editor";
 import * as React from "react";
 import * as Draft from "draft-js";
 import Prism from "prismjs";
@@ -62,7 +62,7 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
 
   static contextType: React.Context<ILocalUISettings> = LocalUISettings;
 
-  private editor: Editor = null as Editor;
+  private editor: PluginsEditor = null as PluginsEditor;
 
   state = {
     plugins: [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()]
@@ -70,20 +70,20 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
 
   focus = () => this.editor.focus();
 
-  onChange = editorState => this.props.onChange(editorState);
+  onChange = (editorState: Draft.EditorState) => this.props.onChange(editorState);
 
-  onTab = e => {
+  onTab = (e: React.KeyboardEvent<{}>) => {
     const maxDepth = 4;
     this.onChange(Draft.RichUtils.onTab(e, this.props.editorState, maxDepth));
   };
 
-  _toggleBlockType = blockType => {
+  _toggleBlockType = (blockType: Draft.DraftBlockType) => {
     this.onChange(
       Draft.RichUtils.toggleBlockType(this.props.editorState, blockType)
     );
   };
 
-  _toggleInlineStyle = inlineStyle => {
+  _toggleInlineStyle = (inlineStyle: string) => {
     this.onChange(
       Draft.RichUtils.toggleInlineStyle(this.props.editorState, inlineStyle)
     );
@@ -141,7 +141,7 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
       <EditorShell font={monospace}>
         <DraftStyles />
         <EditorWrapper className={className} onClick={this.focus}>
-          <Editor
+          <PluginsEditor
             onFocus={this.props.onFocus}
             handleKeyCommand={this.handleKeyCommand}
             keyBindingFn={this.saveKeyListener}
@@ -151,7 +151,7 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
             onChange={this.onChange}
             onTab={this.onTab}
             placeholder="History will be kind to me for I intend to write it. — Winston Churchill"
-            ref={(x: Editor) => (this.editor = x)}
+            ref={(x: PluginsEditor) => (this.editor = x)}
             spellCheck
             plugins={plugins}
           />
@@ -171,7 +171,7 @@ const styleMap = {
   }
 };
 
-function getBlockStyle(block) {
+function getBlockStyle(block: Draft.ContentBlock) {
   switch (block.getType()) {
     case "blockquote":
       return "RichEditor-blockquote";

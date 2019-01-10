@@ -5,16 +5,18 @@
   "author": "Charles ⚡ <charlespeters42@gmail.com>",
   "repository": "charlespeters/downwrite",
   "scripts": {
-    "start": "micro-proxy -r rules.json -p 5000",
+    "start": "micro-proxy -r rules.dev.json -p 5000",
     "dev": "yarn workspaces run dev",
     "build": "yarn workspaces run build",
     "go": "yarn workspaces run deploy",
-    "test": "yarn workspaces run test"
+    "test": "yarn workspaces run test",
+    "local": "now-lambda-runner"
   },
   "devDependencies": {
     "husky": "^1.0.1",
     "lint-staged": "^7.3.0",
     "micro-proxy": "^1.1.0",
+    "now-lambda-runner": "^2.0.0",
     "prettier": "^1.14.3",
     "typescript": "^3.0.3"
   },
