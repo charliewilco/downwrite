@@ -9,10 +9,10 @@ install:
   - yarn
 script:
   - yarn workspace api build
-  - yarn workspace api test --verbose
+  - yarn workspace api test --silent --verbose
   - yarn workspace client typecheck
   - yarn workspace client build
-  - yarn workspace client test --verbose --silent
+  - yarn workspace client test --silent --verbose
 # before_deploy: yarn global add now
 # deploy:
 #   - provider: script # Run a custom deployment script which we will define below
