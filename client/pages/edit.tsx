@@ -66,8 +66,6 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
 
     if (ctx.req) {
       const serverURL: string = ctx.req.headers.host;
-      console.log(serverURL, "SERVER URL");
-
       host = serverURL;
     }
 

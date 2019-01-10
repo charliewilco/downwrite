@@ -45,11 +45,7 @@ export default class Settings extends React.Component<IUserSettingsProps, {}> {
     let host: string;
 
     if (ctx.req) {
-      const serverURL: string =
-        ctx.req &&
-        ((ctx.req.headers["X-Now-Deployment-Url"] as string) ||
-          ctx.req.headers.host);
-      console.log(serverURL, "SERVER URL");
+      const serverURL: string = ctx.req.headers.host;
 
       host = serverURL;
     }

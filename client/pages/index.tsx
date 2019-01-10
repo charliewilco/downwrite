@@ -45,7 +45,6 @@ export default class Dashboard extends React.Component<
 
     if (ctx.req) {
       const serverURL: string = ctx.req.headers.host;
-      console.log(serverURL, "SERVER URL");
 
       host = serverURL;
     }
