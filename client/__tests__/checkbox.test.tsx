@@ -2,8 +2,6 @@ import { render, fireEvent } from "react-testing-library";
 import Check from "../components/checkbox";
 import "jest-dom/extend-expect";
 
-const checkFire = jest.fn();
-
 let { getByTestId, container } = render(
   <label data-testid="TEST_CHECKBOX_LABEL" htmlFor="check">
     <Check data-testid="TEST_CHECKBOX" id="check" />
@@ -12,7 +10,7 @@ let { getByTestId, container } = render(
 
 describe("<Check />", () => {
   it("checks", () => {
-    expect(getByTestId("TEST_CHECKBOX")).toBeInTheDOM();
+    expect(getByTestId("TEST_CHECKBOX")).toBeInTheDocument();
     fireEvent.click(getByTestId("TEST_CHECKBOX_LABEL"));
     expect((getByTestId("TEST_CHECKBOX") as HTMLInputElement).checked).toBe(true);
   });

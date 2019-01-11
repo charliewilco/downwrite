@@ -1,16 +1,15 @@
-import Preview from "../pages/preview";
+import Preview, { IEntry } from "../pages/preview";
 import Content from "../components/content";
 import { render, wait } from "react-testing-library";
 import * as fetchMock from "jest-fetch-mock";
-
 import { draftToMarkdown } from "markdown-draft-js";
-import data from "./db.json";
+import { createMockPost } from "./config/createMocks";
 
-let post = {
-  ...data.posts[0],
-  content: draftToMarkdown(data.posts[0].content),
-  dateAdded: new Date(data.posts[0].dateAdded),
-  dateModified: new Date(data.posts[0].dateModified),
+const mockPost = createMockPost({ title: "Starting Again", public: true });
+
+let post: IEntry = {
+  ...mockPost,
+  content: draftToMarkdown(mockPost.content),
   author: {
     username: "Hello",
     gradient: ["...", "..."]
@@ -18,7 +17,7 @@ let post = {
 };
 
 jest.mock("next/link", () => {
-  return ({ children }) => {
+  return ({ children }: { children: React.ReactNode }) => {
     return children;
   };
 });
@@ -26,7 +25,9 @@ jest.mock("next/link", () => {
 describe("<Preview />", () => {
   it("loads server content", async () => {
     fetchMock.mockResponse(JSON.stringify(post));
-    let FetchContent = render(<Preview entry={post} />);
+    let FetchContent = render(
+      <Preview authed={false} id={mockPost.id} entry={post} />
+    );
     await wait(() => FetchContent.getByTestId("PREVIEW_ENTRTY_TITLE"));
     expect(FetchContent.container).toBeTruthy();
     expect(FetchContent.getByTestId("PREVIEW_ENTRTY_TITLE")).toHaveTextContent(

@@ -3,25 +3,42 @@ import { render, fireEvent } from "react-testing-library";
 
 import DWEditor from "../components/editor";
 import * as Draft from "draft-js";
-import data from "./db.json";
+import { createEditorState } from "./config/createMocks";
 
-const content = Draft.convertFromRaw(data.posts[0]
-  .content as Draft.RawDraftContentState);
+const onChange = jest.fn();
+const onFocus = jest.fn();
+const onSave = jest.fn();
+
+const content = createEditorState("What am i really going to do here?");
 const emptyContent = Draft.EditorState.createEmpty();
-const preloadedContent = Draft.EditorState.createWithContent(content);
-const mockEditor = state =>
-  render(<DWEditor onChange={jest.fn()} editorState={state} />);
+
+const mockEditor = (state: Draft.EditorState) =>
+  render(
+    <DWEditor
+      editorCommand="nope"
+      onSave={onSave}
+      onFocus={onFocus}
+      onChange={onChange}
+      editorState={state}
+    />
+  );
 
 class WrappedEditor extends React.Component {
   state = {
     editorState: emptyContent
   };
 
-  onChange = editorState => this.setState({ editorState });
+  onChange = (editorState: Draft.EditorState) => this.setState({ editorState });
 
   render() {
     return (
-      <DWEditor editorState={this.state.editorState} onChange={this.onChange} />
+      <DWEditor
+        editorCommand="nope"
+        onSave={onSave}
+        onFocus={onFocus}
+        editorState={this.state.editorState}
+        onChange={this.onChange}
+      />
     );
   }
 }
@@ -33,7 +50,7 @@ describe("<DWEditor />", () => {
   });
 
   it("Editor mounts with preloaded content", () => {
-    const { container } = mockEditor(preloadedContent);
+    const { container } = mockEditor(content);
     expect(container).toBeTruthy();
   });
 

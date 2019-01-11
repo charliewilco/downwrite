@@ -1,13 +1,12 @@
 import { render } from "react-testing-library";
-import { ExtendedMatchers } from "./config/setupTests";
 import Header from "../components/header";
 
-let { getByTestId, container } = render(
-  <Header router={{ route: "/" }} authed name="Downwrite" />
-);
+const onClick = jest.fn();
+
+let { getByTestId, container } = render(<Header onClick={onClick} />);
 
 jest.mock("next/link", () => {
-  return ({ children }) => {
+  return ({ children }: { children: React.ReactNode }) => {
     return children;
   };
 });

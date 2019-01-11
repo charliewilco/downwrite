@@ -10,7 +10,7 @@
     "build": "next build",
     "now-build": "next build",
     "start": "next start",
-    "test": "NODE_ENV=test jest --env=jsdom"
+    "test": "NODE_ENV=test jest"
   },
   "dependencies": {
     "@mdx-js/mdx": "^0.16.5",
@@ -72,6 +72,7 @@
     "jest-fetch-mock": "^1.6.6",
     "jest-styled-components": "^6.2.1",
     "react-testing-library": "^5.1.0",
+    "ts-jest": "^23.10.5",
     "typescript": "^3.1.1"
   },
   "babel": {
@@ -91,34 +92,14 @@
     ]
   },
   "jest": {
-    "collectCoverageFrom": [
-      "/**/*.{js,jsx,mjs}"
-    ],
-    "setupTestFrameworkScriptFile": "<rootDir>/__tests__/config/setupTests.ts",
-    "testPathIgnorePatterns": [
-      "<rootDir>/.next/",
-      "<rootDir>/node_modules/",
-      "<rootDir>/__tests__/config/"
-    ],
-    "testMatch": [
-      "**/*.(test).(ts|tsx)"
-    ],
-    "testEnvironment": "node",
-    "transform": {
-      "^.+\\.tsx?$": "babel-jest"
+    "preset": "ts-jest",
+    "testEnvironment": "jsdom",
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.test.json"
+      }
     },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "json"
-    ],
-    "moduleNameMapper": {
-      "\\.(css|less)$": "<rootDir>/__tests__/config/fileTransform.js"
-    }
+    "setupTestFrameworkScriptFile": "<rootDir>/__tests__/config/setupTests.ts"
   },
   "browserslist": [
     ">0.25%",

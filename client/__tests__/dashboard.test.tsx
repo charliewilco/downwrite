@@ -1,15 +1,16 @@
+import * as React from "react";
 import { render, wait, fireEvent } from "react-testing-library";
 import Dashboard from "../pages/index";
-import data from "./db.json";
 
 import * as fetchMock from "jest-fetch-mock";
+import { createMockPosts } from "./config/createMocks";
 
-const entries = data.posts;
+const entries = createMockPosts(4);
 
 const PostDashboard = () => <Dashboard entries={entries} token="..." />;
 
 jest.mock("next/link", () => {
-  return ({ children }) => {
+  return ({ children }: { children: React.ReactNode }) => {
     return children;
   };
 });
@@ -20,7 +21,7 @@ describe("<Dashboard /> post lists", () => {
   });
 
   it("shows list of Cards if authed and has posts", async () => {
-    fetchMock.mockResponseOnce(JSON.stringify(data.posts));
+    fetchMock.mockResponseOnce(JSON.stringify(entries));
     const FullDashboard = render(<PostDashboard />);
     await wait(() => FullDashboard.getByTestId("CARD"));
 
@@ -29,18 +30,18 @@ describe("<Dashboard /> post lists", () => {
   });
 
   it("can toggle from grid to list", async () => {
-    fetchMock.mockResponseOnce(JSON.stringify(data.posts));
+    fetchMock.mockResponseOnce(JSON.stringify(entries));
     const FullDashboard = render(<PostDashboard />);
     await wait(() => FullDashboard.getByTestId("CARD"));
 
-    expect(FullDashboard.getByTestId("ENTRIES_GRIDVIEW")).toBeInTheDOM();
+    expect(FullDashboard.getByTestId("ENTRIES_GRIDVIEW")).toBeInTheDocument();
     expect(
       FullDashboard.container.querySelector("[data-testid='ENTRIES_LISTVIEW']")
-    ).not.toBeInTheDOM();
+    ).not.toBeInTheDocument();
 
     fireEvent.click(FullDashboard.getByTestId("LAYOUT_CONTROL_LIST"));
 
-    expect(FullDashboard.getByTestId("ENTRIES_LISTVIEW")).toBeInTheDOM();
+    expect(FullDashboard.getByTestId("ENTRIES_LISTVIEW")).toBeInTheDocument();
   });
 
   xit("shows error if error", async () => {
@@ -48,11 +49,13 @@ describe("<Dashboard /> post lists", () => {
     const ErrorContainer = render(<Dashboard entries={[]} token="..." />);
     await wait(() => ErrorContainer.getByTestId("LOADING_SPINNER"));
 
-    expect(ErrorContainer.getByTestId("INVALID_TOKEN_CONTAINER")).toBeInTheDOM();
+    expect(
+      ErrorContainer.getByTestId("INVALID_TOKEN_CONTAINER")
+    ).toBeInTheDocument();
 
     expect(
       ErrorContainer.container.querySelector("[data-testid='NO_ENTRIES_PROMPT']")
-    ).toBeInTheDOM();
+    ).toBeInTheDocument();
   });
 
   xit("shows prompt to write more if no posts", async () => {});

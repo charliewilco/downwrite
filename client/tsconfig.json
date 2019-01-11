@@ -19,5 +19,5 @@
     "lib": ["dom", "es2016"],
     "typeRoots": ["./types"]
   },
-  "exclude": ["__tests__", "server.js", "next.config.js"]
+  "exclude": ["next.config.js"]
 }
