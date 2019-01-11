@@ -29,6 +29,7 @@ export default class MyDocument extends Document<WithStyleTags> {
     return (
       <html lang="en">
         <Head>
+          <link rel="stylesheet" href="https://unpkg.com/typescale-dw" />
           {styleTags}
           <meta
             name="viewport"
@@ -37,7 +38,6 @@ export default class MyDocument extends Document<WithStyleTags> {
           />
           <meta name="theme-color" content="#4FA5C2" />
           {/* <Manifest href="/static/manifest/manifest.json" themeColor="#4FA5C2" /> */}
-          <link rel="stylesheet" href="/_next/static/style.css" />
           <link rel="icon" href="/static/favicon.ico" />
         </Head>
         <body>
