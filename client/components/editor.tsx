@@ -10,7 +10,6 @@ import { LocalUISettings, ILocalUISettings } from "./local-ui-settings";
 
 import * as DefaultStyles from "../utils/defaultStyles";
 import DraftStyles from "./draft-styles";
-import "./ganymede.css";
 
 const EditorWrapper = styled.div`
   padding-left: 0px;

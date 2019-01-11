@@ -30,6 +30,10 @@ export default class MyDocument extends Document<WithStyleTags> {
       <html lang="en">
         <Head>
           <link rel="stylesheet" href="https://unpkg.com/typescale-dw" />
+          <link
+            rel="stylesheet"
+            href="https://unpkg.com/ganymede-light-duotone-prism"
+          />
           {styleTags}
           <meta
             name="viewport"
