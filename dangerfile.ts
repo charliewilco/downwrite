@@ -1,8 +1,15 @@
-import { message, danger, schedule, Scheduleable } from "danger";
+import { message, danger, schedule } from "danger";
+import * as fs from "fs";
+
+const pr = danger.github.pr;
+const modified = danger.git.modified_files;
+const bodyAndTitle = (pr.body + pr.title).toLowerCase();
+const trivialPR = bodyAndTitle.includes("#trivial");
 
 const PATTERN = /console\.(log|error|warn|info)/;
 const GLOBAL_PATTERN = new RegExp(PATTERN.source, "g");
 const JS_FILE = /\.(js|ts)x?$/i;
+const PATH = "client";
 
 interface NoConsoleOptions {
   whitelist?: string[];
@@ -37,6 +44,24 @@ async function noConsole(options: NoConsoleOptions = {}) {
 
     fail(`${matches.length} console statement(s) left in ${file}.`);
   });
+}
+
+// Rules
+
+const filesOnly = (file: string) =>
+  fs.existsSync(file) && fs.lstatSync(file).isFile();
+
+// When there are app-changes and it's not a PR marked as trivial, expect
+// there to be CHANGELOG changes.
+const modifiedAppFiles = modified
+  .filter(p => p.includes(PATH))
+  .filter(p => filesOnly(p));
+
+const changelogChanges = modified.includes("CHANGELOG.md");
+if (modifiedAppFiles.length > 0 && !trivialPR && !changelogChanges) {
+  fail(
+    "**No CHANGELOG added.** If this is a small PR, or a bug-fix for an unreleased bug add `#trivial` to your PR message and re-run CI."
+  );
 }
 
 const modifiedMD = danger.git.modified_files.join("- ");
