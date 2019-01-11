@@ -96,7 +96,7 @@
     "testEnvironment": "jsdom",
     "globals": {
       "ts-jest": {
-        "tsConfig": "tsconfig.test.json"
+        "tsConfig": "tsconfig.json"
       }
     },
     "setupTestFrameworkScriptFile": "<rootDir>/__tests__/config/setupTests.ts"
