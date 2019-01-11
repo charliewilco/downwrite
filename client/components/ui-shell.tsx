@@ -10,8 +10,6 @@ import { ErrorContainer, UIErrorBanner } from "./ui-error";
 import { LevelStyles } from "./level-styles";
 import { LocalUISettingsProvider } from "./local-ui-settings";
 
-import "../utils/global.css";
-
 const ClearFixed = styled.div`
   &::after {
     content: "";
