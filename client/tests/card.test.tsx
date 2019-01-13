@@ -5,21 +5,17 @@ import { fireEvent, render } from "react-testing-library";
 
 import Card from "../components/card";
 import { createMockPost } from "../utils/createMocks";
+import MockNextContext from "../utils/mock-next-router";
 
-// jest.mock("next/link", () => {
-//   const React = require("react");
-//   return ({ children }: { children: React.ReactNode }) => {
-//     return children;
-//   };
-// });
+const title = "Starting Again";
+const post = createMockPost({ title, id: "4444" });
+const mockDelete = jest.fn();
 
-const post = createMockPost({ title: "Starting Again" });
-
-const PostedCard: React.SFC<any> = ({ onDelete }) => (
-  <Card public={false} {...post} onDelete={onDelete} />
+const { container, getByTestId } = render(
+  <MockNextContext>
+    <Card public={false} {...post} onDelete={mockDelete} />
+  </MockNextContext>
 );
-
-const { container, getByTestId } = render(<PostedCard />);
 
 describe("<Card />", () => {
   it("contains snippet from content", () => {
@@ -28,8 +24,8 @@ describe("<Card />", () => {
   });
 
   it("contains a title", () => {
-    expect(post.title).toBe("Starting again");
-    expect(getByTestId("CARD_TITLE")).toHaveTextContent("Starting again");
+    expect(post.title).toBe(title);
+    expect(getByTestId("CARD_TITLE")).toHaveTextContent(title);
   });
 
   it("contains delete button", () => {
@@ -41,10 +37,6 @@ describe("<Card />", () => {
   });
 
   it("should fire a delete", () => {
-    const mockDelete = jest.fn();
-
-    const { getByTestId } = render(<PostedCard onDelete={mockDelete} />);
-
     fireEvent.click(getByTestId("CARD_DELETE_BUTTON"));
 
     expect(mockDelete).toHaveBeenCalled();

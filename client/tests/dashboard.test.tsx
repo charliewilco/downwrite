@@ -3,20 +3,17 @@ import "jest-styled-components";
 import "jest-dom/extend-expect";
 import { render, wait, fireEvent } from "react-testing-library";
 import Dashboard from "../pages/index";
-
-import * as fetchMock from "jest-fetch-mock";
+import MockNextContext from "../utils/mock-next-router";
+import fetchMock from "jest-fetch-mock";
 import { createMockPosts } from "../utils/createMocks";
 
 const entries = createMockPosts(4);
 
-const PostDashboard = () => <Dashboard entries={entries} token="..." />;
-
-jest.mock("next/link", () => {
-  const React = require("react");
-  return ({ children }: { children: React.ReactNode }) => {
-    return children;
-  };
-});
+const PostDashboard = () => (
+  <MockNextContext>
+    <Dashboard entries={entries} token="..." />
+  </MockNextContext>
+);
 
 describe("<Dashboard /> post lists", () => {
   beforeEach(() => {
@@ -29,7 +26,7 @@ describe("<Dashboard /> post lists", () => {
     await wait(() => FullDashboard.getByTestId("CARD"));
 
     expect(FullDashboard.container).toBeTruthy();
-    expect(FullDashboard.getByTestId("CARD")).toHaveTextContent("Starting again");
+    expect(FullDashboard.getByTestId("CARD")).toHaveTextContent("Mocked Posts");
   });
 
   it("can toggle from grid to list", async () => {

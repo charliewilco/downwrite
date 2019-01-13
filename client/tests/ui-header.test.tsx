@@ -3,16 +3,15 @@ import { render } from "react-testing-library";
 import "jest-styled-components";
 import "jest-dom/extend-expect";
 import Header from "../components/header";
+import MockNextContext from "../utils/mock-next-router";
 
 const onClick = jest.fn();
 
-let { getByTestId, container } = render(<Header onClick={onClick} />);
-
-jest.mock("next/link", () => {
-  return ({ children }: { children: React.ReactNode }) => {
-    return children;
-  };
-});
+let { getByTestId, container } = render(
+  <MockNextContext>
+    <Header onClick={onClick} />
+  </MockNextContext>
+);
 
 describe("Header Component", () => {
   it("contains application name", () => {

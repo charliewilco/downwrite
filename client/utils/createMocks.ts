@@ -1,4 +1,4 @@
-import * as uuid from "uuid/v4";
+import uuid from "uuid/v4";
 import * as Draft from "draft-js";
 import { IPost } from "downwrite";
 
@@ -7,15 +7,14 @@ export const createMockPost = (overides: Partial<IPost>): IPost => {
     Draft.ContentState.createFromText("Hello")
   );
   const content = Draft.convertToRaw(post.getCurrentContent());
-
-  const id = uuid;
+  const dateAdded = new Date();
 
   return Object.assign(
     {},
     {
       title: "Something",
-      id,
-      dateAdded: Date.now(),
+      id: uuid(),
+      dateAdded,
       content,
       public: false
     },
@@ -24,7 +23,9 @@ export const createMockPost = (overides: Partial<IPost>): IPost => {
 };
 
 export const createMockPosts = (count: number): IPost[] => {
-  return Array(count || 1).fill(createMockPost({ title: "Mocked Posts" }));
+  return Array(count || 1)
+    .fill(null)
+    .map(() => createMockPost({ title: "Mocked Posts" }));
 };
 
 export const createEditorState = (content: string): Draft.EditorState => {
