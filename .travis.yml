@@ -12,6 +12,7 @@ script:
   - yarn workspace api test --silent --verbose
   - yarn workspace client typecheck
   - yarn workspace client build
+  - yarn workspace client jest --clearCache
   - yarn workspace client test --silent --verbose
 # before_deploy: yarn global add now
 # deploy:
