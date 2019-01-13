@@ -1,7 +1,3 @@
-import * as React from "react";
-import "jest-styled-components";
-import "jest-dom/extend-expect";
-
 interface StringTMap<T> {
   [key: string]: T;
 }
@@ -10,7 +6,7 @@ function storageMock() {
   let storage: StringTMap<string> = {};
 
   return {
-    setItem: function(key: string, value: string) {
+    setItem: function(key: string, value: any) {
       storage[key] = value || "";
     },
     getItem: function(key: string) {
@@ -29,5 +25,6 @@ function storageMock() {
   };
 }
 
-(global as any).React = React;
-(global as any).localStorage = storageMock();
+if (!(global as any).localStorage) {
+  (global as any).localStorage = storageMock();
+}
