@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Formik, FormikProps } from "formik";
 import Head from "next/head";
 import Router from "next/router";
-import * as Dwnxt from "../types/downwrite";
+import * as Dwnxt from "downwrite";
 import uuid from "uuid/v4";
 import "isomorphic-fetch";
 import Wrapper from "../components/wrapper";

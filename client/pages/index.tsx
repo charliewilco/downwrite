@@ -1,6 +1,6 @@
 import * as React from "react";
 import { NextContext } from "next";
-import * as Dwnxt from "../types/downwrite";
+import * as Dwnxt from "downwrite";
 import Head from "next/head";
 import orderBy from "lodash/orderBy";
 import isEmpty from "lodash/isEmpty";

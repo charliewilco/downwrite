@@ -8,7 +8,7 @@ import {
   createURL
 } from "./urls";
 
-import * as Dwnxt from "../types/downwrite";
+import * as Dwnxt from "downwrite";
 
 interface IOptions {
   token?: string;

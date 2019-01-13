@@ -6,7 +6,7 @@ import { Formik, Form, FormikProps } from "formik";
 import isEmpty from "lodash/isEmpty";
 import "isomorphic-fetch";
 
-import * as Dwnxt from "../types/downwrite";
+import * as Dwnxt from "downwrite";
 
 import Autosaving from "../components/autosaving-interval";
 import Toast from "../components/toast";
