@@ -106,7 +106,7 @@ exports[`<Card /> matches snapshot 1`] = `
     >
       <a
         class="c3"
-        href="/edit?id=7fa99e5f-b2bc-432c-81c0-0fb0cd81aec4"
+        href="/edit?id=4444"
       >
         Starting Again
       </a>
@@ -137,7 +137,7 @@ exports[`<Card /> matches snapshot 1`] = `
     >
       <a
         class="c3"
-        href="/edit?id=7fa99e5f-b2bc-432c-81c0-0fb0cd81aec4"
+        href="/edit?id=4444"
       >
         Edit
       </a>
