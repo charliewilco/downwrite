@@ -1,0 +1,12 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "api/package.json",
+        "client/package.json",
+        "integration/package.json",
+        "package.json"
+      ]
+    }
+  }
+}
