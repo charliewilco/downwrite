@@ -1,3 +1,6 @@
+import * as React from "react";
+import "jest-styled-components";
+import "jest-dom/extend-expect";
 import { render, fireEvent } from "react-testing-library";
 import Check from "../components/checkbox";
 import "jest-dom/extend-expect";

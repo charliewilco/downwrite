@@ -1,4 +1,7 @@
+import * as React from "react";
 import { render } from "react-testing-library";
+import "jest-styled-components";
+import "jest-dom/extend-expect";
 import Header from "../components/header";
 
 const onClick = jest.fn();

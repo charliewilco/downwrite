@@ -1,15 +1,18 @@
 import * as React from "react";
+import "jest-styled-components";
+import "jest-dom/extend-expect";
 import { render, wait, fireEvent } from "react-testing-library";
 import Dashboard from "../pages/index";
 
 import * as fetchMock from "jest-fetch-mock";
-import { createMockPosts } from "./config/createMocks";
+import { createMockPosts } from "../utils/createMocks";
 
 const entries = createMockPosts(4);
 
 const PostDashboard = () => <Dashboard entries={entries} token="..." />;
 
 jest.mock("next/link", () => {
+  const React = require("react");
   return ({ children }: { children: React.ReactNode }) => {
     return children;
   };

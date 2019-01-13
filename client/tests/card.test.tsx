@@ -1,19 +1,22 @@
-import Card from "../components/card";
+import * as React from "react";
+import "jest-styled-components";
+import "jest-dom/extend-expect";
 import { fireEvent, render } from "react-testing-library";
-import { createMockPost } from "./config/createMocks";
 
-const mockDelete = jest.fn();
+import Card from "../components/card";
+import { createMockPost } from "../utils/createMocks";
 
-jest.mock("next/link", () => {
-  return ({ children }: { children: React.ReactNode }) => {
-    return children;
-  };
-});
+// jest.mock("next/link", () => {
+//   const React = require("react");
+//   return ({ children }: { children: React.ReactNode }) => {
+//     return children;
+//   };
+// });
 
 const post = createMockPost({ title: "Starting Again" });
 
-const PostedCard: React.SFC<any> = () => (
-  <Card public={false} {...post} onDelete={mockDelete} />
+const PostedCard: React.SFC<any> = ({ onDelete }) => (
+  <Card public={false} {...post} onDelete={onDelete} />
 );
 
 const { container, getByTestId } = render(<PostedCard />);
@@ -38,6 +41,10 @@ describe("<Card />", () => {
   });
 
   it("should fire a delete", () => {
+    const mockDelete = jest.fn();
+
+    const { getByTestId } = render(<PostedCard onDelete={mockDelete} />);
+
     fireEvent.click(getByTestId("CARD_DELETE_BUTTON"));
 
     expect(mockDelete).toHaveBeenCalled();
