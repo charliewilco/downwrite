@@ -1,58 +1,63 @@
+import * as React from "react";
+import "jest-styled-components";
+import "jest-dom/extend-expect";
 import { render, wait, fireEvent } from "react-testing-library";
 import Dashboard from "../pages/index";
-import data from "./db.json";
+import MockNextContext from "../utils/mock-next-router";
+import fetchMock, { FetchMock } from "jest-fetch-mock";
+import { createMockPosts } from "../utils/createMocks";
 
-import * as fetchMock from "jest-fetch-mock";
+const entries = createMockPosts(4);
 
-const entries = data.posts;
+const PostDashboard = () => (
+  <MockNextContext>
+    <Dashboard entries={entries} token="..." />
+  </MockNextContext>
+);
 
-const PostDashboard = () => <Dashboard entries={entries} token="..." />;
-
-jest.mock("next/link", () => {
-  return ({ children }) => {
-    return children;
-  };
-});
+let fetch = fetchMock as FetchMock;
 
 describe("<Dashboard /> post lists", () => {
   beforeEach(() => {
-    fetchMock.resetMocks();
+    fetch.resetMocks();
   });
 
   it("shows list of Cards if authed and has posts", async () => {
-    fetchMock.mockResponseOnce(JSON.stringify(data.posts));
+    fetch.mockResponseOnce(JSON.stringify(entries));
     const FullDashboard = render(<PostDashboard />);
     await wait(() => FullDashboard.getByTestId("CARD"));
 
     expect(FullDashboard.container).toBeTruthy();
-    expect(FullDashboard.getByTestId("CARD")).toHaveTextContent("Starting again");
+    expect(FullDashboard.getByTestId("CARD")).toHaveTextContent("Mocked Posts");
   });
 
   it("can toggle from grid to list", async () => {
-    fetchMock.mockResponseOnce(JSON.stringify(data.posts));
+    fetch.mockResponseOnce(JSON.stringify(entries));
     const FullDashboard = render(<PostDashboard />);
     await wait(() => FullDashboard.getByTestId("CARD"));
 
-    expect(FullDashboard.getByTestId("ENTRIES_GRIDVIEW")).toBeInTheDOM();
+    expect(FullDashboard.getByTestId("ENTRIES_GRIDVIEW")).toBeInTheDocument();
     expect(
       FullDashboard.container.querySelector("[data-testid='ENTRIES_LISTVIEW']")
-    ).not.toBeInTheDOM();
+    ).not.toBeInTheDocument();
 
     fireEvent.click(FullDashboard.getByTestId("LAYOUT_CONTROL_LIST"));
 
-    expect(FullDashboard.getByTestId("ENTRIES_LISTVIEW")).toBeInTheDOM();
+    expect(FullDashboard.getByTestId("ENTRIES_LISTVIEW")).toBeInTheDocument();
   });
 
   xit("shows error if error", async () => {
-    fetchMock.mockResponseOnce(JSON.stringify([]));
+    fetch.mockResponseOnce(JSON.stringify([]));
     const ErrorContainer = render(<Dashboard entries={[]} token="..." />);
     await wait(() => ErrorContainer.getByTestId("LOADING_SPINNER"));
 
-    expect(ErrorContainer.getByTestId("INVALID_TOKEN_CONTAINER")).toBeInTheDOM();
+    expect(
+      ErrorContainer.getByTestId("INVALID_TOKEN_CONTAINER")
+    ).toBeInTheDocument();
 
     expect(
       ErrorContainer.container.querySelector("[data-testid='NO_ENTRIES_PROMPT']")
-    ).toBeInTheDOM();
+    ).toBeInTheDocument();
   });
 
   xit("shows prompt to write more if no posts", async () => {});

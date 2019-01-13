@@ -1,5 +1,0 @@
-node_modules/*
-dist/
-types/*.d.ts
-build/
-services/**/node_modules/*

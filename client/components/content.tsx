@@ -5,7 +5,6 @@ import isDate from "date-fns/is_date";
 import Markdown from "react-markdown";
 import "prismjs";
 import CodeBlock from "./code-block";
-import "./ganymede.css";
 import * as DefaultStyles from "../utils/defaultStyles";
 
 const WrapperExtended = styled.div`

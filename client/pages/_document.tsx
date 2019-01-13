@@ -11,6 +11,12 @@ interface WithStyleTags {
   styleTags: any;
 }
 
+const STYLESHEETS = [
+  "https://unpkg.com/base-dw",
+  "https://unpkg.com/typescale-dw",
+  "https://unpkg.com/ganymede-light-duotone-prism"
+];
+
 export default class MyDocument extends Document<WithStyleTags> {
   public static async getInitialProps(context: NextDocumentContext) {
     const initialProps = await Document.getInitialProps(context);
@@ -29,6 +35,9 @@ export default class MyDocument extends Document<WithStyleTags> {
     return (
       <html lang="en">
         <Head>
+          {STYLESHEETS.map((sss, i) => (
+            <link rel="stylesheet" href={sss} key={i} />
+          ))}
           {styleTags}
           <meta
             name="viewport"
@@ -37,7 +46,6 @@ export default class MyDocument extends Document<WithStyleTags> {
           />
           <meta name="theme-color" content="#4FA5C2" />
           {/* <Manifest href="/static/manifest/manifest.json" themeColor="#4FA5C2" /> */}
-          <link rel="stylesheet" href="/_next/static/style.css" />
           <link rel="icon" href="/static/favicon.ico" />
         </Head>
         <body>

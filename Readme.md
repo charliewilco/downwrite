@@ -1,4 +1,4 @@
-# ![Downwrite](.github/header.png)
+# ![Downwrite](.github/images/header.png)
 
 [![Build Status](https://travis-ci.org/charliewilco/downwrite.svg?branch=master)](https://travis-ci.org/charliewilco/downwrite) [![jest](https://jestjs.io/img/jest-badge.svg)](https://github.com/facebook/jest) [![style: styled-components](https://img.shields.io/badge/style-%F0%9F%92%85%20styled--components-orange.svg?colorB=daa357&colorA=db748e)](https://github.com/styled-components/styled-components)
 
@@ -42,7 +42,7 @@ yarn
 
 ### Client ⚡️🦊
 
-![Logos for Related Projects](.github/Client.png)
+![Logos for Related Projects](.github/images/Client.png)
 
 #### Working on this Project
 
@@ -77,7 +77,7 @@ This project is a PWA, it uses some basic service worker implementation and `man
 
 ### API 🌎✨
 
-![Logos for Related Projects](.github/API.png)
+![Logos for Related Projects](.github/images/API.png)
 
 #### Working on this Project
 
@@ -135,7 +135,7 @@ In development, I've been using [Micro](https://github.com/zeit/micro) to replic
 
 ### Integration Testing 🌈🦁🐛
 
-![Logos for Related Projects](.github/Integration.png)
+![Logos for Related Projects](.github/images/Integration.png)
 
 #### Working on the Project
 
@@ -173,7 +173,7 @@ This approach accomplishes two things:
 
 ### Workflow 👷‍♀️🚧
 
-![Logos for Related Projects](.github/Workflow.png)
+![Logos for Related Projects](.github/images/Workflow.png)
 
 Working on this project uses Travis to run the tests and deploy the successfully built workspaces to their given endpoints. It uses [`now`](https://zeit.co/now) for deployments for easy rollback and immutable deployments.
 

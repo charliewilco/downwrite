@@ -13,23 +13,21 @@ type AuthorType = {
   gradient: string[];
 };
 
-interface IEntry {
+export interface IEntry {
   title: string;
   content: string;
   author: AuthorType;
   dateAdded: Date;
 }
 
-interface IEntryError {
+export interface IEntryError {
   message: string;
   error: string;
 }
 
-type StatedEntry = IEntry & IEntryError;
-
 interface IPreviewProps {
   authed: boolean;
-  entry: StatedEntry;
+  entry: IEntry | IEntryError;
   id: string;
 }
 
@@ -60,30 +58,29 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
   static displayName = "PreviewEntry";
 
   public render(): JSX.Element {
-    const {
-      entry: { author },
-      entry,
-      authed
-    } = this.props;
+    const { entry, authed } = this.props;
     return (
       <>
-        {!isEmpty(entry.message) && entry.message.length > 0 ? (
+        {!isEmpty((entry as IEntryError).message) ? (
           <>
             <Head>
-              <title>{entry.error} | Downwrite</title>
+              <title>{(entry as IEntryError).error} | Downwrite</title>
             </Head>
-            <NotFound {...entry} />
+            <NotFound {...entry as IEntryError} />
           </>
         ) : (
           <>
             <Head>
-              <title>{entry.title} | Downwrite</title>
-              <meta name="description" content={entry.content.substr(0, 75)} />
+              <title>{(entry as IEntry).title} | Downwrite</title>
+              <meta
+                name="description"
+                content={(entry as IEntry).content.substr(0, 75)}
+              />
             </Head>
-            <Content {...entry}>
+            <Content {...entry as IEntry}>
               <AuthorBlock
-                name={author.username}
-                colors={author.gradient}
+                name={(entry as IEntry).author.username}
+                colors={(entry as IEntry).author.gradient}
                 authed={authed}
               />
             </Content>

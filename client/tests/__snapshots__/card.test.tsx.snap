@@ -106,15 +106,16 @@ exports[`<Card /> matches snapshot 1`] = `
     >
       <a
         class="c3"
+        href="/edit?id=4444"
       >
-        Starting again
+        Starting Again
       </a>
     </h2>
     <small
       class="c4"
     >
       added 
-      over 1 year
+      less than a minute
        ago
     </small>
   </header>
@@ -125,7 +126,7 @@ exports[`<Card /> matches snapshot 1`] = `
       class="c6"
       data-testid="snippet"
     >
-      What am i really going to do here?
+      Hello
     </p>
   </div>
   <footer
@@ -136,6 +137,7 @@ exports[`<Card /> matches snapshot 1`] = `
     >
       <a
         class="c3"
+        href="/edit?id=4444"
       >
         Edit
       </a>

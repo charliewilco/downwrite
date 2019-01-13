@@ -36,4 +36,15 @@ export default styled.div`
     color: ${props => props.theme.linkHover};
     outline: 0;
   }
+
+  code,
+  pre {
+    font-family: "Input Mono", "SF Mono", Consolas, "Liberation Mono", Menlo,
+      monospace;
+    font-size: 100%;
+  }
+
+  p:not(:last-of-type) {
+    margin-bottom: 1rem;
+  }
 `;

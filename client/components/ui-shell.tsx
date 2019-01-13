@@ -8,9 +8,6 @@ import NightMode, { NightModeTrigger } from "./night-mode";
 import UIContainer from "./ui-container";
 import { ErrorContainer, UIErrorBanner } from "./ui-error";
 import { LevelStyles } from "./level-styles";
-
-import "../utils/global.css";
-import "../utils/typescale.css";
 import { LocalUISettingsProvider } from "./local-ui-settings";
 
 const ClearFixed = styled.div`

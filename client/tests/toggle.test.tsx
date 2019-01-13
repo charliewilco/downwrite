@@ -1,3 +1,6 @@
+import * as React from "react";
+import "jest-styled-components";
+import "jest-dom/extend-expect";
 import Toggle from "../components/toggle";
 import { render, fireEvent } from "react-testing-library";
 
@@ -18,7 +21,7 @@ describe("<Toggle />", () => {
   it("starts closed", () => {
     expect(
       container.querySelector(`[data-testid="TOGGLE_OPEN"]`)
-    ).not.toBeInTheDOM();
+    ).not.toBeInTheDocument();
   });
 
   it("can be toggled open", () => {
@@ -34,6 +37,6 @@ describe("<Toggle />", () => {
     );
     expect(
       openContainer.querySelector(`[data-testid="TOGGLE_OPEN"]`)
-    ).toBeInTheDOM();
+    ).toBeInTheDocument();
   });
 });

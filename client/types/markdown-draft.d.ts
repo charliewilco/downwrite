@@ -8,11 +8,11 @@ declare module "markdown-draft-js" {
 
   export function markdownToDraft(
     s: string,
-    options: MarkdownDraftOptions
+    options?: MarkdownDraftOptions
   ): Draft.RawDraftContentState;
 
   export function draftToMarkdown(
     d: Draft.RawDraftContentState,
-    options: MarkdownDraftOptions
+    options?: MarkdownDraftOptions
   ): string;
 }
