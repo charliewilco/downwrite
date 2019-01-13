@@ -6,7 +6,7 @@ import Content from "../components/content";
 import { render, wait } from "react-testing-library";
 import { draftToMarkdown } from "markdown-draft-js";
 import { createMockPost } from "../utils/createMocks";
-import fetchMock from "jest-fetch-mock";
+import fetchMock, { FetchMock } from "jest-fetch-mock";
 import MockNextContext from "../utils/mock-next-router";
 
 let title = "Starting Again";
@@ -21,9 +21,11 @@ let post: IEntry = {
   }
 };
 
+let fetch = fetchMock as FetchMock;
+
 describe("<Preview />", () => {
   it("loads server content", async () => {
-    fetchMock.mockResponse(JSON.stringify(post));
+    fetch.mockResponse(JSON.stringify(post));
     let FetchContent = render(
       <MockNextContext>
         <Preview authed={false} id={mockPost.id} entry={post} />

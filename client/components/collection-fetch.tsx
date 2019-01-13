@@ -3,7 +3,7 @@ import orderBy from "lodash/orderBy";
 import { AuthContext, IAuthContext } from "./auth";
 import * as API from "../utils/api";
 import "isomorphic-fetch";
-import { IPost } from "types/downwrite";
+import { IPost } from "downwrite";
 
 interface IFetchState {
   posts: IPost[];

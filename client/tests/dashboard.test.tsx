@@ -4,7 +4,7 @@ import "jest-dom/extend-expect";
 import { render, wait, fireEvent } from "react-testing-library";
 import Dashboard from "../pages/index";
 import MockNextContext from "../utils/mock-next-router";
-import fetchMock from "jest-fetch-mock";
+import fetchMock, { FetchMock } from "jest-fetch-mock";
 import { createMockPosts } from "../utils/createMocks";
 
 const entries = createMockPosts(4);
@@ -15,13 +15,15 @@ const PostDashboard = () => (
   </MockNextContext>
 );
 
+let fetch = fetchMock as FetchMock;
+
 describe("<Dashboard /> post lists", () => {
   beforeEach(() => {
-    fetchMock.resetMocks();
+    fetch.resetMocks();
   });
 
   it("shows list of Cards if authed and has posts", async () => {
-    fetchMock.mockResponseOnce(JSON.stringify(entries));
+    fetch.mockResponseOnce(JSON.stringify(entries));
     const FullDashboard = render(<PostDashboard />);
     await wait(() => FullDashboard.getByTestId("CARD"));
 
@@ -30,7 +32,7 @@ describe("<Dashboard /> post lists", () => {
   });
 
   it("can toggle from grid to list", async () => {
-    fetchMock.mockResponseOnce(JSON.stringify(entries));
+    fetch.mockResponseOnce(JSON.stringify(entries));
     const FullDashboard = render(<PostDashboard />);
     await wait(() => FullDashboard.getByTestId("CARD"));
 
@@ -45,7 +47,7 @@ describe("<Dashboard /> post lists", () => {
   });
 
   xit("shows error if error", async () => {
-    fetchMock.mockResponseOnce(JSON.stringify([]));
+    fetch.mockResponseOnce(JSON.stringify([]));
     const ErrorContainer = render(<Dashboard entries={[]} token="..." />);
     await wait(() => ErrorContainer.getByTestId("LOADING_SPINNER"));
 
