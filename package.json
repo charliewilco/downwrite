@@ -9,8 +9,7 @@
     "start": "micro-proxy -r rules.dev.json -p 5000",
     "dev": "yarn workspaces run dev",
     "build": "yarn workspaces run build",
-    "test": "jest",
-    "local": "now-lambda-runner"
+    "test": "jest"
   },
   "devDependencies": {
     "danger": "^7.0.2",
@@ -18,7 +17,6 @@
     "jest": "^23.6.0",
     "lint-staged": "^7.3.0",
     "micro-proxy": "^1.1.0",
-    "now-lambda-runner": "^2.0.0",
     "prettier": "^1.14.3",
     "typescript": "^3.0.3"
   },
