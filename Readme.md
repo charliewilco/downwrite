@@ -1,6 +1,6 @@
 # ![Downwrite](.github/header.png)
 
-[![Build Status](https://travis-ci.org/charliewilco/downwrite.svg?branch=master)](https://travis-ci.org/charliewilco/downwrite) [![jest](https://jestjs.io/img/jest-badge.svg)](https://github.com/facebook/jest) [![style: styled-components](https://img.shields.io/badge/style-%F0%9F%92%85%20styled--components-orange.svg?colorB=daa357&colorA=db748e)](https://github.com/styled-components/styled-components)
+[![Build Status](https://travis-ci.org/charliewilco/downwrite.svg?branch=master)](https://travis-ci.org/charliewilco/downwrite) [![jest](https://jestjs.io/img/jest-badge.svg)](https://github.com/facebook/jest) [![style: styled-components](https://img.shields.io/badge/style-%F0%9F%92%85%20styled--components-orange.svg?colorB=daa357&colorA=db748e)](https://github.com/styled-components/styled-components) [![Greenkeeper badge](https://badges.greenkeeper.io/charliewilco/downwrite.svg)](https://greenkeeper.io/)
 
 ## About 🤔🦄🎉
 
