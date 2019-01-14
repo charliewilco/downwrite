@@ -13,13 +13,6 @@ const createServer = async (port?: number): Promise<Hapi.Server> => {
     routes: { cors: true }
   });
 
-  if (__IS_DEV__) {
-    await server.register({
-      plugin: require("good"),
-      options
-    });
-  }
-
   await server.register(require("hapi-auth-jwt2"));
 
   server.auth.strategy("jwt", "jwt", {
