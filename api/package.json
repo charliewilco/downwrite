@@ -28,22 +28,16 @@
     "@types/uuid": "^3.4.4",
     "bcrypt": "^3.0.1",
     "boom": "^7.2.0",
-    "good": "^8.1.1",
-    "good-console": "^7.1.0",
-    "good-squeeze": "^5.1.0",
     "hapi": "^17.6.0",
     "hapi-auth-jwt2": "^8.1.0",
-    "inert": "^5.1.0",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.3.0",
-    "lout": "^11.1.0",
     "markdown-draft-js": "^1.0.1",
     "micro": "^9.3.3",
     "mongoose": "^5.4.1",
     "relish": "^3.0.0",
     "typescript": "^3.0.3",
-    "uuid": "^3.1.0",
-    "vision": "^5.4.2"
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
