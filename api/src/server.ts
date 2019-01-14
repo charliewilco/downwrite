@@ -1,7 +1,7 @@
 import * as Hapi from "hapi";
 import routes from "./routes";
 import Config from "./util/config";
-
+import options from "./util/logging";
 const __IS_DEV__: boolean = process.env.NODE_ENV !== "production";
 
 const validate = async () => ({ isValid: true });
@@ -13,27 +13,11 @@ const createServer = async (port?: number): Promise<Hapi.Server> => {
     routes: { cors: true }
   });
 
-  // await server.register({
-  //   plugin: require("good"),
-  //   options: {
-  //     reporters: {
-  //       console: [
-  //         {
-  //           module: "good-squeeze",
-  //           name: "Squeeze",
-  //           args: [{ response: "*", log: "*" }]
-  //         },
-  //         {
-  //           module: "good-console"
-  //         },
-  //         "stdout"
-  //       ]
-  //     }
-  //   }
-  // });
-
   if (__IS_DEV__) {
-    await server.register([require("vision"), require("inert"), require("lout")]);
+    await server.register({
+      plugin: require("good"),
+      options
+    });
   }
 
   await server.register(require("hapi-auth-jwt2"));

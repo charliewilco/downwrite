@@ -22,7 +22,7 @@ export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
       const body = await json(req);
       injection.payload = body;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
