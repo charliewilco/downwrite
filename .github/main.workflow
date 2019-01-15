@@ -4,6 +4,6 @@ workflow "New workflow" {
 }
 
 action "Danger" {
-  uses = "danger/danger"
+  uses = "duck8823/actions/danger"
   secrets = ["GITHUB_TOKEN"]
 }
