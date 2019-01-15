@@ -13,11 +13,7 @@ const PreviewLink: React.SFC<{ publicStatus: boolean; id: string }> = ({
   id
 }) =>
   publicStatus && (
-    <Link
-      prefetch
-      passHref
-      href={{ pathname: "/preview", query: { id } }}
-      as={`/${id}/preview`}>
+    <Link prefetch passHref href={{ pathname: "/preview", query: { id } }}>
       <PreviewAnchor>Preview</PreviewAnchor>
     </Link>
   );

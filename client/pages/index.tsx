@@ -54,7 +54,7 @@ export default class Dashboard extends React.Component<
     const entries = await API.getPosts({ token, host });
 
     return {
-      entries
+      entries: orderBy(entries, ["dateModified"], ["desc"])
     };
   }
 
@@ -74,7 +74,7 @@ export default class Dashboard extends React.Component<
 
     if (Array.isArray(entries)) {
       this.setState({
-        entries: orderBy(entries, ["dateAdded"], ["desc"]),
+        entries: orderBy(entries, ["dateModified"], ["desc"]),
         selectedPost: null,
         loaded: true,
         modalOpen: !close
