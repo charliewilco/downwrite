@@ -80,7 +80,7 @@ const UIHeader: React.SFC<IHeaderProps> = ({ router, onClick }) => {
             </MenuContainer>
             {context.authed ? (
               <MenuContainer>
-                <Link prefetch href="/new" as="/new">
+                <Link prefetch href="/new">
                   <AltAnchor space="right">New</AltAnchor>
                 </Link>
                 <ToggleButton onClick={onClick}>

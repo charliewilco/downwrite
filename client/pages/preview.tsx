@@ -27,6 +27,7 @@ export interface IEntryError {
 
 interface IPreviewProps {
   authed: boolean;
+  url?: string;
   entry: IEntry | IEntryError;
   id: string;
 }
@@ -47,7 +48,8 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
 
     return {
       id,
-      entry
+      entry,
+      url: `https://next.downwrite.us/preview?id=${id}`
     };
   }
 
@@ -58,7 +60,7 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
   static displayName = "PreviewEntry";
 
   public render(): JSX.Element {
-    const { entry, authed } = this.props;
+    const { entry, authed, url } = this.props;
     return (
       <>
         {!isEmpty((entry as IEntryError).message) ? (
@@ -72,6 +74,12 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
           <>
             <Head>
               <title>{(entry as IEntry).title} | Downwrite</title>
+              <meta name="og:title" content={(entry as IEntry).title} />
+              <meta
+                name="og:description"
+                content={(entry as IEntry).content.substr(0, 75)}
+              />
+              <meta name="og:url" content={url} />
               <meta
                 name="description"
                 content={(entry as IEntry).content.substr(0, 75)}
