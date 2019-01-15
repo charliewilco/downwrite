@@ -123,6 +123,7 @@ export default class AuthMegaProvider extends React.Component<
 
 export const AuthConsumer = AuthContext.Consumer;
 
+// TODO: Remove
 // Component should be NextStatelessComponent type
 export const withAuth = (Component: NextComponentClass<any>) => {
   return class extends React.Component<any, any> {
