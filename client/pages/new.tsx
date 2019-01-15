@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Draft from "draft-js";
 import styled from "styled-components";
-import { Formik, FormikProps } from "formik";
+import { Formik, Form, FormikProps } from "formik";
 import Head from "next/head";
 import Router from "next/router";
 import * as Dwnxt from "downwrite";
@@ -72,7 +72,12 @@ export default class NewEditor extends React.Component<
     };
 
     API.createPost(body, { token, host })
-      .then(() => Router.push(`/${id}/edit`))
+      .then(() =>
+        Router.push({
+          pathname: `/edit`,
+          query: id
+        })
+      )
       .catch(err => this.setState({ error: err.message }));
   };
 
@@ -94,7 +99,7 @@ export default class NewEditor extends React.Component<
             <Head>
               <title>{title ? title : "New"} | Downwrite</title>
             </Head>
-            <EditorContainer sm>
+            <EditorContainer as={Form} sm>
               {error.length > 0 && <span className="f6 u-center">{error}</span>}
               <Upload
                 onParsed={({ title, editorState }) => {

@@ -51,6 +51,7 @@
   },
   "workspaces": [
     "client",
-    "api"
+    "api",
+    "integration"
   ]
 }
