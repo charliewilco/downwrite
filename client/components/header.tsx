@@ -38,7 +38,7 @@ const HeaderTitle = styled.h1`
   font-style: normal;
   font-family: ${DefaultStyles.fonts.sans};
   line-height: 1;
-  font-weight: 500;
+  font-weight: 700;
 
   @media (min-width: 57.75rem) {
     font-size: 20px;
