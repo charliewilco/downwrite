@@ -68,8 +68,7 @@ const ListItem: React.SFC<IListItemProps> = ({
     <Tray>
       <EditLink id={id} />
       {publicStatus && <PreviewLink id={id} />}
-
-      <DeleteButton onClick={onDelete}>Delete</DeleteButton>
+      {onDelete && <DeleteButton onClick={onDelete}>Delete</DeleteButton>}
     </Tray>
   </Container>
 );

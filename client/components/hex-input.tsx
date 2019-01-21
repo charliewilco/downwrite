@@ -2,7 +2,9 @@ import * as React from "react";
 import styled from "styled-components";
 import * as DefaultStyles from "../utils/defaultStyles";
 
-const Input = styled.input.attrs({ type: "text", spellCheck: false, maxLength: 6 })`
+const attrs = { type: "text", spellCheck: false, maxLength: 6 };
+
+const Input = styled.input.attrs(attrs)`
   display: block;
   width: 100%;
   padding: 2px;

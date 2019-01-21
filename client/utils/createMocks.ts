@@ -1,4 +1,4 @@
-import uuid from "uuid/v4";
+import * as uuid from "uuid/v4";
 import * as Draft from "draft-js";
 import { IPost } from "downwrite";
 
@@ -8,12 +8,13 @@ export const createMockPost = (overides: Partial<IPost>): IPost => {
   );
   const content = Draft.convertToRaw(post.getCurrentContent());
   const dateAdded = new Date();
+  const id = uuid();
 
   return Object.assign(
     {},
     {
       title: "Something",
-      id: uuid(),
+      id,
       dateAdded,
       content,
       public: false
