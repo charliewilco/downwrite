@@ -73,6 +73,7 @@
     "jest-styled-components": "^6.2.1",
     "prop-types": "^15.6.2",
     "react-testing-library": "^5.1.0",
+    "ts-jest": "^23.10.5",
     "typescript": "^3.1.1"
   },
   "babel": {
@@ -92,9 +93,12 @@
     ]
   },
   "jest": {
-    "collectCoverageFrom": [
-      "/**/*.{js,ts,tsx,jsx,mjs}"
-    ],
+    "preset": "ts-jest",
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "<rootDir>/tsconfig.test.json"
+      }
+    },
     "testPathIgnorePatterns": [
       "<rootDir>/.next/",
       "<rootDir>/node_modules/",
@@ -103,22 +107,7 @@
     "testMatch": [
       "**/*.(test).(ts|tsx)"
     ],
-    "testEnvironment": "jsdom",
-    "transform": {
-      "^.+\\.tsx?$": "babel-jest"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "json"
-    ],
-    "moduleNameMapper": {
-      "\\.(css|less)$": "<rootDir>/__tests__/config/fileTransform.js"
-    }
+    "testEnvironment": "jsdom"
   },
   "browserslist": [
     ">0.25%",

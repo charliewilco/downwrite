@@ -54,12 +54,12 @@ export const mockRouter: RouterProps<any> = {
     return foo;
   },
   events: {
-    on: (eventName: EventName, handler: EventHandler | ErrorEventHandler) => {
+    on: (eventName: EventName, handler?: EventHandler | ErrorEventHandler) => {
       let foo: void;
 
       return foo;
     },
-    off: (eventName: EventName, handler: (url: string) => any) => {
+    off: (eventName: EventName, handler?: EventHandler) => {
       let foo: void;
 
       return foo;
