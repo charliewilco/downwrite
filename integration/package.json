@@ -5,16 +5,20 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.5",
+    "@types/jest": "^23.3.13",
     "@types/puppeteer": "^1.9.0",
     "jest": "^23.6.0",
     "jest-dev-server": "^3.4.0",
     "puppeteer": "^1.9.0",
-    "ts-jest": "^23.10.4"
+    "ts-jest": "^23.10.5",
+    "typescript": "^3.2.4"
   },
   "jest": {
     "preset": "ts-jest",
     "globalSetup": "<rootDir>/config/setup",
     "globalTeardown": "<rootDir>/config/teardown"
+  },
+  "dependencies": {
+    "markdown-draft-js": "^1.4.0"
   }
 }
