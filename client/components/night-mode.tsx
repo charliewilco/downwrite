@@ -14,7 +14,7 @@ const NightContainer = styled.div`
   position: relative;
 `;
 
-const NightToggle = styled.div`
+const NightToggle = styled.form`
   color: ${DefaultStyles.colors.text};
   padding: 8px;
   font-family: ${DefaultStyles.fonts.sans};
@@ -122,9 +122,15 @@ export const NightModeTrigger: React.SFC = ({ children }) => (
     <NightModeContext.Consumer>
       {(context: INightModeContext) => (
         <NightContainer className={context.night ? "NightMode" : ""}>
-          <NightToggle>
-            <NightController>
-              <Checkbox checked={context.night} onChange={context.action.onChange} />
+          <NightToggle role="form" tabIndex={-1} onSubmit={context.action.onChange}>
+            <NightController htmlFor="nightToggle">
+              <Checkbox
+                role="checkbox"
+                aria-checked={context.night}
+                checked={context.night}
+                id="nightToggle"
+                onChange={context.action.onChange}
+              />
               <NightLabel>Night Mode</NightLabel>
             </NightController>
           </NightToggle>

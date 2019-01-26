@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Link from "next/link";
 import distance from "date-fns/distance_in_words_to_now";
 
-import { PreviewLink, EditLink } from "./card";
+import { PreviewLink } from "./card";
 
 const PostsTitle = styled.h2`
   font-size: 16px;
@@ -16,6 +16,10 @@ const PostsTitle = styled.h2`
 
 const Container = styled.div`
   padding: 16px 0;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   &:not(:last-of-type) {
     border-bottom: 1px solid #ccc;
@@ -31,6 +35,8 @@ const DeleteButton = styled.button`
 `;
 
 const Tray = styled.div`
+  margin-left: 16px;
+  display: inline-block;
   font-size: 12px;
 `;
 
@@ -59,18 +65,21 @@ const ListItem: React.SFC<IListItemProps> = ({
   onDelete
 }) => (
   <Container>
-    <PostsTitle>
-      <Link prefetch href={{ pathname: "/edit", query: { id } }}>
-        <a>{title}</a>
-      </Link>
-    </PostsTitle>
-    <Meta>added {distance(dateAdded)} ago</Meta>
-    <Tray>
-      <EditLink id={id} />
-      {publicStatus && <PreviewLink id={id} />}
+    <div>
+      <PostsTitle>
+        <Link prefetch href={{ pathname: "/edit", query: { id } }}>
+          <a>{title}</a>
+        </Link>
 
-      <DeleteButton onClick={onDelete}>Delete</DeleteButton>
-    </Tray>
+        {publicStatus && (
+          <Tray>
+            <PreviewLink id={id} />
+          </Tray>
+        )}
+      </PostsTitle>
+      <Meta>added {distance(dateAdded)} ago</Meta>
+    </div>
+    {onDelete && <DeleteButton onClick={onDelete}>Delete</DeleteButton>}
   </Container>
 );
 

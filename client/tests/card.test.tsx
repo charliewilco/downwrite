@@ -2,19 +2,17 @@ import * as React from "react";
 import "jest-styled-components";
 import "jest-dom/extend-expect";
 import { fireEvent, render } from "react-testing-library";
-
 import Card from "../components/card";
 import { createMockPost } from "../utils/createMocks";
-import MockNextContext from "../utils/mock-next-router";
 
 const title = "Starting Again";
 const post = createMockPost({ title, id: "4444" });
 const mockDelete = jest.fn();
 
+jest.mock("next/router");
+
 const { container, getByTestId } = render(
-  <MockNextContext>
-    <Card public={false} {...post} onDelete={mockDelete} />
-  </MockNextContext>
+  <Card public={false} {...post} onDelete={mockDelete} />
 );
 
 describe("<Card />", () => {

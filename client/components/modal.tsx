@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { createGlobalStyle, keyframes } from "styled-components";
 import * as Reach from "@reach/dialog";
 import { CloseIcon } from "./icons";
 import * as DefaultStyles from "../utils/defaultStyles";
@@ -14,6 +14,23 @@ const fadein = keyframes`
     transform: translate(0, 0);
     opacity: 1;
   }
+`;
+
+const DialogStyles = createGlobalStyle`
+  :root {
+    --reach-dialog: 1;
+  }
+
+  [data-reach-dialog-overlay] {
+    overflow: auto;
+  }
+
+  [data-reach-dialog-content] {
+    width: 50vw;
+    margin: 10vh auto;
+    outline: none;
+  }
+
 `;
 
 const Overlay = styled(Reach.DialogOverlay)`
@@ -80,6 +97,7 @@ export default class UIModal extends React.Component<ModalProps, any> {
     const { closeUIModal, children } = this.props;
     return (
       <Overlay>
+        <DialogStyles />
         <ModalContainer>
           <ModalCloseButton onClick={closeUIModal}>
             <CloseIcon className="Modal__close" />

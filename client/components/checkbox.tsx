@@ -19,6 +19,10 @@ const CheckboxInput = styled.input.attrs({ type: "checkbox" })`
     props.checked
       ? `${props.theme.link} url("${base64Icon}") no-repeat center center`
       : "#D0D0D0"};
+
+  &:focus {
+    outline: 1px solid ${props => props.theme.link};
+  }
 `;
 
 export default CheckboxInput;

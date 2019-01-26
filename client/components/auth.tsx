@@ -4,6 +4,7 @@ import Router from "next/router";
 import * as jwt from "jwt-decode";
 import addDays from "date-fns/add_days";
 import { NextComponentClass } from "next";
+import { __IS_TEST__ } from "../utils/dev";
 
 // NOTE:
 // This component should passdown the state of authed from withAuthCheck() HOC
