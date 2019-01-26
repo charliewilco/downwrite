@@ -12,8 +12,7 @@
     "predev": "tsc",
     "start": "micro dist/index.js --port 4000",
     "dev": "micro-dev dist/index.js -p 4000",
-    "test": "jest",
-    "documentation": "typedoc --theme minimal --out ./docs ./src/**/*.ts"
+    "test": "jest"
   },
   "license": "MIT",
   "dependencies": {
@@ -32,17 +31,17 @@
     "hapi-auth-jwt2": "^8.1.0",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.3.0",
-    "markdown-draft-js": "^1.0.1",
+    "markdown-draft-js": "^1.4.0",
     "micro": "^9.3.3",
     "mongoose": "^5.4.1",
     "relish": "^3.0.0",
-    "typescript": "^3.0.3",
+    "typescript": "^3.2.4",
     "uuid": "^3.1.0"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/draft-js": "^0.10.27",
-    "@types/jest": "^23.3.11",
+    "@types/jest": "^23.3.13",
     "@types/shot": "^4.0.0",
     "axios": "^0.18.0",
     "draft-js": "^0.10.5",
@@ -51,8 +50,7 @@
     "shot": "^4.0.7",
     "ts-jest": "^23.10.5",
     "ts-node": "^7.0.1",
-    "typedoc": "^0.12.0",
-    "yesno-http": "^0.0.5"
+    "yesno-http": "^0.0.6"
   },
   "jest": {
     "preset": "ts-jest",

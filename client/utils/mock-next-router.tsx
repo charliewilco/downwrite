@@ -22,7 +22,7 @@ interface RouteChangeError {
 type EventHandler = (url: string) => any;
 type ErrorEventHandler = (err: RouteChangeError, url: string) => any;
 
-export const mockRouter: RouterProps<any> = {
+export const mockRouter: Partial<RouterProps<any>> = {
   components: {},
   asPath: "/",
   route: "/",
@@ -55,19 +55,17 @@ export const mockRouter: RouterProps<any> = {
   },
   events: {
     on: (eventName: EventName, handler?: EventHandler | ErrorEventHandler) => {
-      let foo: void;
-
-      return foo;
+      // let foo: void;
+      // return foo;
     },
-    off: (eventName: EventName, handler?: EventHandler) => {
-      let foo: void;
-
-      return foo;
+    off: (eventName: EventName, handler?: EventHandler | ErrorEventHandler) => {
+      // let foo: void;
+      // return foo;
     }
   }
 };
 
-Router.router = mockRouter;
+Router.router = mockRouter as RouterProps<any>;
 
 // https://github.com/zeit/next.js/issues/5205#issuecomment-422846339
 export default class MockNextContext extends React.Component<any, any> {

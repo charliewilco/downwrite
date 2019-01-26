@@ -10,7 +10,7 @@ import { createMockPosts } from "../utils/createMocks";
 const entries = createMockPosts(4);
 
 const PostDashboard = () => (
-  <MockNextContext>
+  <MockNextContext router={{ entry: "/" }}>
     <Dashboard entries={entries} token="..." />
   </MockNextContext>
 );

@@ -13,6 +13,8 @@ let { getByTestId, container } = render(
   </MockNextContext>
 );
 
+jest.mock("../components/auth", () => () => "Auth");
+
 describe("Header Component", () => {
   it("contains application name", () => {
     expect(getByTestId("APP_HEADER_TITLE")).toHaveTextContent("Downwrite");

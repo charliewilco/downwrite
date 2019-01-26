@@ -71,11 +71,13 @@ export default class NewEditor extends React.Component<
       public: false
     };
 
+    console.log(id);
+
     API.createPost(body, { token, host })
       .then(() =>
         Router.push({
           pathname: `/edit`,
-          query: id
+          query: { id }
         })
       )
       .catch(err => this.setState({ error: err.message }));

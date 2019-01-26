@@ -6,10 +6,11 @@ import styled from "styled-components";
 
 import createMarkdownPlugin from "draft-js-markdown-plugin";
 import createPrismPlugin from "draft-js-prism-plugin";
+import DraftStyles from "./draft-styles";
 import { LocalUISettings, ILocalUISettings } from "./local-ui-settings";
+import { __IS_TEST__ } from "../utils/dev";
 
 import * as DefaultStyles from "../utils/defaultStyles";
-import DraftStyles from "./draft-styles";
 
 const EditorWrapper = styled.div`
   padding-left: 0px;
@@ -64,7 +65,9 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
   private editor: PluginsEditor = null as PluginsEditor;
 
   state = {
-    plugins: [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()]
+    plugins: __IS_TEST__
+      ? []
+      : [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()]
   };
 
   focus = () => this.editor.focus();
