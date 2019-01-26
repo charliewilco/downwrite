@@ -7,20 +7,20 @@ import Router, {
   PopStateCallback
 } from "next/router";
 
-// type EventName =
-//   | "routeChangeStart"
-//   | "routeChangeComplete"
-//   | "routeChangeError"
-//   | "beforeHistoryChange"
-//   | "hashChangeStart"
-//   | "hashChangeComplete";
+type EventName =
+  | "routeChangeStart"
+  | "routeChangeComplete"
+  | "routeChangeError"
+  | "beforeHistoryChange"
+  | "hashChangeStart"
+  | "hashChangeComplete";
 
-// interface RouteChangeError {
-//   cancelled: boolean;
-// }
+interface RouteChangeError {
+  cancelled: boolean;
+}
 
-// type EventHandler = (url: string) => any;
-// type ErrorEventHandler = (err: RouteChangeError, url: string) => any;
+type EventHandler = (url: string) => any;
+type ErrorEventHandler = (err: RouteChangeError, url: string) => any;
 
 export const mockRouter: Partial<RouterProps<any>> = {
   components: {},
@@ -52,17 +52,17 @@ export const mockRouter: Partial<RouterProps<any>> = {
   ) {
     let foo = null as Promise<boolean>;
     return foo;
+  },
+  events: {
+    on: (eventName: EventName, handler?: EventHandler | ErrorEventHandler) => {
+      // let foo: void;
+      // return foo;
+    },
+    off: (eventName: EventName, handler?: EventHandler | ErrorEventHandler) => {
+      // let foo: void;
+      // return foo;
+    }
   }
-  // events: {
-  //   on: (eventName: EventName, handler?: EventHandler | ErrorEventHandler) => {
-  //     // let foo: void;
-  //     // return foo;
-  //   },
-  //   off: (eventName: EventName, handler?: EventHandler | ErrorEventHandler) => {
-  //     // let foo: void;
-  //     // return foo;
-  //   }
-  // }
 };
 
 Router.router = mockRouter as RouterProps<any>;

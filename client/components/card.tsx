@@ -92,7 +92,7 @@ export interface ICardProps {
   excerpt?: string;
   id: string;
   dateAdded: Date;
-  onDelete: () => void;
+  onDelete?: () => void;
   public: boolean;
 }
 
