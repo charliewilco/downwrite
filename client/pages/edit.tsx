@@ -57,7 +57,7 @@ interface IFields {
 const EDITOR_COMMAND = "myeditor-save";
 
 export default class Edit extends React.Component<IEditorProps, IEditorState> {
-  static async getInitialProps(
+  public static async getInitialProps(
     ctx: NextContext<{ id: string; token: string }>
   ): Promise<Partial<IEditorProps>> {
     const token = authMiddleware(ctx);
@@ -81,7 +81,7 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
     };
   }
 
-  static displayName = "EntryEdit";
+  public static displayName: string = "EntryEdit";
 
   private readonly duration: number = __IS_DEV__ ? 30000 : 120000;
 

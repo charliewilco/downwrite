@@ -10,6 +10,7 @@
     "dev": "yarn workspaces run dev",
     "build": "yarn workspaces run build",
     "test": "jest",
+    "lint": "tslint",
     "ws:api": "yarn workspace api",
     "ws:www": "yarn workspace client"
   },
@@ -20,6 +21,7 @@
     "lint-staged": "^8.1.0",
     "micro-proxy": "^1.1.0",
     "prettier": "^1.16.1",
+    "tslint": "^5.12.1",
     "typescript": "^3.2.4"
   },
   "jest": {
