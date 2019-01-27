@@ -35,7 +35,7 @@ xdescribe("Server Endpoints Perform", () => {
     server = await createServer();
   });
 
-  it("can create a user", async () => {
+  xit("can create a user", async () => {
     const r: Hapi.ServerInjectResponse = await server.inject({
       method: "POST",
       url: "/api/users",
@@ -50,7 +50,7 @@ xdescribe("Server Endpoints Perform", () => {
     expect(r.statusCode).toBeLessThanOrEqual(300);
   });
 
-  it("can create a post", async () => {
+  xit("can create a post", async () => {
     const response: Hapi.ServerInjectResponse = await server.inject({
       method: "GET",
       url: "/api/posts",
