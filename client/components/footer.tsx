@@ -38,6 +38,7 @@ const FooterList = styled.ul`
   list-style: none inside;
   padding: 0;
   margin: 0;
+  font-size: 14px;
 `;
 
 const FooterListItem = styled.li`
@@ -50,6 +51,9 @@ const UIFooter: React.SFC<{}> = () => (
     <Wrapper sm>
       <FooterNav>
         <FooterList>
+          <FooterListItem>
+            <span>&copy; 2018 Charles Peters</span>
+          </FooterListItem>
           {PAGES.map((page, i) => (
             <FooterListItem key={i}>
               <Link href={page.href} passHref>
