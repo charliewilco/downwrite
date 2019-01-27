@@ -16,6 +16,8 @@
     "prefer-for-of": true,
     "no-var-keyword": true,
     "interface-over-type-literal": true,
+    "no-duplicate-imports": true,
+    "variable-name": [true, "ban-keywords", "allow-leading-underscore"],
     "ban-types": {
       "options": [
         ["Object", "Avoid using the `Object` type. Did you mean `object`?"],

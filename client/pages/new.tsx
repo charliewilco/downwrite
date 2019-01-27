@@ -49,7 +49,7 @@ export default class NewEditor extends React.Component<
     drafts: []
   };
 
-  static displayName = "NewPostEditor";
+  public static displayName = "NewPostEditor";
 
   // private saveLocalDraft = (id: string, post: Object): void => {
   //   localStorage.setItem("Draft " + id, JSON.stringify(post));
@@ -70,8 +70,6 @@ export default class NewEditor extends React.Component<
       dateAdded,
       public: false
     };
-
-    console.log(id);
 
     API.createPost(body, { token, host })
       .then(() =>
@@ -104,9 +102,9 @@ export default class NewEditor extends React.Component<
             <EditorContainer as={Form} sm>
               {error.length > 0 && <span className="f6 u-center">{error}</span>}
               <Upload
-                onParsed={({ title, editorState }) => {
-                  setFieldValue("title", title);
-                  setFieldValue("editorState", editorState);
+                onParsed={parsed => {
+                  setFieldValue("title", parsed.title);
+                  setFieldValue("editorState", parsed.editorState);
                 }}>
                 <Input
                   name="title"
@@ -125,7 +123,7 @@ export default class NewEditor extends React.Component<
                 <Editor
                   editorCommand={EDITOR_COMMAND}
                   editorState={editorState}
-                  onChange={editorState => setFieldValue("editorState", editorState)}
+                  onChange={es => setFieldValue("editorState", es)}
                   onSave={handleSubmit}
                 />
               </Upload>
