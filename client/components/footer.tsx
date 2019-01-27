@@ -52,7 +52,7 @@ const UIFooter: React.FC<{}> = () => (
       <FooterNav>
         <FooterList>
           <FooterListItem>
-            <span>&copy; 2018 Charles Peters</span>
+            <span>&copy; 2019 Charles Peters</span>
           </FooterListItem>
           {PAGES.map((page, i) => (
             <FooterListItem key={i}>
