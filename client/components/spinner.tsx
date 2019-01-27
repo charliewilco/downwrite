@@ -47,7 +47,7 @@ interface ISpinnerProps {
   delay?: string;
 }
 
-const Spinner: React.SFC<ISpinnerProps> = ({ size, color }) => (
+const Spinner: React.FC<ISpinnerProps> = ({ size, color }) => (
   <OuterRing size={size} color={color}>
     <InnerRing size={size} delay="-0.6s" />
     <InnerRing size={size} delay="-0.4s" />

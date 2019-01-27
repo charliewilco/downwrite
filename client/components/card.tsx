@@ -74,13 +74,13 @@ interface ICardLinks {
   title?: string;
 }
 
-export const EditLink: React.SFC<ICardLinks> = ({ id, title = "Edit" }) => (
+export const EditLink: React.FC<ICardLinks> = ({ id, title = "Edit" }) => (
   <Link prefetch passHref href={{ pathname: "/edit", query: { id } }}>
     <SxLink>{title}</SxLink>
   </Link>
 );
 
-export const PreviewLink: React.SFC<ICardLinks> = ({ id }) => (
+export const PreviewLink: React.FC<ICardLinks> = ({ id }) => (
   <Link prefetch passHref href={{ pathname: "/preview", query: { id } }}>
     <SxLink>Preview</SxLink>
   </Link>
@@ -96,7 +96,7 @@ export interface ICardProps {
   public: boolean;
 }
 
-const Card: React.SFC<ICardProps> = ({
+const Card: React.FC<ICardProps> = ({
   title,
   id,
   content,

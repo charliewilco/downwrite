@@ -116,7 +116,7 @@ export default class NightModeContainer extends React.Component<
   }
 }
 
-export const NightModeTrigger: React.SFC = ({ children }) => (
+export const NightModeTrigger: React.FC = ({ children }) => (
   <>
     <NightModeStyles />
     <NightModeContext.Consumer>

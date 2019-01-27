@@ -64,7 +64,7 @@ interface IHeaderProps extends WithRouterProps {
   onClick: () => void;
 }
 
-const UIHeader: React.SFC<IHeaderProps> = ({ router, onClick }) => {
+const UIHeader: React.FC<IHeaderProps> = ({ router, onClick }) => {
   return !(router.route === "/login") ? (
     <Header data-testid="APP_HEADER">
       <AuthConsumer>

@@ -28,7 +28,7 @@ interface IUIShell {
   token: string;
 }
 
-export const UIShell: React.SFC<IUIShell> = ({ children, token }) => (
+export const UIShell: React.FC<IUIShell> = ({ children, token }) => (
   <NightMode>
     <LocalUISettingsProvider>
       <UIContainer>

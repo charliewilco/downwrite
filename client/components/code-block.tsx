@@ -12,10 +12,7 @@ interface CodeBlockProps {
   value: any;
 }
 
-const CodeBlock: React.SFC<CodeBlockProps> = ({
-  language = "javascript",
-  value
-}) => (
+const CodeBlock: React.FC<CodeBlockProps> = ({ language = "javascript", value }) => (
   <pre>
     <StyledPrism className={`language-${language || "javascript"}`}>
       {value}

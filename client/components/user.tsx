@@ -41,7 +41,7 @@ const SettingsLink = () => (
   </Link>
 );
 
-const UserBlock: React.SFC<IUserBlock> = ({ name, border, colors }) => (
+const UserBlock: React.FC<IUserBlock> = ({ name, border, colors }) => (
   <UserBlockContainer border={border}>
     <SettingsLink />
     <Avatar centered colors={colors} />

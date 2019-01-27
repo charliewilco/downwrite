@@ -21,7 +21,7 @@ export interface IUIErrorMessage {
 
 export const ErrorStateContext = React.createContext({} as IUIErrorMessage);
 
-const UIErrorMessage: React.SFC<IUIErrorMessage> = ({
+const UIErrorMessage: React.FC<IUIErrorMessage> = ({
   errorState: { content, type },
   errorActions: { clearFlashMessage }
 }) =>

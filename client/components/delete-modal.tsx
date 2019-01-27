@@ -35,7 +35,7 @@ interface IDeleteModalProps {
   onDelete: () => void;
 }
 
-const DeleteModal: React.SFC<IDeleteModalProps> = ({
+const DeleteModal: React.FC<IDeleteModalProps> = ({
   closeModal,
   title,
   onCancelDelete,

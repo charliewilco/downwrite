@@ -25,7 +25,7 @@ const ErrorImage = styled.img`
   max-width: 25%;
 `;
 
-const PostError: React.SFC<IPostError> = ({ error, message }) => (
+const PostError: React.FC<IPostError> = ({ error, message }) => (
   <ErrorContainer>
     <ErrorImage
       alt="Document with an Negative mark"

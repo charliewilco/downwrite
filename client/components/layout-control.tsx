@@ -34,7 +34,7 @@ const LayoutTrigger = styled.div<ILayoutTrigger>`
   }
 `;
 
-const LayoutControl: React.SFC<ILayoutControl> = ({ layout, layoutChange }) => (
+const LayoutControl: React.FC<ILayoutControl> = ({ layout, layoutChange }) => (
   <Box>
     <LayoutTrigger
       data-testid="LAYOUT_CONTROL_GRID"

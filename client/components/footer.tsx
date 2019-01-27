@@ -46,7 +46,7 @@ const FooterListItem = styled.li`
   margin-right: 16px;
 `;
 
-const UIFooter: React.SFC<{}> = () => (
+const UIFooter: React.FC<{}> = () => (
   <Footer>
     <Wrapper sm>
       <FooterNav>

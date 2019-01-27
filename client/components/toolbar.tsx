@@ -38,7 +38,7 @@ const INLINE_STYLES = [
   { label: "Mono", style: "CODE" }
 ];
 
-const FullToolBar: React.SFC<any> = ({
+const FullToolBar: React.FC<any> = ({
   onToggleBlockType,
   onToggleInlineStyle,
   currentStyle,
@@ -66,7 +66,7 @@ const FullToolBar: React.SFC<any> = ({
   </ToolbarWrapper>
 );
 
-const SelectionToolBar: React.SFC<any> = ({
+const SelectionToolBar: React.FC<any> = ({
   selectedText,
   currentStyle,
   onToggleInlineStyle,
@@ -96,7 +96,7 @@ const SelectionToolBar: React.SFC<any> = ({
   </ToolbarWrapper>
 );
 
-const Toolbar: React.SFC<any> = ({
+const Toolbar: React.FC<any> = ({
   editorState,
   onToggleBlockType,
   onToggleInlineStyle,

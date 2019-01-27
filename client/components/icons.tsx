@@ -6,7 +6,7 @@ interface IIconAttributes {
   className?: string;
 }
 
-const CloseIcon: React.SFC<IIconAttributes> = ({ size, fill, className }) => (
+const CloseIcon: React.FC<IIconAttributes> = ({ size, fill, className }) => (
   <svg
     width={size}
     height={size}
@@ -31,7 +31,7 @@ const CloseIcon: React.SFC<IIconAttributes> = ({ size, fill, className }) => (
   </svg>
 );
 
-const SignoutIcon: React.SFC<IIconAttributes> = ({ className }) => (
+const SignoutIcon: React.FC<IIconAttributes> = ({ className }) => (
   <svg width={13} height={12} viewBox="0 0 13 12" className={className}>
     <title>Signout Icon</title>
     <g id="Canvas" transform="translate(-1806 -2684)">
@@ -53,7 +53,7 @@ const SignoutIcon: React.SFC<IIconAttributes> = ({ className }) => (
   </svg>
 );
 
-const NavIcon: React.SFC<IIconAttributes> = ({ className }) => (
+const NavIcon: React.FC<IIconAttributes> = ({ className }) => (
   <svg width="20px" height="9px" viewBox="0 0 20 9" className={className}>
     <desc>Navicon</desc>
     <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -66,7 +66,7 @@ const NavIcon: React.SFC<IIconAttributes> = ({ className }) => (
   </svg>
 );
 
-const ExportIcon: React.SFC<IIconAttributes> = ({ className }) => (
+const ExportIcon: React.FC<IIconAttributes> = ({ className }) => (
   <svg width="24" height="15" viewBox="0 0 24 15" className={className}>
     <title>Markdown Symbol</title>
     <g id="Canvas" transform="translate(-1311 -870)">

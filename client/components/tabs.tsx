@@ -64,7 +64,7 @@ interface ITabsList extends ITabsModifier {
   [key: string]: any;
 }
 
-export const List: React.SFC<ITabsList> = ({ children, className }) => (
+export const List: React.FC<ITabsList> = ({ children, className }) => (
   <TabContext.Consumer>
     {(context: ITabsContext): JSX.Element => {
       const cloned = React.Children.map(
@@ -93,7 +93,7 @@ interface ITabsListItem extends ITabsModifier {
   [key: string]: any;
 }
 
-export const ListItem: React.SFC<ITabsListItem> = ({
+export const ListItem: React.FC<ITabsListItem> = ({
   isActive,
   isDisabled,
   id,
@@ -123,7 +123,7 @@ interface ITabsPanels extends ITabsModifier {
   isActive?: boolean;
 }
 
-export const Panels: React.SFC<ITabsPanels> = ({ children, className }) => (
+export const Panels: React.FC<ITabsPanels> = ({ children, className }) => (
   <TabContext.Consumer>
     {context => {
       const cloned = React.Children.map(

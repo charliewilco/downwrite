@@ -40,7 +40,7 @@ const Rule = styled.hr`
   background: rgba(0, 0, 0, 0.125);
 `;
 
-const TeaserCopy: React.SFC<any> = () => (
+const TeaserCopy: React.FC<any> = () => (
   <>You can write and share on Downwrite, you can sign up or log in </>
 );
 
@@ -50,7 +50,7 @@ interface IAuthorProps {
   colors: string[];
 }
 
-const Author: React.SFC<IAuthorProps> = ({ colors, authed, name }) => (
+const Author: React.FC<IAuthorProps> = ({ colors, authed, name }) => (
   <AuthorContainer>
     <AuthorHeader>
       <Avatar colors={colors} />

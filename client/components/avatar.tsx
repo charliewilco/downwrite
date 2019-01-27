@@ -45,7 +45,7 @@ interface IAvatarProps {
   className?: string;
 }
 
-const Avatar: React.SFC<IAvatarProps> = ({ colors, size, centered, className }) => (
+const Avatar: React.FC<IAvatarProps> = ({ colors, size, centered, className }) => (
   <AvatarCircle
     className={className}
     size={size}

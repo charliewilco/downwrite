@@ -27,7 +27,7 @@ interface ICheckboxToggle {
   onChange: (e: React.ChangeEvent) => void;
 }
 
-export const ToggleBox: React.SFC<ICheckboxToggle> = ({
+export const ToggleBox: React.FC<ICheckboxToggle> = ({
   value,
   label,
   name,

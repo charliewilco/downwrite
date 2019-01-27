@@ -30,7 +30,7 @@ interface IErrorPageContext extends NextContext<any> {
   err: CustomError;
 }
 
-const StatusCode: React.SFC<Partial<CustomError>> = ({ statusCode }) => (
+const StatusCode: React.FC<Partial<CustomError>> = ({ statusCode }) => (
   <p>
     {statusCode
       ? "An error " + statusCode + "occurred on server"

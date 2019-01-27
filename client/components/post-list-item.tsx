@@ -57,7 +57,7 @@ interface IListItemProps {
   public: boolean;
 }
 
-const ListItem: React.SFC<IListItemProps> = ({
+const ListItem: React.FC<IListItemProps> = ({
   public: publicStatus,
   title,
   dateAdded,

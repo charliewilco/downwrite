@@ -13,7 +13,7 @@ interface IToolbarIcons {
   active: boolean;
 }
 
-export const BlockQuote: React.SFC<IToolbarIcons> = ({ active }) => (
+export const BlockQuote: React.FC<IToolbarIcons> = ({ active }) => (
   <svg width="14px" height="10px" viewBox="0 0 14 10">
     <desc>Blockquote</desc>
     <defs />
@@ -33,7 +33,7 @@ export const BlockQuote: React.SFC<IToolbarIcons> = ({ active }) => (
   </svg>
 );
 
-export const BulletedList: React.SFC<IToolbarIcons> = ({ active }) => (
+export const BulletedList: React.FC<IToolbarIcons> = ({ active }) => (
   <svg width="18px" height="10px" viewBox="0 0 18 10">
     <desc>Unordred List</desc>
     <defs />
@@ -53,7 +53,7 @@ export const BulletedList: React.SFC<IToolbarIcons> = ({ active }) => (
   </svg>
 );
 
-export const Numbers: React.SFC<IToolbarIcons> = ({ active }) => (
+export const Numbers: React.FC<IToolbarIcons> = ({ active }) => (
   <svg width="19px" height="16px" viewBox="0 0 19 16">
     <desc>Numbers</desc>
     <defs />
@@ -73,7 +73,7 @@ export const Numbers: React.SFC<IToolbarIcons> = ({ active }) => (
   </svg>
 );
 
-export const Code: React.SFC<IToolbarIcons> = ({ active }) => (
+export const Code: React.FC<IToolbarIcons> = ({ active }) => (
   <svg width="20px" height="12px" viewBox="0 0 20 12">
     <desc>Code</desc>
     <defs />
@@ -93,7 +93,7 @@ export const Code: React.SFC<IToolbarIcons> = ({ active }) => (
   </svg>
 );
 
-export const Bold: React.SFC<IToolbarIcons> = ({ active }) => (
+export const Bold: React.FC<IToolbarIcons> = ({ active }) => (
   <svg width="11px" height="14px" viewBox="0 0 11 14">
     <desc>Created with Sketch.</desc>
     <defs />
@@ -113,7 +113,7 @@ export const Bold: React.SFC<IToolbarIcons> = ({ active }) => (
   </svg>
 );
 
-export const Italic: React.SFC<IToolbarIcons> = ({ active }) => (
+export const Italic: React.FC<IToolbarIcons> = ({ active }) => (
   <svg width="12px" height="14px" viewBox="0 0 12 14">
     <desc>Italic</desc>
     <defs />
@@ -133,7 +133,7 @@ export const Italic: React.SFC<IToolbarIcons> = ({ active }) => (
   </svg>
 );
 
-export const Underline: React.SFC<IToolbarIcons> = ({ active }) => (
+export const Underline: React.FC<IToolbarIcons> = ({ active }) => (
   <svg width="14px" height="18px" viewBox="0 0 14 18">
     <g id="Views" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <g id="Artboard" transform="translate(-491.000000, -122.000000)">
@@ -151,7 +151,7 @@ export const Underline: React.SFC<IToolbarIcons> = ({ active }) => (
   </svg>
 );
 
-export const Mono: React.SFC<IToolbarIcons> = ({ active }) => (
+export const Mono: React.FC<IToolbarIcons> = ({ active }) => (
   <svg width="10px" height="15px" viewBox="0 0 10 15">
     <desc>Created with Sketch.</desc>
     <defs />
@@ -170,7 +170,7 @@ export const Mono: React.SFC<IToolbarIcons> = ({ active }) => (
   </svg>
 );
 
-export const Label: React.SFC<{ label: string; active: boolean }> = ({
+export const Label: React.FC<{ label: string; active: boolean }> = ({
   label,
   active
 }) => <Span color={activeStyle(active)}>{label}</Span>;

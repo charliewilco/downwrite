@@ -1,6 +1,6 @@
 import * as React from "react";
 
-const NamePlate: React.SFC<{ className: string }> = ({ className }) => (
+const NamePlate: React.FC<{ className: string }> = ({ className }) => (
   <svg
     className={className}
     width="181"

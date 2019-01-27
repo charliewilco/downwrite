@@ -42,7 +42,7 @@ const CloseButton = styled.button`
   font-family: inherit;
 `;
 
-const UIFlashMessage: React.SFC<IUIFlashProps> = ({
+const UIFlashMessage: React.FC<IUIFlashProps> = ({
   width = 512,
   onClose,
   content,

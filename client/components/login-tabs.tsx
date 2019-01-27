@@ -46,7 +46,7 @@ const FormWrapper = styled(UITabs.Container)`
   color: ${DefaultStyles.colors.text};
 `;
 
-const LoginContainer: React.SFC<any> = ({ renderLogin, renderRegister }) => (
+const LoginContainer: React.FC<any> = ({ renderLogin, renderRegister }) => (
   <FormWrapper>
     <StyledTabsList>
       <StyledListItem data-testid="LOGIN_REGISTER_BUTTON" id="Register">

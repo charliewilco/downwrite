@@ -46,7 +46,7 @@ const StyledImage = styled.img.attrs({ src: "/static/landing.png" })`
   z-index: 0;
 `;
 
-const LandingPage: React.SFC<{ children: React.ReactNode }> = ({ children }) => (
+const LandingPage: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <LocalUISettings.Consumer>
     {({ monospace }) => (
       <Intro font={monospace}>
