@@ -16,9 +16,9 @@ const LoadingContainer = styled.div`
   height: calc(100% - ${(props: ILoadingProps) => props.size}px);
 `;
 
-const Loading: React.FC<ILoadingProps> = ({ size }) => (
-  <LoadingContainer size={size} data-testid="LOADING_SPINNER">
-    <Spinner size={size} color={DefaultStyles.colors.blue400} />
+const Loading: React.FC<ILoadingProps> = props => (
+  <LoadingContainer size={props.size} data-testid="LOADING_SPINNER">
+    <Spinner size={props.size} color={DefaultStyles.colors.blue400} />
   </LoadingContainer>
 );
 

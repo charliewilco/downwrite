@@ -36,18 +36,18 @@ export class Container extends React.Component<
     activeIndex: 0
   };
 
-  getContext(): ITabsContext {
+  private getContext(): ITabsContext {
     return {
       activeIndex: this.state.activeIndex,
       onSelectTab: this.selectTabIndex
     };
   }
 
-  selectTabIndex = (activeIndex: number): void => {
+  private selectTabIndex = (activeIndex: number): void => {
     this.setState({ activeIndex });
   };
 
-  render() {
+  public render(): JSX.Element {
     const value = this.getContext();
     const { className, ...props } = this.props;
     return (
@@ -110,7 +110,7 @@ export const ListItem: React.FC<ITabsListItem> = ({
     className={`${className} ${isDisabled ? "disabled" : isActive ? "active" : ""}`}
     onClick={isDisabled ? null : onSelect}
     onKeyPress={event => {
-      if (event.key == "Enter") {
+      if (event.key === "Enter") {
         return isDisabled ? null : onSelect();
       }
     }}

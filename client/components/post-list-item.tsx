@@ -57,29 +57,23 @@ interface IListItemProps {
   public: boolean;
 }
 
-const ListItem: React.FC<IListItemProps> = ({
-  public: publicStatus,
-  title,
-  dateAdded,
-  id,
-  onDelete
-}) => (
+const ListItem: React.FC<IListItemProps> = props => (
   <Container>
     <div>
       <PostsTitle>
-        <Link prefetch href={{ pathname: "/edit", query: { id } }}>
-          <a>{title}</a>
+        <Link prefetch href={{ pathname: "/edit", query: { id: props.id } }}>
+          <a>{props.title}</a>
         </Link>
 
-        {publicStatus && (
+        {props.public && (
           <Tray>
-            <PreviewLink id={id} />
+            <PreviewLink id={props.id} />
           </Tray>
         )}
       </PostsTitle>
-      <Meta>added {distance(dateAdded)} ago</Meta>
+      <Meta>added {distance(props.dateAdded)} ago</Meta>
     </div>
-    {onDelete && <DeleteButton onClick={onDelete}>Delete</DeleteButton>}
+    {props.onDelete && <DeleteButton onClick={props.onDelete}>Delete</DeleteButton>}
   </Container>
 );
 

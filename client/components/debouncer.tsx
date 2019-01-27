@@ -7,24 +7,24 @@ interface DebounceProps {
 }
 
 export default class extends React.Component<DebounceProps> {
-  static displayName = "Debouncer";
+  public static displayName = "Debouncer";
 
-  static defaultProps = {
+  public static defaultProps = {
     method: () => {},
     timeout: 3500
   };
 
-  autoFire = debounce(this.props.method, this.props.timeout);
+  private autoFire = debounce(this.props.method, this.props.timeout);
 
-  componentDidMount() {
+  public componentDidMount(): void {
     this.autoFire();
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount(): void {
     this.autoFire.flush();
   }
 
-  render(): null {
+  public render(): null {
     return null;
   }
 }

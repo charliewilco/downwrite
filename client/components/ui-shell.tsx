@@ -28,7 +28,7 @@ interface IUIShell {
   token: string;
 }
 
-export const UIShell: React.FC<IUIShell> = ({ children, token }) => (
+export const UIShell: React.FC<IUIShell> = props => (
   <NightMode>
     <LocalUISettingsProvider>
       <UIContainer>
@@ -41,10 +41,10 @@ export const UIShell: React.FC<IUIShell> = ({ children, token }) => (
                 <ClearFixed>
                   <Container>
                     <Header onClick={onToggle} />
-                    {children}
+                    {props.children}
                     <Footer />
                   </Container>
-                  {isOpen && <Nav closeNav={onClose} token={token} />}
+                  {isOpen && <Nav closeNav={onClose} token={props.token} />}
                 </ClearFixed>
               </NightModeTrigger>
             )}

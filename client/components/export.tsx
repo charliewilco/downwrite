@@ -25,10 +25,10 @@ const ExportContainer = styled.div`
 `;
 
 export default class UIMarkdownExport extends React.Component<IExportProps, any> {
-  static displayName = "UIMarkdownExport";
+  public static displayName = "UIMarkdownExport";
 
-  export = () => {
-    let { title, date, editorState } = this.props;
+  private export = (): void => {
+    const { title, date, editorState } = this.props;
     const cx: Draft.ContentState = editorState.getCurrentContent();
     const content: Draft.RawDraftContentState = Draft.convertToRaw(cx);
 
@@ -39,7 +39,7 @@ export default class UIMarkdownExport extends React.Component<IExportProps, any>
     });
   };
 
-  customDraft = (content: Draft.RawDraftContentState): string =>
+  private customDraft = (content: Draft.RawDraftContentState): string =>
     draftToMarkdown(content, {
       entityItems: {
         LINK: {
@@ -54,7 +54,7 @@ export default class UIMarkdownExport extends React.Component<IExportProps, any>
       }
     });
 
-  toMarkdown = ({ title, content, date }: ExportCallback) => {
+  private toMarkdown = ({ title, content, date }: ExportCallback): void => {
     let localFileExtension = localStorage.getItem("DW_FILE_EXTENSION");
     let extension = localFileExtension.replace(/\./g, "") || "md";
 
@@ -74,7 +74,7 @@ export default class UIMarkdownExport extends React.Component<IExportProps, any>
     }
   };
 
-  render() {
+  public render(): JSX.Element {
     const { className } = this.props;
     return (
       <ExportContainer

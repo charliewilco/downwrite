@@ -135,11 +135,11 @@ const NavLabel = styled.span`
 `;
 
 class NavBar extends React.Component<NavigationProps, any> {
-  static displayName = "NavigationBar";
+  public static displayName = "NavigationBar";
 
-  static contextType: React.Context<IAuthContext> = AuthContext;
+  public static contextType: React.Context<IAuthContext> = AuthContext;
 
-  componentDidUpdate(prevProps: NavigationProps) {
+  public componentDidUpdate(prevProps: NavigationProps): void {
     if (prevProps.router && this.props.router) {
       if (prevProps.router.pathname !== this.props.router.pathname) {
         this.props.closeNav();
@@ -147,7 +147,7 @@ class NavBar extends React.Component<NavigationProps, any> {
     }
   }
 
-  render() {
+  public render(): JSX.Element {
     const { closeNav } = this.props;
     const { signOut } = this.context;
     return (

@@ -42,18 +42,19 @@ const CloseButton = styled.button`
   font-family: inherit;
 `;
 
-const UIFlashMessage: React.FC<IUIFlashProps> = ({
-  width = 512,
-  onClose,
-  content,
-  type
-}) => (
-  <UIFlashContainer width={width} centered={!onClose}>
+const prefix = (type: string) => {
+  if (type) {
+    return `${type.length > 0 && type.toUpperCase()}:`;
+  }
+};
+
+const UIFlashMessage: React.FC<IUIFlashProps> = props => (
+  <UIFlashContainer width={props.width || 512} centered={!props.onClose}>
     <Stretch>
-      {type && `${type.length > 0 && type.toUpperCase()}:`} {content}
+      {prefix(props.type)} {props.content}
     </Stretch>
-    {onClose && (
-      <CloseButton onClick={onClose}>
+    {props.onClose && (
+      <CloseButton onClick={props.onClose}>
         <CloseIcon fill="currentColor" />
       </CloseButton>
     )}

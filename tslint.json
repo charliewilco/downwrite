@@ -7,6 +7,8 @@
       "severity": "warning",
       "options": ["debug", "info", "log", "time", "timeEnd", "trace"]
     },
+    "max-line-length": false,
+    "prefer-const": false,
     "member-ordering": false,
     "interface-name": false,
     "ordered-imports": false,
@@ -17,6 +19,8 @@
     "no-var-keyword": true,
     "interface-over-type-literal": true,
     "no-duplicate-imports": true,
+    "max-classes-per-file": false,
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
     "variable-name": [true, "ban-keywords", "allow-leading-underscore"],
     "ban-types": {
       "options": [

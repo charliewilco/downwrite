@@ -66,18 +66,18 @@ export default class NightModeContainer extends React.Component<
   { children: React.ReactChild },
   INightModeState
 > {
-  static displayName = "NightModeContainer";
+  public static displayName: string = "NightModeContainer";
 
-  state = {
+  public readonly state = {
     night: false
   };
 
-  componentDidMount() {
-    let night = JSON.parse(localStorage.getItem("nightMode")) || false;
+  public componentDidMount(): void {
+    const night = JSON.parse(localStorage.getItem("nightMode")) || false;
     this.setState({ night });
   }
 
-  setNightMode = (status: boolean) => {
+  private setNightMode = (status: boolean): void => {
     const { body } = document;
     if (body instanceof HTMLElement) {
       localStorage.setItem("nightMode", status.toString());
@@ -86,22 +86,22 @@ export default class NightModeContainer extends React.Component<
     }
   };
 
-  componentDidUpdate() {
+  public componentDidUpdate(): void {
     const { night } = this.state;
     this.setNightMode(night);
   }
 
-  onChange = () => {
+  private onChange = (): void => {
     this.setState(({ night }) => ({ night: !night }));
   };
 
-  componentWillUnmount() {
+  public componentWillUnmount(): void {
     if (document.body) {
       document.body.classList.remove(NIGHT_MODE);
     }
   }
 
-  render() {
+  public render(): JSX.Element {
     const { night } = this.state;
     const theme: DefaultTheme = night
       ? DefaultStyles.NIGHT_THEME

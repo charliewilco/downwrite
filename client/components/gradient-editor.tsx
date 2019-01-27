@@ -35,14 +35,15 @@ export default class GradientEditor extends React.Component<
   IGradientEditorProps,
   {}
 > {
-  handleColorChange = (value: string, name: string) =>
+  private handleColorChange = (value: string, name: string): void => {
     this.props.onColorChange(value, name);
+  };
 
-  colorsToArray({ a, b }: IColors) {
+  private colorsToArray({ a, b }: IColors): string[] {
     return [a, b];
   }
 
-  render() {
+  public render(): JSX.Element {
     const { colors } = this.props;
 
     return (

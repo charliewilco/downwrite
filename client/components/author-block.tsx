@@ -50,13 +50,13 @@ interface IAuthorProps {
   colors: string[];
 }
 
-const Author: React.FC<IAuthorProps> = ({ colors, authed, name }) => (
+const Author: React.FC<IAuthorProps> = props => (
   <AuthorContainer>
     <AuthorHeader>
-      <Avatar colors={colors} />
-      <AuthorHeadline>Post from {name}</AuthorHeadline>
+      <Avatar colors={props.colors} />
+      <AuthorHeadline>Post from {props.name}</AuthorHeadline>
     </AuthorHeader>
-    {!authed && (
+    {!props.authed && (
       <>
         <Rule />
         <Copy>

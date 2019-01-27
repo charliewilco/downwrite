@@ -23,8 +23,8 @@ const ExportLabel = styled.small`
   font-size: 12px;
 `;
 
-const ExportMarkdownButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
-  <ExportButton onClick={onClick}>
+const ExportMarkdownButton: React.FC<{ onClick: () => void }> = props => (
+  <ExportButton onClick={props.onClick}>
     <StyledExportIcon />
     <ExportLabel>Export</ExportLabel>
   </ExportButton>

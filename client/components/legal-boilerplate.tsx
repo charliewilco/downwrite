@@ -34,9 +34,13 @@ const LegalLink = () => (
   </Link>
 );
 
-const LegalBoilerplate: React.FC<ILegalProps> = ({ name, checked, onChange }) => (
+const LegalBoilerplate: React.FC<ILegalProps> = props => (
   <LegalContainer>
-    <LegalCheck name={name} checked={checked} onChange={onChange} />
+    <LegalCheck
+      name={props.name}
+      checked={props.checked}
+      onChange={props.onChange}
+    />
     <LegalInfo>
       I'm agreeing to abide in all the <LegalLink />.
     </LegalInfo>

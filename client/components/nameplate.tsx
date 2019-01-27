@@ -1,8 +1,8 @@
 import * as React from "react";
 
-const NamePlate: React.FC<{ className: string }> = ({ className }) => (
+const NamePlate: React.FC<{ className: string }> = props => (
   <svg
-    className={className}
+    className={props.className}
     width="181"
     height="26"
     viewBox="0 0 181 26"

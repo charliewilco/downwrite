@@ -21,12 +21,13 @@ export interface IUIErrorMessage {
 
 export const ErrorStateContext = React.createContext({} as IUIErrorMessage);
 
-const UIErrorMessage: React.FC<IUIErrorMessage> = ({
-  errorState: { content, type },
-  errorActions: { clearFlashMessage }
-}) =>
-  content.length > 0 ? (
-    <UIFlash content={content} type={type} onClose={clearFlashMessage} />
+const UIErrorMessage: React.FC<IUIErrorMessage> = ({ errorState, errorActions }) =>
+  errorState.content.length > 0 ? (
+    <UIFlash
+      content={errorState.content}
+      type={errorState.type}
+      onClose={errorActions.clearFlashMessage}
+    />
   ) : (
     <Null />
   );
@@ -35,9 +36,10 @@ type HOComponent = React.ComponentType<any> | React.StatelessComponent<any>;
 
 export const withErrors = (Component: HOComponent) => {
   return class extends React.Component<any, any> {
-    static displayName = `withErrors(${Component.displayName || Component.name})`;
+    public static displayName: string = `withErrors(${Component.displayName ||
+      Component.name})`;
 
-    render() {
+    public render(): JSX.Element {
       return (
         <ErrorStateContext.Consumer>
           {(errs: IUIErrorMessage) => <Component {...this.props} {...errs} />}
@@ -50,18 +52,20 @@ export const withErrors = (Component: HOComponent) => {
 export const UIErrorConsumer = ErrorStateContext.Consumer;
 
 export class ErrorContainer extends React.Component<IErrorProps, ErrorTypes> {
-  state = {
+  public readonly state = {
     content: "",
     type: ""
   };
 
-  setError = (content: string, type: string) => this.setState({ content, type });
+  private setError = (content: string, type: string): void => {
+    this.setState({ content, type });
+  };
 
-  clearFlash = () => this.setState({ content: "", type: "" });
+  private clearFlash = (): void => {
+    this.setState({ content: "", type: "" });
+  };
 
-  render() {
-    const { children } = this.props;
-
+  public render(): JSX.Element {
     const value: IUIErrorMessage = {
       errorState: {
         ...this.state
@@ -74,7 +78,7 @@ export class ErrorContainer extends React.Component<IErrorProps, ErrorTypes> {
 
     return (
       <ErrorStateContext.Provider value={value}>
-        {children}
+        {this.props.children}
       </ErrorStateContext.Provider>
     );
   }

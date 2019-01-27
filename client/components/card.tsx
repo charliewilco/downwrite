@@ -74,14 +74,14 @@ interface ICardLinks {
   title?: string;
 }
 
-export const EditLink: React.FC<ICardLinks> = ({ id, title = "Edit" }) => (
-  <Link prefetch passHref href={{ pathname: "/edit", query: { id } }}>
-    <SxLink>{title}</SxLink>
+export const EditLink: React.FC<ICardLinks> = props => (
+  <Link prefetch passHref href={{ pathname: "/edit", query: { id: props.id } }}>
+    <SxLink>{props.title || "Edit"}</SxLink>
   </Link>
 );
 
-export const PreviewLink: React.FC<ICardLinks> = ({ id }) => (
-  <Link prefetch passHref href={{ pathname: "/preview", query: { id } }}>
+export const PreviewLink: React.FC<ICardLinks> = props => (
+  <Link prefetch passHref href={{ pathname: "/preview", query: { id: props.id } }}>
     <SxLink>Preview</SxLink>
   </Link>
 );
@@ -96,28 +96,21 @@ export interface ICardProps {
   public: boolean;
 }
 
-const Card: React.FC<ICardProps> = ({
-  title,
-  id,
-  content,
-  dateAdded,
-  onDelete,
-  public: publicStatus
-}) => (
+const Card: React.FC<ICardProps> = props => (
   <CardContainer data-testid="CARD">
     <CardHeader>
       <CardTitle data-testid="CARD_TITLE">
-        <EditLink title={title} id={id} />
+        <EditLink title={props.title} id={props.id} />
       </CardTitle>
-      <CardMeta>added {distance(dateAdded)} ago</CardMeta>
+      <CardMeta>added {distance(props.dateAdded)} ago</CardMeta>
     </CardHeader>
     <CardTray>
       <div data-testid="CARD_EXCERPT">
-        <EditLink id={id} />
-        {publicStatus && <PreviewLink id={id} />}
+        <EditLink id={props.id} />
+        {props.public && <PreviewLink id={props.id} />}
       </div>
-      {onDelete && (
-        <CardDelete data-testid="CARD_DELETE_BUTTON" onClick={onDelete}>
+      {props.onDelete && (
+        <CardDelete data-testid="CARD_DELETE_BUTTON" onClick={props.onDelete}>
           Delete
         </CardDelete>
       )}
