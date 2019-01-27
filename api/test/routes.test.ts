@@ -57,9 +57,6 @@ xdescribe("Server Endpoints Perform", () => {
       payload: {
         ...createdPost,
         user
-      },
-      credentials: {
-        user
       }
     });
 
@@ -73,9 +70,6 @@ xdescribe("Server Endpoints Perform", () => {
       url: "/api/posts",
       headers: {
         Authorization: token
-      },
-      credentials: {
-        user
       }
     });
 
@@ -89,9 +83,7 @@ xdescribe("Server Endpoints Perform", () => {
     const p = await server.inject({
       method: "GET",
       url: "/api/posts/" + r.result[0].id,
-      credentials: {
-        user
-      },
+
       headers: {
         Authorization: token
       }

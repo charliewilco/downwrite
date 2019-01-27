@@ -23,28 +23,26 @@ const Footer = styled.footer`
   padding-right: 8px;
 `;
 
-const FooterNav = styled.nav``;
+const FooterNav = styled.nav`
+  &::before {
+    content: "";
+    display: block;
+    width: 64px;
+    height: 3px;
+    background: ${props => props.theme.link};
+    margin-bottom: 32px;
+  }
+`;
 
 const FooterList = styled.ul`
   list-style: none inside;
   padding: 0;
   margin: 0;
-  display: flex;
-  font-size: small;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  margin: 0 auto;
-  max-width: 600px;
 `;
 
 const FooterListItem = styled.li`
-  width: 50%;
-  text-align: center;
-  padding: 8px;
-
-  @media (min-width: 48rem) {
-    width: 25%;
-  }
+  display: inline-block;
+  margin-right: 16px;
 `;
 
 const UIFooter: React.SFC<{}> = () => (
