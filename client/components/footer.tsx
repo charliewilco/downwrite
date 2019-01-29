@@ -17,6 +17,7 @@ const PAGES: IPage[] = [
 ];
 
 const Footer = styled.footer`
+  text-align: center;
   padding-top: 32px;
   padding-bottom: 32px;
   padding-left: 8px;
@@ -27,10 +28,10 @@ const FooterNav = styled.nav`
   &::before {
     content: "";
     display: block;
-    width: 64px;
-    height: 3px;
+    width: 128px;
+    height: 2px;
     background: ${props => props.theme.link};
-    margin-bottom: 32px;
+    margin: 0 auto 32px;
   }
 `;
 
