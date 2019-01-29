@@ -123,7 +123,7 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
   };
 
   public render(): JSX.Element {
-    const { loaded, initialFocus, editorState } = this.state;
+    const { loaded, initialFocus } = this.state;
 
     return !loaded ? (
       <Loading size={75} />
@@ -132,54 +132,57 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
         <Formik
           onSubmit={this.updatePostContent}
           initialValues={{
-            editorState,
+            editorState: this.state.editorState,
             title: this.props.post.title,
             publicStatus: this.props.post.public
           }}>
           {({
-            values: { title, editorState, publicStatus },
+            values,
             handleChange,
             handleSubmit,
             setFieldValue
           }: FormikProps<IFields>) => (
             <>
               <Head>
-                <title>{title} | Downwrite</title>
+                <title>{values.title} | Downwrite</title>
               </Head>
               <Autosaving
                 duration={this.duration}
                 onUpdate={initialFocus && handleSubmit}>
                 <Toast>
-                  Autosaving <i>{title}</i>
+                  Autosaving <i>{values.title}</i>
                 </Toast>
               </Autosaving>
               <OuterEditor as={Form}>
                 <TimeMarker dateAdded={this.props.post.dateAdded} />
-                <Input value={title} name="title" onChange={handleChange} />
+                <Input value={values.title} name="title" onChange={handleChange} />
                 <UtilityBar.Container>
                   <UtilityBar.Items>
                     <ToggleBox
                       label={value => (value ? "Public" : "Private")}
                       name="publicStatus"
-                      value={publicStatus}
+                      value={values.publicStatus}
                       onChange={handleChange}
                     />
-                    <PreviewLink id={this.props.id} publicStatus={publicStatus} />
+                    <PreviewLink
+                      id={this.props.id}
+                      publicStatus={values.publicStatus}
+                    />
                   </UtilityBar.Items>
                   <UtilityBar.Items>
-                    {!!editorState && (
+                    {!!values.editorState && (
                       <ExportMarkdown
-                        editorState={editorState}
-                        title={title}
+                        editorState={values.editorState}
+                        title={values.title}
                         date={this.props.post.dateAdded}
                       />
                     )}
                     <Button type="submit">Save</Button>
                   </UtilityBar.Items>
                 </UtilityBar.Container>
-                {!!editorState && (
+                {!!values.editorState && (
                   <Editor
-                    editorState={editorState}
+                    editorState={values.editorState}
                     editorCommand={EDITOR_COMMAND}
                     onFocus={this.onFocus}
                     onSave={handleSubmit}
@@ -189,7 +192,9 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
                   />
                 )}
               </OuterEditor>
-              {!!editorState && <WordCounter editorState={editorState} />}
+              {!!values.editorState && (
+                <WordCounter editorState={values.editorState} />
+              )}
             </>
           )}
         </Formik>

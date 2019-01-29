@@ -8,10 +8,10 @@ import AuthorBlock from "../components/author-block";
 import NotFound from "../components/not-found";
 import * as API from "../utils/api";
 
-type AuthorType = {
+interface AuthorType {
   username: string;
   gradient: string[];
-};
+}
 
 export interface IEntry {
   title: string;

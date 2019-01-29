@@ -9,9 +9,11 @@ interface IFetchState {
   posts: IPost[];
 }
 
+type FetchRenderProps = (p: IFetchState) => React.ReactNode;
+
 interface IFetchProps {
   sortResponse?: () => void;
-  children: (p: IFetchState) => React.ReactNode;
+  children: FetchRenderProps;
 }
 
 export default class CollectionFetch extends React.Component<
@@ -22,15 +24,15 @@ export default class CollectionFetch extends React.Component<
     posts: []
   };
 
-  static contextType: React.Context<IAuthContext> = AuthContext;
+  public static contextType: React.Context<IAuthContext> = AuthContext;
 
-  static defaultProps = {
+  public static defaultProps = {
     sortResponse: (x: any[]) => x
   };
 
   // TODO: Move this to React Suspense!!
   // TODO: Or move to componentDidMount and add loading State
-  async componentDidMount() {
+  public async componentDidMount(): Promise<void> {
     const { token } = this.context;
     const { host } = document.location;
     const posts = await API.getPosts({ token, host });
@@ -38,7 +40,7 @@ export default class CollectionFetch extends React.Component<
     this.setState({ posts: orderBy(posts, ["dateAdded"], ["desc"]) || [] });
   }
 
-  render() {
+  public render() {
     const { posts } = this.state;
     return this.props.children({ posts });
   }
