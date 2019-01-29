@@ -112,7 +112,7 @@ interface IContentProps {
   content?: string;
 }
 
-const Content: React.SFC<IContentProps> = ({
+const Content: React.FC<IContentProps> = ({
   title,
   dateAdded,
   children,

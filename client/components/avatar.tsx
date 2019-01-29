@@ -45,12 +45,12 @@ interface IAvatarProps {
   className?: string;
 }
 
-const Avatar: React.SFC<IAvatarProps> = ({ colors, size, centered, className }) => (
+const Avatar: React.FC<IAvatarProps> = props => (
   <AvatarCircle
-    className={className}
-    size={size}
-    centered={centered}
-    colors={gradientPoints(colors)}
+    className={props.className}
+    size={props.size}
+    centered={props.centered}
+    colors={gradientPoints(props.colors)}
   />
 );
 

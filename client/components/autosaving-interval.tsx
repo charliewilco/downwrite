@@ -16,18 +16,18 @@ export default class AutosavingInterval extends React.Component<
   IAutosavingProps,
   IAutosavingState
 > {
-  state = { autosaving: false };
+  public readonly state = { autosaving: false };
 
-  static defaultProps = {
+  public static defaultProps = {
     onUpdate: () => {},
     delay: 3000,
     duration: 5000
   };
 
-  isMounted: boolean = false;
-  interval: any;
+  private isMounted: boolean = false;
+  private interval: any;
 
-  componentDidMount() {
+  public componentDidMount(): void {
     this.isMounted = true;
 
     this.interval = setInterval(async () => {
@@ -40,13 +40,15 @@ export default class AutosavingInterval extends React.Component<
     }, this.props.duration);
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount(): void {
     this.isMounted = false;
     clearInterval(this.interval);
   }
 
-  render() {
+  public render(): JSX.Element {
     const { autosaving } = this.state;
-    return autosaving && this.props.children;
+    if (autosaving) {
+      return <>{this.props.children}</>;
+    }
   }
 }

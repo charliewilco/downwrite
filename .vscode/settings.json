@@ -1,6 +1,7 @@
 {
   "editor.formatOnSave": true,
+  "jest.showCoverageOnLoad": true,
   "travis.repository": "downwrite",
   "travis.username": "charliewilco",
-  "jest.showCoverageOnLoad": true
+  "travis.pro": true
 }

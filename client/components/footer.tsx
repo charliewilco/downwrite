@@ -17,41 +17,44 @@ const PAGES: IPage[] = [
 ];
 
 const Footer = styled.footer`
+  text-align: center;
   padding-top: 32px;
   padding-bottom: 32px;
   padding-left: 8px;
   padding-right: 8px;
 `;
 
-const FooterNav = styled.nav``;
+const FooterNav = styled.nav`
+  &::before {
+    content: "";
+    display: block;
+    width: 128px;
+    height: 2px;
+    background: ${props => props.theme.link};
+    margin: 0 auto 32px;
+  }
+`;
 
 const FooterList = styled.ul`
   list-style: none inside;
   padding: 0;
   margin: 0;
-  display: flex;
-  font-size: small;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  margin: 0 auto;
-  max-width: 600px;
+  font-size: 14px;
 `;
 
 const FooterListItem = styled.li`
-  width: 50%;
-  text-align: center;
-  padding: 8px;
-
-  @media (min-width: 48rem) {
-    width: 25%;
-  }
+  display: inline-block;
+  margin-right: 16px;
 `;
 
-const UIFooter: React.SFC<{}> = () => (
+const UIFooter: React.FC<{}> = () => (
   <Footer>
     <Wrapper sm>
       <FooterNav>
         <FooterList>
+          <FooterListItem>
+            <span>&copy; 2019 Charles Peters</span>
+          </FooterListItem>
           {PAGES.map((page, i) => (
             <FooterListItem key={i}>
               <Link href={page.href} passHref>

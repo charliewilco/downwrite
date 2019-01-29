@@ -40,7 +40,7 @@ const Rule = styled.hr`
   background: rgba(0, 0, 0, 0.125);
 `;
 
-const TeaserCopy: React.SFC<any> = () => (
+const TeaserCopy: React.FC<any> = () => (
   <>You can write and share on Downwrite, you can sign up or log in </>
 );
 
@@ -50,13 +50,13 @@ interface IAuthorProps {
   colors: string[];
 }
 
-const Author: React.SFC<IAuthorProps> = ({ colors, authed, name }) => (
+const Author: React.FC<IAuthorProps> = props => (
   <AuthorContainer>
     <AuthorHeader>
-      <Avatar colors={colors} />
-      <AuthorHeadline>Post from {name}</AuthorHeadline>
+      <Avatar colors={props.colors} />
+      <AuthorHeadline>Post from {props.name}</AuthorHeadline>
     </AuthorHeader>
-    {!authed && (
+    {!props.authed && (
       <>
         <Rule />
         <Copy>

@@ -48,7 +48,7 @@ const LogoMark = () => (
   </LogoVector>
 );
 
-const Logo: React.SFC<any> = () => (
+const Logo: React.FC<any> = () => (
   <LogoContainer>
     <LogoMark />
   </LogoContainer>

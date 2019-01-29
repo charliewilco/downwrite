@@ -8,7 +8,7 @@ const PreviewAnchor = styled.a`
   line-height: 1;
 `;
 
-const PreviewLink: React.SFC<{ publicStatus: boolean; id: string }> = ({
+const PreviewLink: React.FC<{ publicStatus: boolean; id: string }> = ({
   publicStatus,
   id
 }) =>

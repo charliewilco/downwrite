@@ -26,6 +26,9 @@ export function cookies<T>(
   }
 }
 // : Promise<string>
+
+export const WHITE_LIST: string[] = ["/about", "/preview"];
+
 export const authMiddleware = (ctx: NextContext): string => {
   const cookie = cookies<ICookie>(ctx) as ICookie;
   const token = cookie.DW_TOKEN;

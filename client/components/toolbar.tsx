@@ -38,99 +38,83 @@ const INLINE_STYLES = [
   { label: "Mono", style: "CODE" }
 ];
 
-const FullToolBar: React.SFC<any> = ({
-  onToggleBlockType,
-  onToggleInlineStyle,
-  currentStyle,
-  blockType
-}) => (
+const FullToolBar: React.FC<any> = props => (
   <ToolbarWrapper>
     {BLOCK_TYPES.map(type => (
       <StyleButton
         key={type.label}
-        active={type.style === blockType}
+        active={type.style === props.blockType}
         label={type.label}
-        onToggle={onToggleBlockType}
+        onToggle={props.onToggleBlockType}
         style={type.style}
       />
     ))}
     {INLINE_STYLES.map(type => (
       <StyleButton
         key={type.label}
-        active={currentStyle.has(type.style)}
+        active={props.currentStyle.has(type.style)}
         label={type.label}
-        onToggle={onToggleInlineStyle}
+        onToggle={props.onToggleInlineStyle}
         style={type.style}
       />
     ))}
   </ToolbarWrapper>
 );
 
-const SelectionToolBar: React.SFC<any> = ({
-  selectedText,
-  currentStyle,
-  onToggleInlineStyle,
-  onToggleBlockType,
-  blockType
-}) => (
+const SelectionToolBar: React.FC<any> = props => (
   <ToolbarWrapper>
-    {selectedText.length > 0
+    {props.selectedText.length > 0
       ? INLINE_STYLES.map(type => (
           <StyleButton
             key={type.label}
-            active={currentStyle.has(type.style)}
+            active={props.currentStyle.has(type.style)}
             label={type.label}
-            onToggle={onToggleInlineStyle}
+            onToggle={props.onToggleInlineStyle}
             style={type.style}
           />
         ))
       : BLOCK_TYPES.map(type => (
           <StyleButton
             key={type.label}
-            active={type.style === blockType}
+            active={type.style === props.blockType}
             label={type.label}
-            onToggle={onToggleBlockType}
+            onToggle={props.onToggleBlockType}
             style={type.style}
           />
         ))}
   </ToolbarWrapper>
 );
 
-const Toolbar: React.SFC<any> = ({
-  editorState,
-  onToggleBlockType,
-  onToggleInlineStyle,
-  fullBar
-}) => {
-  const selection = editorState.getSelection();
+const Toolbar: React.FC<any> = props => {
+  const selection = props.editorState.getSelection();
   const anchorKey = selection.getAnchorKey();
-  const currentContent = editorState.getCurrentContent();
+  const currentContent = props.editorState.getCurrentContent();
   const currentContentBlock = currentContent.getBlockForKey(anchorKey);
   const start = selection.getStartOffset();
   const end = selection.getEndOffset();
   const selectedText = currentContentBlock.getText().slice(start, end);
-  const currentStyle = editorState.getCurrentInlineStyle();
-  const blockType = editorState
+  const currentStyle = props.editorState.getCurrentInlineStyle();
+  const blockType = props.editorState
     .getCurrentContent()
     .getBlockForKey(selection.getStartKey())
     .getType();
 
   return (
     <>
-      {fullBar ? (
+      {props.fullBar ? (
         <SelectionToolBar
           selectedText={selectedText}
           blockType={blockType}
           currentStyle={currentStyle}
-          onToggleInlineStyle={onToggleInlineStyle}
-          onToggleBlockType={onToggleBlockType}
+          onToggleInlineStyle={props.onToggleInlineStyle}
+          onToggleBlockType={props.onToggleBlockType}
         />
       ) : (
         <FullToolBar
           blockType={blockType}
           currentStyle={currentStyle}
-          onToggleInlineStyle={onToggleInlineStyle}
-          onToggleBlockType={onToggleBlockType}
+          onToggleInlineStyle={props.onToggleInlineStyle}
+          onToggleBlockType={props.onToggleBlockType}
         />
       )}
     </>

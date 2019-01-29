@@ -36,18 +36,18 @@ export class Container extends React.Component<
     activeIndex: 0
   };
 
-  getContext(): ITabsContext {
+  private getContext(): ITabsContext {
     return {
       activeIndex: this.state.activeIndex,
       onSelectTab: this.selectTabIndex
     };
   }
 
-  selectTabIndex = (activeIndex: number): void => {
+  private selectTabIndex = (activeIndex: number): void => {
     this.setState({ activeIndex });
   };
 
-  render() {
+  public render(): JSX.Element {
     const value = this.getContext();
     const { className, ...props } = this.props;
     return (
@@ -64,7 +64,7 @@ interface ITabsList extends ITabsModifier {
   [key: string]: any;
 }
 
-export const List: React.SFC<ITabsList> = ({ children, className }) => (
+export const List: React.FC<ITabsList> = ({ children, className }) => (
   <TabContext.Consumer>
     {(context: ITabsContext): JSX.Element => {
       const cloned = React.Children.map(
@@ -93,7 +93,7 @@ interface ITabsListItem extends ITabsModifier {
   [key: string]: any;
 }
 
-export const ListItem: React.SFC<ITabsListItem> = ({
+export const ListItem: React.FC<ITabsListItem> = ({
   isActive,
   isDisabled,
   id,
@@ -110,7 +110,7 @@ export const ListItem: React.SFC<ITabsListItem> = ({
     className={`${className} ${isDisabled ? "disabled" : isActive ? "active" : ""}`}
     onClick={isDisabled ? null : onSelect}
     onKeyPress={event => {
-      if (event.key == "Enter") {
+      if (event.key === "Enter") {
         return isDisabled ? null : onSelect();
       }
     }}
@@ -123,7 +123,7 @@ interface ITabsPanels extends ITabsModifier {
   isActive?: boolean;
 }
 
-export const Panels: React.SFC<ITabsPanels> = ({ children, className }) => (
+export const Panels: React.FC<ITabsPanels> = ({ children, className }) => (
   <TabContext.Consumer>
     {context => {
       const cloned = React.Children.map(

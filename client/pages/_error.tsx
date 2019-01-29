@@ -30,21 +30,21 @@ interface IErrorPageContext extends NextContext<any> {
   err: CustomError;
 }
 
-const StatusCode: React.SFC<Partial<CustomError>> = ({ statusCode }) => (
+const StatusCode: React.FC<Partial<CustomError>> = props => (
   <p>
-    {statusCode
-      ? "An error " + statusCode + "occurred on server"
+    {props.statusCode
+      ? "An error " + props.statusCode + "occurred on server"
       : "An error occurred on client"}
   </p>
 );
 
 export default class ErrorPage extends React.Component<IErrorViewProps, any> {
-  static getInitialProps({ res, err }: IErrorPageContext) {
+  public static getInitialProps({ res, err }: IErrorPageContext) {
     const statusCode = res ? res.statusCode : err ? err.statusCode : null;
     return { statusCode };
   }
 
-  render() {
+  public render(): JSX.Element {
     const { statusCode } = this.props;
     return (
       <CenteredWrapper>

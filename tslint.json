@@ -1,0 +1,39 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "member-access": true,
+    "class-name": true,
+    "no-console": {
+      "severity": "warning",
+      "options": ["debug", "info", "log", "time", "timeEnd", "trace"]
+    },
+    "max-line-length": false,
+    "prefer-const": false,
+    "member-ordering": false,
+    "interface-name": false,
+    "ordered-imports": false,
+    "trailing-comma": [true, { "multiline": "never", "singleline": "never" }],
+    "object-literal-sort-keys": false,
+    "arrow-parens": false,
+    "prefer-for-of": true,
+    "no-var-keyword": true,
+    "interface-over-type-literal": true,
+    "no-duplicate-imports": true,
+    "max-classes-per-file": false,
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "variable-name": [true, "ban-keywords", "allow-leading-underscore"],
+    "ban-types": {
+      "options": [
+        ["Object", "Avoid using the `Object` type. Did you mean `object`?"],
+        [
+          "Function",
+          "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."
+        ],
+        ["Boolean", "Avoid using the `Boolean` type. Did you mean `boolean`?"],
+        ["Number", "Avoid using the `Number` type. Did you mean `number`?"],
+        ["String", "Avoid using the `String` type. Did you mean `string`?"],
+        ["Symbol", "Avoid using the `Symbol` type. Did you mean `symbol`?"]
+      ]
+    }
+  }
+}

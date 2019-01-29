@@ -24,9 +24,9 @@ interface IMarkdown {
 }
 
 export default class Uploader extends React.Component<IUploadProps, {}> {
-  static displayName = "Uploader";
+  public static displayName = "Uploader";
 
-  reader: FileReader = __IS_BROWSER__ && new FileReader();
+  private reader: FileReader = __IS_BROWSER__ && new FileReader();
 
   private extractMarkdown = (files: File[]): void => {
     this.reader.onload = () => {
@@ -48,16 +48,19 @@ export default class Uploader extends React.Component<IUploadProps, {}> {
   private onDrop = (files: File[]) => this.extractMarkdown(files);
 
   public render(): JSX.Element {
-    const { disabled, children } = this.props;
+    const { disabled } = this.props;
     return (
       <Dropzone
         accept="text/markdown, text/x-markdown, text/plain"
         multiple={false}
-        style={{ border: 0, width: "100%" }}
         onDrop={this.onDrop}
         disableClick
         disabled={disabled}>
-        {children}
+        {({ getRootProps }) => (
+          <div {...getRootProps()} style={{ border: 0, width: "100%" }}>
+            {this.props.children}
+          </div>
+        )}
       </Dropzone>
     );
   }

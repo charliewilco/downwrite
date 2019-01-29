@@ -43,7 +43,7 @@ interface ISettingsBlockProps {
   description?: string;
 }
 
-const SettingsBlock: React.SFC<ISettingsBlockProps> = ({
+const SettingsBlock: React.FC<ISettingsBlockProps> = ({
   children,
   title,
   description

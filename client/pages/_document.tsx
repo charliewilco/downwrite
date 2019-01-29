@@ -30,7 +30,7 @@ export default class MyDocument extends Document<WithStyleTags> {
     return { ...page, ...initialProps, styleTags };
   }
 
-  render() {
+  public render(): JSX.Element {
     const { styleTags } = this.props;
     return (
       <html lang="en">

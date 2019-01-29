@@ -37,9 +37,9 @@ interface IHomeProps {
 }
 
 export default class Home extends React.Component<IHomeProps, any> {
-  static contextType: React.Context<IUIErrorMessage> = ErrorStateContext;
+  public static contextType: React.Context<IUIErrorMessage> = ErrorStateContext;
 
-  render() {
+  public render(): JSX.Element {
     const { signIn } = this.props;
     const { setError } = this.context.errorActions;
     return (
