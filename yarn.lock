@@ -4802,10 +4802,10 @@ hapi-auth-jwt2@^8.3.0:
     cookie "^0.3.1"
     jsonwebtoken "^8.1.0"
 
-hapi@^18.0.0:
-  version "18.0.0"
-  resolved "https://registry.npmjs.org/hapi/-/hapi-18.0.0.tgz#97dcc248432baa3d32eb9d9542dec028d8271e1a"
-  integrity sha512-Yv68jeoHww6W88gQsvBfZil139Ho/CTMH75+GADuREIET/4bo60yhp+MoVc3lHjMR5hIEYl7HC6wxGzbmGBLQg==
+hapi@^18.1.0:
+  version "18.1.0"
+  resolved "https://registry.yarnpkg.com/hapi/-/hapi-18.1.0.tgz#98a2a5a8f37a41eb196bdad9727f66b1fbca5fec"
+  integrity sha512-nSU1VLyTAgp7P5gy47QzJIP2JAb+wOFvJIV3gnL0lFj/mD+HuTXhyUsDYXjF/dhADMVXVEz31z6SUHBJhtsvGA==
   dependencies:
     accept "3.x.x"
     ammo "3.x.x"
@@ -6221,10 +6221,10 @@ jimp@^0.2.28:
     tinycolor2 "^1.1.2"
     url-regex "^3.0.0"
 
-joi@14.x.x:
-  version "14.3.0"
-  resolved "https://registry.npmjs.org/joi/-/joi-14.3.0.tgz#55f7c5caa8256de74ccb12eb22ab1c19eea02db3"
-  integrity sha512-0HKd1z8MWogez4GaU0LkY1FgW30vR2Kwy414GISfCU41OYgUC2GWpNe5amsvBZtDqPtt7DohykfOOMIw1Z5hvQ==
+joi@14.x.x, joi@^14.3.1:
+  version "14.3.1"
+  resolved "https://registry.npmjs.org/joi/-/joi-14.3.1.tgz#164a262ec0b855466e0c35eea2a885ae8b6c703c"
+  integrity sha512-LQDdM+pkOrpAn4Lp+neNIFV3axv1Vna3j38bisbQhETPMANYRbFJFUyOZcOClYvM/hppMhGWuKSFEK9vjrB+bQ==
   dependencies:
     hoek "6.x.x"
     isemail "3.x.x"
@@ -6238,15 +6238,6 @@ joi@^11.1.1:
     hoek "4.x.x"
     isemail "3.x.x"
     topo "2.x.x"
-
-joi@^14.3.1:
-  version "14.3.1"
-  resolved "https://registry.npmjs.org/joi/-/joi-14.3.1.tgz#164a262ec0b855466e0c35eea2a885ae8b6c703c"
-  integrity sha512-LQDdM+pkOrpAn4Lp+neNIFV3axv1Vna3j38bisbQhETPMANYRbFJFUyOZcOClYvM/hppMhGWuKSFEK9vjrB+bQ==
-  dependencies:
-    hoek "6.x.x"
-    isemail "3.x.x"
-    topo "3.x.x"
 
 jpeg-js@^0.2.0:
   version "0.2.0"
