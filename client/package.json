@@ -63,7 +63,7 @@
     "@types/react-dropzone": "^4.2.2",
     "@types/styled-components": "^4.1.6",
     "@types/uuid": "^3.4.3",
-    "@types/yup": "^0.26.6",
+    "@types/yup": "^0.26.7",
     "jest": "^24.0.0",
     "jest-dom": "^3.0.0",
     "jest-fetch-mock": "^2.1.0",
