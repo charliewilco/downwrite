@@ -25,6 +25,7 @@ const LegalContainer = styled.label`
   display: flex;
   align-items: center;
   margin: 16px;
+  font-weight: 700;
   background: ${props => (props.theme.night ? "white" : "#d8eaf1")};
   padding: 8px;
   color: ${DefaultStyles.colors.text};

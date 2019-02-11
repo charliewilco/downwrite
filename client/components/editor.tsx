@@ -80,17 +80,17 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
     this.onChange(Draft.RichUtils.onTab(e, this.props.editorState, maxDepth));
   };
 
-  private _toggleBlockType = (blockType: Draft.DraftBlockType) => {
-    this.onChange(
-      Draft.RichUtils.toggleBlockType(this.props.editorState, blockType)
-    );
-  };
+  // private _toggleBlockType = (blockType: Draft.DraftBlockType) => {
+  //   this.onChange(
+  //     Draft.RichUtils.toggleBlockType(this.props.editorState, blockType)
+  //   );
+  // };
 
-  private _toggleInlineStyle = (inlineStyle: string) => {
-    this.onChange(
-      Draft.RichUtils.toggleInlineStyle(this.props.editorState, inlineStyle)
-    );
-  };
+  // private _toggleInlineStyle = (inlineStyle: string) => {
+  //   this.onChange(
+  //     Draft.RichUtils.toggleInlineStyle(this.props.editorState, inlineStyle)
+  //   );
+  // };
 
   private handleKeyCommand = (
     command: string,
