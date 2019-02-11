@@ -8,23 +8,23 @@ interface ITouchOutsideProps {
 }
 
 export default class TouchOutside extends React.Component<ITouchOutsideProps> {
-  static displayName = "TouchOutside";
+  public static displayName = "TouchOutside";
 
-  componentDidMount() {
+  public componentDidMount(): void {
     if (document) {
       document.addEventListener("touchstart", this.outsideHandleClick);
       document.addEventListener("click", this.outsideHandleClick);
     }
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount(): void {
     if (document) {
       document.removeEventListener("touchstart", this.outsideHandleClick);
       document.removeEventListener("click", this.outsideHandleClick);
     }
   }
 
-  outsideHandleClick = ({ target }: MouseEvent): void => {
+  private outsideHandleClick = ({ target }: MouseEvent): void => {
     const node = findDOMNode(this);
 
     if (node instanceof HTMLElement) {
@@ -34,7 +34,7 @@ export default class TouchOutside extends React.Component<ITouchOutsideProps> {
     }
   };
 
-  render() {
+  public render(): JSX.Element {
     return <>{this.props.children}</>;
   }
 }

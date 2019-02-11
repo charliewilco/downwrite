@@ -1,7 +1,7 @@
 import * as React from "react";
 
 export default class LockScroll extends React.Component {
-  componentDidMount() {
+  public componentDidMount(): void {
     if (document) {
       if (document.body) {
         document.body.classList.add("__noScroll");
@@ -9,7 +9,7 @@ export default class LockScroll extends React.Component {
     }
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount(): void {
     if (document) {
       if (document.body) {
         document.body.classList.remove("__noScroll");
@@ -17,7 +17,7 @@ export default class LockScroll extends React.Component {
     }
   }
 
-  render() {
+  public render(): React.ReactNode {
     return this.props.children;
   }
 }

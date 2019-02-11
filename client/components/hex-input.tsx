@@ -43,23 +43,26 @@ export default class HexInput extends React.PureComponent<
   IHexInputProps,
   IHexInputState
 > {
-  state = {
+  public readonly state = {
     hex: this.props.initialValue || ""
   };
 
-  static defaultProps = {
+  public static defaultProps = {
     onChange: (color: string): void => {
       color;
     }
   };
 
-  handleChange = ({
+  private handleChange = ({
     target: { value: hex }
-  }: React.ChangeEvent<HTMLInputElement>) => {
+  }: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ hex });
   };
 
-  componentDidUpdate(prevProps: IHexInputProps, prevState: IHexInputState) {
+  public componentDidUpdate(
+    prevProps: IHexInputProps,
+    prevState: IHexInputState
+  ): void {
     const { hex } = this.state;
     let color = "#" + hex;
     let prevColor = "#" + prevState.hex;
@@ -73,7 +76,7 @@ export default class HexInput extends React.PureComponent<
   //   return this.state.hex !== nextState.hex;
   // }
 
-  render() {
+  public render(): JSX.Element {
     const { hex } = this.state;
     return (
       <InputWrapper>

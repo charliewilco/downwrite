@@ -5,24 +5,24 @@ interface LocalDraftTypes {
 }
 
 export default class extends React.Component<void, LocalDraftTypes> {
-  state: LocalDraftTypes = {
+  public readonly state: LocalDraftTypes = {
     drafts: []
   };
 
-  searchLocalStorage = () => {
+  private searchLocalStorage = () => {
     return localStorage.forEach(
       (item: any, iterator: number) =>
         localStorage.key(iterator).includes("Draft") && item
     );
   };
 
-  componentDidMount() {
+  public componentDidMount(): void {
     let storage = this.searchLocalStorage();
 
     return storage.forEach((item: any) => item);
   }
 
-  render() {
+  public render(): JSX.Element {
     return <span>I should be a list and i'm not</span>;
   }
 }

@@ -29,7 +29,7 @@ interface IPostListProps {
 }
 
 export default class PostList extends React.Component<IPostListProps, {}> {
-  render() {
+  public render(): JSX.Element {
     const { posts, onDelete } = this.props;
 
     return (

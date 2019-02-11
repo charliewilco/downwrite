@@ -25,13 +25,15 @@ const mockEditor = (state: Draft.EditorState) =>
   );
 
 class WrappedEditor extends React.Component {
-  state = {
+  public readonly state = {
     editorState: emptyContent
   };
 
-  onChange = (editorState: Draft.EditorState) => this.setState({ editorState });
+  private onChange = (editorState: Draft.EditorState): void => {
+    this.setState({ editorState });
+  };
 
-  render() {
+  public render(): JSX.Element {
     return (
       <DWEditor
         editorCommand="nope"

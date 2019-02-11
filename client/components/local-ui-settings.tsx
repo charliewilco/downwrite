@@ -19,11 +19,11 @@ export class LocalUISettingsProvider extends React.Component<
     monospace: string;
   }
 > {
-  state = {
+  public readonly state = {
     monospace: DefaultStyles.fonts.monospace
   };
 
-  componentDidMount() {
+  public componentDidMount(): void {
     const monospace = localStorage.getItem("DW_EDITOR_FONT");
 
     this.setState(state => ({
@@ -31,11 +31,11 @@ export class LocalUISettingsProvider extends React.Component<
     }));
   }
 
-  updateFont = (monospace: string) => {
+  private updateFont = (monospace: string): void => {
     this.setState({ monospace });
   };
 
-  render() {
+  public render(): JSX.Element {
     return (
       <LocalUISettings.Provider
         value={{

@@ -25,9 +25,9 @@ interface IInputs {
 }
 
 class SettingsPassword extends React.Component<{}, {}> {
-  static contextType: React.Context<IAuthContext> = AuthContext;
+  public static contextType: React.Context<IAuthContext> = AuthContext;
 
-  onSubmit = (
+  private onSubmit = (
     values: IPasswordSettings,
     actions: FormikActions<IPasswordSettings>
   ): void => {
@@ -55,7 +55,7 @@ class SettingsPassword extends React.Component<{}, {}> {
     }
   ];
 
-  render() {
+  public render(): JSX.Element {
     return (
       <Formik
         initialValues={{

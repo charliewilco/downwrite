@@ -6,7 +6,7 @@ interface IInvalidTokenProps {
 }
 
 export default class extends React.Component<IInvalidTokenProps, any> {
-  render() {
+  public render(): JSX.Element {
     return (
       <div data-testid="INVALID_TOKEN_CONTAINER">
         <p>{this.props.error}</p>

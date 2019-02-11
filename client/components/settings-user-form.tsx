@@ -17,11 +17,12 @@ interface ISettingsUserForm {
 }
 
 class SettingsUser extends React.Component<ISettingsUserForm, {}> {
-  static contextType: React.Context<IAuthContext> = AuthContext;
-  onSubmit = async (
+  public static contextType: React.Context<IAuthContext> = AuthContext;
+
+  private onSubmit = async (
     values: IUserFormValues,
     actions: FormikActions<IUserFormValues>
-  ) => {
+  ): Promise<void> => {
     const { token } = this.context;
     const { host } = document.location;
     const settings = await API.updateSettings(values, { token, host });
@@ -30,7 +31,7 @@ class SettingsUser extends React.Component<ISettingsUserForm, {}> {
     }
   };
 
-  render() {
+  public render(): JSX.Element {
     const { user } = this.props;
     return (
       <Formik

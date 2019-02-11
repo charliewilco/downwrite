@@ -91,9 +91,9 @@ interface ModalProps {
 }
 
 export default class UIModal extends React.Component<ModalProps, any> {
-  static displayName = "UIModal";
+  public static displayName = "UIModal";
 
-  render() {
+  public render(): JSX.Element {
     const { closeUIModal, children } = this.props;
     return (
       <Overlay>

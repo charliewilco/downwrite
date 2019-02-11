@@ -33,13 +33,20 @@ interface LoginProps {
 }
 
 export default class Register extends React.Component<LoginProps, {}> {
-  handleSubmit = (values: IRegistration, actions: FormikActions<IRegistration>) => {
+  private handleSubmit = (
+    values: IRegistration,
+    actions: FormikActions<IRegistration>
+  ): void => {
     if (values.legalChecked) {
       this.onSubmit(values);
     }
   };
 
-  onSubmit = async ({ username, email, password }: IRegistration): Promise<void> => {
+  private onSubmit = async ({
+    username,
+    email,
+    password
+  }: IRegistration): Promise<void> => {
     const { signIn, setError } = this.props;
     const { host } = document.location;
     const user = await API.createUser(
@@ -80,7 +87,7 @@ export default class Register extends React.Component<LoginProps, {}> {
     }
   ];
 
-  render() {
+  public render(): JSX.Element {
     return (
       <Formik
         validationSchema={RegisterFormSchema}

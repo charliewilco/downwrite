@@ -10,32 +10,33 @@ export default class OfflineListener extends React.Component<
   { children: React.ReactNode },
   OfflineAtrx
 > {
-  static displayName = "OfflineListener";
+  public static displayName = "OfflineListener";
 
-  state = {
+  public readonly state = {
     offline: !window.navigator.onLine
   };
 
-  handleChange = (x: Event) =>
+  private handleChange = (x: Event): void => {
     this.setState({
       offline: !(x.currentTarget as Window).navigator.onLine
     });
+  };
 
-  componentDidMount() {
+  public componentDidMount(): void {
     if (window) {
       window.addEventListener("offline", this.handleChange);
       window.addEventListener("online", this.handleChange);
     }
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount(): void {
     if (window) {
       window.removeEventListener("offline", this.handleChange);
       window.removeEventListener("online", this.handleChange);
     }
   }
 
-  render() {
+  public render(): JSX.Element {
     const { offline } = this.state;
     const { children } = this.props;
     return <Provider value={{ offline }}>{children}</Provider>;

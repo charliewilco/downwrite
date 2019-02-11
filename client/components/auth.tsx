@@ -83,6 +83,8 @@ export default class AuthMegaProvider extends React.Component<
     };
   }
 
+  public readonly state: IAuthState;
+
   private signIn = (authed: boolean, token: string): void => {
     const { name } = jwt(token);
     this.setState({ authed, token, name });

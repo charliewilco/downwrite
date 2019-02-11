@@ -24,11 +24,14 @@ export default class SettingsLocalMarkdown extends React.Component<
   {},
   { initialValues: ILocalSettings }
 > {
-  state = { initialValues };
+  public readonly state = { initialValues };
 
-  static contextType: React.Context<ILocalUISettings> = LocalUISettings;
+  public static contextType: React.Context<ILocalUISettings> = LocalUISettings;
 
-  onSubmit = (values: ILocalSettings, actions: FormikActions<ILocalSettings>) => {
+  private onSubmit = (
+    values: ILocalSettings,
+    actions: FormikActions<ILocalSettings>
+  ): void => {
     localStorage.setItem("DW_FILE_EXTENSION", values.fileExtension);
     localStorage.setItem("DW_EDITOR_FONT", values.fontFamily);
 
@@ -42,7 +45,7 @@ export default class SettingsLocalMarkdown extends React.Component<
     }
   };
 
-  componentDidMount() {
+  public componentDidMount(): void {
     let fileExtension =
       localStorage.getItem("DW_FILE_EXTENSION") || initialValues.fileExtension;
     let fontFamily =
@@ -62,7 +65,7 @@ export default class SettingsLocalMarkdown extends React.Component<
     }
   ];
 
-  render() {
+  public render(): JSX.Element {
     return (
       <Formik
         enableReinitialize

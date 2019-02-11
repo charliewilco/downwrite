@@ -35,7 +35,7 @@ const StyledInput = styled.input`
   }
 
   &::placeholder {
-    color: #d9d9d9;
+    color: ${props => (props.theme.night ? "rgba(255, 255, 255, .25)" : "#d9d9d9")};
     font-weight: 700;
     font-style: italic;
   }
@@ -68,17 +68,17 @@ const UIInputLabel = styled.small<InputTypeState>`
 `;
 
 export default class extends React.Component<InputType, InputTypeState> {
-  state = {
+  public readonly state = {
     active: false
   };
 
-  static displayName = "UIInput";
+  public static displayName = "UIInput";
 
-  static defaultProps = {
+  public static defaultProps = {
     type: "text"
   };
 
-  render() {
+  public render(): JSX.Element {
     const id = uuid();
     const { active } = this.state;
     const { label } = this.props;
