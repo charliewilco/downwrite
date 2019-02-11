@@ -42,8 +42,8 @@ const FormWrapper = styled(UITabs.Container)`
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
   max-width: 544px;
   width: 100%;
-  background: white;
-  color: ${DefaultStyles.colors.text};
+  background: ${props => props.theme.cardBackground};
+  color: ${props => props.theme.color};
 `;
 
 interface LoginContainerProps {
