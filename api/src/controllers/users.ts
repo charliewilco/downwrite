@@ -91,16 +91,16 @@ export const updatePassword = async (request: IUpdatePassword) => {
   }
 };
 
-export const verifyValidPassword = async request => {
+export const verifyValidPassword = async (request: IUpdatePassword) => {
   const { user } = request.auth.credentials;
   const { oldPassword, newPassword } = request.payload;
   const salt = await bcrypt.genSalt(10);
   const newPasswordHash = await bcrypt.hash(newPassword, salt);
 
   // Validates the the old password was actually the user's password
-  const isPasswordValid = async oldPassword => {
+  const isPasswordValid = async (p: string): Promise<boolean> => {
     const { password } = await User.findById(user, "password").lean();
-    const result = await bcrypt.compare(oldPassword, password);
+    const result = await bcrypt.compare(p, password);
 
     return result;
   };
