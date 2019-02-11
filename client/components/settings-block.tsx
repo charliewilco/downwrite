@@ -6,6 +6,8 @@ const StyledToast = styled(Toast)`
   flex-wrap: wrap;
   padding: 16px;
   margin-bottom: 32px;
+  color: ${props => props.theme.color};
+  background: ${props => props.theme.cardBackground};
 `;
 
 const SettingsTitleContainer = styled.header`
