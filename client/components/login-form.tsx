@@ -17,7 +17,10 @@ interface LoginProps {
 }
 
 export default class Login extends React.Component<LoginProps, {}> {
-  handleSubmit = (values: ILoginForm, actions: FormikActions<ILoginForm>) => {
+  private handleSubmit = (
+    values: ILoginForm,
+    actions: FormikActions<ILoginForm>
+  ): void => {
     this.onSubmit(values);
   };
 
