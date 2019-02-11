@@ -50,5 +50,7 @@ export default class AutosavingInterval extends React.Component<
     if (autosaving) {
       return <>{this.props.children}</>;
     }
+
+    return null;
   }
 }

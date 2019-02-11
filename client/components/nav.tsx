@@ -2,7 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 import { withRouter, WithRouterProps } from "next/router";
 import styled, { keyframes } from "styled-components";
-import { AuthContext, IAuthContext } from "./auth";
+import { AuthConsumer } from "./auth";
 import User from "./user";
 import Fetch from "./collection-fetch";
 import { SignoutIcon } from "./icons";
@@ -137,8 +137,6 @@ const NavLabel = styled.span`
 class NavBar extends React.Component<NavigationProps, any> {
   public static displayName = "NavigationBar";
 
-  public static contextType: React.Context<IAuthContext> = AuthContext;
-
   public componentDidUpdate(prevProps: NavigationProps): void {
     if (prevProps.router && this.props.router) {
       if (prevProps.router.pathname !== this.props.router.pathname) {
@@ -149,48 +147,55 @@ class NavBar extends React.Component<NavigationProps, any> {
 
   public render(): JSX.Element {
     const { closeNav } = this.props;
-    const { signOut } = this.context;
     return (
-      <LockScroll>
-        <TouchOutside onChange={closeNav}>
-          <Nav>
-            <NavColumn>
-              <div>
-                <User border {...this.context} />
-                <UserActionContainer>
-                  <Link href="/" passHref>
-                    <NavItem>All Entries</NavItem>
-                  </Link>
-                  <Link href="/new" prefetch passHref>
-                    <NavItem>Create New Entry</NavItem>
-                  </Link>
-                </UserActionContainer>
-              </div>
+      <AuthConsumer>
+        {context => (
+          <LockScroll>
+            <TouchOutside onChange={closeNav}>
+              <Nav>
+                <NavColumn>
+                  <div>
+                    <User
+                      border
+                      colors={["#FEB692", "#EA5455"]}
+                      name={context.name}
+                    />
+                    <UserActionContainer>
+                      <Link href="/" passHref>
+                        <NavItem>All Entries</NavItem>
+                      </Link>
+                      <Link href="/new" prefetch passHref>
+                        <NavItem>Create New Entry</NavItem>
+                      </Link>
+                    </UserActionContainer>
+                  </div>
 
-              <PostListContainer>
-                <Fetch>
-                  {({ posts }) =>
-                    posts.length > 0 ? (
-                      <SidebarPosts posts={posts} />
-                    ) : (
-                      <SidebarEmpty />
-                    )
-                  }
-                </Fetch>
-              </PostListContainer>
+                  <PostListContainer>
+                    <Fetch>
+                      {({ posts }) =>
+                        posts.length > 0 ? (
+                          <SidebarPosts posts={posts} />
+                        ) : (
+                          <SidebarEmpty />
+                        )
+                      }
+                    </Fetch>
+                  </PostListContainer>
 
-              <NavTray>
-                <Link href="/legal" passHref>
-                  <NavLink>Legal</NavLink>
-                </Link>
-                <NavButton onClick={signOut}>
-                  <StyledSignoutIcon /> <NavLabel>Sign Out</NavLabel>
-                </NavButton>
-              </NavTray>
-            </NavColumn>
-          </Nav>
-        </TouchOutside>
-      </LockScroll>
+                  <NavTray>
+                    <Link href="/legal" passHref>
+                      <NavLink>Legal</NavLink>
+                    </Link>
+                    <NavButton onClick={context.signOut}>
+                      <StyledSignoutIcon /> <NavLabel>Sign Out</NavLabel>
+                    </NavButton>
+                  </NavTray>
+                </NavColumn>
+              </Nav>
+            </TouchOutside>
+          </LockScroll>
+        )}
+      </AuthConsumer>
     );
   }
 }

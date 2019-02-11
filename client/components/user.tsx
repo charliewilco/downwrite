@@ -41,12 +41,14 @@ const SettingsLink = () => (
   </Link>
 );
 
-const UserBlock: React.FC<IUserBlock> = props => (
-  <UserBlockContainer border={props.border}>
-    <SettingsLink />
-    <Avatar centered colors={props.colors} />
-    <DisplayUser>{props.name}</DisplayUser>
-  </UserBlockContainer>
-);
+const UserBlock: React.FC<IUserBlock> = props => {
+  return (
+    <UserBlockContainer border={props.border}>
+      <SettingsLink />
+      <Avatar centered colors={props.colors} />
+      <DisplayUser>{props.name}</DisplayUser>
+    </UserBlockContainer>
+  );
+};
 
 export default UserBlock;
