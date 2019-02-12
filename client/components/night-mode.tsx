@@ -8,6 +8,8 @@ import Checkbox from "./checkbox";
 import * as DefaultStyles from "../utils/defaultStyles";
 
 const NIGHT_MODE: string = "NightMDX";
+const NIGHT_MODE_OFF: string = "NIGHT_MODE_OFF";
+const NIGHT_MODE_ON: string = "NIGHT_MODE_ON";
 
 const NightContainer = styled.div`
   padding-top: 16px;
@@ -42,11 +44,7 @@ interface INightModeContext {
   };
 }
 
-interface INightModeState {
-  night: boolean;
-}
-
-const NightModeContext = React.createContext({});
+const NightModeContext = React.createContext({} as INightModeContext);
 
 const NightModeStyles = createGlobalStyle`
   .NightMDX {}
@@ -62,81 +60,76 @@ const NightModeStyles = createGlobalStyle`
   }
 `;
 
-export default class NightModeContainer extends React.Component<
-  { children: React.ReactChild },
-  INightModeState
-> {
-  public static displayName: string = "NightModeContainer";
+const NightModeContainer: React.FC<{ children: React.ReactChild }> = function(
+  props
+) {
+  const [night, setNight] = React.useState(false);
 
-  public readonly state = {
-    night: false
-  };
+  React.useEffect(() => {
+    if (typeof window !== undefined) {
+      const local = localStorage.getItem(NIGHT_MODE);
 
-  public componentDidMount(): void {
-    const night = JSON.parse(localStorage.getItem("nightMode")) || false;
-    this.setState({ night });
-  }
+      if (local !== NIGHT_MODE_OFF) {
+        setNight(true);
+      }
+    }
+  }, []);
 
-  private setNightMode = (status: boolean): void => {
+  React.useEffect(() => {
     const { body } = document;
+
     if (body instanceof HTMLElement) {
-      localStorage.setItem("nightMode", status.toString());
+      localStorage.setItem(NIGHT_MODE, night ? NIGHT_MODE_ON : NIGHT_MODE_OFF);
 
-      status ? body.classList.add(NIGHT_MODE) : body.classList.remove(NIGHT_MODE);
+      night ? body.classList.add(NIGHT_MODE) : body.classList.remove(NIGHT_MODE);
     }
+
+    return function cleanup() {
+      if (document.body) {
+        document.body.classList.remove(NIGHT_MODE);
+      }
+    };
+  }, [night]);
+
+  const onChange = () => {
+    setNight(!night);
   };
 
-  public componentDidUpdate(): void {
-    const { night } = this.state;
-    this.setNightMode(night);
-  }
+  const theme: DefaultTheme = night
+    ? DefaultStyles.NIGHT_THEME
+    : DefaultStyles.DAY_THEME;
 
-  private onChange = (): void => {
-    this.setState(({ night }) => ({ night: !night }));
+  return (
+    <NightModeContext.Provider value={{ night, action: { onChange } }}>
+      <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
+    </NightModeContext.Provider>
+  );
+};
+
+export default NightModeContainer;
+
+export const NightModeTrigger: React.FC = ({ children }) => {
+  const { night, action } = React.useContext<INightModeContext>(NightModeContext);
+  const onChange = () => {
+    action.onChange();
   };
 
-  public componentWillUnmount(): void {
-    if (document.body) {
-      document.body.classList.remove(NIGHT_MODE);
-    }
-  }
-
-  public render(): JSX.Element {
-    const { night } = this.state;
-    const theme: DefaultTheme = night
-      ? DefaultStyles.NIGHT_THEME
-      : DefaultStyles.DAY_THEME;
-
-    return (
-      <NightModeContext.Provider
-        value={{ night, action: { onChange: this.onChange } }}>
-        <ThemeProvider theme={theme}>{this.props.children}</ThemeProvider>
-      </NightModeContext.Provider>
-    );
-  }
-}
-
-export const NightModeTrigger: React.FC = ({ children }) => (
-  <>
-    <NightModeStyles />
-    <NightModeContext.Consumer>
-      {(context: INightModeContext) => (
-        <NightContainer className={context.night ? "NightMode" : ""}>
-          <NightToggle role="form" tabIndex={-1} onSubmit={context.action.onChange}>
-            <NightController htmlFor="nightToggle">
-              <Checkbox
-                role="checkbox"
-                aria-checked={context.night}
-                checked={context.night}
-                id="nightToggle"
-                onChange={context.action.onChange}
-              />
-              <NightLabel>Night Mode</NightLabel>
-            </NightController>
-          </NightToggle>
-          {children}
-        </NightContainer>
-      )}
-    </NightModeContext.Consumer>
-  </>
-);
+  return (
+    <NightContainer className={night ? "NightMode" : ""}>
+      <NightModeStyles />
+      <NightToggle role="form" tabIndex={-1} onSubmit={onChange}>
+        <NightController htmlFor="nightToggle">
+          <Checkbox
+            role="checkbox"
+            aria-checked={night}
+            checked={night}
+            id="nightToggle"
+            onChange={onChange}
+          />
+          <NightLabel>Night Mode</NightLabel>
+        </NightController>
+      </NightToggle>
+      {children}
+    </NightContainer>
+  );
+};
