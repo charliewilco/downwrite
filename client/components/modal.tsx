@@ -90,23 +90,20 @@ interface ModalProps {
   children: React.ReactNode;
 }
 
-export default class UIModal extends React.Component<ModalProps, any> {
-  public static displayName = "UIModal";
+const UIModal: React.FC<ModalProps> = function(props) {
+  return (
+    <Overlay>
+      <DialogStyles />
+      <ModalContainer>
+        <ModalCloseButton onClick={props.closeUIModal}>
+          <CloseIcon className="Modal__close" />
+        </ModalCloseButton>
+        <ModalBody>
+          <ModalInnerContainer>{props.children}</ModalInnerContainer>
+        </ModalBody>
+      </ModalContainer>
+    </Overlay>
+  );
+};
 
-  public render(): JSX.Element {
-    const { closeUIModal, children } = this.props;
-    return (
-      <Overlay>
-        <DialogStyles />
-        <ModalContainer>
-          <ModalCloseButton onClick={closeUIModal}>
-            <CloseIcon className="Modal__close" />
-          </ModalCloseButton>
-          <ModalBody>
-            <ModalInnerContainer>{children}</ModalInnerContainer>
-          </ModalBody>
-        </ModalContainer>
-      </Overlay>
-    );
-  }
-}
+export default UIModal;

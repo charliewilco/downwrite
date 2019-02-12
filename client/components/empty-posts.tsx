@@ -42,18 +42,22 @@ export const SidebarEmpty = () => (
   </Flex>
 );
 
-export default () => (
-  <Wrapper data-testid="NO_ENTRIES_PROMPT">
-    <Flex>
-      <EmptyBlockRight>
-        <Nib />
-      </EmptyBlockRight>
-      <EmptyBlockLeft>
-        <EmptyTitle>Looks like you don't have any entries</EmptyTitle>
-        <Link href="/new">
-          <GetStarted>Get Started &rarr;</GetStarted>
-        </Link>
-      </EmptyBlockLeft>
-    </Flex>
-  </Wrapper>
-);
+const Empty: React.FC<{}> = function() {
+  return (
+    <Wrapper data-testid="NO_ENTRIES_PROMPT">
+      <Flex>
+        <EmptyBlockRight>
+          <Nib />
+        </EmptyBlockRight>
+        <EmptyBlockLeft>
+          <EmptyTitle>Looks like you don't have any entries</EmptyTitle>
+          <Link href="/new">
+            <GetStarted>Get Started &rarr;</GetStarted>
+          </Link>
+        </EmptyBlockLeft>
+      </Flex>
+    </Wrapper>
+  );
+};
+
+export default Empty;

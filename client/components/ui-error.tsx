@@ -51,6 +51,7 @@ export const withErrors = (Component: HOComponent) => {
 
 export const UIErrorConsumer = ErrorStateContext.Consumer;
 
+// TODO: Refactor to use hooks `useReducer`
 export class ErrorContainer extends React.Component<IErrorProps, ErrorTypes> {
   public readonly state = {
     content: "",

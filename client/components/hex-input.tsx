@@ -48,9 +48,7 @@ export default class HexInput extends React.PureComponent<
   };
 
   public static defaultProps = {
-    onChange: (color: string): void => {
-      color;
-    }
+    onChange: (color: string): void => {}
   };
 
   private handleChange = ({

@@ -16,15 +16,15 @@ interface LoginProps {
   setError: (x: string, y: string) => void;
 }
 
-export default class Login extends React.Component<LoginProps, {}> {
-  private handleSubmit = (
+const Login: React.FC<LoginProps> = function(props) {
+  const handleFormSubmit = (
     values: ILoginForm,
     actions: FormikActions<ILoginForm>
   ): void => {
-    this.onSubmit(values);
+    onSubmit(values);
   };
 
-  private onSubmit = async (values: ILoginForm): Promise<void> => {
+  const onSubmit = async (values: ILoginForm): Promise<void> => {
     const { signIn, setError } = this.props;
     const { host } = document.location;
     const auth = await API.authUser(values, { host });
@@ -38,55 +38,55 @@ export default class Login extends React.Component<LoginProps, {}> {
     }
   };
 
-  public render(): JSX.Element {
-    return (
-      <SpacedBox>
-        <Formik
-          validationSchema={LoginFormSchema}
-          initialValues={{
-            user: "",
-            password: ""
-          }}
-          onSubmit={this.handleSubmit}>
-          {({
-            values,
-            errors,
-            handleChange,
-            handleSubmit
-          }: FormikProps<ILoginForm>) => (
-            <Form>
-              <UIInputContainer>
-                <UIInput
-                  placeholder="user@email.com"
-                  label="Username or Email"
-                  name="user"
-                  autoComplete="username"
-                  value={values.user}
-                  onChange={handleChange}
-                />
-                <ErrorMessage name="user" component={UIInputError} />
+  return (
+    <SpacedBox>
+      <Formik
+        validationSchema={LoginFormSchema}
+        initialValues={{
+          user: "",
+          password: ""
+        }}
+        onSubmit={handleFormSubmit}>
+        {({
+          values,
+          errors,
+          handleChange,
+          handleSubmit
+        }: FormikProps<ILoginForm>) => (
+          <Form>
+            <UIInputContainer>
+              <UIInput
+                placeholder="user@email.com"
+                label="Username or Email"
+                name="user"
+                autoComplete="username"
+                value={values.user}
+                onChange={handleChange}
+              />
+              <ErrorMessage name="user" component={UIInputError} />
+            </UIInputContainer>
+            <UIInputContainer>
+              <UIInput
+                placeholder="*********"
+                name="password"
+                label="Password"
+                value={values.password}
+                type="password"
+                autoComplete="current-password"
+                onChange={handleChange}
+              />
+              <ErrorMessage name="password" component={UIInputError} />
+            </UIInputContainer>
+            <SpacedBox align="right">
+              <UIInputContainer style={{ display: "inline-block" }}>
+                <Button type="submit">Login</Button>
               </UIInputContainer>
-              <UIInputContainer>
-                <UIInput
-                  placeholder="*********"
-                  name="password"
-                  label="Password"
-                  value={values.password}
-                  type="password"
-                  autoComplete="current-password"
-                  onChange={handleChange}
-                />
-                <ErrorMessage name="password" component={UIInputError} />
-              </UIInputContainer>
-              <SpacedBox align="right">
-                <UIInputContainer style={{ display: "inline-block" }}>
-                  <Button type="submit">Login</Button>
-                </UIInputContainer>
-              </SpacedBox>
-            </Form>
-          )}
-        </Formik>
-      </SpacedBox>
-    );
-  }
-}
+            </SpacedBox>
+          </Form>
+        )}
+      </Formik>
+    </SpacedBox>
+  );
+};
+
+export default Login;

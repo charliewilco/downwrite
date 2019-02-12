@@ -24,14 +24,28 @@ interface IInputs {
   label: string;
 }
 
-class SettingsPassword extends React.Component<{}, {}> {
-  public static contextType: React.Context<IAuthContext> = AuthContext;
+const PASSWORD_INPUTS: IInputs[] = [
+  {
+    label: "Current Password",
+    name: "oldPassword"
+  },
+  {
+    label: "New Password",
+    name: "newPassword"
+  },
+  {
+    label: "Confirm Your New Password",
+    name: "confirmPassword"
+  }
+];
 
-  private onSubmit = (
+const SettingsPassword: React.FC = function() {
+  const { token } = React.useContext<IAuthContext>(AuthContext);
+
+  const onSubmit = (
     values: IPasswordSettings,
     actions: FormikActions<IPasswordSettings>
   ): void => {
-    const { token } = this.context;
     const { host } = document.location;
     const response = API.updatePassword(values, { token, host });
 
@@ -40,71 +54,50 @@ class SettingsPassword extends React.Component<{}, {}> {
     }
   };
 
-  private inputs: IInputs[] = [
-    {
-      label: "Current Password",
-      name: "oldPassword"
-    },
-    {
-      label: "New Password",
-      name: "newPassword"
-    },
-    {
-      label: "Confirm Your New Password",
-      name: "confirmPassword"
-    }
-  ];
-
-  public render(): JSX.Element {
-    return (
-      <Formik
-        initialValues={{
-          oldPassword: "",
-          newPassword: "",
-          confirmPassword: ""
-        }}
-        validationSchema={UpdatePasswordSchema}
-        onSubmit={this.onSubmit}>
-        {({
-          values,
-          handleChange,
-          isSubmitting
-        }: FormikProps<IPasswordSettings>) => (
-          <SettingsBlock title="Password">
-            <Toggle>
-              {({ isOpen, onToggle }) => (
-                <Form>
-                  {this.inputs.map(({ name, label }: IInputs, idx) => (
-                    <UIInputContainer key={idx}>
-                      <UIInput
-                        label={label}
-                        name={name}
-                        type={!isOpen ? "password" : "text"}
-                        placeholder="*********"
-                        value={values[name]}
-                        onChange={handleChange}
-                      />
-                      <ErrorMessage name={name} component={UIInputError} />
-                    </UIInputContainer>
-                  ))}
-                  <SettingsFormActions split>
-                    <ToggleBox
-                      label={value => (!value ? "Values hidden" : "Values shown")}
-                      onChange={onToggle}
-                      value={isOpen}
+  return (
+    <Formik
+      initialValues={{
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: ""
+      }}
+      validationSchema={UpdatePasswordSchema}
+      onSubmit={onSubmit}>
+      {({ values, handleChange, isSubmitting }: FormikProps<IPasswordSettings>) => (
+        <SettingsBlock title="Password">
+          <Toggle>
+            {({ isOpen, onToggle }) => (
+              <Form>
+                {PASSWORD_INPUTS.map(({ name, label }: IInputs, idx) => (
+                  <UIInputContainer key={idx}>
+                    <UIInput
+                      label={label}
+                      name={name}
+                      type={!isOpen ? "password" : "text"}
+                      placeholder="*********"
+                      value={values[name]}
+                      onChange={handleChange}
                     />
-                    <Button type="submit" disabled={isSubmitting}>
-                      Save
-                    </Button>
-                  </SettingsFormActions>
-                </Form>
-              )}
-            </Toggle>
-          </SettingsBlock>
-        )}
-      </Formik>
-    );
-  }
-}
+                    <ErrorMessage name={name} component={UIInputError} />
+                  </UIInputContainer>
+                ))}
+                <SettingsFormActions split>
+                  <ToggleBox
+                    label={value => (!value ? "Values hidden" : "Values shown")}
+                    onChange={onToggle}
+                    value={isOpen}
+                  />
+                  <Button type="submit" disabled={isSubmitting}>
+                    Save
+                  </Button>
+                </SettingsFormActions>
+              </Form>
+            )}
+          </Toggle>
+        </SettingsBlock>
+      )}
+    </Formik>
+  );
+};
 
 export default SettingsPassword;

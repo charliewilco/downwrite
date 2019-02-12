@@ -6,7 +6,7 @@ import FileSaver from "file-saver";
 import Markdown from "./export-markdown-button";
 import { createMarkdown } from "../utils/markdownTemplate";
 
-interface IExportProps {
+interface ExportProps {
   title: string;
   className?: string;
   date: Date;
@@ -24,22 +24,20 @@ const ExportContainer = styled.div`
   margin: 0 16px;
 `;
 
-export default class UIMarkdownExport extends React.Component<IExportProps, any> {
-  public static displayName = "UIMarkdownExport";
-
-  private export = (): void => {
-    const { title, date, editorState } = this.props;
+const UIMarkdownExport: React.FC<ExportProps> = function(props) {
+  const exportMarkdown = (): void => {
+    const { title, date, editorState } = props;
     const cx: Draft.ContentState = editorState.getCurrentContent();
     const content: Draft.RawDraftContentState = Draft.convertToRaw(cx);
 
-    return this.toMarkdown({
+    return toMarkdown({
       title,
       content,
       date
     });
   };
 
-  private customDraft = (content: Draft.RawDraftContentState): string =>
+  const customDraft = (content: Draft.RawDraftContentState): string =>
     draftToMarkdown(content, {
       entityItems: {
         LINK: {
@@ -54,7 +52,7 @@ export default class UIMarkdownExport extends React.Component<IExportProps, any>
       }
     });
 
-  private toMarkdown = ({ title, content, date }: ExportCallback): void => {
+  const toMarkdown = ({ title, content, date }: ExportCallback): void => {
     let localFileExtension = localStorage.getItem("DW_FILE_EXTENSION");
     let extension = localFileExtension.replace(/\./g, "") || "md";
 
@@ -62,7 +60,7 @@ export default class UIMarkdownExport extends React.Component<IExportProps, any>
       let isFileSaverSupported: boolean = !!new Blob();
 
       if (isFileSaverSupported) {
-        let md = createMarkdown(title, this.customDraft(content), date);
+        let md = createMarkdown(title, customDraft(content), date);
         let blob = new Blob([md.trim()], { type: "text/markdown; charset=UTF-8" });
         FileSaver.saveAs(
           blob,
@@ -74,14 +72,13 @@ export default class UIMarkdownExport extends React.Component<IExportProps, any>
     }
   };
 
-  public render(): JSX.Element {
-    const { className } = this.props;
-    return (
-      <ExportContainer
-        title="Export entry to a Markdown file."
-        className={className}>
-        <Markdown onClick={this.export} />
-      </ExportContainer>
-    );
-  }
-}
+  return (
+    <ExportContainer
+      title="Export entry to a Markdown file."
+      className={props.className}>
+      <Markdown onClick={exportMarkdown} />
+    </ExportContainer>
+  );
+};
+
+export default UIMarkdownExport;

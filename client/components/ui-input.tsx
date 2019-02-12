@@ -8,7 +8,7 @@ interface InputType {
   label: string;
   value: string;
   name?: string;
-  type: string;
+  type?: string;
   placeholder?: string;
   autoComplete?: string;
 }
@@ -67,31 +67,23 @@ const UIInputLabel = styled.small<InputTypeState>`
   transition: color 250ms ease-in-out;
 `;
 
-export default class extends React.Component<InputType, InputTypeState> {
-  public readonly state = {
-    active: false
-  };
+const UIInput: React.FC<InputType> = function({ label, ...props }) {
+  const id = uuid();
 
-  public static displayName = "UIInput";
+  const [active, setActive] = React.useState<boolean>(false);
 
-  public static defaultProps = {
-    type: "text"
-  };
+  return (
+    <Container htmlFor={id}>
+      <StyledInput
+        type="text"
+        onFocus={() => setActive(true)}
+        onBlur={() => setActive(false)}
+        id={id}
+        {...props}
+      />
+      <UIInputLabel active={active}>{label}</UIInputLabel>
+    </Container>
+  );
+};
 
-  public render(): JSX.Element {
-    const id = uuid();
-    const { active } = this.state;
-    const { label } = this.props;
-    return (
-      <Container htmlFor={id}>
-        <StyledInput
-          onFocus={() => this.setState({ active: true })}
-          onBlur={() => this.setState({ active: false })}
-          id={id}
-          {...this.props}
-        />
-        <UIInputLabel active={active}>{label}</UIInputLabel>
-      </Container>
-    );
-  }
-}
+export default UIInput;

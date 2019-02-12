@@ -6,8 +6,6 @@ import { AuthConsumer } from "./auth";
 import User from "./user";
 import Fetch from "./collection-fetch";
 import { SignoutIcon } from "./icons";
-import { SidebarEmpty } from "./empty-posts";
-import SidebarPosts from "./sidebar-posts";
 import TouchOutside from "./touch-outside";
 import LockScroll from "./lock-scroll";
 import * as DefaultStyles from "../utils/defaultStyles";
@@ -171,15 +169,7 @@ class NavBar extends React.Component<NavigationProps, any> {
                   </div>
 
                   <PostListContainer>
-                    <Fetch>
-                      {({ posts }) =>
-                        posts.length > 0 ? (
-                          <SidebarPosts posts={posts} />
-                        ) : (
-                          <SidebarEmpty />
-                        )
-                      }
-                    </Fetch>
+                    <Fetch />
                   </PostListContainer>
 
                   <NavTray>

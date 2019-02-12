@@ -7,8 +7,11 @@ import {
   AUTH_ENDPOINT,
   createURL
 } from "./urls";
-
 import * as Dwnxt from "downwrite";
+import { __IS_DEV__, __IS_BROWSER__ } from "./dev";
+
+import "isomorphic-fetch";
+import "abortcontroller-polyfill/dist/abortcontroller-polyfill-only";
 
 interface IOptions {
   token?: string;
@@ -26,7 +29,12 @@ type APIResponse = Dwnxt.IPost | Dwnxt.IPostError;
 
 type HeaderMethod = "GET" | "PUT" | "POST" | "DELETE";
 
-import { __IS_DEV__, __IS_BROWSER__ } from "./dev";
+const controller: AbortController = new AbortController();
+const signal: AbortSignal = controller.signal;
+
+export function abortFetching() {
+  controller.abort();
+}
 
 /**
  * Creates header for Fetch request with Token
@@ -38,15 +46,17 @@ export const createHeader = (
   token?: string
 ): RequestInit => {
   const Header = new Headers();
-
-  token && Header.set("Authorization", token);
+  if (token) {
+    Header.set("Authorization", token);
+  }
   Header.set("Content-Type", "application/json");
 
   return {
     method,
     headers: Header,
     mode: "cors",
-    cache: "default"
+    cache: "default",
+    signal
   };
 };
 
@@ -171,6 +181,7 @@ export async function getPosts(
   options: IOptions
 ): Promise<Dwnxt.IPost[] | Dwnxt.IPostError> {
   const url = createURL(POST_ENDPOINT, options.host);
+
   const entries: Dwnxt.IPost[] = await fetch(
     url,
     createHeader("GET", options.token)

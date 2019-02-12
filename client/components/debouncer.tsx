@@ -6,7 +6,7 @@ interface DebounceProps {
   timeout: number;
 }
 
-export default class extends React.Component<DebounceProps> {
+export default class Debouncer extends React.Component<DebounceProps> {
   public static displayName = "Debouncer";
 
   public static defaultProps = {

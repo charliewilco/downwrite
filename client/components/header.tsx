@@ -1,12 +1,12 @@
 import * as React from "react";
 import styled from "styled-components";
 import Link from "next/link";
+import { withRouter, WithRouterProps } from "next/router";
 import Logo from "./logo";
 import AltAnchor from "./alt-anchor-link";
 import { NavIcon } from "./icons";
 import * as DefaultStyles from "../utils/defaultStyles";
 import { AuthConsumer } from "./auth";
-import { withRouter, WithRouterProps } from "next/router";
 
 const MenuContainer = styled.nav`
   display: flex;
