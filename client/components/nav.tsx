@@ -2,7 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 import { withRouter, WithRouterProps } from "next/router";
 import styled, { keyframes } from "styled-components";
-import { AuthConsumer } from "./auth";
+import { AuthContext, IAuthContext } from "./auth";
 import User from "./user";
 import Fetch from "./collection-fetch";
 import { SignoutIcon } from "./icons";
@@ -132,62 +132,47 @@ const NavLabel = styled.span`
   vertical-align: middle;
 `;
 
-class NavBar extends React.Component<NavigationProps, any> {
-  public static displayName = "NavigationBar";
+const NavBar: React.FC<NavigationProps> = function(props) {
+  const context = React.useContext<IAuthContext>(AuthContext);
 
-  public componentDidUpdate(prevProps: NavigationProps): void {
-    if (prevProps.router && this.props.router) {
-      if (prevProps.router.pathname !== this.props.router.pathname) {
-        this.props.closeNav();
-      }
-    }
-  }
+  React.useEffect(() => {
+    props.closeNav();
+  }, [props.router.pathname]);
 
-  public render(): JSX.Element {
-    const { closeNav } = this.props;
-    return (
-      <AuthConsumer>
-        {context => (
-          <LockScroll>
-            <TouchOutside onChange={closeNav}>
-              <Nav>
-                <NavColumn>
-                  <div>
-                    <User
-                      border
-                      colors={["#FEB692", "#EA5455"]}
-                      name={context.name}
-                    />
-                    <UserActionContainer>
-                      <Link href="/" passHref>
-                        <NavItem>All Entries</NavItem>
-                      </Link>
-                      <Link href="/new" prefetch passHref>
-                        <NavItem>Create New Entry</NavItem>
-                      </Link>
-                    </UserActionContainer>
-                  </div>
+  return (
+    <LockScroll>
+      <TouchOutside onChange={props.closeNav}>
+        <Nav>
+          <NavColumn>
+            <div>
+              <User border colors={["#FEB692", "#EA5455"]} name={context.name} />
+              <UserActionContainer>
+                <Link href="/" passHref>
+                  <NavItem>All Entries</NavItem>
+                </Link>
+                <Link href="/new" prefetch passHref>
+                  <NavItem>Create New Entry</NavItem>
+                </Link>
+              </UserActionContainer>
+            </div>
 
-                  <PostListContainer>
-                    <Fetch />
-                  </PostListContainer>
+            <PostListContainer>
+              <Fetch />
+            </PostListContainer>
 
-                  <NavTray>
-                    <Link href="/legal" passHref>
-                      <NavLink>Legal</NavLink>
-                    </Link>
-                    <NavButton onClick={context.signOut}>
-                      <StyledSignoutIcon /> <NavLabel>Sign Out</NavLabel>
-                    </NavButton>
-                  </NavTray>
-                </NavColumn>
-              </Nav>
-            </TouchOutside>
-          </LockScroll>
-        )}
-      </AuthConsumer>
-    );
-  }
-}
+            <NavTray>
+              <Link href="/legal" passHref>
+                <NavLink>Legal</NavLink>
+              </Link>
+              <NavButton onClick={context.signOut}>
+                <StyledSignoutIcon /> <NavLabel>Sign Out</NavLabel>
+              </NavButton>
+            </NavTray>
+          </NavColumn>
+        </Nav>
+      </TouchOutside>
+    </LockScroll>
+  );
+};
 
 export default withRouter(NavBar);

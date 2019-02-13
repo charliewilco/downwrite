@@ -23,18 +23,18 @@ interface IMarkdown {
   };
 }
 
-export default class Uploader extends React.Component<IUploadProps, {}> {
-  public static displayName = "Uploader";
+const Uploader: React.FC<IUploadProps> = function(props) {
+  const reader: FileReader = __IS_BROWSER__ && new FileReader();
 
-  private reader: FileReader = __IS_BROWSER__ && new FileReader();
+  const onDrop = (files: File[]) => extractMarkdown(files);
 
-  private extractMarkdown = (files: File[]): void => {
-    this.reader.onload = () => {
-      let md: IMarkdown = fm(this.reader.result as string);
+  const extractMarkdown = (files: File[]): void => {
+    reader.onload = () => {
+      let md: IMarkdown = fm(reader.result as string);
 
       let markdown = markdownToDraft(md.body, { preserveNewlines: true });
 
-      return this.props.onParsed({
+      return props.onParsed({
         title: md.attributes.title || "",
         editorState: Draft.EditorState.createWithContent(
           Draft.convertFromRaw(markdown)
@@ -42,26 +42,23 @@ export default class Uploader extends React.Component<IUploadProps, {}> {
       });
     };
 
-    this.reader.readAsText(files[0]);
+    reader.readAsText(files[0]);
   };
 
-  private onDrop = (files: File[]) => this.extractMarkdown(files);
+  return (
+    <Dropzone
+      accept="text/markdown, text/x-markdown, text/plain"
+      multiple={false}
+      onDrop={onDrop}
+      disableClick
+      disabled={props.disabled}>
+      {({ getRootProps }) => (
+        <div {...getRootProps()} style={{ border: 0, width: "100%" }}>
+          {props.children}
+        </div>
+      )}
+    </Dropzone>
+  );
+};
 
-  public render(): JSX.Element {
-    const { disabled } = this.props;
-    return (
-      <Dropzone
-        accept="text/markdown, text/x-markdown, text/plain"
-        multiple={false}
-        onDrop={this.onDrop}
-        disableClick
-        disabled={disabled}>
-        {({ getRootProps }) => (
-          <div {...getRootProps()} style={{ border: 0, width: "100%" }}>
-            {this.props.children}
-          </div>
-        )}
-      </Dropzone>
-    );
-  }
-}
+export default Uploader;

@@ -1,23 +1,25 @@
 import * as React from "react";
 
-export default class LockScroll extends React.Component {
-  public componentDidMount(): void {
+const LOCK_SCROLL_CLASSNAME: string = "__noScroll";
+
+const LockScroll: React.FC = function(props) {
+  React.useEffect(() => {
     if (document) {
       if (document.body) {
-        document.body.classList.add("__noScroll");
+        document.body.classList.add(LOCK_SCROLL_CLASSNAME);
       }
     }
-  }
 
-  public componentWillUnmount(): void {
-    if (document) {
-      if (document.body) {
-        document.body.classList.remove("__noScroll");
+    return function cleanup() {
+      if (document) {
+        if (document.body) {
+          document.body.classList.remove(LOCK_SCROLL_CLASSNAME);
+        }
       }
-    }
-  }
+    };
+  }, []);
 
-  public render(): React.ReactNode {
-    return this.props.children;
-  }
-}
+  return <>{props.children}</>;
+};
+
+export default LockScroll;

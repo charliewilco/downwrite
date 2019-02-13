@@ -44,29 +44,28 @@ interface IColorPickerProps {
   name: string;
 }
 
-export default class ColorPicker extends React.Component<IColorPickerProps> {
-  public static defaultProps: IColorPickerProps = {
-    colors: [],
-    onPress: (color: string, name: string) => ({ color, name }),
-    name: "Color Picker"
-  };
+const ColorPicker: React.FC<IColorPickerProps> = function(props) {
+  return (
+    <PickerContainer>
+      {props.title && <PickerTitle>{props.title}</PickerTitle>}
+      <SwatchContainer>
+        {props.colors.map(color => (
+          <SwatchBox
+            onClick={() => props.onPress(color, props.name)}
+            color={color}
+            key={color}
+          />
+        ))}
+      </SwatchContainer>
+      <HexInput onChange={color => props.onPress(color, props.name)} />
+    </PickerContainer>
+  );
+};
 
-  public render(): JSX.Element {
-    const { title, colors, onPress, name } = this.props;
-    return (
-      <PickerContainer>
-        {title && <PickerTitle>{title}</PickerTitle>}
-        <SwatchContainer>
-          {colors.map(color => (
-            <SwatchBox
-              onClick={() => onPress(color, name)}
-              color={color}
-              key={color}
-            />
-          ))}
-        </SwatchContainer>
-        <HexInput onChange={color => onPress(color, name)} />
-      </PickerContainer>
-    );
-  }
-}
+ColorPicker.defaultProps = {
+  colors: [],
+  onPress: (color: string, name: string) => ({ color, name }),
+  name: "Color Picker"
+};
+
+export default ColorPicker;
