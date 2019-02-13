@@ -34,21 +34,23 @@ const LayoutTrigger = styled.div<ILayoutTrigger>`
   }
 `;
 
-const LayoutControl: React.FC<ILayoutControl> = props => (
-  <Box>
-    <LayoutTrigger
-      data-testid="LAYOUT_CONTROL_GRID"
-      active={props.layout}
-      onClick={() => props.layoutChange(true)}>
-      Grid
-    </LayoutTrigger>
-    <LayoutTrigger
-      data-testid="LAYOUT_CONTROL_LIST"
-      active={!props.layout}
-      onClick={() => props.layoutChange(false)}>
-      List
-    </LayoutTrigger>
-  </Box>
-);
+const LayoutControl: React.FC<ILayoutControl> = function(props) {
+  return (
+    <Box>
+      <LayoutTrigger
+        data-testid="LAYOUT_CONTROL_GRID"
+        active={props.layout}
+        onClick={() => props.layoutChange(true)}>
+        Grid
+      </LayoutTrigger>
+      <LayoutTrigger
+        data-testid="LAYOUT_CONTROL_LIST"
+        active={!props.layout}
+        onClick={() => props.layoutChange(false)}>
+        List
+      </LayoutTrigger>
+    </Box>
+  );
+};
 
 export default LayoutControl;

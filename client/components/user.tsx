@@ -1,6 +1,5 @@
 import * as React from "react";
 import styled, { css } from "styled-components";
-import Link from "next/link";
 import Avatar from "./avatar";
 
 interface IUserBlock {
@@ -26,25 +25,9 @@ const DisplayUser = styled.span`
   font-weight: 700;
 `;
 
-const UserAnchor = styled.a`
-  position: absolute;
-  top: 0;
-  padding: 8px;
-  right: 0;
-  font-size: small;
-  font-weight: 700;
-`;
-
-const SettingsLink = () => (
-  <Link href="/settings" passHref>
-    <UserAnchor>Settings</UserAnchor>
-  </Link>
-);
-
 const UserBlock: React.FC<IUserBlock> = props => {
   return (
     <UserBlockContainer border={props.border}>
-      <SettingsLink />
       <Avatar centered colors={props.colors} />
       <DisplayUser>{props.name}</DisplayUser>
     </UserBlockContainer>

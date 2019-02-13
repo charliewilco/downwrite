@@ -2,11 +2,12 @@ import * as React from "react";
 import Link from "next/link";
 import { withRouter, WithRouterProps } from "next/router";
 import styled, { keyframes } from "styled-components";
+import * as Reach from "@reach/dialog";
 import { AuthContext, IAuthContext } from "./auth";
 import User from "./user";
 import Fetch from "./collection-fetch";
 import { SignoutIcon } from "./icons";
-import TouchOutside from "./touch-outside";
+
 import LockScroll from "./lock-scroll";
 import * as DefaultStyles from "../utils/defaultStyles";
 
@@ -20,7 +21,7 @@ const NavColumn = styled.div`
   }
 `;
 
-const StyledSignoutIcon = styled(SignoutIcon)`
+export const StyledSignoutIcon = styled(SignoutIcon)`
   display: inline-block;
   vertical-align: middle;
 `;
@@ -102,7 +103,7 @@ const NavTray = styled.footer`
   justify-content: space-between;
 `;
 
-const NavItem = styled.a`
+export const NavItem = styled.a`
   display: block;
   color: ${DefaultStyles.colors.gray300};
   font-size: 16px;
@@ -117,7 +118,7 @@ const NavItem = styled.a`
   }
 `;
 
-const UserActionContainer = styled.div`
+export const UserActionContainer = styled.div`
   padding: 16px 8px;
 `;
 
@@ -127,50 +128,69 @@ interface NavigationProps extends WithRouterProps {
   closeNav: () => void;
 }
 
-const NavLabel = styled.span`
+export const NavLabel = styled.span`
   display: inline-block;
   vertical-align: middle;
 `;
 
+function usePrevious<T>(value: T) {
+  const ref = React.useRef<T>(null);
+  React.useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
 const NavBar: React.FC<NavigationProps> = function(props) {
   const context = React.useContext<IAuthContext>(AuthContext);
 
+  const prevRoute = usePrevious(props.router.route);
+
   React.useEffect(() => {
-    props.closeNav();
-  }, [props.router.pathname]);
+    if (prevRoute !== props.router.route) {
+      console.log("route changed");
+    }
+  }, [props.router.route]);
+
+  const onBlur = () => {
+    console.log("BLUR");
+    // props.closeNav();
+  };
 
   return (
     <LockScroll>
-      <TouchOutside onChange={props.closeNav}>
-        <Nav>
-          <NavColumn>
-            <div>
-              <User border colors={["#FEB692", "#EA5455"]} name={context.name} />
-              <UserActionContainer>
-                <Link href="/" passHref>
-                  <NavItem>All Entries</NavItem>
-                </Link>
-                <Link href="/new" prefetch passHref>
-                  <NavItem>Create New Entry</NavItem>
-                </Link>
-              </UserActionContainer>
-            </div>
+      <Reach.Dialog>
+        <Reach.DialogContent onBlur={() => onBlur()}>
+          <Nav role="navigation">
+            <NavColumn>
+              <div>
+                <User border colors={["#FEB692", "#EA5455"]} name={context.name} />
+                <UserActionContainer>
+                  <Link href="/" passHref>
+                    <NavItem>All Entries</NavItem>
+                  </Link>
+                  <Link href="/new" prefetch passHref>
+                    <NavItem>Create New Entry</NavItem>
+                  </Link>
+                </UserActionContainer>
+              </div>
 
-            <PostListContainer>
-              <Fetch />
-            </PostListContainer>
+              <PostListContainer>
+                <Fetch />
+              </PostListContainer>
 
-            <NavTray>
-              <Link href="/legal" passHref>
-                <NavLink>Legal</NavLink>
-              </Link>
-              <NavButton onClick={context.signOut}>
-                <StyledSignoutIcon /> <NavLabel>Sign Out</NavLabel>
-              </NavButton>
-            </NavTray>
-          </NavColumn>
-        </Nav>
-      </TouchOutside>
+              <NavTray>
+                <Link href="/legal" passHref>
+                  <NavLink>Legal</NavLink>
+                </Link>
+                <NavButton onClick={context.signOut}>
+                  <StyledSignoutIcon /> <NavLabel>Sign Out</NavLabel>
+                </NavButton>
+              </NavTray>
+            </NavColumn>
+          </Nav>
+        </Reach.DialogContent>
+      </Reach.Dialog>
     </LockScroll>
   );
 };
