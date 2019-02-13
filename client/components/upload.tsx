@@ -23,6 +23,7 @@ interface IMarkdown {
   };
 }
 
+// TODO: use `React.useMemo()` on upload
 const Uploader: React.FC<IUploadProps> = function(props) {
   const reader: FileReader = __IS_BROWSER__ && new FileReader();
 

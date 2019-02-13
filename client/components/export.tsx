@@ -24,6 +24,7 @@ const ExportContainer = styled.div`
   margin: 0 16px;
 `;
 
+// TODO: use `React.useMemo()` to run export
 const UIMarkdownExport: React.FC<ExportProps> = function(props) {
   const exportMarkdown = (): void => {
     const { title, date, editorState } = props;
