@@ -3,8 +3,8 @@ import delay from "delay";
 
 interface IAutosavingProps {
   onUpdate: (x?: any) => void;
-  delay: number;
-  duration: number;
+  delay?: number;
+  duration?: number;
 }
 
 const AutosavingInterval: React.FC<IAutosavingProps> = function(props) {
@@ -16,11 +16,11 @@ const AutosavingInterval: React.FC<IAutosavingProps> = function(props) {
     interval = setInterval(async () => {
       if (props.onUpdate) {
         setAutoSaving(true);
-        await delay(props.delay);
+        await delay(props.delay || 3000);
         props.onUpdate();
         setAutoSaving(false);
       }
-    }, props.duration);
+    }, props.duration || 5000);
 
     return function cleanup() {
       clearInterval(interval);
