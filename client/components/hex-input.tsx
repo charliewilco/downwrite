@@ -35,52 +35,29 @@ interface IHexInputProps {
   initialValue?: string;
 }
 
-interface IHexInputState {
-  hex: string;
-}
-
-export default class HexInput extends React.PureComponent<
-  IHexInputProps,
-  IHexInputState
-> {
-  public readonly state = {
-    hex: this.props.initialValue || ""
-  };
-
-  public static defaultProps = {
-    onChange: (color: string): void => {}
-  };
-
-  private handleChange = ({
-    target: { value: hex }
+const FunHexInput: React.FC<IHexInputProps> = function(props) {
+  const [hex, setHexColor] = React.useState<string>(props.initialValue || "");
+  const handleChange = ({
+    target: { value }
   }: React.ChangeEvent<HTMLInputElement>): void => {
-    this.setState({ hex });
+    setHexColor(value);
   };
 
-  public componentDidUpdate(
-    prevProps: IHexInputProps,
-    prevState: IHexInputState
-  ): void {
-    const { hex } = this.state;
-    let color = "#" + hex;
-    let prevColor = "#" + prevState.hex;
+  React.useEffect(() => {
+    const color = "#" + hex;
+    const isValid = DefaultStyles.isValidHex(color);
 
-    if (prevColor !== color) {
-      DefaultStyles.isValidHex(color) && this.props.onChange(color);
+    if (isValid && props.onChange) {
+      props.onChange(color);
     }
-  }
+  }, [hex]);
 
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   return this.state.hex !== nextState.hex;
-  // }
+  return (
+    <InputWrapper>
+      <span>#</span>
+      <Input value={hex.replace("#", "")} onChange={handleChange} />
+    </InputWrapper>
+  );
+};
 
-  public render(): JSX.Element {
-    const { hex } = this.state;
-    return (
-      <InputWrapper>
-        <span>#</span>
-        <Input value={hex.replace("#", "")} onChange={this.handleChange} />
-      </InputWrapper>
-    );
-  }
-}
+export default FunHexInput;
