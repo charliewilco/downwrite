@@ -73,11 +73,12 @@ const config = {
 module.exports = (phase, { defaultConfig }) => {
   if (phase === PHASE_PRODUCTION_SERVER) {
     // Config used to run in production.
-    return {};
+    return {
+      target: "serverless"
+    };
   }
   // ✅ Put the require call here.
 
-  const withCSS = require("@zeit/next-css");
   const withTypescript = require("@zeit/next-typescript");
   const withMDX = require("@zeit/next-mdx")({
     extension: /\.mdx?$/
@@ -85,5 +86,9 @@ module.exports = (phase, { defaultConfig }) => {
 
   //
 
-  return withTypescript(withMDX(withCSS()));
+  return withTypescript(
+    withMDX({
+      target: "serverless"
+    })
+  );
 };

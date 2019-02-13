@@ -16,7 +16,6 @@
     "@mdx-js/mdx": "^0.16.8",
     "@mdx-js/tag": "^0.16.8",
     "@reach/dialog": "^0.1.2",
-    "@zeit/next-css": "^1.0.1",
     "@zeit/next-mdx": "^1.2.0",
     "@zeit/next-typescript": "^1.1.1",
     "abortcontroller-polyfill": "^1.2.3",
