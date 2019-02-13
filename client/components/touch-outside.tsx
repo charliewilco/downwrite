@@ -28,8 +28,8 @@ const TouchOutside: React.FC<ITouchOutsideProps> = function(props) {
 
     return function cleanup() {
       if (document) {
-        document.removeEventListener("touchstart", this.outsideHandleClick);
-        document.removeEventListener("click", this.outsideHandleClick);
+        document.removeEventListener("touchstart", outsideHandleClick);
+        document.removeEventListener("click", outsideHandleClick);
       }
     };
   }, []);

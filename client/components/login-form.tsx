@@ -25,16 +25,15 @@ const Login: React.FC<LoginProps> = function(props) {
   };
 
   const onSubmit = async (values: ILoginForm): Promise<void> => {
-    const { signIn, setError } = this.props;
     const { host } = document.location;
     const auth = await API.authUser(values, { host });
 
     if (auth.error) {
-      setError(auth.message, "error");
+      props.setError(auth.message, "error");
     }
 
     if (auth.token) {
-      signIn(auth.token !== undefined, auth.token);
+      props.signIn(auth.token !== undefined, auth.token);
     }
   };
 

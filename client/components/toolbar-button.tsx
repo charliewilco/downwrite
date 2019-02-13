@@ -56,7 +56,7 @@ function findIcon(label: string, active: boolean): React.ReactNode {
 const StyleButton: React.FC<IToolbarButtonProps> = function(props) {
   const onToggle = (e: React.MouseEvent<HTMLDivElement>): void => {
     e.preventDefault();
-    this.props.onToggle(this.props.style);
+    props.onToggle(props.style);
   };
 
   return (
