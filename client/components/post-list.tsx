@@ -4,7 +4,6 @@ import Card from "./card";
 import LayoutControl from "./layout-control";
 import PostListItem from "./post-list-item";
 import ContainerTitle from "./container-title";
-import Toggle from "./toggle";
 import { Grid, GridItem } from "./post-grid";
 
 const ListHeader = styled.header`
@@ -29,32 +28,30 @@ interface IPostListProps {
 }
 
 const PostList: React.FC<IPostListProps> = function(props) {
+  const [isOpen, setOpen] = React.useState<boolean>(true);
+
   return (
-    <Toggle defaultOpen>
-      {({ isOpen, onSetInstance }) => (
-        <>
-          <ListHeader>
-            <ContainerTitle>Entries</ContainerTitle>
-            <LayoutControl layout={isOpen} layoutChange={onSetInstance} />
-          </ListHeader>
-          {isOpen ? (
-            <Grid data-testid="ENTRIES_GRIDVIEW">
-              {props.posts.map((p, i) => (
-                <GridItem key={i}>
-                  <Card {...p} onDelete={() => props.onDelete(p)} />
-                </GridItem>
-              ))}
-            </Grid>
-          ) : (
-            <List data-testid="ENTRIES_LISTVIEW">
-              {props.posts.map((p, i) => (
-                <PostListItem key={i} {...p} onDelete={() => props.onDelete(p)} />
-              ))}
-            </List>
-          )}
-        </>
+    <>
+      <ListHeader>
+        <ContainerTitle>Entries</ContainerTitle>
+        <LayoutControl layout={isOpen} layoutChange={setOpen} />
+      </ListHeader>
+      {isOpen ? (
+        <Grid data-testid="ENTRIES_GRIDVIEW">
+          {props.posts.map((p, i) => (
+            <GridItem key={i}>
+              <Card {...p} onDelete={() => props.onDelete(p)} />
+            </GridItem>
+          ))}
+        </Grid>
+      ) : (
+        <List data-testid="ENTRIES_LISTVIEW">
+          {props.posts.map((p, i) => (
+            <PostListItem key={i} {...p} onDelete={() => props.onDelete(p)} />
+          ))}
+        </List>
       )}
-    </Toggle>
+    </>
   );
 };
 

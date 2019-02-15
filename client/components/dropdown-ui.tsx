@@ -2,8 +2,8 @@ import * as React from "react";
 import styled, { keyframes, createGlobalStyle } from "styled-components";
 import Router from "next/router";
 import * as Reach from "@reach/menu-button";
-import { NavIcon } from "./icons";
-import { NavItem, StyledSignoutIcon, NavLabel } from "./nav";
+import { NavIcon, SignoutIcon } from "./icons";
+import { NavItem } from "./nav";
 import User from "./user";
 import { AuthContext, IAuthContext } from "./auth";
 import * as DefaultStyle from "../utils/defaultStyles";
@@ -23,7 +23,6 @@ const MenuStyles = createGlobalStyle`
   [data-reach-menu-list] {
     display: block;
     white-space: nowrap;
-    background: ${props => props.theme.cardBackground};
     outline: none;
     padding: 0;
   }
@@ -40,11 +39,6 @@ const MenuStyles = createGlobalStyle`
     color: white;
     text-decoration: initial;
     padding: 5px 20px;
-  }
-
-  [data-reach-menu-item][data-selected] {
-    background: ${props => props.theme.link};
-    outline: none;
   }
 `;
 
@@ -72,14 +66,31 @@ const fadeInFromLeft = keyframes`
     opacity: 1;
   }
 `;
-const MenuList = styled(Reach.MenuList)`
+
+export const MenuList = styled(Reach.MenuList)`
   animation: ${fadeInFromLeft} 0.45s;
   color: ${props => props.theme.color};
+  background: ${props => props.theme.cardBackground};
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
+
+  & > [data-reach-menu-item][data-selected] {
+    background: ${props => props.theme.link};
+    outline: none;
+  }
+`;
+
+export const MenuLabel = styled.span`
+  display: inline-block;
+  vertical-align: middle;
+`;
+
+export const StyledSignoutIcon = styled(SignoutIcon)`
+  display: inline-block;
+  vertical-align: middle;
 `;
 
 const DropdownUI: React.FC<{}> = function(props) {
-  const context = React.useContext<IAuthContext>(AuthContext);
+  const auth = React.useContext<IAuthContext>(AuthContext);
   return (
     <Reach.Menu>
       <MenuStyles />
@@ -87,7 +98,7 @@ const DropdownUI: React.FC<{}> = function(props) {
         <NavIcon className="Navicon" />
       </ToggleButton>
       <MenuList>
-        <StyledUser border colors={["#FEB692", "#EA5455"]} name={context.name} />
+        <StyledUser border colors={["#FEB692", "#EA5455"]} name={auth.name} />
         <Reach.MenuLink onClick={() => Router.push("/")} component={NavItem}>
           All Entries
         </Reach.MenuLink>
@@ -97,8 +108,8 @@ const DropdownUI: React.FC<{}> = function(props) {
         <Reach.MenuLink onClick={() => Router.push("/settings")} component={NavItem}>
           Settings
         </Reach.MenuLink>
-        <Reach.MenuItem onSelect={context.signOut}>
-          <StyledSignoutIcon /> <NavLabel>Sign Out</NavLabel>
+        <Reach.MenuItem onSelect={auth.signOut}>
+          <StyledSignoutIcon /> <MenuLabel>Sign Out</MenuLabel>
         </Reach.MenuItem>
       </MenuList>
     </Reach.Menu>

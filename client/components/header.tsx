@@ -51,9 +51,7 @@ const Header = styled.header`
   }
 `;
 
-interface IHeaderProps extends WithRouterProps {}
-
-const UIHeader: React.FC<IHeaderProps> = ({ router }) => {
+const UIHeader: React.FC<WithRouterProps> = ({ router }) => {
   return !(router.route === "/login") ? (
     <Header data-testid="APP_HEADER">
       <AuthConsumer>

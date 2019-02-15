@@ -148,12 +148,11 @@ const NavBar: React.FC<NavigationProps> = function(props) {
 
   React.useEffect(() => {
     if (prevRoute !== props.router.route) {
-      console.log("route changed");
+      onBlur();
     }
   }, [props.router.route]);
 
   const onBlur = () => {
-    console.log("BLUR");
     // props.closeNav();
   };
 

@@ -26,24 +26,26 @@ interface IUIShell {
   token: string;
 }
 
-export const UIShell: React.FC<IUIShell> = props => (
-  <NightMode>
-    <LocalUISettingsProvider>
-      <UIContainer>
-        <LevelStyles />
-        <ErrorContainer>
-          <NightModeTrigger>
-            <UIErrorBanner />
-            <ClearFixed>
-              <Container>
-                <Header />
-                {props.children}
-                <Footer />
-              </Container>
-            </ClearFixed>
-          </NightModeTrigger>
-        </ErrorContainer>
-      </UIContainer>
-    </LocalUISettingsProvider>
-  </NightMode>
-);
+export const UIShell: React.FC<IUIShell> = function(props) {
+  return (
+    <NightMode>
+      <LocalUISettingsProvider>
+        <UIContainer>
+          <LevelStyles />
+          <ErrorContainer>
+            <NightModeTrigger>
+              <UIErrorBanner />
+              <ClearFixed>
+                <Container>
+                  <Header />
+                  {props.children}
+                  <Footer />
+                </Container>
+              </ClearFixed>
+            </NightModeTrigger>
+          </ErrorContainer>
+        </UIContainer>
+      </LocalUISettingsProvider>
+    </NightMode>
+  );
+};

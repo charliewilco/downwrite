@@ -2,8 +2,6 @@ import * as React from "react";
 import styled from "styled-components";
 import * as DefaultStyles from "../utils/defaultStyles";
 
-const Box = styled.div``;
-
 interface ILayoutTrigger {
   active: boolean;
   theme?: any;
@@ -36,7 +34,7 @@ const LayoutTrigger = styled.div<ILayoutTrigger>`
 
 const LayoutControl: React.FC<ILayoutControl> = function(props) {
   return (
-    <Box>
+    <div>
       <LayoutTrigger
         data-testid="LAYOUT_CONTROL_GRID"
         active={props.layout}
@@ -49,7 +47,7 @@ const LayoutControl: React.FC<ILayoutControl> = function(props) {
         onClick={() => props.layoutChange(false)}>
         List
       </LayoutTrigger>
-    </Box>
+    </div>
   );
 };
 
