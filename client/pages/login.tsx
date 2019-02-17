@@ -36,27 +36,28 @@ interface IHomeProps {
   signIn: (x: boolean, y: string) => void;
 }
 
-export default class Home extends React.Component<IHomeProps, any> {
-  static contextType: React.Context<IUIErrorMessage> = ErrorStateContext;
+const Home: React.FC<IHomeProps> = function(props) {
+  const { errorActions } = React.useContext<IUIErrorMessage>(ErrorStateContext);
+  return (
+    <>
+      <Head>
+        <title>Downwrite</title>
+      </Head>
+      <HomeContainer data-testid="LOGIN_PAGE_CONTAINER">
+        <Landing>
+          <Features />
+        </Landing>
+        <LoginTabs
+          renderLogin={() => (
+            <Login setError={errorActions.setError} signIn={props.signIn} />
+          )}
+          renderRegister={() => (
+            <Register setError={errorActions.setError} signIn={props.signIn} />
+          )}
+        />
+      </HomeContainer>
+    </>
+  );
+};
 
-  render() {
-    const { signIn } = this.props;
-    const { setError } = this.context.errorActions;
-    return (
-      <>
-        <Head>
-          <title>Downwrite</title>
-        </Head>
-        <HomeContainer data-testid="LOGIN_PAGE_CONTAINER">
-          <Landing>
-            <Features />
-          </Landing>
-          <LoginTabs
-            renderLogin={() => <Login setError={setError} signIn={signIn} />}
-            renderRegister={() => <Register setError={setError} signIn={signIn} />}
-          />
-        </HomeContainer>
-      </>
-    );
-  }
-}
+export default Home;

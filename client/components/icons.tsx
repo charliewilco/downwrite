@@ -6,18 +6,22 @@ interface IIconAttributes {
   className?: string;
 }
 
-const CloseIcon: React.SFC<IIconAttributes> = ({ size, fill, className }) => (
+const CloseIcon: React.FC<IIconAttributes> = props => (
   <svg
-    width={size}
-    height={size}
-    className={className}
+    width={props.size}
+    height={props.size}
+    className={props.className}
     viewBox="0 0 12 12"
     style={{ display: "block" }}>
     <title>Close</title>
     <g id="Canvas" transform="translate(-1561 -730)">
       <g id="Close">
         <g id="Combined Shape">
-          <use xlinkHref="#modalClose" transform="translate(1561 730)" fill={fill} />
+          <use
+            xlinkHref="#modalClose"
+            transform="translate(1561 730)"
+            fill={props.fill}
+          />
         </g>
       </g>
     </g>
@@ -31,8 +35,8 @@ const CloseIcon: React.SFC<IIconAttributes> = ({ size, fill, className }) => (
   </svg>
 );
 
-const SignoutIcon: React.SFC<IIconAttributes> = ({ className }) => (
-  <svg width={13} height={12} viewBox="0 0 13 12" className={className}>
+const SignoutIcon: React.FC<IIconAttributes> = props => (
+  <svg width={13} height={12} viewBox="0 0 13 12" className={props.className}>
     <title>Signout Icon</title>
     <g id="Canvas" transform="translate(-1806 -2684)">
       <g id="Signout Icon">
@@ -53,8 +57,8 @@ const SignoutIcon: React.SFC<IIconAttributes> = ({ className }) => (
   </svg>
 );
 
-const NavIcon: React.SFC<IIconAttributes> = ({ className }) => (
-  <svg width="20px" height="9px" viewBox="0 0 20 9" className={className}>
+const NavIcon: React.FC<IIconAttributes> = props => (
+  <svg width="20px" height="9px" viewBox="0 0 20 9" className={props.className}>
     <desc>Navicon</desc>
     <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <g fill="inherit" id="NaviconGroup">
@@ -66,8 +70,8 @@ const NavIcon: React.SFC<IIconAttributes> = ({ className }) => (
   </svg>
 );
 
-const ExportIcon: React.SFC<IIconAttributes> = ({ className }) => (
-  <svg width="24" height="15" viewBox="0 0 24 15" className={className}>
+const ExportIcon: React.FC<IIconAttributes> = props => (
+  <svg width="24" height="15" viewBox="0 0 24 15" className={props.className}>
     <title>Markdown Symbol</title>
     <g id="Canvas" transform="translate(-1311 -870)">
       <g id="Combined Shape">

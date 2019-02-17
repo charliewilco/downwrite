@@ -3,7 +3,14 @@ import Config from "./config";
 
 // const fs = require('fs')
 // let key = fs.readFileSync('private.key')
-export function createToken(user): string {
+
+interface ITokenUser {
+  username: string;
+  _id: string;
+  admin?: boolean;
+}
+
+export function createToken(user: ITokenUser): string {
   let scopes: string;
 
   if (user.admin) {

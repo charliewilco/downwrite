@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import Modal from "./modal";
-import Button, { AltButton } from "./button";
+import { Button, AltButton } from "./button";
 import * as DefaultStyles from "../utils/defaultStyles";
 
 const DeleteTray = styled.div`
@@ -35,23 +35,19 @@ interface IDeleteModalProps {
   onDelete: () => void;
 }
 
-const DeleteModal: React.SFC<IDeleteModalProps> = ({
-  closeModal,
-  title,
-  onCancelDelete,
-  onDelete
-}) => (
-  <Modal closeUIModal={closeModal}>
+const DeleteModal: React.FC<IDeleteModalProps> = props => (
+  <Modal closeUIModal={props.closeModal}>
     <Box>
       <DeleteBody>
         <h6>Delete Post</h6>
         <DeleteWarning>
-          Are you sure you want to delete <strong>{quotedTitle(title)}</strong>?
+          Are you sure you want to delete <strong>{quotedTitle(props.title)}</strong>
+          ?
         </DeleteWarning>
       </DeleteBody>
       <DeleteTray>
-        <AltButton onClick={onCancelDelete}>Cancel</AltButton>
-        <Button onClick={onDelete}>Delete</Button>
+        <AltButton onClick={props.onCancelDelete}>Cancel</AltButton>
+        <Button onClick={props.onDelete}>Delete</Button>
       </DeleteTray>
     </Box>
   </Modal>

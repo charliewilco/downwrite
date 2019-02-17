@@ -83,32 +83,34 @@ export default class AuthMegaProvider extends React.Component<
     };
   }
 
-  signIn = (authed: boolean, token: string): void => {
+  public readonly state: IAuthState;
+
+  private signIn = (authed: boolean, token: string): void => {
     const { name } = jwt(token);
-    return this.setState({ authed, token, name }, () =>
-      cookie.set("DW_TOKEN", token, cookieOptions)
-    );
+    this.setState({ authed, token, name });
+    cookie.set("DW_TOKEN", token, cookieOptions);
   };
 
-  signOut = () => {
-    return this.setState(
-      {
-        authed: false,
-        token: undefined,
-        name: undefined
-      },
-      () => cookie.remove("DW_TOKEN", cookieOptions)
-    );
+  private signOut = (): void => {
+    this.setState({
+      authed: false,
+      token: undefined,
+      name: undefined
+    });
   };
 
-  componentDidUpdate(prevProps: IAuthProps, prevState: IAuthState): void {
+  public componentDidUpdate(prevProps: IAuthProps, prevState: IAuthState): void {
     const { authed } = this.state;
     if (prevState.authed !== authed) {
       Router.push({ pathname: authed ? "/" : "/login" });
+
+      if (!authed) {
+        cookie.remove("DW_TOKEN", cookieOptions);
+      }
     }
   }
 
-  render() {
+  public render(): JSX.Element {
     return (
       <AuthContext.Provider
         value={{
@@ -128,11 +130,12 @@ export const AuthConsumer = AuthContext.Consumer;
 // Component should be NextStatelessComponent type
 export const withAuth = (Component: NextComponentClass<any>) => {
   return class extends React.Component<any, any> {
-    static displayName = `withAuth(${Component.displayName || Component.name})`;
+    public static displayName = `withAuth(${Component.displayName ||
+      Component.name})`;
 
-    static getInitialProps = Component.getInitialProps;
+    public static getInitialProps = Component.getInitialProps;
 
-    render() {
+    public render(): JSX.Element {
       return (
         <AuthContext.Consumer>
           {(auth: IAuthActions) => <Component {...this.props} {...auth} />}

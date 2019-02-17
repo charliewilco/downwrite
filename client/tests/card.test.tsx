@@ -11,6 +11,10 @@ const mockDelete = jest.fn();
 
 jest.mock("next/router");
 
+jest.mock("next/link", () => {
+  return jest.fn(props => <>{props.children}</>);
+});
+
 const { container, getByTestId } = render(
   <Card public={false} {...post} onDelete={mockDelete} />
 );

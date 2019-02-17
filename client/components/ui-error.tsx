@@ -21,63 +21,46 @@ export interface IUIErrorMessage {
 
 export const ErrorStateContext = React.createContext({} as IUIErrorMessage);
 
-const UIErrorMessage: React.SFC<IUIErrorMessage> = ({
-  errorState: { content, type },
-  errorActions: { clearFlashMessage }
-}) =>
-  content.length > 0 ? (
-    <UIFlash content={content} type={type} onClose={clearFlashMessage} />
+const UIErrorMessage: React.FC<{}> = function(props) {
+  const { errorState, errorActions } = React.useContext<IUIErrorMessage>(
+    ErrorStateContext
+  );
+  return errorState.content.length > 0 ? (
+    <UIFlash
+      content={errorState.content}
+      type={errorState.type}
+      onClose={errorActions.clearFlashMessage}
+    />
   ) : (
     <Null />
   );
-
-type HOComponent = React.ComponentType<any> | React.StatelessComponent<any>;
-
-export const withErrors = (Component: HOComponent) => {
-  return class extends React.Component<any, any> {
-    static displayName = `withErrors(${Component.displayName || Component.name})`;
-
-    render() {
-      return (
-        <ErrorStateContext.Consumer>
-          {(errs: IUIErrorMessage) => <Component {...this.props} {...errs} />}
-        </ErrorStateContext.Consumer>
-      );
-    }
-  };
 };
 
 export const UIErrorConsumer = ErrorStateContext.Consumer;
 
-export class ErrorContainer extends React.Component<IErrorProps, ErrorTypes> {
-  state = {
+// TODO: Refactor to use hooks `useReducer`
+export const ErrorContainer: React.FC<IErrorProps> = function(props) {
+  const [errorState, setState] = React.useState<ErrorTypes>({
     content: "",
     type: ""
-  };
+  });
 
-  setError = (content: string, type: string) => this.setState({ content, type });
+  return (
+    <ErrorStateContext.Provider
+      value={{
+        errorState,
+        errorActions: {
+          setError: (content: string, type: string): void => {
+            setState({ content, type });
+          },
+          clearFlashMessage: (): void => {
+            setState({ content: "", type: "" });
+          }
+        }
+      }}>
+      {props.children}
+    </ErrorStateContext.Provider>
+  );
+};
 
-  clearFlash = () => this.setState({ content: "", type: "" });
-
-  render() {
-    const { children } = this.props;
-
-    const value: IUIErrorMessage = {
-      errorState: {
-        ...this.state
-      },
-      errorActions: {
-        setError: this.setError,
-        clearFlashMessage: this.clearFlash
-      }
-    };
-
-    return (
-      <ErrorStateContext.Provider value={value}>
-        {children}
-      </ErrorStateContext.Provider>
-    );
-  }
-}
-
-export const UIErrorBanner = withErrors(UIErrorMessage);
+export const UIErrorBanner = UIErrorMessage;

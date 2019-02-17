@@ -8,10 +8,10 @@ import AuthorBlock from "../components/author-block";
 import NotFound from "../components/not-found";
 import * as API from "../utils/api";
 
-type AuthorType = {
+interface AuthorType {
   username: string;
   gradient: string[];
-};
+}
 
 export interface IEntry {
   title: string;
@@ -33,7 +33,7 @@ interface IPreviewProps {
 }
 
 export default class PreviewEntry extends React.Component<IPreviewProps, any> {
-  static async getInitialProps(
+  public static async getInitialProps(
     ctx: NextContext<{ id: string }>
   ): Promise<Partial<IPreviewProps>> {
     let { id } = ctx.query;
@@ -53,11 +53,11 @@ export default class PreviewEntry extends React.Component<IPreviewProps, any> {
     };
   }
 
-  static defaultProps = {
+  public static defaultProps = {
     entry: {}
   };
 
-  static displayName = "PreviewEntry";
+  public static displayName = "PreviewEntry";
 
   public render(): JSX.Element {
     const { entry, authed, url } = this.props;

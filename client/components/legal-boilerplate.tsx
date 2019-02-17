@@ -2,6 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import Checkbox from "./checkbox";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 interface ILegalProps {
   name: string;
@@ -24,8 +25,10 @@ const LegalContainer = styled.label`
   display: flex;
   align-items: center;
   margin: 16px;
-  background: #d8eaf1;
+  font-weight: 700;
+  background: ${props => (props.theme.night ? "white" : "#d8eaf1")};
   padding: 8px;
+  color: ${DefaultStyles.colors.text};
 `;
 
 const LegalLink = () => (
@@ -34,9 +37,13 @@ const LegalLink = () => (
   </Link>
 );
 
-const LegalBoilerplate: React.SFC<ILegalProps> = ({ name, checked, onChange }) => (
+const LegalBoilerplate: React.FC<ILegalProps> = props => (
   <LegalContainer>
-    <LegalCheck name={name} checked={checked} onChange={onChange} />
+    <LegalCheck
+      name={props.name}
+      checked={props.checked}
+      onChange={props.onChange}
+    />
     <LegalInfo>
       I'm agreeing to abide in all the <LegalLink />.
     </LegalInfo>

@@ -13,7 +13,7 @@ import { gradientPoints } from "../components/avatar";
 //     };
 //   });
 
-const SettingsAvatar: React.SFC<any> = () => (
+const SettingsAvatar: React.FC<any> = () => (
   <Formik initialValues={{ colors: gradientPoints() }} onSubmit={() => null}>
     {({ values, handleChange, setFieldValue }) => (
       <SettingsBlock title="Avatar">

@@ -2,8 +2,6 @@ import * as React from "react";
 import styled from "styled-components";
 import * as DefaultStyles from "../utils/defaultStyles";
 
-const Box = styled.div``;
-
 interface ILayoutTrigger {
   active: boolean;
   theme?: any;
@@ -34,21 +32,23 @@ const LayoutTrigger = styled.div<ILayoutTrigger>`
   }
 `;
 
-const LayoutControl: React.SFC<ILayoutControl> = ({ layout, layoutChange }) => (
-  <Box>
-    <LayoutTrigger
-      data-testid="LAYOUT_CONTROL_GRID"
-      active={layout}
-      onClick={() => layoutChange(true)}>
-      Grid
-    </LayoutTrigger>
-    <LayoutTrigger
-      data-testid="LAYOUT_CONTROL_LIST"
-      active={!layout}
-      onClick={() => layoutChange(false)}>
-      List
-    </LayoutTrigger>
-  </Box>
-);
+const LayoutControl: React.FC<ILayoutControl> = function(props) {
+  return (
+    <div>
+      <LayoutTrigger
+        data-testid="LAYOUT_CONTROL_GRID"
+        active={props.layout}
+        onClick={() => props.layoutChange(true)}>
+        Grid
+      </LayoutTrigger>
+      <LayoutTrigger
+        data-testid="LAYOUT_CONTROL_LIST"
+        active={!props.layout}
+        onClick={() => props.layoutChange(false)}>
+        List
+      </LayoutTrigger>
+    </div>
+  );
+};
 
 export default LayoutControl;

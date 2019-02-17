@@ -42,11 +42,16 @@ const FormWrapper = styled(UITabs.Container)`
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
   max-width: 544px;
   width: 100%;
-  background: white;
-  color: ${DefaultStyles.colors.text};
+  background: ${props => props.theme.cardBackground};
+  color: ${props => props.theme.color};
 `;
 
-const LoginContainer: React.SFC<any> = ({ renderLogin, renderRegister }) => (
+interface LoginContainerProps {
+  renderRegister: () => React.ReactNode;
+  renderLogin: () => React.ReactNode;
+}
+
+const LoginContainer: React.FC<LoginContainerProps> = props => (
   <FormWrapper>
     <StyledTabsList>
       <StyledListItem data-testid="LOGIN_REGISTER_BUTTON" id="Register">
@@ -63,13 +68,13 @@ const LoginContainer: React.SFC<any> = ({ renderLogin, renderRegister }) => (
             Sign Up as a New User
           </SelectedTitle>
         </header>
-        {renderRegister()}
+        {props.renderRegister()}
       </UITabs.Panel>
       <UITabs.Panel label="Login">
         <header style={{ padding: 16 }}>
           <SelectedTitle data-testid="LOGIN_TITLE">Welcome Back!</SelectedTitle>
         </header>
-        {renderLogin()}
+        {props.renderLogin()}
       </UITabs.Panel>
     </UITabs.Panels>
   </FormWrapper>

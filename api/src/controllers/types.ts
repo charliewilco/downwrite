@@ -21,6 +21,14 @@ export interface ILoginRequest extends Hapi.Request {
   };
 }
 
+export interface IPasswordResetRequest extends Hapi.Request {
+  auth: IRequestAuth;
+  payload: {
+    oldPassword: string;
+    newPassword: string;
+  };
+}
+
 export interface IRegisterRequest extends Hapi.Request {
   auth: IRequestAuth;
   payload: {

@@ -9,7 +9,7 @@ import uuid from "uuid/v4";
 import "isomorphic-fetch";
 import Wrapper from "../components/wrapper";
 import { Input } from "../components/editor-input";
-import Button from "../components/button";
+import { Button } from "../components/button";
 import Upload from "../components/upload";
 import Editor from "../components/editor";
 import * as UtilityBar from "../components/utility-bar";
@@ -49,7 +49,7 @@ export default class NewEditor extends React.Component<
     drafts: []
   };
 
-  static displayName = "NewPostEditor";
+  public static displayName = "NewPostEditor";
 
   // private saveLocalDraft = (id: string, post: Object): void => {
   //   localStorage.setItem("Draft " + id, JSON.stringify(post));
@@ -70,8 +70,6 @@ export default class NewEditor extends React.Component<
       dateAdded,
       public: false
     };
-
-    console.log(id);
 
     API.createPost(body, { token, host })
       .then(() =>
@@ -97,40 +95,38 @@ export default class NewEditor extends React.Component<
           handleSubmit,
           handleChange
         }: FormikProps<IFormikValues>) => (
-          <>
+          <EditorContainer as={Form} sm>
             <Head>
               <title>{title ? title : "New"} | Downwrite</title>
             </Head>
-            <EditorContainer as={Form} sm>
-              {error.length > 0 && <span className="f6 u-center">{error}</span>}
-              <Upload
-                onParsed={({ title, editorState }) => {
-                  setFieldValue("title", title);
-                  setFieldValue("editorState", editorState);
-                }}>
-                <Input
-                  name="title"
-                  placeholder="Untitled Document"
-                  value={title}
-                  onChange={handleChange}
-                />
-                <UtilityBar.Container>
-                  <UtilityBar.Items>
-                    {offline && <span>You're Offline Right Now</span>}
-                  </UtilityBar.Items>
-                  <UtilityBar.Items>
-                    <Button type="Submit">Add New</Button>
-                  </UtilityBar.Items>
-                </UtilityBar.Container>
-                <Editor
-                  editorCommand={EDITOR_COMMAND}
-                  editorState={editorState}
-                  onChange={editorState => setFieldValue("editorState", editorState)}
-                  onSave={handleSubmit}
-                />
-              </Upload>
-            </EditorContainer>
-          </>
+            {error.length > 0 && <span className="f6 u-center">{error}</span>}
+            <Upload
+              onParsed={parsed => {
+                setFieldValue("title", parsed.title);
+                setFieldValue("editorState", parsed.editorState);
+              }}>
+              <Input
+                name="title"
+                placeholder="Untitled Document"
+                value={title}
+                onChange={handleChange}
+              />
+              <UtilityBar.Container>
+                <UtilityBar.Items>
+                  {offline && <span>You're Offline Right Now</span>}
+                </UtilityBar.Items>
+                <UtilityBar.Items>
+                  <Button type="Submit">Add New</Button>
+                </UtilityBar.Items>
+              </UtilityBar.Container>
+              <Editor
+                editorCommand={EDITOR_COMMAND}
+                editorState={editorState}
+                onChange={es => setFieldValue("editorState", es)}
+                onSave={handleSubmit}
+              />
+            </Upload>
+          </EditorContainer>
         )}
       </Formik>
     );

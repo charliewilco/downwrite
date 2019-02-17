@@ -1,52 +1,37 @@
 import * as React from "react";
 import delay from "delay";
-// import debounce from "lodash/debounce";
 
 interface IAutosavingProps {
   onUpdate: (x?: any) => void;
-  delay: number;
-  duration: number;
+  delay?: number;
+  duration?: number;
 }
 
-interface IAutosavingState {
-  autosaving: boolean;
-}
+const AutosavingInterval: React.FC<IAutosavingProps> = function(props) {
+  const [autosaving, setAutoSaving] = React.useState<boolean>(false);
 
-export default class AutosavingInterval extends React.Component<
-  IAutosavingProps,
-  IAutosavingState
-> {
-  state = { autosaving: false };
+  let interval: NodeJS.Timeout;
 
-  static defaultProps = {
-    onUpdate: () => {},
-    delay: 3000,
-    duration: 5000
-  };
-
-  isMounted: boolean = false;
-  interval: any;
-
-  componentDidMount() {
-    this.isMounted = true;
-
-    this.interval = setInterval(async () => {
-      if (this.isMounted && this.props.onUpdate) {
-        this.setState({ autosaving: true });
-        await delay(this.props.delay);
-        this.props.onUpdate();
-        this.setState({ autosaving: false });
+  React.useEffect(() => {
+    interval = setInterval(async () => {
+      if (props.onUpdate) {
+        setAutoSaving(true);
+        await delay(props.delay || 3000);
+        props.onUpdate();
+        setAutoSaving(false);
       }
-    }, this.props.duration);
+    }, props.duration || 5000);
+
+    return function cleanup() {
+      clearInterval(interval);
+    };
+  }, []);
+
+  if (autosaving) {
+    return <>{props.children}</>;
   }
 
-  componentWillUnmount() {
-    this.isMounted = false;
-    clearInterval(this.interval);
-  }
+  return null;
+};
 
-  render() {
-    const { autosaving } = this.state;
-    return autosaving && this.props.children;
-  }
-}
+export default AutosavingInterval;

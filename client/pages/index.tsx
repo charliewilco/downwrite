@@ -32,13 +32,13 @@ export default class Dashboard extends React.Component<
   IDashboardProps,
   IDashboardState
 > {
-  static displayName = "Dashboard";
+  public static displayName = "Dashboard";
 
-  static defaultProps: Partial<IDashboardProps> = {
+  public static defaultProps: Partial<IDashboardProps> = {
     entries: []
   };
 
-  static async getInitialProps(
+  public static async getInitialProps(
     ctx: NextContext<{ token: string }>
   ): Promise<Partial<IDashboardProps>> {
     let host: string;

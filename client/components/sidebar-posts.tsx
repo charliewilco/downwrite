@@ -11,7 +11,7 @@ const Separator = styled.div`
   margin-bottom: 1rem;
 `;
 
-const SidebarPosts: React.SFC<{ posts: any[] }> = ({ posts }) => (
+const SidebarPosts: React.FC<{ posts: any[] }> = ({ posts }) => (
   <>
     <SidebarEntriesTitle>Recent Entries</SidebarEntriesTitle>
     {posts.slice(0, 2).map((post, i) => (

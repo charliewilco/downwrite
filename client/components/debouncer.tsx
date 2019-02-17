@@ -2,29 +2,26 @@ import * as React from "react";
 import debounce from "lodash/debounce";
 
 interface DebounceProps {
-  method: () => void;
+  method?: () => void;
   timeout: number;
 }
 
-export default class extends React.Component<DebounceProps> {
-  static displayName = "Debouncer";
-
-  static defaultProps = {
-    method: () => {},
-    timeout: 3500
-  };
-
-  autoFire = debounce(this.props.method, this.props.timeout);
-
-  componentDidMount() {
-    this.autoFire();
+const Debouncer: React.FC<DebounceProps> = function(props) {
+  if (props.method) {
+    const autoFire = debounce(props.method, props.timeout);
+    React.useEffect(() => {
+      autoFire();
+      return function cleanup() {
+        autoFire.flush();
+      };
+    }, []);
   }
 
-  componentWillUnmount() {
-    this.autoFire.flush();
-  }
+  return null;
+};
 
-  render(): null {
-    return null;
-  }
-}
+Debouncer.defaultProps = {
+  timeout: 3500
+};
+
+export default Debouncer;

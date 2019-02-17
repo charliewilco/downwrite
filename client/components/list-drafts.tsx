@@ -1,28 +1,24 @@
 import * as React from "react";
 
-interface LocalDraftTypes {
-  drafts: any[];
-}
+const searchLocalStorage = () => {
+  return localStorage.forEach(
+    (item: any, iterator: number) =>
+      localStorage.key(iterator).includes("Draft") && item
+  );
+};
 
-export default class extends React.Component<void, LocalDraftTypes> {
-  state: LocalDraftTypes = {
-    drafts: []
-  };
+const ListDrafts: React.FC<{}> = function(props) {
+  const [drafts] = React.useState<any[]>([]);
 
-  searchLocalStorage = () => {
-    return localStorage.forEach(
-      (item: any, iterator: number) =>
-        localStorage.key(iterator).includes("Draft") && item
-    );
-  };
+  React.useEffect(() => {
+    let storage = searchLocalStorage();
 
-  componentDidMount() {
-    let storage = this.searchLocalStorage();
+    storage.forEach((item: any) => {
+      drafts.includes(item);
+    });
+  }, []);
 
-    return storage.forEach((item: any) => item);
-  }
+  return <span>I should be a list and i'm not</span>;
+};
 
-  render() {
-    return <span>I should be a list and i'm not</span>;
-  }
-}
+export default ListDrafts;

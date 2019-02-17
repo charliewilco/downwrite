@@ -12,7 +12,7 @@ import Autosaving from "../components/autosaving-interval";
 import Toast from "../components/toast";
 import ExportMarkdown from "../components/export";
 import WordCounter from "../components/word-count";
-import Button from "../components/button";
+import { Button } from "../components/button";
 import Loading from "../components/loading";
 import { Input } from "../components/editor-input";
 import OuterEditor from "../components/outer-editor";
@@ -57,7 +57,7 @@ interface IFields {
 const EDITOR_COMMAND = "myeditor-save";
 
 export default class Edit extends React.Component<IEditorProps, IEditorState> {
-  static async getInitialProps(
+  public static async getInitialProps(
     ctx: NextContext<{ id: string; token: string }>
   ): Promise<Partial<IEditorProps>> {
     const token = authMiddleware(ctx);
@@ -81,7 +81,7 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
     };
   }
 
-  static displayName = "EntryEdit";
+  public static displayName: string = "EntryEdit";
 
   private readonly duration: number = __IS_DEV__ ? 30000 : 120000;
 
@@ -123,7 +123,7 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
   };
 
   public render(): JSX.Element {
-    const { loaded, initialFocus, editorState } = this.state;
+    const { loaded, initialFocus } = this.state;
 
     return !loaded ? (
       <Loading size={75} />
@@ -132,54 +132,57 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
         <Formik
           onSubmit={this.updatePostContent}
           initialValues={{
-            editorState,
+            editorState: this.state.editorState,
             title: this.props.post.title,
             publicStatus: this.props.post.public
           }}>
           {({
-            values: { title, editorState, publicStatus },
+            values,
             handleChange,
             handleSubmit,
             setFieldValue
           }: FormikProps<IFields>) => (
             <>
               <Head>
-                <title>{title} | Downwrite</title>
+                <title>{values.title} | Downwrite</title>
               </Head>
               <Autosaving
                 duration={this.duration}
                 onUpdate={initialFocus && handleSubmit}>
                 <Toast>
-                  Autosaving <i>{title}</i>
+                  Autosaving <i>{values.title}</i>
                 </Toast>
               </Autosaving>
               <OuterEditor as={Form}>
                 <TimeMarker dateAdded={this.props.post.dateAdded} />
-                <Input value={title} name="title" onChange={handleChange} />
+                <Input value={values.title} name="title" onChange={handleChange} />
                 <UtilityBar.Container>
                   <UtilityBar.Items>
                     <ToggleBox
                       label={value => (value ? "Public" : "Private")}
                       name="publicStatus"
-                      value={publicStatus}
+                      value={values.publicStatus}
                       onChange={handleChange}
                     />
-                    <PreviewLink id={this.props.id} publicStatus={publicStatus} />
+                    <PreviewLink
+                      id={this.props.id}
+                      publicStatus={values.publicStatus}
+                    />
                   </UtilityBar.Items>
                   <UtilityBar.Items>
-                    {!!editorState && (
+                    {!!values.editorState && (
                       <ExportMarkdown
-                        editorState={editorState}
-                        title={title}
+                        editorState={values.editorState}
+                        title={values.title}
                         date={this.props.post.dateAdded}
                       />
                     )}
                     <Button type="submit">Save</Button>
                   </UtilityBar.Items>
                 </UtilityBar.Container>
-                {!!editorState && (
+                {!!values.editorState && (
                   <Editor
-                    editorState={editorState}
+                    editorState={values.editorState}
                     editorCommand={EDITOR_COMMAND}
                     onFocus={this.onFocus}
                     onSave={handleSubmit}
@@ -189,7 +192,9 @@ export default class Edit extends React.Component<IEditorProps, IEditorState> {
                   />
                 )}
               </OuterEditor>
-              {!!editorState && <WordCounter editorState={editorState} />}
+              {!!values.editorState && (
+                <WordCounter editorState={values.editorState} />
+              )}
             </>
           )}
         </Formik>

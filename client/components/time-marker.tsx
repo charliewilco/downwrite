@@ -13,12 +13,12 @@ const Meta = styled.div`
   margin-bottom: 8px;
 `;
 
-const Time: React.SFC<ITimeMarkProps> = ({ dateAdded }) => {
+const Time: React.FC<ITimeMarkProps> = ({ dateAdded }) => {
   let date: string = isDate(dateAdded) ? dateAdded.toString() : undefined;
   return <time dateTime={date}>{format(dateAdded, "DD MMMM YYYY")}</time>;
 };
 
-const TimeMarker: React.SFC<ITimeMarkProps> = ({ dateAdded }) => (
+const TimeMarker: React.FC<ITimeMarkProps> = ({ dateAdded }) => (
   <Meta>
     Added on <Time dateAdded={dateAdded} />
   </Meta>

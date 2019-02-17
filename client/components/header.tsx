@@ -1,12 +1,12 @@
 import * as React from "react";
 import styled from "styled-components";
 import Link from "next/link";
+import { withRouter, WithRouterProps } from "next/router";
 import Logo from "./logo";
 import AltAnchor from "./alt-anchor-link";
-import { NavIcon } from "./icons";
 import * as DefaultStyles from "../utils/defaultStyles";
 import { AuthConsumer } from "./auth";
-import { withRouter, WithRouterProps } from "next/router";
+import DropdownUI from "./dropdown-ui";
 
 const MenuContainer = styled.nav`
   display: flex;
@@ -22,15 +22,6 @@ const HomeLink = styled.a`
   &:hover {
     color: ${DefaultStyles.colors.blue700};
   }
-`;
-
-const ToggleButton = styled.button`
-  appearance: none;
-  outline: none;
-  border: 0;
-  font-family: inherit;
-  background: none;
-  box-sizing: inherit;
 `;
 
 const HeaderTitle = styled.h1`
@@ -60,11 +51,7 @@ const Header = styled.header`
   }
 `;
 
-interface IHeaderProps extends WithRouterProps {
-  onClick: () => void;
-}
-
-const UIHeader: React.SFC<IHeaderProps> = ({ router, onClick }) => {
+const UIHeader: React.FC<WithRouterProps> = ({ router }) => {
   return !(router.route === "/login") ? (
     <Header data-testid="APP_HEADER">
       <AuthConsumer>
@@ -83,9 +70,7 @@ const UIHeader: React.SFC<IHeaderProps> = ({ router, onClick }) => {
                 <Link prefetch href="/new">
                   <AltAnchor space="right">New</AltAnchor>
                 </Link>
-                <ToggleButton onClick={onClick}>
-                  <NavIcon className="Navicon" />
-                </ToggleButton>
+                <DropdownUI />
               </MenuContainer>
             ) : (
               <MenuContainer>
