@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Formik, Form, FormikProps, ErrorMessage, FormikActions } from "formik";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
-import Button from "./button";
+import { Button } from "./button";
 import SpacedBox from "./spaced-box";
 import * as API from "../utils/api";
 import { LoginFormSchema } from "../utils/validations";

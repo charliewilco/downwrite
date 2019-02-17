@@ -2,7 +2,7 @@ import * as React from "react";
 import { Formik, FormikProps, ErrorMessage, Form, FormikActions } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
-import Button from "./button";
+import { Button } from "./button";
 import * as API from "../utils/api";
 import { AuthContext, IAuthContext } from "./auth";
 import { UserSettingsSchema } from "../utils/validations";

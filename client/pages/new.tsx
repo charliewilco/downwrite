@@ -9,7 +9,7 @@ import uuid from "uuid/v4";
 import "isomorphic-fetch";
 import Wrapper from "../components/wrapper";
 import { Input } from "../components/editor-input";
-import Button from "../components/button";
+import { Button } from "../components/button";
 import Upload from "../components/upload";
 import Editor from "../components/editor";
 import * as UtilityBar from "../components/utility-bar";

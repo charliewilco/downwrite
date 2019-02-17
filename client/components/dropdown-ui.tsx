@@ -1,12 +1,11 @@
 import * as React from "react";
-import styled, { keyframes, createGlobalStyle } from "styled-components";
+import styled, { keyframes, withTheme, createGlobalStyle } from "styled-components";
 import Router from "next/router";
 import * as Reach from "@reach/menu-button";
 import { NavIcon, SignoutIcon } from "./icons";
-import { NavItem } from "./nav";
 import User from "./user";
 import { AuthContext, IAuthContext } from "./auth";
-import * as DefaultStyle from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 const MenuStyles = createGlobalStyle`
   :root {
@@ -17,7 +16,7 @@ const MenuStyles = createGlobalStyle`
     display: block;
     position: absolute;
     width: 384px;
-    font-family: ${DefaultStyle.fonts.sans};
+    font-family: ${DefaultStyles.fonts.sans};
   }
 
   [data-reach-menu-list] {
@@ -36,7 +35,6 @@ const MenuStyles = createGlobalStyle`
     display: block;
     color: inherit;
     font: inherit;
-    color: white;
     text-decoration: initial;
     padding: 5px 20px;
   }
@@ -69,12 +67,13 @@ const fadeInFromLeft = keyframes`
 
 export const MenuList = styled(Reach.MenuList)`
   animation: ${fadeInFromLeft} 0.45s;
-  color: ${props => props.theme.color};
+  color: ${props => (props.theme.night ? "white" : DefaultStyles.colors.gray300)};
   background: ${props => props.theme.cardBackground};
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
 
   & > [data-reach-menu-item][data-selected] {
     background: ${props => props.theme.link};
+    color: white;
     outline: none;
   }
 `;
@@ -84,12 +83,29 @@ export const MenuLabel = styled.span`
   vertical-align: middle;
 `;
 
+export const DropdownLink = styled.a`
+  display: block;
+  color: ${props => (props.theme.night ? "white" : DefaultStyles.colors.gray300)};
+  font-size: 16px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  & + & {
+    margin-bottom: 8px;
+  }
+
+  &[data-selected] {
+    background: ${props => props.theme.link};
+    color: white;
+    outline: none;
+  }
+`;
+
 export const StyledSignoutIcon = styled(SignoutIcon)`
   display: inline-block;
   vertical-align: middle;
 `;
 
-const DropdownUI: React.FC<{}> = function(props) {
+const DropdownUI: React.FC<{}> = withTheme(function(props) {
   const auth = React.useContext<IAuthContext>(AuthContext);
   return (
     <Reach.Menu>
@@ -99,13 +115,15 @@ const DropdownUI: React.FC<{}> = function(props) {
       </ToggleButton>
       <MenuList>
         <StyledUser border colors={["#FEB692", "#EA5455"]} name={auth.name} />
-        <Reach.MenuLink onClick={() => Router.push("/")} component={NavItem}>
+        <Reach.MenuLink onClick={() => Router.push("/")} component={DropdownLink}>
           All Entries
         </Reach.MenuLink>
-        <Reach.MenuLink onClick={() => Router.push("/new")} component={NavItem}>
+        <Reach.MenuLink onClick={() => Router.push("/new")} component={DropdownLink}>
           Create New Entry
         </Reach.MenuLink>
-        <Reach.MenuLink onClick={() => Router.push("/settings")} component={NavItem}>
+        <Reach.MenuLink
+          onClick={() => Router.push("/settings")}
+          component={DropdownLink}>
           Settings
         </Reach.MenuLink>
         <Reach.MenuItem onSelect={auth.signOut}>
@@ -114,6 +132,6 @@ const DropdownUI: React.FC<{}> = function(props) {
       </MenuList>
     </Reach.Menu>
   );
-};
+});
 
 export default DropdownUI;

@@ -12,7 +12,7 @@ import Autosaving from "../components/autosaving-interval";
 import Toast from "../components/toast";
 import ExportMarkdown from "../components/export";
 import WordCounter from "../components/word-count";
-import Button from "../components/button";
+import { Button } from "../components/button";
 import Loading from "../components/loading";
 import { Input } from "../components/editor-input";
 import OuterEditor from "../components/outer-editor";

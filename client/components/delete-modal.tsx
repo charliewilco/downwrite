@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import Modal from "./modal";
-import Button, { AltButton } from "./button";
+import { Button, AltButton } from "./button";
 import * as DefaultStyles from "../utils/defaultStyles";
 
 const DeleteTray = styled.div`

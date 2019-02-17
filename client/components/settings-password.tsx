@@ -3,7 +3,7 @@ import { Formik, FormikProps, ErrorMessage, Form, FormikActions } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { ToggleBox } from "../components/toggle-box";
-import Button from "./button";
+import { Button } from "./button";
 import { IAuthContext, AuthContext } from "./auth";
 import { UpdatePasswordSchema } from "../utils/validations";
 import * as API from "../utils/api";
