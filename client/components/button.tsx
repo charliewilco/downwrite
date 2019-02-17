@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import * as DefaultStyles from "../utils/defaultStyles";
 
-export default styled.button`
+export const Button = styled.button`
   background-color: ${DefaultStyles.colors.yellow700};
   border-radius: 0.25rem;
   border: 0;

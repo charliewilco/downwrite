@@ -2,7 +2,7 @@ import * as React from "react";
 import { Formik, Form, FormikProps, ErrorMessage, FormikActions } from "formik";
 import "isomorphic-fetch";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
-import Button from "./button";
+import { Button } from "./button";
 import SpacedBox from "./spaced-box";
 import LegalBoilerplate from "./legal-boilerplate";
 import * as API from "../utils/api";

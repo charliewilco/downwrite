@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Link from "next/link";
 import Router from "next/router";
 import Wrapper from "./wrapper";
-import Button from "./button";
+import { Button } from "./button";
 import Nib from "./nib";
 
 const EmptyBlockRight = styled.div`
