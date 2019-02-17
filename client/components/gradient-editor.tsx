@@ -31,39 +31,34 @@ const StyledAvatar = styled(Avatar)`
   margin-bottom: 36px;
 `;
 
-export default class GradientEditor extends React.Component<
-  IGradientEditorProps,
-  {}
-> {
-  private handleColorChange = (value: string, name: string): void => {
-    this.props.onColorChange(value, name);
+const GradientEditor: React.FC<IGradientEditorProps> = function(props) {
+  const handleColorChange = (value: string, name: string): void => {
+    props.onColorChange(value, name);
   };
 
-  private colorsToArray({ a, b }: IColors): string[] {
+  const colorsToArray = ({ a, b }: IColors): string[] => {
     return [a, b];
-  }
+  };
 
-  public render(): JSX.Element {
-    const { colors } = this.props;
+  return (
+    <Container>
+      <StyledAvatar centered size={64} colors={colorsToArray(props.colors)} />
+      <Flex>
+        <ColorPicker
+          title="Start Color"
+          name="a"
+          onPress={handleColorChange}
+          colors={DefaultStyles.startColors}
+        />
+        <ColorPicker
+          title="End Color"
+          name="b"
+          onPress={handleColorChange}
+          colors={DefaultStyles.endColors}
+        />
+      </Flex>
+    </Container>
+  );
+};
 
-    return (
-      <Container>
-        <StyledAvatar centered size={64} colors={this.colorsToArray(colors)} />
-        <Flex>
-          <ColorPicker
-            title="Start Color"
-            name="a"
-            onPress={this.handleColorChange}
-            colors={DefaultStyles.startColors}
-          />
-          <ColorPicker
-            title="End Color"
-            name="b"
-            onPress={this.handleColorChange}
-            colors={DefaultStyles.endColors}
-          />
-        </Flex>
-      </Container>
-    );
-  }
-}
+export default GradientEditor;

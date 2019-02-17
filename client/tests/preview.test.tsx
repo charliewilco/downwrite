@@ -7,7 +7,7 @@ import { render, wait } from "react-testing-library";
 import { draftToMarkdown } from "markdown-draft-js";
 import { createMockPost } from "../utils/createMocks";
 import fetchMock, { FetchMock } from "jest-fetch-mock";
-import MockNextContext from "../utils/mock-next-router";
+// import MockNextContext from "../utils/mock-next-router";
 
 let title = "Starting Again";
 const mockPost = createMockPost({ title, public: true });
@@ -23,13 +23,15 @@ let post: IEntry = {
 
 let fetch = fetchMock as FetchMock;
 
+jest.mock("next/link", () => {
+  return jest.fn(props => <>{props.children}</>);
+});
+
 describe("<Preview />", () => {
   it("loads server content", async () => {
     fetch.mockResponse(JSON.stringify(post));
     let FetchContent = render(
-      <MockNextContext>
-        <Preview authed={false} id={mockPost.id} entry={post} />
-      </MockNextContext>
+      <Preview authed={false} id={mockPost.id} entry={post} />
     );
     await wait(() => FetchContent.getByTestId("PREVIEW_ENTRTY_TITLE"));
     expect(FetchContent.container).toBeTruthy();
@@ -40,11 +42,7 @@ describe("<Preview />", () => {
   });
 
   it("takes static content", () => {
-    let StaticContent = render(
-      <MockNextContext>
-        <Content {...post} />
-      </MockNextContext>
-    );
+    let StaticContent = render(<Content {...post} />);
     expect(StaticContent.getByTestId("PREVIEW_ENTRTY_TITLE")).toHaveTextContent(
       title
     );

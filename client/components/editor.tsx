@@ -54,42 +54,43 @@ interface IEditorState {
 }
 
 export default class DWEditor extends React.Component<IEditorProps, IEditorState> {
-  static displayName = "DWEditor";
+  public static displayName = "DWEditor";
 
-  static defaultProps = {
+  public static defaultProps = {
     toolbar: false
   };
 
-  static contextType: React.Context<ILocalUISettings> = LocalUISettings;
+  public static contextType: React.Context<ILocalUISettings> = LocalUISettings;
 
   private editor: PluginsEditor = null as PluginsEditor;
 
-  state = {
+  public readonly state = {
     plugins: __IS_TEST__
       ? []
       : [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()]
   };
 
-  focus = () => this.editor.focus();
+  private focus = (): void => this.editor.focus();
 
-  onChange = (editorState: Draft.EditorState) => this.props.onChange(editorState);
+  private onChange = (editorState: Draft.EditorState) =>
+    this.props.onChange(editorState);
 
-  onTab = (e: React.KeyboardEvent<{}>) => {
+  private onTab = (e: React.KeyboardEvent<{}>) => {
     const maxDepth = 4;
     this.onChange(Draft.RichUtils.onTab(e, this.props.editorState, maxDepth));
   };
 
-  _toggleBlockType = (blockType: Draft.DraftBlockType) => {
-    this.onChange(
-      Draft.RichUtils.toggleBlockType(this.props.editorState, blockType)
-    );
-  };
+  // private _toggleBlockType = (blockType: Draft.DraftBlockType) => {
+  //   this.onChange(
+  //     Draft.RichUtils.toggleBlockType(this.props.editorState, blockType)
+  //   );
+  // };
 
-  _toggleInlineStyle = (inlineStyle: string) => {
-    this.onChange(
-      Draft.RichUtils.toggleInlineStyle(this.props.editorState, inlineStyle)
-    );
-  };
+  // private _toggleInlineStyle = (inlineStyle: string) => {
+  //   this.onChange(
+  //     Draft.RichUtils.toggleInlineStyle(this.props.editorState, inlineStyle)
+  //   );
+  // };
 
   private handleKeyCommand = (
     command: string,
@@ -110,7 +111,7 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
     return "not-handled";
   };
 
-  saveKeyListener = (e: React.KeyboardEvent): string => {
+  private saveKeyListener = (e: React.KeyboardEvent): string => {
     if (e.keyCode === 83 && Draft.KeyBindingUtil.hasCommandModifier(e)) {
       return this.props.editorCommand;
     }
@@ -118,7 +119,7 @@ export default class DWEditor extends React.Component<IEditorProps, IEditorState
     return Draft.getDefaultKeyBinding(e);
   };
 
-  render() {
+  public render(): JSX.Element {
     const { editorState } = this.props;
     const { plugins } = this.state;
 

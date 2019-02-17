@@ -10,7 +10,7 @@ interface IAppProps extends AppComponentProps {
 }
 
 export default class Downwrite extends App<IAppProps> {
-  static async getInitialProps({ Component, ctx }: NextAppContext) {
+  public static async getInitialProps({ Component, ctx }: NextAppContext) {
     let pageProps = {};
 
     let { DW_TOKEN: token } = cookies<ICookie>(ctx) as ICookie;
@@ -22,7 +22,7 @@ export default class Downwrite extends App<IAppProps> {
     return { pageProps, token };
   }
 
-  render() {
+  public render(): JSX.Element {
     const { Component, pageProps, token } = this.props;
     const authed = !isEmpty(token);
     return (

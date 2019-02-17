@@ -23,8 +23,6 @@ const ToolbarButton = styled.div`
   transition: all 250ms ease-in-out;
 `;
 
-const h = React.createElement;
-
 interface IToolbarButtonProps {
   style: string;
   onToggle: (x: string) => void;
@@ -32,42 +30,40 @@ interface IToolbarButtonProps {
   label: string;
 }
 
-export default class StyleButton extends React.Component<IToolbarButtonProps> {
-  findIcon = (label: string, active: boolean) => {
-    switch (label) {
-      case "Quote":
-        return h(BlockQuote, { active });
-      case "Bullets":
-        return h(BulletedList, { active });
-      case "Numbers":
-        return h(Numbers, { active });
-      case "Code":
-        return h(Code, { active });
-      case "Bold":
-        return h(Bold, { active });
-      case "Italic":
-        return h(Italic, { active });
-      case "Underline":
-        return h(Underline, { active });
-      case "Mono":
-        return h(Mono, { active });
-      default:
-        return h(Label, { label, active });
-    }
-  };
-
-  onToggle = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    this.props.onToggle(this.props.style);
-  };
-
-  render() {
-    const { active, label } = this.props;
-
-    return (
-      <ToolbarButton onMouseDown={this.onToggle}>
-        {this.findIcon(label, active)}
-      </ToolbarButton>
-    );
+function findIcon(label: string, active: boolean): React.ReactNode {
+  switch (label) {
+    case "Quote":
+      return React.createElement(BlockQuote, { active });
+    case "Bullets":
+      return React.createElement(BulletedList, { active });
+    case "Numbers":
+      return React.createElement(Numbers, { active });
+    case "Code":
+      return React.createElement(Code, { active });
+    case "Bold":
+      return React.createElement(Bold, { active });
+    case "Italic":
+      return React.createElement(Italic, { active });
+    case "Underline":
+      return React.createElement(Underline, { active });
+    case "Mono":
+      return React.createElement(Mono, { active });
+    default:
+      return React.createElement(Label, { label, active });
   }
 }
+
+const StyleButton: React.FC<IToolbarButtonProps> = function(props) {
+  const onToggle = (e: React.MouseEvent<HTMLDivElement>): void => {
+    e.preventDefault();
+    props.onToggle(props.style);
+  };
+
+  return (
+    <ToolbarButton onMouseDown={onToggle}>
+      {findIcon(props.label, props.active)}
+    </ToolbarButton>
+  );
+};
+
+export default StyleButton;

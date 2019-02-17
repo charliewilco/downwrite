@@ -85,7 +85,7 @@ export const getMarkdown = async (req: IRequest) => {
             return "[";
           },
 
-          close: entity => {
+          close: (entity: any) => {
             return `](${entity.data.url || entity.data.href})`;
           }
         }

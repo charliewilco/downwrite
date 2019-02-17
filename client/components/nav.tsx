@@ -2,13 +2,12 @@ import * as React from "react";
 import Link from "next/link";
 import { withRouter, WithRouterProps } from "next/router";
 import styled, { keyframes } from "styled-components";
+import * as Reach from "@reach/dialog";
 import { AuthContext, IAuthContext } from "./auth";
 import User from "./user";
 import Fetch from "./collection-fetch";
 import { SignoutIcon } from "./icons";
-import { SidebarEmpty } from "./empty-posts";
-import SidebarPosts from "./sidebar-posts";
-import TouchOutside from "./touch-outside";
+
 import LockScroll from "./lock-scroll";
 import * as DefaultStyles from "../utils/defaultStyles";
 
@@ -22,7 +21,7 @@ const NavColumn = styled.div`
   }
 `;
 
-const StyledSignoutIcon = styled(SignoutIcon)`
+export const StyledSignoutIcon = styled(SignoutIcon)`
   display: inline-block;
   vertical-align: middle;
 `;
@@ -104,7 +103,7 @@ const NavTray = styled.footer`
   justify-content: space-between;
 `;
 
-const NavItem = styled.a`
+export const NavItem = styled.a`
   display: block;
   color: ${DefaultStyles.colors.gray300};
   font-size: 16px;
@@ -119,7 +118,7 @@ const NavItem = styled.a`
   }
 `;
 
-const UserActionContainer = styled.div`
+export const UserActionContainer = styled.div`
   padding: 16px 8px;
 `;
 
@@ -129,34 +128,42 @@ interface NavigationProps extends WithRouterProps {
   closeNav: () => void;
 }
 
-const NavLabel = styled.span`
+export const NavLabel = styled.span`
   display: inline-block;
   vertical-align: middle;
 `;
 
-class NavBar extends React.Component<NavigationProps, any> {
-  public static displayName = "NavigationBar";
+function usePrevious<T>(value: T) {
+  const ref = React.useRef<T>(null);
+  React.useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
 
-  public static contextType: React.Context<IAuthContext> = AuthContext;
+const NavBar: React.FC<NavigationProps> = function(props) {
+  const context = React.useContext<IAuthContext>(AuthContext);
 
-  public componentDidUpdate(prevProps: NavigationProps): void {
-    if (prevProps.router && this.props.router) {
-      if (prevProps.router.pathname !== this.props.router.pathname) {
-        this.props.closeNav();
-      }
+  const prevRoute = usePrevious(props.router.route);
+
+  React.useEffect(() => {
+    if (prevRoute !== props.router.route) {
+      onBlur();
     }
-  }
+  }, [props.router.route]);
 
-  public render(): JSX.Element {
-    const { closeNav } = this.props;
-    const { signOut } = this.context;
-    return (
-      <LockScroll>
-        <TouchOutside onChange={closeNav}>
-          <Nav>
+  const onBlur = () => {
+    // props.closeNav();
+  };
+
+  return (
+    <LockScroll>
+      <Reach.Dialog>
+        <Reach.DialogContent onBlur={() => onBlur()}>
+          <Nav role="navigation">
             <NavColumn>
               <div>
-                <User border {...this.context} />
+                <User border colors={["#FEB692", "#EA5455"]} name={context.name} />
                 <UserActionContainer>
                   <Link href="/" passHref>
                     <NavItem>All Entries</NavItem>
@@ -168,31 +175,23 @@ class NavBar extends React.Component<NavigationProps, any> {
               </div>
 
               <PostListContainer>
-                <Fetch>
-                  {({ posts }) =>
-                    posts.length > 0 ? (
-                      <SidebarPosts posts={posts} />
-                    ) : (
-                      <SidebarEmpty />
-                    )
-                  }
-                </Fetch>
+                <Fetch />
               </PostListContainer>
 
               <NavTray>
                 <Link href="/legal" passHref>
                   <NavLink>Legal</NavLink>
                 </Link>
-                <NavButton onClick={signOut}>
+                <NavButton onClick={context.signOut}>
                   <StyledSignoutIcon /> <NavLabel>Sign Out</NavLabel>
                 </NavButton>
               </NavTray>
             </NavColumn>
           </Nav>
-        </TouchOutside>
-      </LockScroll>
-    );
-  }
-}
+        </Reach.DialogContent>
+      </Reach.Dialog>
+    </LockScroll>
+  );
+};
 
 export default withRouter(NavBar);

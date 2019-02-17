@@ -35,9 +35,9 @@ interface IUserSettingsProps {
 // }
 
 export default class Settings extends React.Component<IUserSettingsProps, {}> {
-  static displayName = "Settings";
+  public static displayName = "Settings";
 
-  static async getInitialProps(
+  public static async getInitialProps(
     ctx: NextContext<{ token: string }>
   ): Promise<Partial<IUserSettingsProps>> {
     const token = authMiddleware(ctx);
@@ -58,7 +58,7 @@ export default class Settings extends React.Component<IUserSettingsProps, {}> {
     };
   }
 
-  render() {
+  public render(): JSX.Element {
     const { user } = this.props;
     return (
       <SettingsWrapper sm>

@@ -3,17 +3,18 @@ import { render } from "react-testing-library";
 import "jest-styled-components";
 import "jest-dom/extend-expect";
 import Header from "../components/header";
-import MockNextContext from "../utils/mock-next-router";
 
-const onClick = jest.fn();
+jest.mock("next/link");
+jest.mock("next/router");
+jest.mock("universal-cookie", () => {
+  return class Cookie {};
+});
+jest.mock("jwt-decode");
+jest.mock("../components/auth");
 
-let { getByTestId, container } = render(
-  <MockNextContext>
-    <Header onClick={onClick} />
-  </MockNextContext>
-);
+let { getByTestId, container } = render(<Header />);
 
-jest.mock("../components/auth", () => () => "Auth");
+// jest.mock("../components/auth", () => () => "Auth");
 
 describe("Header Component", () => {
   it("contains application name", () => {

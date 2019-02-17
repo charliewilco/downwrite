@@ -1,43 +1,41 @@
 import * as React from "react";
 
-interface OfflineAtrx {
+export interface OfflineContext {
   offline: boolean;
 }
 
-export const { Provider, Consumer } = React.createContext({});
+export const Offline = React.createContext<OfflineContext>({
+  offline: !window.navigator.onLine
+});
 
-export default class OfflineListener extends React.Component<
-  { children: React.ReactNode },
-  OfflineAtrx
-> {
-  static displayName = "OfflineListener";
+export function useOffline() {
+  const [isOffline, setIsOffline] = React.useState<boolean>(false);
 
-  state = {
-    offline: !window.navigator.onLine
-  };
+  function handleChange(event: Event) {
+    setIsOffline(!(event.currentTarget as Window).navigator.onLine);
+  }
 
-  handleChange = (x: Event) =>
-    this.setState({
-      offline: !(x.currentTarget as Window).navigator.onLine
-    });
-
-  componentDidMount() {
-    if (window) {
-      window.addEventListener("offline", this.handleChange);
-      window.addEventListener("online", this.handleChange);
+  React.useEffect(() => {
+    if (typeof window === undefined) {
+      window.addEventListener("offline", handleChange);
+      window.addEventListener("online", handleChange);
     }
-  }
 
-  componentWillUnmount() {
-    if (window) {
-      window.removeEventListener("offline", this.handleChange);
-      window.removeEventListener("online", this.handleChange);
-    }
-  }
+    return () => {
+      if (typeof window === undefined) {
+        window.removeEventListener("offline", handleChange);
+        window.removeEventListener("online", handleChange);
+      }
+    };
+  }, []);
 
-  render() {
-    const { offline } = this.state;
-    const { children } = this.props;
-    return <Provider value={{ offline }}>{children}</Provider>;
-  }
+  return isOffline;
 }
+
+const OfflineListener: React.FC = function(props) {
+  const offline = useOffline();
+
+  return <Offline.Provider value={{ offline }}>{props.children}</Offline.Provider>;
+};
+
+export default OfflineListener;

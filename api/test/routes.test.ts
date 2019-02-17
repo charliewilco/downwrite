@@ -65,7 +65,7 @@ xdescribe("Server Endpoints Perform", () => {
   });
 
   xit("can list posts and list post", async () => {
-    const r = await server.inject({
+    const r: any = await server.inject({
       method: "GET",
       url: "/api/posts",
       headers: {

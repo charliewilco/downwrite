@@ -28,37 +28,24 @@ const TabContext = React.createContext({
   onSelectTab: null
 } as ITabsContext);
 
-export class Container extends React.Component<
-  ITabsContainerProps,
-  ITabsContainerState
-> {
-  public readonly state: ITabsContainerState = {
-    activeIndex: 0
-  };
+export const Container: React.FC<ITabsContainerProps> = function({
+  className,
+  ...props
+}) {
+  const [activeIndex, selectTabIndex] = React.useState(0);
 
-  private getContext(): ITabsContext {
-    return {
-      activeIndex: this.state.activeIndex,
-      onSelectTab: this.selectTabIndex
-    };
-  }
-
-  private selectTabIndex = (activeIndex: number): void => {
-    this.setState({ activeIndex });
-  };
-
-  public render(): JSX.Element {
-    const value = this.getContext();
-    const { className, ...props } = this.props;
-    return (
-      <TabContext.Provider value={value}>
-        <div className={className} {...props}>
-          {this.props.children}
-        </div>
-      </TabContext.Provider>
-    );
-  }
-}
+  return (
+    <TabContext.Provider
+      value={{
+        activeIndex,
+        onSelectTab: selectTabIndex
+      }}>
+      <div className={className} {...props}>
+        {props.children}
+      </div>
+    </TabContext.Provider>
+  );
+};
 
 interface ITabsList extends ITabsModifier {
   [key: string]: any;
@@ -145,30 +132,27 @@ interface ITabsPanelProps extends ITabsModifier {
   label: string;
 }
 
-export class Panel extends React.Component<ITabsPanelProps> {
-  private ref: React.RefObject<HTMLDivElement> = React.createRef();
+export const Panel: React.FC<ITabsPanelProps> = function(props) {
+  const ref = React.useRef(null);
 
-  public componentDidUpdate(): void {
-    const node = this.ref.current;
-    if (this.props.isActive) {
+  React.useEffect(() => {
+    const node = ref.current;
+    if (props.isActive) {
       node.focus();
     } else {
       node.blur();
     }
-  }
+  });
 
-  public render(): JSX.Element {
-    const { isActive, className, children, label } = this.props;
-    return (
-      <div
-        ref={this.ref}
-        className={className}
-        role="tabpanel"
-        aria-hidden={!isActive}
-        style={{ display: isActive ? "block" : "none" }}
-        aria-labelledby={label}>
-        {children}
-      </div>
-    );
-  }
-}
+  return (
+    <div
+      ref={ref}
+      className={props.className}
+      role="tabpanel"
+      aria-hidden={!props.isActive}
+      style={{ display: props.isActive ? "block" : "none" }}
+      aria-labelledby={props.label}>
+      {props.children}
+    </div>
+  );
+};

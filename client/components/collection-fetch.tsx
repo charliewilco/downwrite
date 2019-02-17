@@ -1,47 +1,81 @@
 import * as React from "react";
 import orderBy from "lodash/orderBy";
 import { AuthContext, IAuthContext } from "./auth";
+import { SidebarEmpty } from "./empty-posts";
+import SidebarPosts from "./sidebar-posts";
 import * as API from "../utils/api";
-import "isomorphic-fetch";
 import { IPost } from "downwrite";
 
-interface IFetchState {
+interface FetchState {
   posts: IPost[];
+  isLoading: boolean;
 }
 
-type FetchRenderProps = (p: IFetchState) => React.ReactNode;
-
-interface IFetchProps {
-  sortResponse?: () => void;
-  children: FetchRenderProps;
+interface FetchAction {
+  type: string;
+  payload?: {
+    posts: IPost[];
+    error?: string;
+  };
 }
 
-export default class CollectionFetch extends React.Component<
-  IFetchProps,
-  IFetchState
-> {
-  public readonly state: IFetchState = {
-    posts: []
-  };
+const reducer: React.Reducer<FetchState, FetchAction> = (state, action) => {
+  switch (action.type) {
+    case "fetched": {
+      return { ...state, posts: action.payload.posts, isLoading: false };
+    }
+    case "fetching": {
+      return { ...state, isLoading: true };
+    }
+    default: {
+      return state;
+    }
+  }
+};
 
-  public static contextType: React.Context<IAuthContext> = AuthContext;
+const initialState: FetchState = {
+  posts: [],
+  isLoading: true
+};
 
-  public static defaultProps = {
-    sortResponse: (x: any[]) => x
-  };
+const CollectionFetch: React.FC = function() {
+  const [state, dispatch] = React.useReducer(reducer, initialState);
 
-  // TODO: Move this to React Suspense!!
-  // TODO: Or move to componentDidMount and add loading State
-  public async componentDidMount(): Promise<void> {
-    const { token } = this.context;
+  const { token } = React.useContext<IAuthContext>(AuthContext);
+
+  React.useEffect(() => {
     const { host } = document.location;
-    const posts = await API.getPosts({ token, host });
+    dispatch({ type: "fetching" });
 
-    this.setState({ posts: orderBy(posts, ["dateAdded"], ["desc"]) || [] });
-  }
+    API.getPosts({ token, host }).then(posts => {
+      if (Array.isArray(posts)) {
+        dispatch({
+          type: "fetched",
+          payload: {
+            posts: orderBy(posts, ["dateAdded"], ["desc"])
+          }
+        });
+      } else {
+        dispatch({
+          type: "error",
+          payload: {
+            posts: [],
+            error: "Can't receieve posts"
+          }
+        });
+      }
+    });
 
-  public render() {
-    const { posts } = this.state;
-    return this.props.children({ posts });
-  }
-}
+    return function cleanup() {
+      API.abortFetching();
+    };
+  }, [token]);
+
+  return state.posts.length > 0 ? (
+    <SidebarPosts posts={state.posts} />
+  ) : (
+    <SidebarEmpty />
+  );
+};
+
+export default CollectionFetch;

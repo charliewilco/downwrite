@@ -1,7 +1,5 @@
 import * as React from "react";
 import styled from "styled-components";
-import Nav from "./nav";
-import Toggle from "./toggle";
 import Header from "./header";
 import Footer from "./footer";
 import NightMode, { NightModeTrigger } from "./night-mode";
@@ -28,29 +26,26 @@ interface IUIShell {
   token: string;
 }
 
-export const UIShell: React.FC<IUIShell> = props => (
-  <NightMode>
-    <LocalUISettingsProvider>
-      <UIContainer>
-        <LevelStyles />
-        <ErrorContainer>
-          <Toggle>
-            {({ isOpen, onToggle, onClose }) => (
-              <NightModeTrigger>
-                <UIErrorBanner />
-                <ClearFixed>
-                  <Container>
-                    <Header onClick={onToggle} />
-                    {props.children}
-                    <Footer />
-                  </Container>
-                  {isOpen && <Nav closeNav={onClose} token={props.token} />}
-                </ClearFixed>
-              </NightModeTrigger>
-            )}
-          </Toggle>
-        </ErrorContainer>
-      </UIContainer>
-    </LocalUISettingsProvider>
-  </NightMode>
-);
+export const UIShell: React.FC<IUIShell> = function(props) {
+  return (
+    <NightMode>
+      <LocalUISettingsProvider>
+        <UIContainer>
+          <LevelStyles />
+          <ErrorContainer>
+            <NightModeTrigger>
+              <UIErrorBanner />
+              <ClearFixed>
+                <Container>
+                  <Header />
+                  {props.children}
+                  <Footer />
+                </Container>
+              </ClearFixed>
+            </NightModeTrigger>
+          </ErrorContainer>
+        </UIContainer>
+      </LocalUISettingsProvider>
+    </NightMode>
+  );
+};

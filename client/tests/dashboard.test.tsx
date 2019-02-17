@@ -3,17 +3,14 @@ import "jest-styled-components";
 import "jest-dom/extend-expect";
 import { render, wait, fireEvent } from "react-testing-library";
 import Dashboard from "../pages/index";
-import MockNextContext from "../utils/mock-next-router";
 import fetchMock, { FetchMock } from "jest-fetch-mock";
 import { createMockPosts } from "../utils/createMocks";
 
 const entries = createMockPosts(4);
 
-const PostDashboard = () => (
-  <MockNextContext router={{ entry: "/" }}>
-    <Dashboard entries={entries} token="..." />
-  </MockNextContext>
-);
+const PostDashboard = () => {
+  return <Dashboard entries={entries} token="..." />;
+};
 
 let fetch = fetchMock as FetchMock;
 

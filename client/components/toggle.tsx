@@ -8,36 +8,34 @@ interface IToggleAction {
 }
 
 interface ToggleProps {
-  defaultOpen: boolean;
-  children: (state: IToggleAction) => JSX.Element;
+  defaultOpen?: boolean;
+  children(state: IToggleAction): React.ReactNode;
 }
 
-export default class ToggleInstance extends React.Component<
-  ToggleProps,
-  { open: boolean }
-> {
-  static defaultProps = {
-    defaultOpen: false
+const Toggle: React.FC<ToggleProps> = function(props) {
+  const [open, setOpen] = React.useState<boolean>(props.defaultOpen || false);
+  const onClose = () => {
+    setOpen(false);
   };
 
-  static displayName = "ToggleInstance";
-
-  state = {
-    open: this.props.defaultOpen
+  const setInstance = (value: boolean) => {
+    setOpen(value);
   };
 
-  closeInstance = () => this.setState({ open: false });
+  const onToggle = () => {
+    setOpen(!open);
+  };
 
-  setInstance = (value: boolean) => this.setState({ open: value });
+  return (
+    <>
+      {props.children({
+        isOpen: open,
+        onToggle,
+        onClose,
+        onSetInstance: setInstance
+      })}
+    </>
+  );
+};
 
-  toggleInstance = () => this.setState(({ open }) => ({ open: !open }));
-
-  render() {
-    return this.props.children({
-      isOpen: this.state.open,
-      onToggle: this.toggleInstance,
-      onClose: this.closeInstance,
-      onSetInstance: this.setInstance
-    });
-  }
-}
+export default Toggle;
