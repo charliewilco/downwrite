@@ -24,26 +24,17 @@ const mockEditor = (state: Draft.EditorState) =>
     />
   );
 
-class WrappedEditor extends React.Component {
-  public readonly state = {
-    editorState: emptyContent
-  };
-
-  private onChange = (editorState: Draft.EditorState): void => {
-    this.setState({ editorState });
-  };
-
-  public render(): JSX.Element {
-    return (
-      <DWEditor
-        editorCommand="nope"
-        onSave={onSave}
-        onFocus={onFocus}
-        editorState={this.state.editorState}
-        onChange={this.onChange}
-      />
-    );
-  }
+function WrappedEditor() {
+  const [editorState, setEditorState] = React.useState(emptyContent);
+  return (
+    <DWEditor
+      editorCommand="nope"
+      onSave={onSave}
+      onFocus={onFocus}
+      editorState={editorState}
+      onChange={state => setEditorState(state)}
+    />
+  );
 }
 
 describe("<DWEditor />", () => {

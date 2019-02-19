@@ -34,42 +34,39 @@ interface IUserSettingsProps {
 //   };
 // }
 
-export default class Settings extends React.Component<IUserSettingsProps, {}> {
-  public static displayName = "Settings";
-
-  public static async getInitialProps(
-    ctx: NextContext<{ token: string }>
-  ): Promise<Partial<IUserSettingsProps>> {
-    const token = authMiddleware(ctx);
-
-    let host: string;
-
-    if (ctx.req) {
-      const serverURL: string = ctx.req.headers.host;
-
-      host = serverURL;
-    }
-
-    const user = await API.getUserDetails({ token, host });
-
-    return {
-      token,
-      user
-    };
-  }
-
-  public render(): JSX.Element {
-    const { user } = this.props;
-    return (
-      <SettingsWrapper sm>
-        <Head>
-          <title>User Settings</title>
-        </Head>
-        <SettingsTitle>Settings</SettingsTitle>
-        <SettingsUser user={user} />
-        <SettingsPassword />
-        <SettingsLocal />
-      </SettingsWrapper>
-    );
-  }
+function Settings(props: IUserSettingsProps) {
+  return (
+    <SettingsWrapper sm>
+      <Head>
+        <title>User Settings</title>
+      </Head>
+      <SettingsTitle>Settings</SettingsTitle>
+      <SettingsUser user={props.user} />
+      <SettingsPassword />
+      <SettingsLocal />
+    </SettingsWrapper>
+  );
 }
+
+Settings.getInitialProps = async function(
+  ctx: NextContext<{ token: string }>
+): Promise<Partial<IUserSettingsProps>> {
+  const token = authMiddleware(ctx);
+
+  let host: string;
+
+  if (ctx.req) {
+    const serverURL: string = ctx.req.headers.host;
+
+    host = serverURL;
+  }
+
+  const user = await API.getUserDetails({ token, host });
+
+  return {
+    token,
+    user
+  };
+};
+
+export default Settings;

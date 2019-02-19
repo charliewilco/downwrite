@@ -38,30 +38,29 @@ const StatusCode: React.FC<Partial<CustomError>> = props => (
   </p>
 );
 
-export default class ErrorPage extends React.Component<IErrorViewProps, any> {
-  public static getInitialProps({ res, err }: IErrorPageContext) {
-    const statusCode = res ? res.statusCode : err ? err.statusCode : null;
-    return { statusCode };
-  }
-
-  public render(): JSX.Element {
-    const { statusCode } = this.props;
-    return (
-      <CenteredWrapper>
-        <Head>
-          <title>Not Found | Downwrite</title>
-        </Head>
-        <ErrorTitle>404</ErrorTitle>
-        <StatusCode statusCode={statusCode} />
-        <NotFound
-          error={null}
-          message={
-            statusCode
-              ? "An error " + statusCode + "occurred on server"
-              : "An error occurred on client"
-          }
-        />
-      </CenteredWrapper>
-    );
-  }
+function ErrorPage(props: IErrorViewProps) {
+  return (
+    <CenteredWrapper>
+      <Head>
+        <title>Not Found | Downwrite</title>
+      </Head>
+      <ErrorTitle>404</ErrorTitle>
+      <StatusCode statusCode={props.statusCode} />
+      <NotFound
+        error={null}
+        message={
+          props.statusCode
+            ? "An error " + props.statusCode + "occurred on server"
+            : "An error occurred on client"
+        }
+      />
+    </CenteredWrapper>
+  );
 }
+
+ErrorPage.getInitialProps = function({ res, err }: IErrorPageContext) {
+  const statusCode = res ? res.statusCode : err ? err.statusCode : null;
+  return { statusCode };
+};
+
+export default ErrorPage;
