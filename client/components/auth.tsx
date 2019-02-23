@@ -95,7 +95,7 @@ function initializer(tokenInitial?: string): IAuthState {
 }
 
 // Should be able to just request user details from another call
-export function AuthHookProvider(props: IAuthProps) {
+export function AuthProvider(props: IAuthProps) {
   const [state, dispatch] = React.useReducer<
     React.Reducer<IAuthState, IAuthReducerAction>,
     string

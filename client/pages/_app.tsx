@@ -2,7 +2,7 @@ import * as React from "react";
 import App, { Container, AppComponentProps, NextAppContext } from "next/app";
 import isEmpty from "lodash/isEmpty";
 import { UIShell } from "../components/ui-shell";
-import { AuthHookProvider, AuthContext, IAuthContext } from "../components/auth";
+import { AuthProvider, AuthContext, IAuthContext } from "../components/auth";
 import { cookies, ICookie } from "../utils/auth-middleware";
 
 interface IAppProps extends AppComponentProps {
@@ -26,13 +26,13 @@ export default class Downwrite extends App<IAppProps> {
     const authed = !isEmpty(token);
     return (
       <Container>
-        <AuthHookProvider token={token} authed={authed}>
+        <AuthProvider token={token} authed={authed}>
           <UIShell token={token}>
             <AuthContext.Consumer>
               {(auth: IAuthContext) => <Component {...pageProps} {...auth} />}
             </AuthContext.Consumer>
           </UIShell>
-        </AuthHookProvider>
+        </AuthProvider>
       </Container>
     );
   }
