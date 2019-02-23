@@ -5,7 +5,7 @@ import { withRouter, WithRouterProps } from "next/router";
 import Logo from "./logo";
 import AltAnchor from "./alt-anchor-link";
 import * as DefaultStyles from "../utils/defaultStyles";
-import { AuthConsumer } from "./auth";
+import { AuthContext, IAuthContext } from "./auth";
 import DropdownUI from "./dropdown-ui";
 
 const MenuContainer = styled.nav`
@@ -52,36 +52,32 @@ const Header = styled.header`
 `;
 
 const UIHeader: React.FC<WithRouterProps> = ({ router }) => {
+  const { authed } = React.useContext<IAuthContext>(AuthContext);
+
   return !(router.route === "/login") ? (
     <Header data-testid="APP_HEADER">
-      <AuthConsumer>
-        {context => (
-          <>
-            <MenuContainer>
-              <Logo />
-              <HeaderTitle data-testid="APP_HEADER_TITLE">
-                <Link href={!context.authed ? "/login" : "/"}>
-                  <HomeLink>Downwrite</HomeLink>
-                </Link>
-              </HeaderTitle>
-            </MenuContainer>
-            {context.authed ? (
-              <MenuContainer>
-                <Link prefetch href="/new">
-                  <AltAnchor space="right">New</AltAnchor>
-                </Link>
-                <DropdownUI />
-              </MenuContainer>
-            ) : (
-              <MenuContainer>
-                <Link prefetch href="/login">
-                  <AltAnchor space="right">Login or Sign Up</AltAnchor>
-                </Link>
-              </MenuContainer>
-            )}
-          </>
-        )}
-      </AuthConsumer>
+      <MenuContainer>
+        <Logo />
+        <HeaderTitle data-testid="APP_HEADER_TITLE">
+          <Link href={!authed ? "/login" : "/"}>
+            <HomeLink>Downwrite</HomeLink>
+          </Link>
+        </HeaderTitle>
+      </MenuContainer>
+      {authed ? (
+        <MenuContainer>
+          <Link prefetch href="/new">
+            <AltAnchor space="right">New</AltAnchor>
+          </Link>
+          <DropdownUI />
+        </MenuContainer>
+      ) : (
+        <MenuContainer>
+          <Link prefetch href="/login">
+            <AltAnchor space="right">Login or Sign Up</AltAnchor>
+          </Link>
+        </MenuContainer>
+      )}
     </Header>
   ) : null;
 };

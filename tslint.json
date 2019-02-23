@@ -19,6 +19,8 @@
     "no-var-keyword": true,
     "interface-over-type-literal": true,
     "no-duplicate-imports": true,
+    "no-empty": false,
+    "no-angle-bracket-type-assertion": false,
     "max-classes-per-file": false,
     "semicolon": [true, "always", "ignore-bound-class-methods"],
     "variable-name": [true, "ban-keywords", "allow-leading-underscore"],

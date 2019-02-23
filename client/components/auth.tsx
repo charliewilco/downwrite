@@ -3,7 +3,6 @@ import Cookies from "universal-cookie";
 import Router from "next/router";
 import * as jwt from "jwt-decode";
 import addDays from "date-fns/add_days";
-import { NextComponentClass } from "next";
 import { __IS_TEST__ } from "../utils/dev";
 
 // NOTE:
@@ -32,13 +31,13 @@ const cookieOptions = {
   expires: addDays(Date.now(), COOKIE_EXPIRATION)
 };
 
-interface IAuthProps {
+export interface IAuthProps {
   children: React.ReactNode;
   token: string;
   authed: boolean;
 }
 
-interface IAuthState {
+export interface IAuthState {
   token: string;
   name?: string;
   authed: boolean;
@@ -51,7 +50,7 @@ export interface IAuthActions {
 
 export interface IAuthContext extends IAuthState, IAuthActions {}
 
-interface IToken {
+export interface IToken {
   name: string;
   user: string;
 }
@@ -61,86 +60,87 @@ const EMPTY_USER: IToken = {
   name: null
 };
 
-export const AuthContext = React.createContext({} as IAuthContext);
+export const SIGN_IN: string = "SIGN_IN";
+export const SIGN_OUT: string = "SIGN_OUT";
 
-// Should be able to just request user details from another call
-export default class AuthMegaProvider extends React.Component<
-  IAuthProps,
-  IAuthState
-> {
-  constructor(props: IAuthProps) {
-    super(props);
+export const AuthContext = React.createContext<IAuthContext>({} as IAuthContext);
 
-    let token = this.props.token || cookie.get("DW_TOKEN");
+interface IAuthReducerAction {
+  type: string;
+  payload?: IAuthState;
+}
 
-    let __TOKEN_EXISTS__: boolean = token !== undefined && token !== "undefined";
-    const { name } = __TOKEN_EXISTS__ ? jwt<IToken>(token) : EMPTY_USER;
-
-    this.state = {
-      token,
-      authed: __TOKEN_EXISTS__,
-      name: name || null
-    };
-  }
-
-  public readonly state: IAuthState;
-
-  private signIn = (authed: boolean, token: string): void => {
-    const { name } = jwt(token);
-    this.setState({ authed, token, name });
-    cookie.set("DW_TOKEN", token, cookieOptions);
-  };
-
-  private signOut = (): void => {
-    this.setState({
-      authed: false,
-      token: undefined,
-      name: undefined
-    });
-  };
-
-  public componentDidUpdate(prevProps: IAuthProps, prevState: IAuthState): void {
-    const { authed } = this.state;
-    if (prevState.authed !== authed) {
-      Router.push({ pathname: authed ? "/" : "/login" });
-
-      if (!authed) {
-        cookie.remove("DW_TOKEN", cookieOptions);
-      }
-    }
-  }
-
-  public render(): JSX.Element {
-    return (
-      <AuthContext.Provider
-        value={{
-          ...this.state,
-          signIn: this.signIn,
-          signOut: this.signOut
-        }}>
-        {this.props.children}
-      </AuthContext.Provider>
-    );
+function reducer(state: IAuthState, action: IAuthReducerAction) {
+  switch (action.type) {
+    case SIGN_IN:
+      return { ...action.payload };
+    case SIGN_OUT:
+      return { token: null, authed: false, name: null };
+    default:
+      throw new Error();
   }
 }
 
-export const AuthConsumer = AuthContext.Consumer;
+function initializer(tokenInitial?: string): IAuthState {
+  let token = tokenInitial || cookie.get("DW_TOKEN");
 
-// TODO: Remove
-// Component should be NextStatelessComponent type
-export const withAuth = (Component: NextComponentClass<any>) => {
-  return class extends React.Component<any, any> {
-    public static displayName = `withAuth(${Component.displayName ||
-      Component.name})`;
+  let __TOKEN_EXISTS__: boolean = token !== undefined && token !== "undefined";
+  const { name } = __TOKEN_EXISTS__ ? jwt<IToken>(token) : EMPTY_USER;
 
-    public static getInitialProps = Component.getInitialProps;
-
-    public render(): JSX.Element {
-      return (
-        <AuthContext.Consumer>
-          {(auth: IAuthActions) => <Component {...this.props} {...auth} />}
-        </AuthContext.Consumer>
-      );
-    }
+  return {
+    token,
+    authed: __TOKEN_EXISTS__,
+    name: name || null
   };
-};
+}
+
+// Should be able to just request user details from another call
+export function AuthHookProvider(props: IAuthProps) {
+  const [state, dispatch] = React.useReducer<
+    React.Reducer<IAuthState, IAuthReducerAction>,
+    string
+  >(reducer, props.token, initializer);
+
+  React.useEffect(() => {
+    if (state.authed && Router.route === "/login") {
+      Router.push({ pathname: "/" });
+    }
+
+    if (!state.authed) {
+      Router.push({ pathname: "/login" });
+      cookie.remove("DW_TOKEN", cookieOptions);
+    }
+  }, [state.authed]);
+
+  React.useEffect(() => {
+    cookie.set("DW_TOKEN", state.token, cookieOptions);
+  }, [state.token]);
+
+  function signIn(authed: boolean, token: string) {
+    const { name } = jwt<IToken>(token);
+
+    dispatch({
+      type: SIGN_IN,
+      payload: {
+        token,
+        authed,
+        name
+      }
+    });
+  }
+
+  function signOut() {
+    dispatch({ type: SIGN_OUT });
+  }
+
+  return (
+    <AuthContext.Provider
+      value={{
+        ...state,
+        signIn,
+        signOut
+      }}>
+      {props.children}
+    </AuthContext.Provider>
+  );
+}

@@ -49,119 +49,84 @@ interface IEditorProps {
   toolbar?: boolean;
 }
 
-interface IEditorState {
-  plugins: any[];
-}
+export default function DownwriteEditor(props: IEditorProps) {
+  let editorRef = React.useRef<PluginsEditor>(null);
 
-export default class DWEditor extends React.Component<IEditorProps, IEditorState> {
-  public static displayName = "DWEditor";
+  const { monospace } = React.useContext<ILocalUISettings>(LocalUISettings);
+  const plugins = __IS_TEST__
+    ? []
+    : [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()];
 
-  public static defaultProps = {
-    toolbar: false
+  let className = "RichEditor-editor";
+  let contentState = props.editorState.getCurrentContent();
+  if (!contentState.hasText()) {
+    if (
+      contentState
+        .getBlockMap()
+        .first()
+        .getType() !== "unstyled"
+    ) {
+      className += " RichEditor-hidePlaceholder";
+    }
+  }
+
+  const focus = (): void => {
+    editorRef.current.focus();
   };
 
-  public static contextType: React.Context<ILocalUISettings> = LocalUISettings;
-
-  private editor: PluginsEditor = null as PluginsEditor;
-
-  public readonly state = {
-    plugins: __IS_TEST__
-      ? []
-      : [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()]
-  };
-
-  private focus = (): void => this.editor.focus();
-
-  private onChange = (editorState: Draft.EditorState) =>
-    this.props.onChange(editorState);
-
-  private onTab = (e: React.KeyboardEvent<{}>) => {
+  const onTab = (e: React.KeyboardEvent<{}>) => {
     const maxDepth = 4;
-    this.onChange(Draft.RichUtils.onTab(e, this.props.editorState, maxDepth));
+    props.onChange(Draft.RichUtils.onTab(e, props.editorState, maxDepth));
   };
 
-  // private _toggleBlockType = (blockType: Draft.DraftBlockType) => {
-  //   this.onChange(
-  //     Draft.RichUtils.toggleBlockType(this.props.editorState, blockType)
-  //   );
-  // };
+  const saveKeyListener = (e: React.KeyboardEvent): string => {
+    if (e.keyCode === 83 && Draft.KeyBindingUtil.hasCommandModifier(e)) {
+      return props.editorCommand;
+    }
 
-  // private _toggleInlineStyle = (inlineStyle: string) => {
-  //   this.onChange(
-  //     Draft.RichUtils.toggleInlineStyle(this.props.editorState, inlineStyle)
-  //   );
-  // };
+    return Draft.getDefaultKeyBinding(e);
+  };
 
-  private handleKeyCommand = (
+  const handleKeyCommand = (
     command: string,
     editorState: Draft.EditorState
   ): Handler => {
     const newState = Draft.RichUtils.handleKeyCommand(editorState, command);
 
     if (newState) {
-      this.onChange(newState);
+      props.onChange(newState);
       return "handled";
     }
 
-    if (command === this.props.editorCommand) {
-      this.props.onSave();
+    if (command === props.editorCommand) {
+      props.onSave();
       return "handled";
     }
 
     return "not-handled";
   };
 
-  private saveKeyListener = (e: React.KeyboardEvent): string => {
-    if (e.keyCode === 83 && Draft.KeyBindingUtil.hasCommandModifier(e)) {
-      return this.props.editorCommand;
-    }
-
-    return Draft.getDefaultKeyBinding(e);
-  };
-
-  public render(): JSX.Element {
-    const { editorState } = this.props;
-    const { plugins } = this.state;
-
-    const { monospace } = this.context;
-
-    // If the user changes block type before entering any text, we can
-    // either style the placeholder or hide it. Let's just hide it now.
-    let className = "RichEditor-editor";
-    let contentState = editorState.getCurrentContent();
-    if (!contentState.hasText()) {
-      if (
-        contentState
-          .getBlockMap()
-          .first()
-          .getType() !== "unstyled"
-      ) {
-        className += " RichEditor-hidePlaceholder";
-      }
-    }
-
-    return (
-      <EditorShell font={monospace}>
-        <DraftStyles />
-        <EditorWrapper className={className} onClick={this.focus}>
-          <PluginsEditor
-            onFocus={this.props.onFocus}
-            handleKeyCommand={this.handleKeyCommand}
-            keyBindingFn={this.saveKeyListener}
-            blockStyleFn={getBlockStyle}
-            customStyleMap={styleMap}
-            editorState={editorState}
-            onChange={this.onChange}
-            onTab={this.onTab}
-            placeholder="History will be kind to me for I intend to write it. — Winston Churchill"
-            ref={(x: PluginsEditor) => (this.editor = x)}
-            spellCheck
-            plugins={plugins}
-          />
-        </EditorWrapper>
-      </EditorShell>
-    );
-  }
+  return (
+    <EditorShell font={monospace}>
+      <DraftStyles />
+      <EditorWrapper className={className} onClick={focus}>
+        <PluginsEditor
+          onFocus={props.onFocus}
+          handleKeyCommand={handleKeyCommand}
+          keyBindingFn={saveKeyListener}
+          blockStyleFn={getBlockStyle}
+          customStyleMap={styleMap}
+          editorState={props.editorState}
+          onChange={props.onChange}
+          onTab={onTab}
+          placeholder="History will be kind to me for I intend to write it. — Winston Churchill"
+          ref={editorRef}
+          spellCheck
+          plugins={plugins}
+        />
+      </EditorWrapper>
+    </EditorShell>
+  );
 }
 
 // Custom overrides for "code" style.

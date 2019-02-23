@@ -2,7 +2,7 @@ import * as React from "react";
 import App, { Container, AppComponentProps, NextAppContext } from "next/app";
 import isEmpty from "lodash/isEmpty";
 import { UIShell } from "../components/ui-shell";
-import AuthMegaProvider, { AuthConsumer } from "../components/auth";
+import { AuthHookProvider, AuthContext, IAuthContext } from "../components/auth";
 import { cookies, ICookie } from "../utils/auth-middleware";
 
 interface IAppProps extends AppComponentProps {
@@ -12,7 +12,6 @@ interface IAppProps extends AppComponentProps {
 export default class Downwrite extends App<IAppProps> {
   public static async getInitialProps({ Component, ctx }: NextAppContext) {
     let pageProps = {};
-
     let { DW_TOKEN: token } = cookies<ICookie>(ctx) as ICookie;
 
     if (Component.getInitialProps) {
@@ -27,13 +26,13 @@ export default class Downwrite extends App<IAppProps> {
     const authed = !isEmpty(token);
     return (
       <Container>
-        <AuthMegaProvider token={token} authed={authed}>
+        <AuthHookProvider token={token} authed={authed}>
           <UIShell token={token}>
-            <AuthConsumer>
-              {auth => <Component {...pageProps} {...auth} />}
-            </AuthConsumer>
+            <AuthContext.Consumer>
+              {(auth: IAuthContext) => <Component {...pageProps} {...auth} />}
+            </AuthContext.Consumer>
           </UIShell>
-        </AuthMegaProvider>
+        </AuthHookProvider>
       </Container>
     );
   }
