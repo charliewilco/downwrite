@@ -1,5 +1,4 @@
 import * as React from "react";
-import styled, { keyframes, withTheme, createGlobalStyle } from "styled-components";
 import Router from "next/router";
 import * as Reach from "@reach/menu-button";
 import { NavIcon, SignoutIcon } from "./icons";
@@ -8,27 +7,7 @@ import { AuthContext, IAuthContext } from "./auth";
 import * as DefaultStyles from "../utils/defaultStyles";
 import { NightModeContext, INightModeContext } from "./night-mode";
 
-const StyledUser = styled(User)`
-  background: ${props => props.theme.background};
-`;
-
-const fadeInFromLeft = keyframes`
-  0% {
-    transform: translate(25%, 0);
-    opacity: 0;
-  }
-
-  100% {
-    transform: translate(0, 0);
-    opacity: 1;
-  }
-`;
-
-export const MenuList = styled(Reach.MenuList)`
-  animation: ${fadeInFromLeft} 0.45s;
-`;
-
-const DropdownUI: React.FC<{}> = withTheme(function(props) {
+export default function DropdownUI() {
   const auth = React.useContext<IAuthContext>(AuthContext);
   const { night } = React.useContext<INightModeContext>(NightModeContext);
   return (
@@ -37,7 +16,7 @@ const DropdownUI: React.FC<{}> = withTheme(function(props) {
         <NavIcon className="icon" />
       </Reach.MenuButton>
       <Reach.MenuList className="menu-list">
-        <StyledUser border colors={["#FEB692", "#EA5455"]} name={auth.name} />
+        <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
         <Reach.MenuLink onClick={() => Router.push("/")} component="a">
           All Entries
         </Reach.MenuLink>
@@ -83,7 +62,20 @@ const DropdownUI: React.FC<{}> = withTheme(function(props) {
           padding: 5px 20px;
         }
 
+        @keyframes FADE_IN_FROM_LEFT {
+          0% {
+            transform: translate(25%, 0);
+            opacity: 0;
+          }
+
+          100% {
+            transform: translate(0, 0);
+            opacity: 1;
+          }
+        }
+
         .menu-list {
+          animation: FADE_IN_FROM_LEFT 0.45s;
           color: ${night ? "white" : DefaultStyles.colors.gray300};
           background: var(--cardBackground);
           box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
@@ -125,6 +117,4 @@ const DropdownUI: React.FC<{}> = withTheme(function(props) {
       `}</style>
     </Reach.Menu>
   );
-});
-
-export default DropdownUI;
+}

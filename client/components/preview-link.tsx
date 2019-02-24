@@ -1,21 +1,29 @@
 import * as React from "react";
 import Link from "next/link";
-import styled from "styled-components";
 
-const PreviewAnchor = styled.a`
-  display: block;
-  font-size: 12px;
-  line-height: 1;
-`;
+interface PreviewLinkProps {
+  publicStatus: boolean;
+  id: string;
+}
 
-const PreviewLink: React.FC<{ publicStatus: boolean; id: string }> = ({
-  publicStatus,
-  id
-}) =>
-  publicStatus && (
-    <Link prefetch passHref href={{ pathname: "/preview", query: { id } }}>
-      <PreviewAnchor>Preview</PreviewAnchor>
-    </Link>
-  );
+const PreviewLink: React.FC<PreviewLinkProps> = props => {
+  return props.publicStatus ? (
+    <>
+      <Link
+        prefetch
+        passHref
+        href={{ pathname: "/preview", query: { id: props.id } }}>
+        <a>Preview</a>
+      </Link>
+      <style jsx>{`
+        a {
+          display: block;
+          font-size: 12px;
+          line-height: 1;
+        }
+      `}</style>
+    </>
+  ) : null;
+};
 
 export default PreviewLink;

@@ -1,24 +1,10 @@
 import * as React from "react";
-import styled from "styled-components";
 import Header from "./header";
 import Footer from "./footer";
 import NightMode, { NightModeTrigger } from "./night-mode";
-import UIContainer from "./ui-container";
 import { ErrorContainer, UIErrorBanner } from "./ui-error";
 import { LevelStyles } from "./level-styles";
 import { LocalUISettingsProvider } from "./local-ui-settings";
-
-const ClearFixed = styled.div`
-  &::after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-`;
-
-const Container = styled.div`
-  min-height: 100%;
-`;
 
 interface IUIShell {
   authed?: boolean;
@@ -30,21 +16,77 @@ export const UIShell: React.FC<IUIShell> = function(props) {
   return (
     <NightMode>
       <LocalUISettingsProvider>
-        <UIContainer>
+        <div className="UIContainer">
           <LevelStyles />
           <ErrorContainer>
             <NightModeTrigger>
               <UIErrorBanner />
-              <ClearFixed>
-                <Container>
+              <div className="clearfix">
+                <div style={{ minHeight: "100%" }}>
                   <Header />
                   {props.children}
                   <Footer />
-                </Container>
-              </ClearFixed>
+                </div>
+              </div>
             </NightModeTrigger>
           </ErrorContainer>
-        </UIContainer>
+        </div>
+        <style jsx global>{`
+          .UIContainer {
+            color: var(--color);
+            background: var(--background);
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            overflow: scroll;
+          }
+
+          .UIContainer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            display: block;
+            height: 4px;
+            width: 100%;
+            background-image: linear-gradient(to right, #2584a5, #4fa5c2);
+          }
+
+          .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+          }
+
+          .UIContainer a {
+            background-color: transparent;
+            text-decoration: none;
+            color: var(--link);
+          }
+
+          .UIContainer a:active,
+          .UIContainer a:hover {
+            color: var(--linkHover);
+            outline: 0;
+          }
+
+          code,
+          pre {
+            font-family: "Input Mono", "SF Mono", Consolas, "Liberation Mono", Menlo,
+              monospace;
+            font-size: 100%;
+          }
+
+          p:not(:last-of-type) {
+            margin-bottom: 1rem;
+          }
+        `}</style>
       </LocalUISettingsProvider>
     </NightMode>
   );

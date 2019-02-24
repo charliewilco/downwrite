@@ -6,18 +6,6 @@ import PostListItem from "./post-list-item";
 import ContainerTitle from "./container-title";
 import { Grid, GridItem } from "./post-grid";
 
-const ListHeader = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-`;
-
-const List = styled.ul`
-  width: 100%;
-  list-style: inside none;
-`;
-
 export const PostContainer = styled.div`
   padding: 16px 8px;
 `;
@@ -32,10 +20,10 @@ const PostList: React.FC<IPostListProps> = function(props) {
 
   return (
     <>
-      <ListHeader>
+      <header>
         <ContainerTitle>Entries</ContainerTitle>
         <LayoutControl layout={isOpen} layoutChange={setOpen} />
-      </ListHeader>
+      </header>
       {isOpen ? (
         <Grid data-testid="ENTRIES_GRIDVIEW">
           {props.posts.map((p, i) => (
@@ -45,12 +33,25 @@ const PostList: React.FC<IPostListProps> = function(props) {
           ))}
         </Grid>
       ) : (
-        <List data-testid="ENTRIES_LISTVIEW">
+        <ul data-testid="ENTRIES_LISTVIEW">
           {props.posts.map((p, i) => (
             <PostListItem key={i} {...p} onDelete={() => props.onDelete(p)} />
           ))}
-        </List>
+        </ul>
       )}
+      <style jsx>{`
+        header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 24px;
+        }
+
+        ul {
+          width: 100%;
+          list-style: inside none;
+        }
+      `}</style>
     </>
   );
 };
