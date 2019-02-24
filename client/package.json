@@ -63,6 +63,7 @@
     "@types/react-dom": "^16.8.2",
     "@types/react-dropzone": "^4.2.2",
     "@types/styled-components": "^4.1.10",
+    "@types/styled-jsx": "^2.2.8",
     "@types/uuid": "^3.4.3",
     "@types/yup": "^0.26.9",
     "jest": "^24.1.0",

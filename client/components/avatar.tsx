@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { css } from "styled-components";
+import classNames from "../utils/classnames";
 
 export type GradientColors = string[];
 
@@ -15,28 +15,11 @@ export const gradientPoints = (colors: GradientColors = AvatarColors) => ({
   b: colors[1]
 });
 
-const spaced = css`
-  margin: 0 auto 1rem;
-`;
-
 export interface IAvatarCircleProps {
   colors: IPointedGradientColors;
   centered?: boolean;
   size?: number;
 }
-
-const AvatarCircle = styled.div<IAvatarCircleProps>`
-  border-radius: 50%;
-  height: ${props => props.size || 48}px;
-  width: ${props => props.size || 48}px;
-  background: linear-gradient(
-    135deg,
-    ${props => props.colors.a || "#FEB692"} 10%,
-    ${props => props.colors.b || "#EA5455"} 100%
-  );
-
-  ${props => props.centered && spaced};
-`;
 
 interface IAvatarProps {
   colors: GradientColors;
@@ -45,13 +28,30 @@ interface IAvatarProps {
   className?: string;
 }
 
-const Avatar: React.FC<IAvatarProps> = props => (
-  <AvatarCircle
-    className={props.className}
-    size={props.size}
-    centered={props.centered}
-    colors={gradientPoints(props.colors)}
-  />
-);
+const Avatar: React.FC<IAvatarProps> = props => {
+  const cx = classNames("circle", props.className, props.centered && "centered");
+  const colors = gradientPoints(props.colors);
+  return (
+    <>
+      <div role="image" className={cx} />
+      <style jsx>{`
+        .circle {
+          border-radius: 50%;
+          height: ${props.size || 48}px;
+          width: ${props.size || 48}px;
+          background: linear-gradient(
+            135deg,
+            ${colors.a || "#FEB692"} 10%,
+            ${colors.b || "#EA5455"} 100%
+          );
+        }
+
+        .centered {
+          margin: 0 auto 1rem;
+        }
+      `}</style>
+    </>
+  );
+};
 
 export default Avatar;

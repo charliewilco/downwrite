@@ -1,5 +1,4 @@
 import * as React from "react";
-import styled from "styled-components";
 import Link from "next/link";
 import AltAnchor from "./alt-anchor-link";
 import Wrapper from "./wrapper";
@@ -16,56 +15,55 @@ const PAGES: IPage[] = [
   { name: "@charlespeters", href: "https://twitter.com/charlespeters" }
 ];
 
-const Footer = styled.footer`
-  text-align: center;
-  padding-top: 32px;
-  padding-bottom: 32px;
-  padding-left: 8px;
-  padding-right: 8px;
-`;
-
-const FooterNav = styled.nav`
-  &::before {
-    content: "";
-    display: block;
-    width: 128px;
-    height: 2px;
-    background: ${props => props.theme.link};
-    margin: 0 auto 32px;
-  }
-`;
-
-const FooterList = styled.ul`
-  list-style: none inside;
-  padding: 0;
-  margin: 0;
-  font-size: 14px;
-`;
-
-const FooterListItem = styled.li`
-  display: inline-block;
-  margin-right: 16px;
-`;
-
 const UIFooter: React.FC<{}> = () => (
-  <Footer>
+  <footer className="ui-footer">
     <Wrapper sm>
-      <FooterNav>
-        <FooterList>
-          <FooterListItem>
+      <nav className="ui-footer-nav">
+        <ul>
+          <li>
             <span>&copy; 2019 Charles Peters</span>
-          </FooterListItem>
+          </li>
           {PAGES.map((page, i) => (
-            <FooterListItem key={i}>
+            <li key={i}>
               <Link href={page.href} passHref>
                 <AltAnchor>{page.name}</AltAnchor>
               </Link>
-            </FooterListItem>
+            </li>
           ))}
-        </FooterList>
-      </FooterNav>
+        </ul>
+      </nav>
     </Wrapper>
-  </Footer>
+    <style jsx>{`
+      .ui-footer {
+        text-align: center;
+        padding-top: 32px;
+        padding-bottom: 32px;
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+
+      .ui-footer-nav::before {
+        content: "";
+        display: block;
+        width: 128px;
+        height: 2px;
+        background: var(--link);
+        margin: 0 auto 32px;
+      }
+
+      .ui-footer-nav ul {
+        list-style: none inside;
+        padding: 0;
+        margin: 0;
+        font-size: 14px;
+      }
+
+      .ui-footer-nav li {
+        display: inline-block;
+        margin-right: 16px;
+      }
+    `}</style>
+  </footer>
 );
 
 export default UIFooter;

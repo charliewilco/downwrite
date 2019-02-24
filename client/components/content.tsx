@@ -60,6 +60,7 @@ const ContentBody = styled.section`
   ul,
   ol,
   pre,
+  hr,
   p {
     margin-bottom: 24.6px;
   }

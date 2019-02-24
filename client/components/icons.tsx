@@ -61,7 +61,7 @@ const NavIcon: React.FC<IIconAttributes> = props => (
   <svg width="20px" height="9px" viewBox="0 0 20 9" className={props.className}>
     <desc>Navicon</desc>
     <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-      <g fill="inherit" id="NaviconGroup">
+      <g fill="var(--color)" id="NaviconGroup">
         <rect id="Rectangle-Copy-3" x="0" y="0" width="20" height="1" />
         <rect id="Rectangle-Copy-4" x={10} y="4" width={10} height="1" />
         <rect id="Rectangle-Copy-5" x={5} y="8" width={15} height="1" />

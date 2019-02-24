@@ -37,14 +37,14 @@ const NightController = styled.label`
   align-items: center;
 `;
 
-interface INightModeContext {
+export interface INightModeContext {
   night: boolean;
   action: {
     onChange: () => void;
   };
 }
 
-const NightModeContext = React.createContext({} as INightModeContext);
+export const NightModeContext = React.createContext({} as INightModeContext);
 
 const NightModeStyles = createGlobalStyle`
   .NightMDX {}
@@ -101,6 +101,22 @@ const NightModeContainer: React.FC<{ children: React.ReactChild }> = function(
 
   return (
     <NightModeContext.Provider value={{ night, action: { onChange } }}>
+      <style global jsx>{`
+        :root {
+          --background: ${theme.background};
+          --color: ${theme.color};
+          --border: ${theme.border};
+          --link: ${theme.link};
+          --linkHover: ${theme.linkHover};
+          --meta: ${theme.meta};
+          --inputBorder: ${theme.inputBorder};
+          --cardBackground: ${theme.cardBackground};
+          --cardTrayBackground: ${theme.cardTrayBackground};
+          --cardDeleteButton: ${theme.cardDeleteButton};
+          --headerLogoLink: ${theme.headerLogoLink};
+          --landingPageTitle: ${theme.landingPageTitle};
+        }
+      `}</style>
       <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
     </NightModeContext.Provider>
   );

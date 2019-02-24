@@ -1,27 +1,29 @@
-import styled, { css } from "styled-components";
+import * as React from "react";
+// import css from "styled-jsx/css";
 import * as DefaultStyles from "../utils/defaultStyles";
 
-const AltAnchor = styled.a<{ space?: string }>`
-  font-size: 14px;
-  cursor: pointer;
-  line-height: 1.1;
-  opacity: 0.5;
-  color: ${props => props.theme.color} !important;
+interface AltAnchorProps<T> extends React.AnchorHTMLAttributes<T> {
+  space?: string;
+}
 
-  ${props =>
-    props.space === "right"
-      ? css`
-          margin-right: 32px;
-        `
-      : props.space === "left"
-      ? css`
-          margin-left: 32px;
-        `
-      : null} &:hover,
-  &:focus {
-    color: ${DefaultStyles.colors.text};
-    opacity: 1;
-  }
-`;
+export default function AltAnchorLink({ space, ...props }: AltAnchorProps<any>) {
+  return (
+    <>
+      <style jsx>{`
+        a {
+          font-size: 14px;
+          cursor: pointer;
+          line-height: 1.1;
+          opacity: 0.5;
+          color: var(--color) !important;
+        }
 
-export default AltAnchor;
+        a:focus {
+          color: ${DefaultStyles.colors.text};
+          opacity: 1;
+        }
+      `}</style>
+      <a {...props} />
+    </>
+  );
+}

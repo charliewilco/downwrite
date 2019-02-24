@@ -3,6 +3,7 @@ declare module "@reach/dialog" {
     isOpen?: boolean;
     onDismiss?: () => void;
     children: React.ReactNode | any;
+    className?: string;
   }
 
   export interface DialogOverlayProps extends DialogProps {

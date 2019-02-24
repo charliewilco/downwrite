@@ -40,7 +40,7 @@ const Rule = styled.hr`
   background: rgba(0, 0, 0, 0.125);
 `;
 
-const TeaserCopy: React.FC<any> = () => (
+const TeaserCopy: React.FC<{}> = () => (
   <>You can write and share on Downwrite, you can sign up or log in </>
 );
 
