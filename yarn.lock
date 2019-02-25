@@ -1183,15 +1183,10 @@
   resolved "https://registry.npmjs.org/@types/jest/-/jest-23.3.13.tgz#c81484b6f4ca007bb09887ed15ecb3286d58f928"
   integrity sha512-ePl4l+7dLLmCucIwgQHAgjiepY++qcI6nb8eAwGNkB6OxmTe3Z9rQU3rSpomqu42PCCnlThZbOoxsf+qylJsLA==
 
-"@types/joi@*":
-  version "14.0.0"
-  resolved "https://registry.npmjs.org/@types/joi/-/joi-14.0.0.tgz#7906aca6850868f39f888efcaef28bbcbbab5498"
-  integrity sha512-q3r+5QfNrthJL+5Pvb9MOP7rJniTfAV+cGbsO2a3ItGSuwmp2vdjjZ/VCWKwGT5lNx4eOvZI4O3IpSIXh3f4RA==
-
-"@types/joi@^14.3.0":
-  version "14.3.0"
-  resolved "https://registry.npmjs.org/@types/joi/-/joi-14.3.0.tgz#8a735b7cf5d7f0f9edea778e9594620df5e94aa9"
-  integrity sha512-dkNE2Ibbe1eXqXAg8dmAXAjhuH/IUacNp7aG5ymdcIiktJIXZMCF+aEHvZAWjNQD+Cy9BYwkJla+19J/vmMAOg==
+"@types/joi@*", "@types/joi@^14.3.2":
+  version "14.3.2"
+  resolved "https://registry.yarnpkg.com/@types/joi/-/joi-14.3.2.tgz#eff771f0b19698b8e6e7c6fe6b625e07e2618fe9"
+  integrity sha512-riJTpNwDOoRgRrrOjfcjwMBYJLVg8rzwMEAAcZ2JBvdmYWCLIsbzTFXHV517terbYzGmdzkwFYeXUem7eXVNoQ==
 
 "@types/jsonwebtoken@^8.3.0":
   version "8.3.0"
