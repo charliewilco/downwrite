@@ -1,22 +1,7 @@
 import * as React from "react";
 import Head from "next/head";
-import styled from "styled-components";
-import Wrapper from "../components/wrapper";
 import NotFound from "../components/not-found";
 import { NextContext } from "next";
-
-const CenteredWrapper = styled(Wrapper)`
-  text-align: center;
-  padding: 8rem 1rem;
-`;
-
-const ErrorTitle = styled.h2`
-  display: inline-block;
-  margin-bottom: 32px;
-  font-size: 84px;
-  line-height: 1;
-  font-weight: 900;
-`;
 
 interface IErrorViewProps {
   statusCode: number;
@@ -40,11 +25,11 @@ const StatusCode: React.FC<Partial<CustomError>> = props => (
 
 function ErrorPage(props: IErrorViewProps) {
   return (
-    <CenteredWrapper>
+    <section className="centered-wrapper">
       <Head>
         <title>Not Found | Downwrite</title>
       </Head>
-      <ErrorTitle>404</ErrorTitle>
+      <h2>404</h2>
       <StatusCode statusCode={props.statusCode} />
       <NotFound
         error={null}
@@ -54,7 +39,24 @@ function ErrorPage(props: IErrorViewProps) {
             : "An error occurred on client"
         }
       />
-    </CenteredWrapper>
+      <style jsx>{`
+        h2 {
+          display: inline-block;
+          margin-bottom: 32px;
+          font-size: 84px;
+          line-height: 1;
+          font-weight: 900;
+        }
+
+        .centered-wrapper {
+          text-align: center;
+          padding: 8rem 1rem;
+          margin-left: auto;
+          margin-right: auto;
+          max-width: 1088px;
+        }
+      `}</style>
+    </section>
   );
 }
 

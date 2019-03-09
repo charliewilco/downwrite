@@ -6,7 +6,7 @@ import orderBy from "lodash/orderBy";
 import isEmpty from "lodash/isEmpty";
 import "isomorphic-fetch";
 import DeleteModal from "../components/delete-modal";
-import PostList, { PostContainer } from "../components/post-list";
+import PostList from "../components/post-list";
 import Loading from "../components/loading";
 import EmptyPosts from "../components/empty-posts";
 import InvalidToken from "../components/invalid-token";
@@ -145,7 +145,7 @@ export function DashboardUI(props: IDashboardProps) {
           closeModal={() => dispatch({ type: CLOSE_MODAL })}
         />
       )}
-      <PostContainer>
+      <section className="PostContainer">
         {state.loaded ? (
           Array.isArray(state.entries) && state.entries.length > 0 ? (
             <PostList
@@ -162,7 +162,12 @@ export function DashboardUI(props: IDashboardProps) {
         ) : (
           <Loading size={100} />
         )}
-      </PostContainer>
+        <style jsx>{`
+          .PostContainer {
+            padding: 16px 8px;
+          }
+        `}</style>
+      </section>
     </>
   );
 }

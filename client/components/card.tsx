@@ -7,17 +7,22 @@ import * as DefaultStyles from "../utils/defaultStyles";
 interface ICardLinks {
   id: string;
   title?: string;
+  style?: React.CSSProperties;
 }
 
 export const EditLink: React.FC<ICardLinks> = props => (
   <Link prefetch passHref href={{ pathname: "/edit", query: { id: props.id } }}>
-    <a className="link">{props.title || "Edit"}</a>
+    <a className="link" style={props.style}>
+      {props.title || "Edit"}
+    </a>
   </Link>
 );
 
 export const PreviewLink: React.FC<ICardLinks> = props => (
   <Link prefetch passHref href={{ pathname: "/preview", query: { id: props.id } }}>
-    <a className="link">Preview</a>
+    <a className="link" style={props.style}>
+      Preview
+    </a>
   </Link>
 );
 
@@ -75,10 +80,6 @@ const Card: React.FC<ICardProps> = props => (
         justify-content: space-between;
       }
 
-      .tray a {
-        margin-right: 8px;
-      }
-
       .tray a:hover {
         color: ${DefaultStyles.colors.blue500};
       }
@@ -107,9 +108,9 @@ const Card: React.FC<ICardProps> = props => (
       <small className="meta">added {distance(props.dateAdded)} ago</small>
     </header>
     <footer className="tray">
-      <div data-testid="CARD_EXCERPT">
-        <EditLink id={props.id} />
-        {props.public && <PreviewLink id={props.id} />}
+      <div className="links" data-testid="CARD_EXCERPT">
+        <EditLink style={{ marginRight: 8 }} id={props.id} />
+        {props.public && <PreviewLink style={{ marginRight: 8 }} id={props.id} />}
       </div>
       {props.onDelete && (
         <button

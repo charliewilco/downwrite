@@ -144,13 +144,17 @@ export const Panel: React.FC<ITabsPanelProps> = function(props) {
     }
   });
 
+  const activeStyle: React.CSSProperties = {
+    display: props.isActive ? "block" : "none"
+  };
+
   return (
     <div
       ref={ref}
       className={props.className}
       role="tabpanel"
       aria-hidden={!props.isActive}
-      style={{ display: props.isActive ? "block" : "none" }}
+      style={activeStyle}
       aria-labelledby={props.label}>
       {props.children}
     </div>

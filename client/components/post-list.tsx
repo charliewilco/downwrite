@@ -1,14 +1,9 @@
 import * as React from "react";
-import styled from "styled-components";
 import Card from "./card";
 import LayoutControl from "./layout-control";
 import PostListItem from "./post-list-item";
 import ContainerTitle from "./container-title";
 import { Grid, GridItem } from "./post-grid";
-
-export const PostContainer = styled.div`
-  padding: 16px 8px;
-`;
 
 interface IPostListProps {
   posts: any[];
