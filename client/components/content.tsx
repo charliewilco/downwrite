@@ -113,6 +113,10 @@ interface IContentProps {
   content?: string;
 }
 
+const MARKDOWN_RENDERS = {
+  code: CodeBlock
+};
+
 const Content: React.FC<IContentProps> = ({
   title,
   dateAdded,
@@ -134,7 +138,7 @@ const Content: React.FC<IContentProps> = ({
         )}
       </ContentHeader>
       <ContentBody data-testid="PREVIEW_ENTRTY_BODY" className="PreviewBody">
-        {content && <Markdown source={content} renderers={{ code: CodeBlock }} />}
+        {content && <Markdown source={content} renderers={MARKDOWN_RENDERS} />}
         {children}
       </ContentBody>
     </article>

@@ -45,19 +45,20 @@ export const ErrorContainer: React.FC<IErrorProps> = function(props) {
     type: ""
   });
 
+  const context: IUIErrorMessage = {
+    errorState,
+    errorActions: {
+      setError: (content: string, type: string): void => {
+        setState({ content, type });
+      },
+      clearFlashMessage: (): void => {
+        setState({ content: "", type: "" });
+      }
+    }
+  };
+
   return (
-    <ErrorStateContext.Provider
-      value={{
-        errorState,
-        errorActions: {
-          setError: (content: string, type: string): void => {
-            setState({ content, type });
-          },
-          clearFlashMessage: (): void => {
-            setState({ content: "", type: "" });
-          }
-        }
-      }}>
+    <ErrorStateContext.Provider value={context}>
       {props.children}
     </ErrorStateContext.Provider>
   );

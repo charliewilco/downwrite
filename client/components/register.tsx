@@ -57,15 +57,6 @@ const REGISTER_INPUTS: IInput[] = [
 ];
 
 const Register: React.FC<LoginProps> = function(props) {
-  const handleSubmit = (
-    values: IRegistration,
-    actions: FormikActions<IRegistration>
-  ): void => {
-    if (values.legalChecked) {
-      onSubmit(values);
-    }
-  };
-
   const onSubmit = async ({
     username,
     email,
@@ -86,15 +77,26 @@ const Register: React.FC<LoginProps> = function(props) {
     }
   };
 
+  const handleSubmit = (
+    values: IRegistration,
+    actions: FormikActions<IRegistration>
+  ): void => {
+    if (values.legalChecked) {
+      onSubmit(values);
+    }
+  };
+
+  const initialValues = {
+    legalChecked: false,
+    username: "",
+    password: "",
+    email: ""
+  };
+
   return (
     <Formik
       validationSchema={RegisterFormSchema}
-      initialValues={{
-        legalChecked: false,
-        username: "",
-        password: "",
-        email: ""
-      }}
+      initialValues={initialValues}
       onSubmit={handleSubmit}>
       {({ values, handleChange }: FormikProps<IRegistration>) => (
         <Form>

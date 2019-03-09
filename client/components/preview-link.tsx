@@ -1,5 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
+import { UrlObject } from "url";
 
 interface PreviewLinkProps {
   publicStatus: boolean;
@@ -7,12 +8,13 @@ interface PreviewLinkProps {
 }
 
 const PreviewLink: React.FC<PreviewLinkProps> = props => {
+  const link: UrlObject = {
+    pathname: "/preview",
+    query: { id: props.id }
+  };
   return props.publicStatus ? (
     <>
-      <Link
-        prefetch
-        passHref
-        href={{ pathname: "/preview", query: { id: props.id } }}>
+      <Link prefetch passHref href={link}>
         <a>Preview</a>
       </Link>
       <style jsx>{`

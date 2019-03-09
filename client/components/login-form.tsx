@@ -37,14 +37,16 @@ const Login: React.FC<LoginProps> = function(props) {
     }
   };
 
+  const initialValues = {
+    user: "",
+    password: ""
+  };
+
   return (
     <SpacedBox>
       <Formik
         validationSchema={LoginFormSchema}
-        initialValues={{
-          user: "",
-          password: ""
-        }}
+        initialValues={initialValues}
         onSubmit={handleFormSubmit}>
         {({
           values,

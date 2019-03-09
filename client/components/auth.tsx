@@ -133,14 +133,13 @@ export function AuthProvider(props: IAuthProps) {
     dispatch({ type: SIGN_OUT });
   }
 
+  const context: IAuthContext = {
+    ...state,
+    signIn,
+    signOut
+  };
+
   return (
-    <AuthContext.Provider
-      value={{
-        ...state,
-        signIn,
-        signOut
-      }}>
-      {props.children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={context}>{props.children}</AuthContext.Provider>
   );
 }

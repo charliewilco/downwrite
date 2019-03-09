@@ -99,8 +99,13 @@ const NightModeContainer: React.FC<{ children: React.ReactChild }> = function(
     ? DefaultStyles.NIGHT_THEME
     : DefaultStyles.DAY_THEME;
 
+  const context: INightModeContext = {
+    night,
+    action: { onChange }
+  };
+
   return (
-    <NightModeContext.Provider value={{ night, action: { onChange } }}>
+    <NightModeContext.Provider value={context}>
       <style global jsx>{`
         :root {
           --background: ${theme.background};
