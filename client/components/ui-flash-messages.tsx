@@ -1,5 +1,4 @@
 import * as React from "react";
-import styled from "styled-components";
 import { CloseIcon } from "./icons";
 import * as DefaultStyles from "../utils/defaultStyles";
 
@@ -11,37 +10,6 @@ interface IUIFlashProps {
   centered?: boolean;
 }
 
-const UIFlashContainer = styled.div`
-  display: flex;
-  border-left: 5px solid rgba(0, 0, 0, 0.25);
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
-  z-index: 900;
-  max-width: ${(props: IUIFlashProps) => props.width}px;
-  left: 0px;
-  right: 0px;
-  background: ${DefaultStyles.colors.yellow500};
-  color: ${DefaultStyles.colors.text};
-  position: fixed;
-  top: 20px;
-  margin: auto;
-  text-align: ${(props: IUIFlashProps) => props.centered && "center"};
-  padding-top: 8px;
-  padding-right: 16px;
-  padding-bottom: 8px;
-  padding-left: 16px;
-`;
-
-const Stretch = styled.div`
-  flex: 1;
-`;
-
-const CloseButton = styled.button`
-  appearance: none;
-  border: 0px;
-  color: inherit;
-  font-family: inherit;
-`;
-
 const prefix = (type: string) => {
   if (type) {
     return `${type.length > 0 && type.toUpperCase()}:`;
@@ -49,16 +17,48 @@ const prefix = (type: string) => {
 };
 
 const UIFlashMessage: React.FC<IUIFlashProps> = props => (
-  <UIFlashContainer width={props.width || 512} centered={!props.onClose}>
-    <Stretch>
+  <div className="UIFlashContainer" role="alert">
+    <div className="Stretch">
       {prefix(props.type)} {props.content}
-    </Stretch>
+    </div>
     {props.onClose && (
-      <CloseButton onClick={props.onClose}>
+      <button className="CloseButton" onClick={props.onClose}>
         <CloseIcon fill="currentColor" />
-      </CloseButton>
+      </button>
     )}
-  </UIFlashContainer>
+    <style jsx>{`
+      .UIFlashContainer {
+        display: flex;
+        border-left: 5px solid rgba(0, 0, 0, 0.25);
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
+        z-index: 900;
+        max-width: ${props.width || 512}px;
+        left: 0px;
+        right: 0px;
+        background: ${DefaultStyles.colors.yellow500};
+        color: ${DefaultStyles.colors.text};
+        position: fixed;
+        top: 20px;
+        margin: auto;
+        text-align: ${!props.onClose ? "center" : "inherit"};
+        padding-top: 8px;
+        padding-right: 16px;
+        padding-bottom: 8px;
+        padding-left: 16px;
+      }
+
+      .Stretch {
+        flex: 1;
+      }
+
+      .CloseButton {
+        appearance: none;
+        border: 0px;
+        color: inherit;
+        font-family: inherit;
+      }
+    `}</style>
+  </div>
 );
 
 export default UIFlashMessage;

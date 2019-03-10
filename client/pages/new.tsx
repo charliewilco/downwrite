@@ -106,6 +106,21 @@ export default function NewEditor(props: INewPostProps) {
           </Upload>
         </EditorContainer>
       )}
+      <style jsx>
+        {`
+          .UtilityBarContainer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0 16px;
+            padding: 8px 0;
+          }
+          .UtilityBarItems {
+            display: flex;
+            align-items: center;
+          }
+        `}
+      </style>
     </Formik>
   );
 }

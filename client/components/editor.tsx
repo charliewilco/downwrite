@@ -2,8 +2,6 @@ import PluginsEditor from "draft-js-plugins-editor";
 import * as React from "react";
 import * as Draft from "draft-js";
 import Prism from "prismjs";
-import styled from "styled-components";
-
 import createMarkdownPlugin from "draft-js-markdown-plugin";
 import createPrismPlugin from "draft-js-prism-plugin";
 import DraftStyles from "./draft-styles";
@@ -11,32 +9,6 @@ import { LocalUISettings, ILocalUISettings } from "./local-ui-settings";
 import { __IS_TEST__ } from "../utils/dev";
 
 import * as DefaultStyles from "../utils/defaultStyles";
-
-const EditorWrapper = styled.div`
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  height: 100%;
-  width: 100%;
-
-  select {
-    float: right;
-    border: 0;
-    background: none;
-    color: ${DefaultStyles.colors.blue700};
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
-      sans-serif;
-  }
-`;
-
-const EditorShell = styled.div<{ font: string }>`
-  border-top: 0px;
-  position: relative;
-  padding-top: 24px;
-  padding-bottom: 128px;
-  font-family: ${props => props.font};
-`;
 
 type Handler = "handled" | "not-handled";
 
@@ -57,8 +29,8 @@ export default function DownwriteEditor(props: IEditorProps) {
     ? []
     : [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()];
 
-  let className = "RichEditor-editor";
-  let contentState = props.editorState.getCurrentContent();
+  let className: string = "EditorWrapper RichEditor-editor";
+  let contentState: Draft.ContentState = props.editorState.getCurrentContent();
   if (!contentState.hasText()) {
     if (
       contentState
@@ -107,9 +79,9 @@ export default function DownwriteEditor(props: IEditorProps) {
   };
 
   return (
-    <EditorShell font={monospace}>
+    <div className="Shell">
       <DraftStyles />
-      <EditorWrapper className={className} onClick={focus}>
+      <div className={className} onClick={focus}>
         <PluginsEditor
           onFocus={props.onFocus}
           handleKeyCommand={handleKeyCommand}
@@ -124,8 +96,35 @@ export default function DownwriteEditor(props: IEditorProps) {
           spellCheck
           plugins={plugins}
         />
-      </EditorWrapper>
-    </EditorShell>
+      </div>
+      <style jsx>{`
+        .EditorWrapper {
+          padding-left: 0px;
+          padding-right: 0px;
+          padding-top: 16px;
+          padding-bottom: 16px;
+          height: 100%;
+          width: 100%;
+        }
+
+        .Shell {
+          border-top: 0px;
+          position: relative;
+          padding-top: 24px;
+          padding-bottom: 128px;
+          font-family: ${monospace};
+        }
+
+        select {
+          float: right;
+          border: 0;
+          background: none;
+          color: ${DefaultStyles.colors.blue700};
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+            Arial, sans-serif;
+        }
+      `}</style>
+    </div>
   );
 }
 

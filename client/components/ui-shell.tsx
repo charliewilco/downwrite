@@ -76,6 +76,11 @@ export const UIShell: React.FC<IUIShell> = function(props) {
             outline: 0;
           }
 
+          .ContainerTitle {
+            font-weight: 900;
+            font-size: 24px;
+          }
+
           code,
           pre {
             font-family: "Input Mono", "SF Mono", Consolas, "Liberation Mono", Menlo,

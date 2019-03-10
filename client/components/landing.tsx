@@ -1,64 +1,68 @@
 import * as React from "react";
-import styled from "styled-components";
 import { LocalUISettings } from "./local-ui-settings";
 import * as DefaultStyles from "../utils/defaultStyles";
+import { NightModeContext } from "./night-mode";
 
-const Intro = styled.article<{ font: string }>`
-  text-align: center;
-  margin-bottom: 64px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  max-width: 33rem;
-  width: 100%;
-  font-family: ${props => (props.font ? props.font : DefaultStyles.fonts.monospace)};
+const LandingPage: React.FC<{ children: React.ReactNode }> = props => {
+  const theme = React.useContext(NightModeContext);
+  const { monospace } = React.useContext(LocalUISettings);
+  return (
+    <article>
+      <img className="BannerImage" src="/static/landing.png" />
+      <header className="IntroContents">
+        <h1 className="IntroTitle" data-testid="Login Page Container">
+          Downwrite
+        </h1>
+        <span className="Tagline">A place to write</span>
+      </header>
+      {props.children}
+      <style jsx>{`
+        article {
+          font-family: ${monospace || DefaultStyles.fonts.monospace};
+          text-align: center;
+          margin-bottom: 64px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          max-width: 33rem;
+          width: 100%;
+        }
 
-  @media (min-width: 57.75rem) {
-    padding-top: 64px;
-  }
-`;
+        .IntroTitle {
+          color: ${theme.night ? "white" : "#185A70"};
+          font-size: 24px;
+          font-family: ${DefaultStyles.fonts.sans};
+          font-weight: 900;
+        }
 
-const IntroContent = styled.div`
-  padding: 32px 0 0;
-  margin-bottom: 64px;
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+        .IntroContents {
+          padding: 32px 0 0;
+          margin-bottom: 64px;
+          z-index: 5;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .Tagline {
+          font-weight: 700;
+          font-style: italic;
+          color: var(--landingPageTitle);
+        }
 
-  span {
-    font-weight: 700;
-    font-style: italic;
-    color: ${props => props.theme.landingPageTitle};
-  }
-`;
+        .BannerImage {
+          max-width: 200px;
+          z-index: 0;
+        }
 
-const IntroTitle = styled.h1`
-  color: ${props => (props.theme.night ? "white" : "#185A70")};
-  font-size: 24px;
-  font-family: ${DefaultStyles.fonts.sans};
-  font-weight: 900;
-`;
-
-const StyledImage = styled.img.attrs({ src: "/static/landing.png" })`
-  max-width: 200px;
-  z-index: 0;
-`;
-
-const LandingPage: React.FC<{ children: React.ReactNode }> = props => (
-  <LocalUISettings.Consumer>
-    {({ monospace }) => (
-      <Intro font={monospace}>
-        <StyledImage />
-        <IntroContent>
-          <IntroTitle data-testid="Login Page Container">Downwrite</IntroTitle>
-          <span>A place to write</span>
-        </IntroContent>
-        {props.children}
-      </Intro>
-    )}
-  </LocalUISettings.Consumer>
-);
+        @media (min-width: 57.75rem) {
+          article {
+            padding-top: 65px;
+          }
+        }
+      `}</style>
+    </article>
+  );
+};
 
 export default LandingPage;

@@ -1,9 +1,7 @@
 import * as React from "react";
 import * as DefaultStyles from "../utils/defaultStyles";
 
-export const Button = function(
-  props: React.ButtonHTMLAttributes<HTMLButtonElement>
-) {
+export function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <>
       <button {...props} />
@@ -35,11 +33,9 @@ export const Button = function(
       `}</style>
     </>
   );
-};
+}
 
-export const AltButton = function(
-  props: React.ButtonHTMLAttributes<HTMLButtonElement>
-) {
+export function AltButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <>
       <button {...props} />
@@ -58,4 +54,24 @@ export const AltButton = function(
       `}</style>
     </>
   );
-};
+}
+
+export function CancelButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <>
+      <button {...props} />
+      <style jsx>{`
+        button {
+          margin-right: 1rem;
+          color: ${DefaultStyles.colors.blue700};
+          background: none;
+          font-family: inherit;
+          font-size: 100%;
+          border: 0px;
+          font-weight: 700;
+          box-sizing: inherit;
+        }
+      `}</style>
+    </>
+  );
+}

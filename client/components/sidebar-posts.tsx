@@ -1,23 +1,13 @@
 import * as React from "react";
-import styled from "styled-components";
 import PostListItem from "./post-list-item";
-
-const SidebarEntriesTitle = styled.h6`
-  font-size: 12px;
-  margin-bottom: 8px;
-`;
-
-const Separator = styled.div`
-  margin-bottom: 1rem;
-`;
 
 const SidebarPosts: React.FC<{ posts: any[] }> = ({ posts }) => (
   <>
-    <SidebarEntriesTitle>Recent Entries</SidebarEntriesTitle>
+    <h6 style={{ fontSize: 12, marginBottom: 8 }}>Recent Entries</h6>
     {posts.slice(0, 2).map((post, i) => (
-      <Separator key={i}>
+      <div style={{ marginBottom: 16 }} key={i}>
         <PostListItem {...post} />
-      </Separator>
+      </div>
     ))}
   </>
 );

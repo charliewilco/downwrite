@@ -1,24 +1,5 @@
 import * as React from "react";
 import StyleButton from "./toolbar-button";
-import styled from "styled-components";
-
-const ToolbarWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-right: 16px;
-  padding-left: 16px;
-  background: white;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  border-bottom-color: rgba(0, 0, 0, 0.125);
-`;
 
 const BLOCK_TYPES = [
   { label: "H1", style: "header-one" },
@@ -39,7 +20,7 @@ const INLINE_STYLES = [
 ];
 
 const FullToolBar: React.FC<any> = props => (
-  <ToolbarWrapper>
+  <div className="ToolbarWrapper">
     {BLOCK_TYPES.map(type => (
       <StyleButton
         key={type.label}
@@ -58,11 +39,11 @@ const FullToolBar: React.FC<any> = props => (
         style={type.style}
       />
     ))}
-  </ToolbarWrapper>
+  </div>
 );
 
 const SelectionToolBar: React.FC<any> = props => (
-  <ToolbarWrapper>
+  <div className="ToolbarWrapper">
     {props.selectedText.length > 0
       ? INLINE_STYLES.map(type => (
           <StyleButton
@@ -82,7 +63,7 @@ const SelectionToolBar: React.FC<any> = props => (
             style={type.style}
           />
         ))}
-  </ToolbarWrapper>
+  </div>
 );
 
 const Toolbar: React.FC<any> = props => {
@@ -117,6 +98,25 @@ const Toolbar: React.FC<any> = props => {
           onToggleBlockType={props.onToggleBlockType}
         />
       )}
+      <style jsx>{`
+        .ToolbarWrapper {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          position: absolute;
+          top: 0px;
+          left: 0px;
+          right: 0px;
+          padding-top: 8px;
+          padding-bottom: 8px;
+          padding-right: 16px;
+          padding-left: 16px;
+          background: white;
+          border-bottom-width: 1px;
+          border-bottom-style: solid;
+          border-bottom-color: rgba(0, 0, 0, 0.125);
+        }
+      `}</style>
     </>
   );
 };

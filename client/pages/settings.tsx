@@ -1,23 +1,14 @@
 import * as React from "react";
 import Head from "next/head";
 import { NextContext } from "next";
-import styled from "styled-components";
+
 import "isomorphic-fetch";
 import SettingsUser from "../components/settings-user-form";
 import SettingsPassword from "../components/settings-password";
 import SettingsLocal from "../components/settings-markdown";
-import Wrapper from "../components/wrapper";
-import ContainerTitle from "../components/container-title";
+
 import * as API from "../utils/api";
 import { authMiddleware } from "../utils/auth-middleware";
-
-const SettingsWrapper = styled(Wrapper)`
-  padding: 8px;
-`;
-
-const SettingsTitle = styled(ContainerTitle)`
-  margin-bottom: 16px;
-`;
 
 interface IUserSettingsProps {
   user: {
@@ -36,15 +27,28 @@ interface IUserSettingsProps {
 
 function Settings(props: IUserSettingsProps) {
   return (
-    <SettingsWrapper sm>
+    <div className="Wrapper">
       <Head>
         <title>User Settings</title>
       </Head>
-      <SettingsTitle>Settings</SettingsTitle>
+
+      <h1 className="ContainerTitle">Settings</h1>
       <SettingsUser user={props.user} />
       <SettingsPassword />
       <SettingsLocal />
-    </SettingsWrapper>
+      <style jsx>{`
+        h1 {
+          margin-bottom: 16px;
+        }
+
+        .Wrapper {
+          margin-left: auto;
+          margin-right: auto;
+          padding: 8px;
+          max-width: 768px;
+        }
+      `}</style>
+    </div>
   );
 }
 

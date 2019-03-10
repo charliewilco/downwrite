@@ -1,21 +1,6 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import styled from "styled-components";
 import { ToastNoPosition as Toast } from "./toast";
-
-const Meta = styled.div`
-  opacity: 0.5;
-  font-size: small;
-  padding: 8px;
-`;
-
-const WordCounterContainer = styled.div`
-  margin: 16px 8px;
-  right: 0;
-  bottom: 0;
-  z-index: 50;
-  position: fixed;
-`;
 
 interface IWordCounterers {
   limit?: number;
@@ -49,20 +34,34 @@ function getWordCount(editorState: Draft.EditorState): number {
 }
 
 const WordCounter: React.FC<IWordCounterers> = function(props) {
-  const displayCount = React.useMemo(() => {
+  const displayCount = React.useMemo<number>(() => {
     const selection = getSelectionCount(props.editorState);
     const words = getWordCount(props.editorState);
     return selection > 0 ? selection : words;
   }, [props.editorState]);
 
   return (
-    <WordCounterContainer>
+    <div className="container">
       <Toast>
-        <Meta>
+        <div className="Meta">
           <small>Word Count: {displayCount}</small>
-        </Meta>
+        </div>
       </Toast>
-    </WordCounterContainer>
+      <style jsx>{`
+        .container {
+          margin: 16px 8px;
+          right: 0;
+          bottom: 0;
+          z-index: 50;
+          position: fixed;
+        }
+        .meta {
+          opacity: 0.5;
+          font-size: small;
+          padding: 8px;
+        }
+      `}</style>
+    </div>
   );
 };
 

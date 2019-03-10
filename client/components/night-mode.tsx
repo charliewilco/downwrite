@@ -1,41 +1,11 @@
 import * as React from "react";
-import styled, {
-  DefaultTheme,
-  ThemeProvider,
-  createGlobalStyle
-} from "styled-components";
+import { DefaultTheme, ThemeProvider } from "styled-components";
 import Checkbox from "./checkbox";
 import * as DefaultStyles from "../utils/defaultStyles";
 
 const NIGHT_MODE: string = "NightMDX";
 const NIGHT_MODE_OFF: string = "NIGHT_MODE_OFF";
 const NIGHT_MODE_ON: string = "NIGHT_MODE_ON";
-
-const NightContainer = styled.div`
-  padding-top: 16px;
-  position: relative;
-`;
-
-const NightToggle = styled.form`
-  color: ${DefaultStyles.colors.text};
-  padding: 8px;
-  font-family: ${DefaultStyles.fonts.sans};
-  margin: 16px 8px;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
-  background: white;
-  bottom: 0;
-  z-index: 50;
-  position: fixed;
-`;
-
-const NightLabel = styled.small`
-  margin-left: 8px;
-`;
-
-const NightController = styled.label`
-  display: flex;
-  align-items: center;
-`;
 
 export interface INightModeContext {
   night: boolean;
@@ -45,20 +15,6 @@ export interface INightModeContext {
 }
 
 export const NightModeContext = React.createContext({} as INightModeContext);
-
-const NightModeStyles = createGlobalStyle`
-  .NightMDX {}
-
-  .NightMode {
-    transition: background 375ms ease-in-out;
-  }
-
-  .NightMode .PreviewBody blockquote,
-  .NightMode blockquote {
-    background: none;
-    color: ${DefaultStyles.colors.blue100} !important;
-  }
-`;
 
 const NightModeContainer: React.FC<{ children: React.ReactChild }> = function(
   props
@@ -121,6 +77,19 @@ const NightModeContainer: React.FC<{ children: React.ReactChild }> = function(
           --headerLogoLink: ${theme.headerLogoLink};
           --landingPageTitle: ${theme.landingPageTitle};
         }
+
+        .NightMDX {
+        }
+
+        .NightMode {
+          transition: background 375ms ease-in-out;
+        }
+
+        .NightMode .PreviewBody blockquote,
+        .NightMode blockquote {
+          background: none;
+          color: ${DefaultStyles.colors.blue100} !important;
+        }
       `}</style>
       <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
     </NightModeContext.Provider>
@@ -135,11 +104,12 @@ export const NightModeTrigger: React.FC = ({ children }) => {
     action.onChange();
   };
 
+  const className = night ? "NightContainer NightMode" : "NightContainer";
+
   return (
-    <NightContainer className={night ? "NightMode" : ""}>
-      <NightModeStyles />
-      <NightToggle role="form" tabIndex={-1} onSubmit={onChange}>
-        <NightController htmlFor="nightToggle">
+    <div className={className}>
+      <form className="NightToggle" role="form" tabIndex={-1} onSubmit={onChange}>
+        <label className="NightController" htmlFor="nightToggle">
           <Checkbox
             role="checkbox"
             aria-checked={night}
@@ -147,10 +117,34 @@ export const NightModeTrigger: React.FC = ({ children }) => {
             id="nightToggle"
             onChange={onChange}
           />
-          <NightLabel>Night Mode</NightLabel>
-        </NightController>
-      </NightToggle>
+          <small className="NightLabel">Night Mode</small>
+        </label>
+      </form>
       {children}
-    </NightContainer>
+      <style jsx>{`
+        .NightContainer {
+          padding-top: 16px;
+          position: relative;
+        }
+        .NightLabel {
+          margin-left: 8px;
+        }
+        .NightController {
+          display: flex;
+          align-items: center;
+        }
+        .NightToggle {
+          color: ${DefaultStyles.colors.text};
+          padding: 8px;
+          font-family: ${DefaultStyles.fonts.sans};
+          margin: 16px 8px;
+          box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
+          background: white;
+          bottom: 0;
+          z-index: 50;
+          position: fixed;
+        }
+      `}</style>
+    </div>
   );
 };

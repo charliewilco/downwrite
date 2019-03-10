@@ -28,7 +28,6 @@ const SettingsBlock: React.FC<ISettingsBlockProps> = props => (
         padding: 16px;
         margin-bottom: 32px;
         box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
-        padding: 0.25rem;
       }
       h4 {
         font-size: 18px;

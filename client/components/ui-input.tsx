@@ -25,10 +25,6 @@ export const UIInputError = styled.small`
   color: #d04d36;
 `;
 
-export const UIInputToggle = styled.input.attrs({ type: "checkbox" })<{
-  isOpen: boolean;
-}>``;
-
 const UIInput: React.FC<InputType> = function({ label, ...props }) {
   const id = uuid();
 

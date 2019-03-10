@@ -1,7 +1,8 @@
 import * as React from "react";
+import Router from "next/router";
 import orderBy from "lodash/orderBy";
 import { AuthContext, IAuthContext } from "./auth";
-import { SidebarEmpty } from "./empty-posts";
+import { Button } from "./button";
 import SidebarPosts from "./sidebar-posts";
 import * as API from "../utils/api";
 import { IPost } from "downwrite";
@@ -74,7 +75,18 @@ const CollectionFetch: React.FC = function() {
   return state.posts.length > 0 ? (
     <SidebarPosts posts={state.posts} />
   ) : (
-    <SidebarEmpty />
+    <div className="FlexColumn">
+      <Button onClick={() => Router.push("/new")}>Get Started</Button>
+      <style jsx>{`
+        .FlexColumn {
+          padding-top: 64px;
+
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+        }
+      `}</style>
+    </div>
   );
 };
 

@@ -16,7 +16,7 @@ const PostList: React.FC<IPostListProps> = function(props) {
   return (
     <>
       <header>
-        <ContainerTitle>Entries</ContainerTitle>
+        <h1 className="ContainerTitle">Entries</h1>
         <LayoutControl layout={isOpen} layoutChange={setOpen} />
       </header>
       {isOpen ? (

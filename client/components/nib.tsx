@@ -1,43 +1,39 @@
 import * as React from "react";
-import styled, { keyframes } from "styled-components";
-
-const backNForth = keyframes`
-  0% {
-    transform: translate(0, 0);
-  }
-
-  50% {
-    transform: translate(calc(384px - 60px), 0);
-  }
-
-  100% {
-    transform: translate(0, 0);
-  }
-`;
-
-const NibContainer = styled.div`
-  &::after {
-    content: "";
-    margin-top: 8px;
-    width: 100%;
-    height: 4px;
-    display: block;
-    background-image: linear-gradient(#4fa5c2, #185a70);
-  }
-`;
-
-const AnimatedIcon = styled.svg`
-  animation: ${backNForth} 7s infinite;
-  width: 60px;
-  height: 71px;
-  display: block;
-  transform: translate(0, 0);
-`;
 
 export default function Nib() {
   return (
-    <NibContainer>
-      <AnimatedIcon viewBox="0 0 60 71">
+    <div className="NibContainer">
+      <style jsx>{`
+        @keyframes BACK_N_FORTH {
+          0% {
+            transform: translate(0, 0);
+          }
+
+          50% {
+            transform: translate(calc(384px - 60px), 0);
+          }
+
+          100% {
+            transform: translate(0, 0);
+          }
+        }
+        .NibContainer::after {
+          content: "";
+          margin-top: 8px;
+          width: 100%;
+          height: 4px;
+          display: block;
+          background-image: linear-gradient(#4fa5c2, #185a70);
+        }
+        .AnimatedIcon {
+          animation: BACK_N_FORTHk 7s infinite;
+          width: 60px;
+          height: 71px;
+          display: block;
+          transform: translate(0, 0);
+        }
+      `}</style>
+      <svg className="AnimatedIcon" viewBox="0 0 60 71">
         <title>Nib</title>
         <g id="Canvas" transform="translate(-353 36)">
           <g id="Nib">
@@ -92,7 +88,7 @@ export default function Nib() {
             d="M 12.5534 44.1141C 12.5534 42.2289 14.0965 40.7006 16 40.7006L 16 0L 0 47.2896L 16 62.4853L 16 47.5272C 14.0965 47.5276 12.5534 45.9993 12.5534 44.1141L 12.5534 44.1141Z"
           />
         </defs>
-      </AnimatedIcon>
-    </NibContainer>
+      </svg>
+    </div>
   );
 }
