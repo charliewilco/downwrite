@@ -2,24 +2,24 @@ interface StringTMap<T> {
   [key: string]: T;
 }
 
-function storageMock() {
+export function storageMock() {
   let storage: StringTMap<string> = {};
 
   return {
-    setItem: function(key: string, value: any) {
+    setItem(key: string, value: any) {
       storage[key] = value || "";
     },
-    getItem: function(key: string) {
+    getItem(key: string) {
       return key in storage ? storage[key] : null;
     },
-    removeItem: function(key: string) {
+    removeItem(key: string) {
       delete storage[key];
     },
     get length() {
       return Object.keys(storage).length;
     },
-    key: function(i: number) {
-      var keys = Object.keys(storage);
+    key(i: number) {
+      const keys = Object.keys(storage);
       return keys[i] || null;
     }
   };
