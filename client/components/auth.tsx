@@ -60,21 +60,23 @@ const EMPTY_USER: IToken = {
   name: null
 };
 
-export const SIGN_IN: string = "SIGN_IN";
-export const SIGN_OUT: string = "SIGN_OUT";
+export enum AuthActions {
+  SIGN_IN = "SIGN_IN",
+  SIGN_OUT = "SIGN_OUT"
+}
 
 export const AuthContext = React.createContext<IAuthContext>({} as IAuthContext);
 
 interface IAuthReducerAction {
-  type: string;
+  type: AuthActions;
   payload?: IAuthState;
 }
 
 function reducer(state: IAuthState, action: IAuthReducerAction) {
   switch (action.type) {
-    case SIGN_IN:
+    case AuthActions.SIGN_IN:
       return { ...action.payload };
-    case SIGN_OUT:
+    case AuthActions.SIGN_OUT:
       return { token: null, authed: false, name: null };
     default:
       throw new Error();
@@ -120,7 +122,7 @@ export function AuthProvider(props: IAuthProps) {
     const { name } = jwt<IToken>(token);
 
     dispatch({
-      type: SIGN_IN,
+      type: AuthActions.SIGN_IN,
       payload: {
         token,
         authed,
@@ -130,7 +132,7 @@ export function AuthProvider(props: IAuthProps) {
   }
 
   function signOut() {
-    dispatch({ type: SIGN_OUT });
+    dispatch({ type: AuthActions.SIGN_OUT });
   }
 
   const context: IAuthContext = {

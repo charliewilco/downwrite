@@ -29,4 +29,13 @@ declare module "downwrite" {
     username: string;
     gradient: string[];
   }
+
+  export enum Endpoints {
+    POST_ENDPOINT = "/api/posts",
+    PREVIEW_ENDPOINT = "/api/posts/preview",
+    USER_ENDPOINT = "/api/users",
+    PASSWORD_ENDPOINT = "/api/password",
+    SETTINGS_ENDPOINT = "/api/users/settings",
+    AUTH_ENDPOINT = "/api/users/authenticate"
+  }
 }
