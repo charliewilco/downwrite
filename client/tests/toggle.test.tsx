@@ -1,3 +1,4 @@
+import "jest";
 import * as React from "react";
 import "jest-dom/extend-expect";
 import Toggle from "../components/toggle";

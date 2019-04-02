@@ -1,5 +1,6 @@
 import * as React from "react";
 import "jest-dom/extend-expect";
+import { LinkProps } from "next/link";
 import Preview, { IEntry } from "../pages/preview";
 import Content from "../components/content";
 import { render, wait } from "react-testing-library";
@@ -23,7 +24,7 @@ let post: IEntry = {
 let fetch = fetchMock as FetchMock;
 
 jest.mock("next/link", () => {
-  return jest.fn(props => <>{props.children}</>);
+  return jest.fn((props: LinkProps) => <>{props.children}</>);
 });
 
 describe("<Preview />", () => {

@@ -2,7 +2,8 @@ import * as React from "react";
 import { render } from "react-testing-library";
 import "jest-dom/extend-expect";
 import { UIHeader } from "../components/header";
-import { SingletonRouter } from "next/router";
+import { SingletonRouter, WithRouterProps } from "next/router";
+import { LinkProps } from "next/link";
 
 jest.mock("universal-cookie", () => {
   return class Cookie {};
@@ -14,14 +15,14 @@ jest.mock("../components/auth");
 
 jest.mock("next/router", () => {
   return {
-    withRouter: Component => {
+    withRouter: (Component: React.ComponentType<{} & WithRouterProps<{}>>) => {
       return <Component router={{ route: "/" } as SingletonRouter<{}>} />;
     }
   };
 });
 
 jest.mock("next/link", () => {
-  return jest.fn(props => <>{props.children}</>);
+  return jest.fn((props: LinkProps) => <>{props.children}</>);
 });
 
 let { getByTestId, container } = render(

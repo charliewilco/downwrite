@@ -1,5 +1,7 @@
 import * as React from "react";
 import "jest-dom/extend-expect";
+import { LinkProps } from "next/link";
+
 import { render, wait, fireEvent } from "react-testing-library";
 import Dashboard from "../pages/index";
 import fetchMock, { FetchMock } from "jest-fetch-mock";
@@ -9,7 +11,7 @@ const entries = createMockPosts(4);
 jest.mock("next/router");
 
 jest.mock("next/link", () => {
-  return jest.fn(props => <>{props.children}</>);
+  return jest.fn((props: LinkProps) => <>{props.children}</>);
 });
 const PostDashboard = () => {
   return <Dashboard entries={entries} token="..." />;

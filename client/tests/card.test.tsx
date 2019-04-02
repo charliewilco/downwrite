@@ -1,5 +1,6 @@
 import * as React from "react";
 import "jest-dom/extend-expect";
+import { LinkProps } from "next/link";
 import { fireEvent, render } from "react-testing-library";
 import Card from "../components/card";
 import { createMockPost } from "../utils/createMocks";
@@ -8,10 +9,8 @@ const title = "Starting Again";
 const post = createMockPost({ title, id: "4444" });
 const mockDelete = jest.fn();
 
-jest.mock("next/router");
-
 jest.mock("next/link", () => {
-  return jest.fn(props => <>{props.children}</>);
+  return jest.fn((props: LinkProps) => <>{props.children}</>);
 });
 
 const { container, getByTestId } = render(
