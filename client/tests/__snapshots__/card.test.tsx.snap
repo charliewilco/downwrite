@@ -1,149 +1,47 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<Card /> matches snapshot 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  height: 192px;
-  font-weight: 400;
-  box-shadow: 0 0 2px rgba(0,0,0,0.07),0 2px 4px rgba(0,0,0,0.12);
-}
-
-.c0 a {
-  cursor: pointer;
-}
-
-.c2 {
-  font-size: 14px;
-  margin-bottom: 0px;
-  font-weight: 700;
-}
-
-.c1 {
-  display: block;
-  border-bottom: 1px solid;
-  padding: 12px 8px;
-}
-
-.c4 {
-  font-size: 12px;
-  display: block;
-  font-weight: 400;
-}
-
-.c7 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 8px;
-  font-weight: 700;
-  font-size: 12px;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-.c7 a:hover {
-  color: #4382A1;
-}
-
-.c6 {
-  font-size: 12px;
-}
-
-.c5 {
-  display: block;
-  padding: 0.5rem;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  overflow: hidden;
-}
-
-.c8 {
-  border: 0px;
-  background: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  font-family: inherit;
-  box-sizing: inherit;
-  font-size: 12px;
-  -webkit-font-smoothing: antialiased;
-}
-
-.c3 {
-  margin-right: 8px;
-}
-
-@media (min-width:57.75rem) {
-  .c2 {
-    font-size: 18px;
-  }
-}
-
 <div
-  class="c0"
+  class="jsx-1976558292 container"
   data-testid="CARD"
 >
   <header
-    class="c1"
+    class="jsx-1976558292"
   >
     <h2
-      class="c2"
+      class="jsx-1976558292"
       data-testid="CARD_TITLE"
     >
       <a
-        class="c3"
-        href="/edit?id=4444"
+        class="link"
       >
         Starting Again
       </a>
     </h2>
     <small
-      class="c4"
+      class="jsx-1976558292 meta"
     >
       added 
       less than a minute
        ago
     </small>
   </header>
-  <div
-    class="c5"
-  >
-    <p
-      class="c6"
-      data-testid="snippet"
-    >
-      Hello
-    </p>
-  </div>
   <footer
-    class="c7"
+    class="jsx-1976558292 tray"
   >
     <div
+      class="jsx-1976558292 links"
       data-testid="CARD_EXCERPT"
     >
       <a
-        class="c3"
-        href="/edit?id=4444"
+        class="link"
+        style="margin-right: 8px;"
       >
         Edit
       </a>
     </div>
     <button
-      class="c8"
+      class="jsx-1976558292 delete-button"
       data-testid="CARD_DELETE_BUTTON"
     >
       Delete

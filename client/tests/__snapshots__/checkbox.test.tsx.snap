@@ -1,29 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<Check /> matches snapshot 1`] = `
-.c0 {
-  display: inline-block;
-  border-radius: 4px;
-  vertical-align: middle;
-  width: 20px;
-  height: 20px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border: 0px;
-  background: #D0D0D0;
-}
-
-.c0:focus {
-  outline: 1px solid;
-}
-
 <label
   data-testid="TEST_CHECKBOX_LABEL"
   for="check"
 >
   <input
-    class="c0"
+    class="jsx-707974432 "
     data-testid="TEST_CHECKBOX"
     id="check"
     type="checkbox"

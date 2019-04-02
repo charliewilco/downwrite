@@ -1,5 +1,4 @@
 import * as React from "react";
-import "jest-styled-components";
 import "jest-dom/extend-expect";
 import { Button } from "../components/button";
 import { render, fireEvent } from "react-testing-library";

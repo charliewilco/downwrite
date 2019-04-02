@@ -1,5 +1,4 @@
 import * as React from "react";
-import "jest-styled-components";
 import "jest-dom/extend-expect";
 import Toggle from "../components/toggle";
 import { render, fireEvent } from "react-testing-library";

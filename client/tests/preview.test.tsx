@@ -1,5 +1,4 @@
 import * as React from "react";
-import "jest-styled-components";
 import "jest-dom/extend-expect";
 import Preview, { IEntry } from "../pages/preview";
 import Content from "../components/content";

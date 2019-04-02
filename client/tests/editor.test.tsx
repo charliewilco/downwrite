@@ -1,6 +1,5 @@
 import * as React from "react";
 import { render, fireEvent } from "react-testing-library";
-import "jest-styled-components";
 import "jest-dom/extend-expect";
 import DWEditor from "../components/editor";
 import * as Draft from "draft-js";

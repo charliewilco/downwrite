@@ -1,5 +1,4 @@
 import * as React from "react";
-import "jest-styled-components";
 import "jest-dom/extend-expect";
 import { fireEvent, render } from "react-testing-library";
 import Card from "../components/card";
