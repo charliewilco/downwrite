@@ -1,4 +1,4 @@
-import { DefaultTheme } from "styled-components";
+import * as Dwnxt from "downwrite";
 
 export const colors = {
   blue400: "#4fa5c2", // Main Color
@@ -28,7 +28,7 @@ export const colors = {
 //   defaultYellow: '#ffc200'
 // }
 
-export const NIGHT_THEME: DefaultTheme = {
+export const NIGHT_THEME: Dwnxt.UIDefaultTheme = {
   night: true,
   background: "#022438", // "#093F5D", "#072a3e"
   color: colors.gray100,
@@ -44,7 +44,7 @@ export const NIGHT_THEME: DefaultTheme = {
   landingPageTitle: colors.blue400
 };
 
-export const DAY_THEME: DefaultTheme = {
+export const DAY_THEME: Dwnxt.UIDefaultTheme = {
   night: false,
   background: colors.gray100,
   color: colors.text,
@@ -60,11 +60,13 @@ export const DAY_THEME: DefaultTheme = {
   landingPageTitle: colors.blue900
 };
 
-export const fonts = {
-  monospace: `SF Mono, Input Mono Condensed, Roboto Mono, Menlo, monospace`,
-  sans: `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"`,
-  code: `'SF Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace`
-};
+export enum Fonts {
+  monospace = "SF Mono, Input Mono Condensed, Roboto Mono, Menlo, monospace",
+  sans = "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+  code = "'SF Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace"
+}
+
+export const fonts = {};
 
 export function isValidHex(hex: string): boolean {
   let valid = /^#[0-9A-F]{6}$/i.test(hex);

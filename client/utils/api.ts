@@ -4,6 +4,7 @@ import { __IS_DEV__, __IS_BROWSER__ } from "./dev";
 
 import "isomorphic-fetch";
 import "abortcontroller-polyfill/dist/abortcontroller-polyfill-only";
+import { Omit } from "./types";
 
 interface IOptions {
   token?: string;
@@ -52,20 +53,13 @@ export const createHeader = (
   };
 };
 
-/**
- * Creates url string for both server and client based off header
- * @param url
- * @param hostname
- * @returns string
- */
-
 export interface IAuthUserBody {
   user: string;
   password: string;
 }
 
 export async function authUser(
-  { user, password }: IAuthUserBody,
+  body: IAuthUserBody,
   options?: IOptions
 ): Promise<any> {
   const url = createURL(Dwnxt.Endpoints.AUTH_ENDPOINT, options.host);
@@ -74,7 +68,7 @@ export async function authUser(
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ user, password })
+    body: JSON.stringify(body)
   }).then(res => res.json());
 
   return auth;
@@ -89,13 +83,15 @@ export async function getUserDetails(options: IOptions): Promise<any> {
   return user;
 }
 
-export async function updateSettings(
-  body: {
-    username: string;
-    email: string;
-  },
-  options: IOptions
-) {
+export interface ICreateUserBody {
+  username: string;
+  email: string;
+  password: string;
+}
+
+export type SettingsBody = Omit<ICreateUserBody, "password">;
+
+export async function updateSettings(body: SettingsBody, options: IOptions) {
   const url = createURL(Dwnxt.Endpoints.SETTINGS_ENDPOINT, options.host);
   const settings = await fetch(url, {
     ...createHeader("POST", options.token),
@@ -105,14 +101,8 @@ export async function updateSettings(
   return settings;
 }
 
-export interface ICreateUserBody {
-  username: string;
-  email: string;
-  password: string;
-}
-
 export async function createUser(
-  { username, email, password }: ICreateUserBody,
+  body: ICreateUserBody,
   options?: IOptions
 ): Promise<IUserResponse> {
   const url = createURL(Dwnxt.Endpoints.USER_ENDPOINT, options.host);
@@ -122,12 +112,13 @@ export async function createUser(
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ username, email, password })
+    body: JSON.stringify(body)
   }).then(res => res.json());
 
   return user;
 }
 
+// TODO: Remove Any
 export async function updatePassword(body: any, options: IOptions): Promise<any> {
   const url = createURL(Dwnxt.Endpoints.PASSWORD_ENDPOINT, options.host);
   const password = await fetch(url, {

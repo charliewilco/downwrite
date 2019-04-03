@@ -15,17 +15,19 @@ interface IErrorPageContext extends NextContext<any> {
   err: CustomError;
 }
 
-const StatusCode: React.FC<Partial<CustomError>> = props => (
-  <p>
-    {props.statusCode
-      ? "An error " + props.statusCode + "occurred on server"
-      : "An error occurred on client"}
-  </p>
-);
+function StatusCode(props: Partial<CustomError>) {
+  return (
+    <p>
+      {props.statusCode
+        ? "An error " + props.statusCode + "occurred on server"
+        : "An error occurred on client"}
+    </p>
+  );
+}
 
 function ErrorPage(props: IErrorViewProps) {
   return (
-    <section className="centered-wrapper">
+    <section className="Wrapper centered">
       <Head>
         <title>Not Found | Downwrite</title>
       </Head>
@@ -48,12 +50,9 @@ function ErrorPage(props: IErrorViewProps) {
           font-weight: 900;
         }
 
-        .centered-wrapper {
+        .centered {
           text-align: center;
           padding: 8rem 1rem;
-          margin-left: auto;
-          margin-right: auto;
-          max-width: 1088px;
         }
       `}</style>
     </section>
