@@ -1,10 +1,17 @@
 import * as React from "react";
-import { NextContext } from "next";
 import * as Dwnxt from "downwrite";
 import Head from "next/head";
 import orderBy from "lodash/orderBy";
 import isEmpty from "lodash/isEmpty";
 import "isomorphic-fetch";
+import {
+  IDashboardAction,
+  IDashboardState,
+  initialState,
+  reducer,
+  DashboardAction,
+  SelectedPost
+} from "../reducers/dashboard";
 import DeleteModal from "../components/delete-modal";
 import PostList from "../components/post-list";
 import Loading from "../components/loading";
@@ -12,96 +19,19 @@ import EmptyPosts from "../components/empty-posts";
 import InvalidToken from "../components/invalid-token";
 import * as API from "../utils/api";
 import { authMiddleware } from "../utils/auth-middleware";
-
-// type Res = Dwnxt.IPostError | Dwnxt.IPost[];
+import intialProps from "../utils/inital-props";
 
 interface IDashboardProps {
   entries: Dwnxt.IPost[] | Dwnxt.IPostError;
   token: string;
 }
 
-interface IDashboardState {
-  entries: Dwnxt.IPost[] | Dwnxt.IPostError;
-  loaded: boolean;
-  selectedPost?: Dwnxt.IPost;
-  modalOpen: boolean;
-  error: string;
-}
-
-function initialState(entries?: Dwnxt.IPost[] | Dwnxt.IPostError): IDashboardState {
-  return {
-    entries: entries || [],
-    error: "",
-    loaded: (entries as Dwnxt.IPost[]).length > 0,
-    modalOpen: false,
-    selectedPost: null
-  };
-}
-
-interface Action {
-  type: string;
-  payload?: {
-    errorMessage?: Dwnxt.IPostError;
-    selectedPost?: Dwnxt.IPost;
-    entries?: Dwnxt.IPost[];
-  };
-}
-
-const ERROR_BIG_TIME: string = "ERROR_BIG_TIME";
-const SELECT_POST: string = "SELECT_POST";
-const CANCEL_DELETE: string = "CANCEL_DELETE";
-const FETCH_ENTRIES: string = "FETCH_ENTRIES";
-const CLOSE_MODAL: string = "CLOSE_MODAL";
-
-function reducer(state: IDashboardState, action: Action): IDashboardState {
-  switch (action.type) {
-    case SELECT_POST:
-      return {
-        ...state,
-        modalOpen: true,
-        selectedPost: action.payload.selectedPost
-      };
-    case CLOSE_MODAL:
-      return {
-        ...state,
-        modalOpen: false
-      };
-    case "deleted":
-      return {
-        ...state,
-        modalOpen: false,
-        selectedPost: null
-      };
-    case ERROR_BIG_TIME:
-      return {
-        ...state,
-        error: action.payload.errorMessage.message,
-        loaded: true,
-        selectedPost: null
-      };
-    case CANCEL_DELETE:
-      return { ...state, modalOpen: false, selectedPost: null };
-    case FETCH_ENTRIES:
-      return {
-        ...state,
-        selectedPost: null,
-        loaded: true,
-        modalOpen: false,
-        entries: orderBy(action.payload.entries, "dateModified", ["desc"])
-      };
-
-    default:
-      throw new Error();
-  }
-}
-
 // TODO: refactor to have selected post, deletion to be handled by a lower level component
 // should be opened at this level and be handed a token and post to delete
 export function DashboardUI(props: IDashboardProps) {
-  const [state, dispatch] = React.useReducer<React.Reducer<IDashboardState, Action>>(
-    reducer,
-    { ...initialState(props.entries) }
-  );
+  const [state, dispatch] = React.useReducer<
+    React.Reducer<IDashboardState, IDashboardAction>
+  >(reducer, { ...initialState(props.entries) });
 
   React.useEffect(() => {
     if (isEmpty(state.entries)) {
@@ -114,13 +44,16 @@ export function DashboardUI(props: IDashboardProps) {
     const entries = await API.getPosts({ token: props.token, host });
 
     if (Array.isArray(entries)) {
-      dispatch({ type: FETCH_ENTRIES, payload: { entries } });
+      dispatch({ type: DashboardAction.FETCH_ENTRIES, payload: { entries } });
     } else if (typeof entries === "object") {
-      dispatch({ type: ERROR_BIG_TIME, payload: { errorMessage: entries } });
+      dispatch({
+        type: DashboardAction.ERROR_BIG_TIME,
+        payload: { errorMessage: entries }
+      });
     }
   }
 
-  async function onDelete({ id }: Dwnxt.IPost): Promise<void> {
+  async function onDelete({ id }: SelectedPost): Promise<void> {
     const { host } = document.location;
 
     const response = await API.removePost(id, { token: props.token, host });
@@ -141,8 +74,8 @@ export function DashboardUI(props: IDashboardProps) {
         <DeleteModal
           title={state.selectedPost.title}
           onDelete={() => onDelete(state.selectedPost)}
-          onCancelDelete={() => dispatch({ type: CANCEL_DELETE })}
-          closeModal={() => dispatch({ type: CLOSE_MODAL })}
+          onCancelDelete={() => dispatch({ type: DashboardAction.CANCEL_DELETE })}
+          closeModal={() => dispatch({ type: DashboardAction.CLOSE_MODAL })}
         />
       )}
       <section className="PostContainer">
@@ -150,7 +83,10 @@ export function DashboardUI(props: IDashboardProps) {
           Array.isArray(state.entries) && state.entries.length > 0 ? (
             <PostList
               onDelete={selectedPost =>
-                dispatch({ type: SELECT_POST, payload: { selectedPost } })
+                dispatch({
+                  type: DashboardAction.SELECT_POST,
+                  payload: { selectedPost }
+                })
               }
               posts={state.entries as Dwnxt.IPost[]}
             />
@@ -172,28 +108,25 @@ export function DashboardUI(props: IDashboardProps) {
   );
 }
 
-DashboardUI.getInitialProps = async function(
-  ctx: NextContext<{ token: string }>
-): Promise<Partial<IDashboardProps>> {
-  let host: string;
+intialProps<IDashboardProps, { token: string }>(
+  DashboardUI,
+  async (ctx): Promise<Partial<IDashboardProps>> => {
+    let host: string;
 
-  if (ctx.req) {
-    const serverURL: string = ctx.req.headers.host;
+    if (ctx.req) {
+      const serverURL: string = ctx.req.headers.host;
+      host = serverURL;
+    }
 
-    host = serverURL;
+    const token = authMiddleware(ctx);
+    const entries = await API.getPosts({ token, host });
+
+    return {
+      entries: orderBy(entries, ["dateModified"], ["desc"])
+    };
+  },
+  {
+    entries: []
   }
-
-  const token = authMiddleware(ctx);
-
-  const entries = await API.getPosts({ token, host });
-
-  return {
-    entries: orderBy(entries, ["dateModified"], ["desc"])
-  };
-};
-
-DashboardUI.defaultProps = {
-  entries: []
-};
-
+);
 export default DashboardUI;

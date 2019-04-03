@@ -3,6 +3,12 @@ import Cookies from "universal-cookie";
 import Router from "next/router";
 import * as jwt from "jwt-decode";
 import addDays from "date-fns/add_days";
+import {
+  IAuthReducerAction,
+  IAuthState,
+  AuthActions,
+  reducer
+} from "../reducers/auth";
 import { __IS_TEST__ } from "../utils/dev";
 
 // NOTE:
@@ -37,12 +43,6 @@ export interface IAuthProps {
   authed: boolean;
 }
 
-export interface IAuthState {
-  token: string;
-  name?: string;
-  authed: boolean;
-}
-
 export interface IAuthActions {
   signIn: (authed: boolean, token: string) => void;
   signOut: () => void;
@@ -60,28 +60,7 @@ const EMPTY_USER: IToken = {
   name: null
 };
 
-export enum AuthActions {
-  SIGN_IN = "SIGN_IN",
-  SIGN_OUT = "SIGN_OUT"
-}
-
 export const AuthContext = React.createContext<IAuthContext>({} as IAuthContext);
-
-interface IAuthReducerAction {
-  type: AuthActions;
-  payload?: IAuthState;
-}
-
-function reducer(state: IAuthState, action: IAuthReducerAction) {
-  switch (action.type) {
-    case AuthActions.SIGN_IN:
-      return { ...action.payload };
-    case AuthActions.SIGN_OUT:
-      return { token: null, authed: false, name: null };
-    default:
-      throw new Error();
-  }
-}
 
 function initializer(tokenInitial?: string): IAuthState {
   let token = tokenInitial || cookie.get("DW_TOKEN");
