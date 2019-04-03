@@ -6,12 +6,10 @@ import Router from "next/router";
 import * as Dwnxt from "downwrite";
 import uuid from "uuid/v4";
 import "isomorphic-fetch";
-import EditorContainer from "../components/wrapper";
 import { Input } from "../components/editor-input";
 import { Button } from "../components/button";
 import Upload from "../components/upload";
 import Editor from "../components/editor";
-import * as UtilityBar from "../components/utility-bar";
 import * as API from "../utils/api";
 
 interface INewPostProps {
@@ -25,6 +23,13 @@ interface IFormikValues {
 }
 
 const EDITOR_COMMAND = "create-new-post";
+
+const EDITOR_SPACING: React.CSSProperties = {
+  paddingTop: 128,
+  paddingLeft: 4,
+  paddingRight: 4,
+  paddingBottom: 0
+};
 
 // const saveLocalDraft = (id: string, post: Object): void => {
 //   localStorage.setItem("Draft " + id, JSON.stringify(post));
@@ -65,15 +70,7 @@ export default function NewEditor(props: INewPostProps) {
         handleSubmit,
         handleChange
       }: FormikProps<IFormikValues>) => (
-        <EditorContainer
-          as={Form}
-          sm
-          style={{
-            paddingTop: 128,
-            paddingLeft: 4,
-            paddingRight: 4,
-            paddingBottom: 0
-          }}>
+        <Form className="Wrapper Wrapper--sm" style={EDITOR_SPACING}>
           <Head>
             <title>{values.title ? values.title : "New"} | Downwrite</title>
           </Head>
@@ -89,14 +86,14 @@ export default function NewEditor(props: INewPostProps) {
               value={values.title}
               onChange={handleChange}
             />
-            <UtilityBar.Container>
-              <UtilityBar.Items>
+            <aside className="UtilityBarContainer">
+              <div className="UtilityBarItems">
                 {props.offline && <span>You're Offline Right Now</span>}
-              </UtilityBar.Items>
-              <UtilityBar.Items>
+              </div>
+              <div className="UtilityBarItems">
                 <Button type="Submit">Add New</Button>
-              </UtilityBar.Items>
-            </UtilityBar.Container>
+              </div>
+            </aside>
             <Editor
               editorCommand={EDITOR_COMMAND}
               editorState={values.editorState}
@@ -104,7 +101,7 @@ export default function NewEditor(props: INewPostProps) {
               onSave={handleSubmit}
             />
           </Upload>
-        </EditorContainer>
+        </Form>
       )}
       <style jsx>
         {`

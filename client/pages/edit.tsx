@@ -15,13 +15,10 @@ import WordCounter from "../components/word-count";
 import { Button } from "../components/button";
 import Loading from "../components/loading";
 import { Input } from "../components/editor-input";
-import OuterEditor from "../components/outer-editor";
-import Wrapper from "../components/wrapper";
 import { ToggleBox } from "../components/toggle-box";
 import PreviewLink from "../components/preview-link";
 import Editor from "../components/editor";
 import TimeMarker from "../components/time-marker";
-import * as UtilityBar from "../components/utility-bar";
 import * as API from "../utils/api";
 import { superConverter } from "../utils/responseHandler";
 import { sanitize } from "../utils/sanitize";
@@ -85,7 +82,7 @@ function EditUI(props: IEditorProps) {
   return !loaded ? (
     <Loading size={75} />
   ) : (
-    <Wrapper sm>
+    <div className="Wrapper Wrapper--sm">
       <Formik
         onSubmit={updatePostContent}
         initialValues={{
@@ -110,11 +107,11 @@ function EditUI(props: IEditorProps) {
                 Autosaving <i>{values.title}</i>
               </Toast>
             </Autosaving>
-            <OuterEditor as={Form}>
+            <Form className="OuterEditor">
               <TimeMarker dateAdded={props.post.dateAdded} />
               <Input value={values.title} name="title" onChange={handleChange} />
-              <UtilityBar.Container>
-                <UtilityBar.Items>
+              <aside className="UtilityBarContainer">
+                <div className="UtilityBarItems">
                   <ToggleBox
                     label={value => (value ? "Public" : "Private")}
                     name="publicStatus"
@@ -122,8 +119,8 @@ function EditUI(props: IEditorProps) {
                     onChange={handleChange}
                   />
                   <PreviewLink id={props.id} publicStatus={values.publicStatus} />
-                </UtilityBar.Items>
-                <UtilityBar.Items>
+                </div>
+                <div className="UtilityBarItems">
                   {!!values.editorState && (
                     <ExportMarkdown
                       editorState={values.editorState}
@@ -132,8 +129,8 @@ function EditUI(props: IEditorProps) {
                     />
                   )}
                   <Button type="submit">Save</Button>
-                </UtilityBar.Items>
-              </UtilityBar.Container>
+                </div>
+              </aside>
               {!!values.editorState && (
                 <Editor
                   editorState={values.editorState}
@@ -143,7 +140,7 @@ function EditUI(props: IEditorProps) {
                   onChange={editorState => setFieldValue("editorState", editorState)}
                 />
               )}
-            </OuterEditor>
+            </Form>
             {!!values.editorState && (
               <WordCounter editorState={values.editorState} />
             )}
@@ -152,6 +149,9 @@ function EditUI(props: IEditorProps) {
       </Formik>
       <style jsx>
         {`
+          .OuterEditor {
+            padding: 0 8px;
+          }
           .UtilityBarContainer {
             display: flex;
             justify-content: space-between;
@@ -165,7 +165,7 @@ function EditUI(props: IEditorProps) {
           }
         `}
       </style>
-    </Wrapper>
+    </div>
   );
 }
 
