@@ -17,10 +17,16 @@ export const prefixURL = (url: string): string => {
   return !url.startsWith("http") ? prefix + url : url;
 };
 
-export const createURL = (endpoint: string, hostname?: string): string => {
+/**
+ * Creates url string for both server and client based off header
+ * @param url
+ * @param hostname
+ * @returns string
+ */
+export function createURL(endpoint: string, hostname?: string): string {
   if (__IS_BROWSER__ && !__IS_TEST__) {
     return endpoint;
   }
   let url: string = prefixURL(hostname) + endpoint;
   return url;
-};
+}

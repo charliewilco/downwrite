@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Dwnxt from "downwrite";
+import { NextContext } from "next";
 import Head from "next/head";
 import orderBy from "lodash/orderBy";
 import isEmpty from "lodash/isEmpty";
@@ -19,7 +20,6 @@ import EmptyPosts from "../components/empty-posts";
 import InvalidToken from "../components/invalid-token";
 import * as API from "../utils/api";
 import { authMiddleware } from "../utils/auth-middleware";
-import intialProps from "../utils/inital-props";
 
 interface IDashboardProps {
   entries: Dwnxt.IPost[] | Dwnxt.IPostError;
@@ -108,25 +108,26 @@ export function DashboardUI(props: IDashboardProps) {
   );
 }
 
-intialProps<IDashboardProps, { token: string }>(
-  DashboardUI,
-  async (ctx): Promise<Partial<IDashboardProps>> => {
-    let host: string;
+DashboardUI.getInitialProps = async function(
+  ctx: NextContext<{ token: string }>
+): Promise<Partial<IDashboardProps>> {
+  let host: string;
 
-    if (ctx.req) {
-      const serverURL: string = ctx.req.headers.host;
-      host = serverURL;
-    }
-
-    const token = authMiddleware(ctx);
-    const entries = await API.getPosts({ token, host });
-
-    return {
-      entries: orderBy(entries, ["dateModified"], ["desc"])
-    };
-  },
-  {
-    entries: []
+  if (ctx.req) {
+    const serverURL: string = ctx.req.headers.host;
+    host = serverURL;
   }
-);
+
+  const token = authMiddleware(ctx);
+  const entries = await API.getPosts({ token, host });
+
+  return {
+    entries: orderBy(entries, ["dateModified"], ["desc"])
+  };
+};
+
+DashboardUI.defaultProps = {
+  entries: []
+};
+
 export default DashboardUI;

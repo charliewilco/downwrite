@@ -1,8 +1,8 @@
-import * as uuid from "uuid/v4";
+import uuid from "uuid/v4";
 import * as Draft from "draft-js";
 import { IPost } from "downwrite";
 
-export const createMockPost = (overides: Partial<IPost>): IPost => {
+export const createMockPost = (overides?: Partial<IPost>): IPost => {
   const post = Draft.EditorState.createWithContent(
     Draft.ContentState.createFromText("Hello")
   );
@@ -19,7 +19,7 @@ export const createMockPost = (overides: Partial<IPost>): IPost => {
       content,
       public: false
     },
-    overides
+    overides || {}
   );
 };
 

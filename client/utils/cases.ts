@@ -1,3 +1,5 @@
+import "jest";
+
 interface Config {
   name?: string;
   only?: boolean;
