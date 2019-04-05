@@ -54,13 +54,15 @@ const SettingsPassword: React.FC = function() {
     }
   };
 
+  const initialValues: IPasswordSettings = {
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  };
+
   return (
     <Formik
-      initialValues={{
-        oldPassword: "",
-        newPassword: "",
-        confirmPassword: ""
-      }}
+      initialValues={initialValues}
       validationSchema={UpdatePasswordSchema}
       onSubmit={onSubmit}>
       {({ values, handleChange, isSubmitting }: FormikProps<IPasswordSettings>) => (

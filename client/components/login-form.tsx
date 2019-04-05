@@ -2,7 +2,6 @@ import * as React from "react";
 import { Formik, Form, FormikProps, ErrorMessage, FormikActions } from "formik";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
-import SpacedBox from "./spaced-box";
 import * as API from "../utils/api";
 import { LoginFormSchema } from "../utils/validations";
 
@@ -37,13 +36,13 @@ const Login: React.FC<LoginProps> = function(props) {
     }
   };
 
-  const initialValues = {
+  const initialValues: ILoginForm = {
     user: "",
     password: ""
   };
 
   return (
-    <SpacedBox>
+    <div className="SpacedBox">
       <Formik
         validationSchema={LoginFormSchema}
         initialValues={initialValues}
@@ -78,15 +77,24 @@ const Login: React.FC<LoginProps> = function(props) {
               />
               <ErrorMessage name="password" component={UIInputError} />
             </UIInputContainer>
-            <SpacedBox align="right">
+            <div className="SpacedBox u-right">
               <UIInputContainer style={{ display: "inline-block" }}>
                 <Button type="submit">Login</Button>
               </UIInputContainer>
-            </SpacedBox>
+            </div>
           </Form>
         )}
       </Formik>
-    </SpacedBox>
+      <style jsx>{`
+        .SpacedBox {
+          padding: 16px;
+        }
+
+        .u-right {
+          text-align: right;
+        }
+      `}</style>
+    </div>
   );
 };
 

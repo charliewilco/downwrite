@@ -37,13 +37,13 @@ const Author: React.FC<IAuthorProps> = props => (
         margin: 0 auto;
         padding: 16px 8px;
         background-color: var(--cardBackground);
-        box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
+        box-shadow: var(--shadow);
       }
 
       p {
         margin-bottom: 0 !important;
         color: red;
-        font-family: ${DefaultStyles.fonts.monospace};
+        font-family: ${DefaultStyles.Fonts.monospace};
         font-size: small;
         font-style: italic;
         color: #b4b4b4;

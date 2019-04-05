@@ -1,9 +1,4 @@
 import * as React from "react";
-import styled from "styled-components";
-
-const Span = styled.span`
-  display: inline-block;
-`;
 
 type Active = (x: boolean) => string;
 
@@ -171,5 +166,11 @@ export const Mono: React.FC<IToolbarIcons> = props => (
 );
 
 export const Label: React.FC<{ label: string; active: boolean }> = props => (
-  <Span color={activeStyle(props.active)}>{props.label}</Span>
+  <span
+    style={{
+      display: "inline-block",
+      color: activeStyle(props.active)
+    }}>
+    {props.label}
+  </span>
 );

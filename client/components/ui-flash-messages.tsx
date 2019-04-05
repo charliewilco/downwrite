@@ -30,7 +30,7 @@ const UIFlashMessage: React.FC<IUIFlashProps> = props => (
       .UIFlashContainer {
         display: flex;
         border-left: 5px solid rgba(0, 0, 0, 0.25);
-        box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
+        box-shadow: var(--shadow);
         z-index: 900;
         max-width: ${props.width || 512}px;
         left: 0px;

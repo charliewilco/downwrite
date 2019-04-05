@@ -1,11 +1,26 @@
 import * as React from "react";
-import styled from "styled-components";
 
-export const SettingsFormActions = styled.div<{ split?: boolean }>`
-  margin-top: 16px;
-  display: flex;
-  justify-content: ${props => (props.split ? "space-between" : "flex-end")};
-`;
+interface ISettingsFormActionsProps {
+  split?: boolean;
+  children: React.ReactNode;
+}
+
+export function SettingsFormActions(props: ISettingsFormActionsProps): JSX.Element {
+  return (
+    <div className="ActionsContainer">
+      {props.children}
+      <style jsx>
+        {`
+          .ActionsContainer {
+            margin-top: 16px;
+            display: flex;
+            justify-content: ${props.split ? "space-between" : "flex-end"};
+          }
+        `}
+      </style>
+    </div>
+  );
+}
 
 interface ISettingsBlockProps {
   title: string;
@@ -27,7 +42,7 @@ const SettingsBlock: React.FC<ISettingsBlockProps> = props => (
         flex-wrap: wrap;
         padding: 16px;
         margin-bottom: 32px;
-        box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
+        box-shadow: var(--shadow);
       }
       h4 {
         font-size: 18px;

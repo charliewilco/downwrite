@@ -18,7 +18,7 @@ export const LevelStyles = function() {
         box-sizing: border-box;
         text-size-adjust: 100%;
         background-color: #f9fbfc;
-        font: 400 100%/1.6 ${DefaultStyles.fonts.sans};
+        font: 400 100%/1.6 ${DefaultStyles.Fonts.sans};
         color: ${DefaultStyles.colors.text};
         -moz-osx-font-smoothing: grayscale;
         -webkit-font-smoothing: antialiased;

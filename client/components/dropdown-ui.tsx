@@ -39,7 +39,7 @@ export default function DropdownUI() {
           display: block;
           position: absolute;
           width: 384px;
-          font-family: ${DefaultStyles.fonts.sans};
+          font-family: ${DefaultStyles.Fonts.sans};
         }
 
         [data-reach-menu-list] {
@@ -78,7 +78,7 @@ export default function DropdownUI() {
           animation: FADE_IN_FROM_LEFT 0.45s;
           color: ${night ? "white" : DefaultStyles.colors.gray300};
           background: var(--cardBackground);
-          box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
+          box-shadow: var(--shadow);
         }
 
         .menu-list > [data-reach-menu-item][data-selected] {

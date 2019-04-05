@@ -18,12 +18,6 @@ const Empty: React.FC<{}> = function() {
       </div>
 
       <style jsx>{`
-        .Wrapper {
-          margin-left: auto;
-          margin-right: auto;
-          max-width: 1088px;
-        }
-
         .GettingStarted {
           color: #757575;
           cursor: pointer;

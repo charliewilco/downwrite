@@ -12,7 +12,7 @@ export function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
           appearance: none;
           font-weight: 400;
           color: inherit;
-          font-family: ${DefaultStyles.fonts.sans};
+          font-family: ${DefaultStyles.Fonts.sans};
           background: none;
           font-size: 150%;
           border-width: 0px;

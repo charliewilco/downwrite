@@ -15,7 +15,7 @@ export const LocalUISettings = React.createContext({
 
 export const LocalUISettingsProvider: React.FC<{}> = function(props) {
   const [monospace, updateFont] = React.useState<string>(
-    DefaultStyles.fonts.monospace
+    DefaultStyles.Fonts.monospace
   );
 
   React.useEffect(() => {

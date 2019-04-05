@@ -23,7 +23,7 @@ interface ITabsContext extends ITabsContainerState {
 // http://simplyaccessible.com/article/danger-aria-tabs/
 // https://inclusive-components.design/tabbed-interfaces/
 
-const TabContext = React.createContext({
+const TabContext = React.createContext<ITabsContext>({
   activeIndex: 0,
   onSelectTab: null
 } as ITabsContext);
@@ -51,31 +51,28 @@ interface ITabsList extends ITabsModifier {
   [key: string]: any;
 }
 
-export const List: React.FC<ITabsList> = ({ children, className }) => (
-  <TabContext.Consumer>
-    {(context: ITabsContext): JSX.Element => {
-      const cloned = React.Children.map(
-        children,
-        (child: React.ReactElement<any>, index: number) => {
-          return React.cloneElement(child, {
-            isActive: index === context.activeIndex,
-            onSelect: () => context.onSelectTab(index)
-          });
-        }
-      );
-      return (
-        <div className={className} role="tablist">
-          {cloned}
-        </div>
-      );
-    }}
-  </TabContext.Consumer>
-);
+export const List: React.FC<ITabsList> = ({ children, className }) => {
+  const context = React.useContext<ITabsContext>(TabContext);
+  const cloned = React.Children.map(
+    children,
+    (child: React.ReactElement<any>, index: number) => {
+      return React.cloneElement(child, {
+        isActive: index === context.activeIndex,
+        onSelect: () => context.onSelectTab(index)
+      });
+    }
+  );
+  return (
+    <div className={className} role="tablist">
+      {cloned}
+    </div>
+  );
+};
 
 interface ITabsListItem extends ITabsModifier {
   isActive?: boolean;
   isDisabled?: boolean;
-  onSelect: () => void;
+  onSelect?: () => void;
   id: string;
   [key: string]: any;
 }
@@ -110,22 +107,19 @@ interface ITabsPanels extends ITabsModifier {
   isActive?: boolean;
 }
 
-export const Panels: React.FC<ITabsPanels> = ({ children, className }) => (
-  <TabContext.Consumer>
-    {context => {
-      const cloned = React.Children.map(
-        children,
-        (child: React.ReactElement<any>, index) => {
-          return React.cloneElement(child, {
-            isActive: index === context.activeIndex,
-            onSelect: () => context.onSelectTab(index)
-          });
-        }
-      );
-      return <div className={className}>{cloned}</div>;
-    }}
-  </TabContext.Consumer>
-);
+export const Panels: React.FC<ITabsPanels> = ({ children, className }) => {
+  const context = React.useContext<ITabsContext>(TabContext);
+  const cloned = React.Children.map(
+    children,
+    (child: React.ReactElement<any>, index) => {
+      return React.cloneElement(child, {
+        isActive: index === context.activeIndex,
+        onSelect: () => context.onSelectTab(index)
+      });
+    }
+  );
+  return <div className={className}>{cloned}</div>;
+};
 
 interface ITabsPanelProps extends ITabsModifier {
   isActive?: boolean;

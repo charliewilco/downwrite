@@ -100,7 +100,7 @@ const NavBar: React.FC<NavigationProps> = function(props) {
           display: flex;
           animation: FADE_IN_FROM_LEFT_NAV 0.45s;
           width: 75%;
-          box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
+          box-shadow: var(--shadow);
           background: var(--background);
           position: fixed;
           z-index: 100;

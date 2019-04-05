@@ -7,8 +7,8 @@ import * as DefaultStyles from "../utils/defaultStyles";
 import { AuthContext, IAuthContext } from "./auth";
 import DropdownUI from "./dropdown-ui";
 
-const UIHeader: React.FC<WithRouterProps> = ({ router }) => {
-  const { authed } = React.useContext<IAuthContext>(AuthContext);
+export const UIHeader: React.FC<WithRouterProps> = ({ router }) => {
+  const context = React.useContext<IAuthContext>(AuthContext);
 
   return (
     <>
@@ -17,12 +17,12 @@ const UIHeader: React.FC<WithRouterProps> = ({ router }) => {
           <nav className="nav">
             <Logo />
             <h1 data-testid="APP_HEADER_TITLE">
-              <Link href={!authed ? "/login" : "/"}>
+              <Link href={!context.authed ? "/login" : "/"}>
                 <a className="home-link">Downwrite</a>
               </Link>
             </h1>
           </nav>
-          {authed ? (
+          {context.authed ? (
             <nav className="nav">
               <Link prefetch href="/new">
                 <AltAnchor style={{ marginRight: 8 }}>New</AltAnchor>
@@ -51,7 +51,7 @@ const UIHeader: React.FC<WithRouterProps> = ({ router }) => {
             h1 {
               font-size: 16px;
               font-style: normal;
-              font-family: ${DefaultStyles.fonts.sans};
+              font-family: ${DefaultStyles.Fonts.sans};
               line-height: 1;
               font-weight: 700;
             }

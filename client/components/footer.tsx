@@ -1,7 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
 import AltAnchor from "./alt-anchor-link";
-import Wrapper from "./wrapper";
 
 interface IPage {
   name: string;
@@ -16,23 +15,21 @@ const PAGES: IPage[] = [
 ];
 
 const UIFooter: React.FC<{}> = () => (
-  <footer className="ui-footer">
-    <Wrapper sm>
-      <nav className="ui-footer-nav">
-        <ul>
-          <li>
-            <span>&copy; 2019 Charles Peters</span>
+  <footer className="ui-footer Wrapper Wrapper--sm">
+    <nav className="ui-footer-nav">
+      <ul>
+        <li>
+          <span>&copy; 2019 Charles Peters</span>
+        </li>
+        {PAGES.map((page, i) => (
+          <li key={i}>
+            <Link href={page.href} passHref>
+              <AltAnchor>{page.name}</AltAnchor>
+            </Link>
           </li>
-          {PAGES.map((page, i) => (
-            <li key={i}>
-              <Link href={page.href} passHref>
-                <AltAnchor>{page.name}</AltAnchor>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </Wrapper>
+        ))}
+      </ul>
+    </nav>
     <style jsx>{`
       .ui-footer {
         text-align: center;

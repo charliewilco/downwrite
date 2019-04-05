@@ -1,5 +1,4 @@
 import * as React from "react";
-import styled from "styled-components";
 import Avatar from "./avatar";
 import ColorPicker from "./color-picker";
 import * as DefaultStyles from "../utils/defaultStyles";
@@ -15,35 +14,21 @@ interface IGradientEditorProps {
   colors: IColors;
 }
 
-const Container = styled.div`
-  max-width: 512px;
-  margin: 64px auto;
-`;
-
-const Flex = styled.div`
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: space-between;
-`;
-
-const StyledAvatar = styled(Avatar)`
-  margin-bottom: 36px;
-`;
-
 const GradientEditor: React.FC<IGradientEditorProps> = function(props) {
-  const handleColorChange = (value: string, name: string): void => {
+  function handleColorChange(value: string, name: string): void {
     props.onColorChange(value, name);
-  };
+  }
 
   const colorsToArray = ({ a, b }: IColors): string[] => {
     return [a, b];
   };
 
+  const colors = colorsToArray(props.colors);
+
   return (
-    <Container>
-      <StyledAvatar centered size={64} colors={colorsToArray(props.colors)} />
-      <Flex>
+    <div className="GradientEditorContainer">
+      <Avatar className="GEAvatar" centered size={64} colors={colors} />
+      <div className="Flexxy">
         <ColorPicker
           title="Start Color"
           name="a"
@@ -56,8 +41,25 @@ const GradientEditor: React.FC<IGradientEditorProps> = function(props) {
           onPress={handleColorChange}
           colors={DefaultStyles.endColors}
         />
-      </Flex>
-    </Container>
+      </div>
+      <style jsx>{`
+        .GradientEditorContainer {
+          max-width: 512px;
+          margin: 64px auto;
+        }
+
+        .GEAvatar {
+          margin-bottom: 36px;
+        }
+
+        .Flexxy {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          justify-content: space-between;
+        }
+      `}</style>
+    </div>
   );
 };
 

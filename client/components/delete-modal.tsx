@@ -42,7 +42,7 @@ const DeleteModal: React.FC<IDeleteModalProps> = props => (
         display: flex;
         justify-content: flex-end;
         padding: 16px 0;
-        font-family: ${DefaultStyles.fonts.sans};
+        font-family: ${DefaultStyles.Fonts.sans};
       }
 
       .warning {

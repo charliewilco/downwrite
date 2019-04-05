@@ -28,7 +28,7 @@ const LayoutControl: React.FC<ILayoutControl> = function(props) {
           margin: 8px 0 8px 16px;
           cursor: pointer;
           font-size: 14px;
-          font-family: ${DefaultStyles.fonts.sans};
+          font-family: ${DefaultStyles.Fonts.sans};
           color: inherit;
           opacity: 0.5;
         }

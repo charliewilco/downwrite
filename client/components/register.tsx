@@ -3,14 +3,10 @@ import { Formik, Form, FormikProps, ErrorMessage, FormikActions } from "formik";
 import "isomorphic-fetch";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
-import SpacedBox from "./spaced-box";
 import LegalBoilerplate from "./legal-boilerplate";
 import * as API from "../utils/api";
 import { RegisterFormSchema } from "../utils/validations";
-
-export interface StringTMap<T> {
-  [key: string]: T;
-}
+import { StringTMap } from "../utils/types";
 
 interface IRegistration extends StringTMap<string | boolean> {
   username: string;
@@ -100,7 +96,7 @@ const Register: React.FC<LoginProps> = function(props) {
       onSubmit={handleSubmit}>
       {({ values, handleChange }: FormikProps<IRegistration>) => (
         <Form>
-          <SpacedBox>
+          <div className="SpacedBox">
             {REGISTER_INPUTS.map(input => (
               <UIInputContainer key={input.name}>
                 <UIInput
@@ -114,21 +110,30 @@ const Register: React.FC<LoginProps> = function(props) {
                 <ErrorMessage name={input.name} component={UIInputError} />
               </UIInputContainer>
             ))}
-          </SpacedBox>
+          </div>
           <LegalBoilerplate
             name="legalChecked"
             checked={values.legalChecked}
             onChange={handleChange}
           />
-          <SpacedBox align="right">
+          <div className="SpacedBox u-right">
             <UIInputContainer style={{ display: "inline-block" }}>
               <Button disabled={!values.legalChecked} type="submit">
                 Register
               </Button>
             </UIInputContainer>
-          </SpacedBox>
+          </div>
         </Form>
       )}
+      <style jsx>{`
+        .SpacedBox {
+          padding: 16px;
+        }
+
+        .u-right {
+          text-align: right;
+        }
+      `}</style>
     </Formik>
   );
 };

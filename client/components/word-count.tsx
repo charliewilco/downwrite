@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import { ToastNoPosition as Toast } from "./toast";
+import * as DefaultStyles from "../utils/defaultStyles";
 
 interface IWordCounterers {
   limit?: number;
@@ -42,12 +42,16 @@ const WordCounter: React.FC<IWordCounterers> = function(props) {
 
   return (
     <div className="container">
-      <Toast>
-        <div className="Meta">
-          <small>Word Count: {displayCount}</small>
-        </div>
-      </Toast>
+      <div className="Toast">
+        <small className="Meta">Word Count: {displayCount}</small>
+      </div>
       <style jsx>{`
+        .Toast {
+          color: ${DefaultStyles.colors.text};
+          background-color: white;
+          box-shadow: var(--shadow);
+          padding: 12px;
+        }
         .container {
           margin: 16px 8px;
           right: 0;
@@ -55,10 +59,9 @@ const WordCounter: React.FC<IWordCounterers> = function(props) {
           z-index: 50;
           position: fixed;
         }
-        .meta {
+        .Meta {
           opacity: 0.5;
           font-size: small;
-          padding: 8px;
         }
       `}</style>
     </div>

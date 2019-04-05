@@ -12,7 +12,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language = "javascript", value })
     <PrismCode className={`language-${language || "javascript"}`}>{value}</PrismCode>
     <style jsx>{`
       code {
-        font-family: ${DefaultStyles.fonts.monospace};
+        font-family: ${DefaultStyles.Fonts.monospace};
       }
     `}</style>
   </pre>

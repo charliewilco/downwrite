@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DefaultTheme, ThemeProvider } from "styled-components";
+import * as Dwnxt from "downwrite";
 import Checkbox from "./checkbox";
 import * as DefaultStyles from "../utils/defaultStyles";
 
@@ -51,7 +51,7 @@ const NightModeContainer: React.FC<{ children: React.ReactChild }> = function(
     setNight(!night);
   };
 
-  const theme: DefaultTheme = night
+  const theme: Dwnxt.UIDefaultTheme = night
     ? DefaultStyles.NIGHT_THEME
     : DefaultStyles.DAY_THEME;
 
@@ -62,6 +62,7 @@ const NightModeContainer: React.FC<{ children: React.ReactChild }> = function(
 
   return (
     <NightModeContext.Provider value={context}>
+      {props.children}
       <style global jsx>{`
         :root {
           --background: ${theme.background};
@@ -76,6 +77,7 @@ const NightModeContainer: React.FC<{ children: React.ReactChild }> = function(
           --cardDeleteButton: ${theme.cardDeleteButton};
           --headerLogoLink: ${theme.headerLogoLink};
           --landingPageTitle: ${theme.landingPageTitle};
+          --shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
         }
 
         .NightMDX {
@@ -91,7 +93,6 @@ const NightModeContainer: React.FC<{ children: React.ReactChild }> = function(
           color: ${DefaultStyles.colors.blue100} !important;
         }
       `}</style>
-      <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
     </NightModeContext.Provider>
   );
 };
@@ -104,7 +105,7 @@ export const NightModeTrigger: React.FC = ({ children }) => {
     action.onChange();
   };
 
-  const className = night ? "NightContainer NightMode" : "NightContainer";
+  const className: string = night ? "NightContainer NightMode" : "NightContainer";
 
   return (
     <div className={className}>
@@ -136,9 +137,9 @@ export const NightModeTrigger: React.FC = ({ children }) => {
         .NightToggle {
           color: ${DefaultStyles.colors.text};
           padding: 8px;
-          font-family: ${DefaultStyles.fonts.sans};
+          font-family: ${DefaultStyles.Fonts.sans};
           margin: 16px 8px;
-          box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
+          box-shadow: var(--shadow);
           background: white;
           bottom: 0;
           z-index: 50;

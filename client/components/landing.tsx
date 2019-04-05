@@ -18,7 +18,7 @@ const LandingPage: React.FC<{ children: React.ReactNode }> = props => {
       {props.children}
       <style jsx>{`
         article {
-          font-family: ${monospace || DefaultStyles.fonts.monospace};
+          font-family: ${monospace || DefaultStyles.Fonts.monospace};
           text-align: center;
           margin-bottom: 64px;
           display: flex;
@@ -32,7 +32,7 @@ const LandingPage: React.FC<{ children: React.ReactNode }> = props => {
         .IntroTitle {
           color: ${theme.night ? "white" : "#185A70"};
           font-size: 24px;
-          font-family: ${DefaultStyles.fonts.sans};
+          font-family: ${DefaultStyles.Fonts.sans};
           font-weight: 900;
         }
 

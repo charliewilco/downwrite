@@ -6,24 +6,24 @@ interface ITimeMarkProps {
   dateAdded: Date;
 }
 
-const Time: React.FC<ITimeMarkProps> = props => {
+function Time(props: ITimeMarkProps) {
   let date: string = isDate(props.dateAdded)
     ? props.dateAdded.toString()
     : undefined;
   return <time dateTime={date}>{format(props.dateAdded, "DD MMMM YYYY")}</time>;
-};
+}
 
-const TimeMarker: React.FC<ITimeMarkProps> = props => (
-  <div>
-    Added on <Time dateAdded={props.dateAdded} />
-    <style jsx>{`
-      div {
-        opacity: 0.5;
-        font-size: small;
-        margin-bottom: 8px;
-      }
-    `}</style>
-  </div>
-);
-
-export default TimeMarker;
+export default function TimeMarker(props: ITimeMarkProps) {
+  return (
+    <div>
+      Added on <Time dateAdded={props.dateAdded} />
+      <style jsx>{`
+        div {
+          opacity: 0.5;
+          font-size: small;
+          margin-bottom: 8px;
+        }
+      `}</style>
+    </div>
+  );
+}

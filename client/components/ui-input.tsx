@@ -1,8 +1,8 @@
 import * as React from "react";
 import uuid from "uuid/v4";
-import styled from "styled-components";
 import * as DefaultStyles from "../utils/defaultStyles";
 import { NightModeContext } from "./night-mode";
+import classNames from "../utils/classnames";
 
 interface InputType {
   onChange(e: React.ChangeEvent<any>): void;
@@ -14,16 +14,32 @@ interface InputType {
   autoComplete?: string;
 }
 
-export const UIInputContainer = styled.div`
-  position: relative;
-  &:not(:last-of-type) {
-    margin-bottom: 16px;
-  }
-`;
+export const UIInputContainer = function({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>): JSX.Element {
+  return (
+    <>
+      <div className={classNames("UIInputContainer", className)} {...props} />
+      <style jsx>{`
+        .UIInputContainer {
+          position: relative;
+        }
 
-export const UIInputError = styled.small`
-  color: #d04d36;
-`;
+        .UIInputContainer:not(:last-of-type) {
+          margin-bottom: 16px;
+        }
+      `}</style>
+    </>
+  );
+};
+
+export const UIInputError = ({
+  style,
+  ...props
+}: React.HTMLAttributes<HTMLSpanElement>) => {
+  return <span style={Object.assign({}, { color: "#d04d36" }, style)} {...props} />;
+};
 
 const UIInput: React.FC<InputType> = function({ label, ...props }) {
   const id = uuid();
@@ -48,13 +64,13 @@ const UIInput: React.FC<InputType> = function({ label, ...props }) {
 
         small {
           font-weight: 700;
-          font-family: ${DefaultStyles.fonts.sans};
+          font-family: ${DefaultStyles.Fonts.sans};
           color: ${active ? DefaultStyles.colors.yellow700 : "#b4b4b4"};
           transition: color 250ms ease-in-out;
         }
 
         input {
-          font-family: ${DefaultStyles.fonts.monospace};
+          font-family: ${DefaultStyles.Fonts.monospace};
           font-size: 16px;
           font-weight: 400;
           appearance: none;
@@ -71,6 +87,7 @@ const UIInput: React.FC<InputType> = function({ label, ...props }) {
           font-weight: 700;
           font-style: italic;
         }
+
         input:focus {
           outline: none;
           border-bottom: 2px solid ${DefaultStyles.colors.yellow700};

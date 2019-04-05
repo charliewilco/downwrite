@@ -81,6 +81,20 @@ export const UIShell: React.FC<IUIShell> = function(props) {
             font-size: 24px;
           }
 
+          .Wrapper {
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 1088px;
+          }
+
+          .Wrapper--xs {
+            max-width: 384px;
+          }
+
+          .Wrapper--sm {
+            max-width: 768px;
+          }
+
           code,
           pre {
             font-family: "Input Mono", "SF Mono", Consolas, "Liberation Mono", Menlo,
