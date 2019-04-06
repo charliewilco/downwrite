@@ -1,0 +1,40 @@
+pool:
+  vmImage: 'vs2017-win2016'
+
+strategy:
+  maxParallel: 10
+  matrix:
+    node-10:
+      node_version: ^10.10.0
+    node-8:
+      node_version: ^8.12.0
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: $(node_version)
+  displayName: 'Install Node.js'
+
+- script: |
+    yarn 
+  displayName: 'Install dependencies'
+
+- script: |
+    yarn workspace api build
+  displayName: 'API Build'
+
+- script: |
+    yarn workspace api test --silent --verbose
+  displayName: 'API Acceptance Test'
+
+- script: |
+    yarn workspace client typecheck
+  displayName: 'Client Type Check'
+
+- script: |
+    yarn workspace client test
+  displayName: 'Client Unit Tests'
+
+- script: |
+    yarn workspace client build
+  displayName: 'Client Build'
