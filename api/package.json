@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
-    "@types/draft-js": "^0.10.27",
+    "@types/draft-js": "^0.10.30",
     "@types/jest": "^23.3.13",
     "@types/shot": "^4.0.0",
     "axios": "^0.18.0",
