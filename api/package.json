@@ -33,7 +33,7 @@
     "jsonwebtoken": "^8.3.0",
     "markdown-draft-js": "^1.4.0",
     "micro": "^9.3.3",
-    "mongoose": "^5.4.7",
+    "mongoose": "^5.4.22",
     "relish": "^3.0.0",
     "typescript": "^3.2.4",
     "uuid": "^3.1.0"
