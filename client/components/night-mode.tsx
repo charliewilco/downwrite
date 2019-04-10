@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as Dwnxt from "downwrite";
 import Checkbox from "./checkbox";
 import * as DefaultStyles from "../utils/defaultStyles";
 
@@ -51,7 +50,7 @@ const NightModeContainer: React.FC<{ children: React.ReactChild }> = function(
     setNight(!night);
   };
 
-  const theme: Dwnxt.UIDefaultTheme = night
+  const theme: DefaultStyles.UIDefaultTheme = night
     ? DefaultStyles.NIGHT_THEME
     : DefaultStyles.DAY_THEME;
 
