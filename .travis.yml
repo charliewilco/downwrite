@@ -10,5 +10,6 @@ install:
 script:
   - yarn workspace api build
   - yarn workspace api test --silent --verbose
+  - yarn workspace client test
   - yarn workspace client typecheck
   - yarn workspace client build
