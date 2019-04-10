@@ -1,5 +1,5 @@
 import { createURL } from "../utils/urls";
-import { Endpoints } from "downwrite";
+import { Endpoints } from "../utils/api";
 
 describe("urls", () => {
   it("updates a url", () => {

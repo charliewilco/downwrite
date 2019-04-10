@@ -18,6 +18,15 @@ interface IUserResponse {
   message?: string;
 }
 
+export enum Endpoints {
+  POST_ENDPOINT = "/api/posts",
+  PREVIEW_ENDPOINT = "/api/posts/preview",
+  USER_ENDPOINT = "/api/users",
+  PASSWORD_ENDPOINT = "/api/password",
+  SETTINGS_ENDPOINT = "/api/users/settings",
+  AUTH_ENDPOINT = "/api/users/authenticate"
+}
+
 type APIResponse = Dwnxt.IPost | Dwnxt.IPostError;
 
 type HeaderMethod = "GET" | "PUT" | "POST" | "DELETE";
@@ -62,7 +71,7 @@ export async function authUser(
   body: IAuthUserBody,
   options?: IOptions
 ): Promise<any> {
-  const url = createURL(Dwnxt.Endpoints.AUTH_ENDPOINT, options.host);
+  const url = createURL(Endpoints.AUTH_ENDPOINT, options.host);
   const auth = await fetch(url, {
     method: "POST",
     headers: {
@@ -75,7 +84,7 @@ export async function authUser(
 }
 
 export async function getUserDetails(options: IOptions): Promise<any> {
-  const url = createURL(Dwnxt.Endpoints.USER_ENDPOINT, options.host);
+  const url = createURL(Endpoints.USER_ENDPOINT, options.host);
   const user = await fetch(url, createHeader("GET", options.token)).then(res =>
     res.json()
   );
@@ -92,7 +101,7 @@ export interface ICreateUserBody {
 export type SettingsBody = Omit<ICreateUserBody, "password">;
 
 export async function updateSettings(body: SettingsBody, options: IOptions) {
-  const url = createURL(Dwnxt.Endpoints.SETTINGS_ENDPOINT, options.host);
+  const url = createURL(Endpoints.SETTINGS_ENDPOINT, options.host);
   const settings = await fetch(url, {
     ...createHeader("POST", options.token),
     body: JSON.stringify(body)
@@ -105,7 +114,7 @@ export async function createUser(
   body: ICreateUserBody,
   options?: IOptions
 ): Promise<IUserResponse> {
-  const url = createURL(Dwnxt.Endpoints.USER_ENDPOINT, options.host);
+  const url = createURL(Endpoints.USER_ENDPOINT, options.host);
 
   const user = await fetch(url, {
     method: "POST",
@@ -120,7 +129,7 @@ export async function createUser(
 
 // TODO: Remove Any
 export async function updatePassword(body: any, options: IOptions): Promise<any> {
-  const url = createURL(Dwnxt.Endpoints.PASSWORD_ENDPOINT, options.host);
+  const url = createURL(Endpoints.PASSWORD_ENDPOINT, options.host);
   const password = await fetch(url, {
     ...createHeader("POST", options.token),
     body: JSON.stringify(body)
@@ -133,7 +142,7 @@ export async function findPreviewEntry(
   id: string,
   options?: IOptions
 ): Promise<null> {
-  const url = createURL(Dwnxt.Endpoints.PREVIEW_ENDPOINT, options.host);
+  const url = createURL(Endpoints.PREVIEW_ENDPOINT, options.host);
   const entry = await fetch(`${url}/${id}`, {
     method: "GET",
     mode: "cors"
@@ -143,7 +152,7 @@ export async function findPreviewEntry(
 }
 
 export async function getPost(id: string, options: IOptions): Promise<APIResponse> {
-  const url = createURL(Dwnxt.Endpoints.POST_ENDPOINT, options.host);
+  const url = createURL(Endpoints.POST_ENDPOINT, options.host);
   const post = await fetch(`${url}/${id}`, createHeader("GET", options.token)).then(
     res => res.json()
   );
@@ -152,7 +161,7 @@ export async function getPost(id: string, options: IOptions): Promise<APIRespons
 }
 
 export async function removePost(id: string, options: IOptions): Promise<Response> {
-  const url = createURL(Dwnxt.Endpoints.POST_ENDPOINT, options.host);
+  const url = createURL(Endpoints.POST_ENDPOINT, options.host);
   const response = await fetch(
     `${url}/${id}`,
     createHeader("DELETE", options.token)
@@ -163,7 +172,7 @@ export async function removePost(id: string, options: IOptions): Promise<Respons
 export async function getPosts(
   options: IOptions
 ): Promise<Dwnxt.IPost[] | Dwnxt.IPostError> {
-  const url = createURL(Dwnxt.Endpoints.POST_ENDPOINT, options.host);
+  const url = createURL(Endpoints.POST_ENDPOINT, options.host);
 
   const entries: Dwnxt.IPost[] = await fetch(
     url,
@@ -177,7 +186,7 @@ export async function createPost(
   body: Dwnxt.IPostCreation,
   options: IOptions
 ): Promise<APIResponse> {
-  const url = createURL(Dwnxt.Endpoints.POST_ENDPOINT, options.host);
+  const url = createURL(Endpoints.POST_ENDPOINT, options.host);
   const post = await fetch(url, {
     ...createHeader("POST", options.token),
     body: JSON.stringify(body)
@@ -191,7 +200,7 @@ export async function updatePost(
   body: Dwnxt.IPost,
   options: IOptions
 ): Promise<Dwnxt.IPost | Dwnxt.IPostError> {
-  const url = createURL(Dwnxt.Endpoints.POST_ENDPOINT, options.host);
+  const url = createURL(Endpoints.POST_ENDPOINT, options.host);
   const entry = await fetch(`${url}/${id}`, {
     ...createHeader("PUT", options.token),
     body: JSON.stringify(body)

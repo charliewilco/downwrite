@@ -1,5 +1,3 @@
-import * as Dwnxt from "downwrite";
-
 export const colors = {
   blue400: "#4fa5c2", // Main Color
   blue500: "#4382A1",
@@ -16,6 +14,23 @@ export const colors = {
   text: "#4C4C4C"
 };
 
+/** UI Theme for Downwrite */
+export interface UIDefaultTheme {
+  night: boolean;
+  background: string;
+  color: string;
+  border: string;
+  link: string;
+  linkHover: string;
+  meta: string;
+  inputBorder: string;
+  cardBackground: string;
+  cardTrayBackground: string;
+  cardDeleteButton: string;
+  headerLogoLink: string;
+  landingPageTitle: string;
+}
+
 // let colorsDefaults = {
 //   defaultBlue: '#4fa5c2' /* Main Color */,
 //   darkBlue: '#185a70' /* Darker Main Color */,
@@ -28,7 +43,7 @@ export const colors = {
 //   defaultYellow: '#ffc200'
 // }
 
-export const NIGHT_THEME: Dwnxt.UIDefaultTheme = {
+export const NIGHT_THEME: UIDefaultTheme = {
   night: true,
   background: "#022438", // "#093F5D", "#072a3e"
   color: colors.gray100,
@@ -44,7 +59,7 @@ export const NIGHT_THEME: Dwnxt.UIDefaultTheme = {
   landingPageTitle: colors.blue400
 };
 
-export const DAY_THEME: Dwnxt.UIDefaultTheme = {
+export const DAY_THEME: UIDefaultTheme = {
   night: false,
   background: colors.gray100,
   color: colors.text,
