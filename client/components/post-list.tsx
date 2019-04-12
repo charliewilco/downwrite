@@ -9,7 +9,7 @@ interface IPostListProps {
   onDelete: ({ id }: Partial<IPost>) => void;
 }
 
-const PostList: React.FC<IPostListProps> = function(props) {
+export default function PostList(props: IPostListProps): JSX.Element {
   const [isOpen, setOpen] = React.useState<boolean>(true);
 
   return (
@@ -98,6 +98,4 @@ const PostList: React.FC<IPostListProps> = function(props) {
       `}</style>
     </>
   );
-};
-
-export default PostList;
+}

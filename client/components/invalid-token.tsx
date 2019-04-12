@@ -4,7 +4,8 @@ import Link from "next/link";
 interface IInvalidTokenProps {
   error: string;
 }
-const InvalidToken: React.FC<IInvalidTokenProps> = function(props) {
+
+export default function InvalidToken(props: IInvalidTokenProps): JSX.Element {
   return (
     <div data-testid="INVALID_TOKEN_CONTAINER">
       <p>{props.error}</p>
@@ -13,6 +14,4 @@ const InvalidToken: React.FC<IInvalidTokenProps> = function(props) {
       </Link>
     </div>
   );
-};
-
-export default InvalidToken;
+}

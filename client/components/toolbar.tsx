@@ -19,54 +19,58 @@ const INLINE_STYLES = [
   { label: "Mono", style: "CODE" }
 ];
 
-const FullToolBar: React.FC<any> = props => (
-  <div className="ToolbarWrapper">
-    {BLOCK_TYPES.map(type => (
-      <StyleButton
-        key={type.label}
-        active={type.style === props.blockType}
-        label={type.label}
-        onToggle={props.onToggleBlockType}
-        style={type.style}
-      />
-    ))}
-    {INLINE_STYLES.map(type => (
-      <StyleButton
-        key={type.label}
-        active={props.currentStyle.has(type.style)}
-        label={type.label}
-        onToggle={props.onToggleInlineStyle}
-        style={type.style}
-      />
-    ))}
-  </div>
-);
+export function FullToolBar(props: any): JSX.Element {
+  return (
+    <div className="ToolbarWrapper">
+      {BLOCK_TYPES.map(type => (
+        <StyleButton
+          key={type.label}
+          active={type.style === props.blockType}
+          label={type.label}
+          onToggle={props.onToggleBlockType}
+          style={type.style}
+        />
+      ))}
+      {INLINE_STYLES.map(type => (
+        <StyleButton
+          key={type.label}
+          active={props.currentStyle.has(type.style)}
+          label={type.label}
+          onToggle={props.onToggleInlineStyle}
+          style={type.style}
+        />
+      ))}
+    </div>
+  );
+}
 
-const SelectionToolBar: React.FC<any> = props => (
-  <div className="ToolbarWrapper">
-    {props.selectedText.length > 0
-      ? INLINE_STYLES.map(type => (
-          <StyleButton
-            key={type.label}
-            active={props.currentStyle.has(type.style)}
-            label={type.label}
-            onToggle={props.onToggleInlineStyle}
-            style={type.style}
-          />
-        ))
-      : BLOCK_TYPES.map(type => (
-          <StyleButton
-            key={type.label}
-            active={type.style === props.blockType}
-            label={type.label}
-            onToggle={props.onToggleBlockType}
-            style={type.style}
-          />
-        ))}
-  </div>
-);
+export function SelectionToolBar(props: any): JSX.Element {
+  return (
+    <div className="ToolbarWrapper">
+      {props.selectedText.length > 0
+        ? INLINE_STYLES.map(type => (
+            <StyleButton
+              key={type.label}
+              active={props.currentStyle.has(type.style)}
+              label={type.label}
+              onToggle={props.onToggleInlineStyle}
+              style={type.style}
+            />
+          ))
+        : BLOCK_TYPES.map(type => (
+            <StyleButton
+              key={type.label}
+              active={type.style === props.blockType}
+              label={type.label}
+              onToggle={props.onToggleBlockType}
+              style={type.style}
+            />
+          ))}
+    </div>
+  );
+}
 
-const Toolbar: React.FC<any> = props => {
+export default function Toolbar(props: any): JSX.Element {
   const selection = props.editorState.getSelection();
   const anchorKey = selection.getAnchorKey();
   const currentContent = props.editorState.getCurrentContent();
@@ -119,6 +123,4 @@ const Toolbar: React.FC<any> = props => {
       `}</style>
     </>
   );
-};
-
-export default Toolbar;
+}

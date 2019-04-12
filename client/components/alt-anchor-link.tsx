@@ -6,7 +6,10 @@ interface AltAnchorProps<T> extends React.AnchorHTMLAttributes<T> {
   space?: string;
 }
 
-export default function AltAnchorLink({ space, ...props }: AltAnchorProps<any>) {
+export default function AltAnchorLink({
+  space,
+  ...props
+}: AltAnchorProps<any>): JSX.Element {
   return (
     <>
       <style jsx>{`

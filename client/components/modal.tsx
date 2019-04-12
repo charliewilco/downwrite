@@ -3,12 +3,12 @@ import * as Reach from "@reach/dialog";
 import { CloseIcon } from "./icons";
 import * as DefaultStyles from "../utils/defaultStyles";
 
-interface ModalProps {
+interface IModalProps {
   closeUIModal: () => void;
   children: React.ReactNode;
 }
 
-const UIModal: React.FC<ModalProps> = function(props) {
+export default function UIModal(props: IModalProps) {
   return (
     <Reach.DialogOverlay className="Overlay">
       <Reach.DialogContent className="ModalContainer">
@@ -100,6 +100,4 @@ const UIModal: React.FC<ModalProps> = function(props) {
       </Reach.DialogContent>
     </Reach.DialogOverlay>
   );
-};
-
-export default UIModal;
+}

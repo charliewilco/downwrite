@@ -16,7 +16,7 @@ interface ISettingsUserForm {
   user: IUserFormValues;
 }
 
-const SettingsUser: React.FC<ISettingsUserForm> = function(props) {
+export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
   const { token } = React.useContext<IAuthContext>(AuthContext);
 
   const onSubmit = async (
@@ -73,6 +73,4 @@ const SettingsUser: React.FC<ISettingsUserForm> = function(props) {
       )}
     </Formik>
   );
-};
-
-export default SettingsUser;
+}

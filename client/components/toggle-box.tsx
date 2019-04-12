@@ -8,7 +8,7 @@ interface ICheckboxToggle {
   onChange: (e: React.ChangeEvent) => void;
 }
 
-export const ToggleBox: React.FC<ICheckboxToggle> = props => {
+export function ToggleBox(props: ICheckboxToggle) {
   const text = props.label(props.value);
   return (
     <div>
@@ -37,4 +37,4 @@ export const ToggleBox: React.FC<ICheckboxToggle> = props => {
       `}</style>
     </div>
   );
-};
+}

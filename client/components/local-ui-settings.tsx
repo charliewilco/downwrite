@@ -13,7 +13,11 @@ export const LocalUISettings = React.createContext({
   actions: {}
 } as ILocalUISettings);
 
-export const LocalUISettingsProvider: React.FC<{}> = function(props) {
+interface ILocalSettingsProps {
+  children: React.ReactNode;
+}
+
+export function LocalUISettingsProvider(props: ILocalSettingsProps): JSX.Element {
   const [monospace, updateFont] = React.useState<string>(
     DefaultStyles.Fonts.monospace
   );
@@ -38,6 +42,4 @@ export const LocalUISettingsProvider: React.FC<{}> = function(props) {
       {props.children}
     </LocalUISettings.Provider>
   );
-};
-
-export const LocalUISettingsConsumer = LocalUISettings.Consumer;
+}

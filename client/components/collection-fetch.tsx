@@ -57,7 +57,7 @@ const initialState: FetchState = {
   error: ""
 };
 
-const CollectionFetch: React.FC = function() {
+export default function CollectionFetch() {
   const [state, dispatch] = React.useReducer<React.Reducer<FetchState, FetchAction>>(
     reducer,
     initialState
@@ -109,6 +109,4 @@ const CollectionFetch: React.FC = function() {
       `}</style>
     </div>
   );
-};
-
-export default CollectionFetch;
+}

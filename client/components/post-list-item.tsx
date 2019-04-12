@@ -14,7 +14,7 @@ interface IListItemProps {
   public: boolean;
 }
 
-const ListItem: React.FC<IListItemProps> = props => {
+export default function PostListItem(props: IListItemProps): JSX.Element {
   function onDelete() {
     props.onDelete({ id: props.id });
   }
@@ -91,6 +91,4 @@ const ListItem: React.FC<IListItemProps> = props => {
       </style>
     </div>
   );
-};
-
-export default ListItem;
+}

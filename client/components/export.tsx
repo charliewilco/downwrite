@@ -5,21 +5,21 @@ import FileSaver from "file-saver";
 import Markdown from "./export-markdown-button";
 import { createMarkdown } from "../utils/markdownTemplate";
 
-interface ExportProps {
+interface IExportProps {
   title: string;
   className?: string;
   date: Date;
   editorState: Draft.EditorState;
 }
 
-interface ExportCallback {
+interface IExportCallback {
   title: string;
   content: Draft.RawDraftContentState;
   date: Date;
 }
 
 // TODO: use `React.useMemo()` to run export
-const UIMarkdownExport: React.FC<ExportProps> = function(props) {
+export default function UIMarkdownExport(props: IExportProps) {
   const exportMarkdown = (): void => {
     const { title, date, editorState } = props;
     const cx: Draft.ContentState = editorState.getCurrentContent();
@@ -47,7 +47,7 @@ const UIMarkdownExport: React.FC<ExportProps> = function(props) {
       }
     });
 
-  const toMarkdown = ({ title, content, date }: ExportCallback): void => {
+  const toMarkdown = ({ title, content, date }: IExportCallback): void => {
     let localFileExtension = localStorage.getItem("DW_FILE_EXTENSION");
     let extension = localFileExtension.replace(/\./g, "") || "md";
 
@@ -78,6 +78,4 @@ const UIMarkdownExport: React.FC<ExportProps> = function(props) {
       `}</style>
     </aside>
   );
-};
-
-export default UIMarkdownExport;
+}

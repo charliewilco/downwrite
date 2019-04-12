@@ -16,7 +16,7 @@ const LegalLink = () => (
   </Link>
 );
 
-const LegalBoilerplate: React.FC<ILegalProps> = props => {
+export default function LegalBoilerplate(props: ILegalProps) {
   const theme = React.useContext(NightModeContext);
   return (
     <label htmlFor={props.name}>
@@ -54,6 +54,4 @@ const LegalBoilerplate: React.FC<ILegalProps> = props => {
       `}</style>
     </label>
   );
-};
-
-export default LegalBoilerplate;
+}

@@ -12,7 +12,7 @@ interface ToggleProps {
   children(state: IToggleAction): React.ReactNode;
 }
 
-const Toggle: React.FC<ToggleProps> = function(props) {
+export default function Toggle(props: ToggleProps) {
   const [open, setOpen] = React.useState<boolean>(props.defaultOpen || false);
   const onClose = () => {
     setOpen(false);
@@ -23,7 +23,7 @@ const Toggle: React.FC<ToggleProps> = function(props) {
   };
 
   const onToggle = () => {
-    setOpen(!open);
+    setOpen(prev => !prev);
   };
 
   return (
@@ -36,6 +36,4 @@ const Toggle: React.FC<ToggleProps> = function(props) {
       })}
     </>
   );
-};
-
-export default Toggle;
+}

@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Draft from "draft-js";
 import * as DefaultStyles from "../utils/defaultStyles";
 
-interface IWordCounterers {
+interface IWordCounterProps {
   limit?: number;
   editorState: Draft.EditorState;
 }
@@ -33,7 +33,7 @@ function getWordCount(editorState: Draft.EditorState): number {
   return createWordCount(plainText);
 }
 
-const WordCounter: React.FC<IWordCounterers> = function(props) {
+export default function WordCounter(props: IWordCounterProps): JSX.Element {
   const displayCount = React.useMemo<number>(() => {
     const selection = getSelectionCount(props.editorState);
     const words = getWordCount(props.editorState);
@@ -66,6 +66,4 @@ const WordCounter: React.FC<IWordCounterers> = function(props) {
       `}</style>
     </div>
   );
-};
-
-export default WordCounter;
+}

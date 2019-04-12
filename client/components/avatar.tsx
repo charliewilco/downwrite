@@ -28,7 +28,7 @@ interface IAvatarProps {
   className?: string;
 }
 
-const Avatar: React.FC<IAvatarProps> = props => {
+export default function Avatar(props: IAvatarProps): JSX.Element {
   const cx = classNames("circle", props.className, props.centered && "centered");
   const colors = gradientPoints(props.colors);
   return (
@@ -52,6 +52,4 @@ const Avatar: React.FC<IAvatarProps> = props => {
       `}</style>
     </>
   );
-};
-
-export default Avatar;
+}

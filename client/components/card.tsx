@@ -11,21 +11,25 @@ interface ICardLinks {
   style?: React.CSSProperties;
 }
 
-export const EditLink: React.FC<ICardLinks> = props => (
-  <Link prefetch passHref href={{ pathname: "/edit", query: { id: props.id } }}>
-    <a className="link" style={props.style}>
-      {props.title || "Edit"}
-    </a>
-  </Link>
-);
+export function EditLink(props: ICardLinks): JSX.Element {
+  return (
+    <Link prefetch passHref href={{ pathname: "/edit", query: { id: props.id } }}>
+      <a className="link" style={props.style}>
+        {props.title || "Edit"}
+      </a>
+    </Link>
+  );
+}
 
-export const PreviewLink: React.FC<ICardLinks> = props => (
-  <Link prefetch passHref href={{ pathname: "/preview", query: { id: props.id } }}>
-    <a className="link" style={props.style}>
-      Preview
-    </a>
-  </Link>
-);
+export function PreviewLink(props: ICardLinks): JSX.Element {
+  return (
+    <Link prefetch passHref href={{ pathname: "/preview", query: { id: props.id } }}>
+      <a className="link" style={props.style}>
+        Preview
+      </a>
+    </Link>
+  );
+}
 
 export interface ICardProps {
   title: string;
@@ -37,7 +41,7 @@ export interface ICardProps {
   public: boolean;
 }
 
-const Card: React.FC<ICardProps> = props => {
+export default function Card(props: ICardProps) {
   function onDelete() {
     props.onDelete({ id: props.id });
   }
@@ -129,6 +133,4 @@ const Card: React.FC<ICardProps> = props => {
       </footer>
     </div>
   );
-};
-
-export default Card;
+}

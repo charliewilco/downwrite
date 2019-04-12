@@ -2,7 +2,11 @@ import * as React from "react";
 
 const LOCK_SCROLL_CLASSNAME: string = "__noScroll";
 
-const LockScroll: React.FC = function(props) {
+interface ILockScrollProps {
+  children: React.ReactNode;
+}
+
+export default function LockScroll(props: ILockScrollProps): JSX.Element {
   React.useEffect(() => {
     if (document) {
       if (document.body) {
@@ -20,6 +24,4 @@ const LockScroll: React.FC = function(props) {
   }, []);
 
   return <>{props.children}</>;
-};
-
-export default LockScroll;
+}

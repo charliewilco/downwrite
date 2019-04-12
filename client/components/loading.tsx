@@ -6,24 +6,20 @@ interface ILoadingProps {
   size: number;
 }
 
-const Loading: React.FC<ILoadingProps> = props => (
-  <div className="loading" data-testid="LOADING_SPINNER">
-    <Spinner size={props.size} color={DefaultStyles.colors.blue400} />
-    <style jsx>{`
-      .loading {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-        position: relative;
-        height: calc(100% - ${props.size}px);
-      }
-    `}</style>
-  </div>
-);
-
-Loading.defaultProps = {
-  size: 75
-};
-
-export default Loading;
+export default function Loading(props: ILoadingProps): JSX.Element {
+  return (
+    <div className="loading" data-testid="LOADING_SPINNER">
+      <Spinner size={props.size || 75} color={DefaultStyles.colors.blue400} />
+      <style jsx>{`
+        .loading {
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          align-items: center;
+          position: relative;
+          height: calc(100% - ${props.size || 75}px);
+        }
+      `}</style>
+    </div>
+  );
+}

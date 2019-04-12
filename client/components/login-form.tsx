@@ -10,12 +10,12 @@ interface ILoginForm {
   password: string;
 }
 
-interface LoginProps {
+interface ILoginProps {
   signIn: (authed: boolean, token: string) => void;
   setError: (x: string, y: string) => void;
 }
 
-const Login: React.FC<LoginProps> = function(props) {
+export default function Login(props: ILoginProps): JSX.Element {
   const handleFormSubmit = (
     values: ILoginForm,
     actions: FormikActions<ILoginForm>
@@ -96,6 +96,4 @@ const Login: React.FC<LoginProps> = function(props) {
       `}</style>
     </div>
   );
-};
-
-export default Login;
+}

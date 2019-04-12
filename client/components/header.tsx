@@ -7,12 +7,12 @@ import * as DefaultStyles from "../utils/defaultStyles";
 import { AuthContext, IAuthContext } from "./auth";
 import DropdownUI from "./dropdown-ui";
 
-export const UIHeader: React.FC<WithRouterProps> = ({ router }) => {
+export function UIHeader(props: WithRouterProps): JSX.Element {
   const context = React.useContext<IAuthContext>(AuthContext);
 
   return (
     <>
-      {!(router.route === "/login") ? (
+      {!(props.router.route === "/login") ? (
         <header className="ui-header" data-testid="APP_HEADER">
           <nav className="nav">
             <Logo />
@@ -82,6 +82,6 @@ export const UIHeader: React.FC<WithRouterProps> = ({ router }) => {
       ) : null}
     </>
   );
-};
+}
 
 export default withRouter(UIHeader);

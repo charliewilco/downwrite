@@ -7,12 +7,10 @@ import { LevelStyles } from "./level-styles";
 import { LocalUISettingsProvider } from "./local-ui-settings";
 
 interface IUIShell {
-  authed?: boolean;
   children: React.ReactNode;
-  token: string;
 }
 
-export const UIShell: React.FC<IUIShell> = function(props) {
+export function UIShell(props: IUIShell) {
   return (
     <NightMode>
       <LocalUISettingsProvider>
@@ -109,4 +107,4 @@ export const UIShell: React.FC<IUIShell> = function(props) {
       </LocalUISettingsProvider>
     </NightMode>
   );
-};
+}

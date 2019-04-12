@@ -3,7 +3,11 @@ import { LocalUISettings } from "./local-ui-settings";
 import * as DefaultStyles from "../utils/defaultStyles";
 import { NightModeContext } from "./night-mode";
 
-const LandingPage: React.FC<{ children: React.ReactNode }> = props => {
+interface ILandingPageProps {
+  children: React.ReactNode;
+}
+
+export default function LandingPage(props: ILandingPageProps): JSX.Element {
   const theme = React.useContext(NightModeContext);
   const { monospace } = React.useContext(LocalUISettings);
   return (
@@ -63,6 +67,4 @@ const LandingPage: React.FC<{ children: React.ReactNode }> = props => {
       `}</style>
     </article>
   );
-};
-
-export default LandingPage;
+}

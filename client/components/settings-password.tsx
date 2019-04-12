@@ -38,7 +38,7 @@ const PASSWORD_INPUTS: IInputs[] = [
   }
 ];
 
-const SettingsPassword: React.FC = function() {
+export default function SettingsPassword(): JSX.Element {
   const { token } = React.useContext<IAuthContext>(AuthContext);
   const [isOpen, setOpen] = React.useState(false);
 
@@ -96,6 +96,4 @@ const SettingsPassword: React.FC = function() {
       )}
     </Formik>
   );
-};
-
-export default SettingsPassword;
+}

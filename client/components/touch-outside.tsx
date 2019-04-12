@@ -8,7 +8,7 @@ interface ITouchOutsideProps {
   children: React.ReactNode;
 }
 
-const TouchOutside: React.FC<ITouchOutsideProps> = function(props) {
+export default function TouchOutside(props: ITouchOutsideProps): JSX.Element {
   const ref = React.useRef<HTMLDivElement>(null);
   const outsideHandleClick = ({ target }: MouseEvent): void => {
     const node = findDOMNode(ref.current);
@@ -35,6 +35,4 @@ const TouchOutside: React.FC<ITouchOutsideProps> = function(props) {
   }, []);
 
   return <div ref={ref}>{props.children}</div>;
-};
-
-export default TouchOutside;
+}

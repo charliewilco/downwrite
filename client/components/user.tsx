@@ -1,13 +1,13 @@
 import * as React from "react";
 import Avatar from "./avatar";
 
-interface IUserBlock {
+interface IUserBlockProps {
   name: string;
   border: boolean;
   colors: string[];
 }
 
-const UserBlock: React.FC<IUserBlock> = props => {
+export default function UserBlock(props: IUserBlockProps): JSX.Element {
   return (
     <div className={"border" in props && "border"}>
       <Avatar centered colors={props.colors} />
@@ -31,6 +31,4 @@ const UserBlock: React.FC<IUserBlock> = props => {
       `}</style>
     </div>
   );
-};
-
-export default UserBlock;
+}

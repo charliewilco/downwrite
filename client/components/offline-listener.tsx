@@ -4,6 +4,10 @@ export interface OfflineContext {
   offline: boolean;
 }
 
+interface IOfflineListenerProps {
+  children: React.ReactNode;
+}
+
 export const Offline = React.createContext<OfflineContext>({
   offline: !window.navigator.onLine
 });
@@ -32,10 +36,8 @@ export function useOffline() {
   return isOffline;
 }
 
-const OfflineListener: React.FC = function(props) {
+export default function OfflineListener(props: IOfflineListenerProps): JSX.Element {
   const offline = useOffline();
 
   return <Offline.Provider value={{ offline }}>{props.children}</Offline.Provider>;
-};
-
-export default OfflineListener;
+}

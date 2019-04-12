@@ -23,7 +23,7 @@ interface IInput extends StringTMap<string> {
   autoComplete?: string;
 }
 
-interface LoginProps {
+interface ILoginProps {
   signIn: (x: boolean, y: string) => void;
   setError: (x: string, y: string) => void;
 }
@@ -52,7 +52,7 @@ const REGISTER_INPUTS: IInput[] = [
   }
 ];
 
-const Register: React.FC<LoginProps> = function(props) {
+export default function RegisterForm(props: ILoginProps): JSX.Element {
   const onSubmit = async ({
     username,
     email,
@@ -136,6 +136,4 @@ const Register: React.FC<LoginProps> = function(props) {
       `}</style>
     </Formik>
   );
-};
-
-export default Register;
+}

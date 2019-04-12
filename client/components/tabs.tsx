@@ -28,10 +28,7 @@ const TabContext = React.createContext<ITabsContext>({
   onSelectTab: null
 } as ITabsContext);
 
-export const Container: React.FC<ITabsContainerProps> = function({
-  className,
-  ...props
-}) {
+export function Container({ className, ...props }: ITabsContainerProps) {
   const [activeIndex, selectTabIndex] = React.useState(0);
 
   return (
@@ -45,16 +42,16 @@ export const Container: React.FC<ITabsContainerProps> = function({
       </div>
     </TabContext.Provider>
   );
-};
+}
 
 interface ITabsList extends ITabsModifier {
   [key: string]: any;
 }
 
-export const List: React.FC<ITabsList> = ({ children, className }) => {
+export function List(props: ITabsList): JSX.Element {
   const context = React.useContext<ITabsContext>(TabContext);
   const cloned = React.Children.map(
-    children,
+    props.children,
     (child: React.ReactElement<any>, index: number) => {
       return React.cloneElement(child, {
         isActive: index === context.activeIndex,
@@ -63,11 +60,11 @@ export const List: React.FC<ITabsList> = ({ children, className }) => {
     }
   );
   return (
-    <div className={className} role="tablist">
+    <div className={props.className} role="tablist">
       {cloned}
     </div>
   );
-};
+}
 
 interface ITabsListItem extends ITabsModifier {
   isActive?: boolean;
@@ -77,7 +74,7 @@ interface ITabsListItem extends ITabsModifier {
   [key: string]: any;
 }
 
-export const ListItem: React.FC<ITabsListItem> = ({
+export function ListItem({
   isActive,
   isDisabled,
   id,
@@ -85,29 +82,34 @@ export const ListItem: React.FC<ITabsListItem> = ({
   children,
   className,
   ...props
-}) => (
-  <div
-    id={id}
-    role="tab"
-    aria-selected={isActive}
-    tabIndex={isActive ? 0 : -1}
-    className={`${className} ${isDisabled ? "disabled" : isActive ? "active" : ""}`}
-    onClick={isDisabled ? null : onSelect}
-    onKeyPress={event => {
-      if (event.key === "Enter") {
-        return isDisabled ? null : onSelect();
-      }
-    }}
-    {...props}>
-    {children}
-  </div>
-);
+}: ITabsListItem): JSX.Element {
+  return (
+    <div
+      id={id}
+      role="tab"
+      aria-selected={isActive}
+      tabIndex={isActive ? 0 : -1}
+      className={`${className} ${
+        isDisabled ? "disabled" : isActive ? "active" : ""
+      }`}
+      onClick={isDisabled ? null : onSelect}
+      onKeyPress={event => {
+        if (event.key === "Enter") {
+          return isDisabled ? null : onSelect();
+        }
+      }}
+      {...props}>
+      {children}
+    </div>
+  );
+}
 
 interface ITabsPanels extends ITabsModifier {
   isActive?: boolean;
+  children: React.ReactNode;
 }
 
-export const Panels: React.FC<ITabsPanels> = ({ children, className }) => {
+export function Panels({ children, className }: ITabsPanels): JSX.Element {
   const context = React.useContext<ITabsContext>(TabContext);
   const cloned = React.Children.map(
     children,
@@ -119,14 +121,15 @@ export const Panels: React.FC<ITabsPanels> = ({ children, className }) => {
     }
   );
   return <div className={className}>{cloned}</div>;
-};
+}
 
 interface ITabsPanelProps extends ITabsModifier {
   isActive?: boolean;
   label: string;
+  children: React.ReactNode;
 }
 
-export const Panel: React.FC<ITabsPanelProps> = function(props) {
+export function Panel(props: ITabsPanelProps) {
   const ref = React.useRef(null);
 
   React.useEffect(() => {
@@ -153,4 +156,4 @@ export const Panel: React.FC<ITabsPanelProps> = function(props) {
       {props.children}
     </div>
   );
-};
+}

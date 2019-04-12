@@ -14,53 +14,53 @@ const PAGES: IPage[] = [
   { name: "@charlespeters", href: "https://twitter.com/charlespeters" }
 ];
 
-const UIFooter: React.FC<{}> = () => (
-  <footer className="ui-footer Wrapper Wrapper--sm">
-    <nav className="ui-footer-nav">
-      <ul>
-        <li>
-          <span>&copy; 2019 Charles Peters</span>
-        </li>
-        {PAGES.map((page, i) => (
-          <li key={i}>
-            <Link href={page.href} passHref>
-              <AltAnchor>{page.name}</AltAnchor>
-            </Link>
+export default function UIFooter() {
+  return (
+    <footer className="ui-footer Wrapper Wrapper--sm">
+      <nav className="ui-footer-nav">
+        <ul>
+          <li>
+            <span>&copy; 2019 Charles Peters</span>
           </li>
-        ))}
-      </ul>
-    </nav>
-    <style jsx>{`
-      .ui-footer {
-        text-align: center;
-        padding-top: 32px;
-        padding-bottom: 32px;
-        padding-left: 8px;
-        padding-right: 8px;
-      }
+          {PAGES.map((page, i) => (
+            <li key={i}>
+              <Link href={page.href} passHref>
+                <AltAnchor>{page.name}</AltAnchor>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <style jsx>{`
+        .ui-footer {
+          text-align: center;
+          padding-top: 32px;
+          padding-bottom: 32px;
+          padding-left: 8px;
+          padding-right: 8px;
+        }
 
-      .ui-footer-nav::before {
-        content: "";
-        display: block;
-        width: 128px;
-        height: 2px;
-        background: var(--link);
-        margin: 0 auto 32px;
-      }
+        .ui-footer-nav::before {
+          content: "";
+          display: block;
+          width: 128px;
+          height: 2px;
+          background: var(--link);
+          margin: 0 auto 32px;
+        }
 
-      .ui-footer-nav ul {
-        list-style: none inside;
-        padding: 0;
-        margin: 0;
-        font-size: 14px;
-      }
+        .ui-footer-nav ul {
+          list-style: none inside;
+          padding: 0;
+          margin: 0;
+          font-size: 14px;
+        }
 
-      .ui-footer-nav li {
-        display: inline-block;
-        margin-right: 16px;
-      }
-    `}</style>
-  </footer>
-);
-
-export default UIFooter;
+        .ui-footer-nav li {
+          display: inline-block;
+          margin-right: 16px;
+        }
+      `}</style>
+    </footer>
+  );
+}

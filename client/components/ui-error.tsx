@@ -21,7 +21,7 @@ export interface IUIErrorMessage {
 
 export const ErrorStateContext = React.createContext({} as IUIErrorMessage);
 
-const UIErrorMessage: React.FC<{}> = function(props) {
+function UIErrorMessage(): JSX.Element {
   const { errorState, errorActions } = React.useContext<IUIErrorMessage>(
     ErrorStateContext
   );
@@ -34,12 +34,10 @@ const UIErrorMessage: React.FC<{}> = function(props) {
   ) : (
     <Null />
   );
-};
-
-export const UIErrorConsumer = ErrorStateContext.Consumer;
+}
 
 // TODO: Refactor to use hooks `useReducer`
-export const ErrorContainer: React.FC<IErrorProps> = function(props) {
+export function ErrorContainer(props: IErrorProps): JSX.Element {
   const [errorState, setState] = React.useState<ErrorTypes>({
     content: "",
     type: ""
@@ -62,6 +60,6 @@ export const ErrorContainer: React.FC<IErrorProps> = function(props) {
       {props.children}
     </ErrorStateContext.Provider>
   );
-};
+}
 
 export const UIErrorBanner = UIErrorMessage;

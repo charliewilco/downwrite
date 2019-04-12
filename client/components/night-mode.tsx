@@ -15,9 +15,11 @@ export interface INightModeContext {
 
 export const NightModeContext = React.createContext({} as INightModeContext);
 
-const NightModeContainer: React.FC<{ children: React.ReactChild }> = function(
-  props
-) {
+interface INightModeContainerProps {
+  children: React.ReactNode;
+}
+
+function NightModeContainer(props: INightModeContainerProps): JSX.Element {
   const [night, setNight] = React.useState(false);
 
   React.useEffect(() => {
@@ -94,11 +96,11 @@ const NightModeContainer: React.FC<{ children: React.ReactChild }> = function(
       `}</style>
     </NightModeContext.Provider>
   );
-};
+}
 
 export default NightModeContainer;
 
-export const NightModeTrigger: React.FC = ({ children }) => {
+export function NightModeTrigger(props: INightModeContainerProps): JSX.Element {
   const { night, action } = React.useContext<INightModeContext>(NightModeContext);
   const onChange = () => {
     action.onChange();
@@ -120,7 +122,7 @@ export const NightModeTrigger: React.FC = ({ children }) => {
           <small className="NightLabel">Night Mode</small>
         </label>
       </form>
-      {children}
+      {props.children}
       <style jsx>{`
         .NightContainer {
           padding-top: 16px;
@@ -147,4 +149,4 @@ export const NightModeTrigger: React.FC = ({ children }) => {
       `}</style>
     </div>
   );
-};
+}

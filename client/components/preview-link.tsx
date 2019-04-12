@@ -2,12 +2,12 @@ import * as React from "react";
 import Link from "next/link";
 import { UrlObject } from "url";
 
-interface PreviewLinkProps {
+interface IPreviewLinkProps {
   publicStatus: boolean;
   id: string;
 }
 
-const PreviewLink: React.FC<PreviewLinkProps> = props => {
+export default function PreviewLink(props: IPreviewLinkProps): JSX.Element {
   const link: UrlObject = {
     pathname: "/preview",
     query: { id: props.id }
@@ -26,6 +26,4 @@ const PreviewLink: React.FC<PreviewLinkProps> = props => {
       `}</style>
     </>
   ) : null;
-};
-
-export default PreviewLink;
+}

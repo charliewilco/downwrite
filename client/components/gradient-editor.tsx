@@ -14,7 +14,7 @@ interface IGradientEditorProps {
   colors: IColors;
 }
 
-const GradientEditor: React.FC<IGradientEditorProps> = function(props) {
+export default function GradientEditor(props: IGradientEditorProps): JSX.Element {
   function handleColorChange(value: string, name: string): void {
     props.onColorChange(value, name);
   }
@@ -61,6 +61,4 @@ const GradientEditor: React.FC<IGradientEditorProps> = function(props) {
       `}</style>
     </div>
   );
-};
-
-export default GradientEditor;
+}

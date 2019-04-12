@@ -7,7 +7,7 @@ interface ILayoutControl {
   layoutChange: (x: boolean) => void;
 }
 
-const LayoutControl: React.FC<ILayoutControl> = function(props) {
+export default function LayoutControl(props: ILayoutControl) {
   return (
     <div>
       <div
@@ -51,6 +51,4 @@ const LayoutControl: React.FC<ILayoutControl> = function(props) {
       `}</style>
     </div>
   );
-};
-
-export default LayoutControl;
+}

@@ -5,9 +5,10 @@ interface IAutosavingProps {
   onUpdate: (x?: any) => void;
   delay?: number;
   duration?: number;
+  children: React.ReactNode;
 }
 
-const AutosavingInterval: React.FC<IAutosavingProps> = function(props) {
+export default function AutosavingInterval(props: IAutosavingProps): JSX.Element {
   const [autosaving, setAutoSaving] = React.useState<boolean>(false);
 
   let interval: NodeJS.Timeout;
@@ -32,6 +33,4 @@ const AutosavingInterval: React.FC<IAutosavingProps> = function(props) {
   }
 
   return null;
-};
-
-export default AutosavingInterval;
+}

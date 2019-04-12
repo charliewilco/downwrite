@@ -12,7 +12,7 @@ import * as DefaultStyles from "../utils/defaultStyles";
 import { NightModeContext, INightModeContext } from "./night-mode";
 
 // TODO: Slide to close navigation?
-interface NavigationProps extends WithRouterProps {
+interface INavigationProps extends WithRouterProps {
   token: string;
   closeNav: () => void;
 }
@@ -25,7 +25,7 @@ function usePrevious<T>(value: T) {
   return ref.current;
 }
 
-const NavBar: React.FC<NavigationProps> = function(props) {
+function NavBar(props: INavigationProps): JSX.Element {
   const context = React.useContext<IAuthContext>(AuthContext);
   const theme = React.useContext<INightModeContext>(NightModeContext);
 
@@ -190,6 +190,6 @@ const NavBar: React.FC<NavigationProps> = function(props) {
       `}</style>
     </LockScroll>
   );
-};
+}
 
 export default withRouter(NavBar);

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as DefaultStyles from "../utils/defaultStyles";
 
-export const LevelStyles = function() {
+export function LevelStyles(): JSX.Element {
   return (
     <style jsx global>{`
       *,
@@ -44,4 +44,4 @@ export const LevelStyles = function() {
       }
     `}</style>
   );
-};
+}

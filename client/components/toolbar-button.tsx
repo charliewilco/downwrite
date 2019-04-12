@@ -43,7 +43,7 @@ function findIcon(label: string, active: boolean): React.ReactNode {
   }
 }
 
-const StyleButton: React.FC<IToolbarButtonProps> = function(props) {
+export default function StyleButton(props: IToolbarButtonProps): JSX.Element {
   const onToggle = (e: React.MouseEvent<HTMLDivElement>): void => {
     e.preventDefault();
     props.onToggle(props.style);
@@ -65,6 +65,4 @@ const StyleButton: React.FC<IToolbarButtonProps> = function(props) {
       `}</style>
     </div>
   );
-};
-
-export default StyleButton;
+}

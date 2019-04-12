@@ -4,7 +4,7 @@ import * as DefaultStyles from "../utils/defaultStyles";
 import { NightModeContext } from "./night-mode";
 import classNames from "../utils/classnames";
 
-interface InputType {
+interface IUIInputProps {
   onChange(e: React.ChangeEvent<any>): void;
   label: string;
   value: string;
@@ -14,7 +14,7 @@ interface InputType {
   autoComplete?: string;
 }
 
-export const UIInputContainer = function({
+export function UIInputContainer({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>): JSX.Element {
@@ -32,16 +32,16 @@ export const UIInputContainer = function({
       `}</style>
     </>
   );
-};
+}
 
-export const UIInputError = ({
+export function UIInputError({
   style,
   ...props
-}: React.HTMLAttributes<HTMLSpanElement>) => {
+}: React.HTMLAttributes<HTMLSpanElement>): JSX.Element {
   return <span style={Object.assign({}, { color: "#d04d36" }, style)} {...props} />;
-};
+}
 
-const UIInput: React.FC<InputType> = function({ label, ...props }) {
+export default function UIInput({ label, ...props }: IUIInputProps) {
   const id = uuid();
 
   const [active, setActive] = React.useState<boolean>(false);
@@ -95,6 +95,4 @@ const UIInput: React.FC<InputType> = function({ label, ...props }) {
       `}</style>
     </label>
   );
-};
-
-export default UIInput;
+}

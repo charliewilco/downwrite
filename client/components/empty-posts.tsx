@@ -2,7 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 import Nib from "./nib";
 
-const Empty: React.FC<{}> = function() {
+export default function EmptyPosts(): JSX.Element {
   return (
     <section className="Wrapper" data-testid="NO_ENTRIES_PROMPT">
       <div className="FlexColumn">
@@ -50,6 +50,4 @@ const Empty: React.FC<{}> = function() {
       `}</style>
     </section>
   );
-};
-
-export default Empty;
+}

@@ -6,7 +6,7 @@ interface IHexInputProps {
   initialValue?: string;
 }
 
-const FunHexInput: React.FC<IHexInputProps> = function(props) {
+export default function FunHexInput(props: IHexInputProps): JSX.Element {
   const [hex, setHexColor] = React.useState<string>(props.initialValue || "");
 
   function handleChange({
@@ -65,6 +65,4 @@ const FunHexInput: React.FC<IHexInputProps> = function(props) {
       `}</style>
     </div>
   );
-};
-
-export default FunHexInput;
+}
