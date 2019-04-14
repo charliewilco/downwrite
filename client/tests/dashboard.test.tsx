@@ -14,7 +14,7 @@ jest.mock("next/link", () => {
   return jest.fn((props: LinkProps) => <>{props.children}</>);
 });
 const PostDashboard = () => {
-  return <Dashboard entries={entries} token="..." />;
+  return <Dashboard entries={entries} />;
 };
 
 let fetch = fetchMock as FetchMock;
@@ -50,7 +50,7 @@ describe("<Dashboard /> post lists", () => {
 
   xit("shows error if error", async () => {
     fetch.mockResponseOnce(JSON.stringify([]));
-    const ErrorContainer = render(<Dashboard entries={[]} token="..." />);
+    const ErrorContainer = render(<Dashboard entries={[]} />);
     await wait(() => ErrorContainer.getByTestId("LOADING_SPINNER"));
 
     expect(
