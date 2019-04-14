@@ -1,0 +1,17 @@
+.ToggleBox {
+  margin-right: 16px;
+}
+
+.ToggleBoxLabel {
+  flex: 1;
+  margin-left: 8px;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1.2;
+}
+
+.ToggleBoxInner {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
