@@ -29,17 +29,6 @@ export default function LoginPage(): JSX.Element {
           <Features />
         </Landing>
         <LoginTabs />
-        <style jsx>{`
-          .HomeContainer {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 95%;
-            padding: 0 8px 64px;
-            margin: 0 auto;
-          }
-        `}</style>
       </main>
     </>
   );

@@ -27,27 +27,17 @@ interface IUserSettingsProps {
 
 function Settings(props: IUserSettingsProps) {
   return (
-    <div className="Wrapper">
+    <div className="Wrapper Wrapper--sm" style={{ padding: 8 }}>
       <Head>
         <title>User Settings</title>
       </Head>
 
-      <h1 className="ContainerTitle">Settings</h1>
+      <h1 className="ContainerTitle" style={{ marginBottom: 16 }}>
+        Settings
+      </h1>
       <SettingsUser user={props.user} />
       <SettingsPassword />
       <SettingsLocal />
-      <style jsx>{`
-        h1 {
-          margin-bottom: 16px;
-        }
-
-        .Wrapper {
-          margin-left: auto;
-          margin-right: auto;
-          padding: 8px;
-          max-width: 768px;
-        }
-      `}</style>
     </div>
   );
 }

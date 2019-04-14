@@ -100,11 +100,6 @@ export function DashboardUI(props: IDashboardProps) {
         ) : (
           <Loading size={100} />
         )}
-        <style jsx>{`
-          .PostContainer {
-            padding: 16px 8px;
-          }
-        `}</style>
       </section>
     </>
   );

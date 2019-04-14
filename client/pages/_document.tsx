@@ -1,4 +1,5 @@
 import Document, {
+  Html,
   Head,
   Main,
   NextScript,
@@ -6,11 +7,7 @@ import Document, {
 } from "next/document";
 // import Manifest from "next-manifest/manifest";
 
-const STYLESHEETS: string[] = [
-  "https://unpkg.com/base-dw",
-  "https://unpkg.com/typescale-dw",
-  "https://unpkg.com/ganymede-light-duotone-prism"
-];
+const STYLESHEETS: string[] = ["https://unpkg.com/ganymede-light-duotone-prism"];
 
 export default class MyDocument extends Document {
   public static async getInitialProps(context: NextDocumentContext) {
@@ -21,7 +18,7 @@ export default class MyDocument extends Document {
 
   public render(): JSX.Element {
     return (
-      <html lang="en">
+      <Html lang="en">
         <Head>
           {STYLESHEETS.map((sss, i) => (
             <link rel="stylesheet" href={sss} key={i} />
@@ -39,7 +36,7 @@ export default class MyDocument extends Document {
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     );
   }
 }

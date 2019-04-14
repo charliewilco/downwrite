@@ -27,11 +27,18 @@ function StatusCode(props: Partial<CustomError>) {
 
 function ErrorPage(props: IErrorViewProps) {
   return (
-    <section className="Wrapper centered">
+    <section
+      className="Wrapper u-center"
+      style={{
+        paddingTop: 128,
+        paddingBottom: 128,
+        paddingLeft: 16,
+        paddingRight: 16
+      }}>
       <Head>
         <title>Not Found | Downwrite</title>
       </Head>
-      <h2>404</h2>
+      <h2 className="SuperErrorMessage">404</h2>
       <StatusCode statusCode={props.statusCode} />
       <NotFound
         error={null}
@@ -41,20 +48,6 @@ function ErrorPage(props: IErrorViewProps) {
             : "An error occurred on client"
         }
       />
-      <style jsx>{`
-        h2 {
-          display: inline-block;
-          margin-bottom: 32px;
-          font-size: 84px;
-          line-height: 1;
-          font-weight: 900;
-        }
-
-        .centered {
-          text-align: center;
-          padding: 8rem 1rem;
-        }
-      `}</style>
     </section>
   );
 }

@@ -106,7 +106,7 @@ function EditUI(props: IEditorProps) {
                 Autosaving <i>{values.title}</i>
               </Toast>
             </Autosaving>
-            <Form className="OuterEditor">
+            <Form style={{ padding: "0 8px" }}>
               <TimeMarker dateAdded={props.post.dateAdded} />
               <Input value={values.title} name="title" onChange={handleChange} />
               <aside className="UtilityBarContainer">
@@ -146,24 +146,6 @@ function EditUI(props: IEditorProps) {
           </>
         )}
       </Formik>
-      <style jsx>
-        {`
-          .OuterEditor {
-            padding: 0 8px;
-          }
-          .UtilityBarContainer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 8px 0 16px;
-            padding: 8px 0;
-          }
-          .UtilityBarItems {
-            display: flex;
-            align-items: center;
-          }
-        `}
-      </style>
     </div>
   );
 }
