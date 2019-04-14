@@ -78,7 +78,7 @@ module.exports = (phase, { defaultConfig }) => {
     };
   }
   // ✅ Put the require call here.
-
+  const withCSS = require("@zeit/next-css");
   const withTypescript = require("@zeit/next-typescript");
   const withMDX = require("@zeit/next-mdx")({
     extension: /\.mdx?$/
@@ -86,9 +86,11 @@ module.exports = (phase, { defaultConfig }) => {
 
   //
 
-  return withTypescript(
-    withMDX({
-      target: "serverless"
-    })
+  return withCSS(
+    withTypescript(
+      withMDX({
+        target: "serverless"
+      })
+    )
   );
 };
