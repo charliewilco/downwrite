@@ -1,11 +1,8 @@
 import * as React from "react";
 import Head from "next/head";
 import LoginTabs from "../components/login-tabs";
-import { ErrorStateContext, IUIErrorMessage } from "../components/ui-error";
 import Landing from "../components/landing";
 import Features from "../components/landing-features";
-import Register from "../components/register";
-import Login from "../components/login-form";
 
 // TODO: Migrate back to dynamic element ASAP
 // import dynamic from 'next/dynamic';
@@ -21,29 +18,17 @@ import Login from "../components/login-form";
 //   loading: () => <Loading size={75} />
 // });
 
-interface IHomeProps {
-  signIn: (x: boolean, y: string) => void;
-}
-
-const Home: React.FC<IHomeProps> = function(props) {
-  const { errorActions } = React.useContext<IUIErrorMessage>(ErrorStateContext);
+export default function LoginPage(): JSX.Element {
   return (
     <>
-      <Head>
-        <title>Downwrite</title>
-      </Head>
       <main className="HomeContainer" data-testid="LOGIN_PAGE_CONTAINER">
+        <Head>
+          <title>Downwrite</title>
+        </Head>
         <Landing>
           <Features />
         </Landing>
-        <LoginTabs
-          renderLogin={() => (
-            <Login setError={errorActions.setError} signIn={props.signIn} />
-          )}
-          renderRegister={() => (
-            <Register setError={errorActions.setError} signIn={props.signIn} />
-          )}
-        />
+        <LoginTabs />
         <style jsx>{`
           .HomeContainer {
             display: flex;
@@ -58,6 +43,4 @@ const Home: React.FC<IHomeProps> = function(props) {
       </main>
     </>
   );
-};
-
-export default Home;
+}

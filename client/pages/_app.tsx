@@ -27,7 +27,7 @@ export default class Downwrite extends App<IAppProps> {
     return (
       <Container>
         <AuthProvider token={token} authed={authed}>
-          <UIShell token={token}>
+          <UIShell>
             <AuthContext.Consumer>
               {(auth: IAuthContext) => <Component {...pageProps} {...auth} />}
             </AuthContext.Consumer>

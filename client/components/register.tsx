@@ -4,6 +4,8 @@ import "isomorphic-fetch";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
 import LegalBoilerplate from "./legal-boilerplate";
+import { ErrorStateContext, IUIErrorMessage } from "./ui-error";
+import { AuthContext, IAuthContext } from "./auth";
 import * as API from "../utils/api";
 import { RegisterFormSchema } from "../utils/validations";
 import { StringTMap } from "../utils/types";
@@ -21,11 +23,6 @@ interface IInput extends StringTMap<string> {
   placeholder?: string;
   label?: string;
   autoComplete?: string;
-}
-
-interface ILoginProps {
-  signIn: (x: boolean, y: string) => void;
-  setError: (x: string, y: string) => void;
 }
 
 const REGISTER_INPUTS: IInput[] = [
@@ -52,7 +49,11 @@ const REGISTER_INPUTS: IInput[] = [
   }
 ];
 
-export default function RegisterForm(props: ILoginProps): JSX.Element {
+export default function RegisterForm(): JSX.Element {
+  const {
+    errorActions: { setError }
+  } = React.useContext<IUIErrorMessage>(ErrorStateContext);
+  const { signIn } = React.useContext<IAuthContext>(AuthContext);
   const onSubmit = async ({
     username,
     email,
@@ -67,9 +68,9 @@ export default function RegisterForm(props: ILoginProps): JSX.Element {
     );
 
     if (user.userID) {
-      props.signIn(user.id_token !== undefined, user.id_token);
+      signIn(user.id_token !== undefined, user.id_token);
     } else {
-      props.setError(user.message, "error");
+      setError(user.message, "error");
     }
   };
 

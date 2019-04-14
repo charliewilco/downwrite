@@ -1,6 +1,8 @@
 import * as React from "react";
 import { Formik, Form, FormikProps, ErrorMessage, FormikActions } from "formik";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
+import { ErrorStateContext, IUIErrorMessage } from "./ui-error";
+import { AuthContext, IAuthContext } from "./auth";
 import { Button } from "./button";
 import * as API from "../utils/api";
 import { LoginFormSchema } from "../utils/validations";
@@ -10,12 +12,11 @@ interface ILoginForm {
   password: string;
 }
 
-interface ILoginProps {
-  signIn: (authed: boolean, token: string) => void;
-  setError: (x: string, y: string) => void;
-}
-
-export default function Login(props: ILoginProps): JSX.Element {
+export default function Login(): JSX.Element {
+  const {
+    errorActions: { setError }
+  } = React.useContext<IUIErrorMessage>(ErrorStateContext);
+  const { signIn } = React.useContext<IAuthContext>(AuthContext);
   const handleFormSubmit = (
     values: ILoginForm,
     actions: FormikActions<ILoginForm>
@@ -28,11 +29,11 @@ export default function Login(props: ILoginProps): JSX.Element {
     const auth = await API.authUser(values, { host });
 
     if (auth.error) {
-      props.setError(auth.message, "error");
+      setError(auth.message, "error");
     }
 
     if (auth.token) {
-      props.signIn(auth.token !== undefined, auth.token);
+      signIn(auth.token !== undefined, auth.token);
     }
   };
 

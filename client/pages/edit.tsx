@@ -5,9 +5,7 @@ import { NextContext } from "next";
 import { Formik, Form, FormikProps } from "formik";
 import isEmpty from "lodash/isEmpty";
 import "isomorphic-fetch";
-
 import * as Dwnxt from "downwrite";
-
 import Autosaving from "../components/autosaving-interval";
 import Toast from "../components/toast";
 import ExportMarkdown from "../components/export";
@@ -24,9 +22,9 @@ import { superConverter } from "../utils/responseHandler";
 import { sanitize } from "../utils/sanitize";
 import { __IS_DEV__ } from "../utils/dev";
 import { authMiddleware } from "../utils/auth-middleware";
+import { AuthContext, IAuthContext } from "../components/auth";
 
 interface IEditorProps {
-  token: string;
   id: string;
   title: string;
   post: Dwnxt.IPost;
@@ -47,6 +45,7 @@ interface IFields {
 const EDITOR_COMMAND = "myeditor-save";
 
 function EditUI(props: IEditorProps) {
+  const { token } = React.useContext<IAuthContext>(AuthContext);
   const initialEditorState = Draft.EditorState.createWithContent(
     superConverter((props.post as Dwnxt.IPost).content)
   );
@@ -71,7 +70,7 @@ function EditUI(props: IEditorProps) {
         content,
         dateModified
       },
-      { token: props.token, host }
+      { token, host }
     );
   }
 

@@ -13,6 +13,7 @@ import {
   DashboardAction,
   SelectedPost
 } from "../reducers/dashboard";
+import { AuthContext, IAuthContext } from "../components/auth";
 import DeleteModal from "../components/delete-modal";
 import PostList from "../components/post-list";
 import Loading from "../components/loading";
@@ -23,7 +24,6 @@ import { authMiddleware } from "../utils/auth-middleware";
 
 interface IDashboardProps {
   entries: Dwnxt.IPost[] | Dwnxt.IPostError;
-  token: string;
 }
 
 // TODO: refactor to have selected post, deletion to be handled by a lower level component
@@ -33,6 +33,8 @@ export function DashboardUI(props: IDashboardProps) {
     React.Reducer<IDashboardState, IDashboardAction>
   >(reducer, { ...initialState(props.entries) });
 
+  const { token } = React.useContext<IAuthContext>(AuthContext);
+
   React.useEffect(() => {
     if (isEmpty(state.entries)) {
       getPosts();
@@ -41,7 +43,7 @@ export function DashboardUI(props: IDashboardProps) {
 
   async function getPosts(close?: boolean): Promise<void> {
     const { host } = document.location;
-    const entries = await API.getPosts({ token: props.token, host });
+    const entries = await API.getPosts({ token, host });
 
     if (Array.isArray(entries)) {
       dispatch({ type: DashboardAction.FETCH_ENTRIES, payload: { entries } });
@@ -56,7 +58,7 @@ export function DashboardUI(props: IDashboardProps) {
   async function onDelete({ id }: SelectedPost): Promise<void> {
     const { host } = document.location;
 
-    const response = await API.removePost(id, { token: props.token, host });
+    const response = await API.removePost(id, { token, host });
 
     if (response.ok) {
       await getPosts(true);

@@ -10,6 +10,7 @@ import { Input } from "../components/editor-input";
 import { Button } from "../components/button";
 import Upload from "../components/upload";
 import Editor from "../components/editor";
+import { AuthContext, IAuthContext } from "../components/auth";
 import * as API from "../utils/api";
 
 interface INewPostProps {
@@ -35,11 +36,13 @@ const EDITOR_SPACING: React.CSSProperties = {
 //   localStorage.setItem("Draft " + id, JSON.stringify(post));
 // };
 
-export default function NewEditor(props: INewPostProps) {
+function useCreatePost(): [string, (values: IFormikValues) => void] {
   const [error, setError] = React.useState<string>("");
+
+  const { token } = React.useContext<IAuthContext>(AuthContext);
   const id = React.useRef(uuid());
 
-  const onSubmit = async (values: IFormikValues): Promise<void> => {
+  function createNewPost(values: IFormikValues) {
     const ContentState: Draft.ContentState = values.editorState.getCurrentContent();
 
     const body: Dwnxt.IPostCreation = {
@@ -50,14 +53,24 @@ export default function NewEditor(props: INewPostProps) {
       public: false
     };
 
-    API.createPost(body, { token: props.token, host: document.location.host })
+    API.createPost(body, { token, host: document.location.host })
       .then(() =>
         Router.push({
           pathname: `/edit`,
-          query: { id }
+          query: { id: id.current }
         })
       )
       .catch(err => setError(err.message));
+  }
+
+  return [error, (values: IFormikValues) => createNewPost(values)];
+}
+
+export default function NewEditor(props: INewPostProps) {
+  const [error, createNewPost] = useCreatePost();
+
+  const onSubmit = async (values: IFormikValues): Promise<void> => {
+    createNewPost(values);
   };
 
   return (

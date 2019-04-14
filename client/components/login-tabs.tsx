@@ -1,17 +1,10 @@
 import * as React from "react";
 import * as UITabs from "./tabs";
-import { ErrorStateContext, IUIErrorMessage } from "./ui-error";
-import { AuthContext, IAuthContext } from "./auth";
 import Register from "./register";
 import Login from "./login-form";
 import * as DefaultStyles from "../utils/defaultStyles";
 
-interface ILoginContainerProps {}
-
-export default function LoginContainer(props: ILoginContainerProps): JSX.Element {
-  const { errorActions } = React.useContext<IUIErrorMessage>(ErrorStateContext);
-  const { signIn } = React.useContext<IAuthContext>(AuthContext);
-
+export default function LoginContainer(): JSX.Element {
   return (
     <UITabs.Container>
       <UITabs.List className="TabsList">
@@ -33,13 +26,13 @@ export default function LoginContainer(props: ILoginContainerProps): JSX.Element
           <header style={{ padding: 16 }}>
             <h2 data-testid="LOGIN_TITLE">Sign Up as a New User</h2>
           </header>
-          <Register setError={errorActions.setError} signIn={signIn} />
+          <Register />
         </UITabs.Panel>
         <UITabs.Panel label="Login">
           <header style={{ padding: 16 }}>
             <h2 data-testid="LOGIN_TITLE">Welcome Back!</h2>
           </header>
-          <Login setError={errorActions.setError} signIn={signIn} />
+          <Login />
         </UITabs.Panel>
       </UITabs.Panels>
       <style jsx>{`
