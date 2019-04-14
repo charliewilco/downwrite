@@ -6,7 +6,7 @@ exports[`<Check /> matches snapshot 1`] = `
   for="check"
 >
   <input
-    class="jsx-707974432 "
+    class="UICheck"
     data-testid="TEST_CHECKBOX"
     id="check"
     type="checkbox"

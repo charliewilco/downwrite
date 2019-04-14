@@ -10,15 +10,15 @@ interface IPostListProps {
 }
 
 export default function PostList(props: IPostListProps): JSX.Element {
-  const [isOpen, setOpen] = React.useState<boolean>(false);
+  const [isGridView, setOpen] = React.useState<boolean>(true);
 
   return (
     <>
       <header className="PostListHeader">
         <h1 className="ContainerTitle">Entries</h1>
-        <LayoutControl layout={isOpen} layoutChange={setOpen} />
+        <LayoutControl layout={isGridView} layoutChange={setOpen} />
       </header>
-      {isOpen ? (
+      {isGridView ? (
         <ul className="PostList Grid" data-testid="ENTRIES_GRIDVIEW">
           {props.posts.map((p, i) => (
             <li className="GridItem" key={i}>

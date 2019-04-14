@@ -2,14 +2,14 @@
 
 exports[`<Card /> matches snapshot 1`] = `
 <div
-  class="jsx-1976558292 container"
+  class="Card"
   data-testid="CARD"
 >
   <header
-    class="jsx-1976558292"
+    class="CardHeader"
   >
     <h2
-      class="jsx-1976558292"
+      class="CardTitle"
       data-testid="CARD_TITLE"
     >
       <a
@@ -19,7 +19,7 @@ exports[`<Card /> matches snapshot 1`] = `
       </a>
     </h2>
     <small
-      class="jsx-1976558292 meta"
+      class="CardMeta"
     >
       added 
       less than a minute
@@ -27,10 +27,10 @@ exports[`<Card /> matches snapshot 1`] = `
     </small>
   </header>
   <footer
-    class="jsx-1976558292 tray"
+    class="CardTray"
   >
     <div
-      class="jsx-1976558292 links"
+      class="links"
       data-testid="CARD_EXCERPT"
     >
       <a
@@ -41,7 +41,7 @@ exports[`<Card /> matches snapshot 1`] = `
       </a>
     </div>
     <button
-      class="jsx-1976558292 delete-button"
+      class="CardDeleteButton"
       data-testid="CARD_DELETE_BUTTON"
     >
       Delete
