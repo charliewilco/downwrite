@@ -13,17 +13,8 @@ export default function PreviewLink(props: IPreviewLinkProps): JSX.Element {
     query: { id: props.id }
   };
   return props.publicStatus ? (
-    <>
-      <Link prefetch passHref href={link}>
-        <a>Preview</a>
-      </Link>
-      <style jsx>{`
-        a {
-          display: block;
-          font-size: 12px;
-          line-height: 1;
-        }
-      `}</style>
-    </>
+    <Link prefetch passHref href={link}>
+      <a className="AltPreviewLink">Preview</a>
+    </Link>
   ) : null;
 }

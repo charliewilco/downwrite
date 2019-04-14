@@ -78,7 +78,7 @@ export default function Login(): JSX.Element {
               />
               <ErrorMessage name="password" component={UIInputError} />
             </UIInputContainer>
-            <div className="SpacedBox u-right">
+            <div className="u-right" style={{ padding: 16 }}>
               <UIInputContainer style={{ display: "inline-block" }}>
                 <Button type="submit">Login</Button>
               </UIInputContainer>
@@ -86,15 +86,6 @@ export default function Login(): JSX.Element {
           </Form>
         )}
       </Formik>
-      <style jsx>{`
-        .SpacedBox {
-          padding: 16px;
-        }
-
-        .u-right {
-          text-align: right;
-        }
-      `}</style>
     </div>
   );
 }

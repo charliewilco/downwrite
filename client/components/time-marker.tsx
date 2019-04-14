@@ -15,15 +15,8 @@ function Time(props: ITimeMarkProps) {
 
 export default function TimeMarker(props: ITimeMarkProps) {
   return (
-    <div>
+    <div className="TimeMarker">
       Added on <Time dateAdded={props.dateAdded} />
-      <style jsx>{`
-        div {
-          opacity: 0.5;
-          font-size: small;
-          margin-bottom: 8px;
-        }
-      `}</style>
     </div>
   );
 }

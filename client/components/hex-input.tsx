@@ -25,7 +25,7 @@ export default function FunHexInput(props: IHexInputProps): JSX.Element {
   }, [hex]);
 
   return (
-    <div className="InputWrapper">
+    <div className="HexInputWrapper">
       <span>#</span>
       <input
         value={hex.replace("#", "")}
@@ -35,34 +35,6 @@ export default function FunHexInput(props: IHexInputProps): JSX.Element {
         spellCheck={false}
         maxLength={6}
       />
-      <style jsx>{`
-        .HexInput {
-          display: block;
-          width: 100%;
-          padding: 2px;
-          font-size: 14px;
-          border: 0;
-          font-family: inherit;
-        }
-
-        .InputWrapper {
-          display: flex;
-          border: 1px solid rgba(0, 0, 0, 0.125);
-          border-radius: 4px;
-          overflow: hidden;
-          font-family: ${DefaultStyles.Fonts.monospace};
-        }
-
-        .InputWrapper > span {
-          max-width: 24px;
-          font-size: 14px;
-          font-weight: 700;
-          padding: 4px 8px;
-          color: #4f4f4f;
-          background: #dadada;
-          text-align: center;
-        }
-      `}</style>
     </div>
   );
 }

@@ -2,8 +2,8 @@ import * as React from "react";
 
 export default function Logo() {
   return (
-    <div>
-      <svg width={33} height={50} viewBox="0 0 33 50">
+    <div className="Logo">
+      <svg className="LogoIcon" width={33} height={50} viewBox="0 0 33 50">
         <title>Downwrite Logo</title>
         <defs>
           <radialGradient fx="50%" fy="50%" r="143.827%" id="a">
@@ -33,23 +33,6 @@ export default function Logo() {
           />
         </g>
       </svg>
-      <style jsx>{`
-        div {
-          max-width: 20px;
-        }
-
-        svg {
-          display: block;
-          max-width: 100%;
-          min-height: auto;
-        }
-
-        @media (min-width: 57.75rem) {
-          div {
-            max-width: 33px;
-          }
-        }
-      `}</style>
     </div>
   );
 }

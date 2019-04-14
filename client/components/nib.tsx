@@ -1,39 +1,9 @@
 import * as React from "react";
 
-export default function Nib() {
+export default function Nib(): JSX.Element {
   return (
     <div className="NibContainer">
-      <style jsx>{`
-        @keyframes BACK_N_FORTH {
-          0% {
-            transform: translate(0, 0);
-          }
-
-          50% {
-            transform: translate(calc(384px - 60px), 0);
-          }
-
-          100% {
-            transform: translate(0, 0);
-          }
-        }
-        .NibContainer::after {
-          content: "";
-          margin-top: 8px;
-          width: 100%;
-          height: 4px;
-          display: block;
-          background-image: linear-gradient(#4fa5c2, #185a70);
-        }
-        .AnimatedIcon {
-          animation: BACK_N_FORTHk 7s infinite;
-          width: 60px;
-          height: 71px;
-          display: block;
-          transform: translate(0, 0);
-        }
-      `}</style>
-      <svg className="AnimatedIcon" viewBox="0 0 60 71">
+      <svg className="NibAnimatedIcon" viewBox="0 0 60 71">
         <title>Nib</title>
         <g id="Canvas" transform="translate(-353 36)">
           <g id="Nib">

@@ -52,17 +52,6 @@ export default function StyleButton(props: IToolbarButtonProps): JSX.Element {
   return (
     <div className="ToolbarButton" onMouseDown={onToggle}>
       {findIcon(props.label, props.active)}
-      <style jsx>{`
-        .ToolbarButton {
-          display: inline-block;
-          padding: 8px;
-          flex: 1 1 auto;
-          text-align: center;
-          color: ${DefaultStyles.colors.blue700};
-          font-size: 12px;
-          transition: all 250ms ease-in-out;
-        }
-      `}</style>
     </div>
   );
 }

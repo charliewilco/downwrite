@@ -96,17 +96,14 @@ export default function CollectionFetch() {
   return state.posts.length > 0 ? (
     <SidebarPosts posts={state.posts} />
   ) : (
-    <div className="FlexColumn">
+    <div
+      style={{
+        paddingTop: 64,
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column"
+      }}>
       <Button onClick={() => Router.push("/new")}>Get Started</Button>
-      <style jsx>{`
-        .FlexColumn {
-          padding-top: 64px;
-
-          display: flex;
-          align-items: center;
-          flex-direction: column;
-        }
-      `}</style>
     </div>
   );
 }

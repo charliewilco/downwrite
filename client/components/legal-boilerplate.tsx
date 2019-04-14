@@ -17,9 +17,8 @@ const LegalLink = () => (
 );
 
 export default function LegalBoilerplate(props: ILegalProps) {
-  const theme = React.useContext(NightModeContext);
   return (
-    <label htmlFor={props.name}>
+    <label className="LegalConfirm" htmlFor={props.name}>
       <Checkbox
         className="LegalCheck"
         name={props.name}
@@ -27,31 +26,9 @@ export default function LegalBoilerplate(props: ILegalProps) {
         checked={props.checked}
         onChange={props.onChange}
       />
-      <small>
+      <small className="LegalDisclaimer">
         I'm agreeing to abide in all the <LegalLink />.
       </small>
-      <style jsx>{`
-        small {
-          flex: 1;
-          line-height: 1.2;
-        }
-
-        label {
-          display: flex;
-          align-items: center;
-          margin: 16px;
-          font-weight: 700;
-          background: ${theme.night ? "white" : "#d8eaf1"};
-          padding: 8px;
-          color: ${DefaultStyles.colors.text};
-        }
-
-        .LegalCheck {
-          margin-right: 16px;
-          display: block;
-          max-width: 20px;
-        }
-      `}</style>
     </label>
   );
 }

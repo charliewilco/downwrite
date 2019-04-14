@@ -16,8 +16,8 @@ const PAGES: IPage[] = [
 
 export default function UIFooter() {
   return (
-    <footer className="ui-footer Wrapper Wrapper--sm">
-      <nav className="ui-footer-nav">
+    <footer className="AppFooter Wrapper Wrapper--sm">
+      <nav className="AppFooterNav">
         <ul>
           <li>
             <span>&copy; 2019 Charles Peters</span>
@@ -31,36 +31,6 @@ export default function UIFooter() {
           ))}
         </ul>
       </nav>
-      <style jsx>{`
-        .ui-footer {
-          text-align: center;
-          padding-top: 32px;
-          padding-bottom: 32px;
-          padding-left: 8px;
-          padding-right: 8px;
-        }
-
-        .ui-footer-nav::before {
-          content: "";
-          display: block;
-          width: 128px;
-          height: 2px;
-          background: var(--link);
-          margin: 0 auto 32px;
-        }
-
-        .ui-footer-nav ul {
-          list-style: none inside;
-          padding: 0;
-          margin: 0;
-          font-size: 14px;
-        }
-
-        .ui-footer-nav li {
-          display: inline-block;
-          margin-right: 16px;
-        }
-      `}</style>
     </footer>
   );
 }

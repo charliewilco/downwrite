@@ -1,5 +1,6 @@
 import * as React from "react";
 import Avatar from "./avatar";
+import classNames from "../utils/classnames";
 
 interface IUserBlockProps {
   name: string;
@@ -8,27 +9,12 @@ interface IUserBlockProps {
 }
 
 export default function UserBlock(props: IUserBlockProps): JSX.Element {
+  const className = classNames("User", props.border && "User--border");
+
   return (
-    <div className={"border" in props && "border"}>
+    <div className={className}>
       <Avatar centered colors={props.colors} />
-      <span className="user-block-name">{props.name}</span>
-      <style jsx>{`
-        div {
-          position: relative;
-          text-align: center;
-          padding: 32px 8px;
-        }
-
-        span {
-          display: inline-block;
-          font-size: 16px;
-          font-weight: 700;
-        }
-
-        .border {
-          border-bottom: 1px solid var(--border);
-        }
-      `}</style>
+      <span className="UserName">{props.name}</span>
     </div>
   );
 }

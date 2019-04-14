@@ -10,16 +10,16 @@ interface IPostListProps {
 }
 
 export default function PostList(props: IPostListProps): JSX.Element {
-  const [isOpen, setOpen] = React.useState<boolean>(true);
+  const [isOpen, setOpen] = React.useState<boolean>(false);
 
   return (
     <>
-      <header>
+      <header className="PostListHeader">
         <h1 className="ContainerTitle">Entries</h1>
         <LayoutControl layout={isOpen} layoutChange={setOpen} />
       </header>
       {isOpen ? (
-        <ul className="Grid" data-testid="ENTRIES_GRIDVIEW">
+        <ul className="PostList Grid" data-testid="ENTRIES_GRIDVIEW">
           {props.posts.map((p, i) => (
             <li className="GridItem" key={i}>
               <Card {...p} onDelete={props.onDelete} />
@@ -27,75 +27,12 @@ export default function PostList(props: IPostListProps): JSX.Element {
           ))}
         </ul>
       ) : (
-        <ul data-testid="ENTRIES_LISTVIEW">
+        <ul className="PostList" data-testid="ENTRIES_LISTVIEW">
           {props.posts.map((p, i) => (
             <PostListItem key={i} {...p} onDelete={props.onDelete} />
           ))}
         </ul>
       )}
-      <style jsx>{`
-        header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 24px;
-        }
-
-        ul {
-          width: 100%;
-          list-style: inside none;
-        }
-        .Grid {
-          list-style: none inside;
-          display: flex;
-          flex-wrap: wrap;
-        }
-        .GridItem {
-          margin-bottom: 24px;
-          width: 100%;
-        }
-
-        @media (min-width: 48rem) {
-          .Grid {
-            margin-left: -20px;
-          }
-
-          .GridItem {
-            padding-left: 20px;
-            width: 50%;
-          }
-        }
-
-        @media (min-width: 57.75rem) {
-          .GridItem {
-            width: calc(100% / 3);
-          }
-        }
-
-        @media (min-width: 75rem) {
-          .GridItem {
-            width: calc(100% / 4);
-          }
-        }
-
-        @media (min-width: 112.5rem) {
-          .GridItem {
-            width: calc(100% / 5);
-          }
-        }
-
-        @media (min-width: 150rem) {
-          .GridItem {
-            width: calc(100% / 6);
-          }
-        }
-
-        @media (min-width: 187.5rem) {
-          .GridItem {
-            width: calc(100% / 7);
-          }
-        }
-      `}</style>
     </>
   );
 }

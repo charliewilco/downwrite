@@ -22,7 +22,7 @@ export default function PostListItem(props: IListItemProps): JSX.Element {
   return (
     <div className="PostItem">
       <div>
-        <h2 className="PostTitle">
+        <h2 className="PostItemTitle">
           <Link prefetch href={{ pathname: "/edit", query: { id: props.id } }}>
             <a>{props.title}</a>
           </Link>
@@ -33,62 +33,13 @@ export default function PostListItem(props: IListItemProps): JSX.Element {
             </div>
           )}
         </h2>
-        <small className="PostMeta">added {distance(props.dateAdded)} ago</small>
+        <small className="PostItemMeta">added {distance(props.dateAdded)} ago</small>
       </div>
       {props.onDelete && (
-        <button className="DeleteButton" onClick={onDelete}>
+        <button className="PostItemDeleteButton" onClick={onDelete}>
           Delete
         </button>
       )}
-
-      <style jsx>
-        {`
-          .PostItem {
-            padding: 16px 0;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-          }
-
-          .PostTitle {
-            font-size: 16px;
-            font-weight: 700;
-          }
-
-          .PostItem:not(:last-of-type) {
-            border-bottom: 1px solid #ccc;
-          }
-
-          .PostItemTray {
-            margin-left: 16px;
-            display: inline-block;
-            font-size: 12px;
-          }
-
-          .DeleteButton {
-            color: inherit;
-            appearance: none;
-            border: 0px;
-            font-family: inherit;
-            background: none;
-          }
-
-          .PostMeta {
-            font-size: 12px;
-            display: block;
-            color: var(--meta);
-            font-weight: 400;
-            margin-bottom: 8px;
-          }
-
-          @media (min-width: 57.75rem) {
-            .PostTitle {
-              font-size: 18px;
-            }
-          }
-        `}
-      </style>
     </div>
   );
 }

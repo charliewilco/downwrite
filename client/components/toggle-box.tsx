@@ -11,30 +11,11 @@ interface ICheckboxToggle {
 export function ToggleBox(props: ICheckboxToggle) {
   const text = props.label(props.value);
   return (
-    <div>
-      <label>
+    <div className="ToggleBox">
+      <label className="ToggleBoxInner">
         <Check name={props.name} checked={props.value} onChange={props.onChange} />
-        <span>{text}</span>
+        <span className="ToggleBoxLabel">{text}</span>
       </label>
-      <style jsx>{`
-        div {
-          margin-right: 16px;
-        }
-
-        span {
-          flex: 1;
-          margin-left: 8px;
-          display: inline-block;
-          vertical-align: middle;
-          line-height: 1.2;
-        }
-
-        label {
-          font-size: 12px;
-          display: flex;
-          align-items: center;
-        }
-      `}</style>
     </div>
   );
 }

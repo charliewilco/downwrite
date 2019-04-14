@@ -1,5 +1,5 @@
 import * as React from "react";
-import StyleButton from "./toolbar-button";
+import ToolbarButton from "./toolbar-button";
 
 const BLOCK_TYPES = [
   { label: "H1", style: "header-one" },
@@ -23,7 +23,7 @@ export function FullToolBar(props: any): JSX.Element {
   return (
     <div className="ToolbarWrapper">
       {BLOCK_TYPES.map(type => (
-        <StyleButton
+        <ToolbarButton
           key={type.label}
           active={type.style === props.blockType}
           label={type.label}
@@ -32,7 +32,7 @@ export function FullToolBar(props: any): JSX.Element {
         />
       ))}
       {INLINE_STYLES.map(type => (
-        <StyleButton
+        <ToolbarButton
           key={type.label}
           active={props.currentStyle.has(type.style)}
           label={type.label}
@@ -49,7 +49,7 @@ export function SelectionToolBar(props: any): JSX.Element {
     <div className="ToolbarWrapper">
       {props.selectedText.length > 0
         ? INLINE_STYLES.map(type => (
-            <StyleButton
+            <ToolbarButton
               key={type.label}
               active={props.currentStyle.has(type.style)}
               label={type.label}
@@ -58,7 +58,7 @@ export function SelectionToolBar(props: any): JSX.Element {
             />
           ))
         : BLOCK_TYPES.map(type => (
-            <StyleButton
+            <ToolbarButton
               key={type.label}
               active={type.style === props.blockType}
               label={type.label}
@@ -102,25 +102,6 @@ export default function Toolbar(props: any): JSX.Element {
           onToggleBlockType={props.onToggleBlockType}
         />
       )}
-      <style jsx>{`
-        .ToolbarWrapper {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          position: absolute;
-          top: 0px;
-          left: 0px;
-          right: 0px;
-          padding-top: 8px;
-          padding-bottom: 8px;
-          padding-right: 16px;
-          padding-left: 16px;
-          background: white;
-          border-bottom-width: 1px;
-          border-bottom-style: solid;
-          border-bottom-color: rgba(0, 0, 0, 0.125);
-        }
-      `}</style>
     </>
   );
 }

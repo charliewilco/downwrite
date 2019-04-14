@@ -42,23 +42,6 @@ export default function GradientEditor(props: IGradientEditorProps): JSX.Element
           colors={DefaultStyles.endColors}
         />
       </div>
-      <style jsx>{`
-        .GradientEditorContainer {
-          max-width: 512px;
-          margin: 64px auto;
-        }
-
-        .GEAvatar {
-          margin-bottom: 36px;
-        }
-
-        .Flexxy {
-          display: flex;
-          align-items: center;
-          flex-wrap: wrap;
-          justify-content: space-between;
-        }
-      `}</style>
     </div>
   );
 }

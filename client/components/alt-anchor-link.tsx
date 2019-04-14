@@ -1,6 +1,5 @@
 import * as React from "react";
-// import css from "styled-jsx/css";
-import * as DefaultStyles from "../utils/defaultStyles";
+import classNames from "../utils/classnames";
 
 interface AltAnchorProps<T> extends React.AnchorHTMLAttributes<T> {
   space?: string;
@@ -8,25 +7,9 @@ interface AltAnchorProps<T> extends React.AnchorHTMLAttributes<T> {
 
 export default function AltAnchorLink({
   space,
+  className,
   ...props
 }: AltAnchorProps<any>): JSX.Element {
-  return (
-    <>
-      <style jsx>{`
-        a {
-          font-size: 14px;
-          cursor: pointer;
-          line-height: 1.1;
-          opacity: 0.5;
-          color: var(--color) !important;
-        }
-
-        a:focus {
-          color: ${DefaultStyles.colors.text};
-          opacity: 1;
-        }
-      `}</style>
-      <a {...props} />
-    </>
-  );
+  const cx = classNames("AltLink", className);
+  return <a {...props} className={cx} />;
 }

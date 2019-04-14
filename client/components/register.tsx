@@ -117,7 +117,7 @@ export default function RegisterForm(): JSX.Element {
             checked={values.legalChecked}
             onChange={handleChange}
           />
-          <div className="SpacedBox u-right">
+          <div style={{ padding: 16 }} className="u-right">
             <UIInputContainer style={{ display: "inline-block" }}>
               <Button disabled={!values.legalChecked} type="submit">
                 Register
@@ -126,15 +126,6 @@ export default function RegisterForm(): JSX.Element {
           </div>
         </Form>
       )}
-      <style jsx>{`
-        .SpacedBox {
-          padding: 16px;
-        }
-
-        .u-right {
-          text-align: right;
-        }
-      `}</style>
     </Formik>
   );
 }

@@ -41,29 +41,10 @@ export default function WordCounter(props: IWordCounterProps): JSX.Element {
   }, [props.editorState]);
 
   return (
-    <div className="container">
-      <div className="Toast">
-        <small className="Meta">Word Count: {displayCount}</small>
+    <div className="WordCountContainer">
+      <div className="WordCount">
+        <small className="WordCountMeta">Word Count: {displayCount}</small>
       </div>
-      <style jsx>{`
-        .Toast {
-          color: ${DefaultStyles.colors.text};
-          background-color: white;
-          box-shadow: var(--shadow);
-          padding: 12px;
-        }
-        .container {
-          margin: 16px 8px;
-          right: 0;
-          bottom: 0;
-          z-index: 50;
-          position: fixed;
-        }
-        .Meta {
-          opacity: 0.5;
-          font-size: small;
-        }
-      `}</style>
     </div>
   );
 }
