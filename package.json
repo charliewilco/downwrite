@@ -8,7 +8,6 @@
   "scripts": {
     "start": "micro-proxy -r rules.dev.json -p 5000",
     "dev": "yarn workspaces run dev",
-    "build": "yarn workspaces run build",
     "test": "jest",
     "lint": "tslint",
     "ws:api": "yarn workspace api",
