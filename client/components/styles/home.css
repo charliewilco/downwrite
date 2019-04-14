@@ -1,0 +1,56 @@
+.HomeContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  padding: 0 8px 64px;
+  margin: 0 auto;
+}
+
+.LandingContainer {
+  text-align: center;
+  margin-bottom: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 33rem;
+  width: 100%;
+}
+
+.IntroTitle {
+  color: #185a70;
+  font-size: 24px;
+  font-family: var(--sans);
+  font-weight: 900;
+}
+
+.IntroContents {
+  padding: 32px 0 0;
+  margin-bottom: 64px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.Tagline {
+  font-weight: 700;
+  font-style: italic;
+  color: var(--landingPageTitle);
+}
+
+.BannerImage {
+  max-width: 200px;
+  z-index: 0;
+}
+
+@media (min-width: 57.75rem) {
+  .LandingContainer {
+    padding-top: 65px;
+  }
+}
+
+.NightMode .IntroTitle {
+  color: white;
+}

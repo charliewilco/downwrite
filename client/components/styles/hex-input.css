@@ -1,0 +1,26 @@
+.HexInput {
+  display: block;
+  width: 100%;
+  padding: 2px;
+  font-size: 14px;
+  border: 0;
+  font-family: inherit;
+}
+
+.HexInputWrapper {
+  display: flex;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 4px;
+  overflow: hidden;
+  font-family: var(--monospace);
+}
+
+.HexInputWrapper > span {
+  max-width: 24px;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 4px 8px;
+  color: #4f4f4f;
+  background: #dadada;
+  text-align: center;
+}

@@ -1,0 +1,21 @@
+.DeleteEntry {
+  padding: 24px 8px 0;
+}
+
+.DeleteEntryContents {
+  margin-bottom: 16px;
+  padding: 16px;
+  max-width: 480px;
+}
+
+.DeleteEntryTray {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 0;
+  font-family: var(--sans);
+}
+
+.DeleteEntryWarning {
+  margin: 16px 0;
+  font-size: 16px;
+}

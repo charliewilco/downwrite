@@ -1,0 +1,114 @@
+.PostContainer {
+  padding: 16px 8px;
+}
+
+.PostListHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.PostList {
+  width: 100%;
+  list-style: inside none;
+}
+.Grid {
+  list-style: none inside;
+  display: flex;
+  flex-wrap: wrap;
+}
+.GridItem {
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+@media (min-width: 48rem) {
+  .Grid {
+    margin-left: -20px;
+  }
+
+  .GridItem {
+    padding-left: 20px;
+    width: 50%;
+  }
+}
+
+@media (min-width: 57.75rem) {
+  .GridItem {
+    width: calc(100% / 3);
+  }
+}
+
+@media (min-width: 75rem) {
+  .GridItem {
+    width: calc(100% / 4);
+  }
+}
+
+@media (min-width: 112.5rem) {
+  .GridItem {
+    width: calc(100% / 5);
+  }
+}
+
+@media (min-width: 150rem) {
+  .GridItem {
+    width: calc(100% / 6);
+  }
+}
+
+@media (min-width: 187.5rem) {
+  .GridItem {
+    width: calc(100% / 7);
+  }
+}
+
+/* Item */
+
+.PostItem {
+  padding: 16px 0;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.PostItemTitle {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.PostItem:not(:last-of-type) {
+  border-bottom: 1px solid #ccc;
+}
+
+.PostItemTray {
+  margin-left: 16px;
+  display: inline-block;
+  font-size: 12px;
+}
+
+.PostItemDeleteButton {
+  color: inherit;
+  appearance: none;
+  border: 0px;
+  font-family: inherit;
+  background: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.PostItemMeta {
+  font-size: 12px;
+  display: block;
+  color: var(--meta);
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+@media (min-width: 57.75rem) {
+  .PostItemTitle {
+    font-size: 18px;
+  }
+}

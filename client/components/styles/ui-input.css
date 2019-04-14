@@ -1,0 +1,51 @@
+.UIInputContainer {
+  position: relative;
+}
+
+.UIInputContainer:not(:last-of-type) {
+  margin-bottom: 16px;
+}
+
+/*Input */
+
+.UIInputError {
+  color: #d04d36;
+}
+
+.UIInputContainer {
+  display: block;
+}
+
+.UIInputLabel {
+  font-weight: 700;
+  font-family: var(--sans);
+  transition: color 250ms ease-in-out;
+}
+
+.UIInputElement {
+  font-family: var(--monospace);
+  font-size: 16px;
+  font-weight: 400;
+  appearance: none;
+  display: block;
+  border: 0px;
+  width: 100%;
+  border-radius: 0px;
+  border-bottom: 2px solid #b4b4b4;
+  transition: border-bottom 250ms ease-in-out;
+}
+
+.UIInputElement::placeholder {
+  color: #d9d9d9;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.UIInputElement:focus {
+  outline: none;
+  border-bottom: 2px solid var(--yellow700);
+}
+
+.NightMode .UIInputElement::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}

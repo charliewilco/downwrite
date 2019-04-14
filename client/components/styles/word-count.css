@@ -1,0 +1,17 @@
+.WordCount {
+  color: var(--text);
+  background-color: white;
+  box-shadow: var(--shadow);
+  padding: 12px;
+}
+.WordCountContainer {
+  margin: 16px 8px;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  position: fixed;
+}
+.WordCountMeta {
+  opacity: 0.5;
+  font-size: small;
+}
