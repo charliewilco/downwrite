@@ -43,49 +43,42 @@ export default function Login(): JSX.Element {
   };
 
   return (
-    <div className="SpacedBox">
-      <Formik
-        validationSchema={LoginFormSchema}
-        initialValues={initialValues}
-        onSubmit={handleFormSubmit}>
-        {({
-          values,
-          errors,
-          handleChange,
-          handleSubmit
-        }: FormikProps<ILoginForm>) => (
-          <Form>
-            <UIInputContainer>
-              <UIInput
-                placeholder="user@email.com"
-                label="Username or Email"
-                name="user"
-                autoComplete="username"
-                value={values.user}
-                onChange={handleChange}
-              />
-              <ErrorMessage name="user" component={UIInputError} />
+    <Formik
+      validationSchema={LoginFormSchema}
+      initialValues={initialValues}
+      onSubmit={handleFormSubmit}>
+      {({ values, errors, handleChange, handleSubmit }: FormikProps<ILoginForm>) => (
+        <Form>
+          <UIInputContainer>
+            <UIInput
+              placeholder="user@email.com"
+              label="Username or Email"
+              name="user"
+              autoComplete="username"
+              value={values.user}
+              onChange={handleChange}
+            />
+            <ErrorMessage name="user" component={UIInputError} />
+          </UIInputContainer>
+          <UIInputContainer>
+            <UIInput
+              placeholder="*********"
+              name="password"
+              label="Password"
+              value={values.password}
+              type="password"
+              autoComplete="current-password"
+              onChange={handleChange}
+            />
+            <ErrorMessage name="password" component={UIInputError} />
+          </UIInputContainer>
+          <div className="u-right">
+            <UIInputContainer style={{ display: "inline-block" }}>
+              <Button type="submit">Login</Button>
             </UIInputContainer>
-            <UIInputContainer>
-              <UIInput
-                placeholder="*********"
-                name="password"
-                label="Password"
-                value={values.password}
-                type="password"
-                autoComplete="current-password"
-                onChange={handleChange}
-              />
-              <ErrorMessage name="password" component={UIInputError} />
-            </UIInputContainer>
-            <div className="u-right" style={{ padding: 16 }}>
-              <UIInputContainer style={{ display: "inline-block" }}>
-                <Button type="submit">Login</Button>
-              </UIInputContainer>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
+          </div>
+        </Form>
+      )}
+    </Formik>
   );
 }

@@ -40,3 +40,7 @@
   color: var(--yellow700);
   border-bottom-color: var(--yellow700);
 }
+
+.LoginForm {
+  padding: 16px;
+}

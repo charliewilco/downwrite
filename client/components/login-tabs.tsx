@@ -20,7 +20,7 @@ export default function LoginContainer(): JSX.Element {
           Login
         </UITabs.ListItem>
       </UITabs.List>
-      <UITabs.Panels>
+      <UITabs.Panels className="LoginForm">
         <UITabs.Panel label="Register">
           <header style={{ padding: 16 }}>
             <h2 className="FormGreeting" data-testid="LOGIN_TITLE">

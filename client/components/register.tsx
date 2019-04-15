@@ -97,7 +97,7 @@ export default function RegisterForm(): JSX.Element {
       onSubmit={handleSubmit}>
       {({ values, handleChange }: FormikProps<IRegistration>) => (
         <Form>
-          <div className="SpacedBox">
+          <div>
             {REGISTER_INPUTS.map(input => (
               <UIInputContainer key={input.name}>
                 <UIInput
@@ -117,7 +117,7 @@ export default function RegisterForm(): JSX.Element {
             checked={values.legalChecked}
             onChange={handleChange}
           />
-          <div style={{ padding: 16 }} className="u-right">
+          <div className="u-right">
             <UIInputContainer style={{ display: "inline-block" }}>
               <Button disabled={!values.legalChecked} type="submit">
                 Register
