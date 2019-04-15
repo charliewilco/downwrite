@@ -82,3 +82,32 @@ export async function getInitialPreview(
     url: `https://next.downwrite.us/preview?id=${id}`
   };
 }
+
+export interface IUserSettingsProps {
+  user: {
+    username: string;
+    email: string;
+  };
+  token: string;
+}
+
+export async function getInitialSettings(
+  ctx: NextContext<{ token: string }>
+): Promise<Partial<IUserSettingsProps>> {
+  const token = authMiddleware(ctx);
+
+  let host: string;
+
+  if (ctx.req) {
+    const serverURL: string = ctx.req.headers.host;
+
+    host = serverURL;
+  }
+
+  const user = await API.getUserDetails({ token, host });
+
+  return {
+    token,
+    user
+  };
+}

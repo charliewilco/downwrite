@@ -99,7 +99,7 @@ exports[`Header Component matches snapshot 1`] = `
   >
     <a
       class="AltLink"
-      style="margin-right: 8px;"
+      style="margin-right: 16px;"
     >
       Login or Sign Up
     </a>
