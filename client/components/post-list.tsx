@@ -6,7 +6,7 @@ import { IPost } from "downwrite";
 
 interface IPostListProps {
   posts: any[];
-  onDelete: ({ id }: Partial<IPost>) => void;
+  onSelect: ({ id }: Partial<IPost>) => void;
 }
 
 export default function PostList(props: IPostListProps): JSX.Element {
@@ -22,14 +22,14 @@ export default function PostList(props: IPostListProps): JSX.Element {
         <ul className="PostList Grid" data-testid="ENTRIES_GRIDVIEW">
           {props.posts.map((p, i) => (
             <li className="GridItem" key={i}>
-              <Card {...p} onDelete={props.onDelete} />
+              <Card {...p} onDelete={props.onSelect} />
             </li>
           ))}
         </ul>
       ) : (
         <ul className="PostList" data-testid="ENTRIES_LISTVIEW">
           {props.posts.map((p, i) => (
-            <PostListItem key={i} {...p} onDelete={props.onDelete} />
+            <PostListItem key={i} {...p} onDelete={props.onSelect} />
           ))}
         </ul>
       )}

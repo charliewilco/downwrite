@@ -26,9 +26,21 @@ declare module "downwrite" {
     statusCode: number;
   }
 
-  export interface AuthorType {
+  export interface IAuthorType {
     username: string;
     gradient: string[];
+  }
+
+  export interface IPreviewEntry {
+    title: string;
+    content: string;
+    author: IAuthorType;
+    dateAdded: Date;
+  }
+
+  export interface IPreviewEntryError {
+    message: string;
+    error: string;
   }
 
   /** Represents a List of Entries */

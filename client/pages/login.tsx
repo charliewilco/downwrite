@@ -20,16 +20,14 @@ import Features from "../components/landing-features";
 
 export default function LoginPage(): JSX.Element {
   return (
-    <>
-      <main className="HomeContainer" data-testid="LOGIN_PAGE_CONTAINER">
-        <Head>
-          <title>Downwrite</title>
-        </Head>
-        <Landing>
-          <Features />
-        </Landing>
-        <LoginTabs />
-      </main>
-    </>
+    <main className="HomeContainer" data-testid="LOGIN_PAGE_CONTAINER">
+      <Head>
+        <title>Downwrite</title>
+      </Head>
+      <Landing>
+        <Features />
+      </Landing>
+      <LoginTabs />
+    </main>
   );
 }

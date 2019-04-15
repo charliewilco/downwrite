@@ -22,7 +22,7 @@ export interface IPostError {
   statusCode: number;
 }
 
-export interface AuthorType {
+export interface IAuthorType {
   username: string;
   gradient: string[];
 }
@@ -55,4 +55,21 @@ export interface UIDefaultTheme {
   cardDeleteButton: string;
   headerLogoLink: string;
   landingPageTitle: string;
+}
+
+export interface AuthorType {
+  username: string;
+  gradient: string[];
+}
+
+export interface IPreviewEntry {
+  title: string;
+  content: string;
+  author: AuthorType;
+  dateAdded: Date;
+}
+
+export interface IPreviewEntryError {
+  message: string;
+  error: string;
 }

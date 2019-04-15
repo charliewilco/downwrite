@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as Draft from "draft-js";
 import Head from "next/head";
-import { NextContext } from "next";
 import { Formik, Form, FormikProps } from "formik";
 import "isomorphic-fetch";
 import * as Dwnxt from "downwrite";
@@ -16,22 +15,14 @@ import { ToggleBox } from "../components/toggle-box";
 import PreviewLink from "../components/preview-link";
 import Editor from "../components/editor";
 import TimeMarker from "../components/time-marker";
-import * as API from "../utils/api";
 import { superConverter } from "../utils/responseHandler";
 import { __IS_DEV__ } from "../utils/dev";
-import { authMiddleware } from "../utils/auth-middleware";
 import useUpdateEntry, { IFields } from "../hooks/update-entry";
-
-interface IEditorProps {
-  id: string;
-  title: string;
-  post: Dwnxt.IPost;
-  route?: {};
-}
+import { IEditProps, getInitialPost } from "../utils/initial-props";
 
 const EDITOR_COMMAND = "myeditor-save";
 
-function EditUI(props: IEditorProps) {
+function EditUI(props: IEditProps) {
   const initialEditorState = Draft.EditorState.createWithContent(
     superConverter((props.post as Dwnxt.IPost).content)
   );
@@ -116,28 +107,6 @@ function EditUI(props: IEditorProps) {
   );
 }
 
-EditUI.getInitialProps = async function(
-  ctx: NextContext<{ id: string; token: string }>
-) {
-  const token = authMiddleware(ctx);
-
-  let host: string;
-
-  if (ctx.req) {
-    const serverURL: string = ctx.req.headers.host;
-    host = serverURL;
-  }
-
-  const post = (await API.getPost(ctx.query.id, {
-    token,
-    host
-  })) as Dwnxt.IPost;
-
-  return {
-    token,
-    post,
-    id: ctx.query.id
-  };
-};
+EditUI.getInitialProps = getInitialPost;
 
 export default EditUI;
