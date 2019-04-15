@@ -1,4 +1,4 @@
-import Router from "next/router";
+// import Router from "next/router";
 import { NextContext } from "next";
 import Cookies, { CookieGetOptions } from "universal-cookie";
 import { __IS_BROWSER__ } from "./dev";
@@ -12,15 +12,16 @@ export function cookies<T>(
   options?: CookieGetOptions
 ): T | {} {
   options = options || {};
+  let cookies;
   if (context.req) {
     // Server
     if (!context.req.headers) return {}; // for Static export feature of Next.js
-    const cookies = new Cookies(context.req.headers.cookie);
+    cookies = new Cookies(context.req.headers.cookie);
     if (!cookies) return {};
     return cookies.getAll(options);
   } else {
     // Client
-    const cookies = new Cookies();
+    cookies = new Cookies();
 
     return cookies.getAll(options);
   }
@@ -33,14 +34,23 @@ export const authMiddleware = (ctx: NextContext): string => {
   const cookie = cookies<ICookie>(ctx) as ICookie;
   const token = cookie.DW_TOKEN;
 
-  if (ctx.req && !token) {
-    ctx.res.writeHead(302, { Location: "/login" });
-    ctx.res.end();
-    return;
-  }
+  // if (ctx.req && !token) {
+  //   ctx.res.writeHead(302, { Location: "/login" });
+  //   ctx.res.end();
+  //   return;
+  // }
 
   if (!token) {
-    Router.push("/login");
+    // if (__IS_BROWSER__) {
+    //   Router.push("/login");
+    // }
+
+    if (ctx.res) {
+      ctx.res.writeHead(302, { Location: "/login" });
+      ctx.res.end();
+
+      return;
+    }
   }
 
   return token;

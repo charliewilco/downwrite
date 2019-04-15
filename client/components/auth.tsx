@@ -94,7 +94,9 @@ export function AuthProvider(props: IAuthProps) {
   }, [state.authed]);
 
   React.useEffect(() => {
-    cookie.set("DW_TOKEN", state.token, cookieOptions);
+    if (state.token) {
+      cookie.set("DW_TOKEN", state.token, cookieOptions);
+    }
   }, [state.token]);
 
   function signIn(authed: boolean, token: string) {
