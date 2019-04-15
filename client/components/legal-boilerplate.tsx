@@ -1,8 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
 import Checkbox from "./checkbox";
-import * as DefaultStyles from "../utils/defaultStyles";
-import { NightModeContext } from "./night-mode";
 
 interface ILegalProps {
   name: string;

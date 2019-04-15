@@ -1,6 +1,5 @@
 import * as React from "react";
 import HexInput from "./hex-input";
-import * as DefaultStyles from "../utils/defaultStyles";
 
 interface IColorPickerProps {
   title?: string;

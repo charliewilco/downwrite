@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import * as DefaultStyles from "../utils/defaultStyles";
 
 interface IWordCounterProps {
   limit?: number;

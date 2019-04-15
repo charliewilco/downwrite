@@ -10,7 +10,6 @@ import {
   Underline,
   Label
 } from "./toolbar-icons";
-import * as DefaultStyles from "../utils/defaultStyles";
 
 interface IToolbarButtonProps {
   style: string;

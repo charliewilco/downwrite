@@ -1,7 +1,6 @@
 import * as React from "react";
 import Checkbox from "./checkbox";
 import useDarkModeEffect from "../hooks/dark-mode";
-import * as DefaultStyles from "../utils/defaultStyles";
 import classNames from "../utils/classnames";
 
 const NIGHT_MODE: string = "NightMode";
@@ -23,10 +22,6 @@ export default function NightModeContainer(
   props: INightModeContainerProps
 ): JSX.Element {
   const [night, onChange] = useDarkModeEffect(NIGHT_MODE);
-
-  const theme: DefaultStyles.UIDefaultTheme = night
-    ? DefaultStyles.NIGHT_THEME
-    : DefaultStyles.DAY_THEME;
 
   const context: INightModeContext = {
     night,
