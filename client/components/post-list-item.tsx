@@ -16,7 +16,7 @@ interface IListItemProps {
 
 export default function PostListItem(props: IListItemProps): JSX.Element {
   function onDelete() {
-    props.onDelete({ id: props.id });
+    props.onDelete({ id: props.id, title: props.title });
   }
 
   return (

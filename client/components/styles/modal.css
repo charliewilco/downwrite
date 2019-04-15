@@ -36,6 +36,7 @@
   width: 100%;
   background-color: rgba(21, 69, 93, 0.925);
   background-blend-mode: multiply;
+  padding: 8px;
 }
 
 .ModalCloseButton {
@@ -67,11 +68,8 @@
   display: flex;
   margin-left: auto;
   margin-right: auto;
-  width: auto;
+  max-width: 528px;
 }
 
 .ModalContainerInner {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
 }

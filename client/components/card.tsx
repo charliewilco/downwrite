@@ -42,7 +42,7 @@ export interface ICardProps {
 
 export default function Card(props: ICardProps) {
   function onDelete() {
-    props.onDelete({ id: props.id });
+    props.onDelete({ id: props.id, title: props.title });
   }
 
   return (

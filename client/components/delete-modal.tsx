@@ -16,10 +16,9 @@ export default function DeleteModal(props: IDeleteModalProps) {
     <Modal closeUIModal={props.closeModal}>
       <div className="DeleteEntry">
         <div className="DeleteEntryContents">
-          <h6>Delete Post</h6>
+          <h6 className="DeleteTitle">Delete Post</h6>
           <p className="DeleteEntryWarning">
-            Are you sure you want to delete{" "}
-            <strong>{quotedTitle(props.title)}</strong>?
+            Are you sure you want to delete <b>{quotedTitle(props.title)}</b>?
           </p>
         </div>
         <footer className="DeleteEntryTray">
