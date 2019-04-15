@@ -1,5 +1,5 @@
 import * as React from "react";
-import classNames from "utils/classnames";
+import classNames from "../utils/classnames";
 
 interface ISettingsFormActionsProps {
   split?: boolean;
