@@ -3,7 +3,6 @@ import * as Draft from "draft-js";
 import Head from "next/head";
 import { NextContext } from "next";
 import { Formik, Form, FormikProps } from "formik";
-import isEmpty from "lodash/isEmpty";
 import "isomorphic-fetch";
 import * as Dwnxt from "downwrite";
 import Autosaving from "../components/autosaving-interval";
@@ -19,10 +18,9 @@ import Editor from "../components/editor";
 import TimeMarker from "../components/time-marker";
 import * as API from "../utils/api";
 import { superConverter } from "../utils/responseHandler";
-import { sanitize } from "../utils/sanitize";
 import { __IS_DEV__ } from "../utils/dev";
 import { authMiddleware } from "../utils/auth-middleware";
-import { AuthContext, IAuthContext } from "../components/auth";
+import useUpdateEntry, { IFields } from "../hooks/update-entry";
 
 interface IEditorProps {
   id: string;
@@ -31,48 +29,16 @@ interface IEditorProps {
   route?: {};
 }
 
-interface ResponsePost extends Dwnxt.IPost {
-  _id: string;
-  __v: string;
-}
-
-interface IFields {
-  editorState: Draft.EditorState;
-  title: string;
-  publicStatus: boolean;
-}
-
 const EDITOR_COMMAND = "myeditor-save";
 
 function EditUI(props: IEditorProps) {
-  const { token } = React.useContext<IAuthContext>(AuthContext);
   const initialEditorState = Draft.EditorState.createWithContent(
     superConverter((props.post as Dwnxt.IPost).content)
   );
 
-  const dateModified = new Date();
-  const [loaded] = React.useState<boolean>(!isEmpty(props.post));
+  const [, loaded, onSubmit] = useUpdateEntry(props.post, props.id);
+
   const [initialFocus, setIntialFocus] = React.useState<boolean>(false);
-
-  async function updatePostContent(values: IFields): Promise<void> {
-    const contentState: Draft.ContentState = values.editorState.getCurrentContent();
-    const content = Draft.convertToRaw(contentState);
-    const { host } = document.location;
-
-    const body = sanitize<ResponsePost>(props.post, ["_id", "__v"]) as Dwnxt.IPost;
-
-    await API.updatePost(
-      props.id,
-      {
-        ...body,
-        title: values.title,
-        public: values.publicStatus,
-        content,
-        dateModified
-      },
-      { token, host }
-    );
-  }
 
   function onFocus(): void {
     setIntialFocus(true);
@@ -83,7 +49,7 @@ function EditUI(props: IEditorProps) {
   ) : (
     <div className="Wrapper Wrapper--sm">
       <Formik
-        onSubmit={updatePostContent}
+        onSubmit={onSubmit}
         initialValues={{
           editorState: initialEditorState,
           title: props.post.title,

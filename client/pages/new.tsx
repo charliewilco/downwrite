@@ -2,25 +2,16 @@ import * as React from "react";
 import * as Draft from "draft-js";
 import { Formik, Form, FormikProps } from "formik";
 import Head from "next/head";
-import Router from "next/router";
-import * as Dwnxt from "downwrite";
-import uuid from "uuid/v4";
+import useCreatePost, { IFields } from "../hooks/create-entry";
 import "isomorphic-fetch";
 import { Input } from "../components/editor-input";
 import { Button } from "../components/button";
 import Upload from "../components/upload";
 import Editor from "../components/editor";
-import { AuthContext, IAuthContext } from "../components/auth";
-import * as API from "../utils/api";
 
 interface INewPostProps {
   offline?: boolean;
   token: string;
-}
-
-interface IFormikValues {
-  title: string;
-  editorState: Draft.EditorState;
 }
 
 const EDITOR_COMMAND = "create-new-post";
@@ -36,40 +27,10 @@ const EDITOR_SPACING: React.CSSProperties = {
 //   localStorage.setItem("Draft " + id, JSON.stringify(post));
 // };
 
-function useCreatePost(): [string, (values: IFormikValues) => void] {
-  const [error, setError] = React.useState<string>("");
-
-  const { token } = React.useContext<IAuthContext>(AuthContext);
-  const id = React.useRef(uuid());
-
-  function createNewPost(values: IFormikValues) {
-    const ContentState: Draft.ContentState = values.editorState.getCurrentContent();
-
-    const body: Dwnxt.IPostCreation = {
-      title: values.title.length > 0 ? values.title : `Untitled ${id.current}`,
-      id: id.current,
-      content: JSON.stringify(Draft.convertToRaw(ContentState)),
-      dateAdded: new Date(),
-      public: false
-    };
-
-    API.createPost(body, { token, host: document.location.host })
-      .then(() =>
-        Router.push({
-          pathname: `/edit`,
-          query: { id: id.current }
-        })
-      )
-      .catch(err => setError(err.message));
-  }
-
-  return [error, (values: IFormikValues) => createNewPost(values)];
-}
-
-export default function NewEditor(props: INewPostProps) {
+export default function NewEditor(props: INewPostProps): JSX.Element {
   const [error, createNewPost] = useCreatePost();
 
-  const onSubmit = async (values: IFormikValues): Promise<void> => {
+  const onSubmit = async (values: IFields): Promise<void> => {
     createNewPost(values);
   };
 
@@ -82,7 +43,7 @@ export default function NewEditor(props: INewPostProps) {
         setFieldValue,
         handleSubmit,
         handleChange
-      }: FormikProps<IFormikValues>) => (
+      }: FormikProps<IFields>) => (
         <Form className="Wrapper Wrapper--sm" style={EDITOR_SPACING}>
           <Head>
             <title>{values.title ? values.title : "New"} | Downwrite</title>

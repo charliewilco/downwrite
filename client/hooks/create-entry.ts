@@ -6,18 +6,18 @@ import { AuthContext, IAuthContext } from "../components/auth";
 import * as API from "../utils/api";
 import uuid from "uuid/v4";
 
-export interface IFormikValues {
+export interface IFields {
   title: string;
   editorState: Draft.EditorState;
 }
 
-export default function useCreateEntry(): [string, (values: IFormikValues) => void] {
+export default function useCreateEntry(): [string, (values: IFields) => void] {
   const [error, setError] = React.useState<string>("");
 
   const { token } = React.useContext<IAuthContext>(AuthContext);
   const id = React.useRef(uuid());
 
-  function createNewPost(values: IFormikValues) {
+  function createNewPost(values: IFields) {
     const ContentState: Draft.ContentState = values.editorState.getCurrentContent();
 
     const body: Dwnxt.IPostCreation = {
@@ -38,5 +38,5 @@ export default function useCreateEntry(): [string, (values: IFormikValues) => vo
       .catch(err => setError(err.message));
   }
 
-  return [error, (values: IFormikValues) => createNewPost(values)];
+  return [error, (values: IFields) => createNewPost(values)];
 }

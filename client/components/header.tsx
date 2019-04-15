@@ -8,10 +8,12 @@ import DropdownUI from "./dropdown-ui";
 
 export function UIHeader(props: WithRouterProps): JSX.Element {
   const { authed } = React.useContext<IAuthContext>(AuthContext);
-  const style = { marginRight: 8 };
+  const style: React.CSSProperties = { marginRight: 16 };
+  const isLogin: boolean = props.router.route === "/login";
+
   return (
     <>
-      {!(props.router.route === "/login") ? (
+      {!isLogin ? (
         <header className="AppHeader" data-testid="APP_HEADER">
           <nav className="AppHeaderNav">
             <Logo />

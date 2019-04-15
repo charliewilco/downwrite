@@ -19,21 +19,24 @@ export default function useDarkModeEffect(className: string): [boolean, () => vo
     }
   }, []);
 
-  React.useEffect(() => {
-    if (document.body instanceof HTMLElement) {
-      localStorage.setItem(NIGHT_MODE, night ? NIGHT_MODE_ON : NIGHT_MODE_OFF);
+  React.useEffect(
+    function() {
+      if (document.body instanceof HTMLElement) {
+        localStorage.setItem(NIGHT_MODE, night ? NIGHT_MODE_ON : NIGHT_MODE_OFF);
 
-      night
-        ? document.body.classList.add(className)
-        : document.body.classList.remove(className);
-    }
-
-    return function cleanup() {
-      if (document.body) {
-        document.body.classList.remove(className);
+        night
+          ? document.body.classList.add(className)
+          : document.body.classList.remove(className);
       }
-    };
-  }, [night]);
+
+      return function cleanup() {
+        if (document.body) {
+          document.body.classList.remove(className);
+        }
+      };
+    },
+    [night]
+  );
 
   function onChange(): void {
     setNight(prev => !prev);
