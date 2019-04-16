@@ -23,7 +23,7 @@ interface IFormHandlers {
 
 export default function useLoginFns(): IFormHandlers {
   const { signIn } = React.useContext<IAuthContext>(AuthContext);
-  const { actions } = useUINotifications();
+  const { notifications, actions } = useUINotifications();
 
   const onLoginSubmit = async (values: ILoginValues): Promise<void> => {
     const { host } = document.location;
@@ -35,6 +35,11 @@ export default function useLoginFns(): IFormHandlers {
 
     if (auth.token) {
       signIn(auth.token !== undefined, auth.token);
+      if (notifications.length > 0) {
+        notifications.forEach(n => {
+          actions.remove(n);
+        });
+      }
     }
   };
 

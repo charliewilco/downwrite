@@ -53,7 +53,9 @@ export function UIMessage(props: UIMessageProps): JSX.Element {
           {props.notification.text}
         </p>
       </div>
-      <button onClick={onRemove}>Dismiss</button>
+      {!props.notification.dismissable && (
+        <button onClick={onRemove}>Dismiss</button>
+      )}
     </div>
   );
 }

@@ -20,10 +20,8 @@ export interface IFields {
 export default function useUpdateEntry(
   post: Dwnxt.IPost,
   id: string
-): [string, boolean, (v: IFields) => void] {
-  const [loaded] = React.useState<boolean>(!isEmpty(post));
-
-  const [error] = React.useState<string>("");
+): [boolean, (v: IFields) => void] {
+  const loaded = React.useRef<boolean>(!isEmpty(post));
   const { token } = React.useContext<IAuthContext>(AuthContext);
   const dateRef = React.useRef<Date>(new Date());
 
@@ -47,5 +45,5 @@ export default function useUpdateEntry(
     );
   }
 
-  return [error, loaded, (values: IFields) => updatePostContent(values)];
+  return [loaded.current, (values: IFields) => updatePostContent(values)];
 }

@@ -5,7 +5,6 @@ import { Formik, Form, FormikProps } from "formik";
 import "isomorphic-fetch";
 import * as Dwnxt from "downwrite";
 import Autosaving from "../components/autosaving-interval";
-import Toast from "../components/toast";
 import ExportMarkdown from "../components/export";
 import WordCounter from "../components/word-count";
 import { Button } from "../components/button";
@@ -27,9 +26,8 @@ function EditUI(props: InitialProps.IEditProps) {
     superConverter((props.post as Dwnxt.IPost).content)
   );
 
-  const [, loaded, onSubmit] = useUpdateEntry(props.post, props.id);
-
   const [initialFocus, setIntialFocus] = React.useState<boolean>(false);
+  const [loaded, onSubmit] = useUpdateEntry(props.post, props.id);
 
   function onFocus(): void {
     setIntialFocus(true);
@@ -54,15 +52,18 @@ function EditUI(props: InitialProps.IEditProps) {
         }: FormikProps<IFields>) => (
           <>
             <Head>
-              <title>{values.title} | Downwrite</title>
+              <title>
+                {__IS_DEV__ && "DEVELOPMENT"} {values.title} | Downwrite
+              </title>
             </Head>
-            <Autosaving
-              duration={__IS_DEV__ ? 30000 : 120000}
-              onUpdate={initialFocus && handleSubmit}>
-              <Toast>
-                Autosaving <i>{values.title}</i>
-              </Toast>
-            </Autosaving>
+            {initialFocus && (
+              <Autosaving
+                title={values.title}
+                duration={__IS_DEV__ ? 30000 : 120000}
+                onUpdate={handleSubmit}
+              />
+            )}
+
             <Form style={{ padding: "0 8px" }}>
               <TimeMarker dateAdded={props.post.dateAdded} />
               <Input value={values.title} name="title" onChange={handleChange} />

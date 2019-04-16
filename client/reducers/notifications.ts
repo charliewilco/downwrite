@@ -7,7 +7,6 @@ export enum NotificationType {
   WARNING = "WARNING"
 }
 
-// TODO: handler
 export class UINotificationMessage {
   public id: string = uuid();
   public text: string;
@@ -94,7 +93,7 @@ export function init(
 }
 
 interface INotificationActions {
-  add: (m: string, t?: NotificationType) => void;
+  add: (m: string, t?: NotificationType, d?: boolean) => void;
   remove: (m: UINotificationMessage) => void;
 }
 
@@ -113,12 +112,13 @@ export function useUINotificationsProvider(): INotificationContext {
     notifications: []
   });
 
-  function add(text: string, type: NotificationType): void {
+  function add(text: string, type?: NotificationType, dismissable?: boolean): void {
     dispatch({
       type: NotificationActions.ADD_NOTIFICATION,
       payload: {
         text,
-        type
+        type,
+        dismissable
       }
     });
   }
@@ -153,7 +153,6 @@ interface INotificationProps {
 
 export function NotificationProvider(props: INotificationProps): JSX.Element {
   const value = useUINotificationsProvider();
-
   return React.createElement(
     NotificationContext.Provider,
     { value },
