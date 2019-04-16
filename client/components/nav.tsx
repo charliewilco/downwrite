@@ -6,21 +6,13 @@ import { AuthContext, IAuthContext } from "./auth";
 import User from "./user";
 import Fetch from "./collection-fetch";
 import { SignoutIcon } from "./icons";
-
+import usePrevious from "../hooks/previous";
 import LockScroll from "./lock-scroll";
 
 // TODO: Slide to close navigation?
 interface INavigationProps extends WithRouterProps {
   token: string;
   closeNav: () => void;
-}
-
-function usePrevious<T>(value: T) {
-  const ref = React.useRef<T>(null);
-  React.useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
 }
 
 function NavBar(props: INavigationProps): JSX.Element {
