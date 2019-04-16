@@ -3,6 +3,20 @@ import * as UITabs from "./tabs";
 import Register from "./register";
 import Login from "./login-form";
 
+interface IFormHeaderProps {
+  children: React.ReactNode;
+}
+
+function FormHeader(props: IFormHeaderProps) {
+  return (
+    <header className="LoginFormHeader">
+      <h2 className="FormGreeting" data-testid="LOGIN_TITLE">
+        {props.children}
+      </h2>
+    </header>
+  );
+}
+
 export default function LoginContainer(): JSX.Element {
   return (
     <UITabs.Container className="FormWrapper">
@@ -22,19 +36,11 @@ export default function LoginContainer(): JSX.Element {
       </UITabs.List>
       <UITabs.Panels className="LoginForm">
         <UITabs.Panel label="Register">
-          <header style={{ padding: 16 }}>
-            <h2 className="FormGreeting" data-testid="LOGIN_TITLE">
-              Sign Up as a New User
-            </h2>
-          </header>
+          <FormHeader>Sign Up as a New User</FormHeader>
           <Register />
         </UITabs.Panel>
         <UITabs.Panel label="Login">
-          <header style={{ padding: 16 }}>
-            <h2 className="FormGreeting" data-testid="LOGIN_TITLE">
-              Welcome Back!
-            </h2>
-          </header>
+          <FormHeader>Welcome Back!</FormHeader>
           <Login />
         </UITabs.Panel>
       </UITabs.Panels>
