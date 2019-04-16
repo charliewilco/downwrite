@@ -1,6 +1,6 @@
 import * as React from "react";
-import { ErrorStateContext, IUIErrorMessage } from "../components/ui-error";
 import { AuthContext, IAuthContext } from "../components/auth";
+import { useUINotifications, NotificationType } from "../reducers/notifications";
 import * as API from "../utils/api";
 import { StringTMap } from "../utils/types";
 
@@ -22,17 +22,15 @@ interface IFormHandlers {
 }
 
 export default function useLoginFns(): IFormHandlers {
-  const {
-    errorActions: { setError }
-  } = React.useContext<IUIErrorMessage>(ErrorStateContext);
   const { signIn } = React.useContext<IAuthContext>(AuthContext);
+  const { actions } = useUINotifications();
 
   const onLoginSubmit = async (values: ILoginValues): Promise<void> => {
     const { host } = document.location;
     const auth = await API.authUser(values, { host });
 
     if (auth.error) {
-      setError(auth.message, "error");
+      actions.add(auth.message, NotificationType.ERROR);
     }
 
     if (auth.token) {
@@ -56,7 +54,7 @@ export default function useLoginFns(): IFormHandlers {
     if (user.userID) {
       signIn(user.id_token !== undefined, user.id_token);
     } else {
-      setError(user.message, "error");
+      actions.add(user.message, NotificationType.ERROR);
     }
   };
 

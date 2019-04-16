@@ -2,10 +2,10 @@ import * as React from "react";
 import Header from "./header";
 import Footer from "./footer";
 import NightMode from "./night-mode";
-import { ErrorContainer, UIErrorBanner } from "./ui-error";
 import { LocalUISettingsProvider } from "./local-ui-settings";
 import "./styles/base.css";
 import { NotificationProvider } from "../reducers/notifications";
+import { MessageList } from "./ui-notification";
 
 interface IUIShell {
   children: React.ReactNode;
@@ -17,16 +17,14 @@ export function UIShell(props: IUIShell) {
       <LocalUISettingsProvider>
         <div className="UIContainer">
           <NotificationProvider>
-            <ErrorContainer>
-              <UIErrorBanner />
-              <div className="clearfix">
-                <div style={{ minHeight: "100%" }}>
-                  <Header />
-                  {props.children}
-                  <Footer />
-                </div>
+            <div className="clearfix">
+              <div style={{ minHeight: "100%" }}>
+                <Header />
+                {props.children}
+                <Footer />
               </div>
-            </ErrorContainer>
+            </div>
+            <MessageList />
           </NotificationProvider>
         </div>
       </LocalUISettingsProvider>
