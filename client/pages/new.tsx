@@ -3,6 +3,7 @@ import * as Draft from "draft-js";
 import { Formik, Form, FormikProps } from "formik";
 import Head from "next/head";
 import useCreatePost, { IFields } from "../hooks/create-entry";
+import useOffline from "../hooks/offline";
 import "isomorphic-fetch";
 import { Input } from "../components/editor-input";
 import { Button } from "../components/button";
@@ -10,7 +11,6 @@ import Upload from "../components/upload";
 import Editor from "../components/editor";
 
 interface INewPostProps {
-  offline?: boolean;
   token: string;
 }
 
@@ -28,7 +28,8 @@ const EDITOR_SPACING: React.CSSProperties = {
 // };
 
 export default function NewEditor(props: INewPostProps): JSX.Element {
-  const [error, createNewPost] = useCreatePost();
+  const createNewPost = useCreatePost();
+  const isOffline = useOffline();
 
   const onSubmit = async (values: IFields): Promise<void> => {
     createNewPost(values);
@@ -62,7 +63,7 @@ export default function NewEditor(props: INewPostProps): JSX.Element {
             />
             <aside className="UtilityBarContainer">
               <div className="UtilityBarItems">
-                {props.offline && <span>You're Offline Right Now</span>}
+                {isOffline && <span>You're Offline Right Now</span>}
               </div>
               <div className="UtilityBarItems">
                 <Button type="Submit">Add New</Button>

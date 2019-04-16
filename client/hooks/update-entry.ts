@@ -4,6 +4,7 @@ import * as Dwnxt from "downwrite";
 import * as API from "../utils/api";
 import { sanitize } from "../utils/sanitize";
 import { AuthContext, IAuthContext } from "../components/auth";
+import { useUINotifications, NotificationType } from "../reducers/notifications";
 import isEmpty from "lodash/isEmpty";
 
 interface ResponsePost extends Dwnxt.IPost {
@@ -24,6 +25,7 @@ export default function useUpdateEntry(
   const loaded = React.useRef<boolean>(!isEmpty(post));
   const { token } = React.useContext<IAuthContext>(AuthContext);
   const dateRef = React.useRef<Date>(new Date());
+  const { actions } = useUINotifications();
 
   async function updatePostContent(values: IFields): Promise<void> {
     const contentState: Draft.ContentState = values.editorState.getCurrentContent();
@@ -42,7 +44,9 @@ export default function useUpdateEntry(
         dateModified: dateRef.current
       },
       { token, host }
-    );
+    )
+      .then(() => {})
+      .catch(err => actions.add(err.message, NotificationType.ERROR));
   }
 
   return [loaded.current, (values: IFields) => updatePostContent(values)];

@@ -5,14 +5,17 @@ import * as Dwnxt from "downwrite";
 import { AuthContext, IAuthContext } from "../components/auth";
 import * as API from "../utils/api";
 import uuid from "uuid/v4";
+import { useUINotifications, NotificationType } from "../reducers/notifications";
 
 export interface IFields {
   title: string;
   editorState: Draft.EditorState;
 }
 
-export default function useCreateEntry(): [string, (values: IFields) => void] {
-  const [error, setError] = React.useState<string>("");
+export type CreateEntryHander = (values: IFields) => void;
+
+export default function useCreateEntry(): CreateEntryHander {
+  const { actions } = useUINotifications();
 
   const { token } = React.useContext<IAuthContext>(AuthContext);
   const id = React.useRef(uuid());
@@ -35,8 +38,8 @@ export default function useCreateEntry(): [string, (values: IFields) => void] {
           query: { id: id.current }
         })
       )
-      .catch(err => setError(err.message));
+      .catch(err => actions.add(err.message, NotificationType.ERROR));
   }
 
-  return [error, (values: IFields) => createNewPost(values)];
+  return (values: IFields) => createNewPost(values);
 }
