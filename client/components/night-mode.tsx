@@ -35,6 +35,7 @@ export default function NightModeContainer(
   );
 }
 
+// TODO: Remove
 export function NightModeTrigger(props: INightModeContainerProps): JSX.Element {
   const { night, action } = React.useContext<INightModeContext>(NightModeContext);
   const onChange = () => {
