@@ -31,14 +31,10 @@ export default function NewEditor(props: INewPostProps): JSX.Element {
   const createNewPost = useCreatePost();
   const isOffline = useOffline();
 
-  const onSubmit = async (values: IFields): Promise<void> => {
-    createNewPost(values);
-  };
-
   return (
     <Formik
       initialValues={{ title: "", editorState: Draft.EditorState.createEmpty() }}
-      onSubmit={onSubmit}>
+      onSubmit={createNewPost}>
       {({
         values,
         setFieldValue,

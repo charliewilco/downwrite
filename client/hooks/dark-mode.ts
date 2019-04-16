@@ -4,8 +4,6 @@ const NIGHT_MODE: string = "NightMode";
 const NIGHT_MODE_OFF: string = "NIGHT_MODE_OFF";
 const NIGHT_MODE_ON: string = "NIGHT_MODE_ON";
 
-export function useDarkMode() {}
-
 export default function useDarkModeEffect(className: string): [boolean, () => void] {
   const [night, setNight] = React.useState<boolean>(false);
 
