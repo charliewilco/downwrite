@@ -49,7 +49,6 @@ export default function NewEditor(props: INewPostProps): JSX.Element {
           <Head>
             <title>{values.title ? values.title : "New"} | Downwrite</title>
           </Head>
-          {error.length > 0 && <span className="f6 u-center">{error}</span>}
           <Upload
             onParsed={parsed => {
               setFieldValue("title", parsed.title);
