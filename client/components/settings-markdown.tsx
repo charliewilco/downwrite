@@ -26,7 +26,7 @@ const LOCAL_SETTINGS_INPUTS = [
   }
 ];
 
-enum LocalSettings {
+export enum LocalSettings {
   EXTENSION = "DW_FILE_EXTENSION",
   FONT = "DW_EDITOR_FONT"
 }
@@ -40,17 +40,17 @@ export default function SettingsLocalMarkdown(): JSX.Element {
   });
 
   function onSubmit(
-    values: ILocalSettings,
+    { fileExtension, fontFamily }: ILocalSettings,
     actions: FormikActions<ILocalSettings>
   ): void {
-    localStorage.setItem(LocalSettings.EXTENSION, values.fileExtenksion);
-    localStorage.setItem(LocalSettings.FONT, values.fontFamily);
+    localStorage.setItem(LocalSettings.EXTENSION, fileExtension);
+    localStorage.setItem(LocalSettings.FONT, fontFamily);
 
-    context.actions.updateFont(values.fontFamily);
+    context.actions.updateFont(fontFamily);
 
     if (
-      localStorage.getItem(LocalSettings.EXTENSION) === values.fileExtension &&
-      localStorage.getItem(LocalSettings.FONT) === values.fontFamily
+      localStorage.getItem(LocalSettings.EXTENSION) === fileExtension &&
+      localStorage.getItem(LocalSettings.FONT) === fontFamily
     ) {
       actions.setSubmitting(false);
     }

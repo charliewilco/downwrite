@@ -5,6 +5,7 @@ import FileSaver from "file-saver";
 import Markdown from "./export-markdown-button";
 import { createMarkdown } from "../utils/markdownTemplate";
 import classNames from "../utils/classnames";
+import { LocalSettings } from "./settings-markdown";
 
 interface IExportProps {
   title: string;
@@ -51,7 +52,7 @@ export default function UIMarkdownExport(props: IExportProps) {
     });
 
   const toMarkdown = ({ title, content, date }: IExportCallback): void => {
-    let localFileExtension = localStorage.getItem("DW_FILE_EXTENSION");
+    let localFileExtension = localStorage.getItem(LocalSettings.EXTENSION);
     let extension = localFileExtension.replace(/\./g, "") || "md";
 
     try {
