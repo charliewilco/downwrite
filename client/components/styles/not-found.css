@@ -1,0 +1,26 @@
+.NotFound {
+  margin: 0 auto;
+  padding: 8px;
+  max-width: 512px;
+  text-align: center;
+  font-style: italic;
+}
+
+.NotFoundTitle {
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.NotFoundImage {
+  display: inline-block;
+  margin-bottom: 16px;
+  max-width: 25%;
+}
+
+.SuperErrorMessage {
+  display: inline-block;
+  margin-bottom: 32px;
+  font-size: 84px;
+  line-height: 1;
+  font-weight: 900;
+}

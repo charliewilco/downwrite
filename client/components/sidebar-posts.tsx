@@ -1,25 +1,19 @@
 import * as React from "react";
-import styled from "styled-components";
 import PostListItem from "./post-list-item";
 
-const SidebarEntriesTitle = styled.h6`
-  font-size: 12px;
-  margin-bottom: 8px;
-`;
+interface ISidebarPostProps {
+  posts: any[];
+}
 
-const Separator = styled.div`
-  margin-bottom: 1rem;
-`;
-
-const SidebarPosts: React.FC<{ posts: any[] }> = ({ posts }) => (
-  <>
-    <SidebarEntriesTitle>Recent Entries</SidebarEntriesTitle>
-    {posts.slice(0, 2).map((post, i) => (
-      <Separator key={i}>
-        <PostListItem {...post} />
-      </Separator>
-    ))}
-  </>
-);
-
-export default SidebarPosts;
+export default function SidebarPosts(props: ISidebarPostProps): JSX.Element {
+  return (
+    <>
+      <h6 style={{ fontSize: 12, marginBottom: 8 }}>Recent Entries</h6>
+      {props.posts.slice(0, 2).map((post, i) => (
+        <div style={{ marginBottom: 16 }} key={i}>
+          <PostListItem {...post} />
+        </div>
+      ))}
+    </>
+  );
+}

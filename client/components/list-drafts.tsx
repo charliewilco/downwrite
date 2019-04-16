@@ -7,7 +7,7 @@ const searchLocalStorage = () => {
   );
 };
 
-const ListDrafts: React.FC<{}> = function(props) {
+export default function ListDrafts(props: any): JSX.Element {
   const [drafts] = React.useState<any[]>([]);
 
   React.useEffect(() => {
@@ -19,6 +19,4 @@ const ListDrafts: React.FC<{}> = function(props) {
   }, []);
 
   return <span>I should be a list and i'm not</span>;
-};
-
-export default ListDrafts;
+}

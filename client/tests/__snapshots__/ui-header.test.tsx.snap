@@ -1,106 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Header Component matches snapshot 1`] = `
-.c2 {
-  max-width: 20px;
-}
-
-.c3 {
-  display: block;
-  max-width: 100%;
-  min-height: auto;
-}
-
-.c6 {
-  font-size: 14px;
-  cursor: pointer;
-  line-height: 1.1;
-  opacity: 0.5;
-  color: !important;
-  margin-right: 32px;
-}
-
-.c6:hover,
-.c6:focus {
-  color: #4C4C4C;
-  opacity: 1;
-}
-
-.c1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.c5 {
-  margin-left: 12px;
-  display: block;
-  cursor: pointer;
-  -webkit-transition: color 375ms ease-in-out;
-  transition: color 375ms ease-in-out;
-  color: !important;
-}
-
-.c5:hover {
-  color: #185a70;
-}
-
-.c4 {
-  font-size: 16px;
-  font-style: normal;
-  font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
-  line-height: 1;
-  font-weight: 500;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  padding-left: 8px;
-  padding-right: 8px;
-}
-
-@media (min-width:57.75rem) {
-  .c2 {
-    max-width: 33px;
-  }
-}
-
-@media (min-width:57.75rem) {
-  .c4 {
-    font-size: 20px;
-  }
-}
-
 <header
-  class="c0"
+  class="AppHeader"
   data-testid="APP_HEADER"
 >
   <nav
-    class="c1"
+    class="AppHeaderNav"
   >
     <div
-      class="c2"
+      class="Logo"
     >
       <svg
-        class="c3"
+        class="LogoIcon"
         height="50"
         viewBox="0 0 33 50"
         width="33"
@@ -172,21 +84,22 @@ exports[`Header Component matches snapshot 1`] = `
       </svg>
     </div>
     <h1
-      class="c4"
+      class="AppHeaderTitle"
       data-testid="APP_HEADER_TITLE"
     >
       <a
-        class="c5"
+        class="AppHeaderLink"
       >
         Downwrite
       </a>
     </h1>
   </nav>
   <nav
-    class="c1"
+    class="AppHeaderNav"
   >
     <a
-      class="c6"
+      class="AltLink"
+      style="margin-right: 16px;"
     >
       Login or Sign Up
     </a>

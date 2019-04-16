@@ -1,0 +1,39 @@
+:root {
+  --blue400: #4fa5c2; /* Main Color */
+  --blue500: #4382a1;
+  --blue700: #185a70; /*  Darker Main Color */
+  --blue900: #1f5671;
+  --blue100: #d8eaf1; /* Lighter Main Color */
+  --gray100: #f9fbfc; /* Background */
+  --gray200: #dbdcdd;
+  --gray300: #757575;
+  --gray400: #868686; /* Meta Highlighting Color */
+  --gray700: #282828; /* Text Color */
+  --yellow700: #ffb600;
+  --yellow500: #ffc200;
+  --text: #4c4c4c;
+
+  /* Default Styles */
+  --background: #f9fbfc;
+  --color: #4c4c4c;
+  --border: #dbdcdd;
+  --link: #4fa5c2;
+  --linkHover: #d8eaf1;
+  --meta: #757575;
+  --inputBorder: rgba(0, 0, 0, 0.125);
+  --cardBackground: #ffffff;
+  --cardTrayBackground: rgba(101, 163, 191, 0.125);
+  --cardDeleteButton: #185a70;
+  --headerLogoLink: #4fa5c2;
+  --landingPageTitle: #1f5671;
+  --shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
+
+  --base-spacing: 1rem;
+
+  /* Fonts */
+  --code: "SF Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier,
+    monospace;
+  --monospace: "SF Mono", "Input Mono Condensed", "Roboto Mono", Menlo, monospace;
+  --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}

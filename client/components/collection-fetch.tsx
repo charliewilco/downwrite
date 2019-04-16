@@ -1,31 +1,49 @@
 import * as React from "react";
+import Router from "next/router";
 import orderBy from "lodash/orderBy";
 import { AuthContext, IAuthContext } from "./auth";
-import { SidebarEmpty } from "./empty-posts";
+import { Button } from "./button";
 import SidebarPosts from "./sidebar-posts";
 import * as API from "../utils/api";
 import { IPost } from "downwrite";
 
+enum FetchActions {
+  FETCH_COMPLETED = "FETCH_COMPLETED",
+  FETCH_INIT = "FETCH_INIT",
+  FETCH_ERROR = "FETCH_ERROR"
+}
+
 interface FetchState {
   posts: IPost[];
   isLoading: boolean;
+  error?: string;
 }
 
 interface FetchAction {
-  type: string;
+  type: FetchActions;
   payload?: {
     posts: IPost[];
     error?: string;
   };
 }
 
-const reducer: React.Reducer<FetchState, FetchAction> = (state, action) => {
+const reducer: React.Reducer<FetchState, FetchAction> = (
+  state,
+  action
+): FetchState => {
   switch (action.type) {
-    case "fetched": {
+    case FetchActions.FETCH_COMPLETED: {
       return { ...state, posts: action.payload.posts, isLoading: false };
     }
-    case "fetching": {
+    case FetchActions.FETCH_INIT: {
       return { ...state, isLoading: true };
+    }
+    case FetchActions.FETCH_ERROR: {
+      return {
+        posts: action.payload.posts,
+        isLoading: false,
+        error: action.payload.error
+      };
     }
     default: {
       return state;
@@ -35,29 +53,33 @@ const reducer: React.Reducer<FetchState, FetchAction> = (state, action) => {
 
 const initialState: FetchState = {
   posts: [],
-  isLoading: true
+  isLoading: true,
+  error: ""
 };
 
-const CollectionFetch: React.FC = function() {
-  const [state, dispatch] = React.useReducer(reducer, initialState);
+export default function CollectionFetch() {
+  const [state, dispatch] = React.useReducer<React.Reducer<FetchState, FetchAction>>(
+    reducer,
+    initialState
+  );
 
   const { token } = React.useContext<IAuthContext>(AuthContext);
 
   React.useEffect(() => {
     const { host } = document.location;
-    dispatch({ type: "fetching" });
+    dispatch({ type: FetchActions.FETCH_INIT });
 
     API.getPosts({ token, host }).then(posts => {
       if (Array.isArray(posts)) {
         dispatch({
-          type: "fetched",
+          type: FetchActions.FETCH_COMPLETED,
           payload: {
             posts: orderBy(posts, ["dateAdded"], ["desc"])
           }
         });
       } else {
         dispatch({
-          type: "error",
+          type: FetchActions.FETCH_ERROR,
           payload: {
             posts: [],
             error: "Can't receieve posts"
@@ -74,8 +96,14 @@ const CollectionFetch: React.FC = function() {
   return state.posts.length > 0 ? (
     <SidebarPosts posts={state.posts} />
   ) : (
-    <SidebarEmpty />
+    <div
+      style={{
+        paddingTop: 64,
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column"
+      }}>
+      <Button onClick={() => Router.push("/new")}>Get Started</Button>
+    </div>
   );
-};
-
-export default CollectionFetch;
+}

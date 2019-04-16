@@ -1,0 +1,110 @@
+.f1,
+h1 {
+  font-size: 43.75px;
+  font-size: 2.73438rem;
+}
+
+.f2,
+h2 {
+  font-size: 35px;
+  font-size: 2.1875rem;
+}
+
+.f3,
+h3 {
+  font-size: 29.75px;
+  font-size: 1.85938rem;
+}
+
+.f4,
+h4 {
+  font-size: 24.5px;
+  font-size: 1.53125rem;
+}
+
+.f5,
+h5 {
+  font-size: 21px;
+  font-size: 1.3125rem;
+}
+
+.f6,
+h6 {
+  font-size: 17.5px;
+  font-size: 1.09375rem;
+}
+
+.f1,
+.f2,
+.f3,
+.f4,
+.f5,
+.f6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  line-height: 1.5;
+  font-family: inherit;
+}
+
+@media only screen and (min-width: 48rem) {
+  .f1,
+  h1 {
+    font-size: 3.125rem;
+  }
+  .f2,
+  h2 {
+    font-size: 2.5rem;
+  }
+  .f3,
+  h3 {
+    font-size: 2.125rem;
+  }
+  .f4,
+  h4 {
+    font-size: 1.75rem;
+  }
+  .f5,
+  h5 {
+    font-size: 1.5rem;
+  }
+  .f6,
+  h6 {
+    font-size: 1.25rem;
+  }
+}
+
+@media only screen and (min-width: 57.75rem) {
+  .f1,
+  h1 {
+    font-size: 3.51563rem;
+  }
+  .f2,
+  h2 {
+    font-size: 2.8125rem;
+  }
+  .f3,
+  h3 {
+    font-size: 2.39063rem;
+  }
+  .f4,
+  h4 {
+    font-size: 1.96875rem;
+  }
+  .f5,
+  h5 {
+    font-size: 1.6875rem;
+  }
+  .f6,
+  h6 {
+    font-size: 1.40625rem;
+  }
+}
+
+.small {
+  font-size: 87.5%;
+}

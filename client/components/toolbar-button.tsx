@@ -1,5 +1,4 @@
 import * as React from "react";
-import styled from "styled-components";
 import {
   BlockQuote,
   BulletedList,
@@ -11,17 +10,6 @@ import {
   Underline,
   Label
 } from "./toolbar-icons";
-import * as DefaultStyles from "../utils/defaultStyles";
-
-const ToolbarButton = styled.div`
-  display: inline-block;
-  padding: 8px;
-  flex: 1 1 auto;
-  text-align: center;
-  color: ${DefaultStyles.colors.blue700};
-  font-size: 12px;
-  transition: all 250ms ease-in-out;
-`;
 
 interface IToolbarButtonProps {
   style: string;
@@ -31,39 +19,38 @@ interface IToolbarButtonProps {
 }
 
 function findIcon(label: string, active: boolean): React.ReactNode {
+  const props = { active };
   switch (label) {
     case "Quote":
-      return React.createElement(BlockQuote, { active });
+      return React.createElement(BlockQuote, props);
     case "Bullets":
-      return React.createElement(BulletedList, { active });
+      return React.createElement(BulletedList, props);
     case "Numbers":
-      return React.createElement(Numbers, { active });
+      return React.createElement(Numbers, props);
     case "Code":
-      return React.createElement(Code, { active });
+      return React.createElement(Code, props);
     case "Bold":
-      return React.createElement(Bold, { active });
+      return React.createElement(Bold, props);
     case "Italic":
-      return React.createElement(Italic, { active });
+      return React.createElement(Italic, props);
     case "Underline":
-      return React.createElement(Underline, { active });
+      return React.createElement(Underline, props);
     case "Mono":
-      return React.createElement(Mono, { active });
+      return React.createElement(Mono, props);
     default:
       return React.createElement(Label, { label, active });
   }
 }
 
-const StyleButton: React.FC<IToolbarButtonProps> = function(props) {
+export default function StyleButton(props: IToolbarButtonProps): JSX.Element {
   const onToggle = (e: React.MouseEvent<HTMLDivElement>): void => {
     e.preventDefault();
     props.onToggle(props.style);
   };
 
   return (
-    <ToolbarButton onMouseDown={onToggle}>
+    <div className="ToolbarButton" onMouseDown={onToggle}>
       {findIcon(props.label, props.active)}
-    </ToolbarButton>
+    </div>
   );
-};
-
-export default StyleButton;
+}

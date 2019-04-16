@@ -1,137 +1,65 @@
 import * as React from "react";
-import styled, { keyframes, withTheme, createGlobalStyle } from "styled-components";
 import Router from "next/router";
 import * as Reach from "@reach/menu-button";
-import { NavIcon, SignoutIcon } from "./icons";
+import { NavIcon } from "./icons";
 import User from "./user";
 import { AuthContext, IAuthContext } from "./auth";
-import * as DefaultStyles from "../utils/defaultStyles";
+import { NightModeContext, INightModeContext } from "./night-mode";
 
-const MenuStyles = createGlobalStyle`
-  :root {
-    --reach-menu-button: 1;
-  }
+interface IMenuEmojiProps {
+  label: string;
+  children: React.ReactNode;
+}
 
-  [data-reach-menu] {
-    display: block;
-    position: absolute;
-    width: 384px;
-    font-family: ${DefaultStyles.fonts.sans};
-  }
+function MenuEmoji(props: IMenuEmojiProps) {
+  return (
+    <span role="img" aria-label={props.label}>
+      {props.children}{" "}
+    </span>
+  );
+}
 
-  [data-reach-menu-list] {
-    display: block;
-    white-space: nowrap;
-    outline: none;
-    padding: 0;
-  }
-
-  [data-reach-menu-item] {
-    display: block;
-  }
-
-  [data-reach-menu-item] {
-    cursor: pointer;
-    display: block;
-    color: inherit;
-    font: inherit;
-    text-decoration: initial;
-    padding: 5px 20px;
-  }
-`;
-
-const StyledUser = styled(User)`
-  background: ${props => props.theme.background};
-`;
-
-const ToggleButton = styled(Reach.MenuButton)`
-  appearance: none;
-  outline: none;
-  border: 0;
-  font-family: inherit;
-  background: none;
-  box-sizing: inherit;
-`;
-
-const fadeInFromLeft = keyframes`
-  0% {
-    transform: translate(25%, 0);
-    opacity: 0;
-  }
-
-  100% {
-    transform: translate(0, 0);
-    opacity: 1;
-  }
-`;
-
-export const MenuList = styled(Reach.MenuList)`
-  animation: ${fadeInFromLeft} 0.45s;
-  color: ${props => (props.theme.night ? "white" : DefaultStyles.colors.gray300)};
-  background: ${props => props.theme.cardBackground};
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
-
-  & > [data-reach-menu-item][data-selected] {
-    background: ${props => props.theme.link};
-    color: white;
-    outline: none;
-  }
-`;
-
-export const MenuLabel = styled.span`
-  display: inline-block;
-  vertical-align: middle;
-`;
-
-export const DropdownLink = styled.a`
-  display: block;
-  color: ${props => (props.theme.night ? "white" : DefaultStyles.colors.gray300)};
-  font-size: 16px;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  & + & {
-    margin-bottom: 8px;
-  }
-
-  &[data-selected] {
-    background: ${props => props.theme.link};
-    color: white;
-    outline: none;
-  }
-`;
-
-export const StyledSignoutIcon = styled(SignoutIcon)`
-  display: inline-block;
-  vertical-align: middle;
-`;
-
-const DropdownUI: React.FC<{}> = withTheme(function(props) {
+export default function DropdownUI() {
   const auth = React.useContext<IAuthContext>(AuthContext);
+  const darkMode = React.useContext<INightModeContext>(NightModeContext);
+
   return (
     <Reach.Menu>
-      <MenuStyles />
-      <ToggleButton>
-        <NavIcon className="Navicon" />
-      </ToggleButton>
-      <MenuList>
-        <StyledUser border colors={["#FEB692", "#EA5455"]} name={auth.name} />
-        <Reach.MenuLink onClick={() => Router.push("/")} component={DropdownLink}>
+      <Reach.MenuButton className="DropdownMenuButton">
+        <NavIcon className="icon" />
+      </Reach.MenuButton>
+      <Reach.MenuList className="DropdownMenuList">
+        <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
+        <Reach.MenuLink onClick={() => Router.push("/")} component="a">
+          <MenuEmoji label="Stack of books">📚</MenuEmoji>
           All Entries
         </Reach.MenuLink>
-        <Reach.MenuLink onClick={() => Router.push("/new")} component={DropdownLink}>
+        <Reach.MenuLink onClick={() => Router.push("/new")} component="a">
+          <MenuEmoji label="Writing with a Pen">✍️</MenuEmoji>
           Create New Entry
         </Reach.MenuLink>
-        <Reach.MenuLink
-          onClick={() => Router.push("/settings")}
-          component={DropdownLink}>
+        <Reach.MenuLink onClick={() => Router.push("/settings")} component="a">
+          <MenuEmoji label="Gear">⚙️</MenuEmoji>
           Settings
         </Reach.MenuLink>
-        <Reach.MenuItem onSelect={auth.signOut}>
-          <StyledSignoutIcon /> <MenuLabel>Sign Out</MenuLabel>
+        <Reach.MenuItem onSelect={darkMode.action.onChange}>
+          {darkMode.night ? (
+            <>
+              <MenuEmoji label="Sun smiling">🌞</MenuEmoji>
+              Switch to Light Mode
+            </>
+          ) : (
+            <>
+              <MenuEmoji label="Moon">🌙</MenuEmoji>
+              Switch to Dark Mode
+            </>
+          )}
         </Reach.MenuItem>
-      </MenuList>
+        <Reach.MenuItem onSelect={auth.signOut}>
+          <MenuEmoji label="Fearful face">😨</MenuEmoji>
+          Sign Out
+        </Reach.MenuItem>
+      </Reach.MenuList>
     </Reach.Menu>
   );
-});
-
-export default DropdownUI;
+}

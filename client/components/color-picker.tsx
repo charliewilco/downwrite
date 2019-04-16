@@ -1,41 +1,5 @@
 import * as React from "react";
-import styled from "styled-components";
 import HexInput from "./hex-input";
-import * as DefaultStyles from "../utils/defaultStyles";
-
-const SwatchBox = styled.div`
-  background: ${props => props.color};
-  width: 30px;
-  height: 30px;
-  margin: 0 4px 8px;
-  border-radius: 4px;
-`;
-
-const SwatchContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  flex: 1;
-  align-content: center;
-  margin-left: -2px;
-`;
-
-const PickerContainer = styled.div`
-  padding: 4px;
-  margin: 4px;
-  border-radius: 4px;
-  border: 1px solid #f3f3f3;
-  width: 100%;
-  flex: 1 1 248px;
-  width: 100%;
-`;
-
-const PickerTitle = styled.h4`
-  font-size: 13px;
-  opacity: 0.5;
-  font-weight: 400;
-  margin: 0 0 8px 0;
-  font-family: ${DefaultStyles.fonts.sans};
-`;
 
 interface IColorPickerProps {
   title?: string;
@@ -44,23 +8,24 @@ interface IColorPickerProps {
   name: string;
 }
 
-const ColorPicker: React.FC<IColorPickerProps> = function(props) {
+function ColorPicker(props: IColorPickerProps): JSX.Element {
   return (
-    <PickerContainer>
-      {props.title && <PickerTitle>{props.title}</PickerTitle>}
-      <SwatchContainer>
+    <div className="PickerContainer">
+      {props.title && <h4 className="PickerTitle">{props.title}</h4>}
+      <div className="SwatchContainer">
         {props.colors.map(color => (
-          <SwatchBox
+          <div
+            className="SwatchBox"
             onClick={() => props.onPress(color, props.name)}
-            color={color}
+            style={{ background: color }}
             key={color}
           />
         ))}
-      </SwatchContainer>
+      </div>
       <HexInput onChange={color => props.onPress(color, props.name)} />
-    </PickerContainer>
+    </div>
   );
-};
+}
 
 ColorPicker.defaultProps = {
   colors: [],

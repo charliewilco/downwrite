@@ -13,19 +13,19 @@ import { gradientPoints } from "../components/avatar";
 //     };
 //   });
 
-const SettingsAvatar: React.FC<any> = () => (
-  <Formik initialValues={{ colors: gradientPoints() }} onSubmit={() => null}>
-    {({ values, handleChange, setFieldValue }) => (
-      <SettingsBlock title="Avatar">
-        <Form>
-          <GradientEditor
-            colors={values.colors}
-            onColorChange={colors => setFieldValue("colors", colors)}
-          />
-        </Form>
-      </SettingsBlock>
-    )}
-  </Formik>
-);
-
-export default SettingsAvatar;
+export default function SettingsAvatar(): JSX.Element {
+  return (
+    <Formik initialValues={{ colors: gradientPoints() }} onSubmit={() => null}>
+      {({ values, handleChange, setFieldValue }) => (
+        <SettingsBlock title="Avatar">
+          <Form>
+            <GradientEditor
+              colors={values.colors}
+              onColorChange={colors => setFieldValue("colors", colors)}
+            />
+          </Form>
+        </SettingsBlock>
+      )}
+    </Formik>
+  );
+}

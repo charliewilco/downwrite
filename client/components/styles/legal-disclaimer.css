@@ -1,0 +1,20 @@
+.LegalDisclaimer {
+  flex: 1;
+  line-height: 1.2;
+  margin-left: 16px;
+  display: block;
+}
+
+.LegalConfirm {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+  font-weight: 700;
+  background: #d8eaf1;
+  padding: 8px;
+  color: var(--text);
+}
+
+.NightMode .LegalConfirm {
+  background: white;
+}

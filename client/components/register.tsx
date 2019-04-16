@@ -1,23 +1,12 @@
 import * as React from "react";
-import { Formik, Form, FormikProps, ErrorMessage, FormikActions } from "formik";
+import { Formik, Form, FormikProps, ErrorMessage } from "formik";
 import "isomorphic-fetch";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
-import SpacedBox from "./spaced-box";
 import LegalBoilerplate from "./legal-boilerplate";
-import * as API from "../utils/api";
+import useLoginFns, { IRegisterValues } from "../hooks/login";
 import { RegisterFormSchema } from "../utils/validations";
-
-export interface StringTMap<T> {
-  [key: string]: T;
-}
-
-interface IRegistration extends StringTMap<string | boolean> {
-  username: string;
-  password: string;
-  legalChecked: boolean;
-  email: string;
-}
+import { StringTMap } from "../utils/types";
 
 interface IInput extends StringTMap<string> {
   name?: string;
@@ -25,11 +14,6 @@ interface IInput extends StringTMap<string> {
   placeholder?: string;
   label?: string;
   autoComplete?: string;
-}
-
-interface LoginProps {
-  signIn: (x: boolean, y: string) => void;
-  setError: (x: string, y: string) => void;
 }
 
 const REGISTER_INPUTS: IInput[] = [
@@ -56,49 +40,24 @@ const REGISTER_INPUTS: IInput[] = [
   }
 ];
 
-const Register: React.FC<LoginProps> = function(props) {
-  const handleSubmit = (
-    values: IRegistration,
-    actions: FormikActions<IRegistration>
-  ): void => {
-    if (values.legalChecked) {
-      onSubmit(values);
-    }
-  };
+export default function RegisterForm(): JSX.Element {
+  const { onRegisterSubmit } = useLoginFns();
 
-  const onSubmit = async ({
-    username,
-    email,
-    password
-  }: IRegistration): Promise<void> => {
-    const { host } = document.location;
-    const user = await API.createUser(
-      { username, email, password },
-      {
-        host
-      }
-    );
-
-    if (user.userID) {
-      props.signIn(user.id_token !== undefined, user.id_token);
-    } else {
-      props.setError(user.message, "error");
-    }
+  const initialValues: IRegisterValues = {
+    legalChecked: false,
+    username: "",
+    password: "",
+    email: ""
   };
 
   return (
     <Formik
       validationSchema={RegisterFormSchema}
-      initialValues={{
-        legalChecked: false,
-        username: "",
-        password: "",
-        email: ""
-      }}
-      onSubmit={handleSubmit}>
-      {({ values, handleChange }: FormikProps<IRegistration>) => (
+      initialValues={initialValues}
+      onSubmit={onRegisterSubmit}>
+      {({ values, handleChange }: FormikProps<IRegisterValues>) => (
         <Form>
-          <SpacedBox>
+          <div>
             {REGISTER_INPUTS.map(input => (
               <UIInputContainer key={input.name}>
                 <UIInput
@@ -112,23 +71,21 @@ const Register: React.FC<LoginProps> = function(props) {
                 <ErrorMessage name={input.name} component={UIInputError} />
               </UIInputContainer>
             ))}
-          </SpacedBox>
+          </div>
           <LegalBoilerplate
             name="legalChecked"
             checked={values.legalChecked}
             onChange={handleChange}
           />
-          <SpacedBox align="right">
+          <div className="u-right">
             <UIInputContainer style={{ display: "inline-block" }}>
               <Button disabled={!values.legalChecked} type="submit">
                 Register
               </Button>
             </UIInputContainer>
-          </SpacedBox>
+          </div>
         </Form>
       )}
     </Formik>
   );
-};
-
-export default Register;
+}

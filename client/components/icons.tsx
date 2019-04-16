@@ -4,6 +4,7 @@ interface IIconAttributes {
   size?: number;
   fill?: string;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 const CloseIcon: React.FC<IIconAttributes> = props => (
@@ -12,7 +13,7 @@ const CloseIcon: React.FC<IIconAttributes> = props => (
     height={props.size}
     className={props.className}
     viewBox="0 0 12 12"
-    style={{ display: "block" }}>
+    style={Object.assign({}, { display: "block" }, props.style)}>
     <title>Close</title>
     <g id="Canvas" transform="translate(-1561 -730)">
       <g id="Close">
@@ -36,7 +37,12 @@ const CloseIcon: React.FC<IIconAttributes> = props => (
 );
 
 const SignoutIcon: React.FC<IIconAttributes> = props => (
-  <svg width={13} height={12} viewBox="0 0 13 12" className={props.className}>
+  <svg
+    width={13}
+    height={12}
+    viewBox="0 0 13 12"
+    className={props.className}
+    style={props.style}>
     <title>Signout Icon</title>
     <g id="Canvas" transform="translate(-1806 -2684)">
       <g id="Signout Icon">
@@ -58,10 +64,15 @@ const SignoutIcon: React.FC<IIconAttributes> = props => (
 );
 
 const NavIcon: React.FC<IIconAttributes> = props => (
-  <svg width="20px" height="9px" viewBox="0 0 20 9" className={props.className}>
+  <svg
+    width="20px"
+    height="9px"
+    viewBox="0 0 20 9"
+    className={props.className}
+    style={props.style}>
     <desc>Navicon</desc>
     <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-      <g fill="inherit" id="NaviconGroup">
+      <g fill="var(--color)" id="NaviconGroup">
         <rect id="Rectangle-Copy-3" x="0" y="0" width="20" height="1" />
         <rect id="Rectangle-Copy-4" x={10} y="4" width={10} height="1" />
         <rect id="Rectangle-Copy-5" x={5} y="8" width={15} height="1" />
@@ -71,7 +82,12 @@ const NavIcon: React.FC<IIconAttributes> = props => (
 );
 
 const ExportIcon: React.FC<IIconAttributes> = props => (
-  <svg width="24" height="15" viewBox="0 0 24 15" className={props.className}>
+  <svg
+    width="24"
+    height="15"
+    viewBox="0 0 24 15"
+    className={props.className}
+    style={props.style}>
     <title>Markdown Symbol</title>
     <g id="Canvas" transform="translate(-1311 -870)">
       <g id="Combined Shape">

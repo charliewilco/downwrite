@@ -1,23 +1,20 @@
 import * as React from "react";
-import styled from "styled-components";
 import PrismCode from "react-prism";
-import * as DefaultStyles from "../utils/defaultStyles";
 
-const StyledPrism = styled(PrismCode)`
-  font-family: ${DefaultStyles.fonts.code};
-`;
-
-interface CodeBlockProps {
+interface ICodeBlockProps {
   language: string | "javascript";
   value: any;
 }
 
-const CodeBlock: React.FC<CodeBlockProps> = ({ language = "javascript", value }) => (
-  <pre>
-    <StyledPrism className={`language-${language || "javascript"}`}>
-      {value}
-    </StyledPrism>
-  </pre>
-);
-
-export default CodeBlock;
+export default function CodeBlock({
+  language = "javascript",
+  value
+}: ICodeBlockProps) {
+  return (
+    <pre>
+      <PrismCode className={`language-${language || "javascript"}`}>
+        {value}
+      </PrismCode>
+    </pre>
+  );
+}

@@ -1,0 +1,61 @@
+.Card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-weight: 400;
+  padding: 8px;
+  box-shadow: var(--shadow);
+  background: var(--cardBackground);
+}
+
+.Card a {
+  cursor: pointer;
+}
+
+.CardHeader {
+  display: block;
+  border-bottom: 1px solid var(--border);
+  padding: 0 0 12px;
+  margin-bottom: 42px;
+}
+
+.CardTitle {
+  font-size: 14px;
+  margin-bottom: 0px;
+  font-weight: 700;
+}
+
+.CardMeta {
+  font-size: 12px;
+  display: block;
+  color: var(--meta);
+  font-weight: 400;
+}
+
+.CardTray {
+  display: flex;
+  font-weight: 700;
+  font-size: 12px;
+  justify-content: space-between;
+}
+
+.CardTray a:hover {
+  color: var(--blue500);
+}
+
+.CardDeleteButton {
+  color: var(--cardDeleteButton);
+  border: 0px;
+  background: none;
+  appearance: none;
+  font-family: inherit;
+  box-sizing: inherit;
+  font-size: 12px;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (min-width: 57.75rem) {
+  h2 {
+    font-size: 18px;
+  }
+}

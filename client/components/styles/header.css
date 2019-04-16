@@ -1,0 +1,41 @@
+.AppHeader {
+  display: flex;
+  background: var(--background);
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.AppHeaderTitle {
+  font-size: 16px;
+  font-style: normal;
+  font-family: var(--sans);
+  line-height: 1;
+  font-weight: 700;
+}
+
+.AppHeaderLink {
+  margin-left: 12px;
+  display: block;
+  cursor: pointer;
+  transition: color 375ms ease-in-out;
+  color: var(--headerLogoLink) !important;
+}
+
+.AppHeaderLink:hover {
+  color: var(--blue700);
+}
+
+.AppHeaderNav {
+  display: flex;
+  align-items: center;
+}
+
+@media (min-width: 57.75rem) {
+  .AppHeaderTitle {
+    font-size: 20px;
+  }
+}

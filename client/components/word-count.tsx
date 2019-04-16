@@ -1,23 +1,7 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import styled from "styled-components";
-import { ToastNoPosition as Toast } from "./toast";
 
-const Meta = styled.div`
-  opacity: 0.5;
-  font-size: small;
-  padding: 8px;
-`;
-
-const WordCounterContainer = styled.div`
-  margin: 16px 8px;
-  right: 0;
-  bottom: 0;
-  z-index: 50;
-  position: fixed;
-`;
-
-interface IWordCounterers {
+interface IWordCounterProps {
   limit?: number;
   editorState: Draft.EditorState;
 }
@@ -48,22 +32,18 @@ function getWordCount(editorState: Draft.EditorState): number {
   return createWordCount(plainText);
 }
 
-const WordCounter: React.FC<IWordCounterers> = function(props) {
-  const displayCount = React.useMemo(() => {
+export default function WordCounter(props: IWordCounterProps): JSX.Element {
+  const displayCount = React.useMemo<number>(() => {
     const selection = getSelectionCount(props.editorState);
     const words = getWordCount(props.editorState);
     return selection > 0 ? selection : words;
   }, [props.editorState]);
 
   return (
-    <WordCounterContainer>
-      <Toast>
-        <Meta>
-          <small>Word Count: {displayCount}</small>
-        </Meta>
-      </Toast>
-    </WordCounterContainer>
+    <div className="WordCountContainer">
+      <div className="WordCount">
+        <small className="WordCountMeta">Word Count: {displayCount}</small>
+      </div>
+    </div>
   );
-};
-
-export default WordCounter;
+}

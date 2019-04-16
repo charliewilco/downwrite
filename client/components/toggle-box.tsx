@@ -1,24 +1,5 @@
 import * as React from "react";
-import styled from "styled-components";
 import Check from "./checkbox";
-
-const Container = styled.div`
-  margin-right: 16px;
-`;
-
-const LabelFlex = styled.label`
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-`;
-
-const Label = styled.span`
-  flex: 1;
-  margin-left: 8px;
-  display: inline-block;
-  vertical-align: middle;
-  line-height: 1.2;
-`;
 
 interface ICheckboxToggle {
   value: boolean;
@@ -27,19 +8,14 @@ interface ICheckboxToggle {
   onChange: (e: React.ChangeEvent) => void;
 }
 
-export const ToggleBox: React.FC<ICheckboxToggle> = ({
-  value,
-  label,
-  name,
-  onChange
-}) => {
-  const text = label(value);
+export function ToggleBox(props: ICheckboxToggle) {
+  const text = props.label(props.value);
   return (
-    <Container>
-      <LabelFlex>
-        <Check name={name} checked={value} onChange={onChange} />
-        <Label>{text}</Label>
-      </LabelFlex>
-    </Container>
+    <div className="ToggleBox">
+      <label className="ToggleBoxInner">
+        <Check name={props.name} checked={props.value} onChange={props.onChange} />
+        <span className="ToggleBoxLabel">{text}</span>
+      </label>
+    </div>
   );
-};
+}

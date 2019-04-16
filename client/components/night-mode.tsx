@@ -1,124 +1,53 @@
 import * as React from "react";
-import styled, {
-  DefaultTheme,
-  ThemeProvider,
-  createGlobalStyle
-} from "styled-components";
 import Checkbox from "./checkbox";
-import * as DefaultStyles from "../utils/defaultStyles";
+import useDarkModeEffect from "../hooks/dark-mode";
+import classNames from "../utils/classnames";
 
-const NIGHT_MODE: string = "NightMDX";
-const NIGHT_MODE_OFF: string = "NIGHT_MODE_OFF";
-const NIGHT_MODE_ON: string = "NIGHT_MODE_ON";
+const NIGHT_MODE: string = "NightMode";
 
-const NightContainer = styled.div`
-  padding-top: 16px;
-  position: relative;
-`;
-
-const NightToggle = styled.form`
-  color: ${DefaultStyles.colors.text};
-  padding: 8px;
-  font-family: ${DefaultStyles.fonts.sans};
-  margin: 16px 8px;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
-  background: white;
-  bottom: 0;
-  z-index: 50;
-  position: fixed;
-`;
-
-const NightLabel = styled.small`
-  margin-left: 8px;
-`;
-
-const NightController = styled.label`
-  display: flex;
-  align-items: center;
-`;
-
-interface INightModeContext {
+export interface INightModeContext {
   night: boolean;
   action: {
     onChange: () => void;
   };
 }
 
-const NightModeContext = React.createContext({} as INightModeContext);
+export const NightModeContext = React.createContext({} as INightModeContext);
 
-const NightModeStyles = createGlobalStyle`
-  .NightMDX {}
+interface INightModeContainerProps {
+  children: React.ReactNode;
+}
 
-  .NightMode {
-    transition: background 375ms ease-in-out;
-  }
+export default function NightModeContainer(
+  props: INightModeContainerProps
+): JSX.Element {
+  const [night, onChange] = useDarkModeEffect(NIGHT_MODE);
 
-  .NightMode .PreviewBody blockquote,
-  .NightMode blockquote {
-    background: none;
-    color: ${DefaultStyles.colors.blue100} !important;
-  }
-`;
-
-const NightModeContainer: React.FC<{ children: React.ReactChild }> = function(
-  props
-) {
-  const [night, setNight] = React.useState(false);
-
-  React.useEffect(() => {
-    if (typeof window !== undefined) {
-      const local = localStorage.getItem(NIGHT_MODE);
-
-      if (local !== NIGHT_MODE_OFF) {
-        setNight(true);
-      }
-    }
-  }, []);
-
-  React.useEffect(() => {
-    const { body } = document;
-
-    if (body instanceof HTMLElement) {
-      localStorage.setItem(NIGHT_MODE, night ? NIGHT_MODE_ON : NIGHT_MODE_OFF);
-
-      night ? body.classList.add(NIGHT_MODE) : body.classList.remove(NIGHT_MODE);
-    }
-
-    return function cleanup() {
-      if (document.body) {
-        document.body.classList.remove(NIGHT_MODE);
-      }
-    };
-  }, [night]);
-
-  const onChange = () => {
-    setNight(!night);
+  const context: INightModeContext = {
+    night,
+    action: { onChange }
   };
 
-  const theme: DefaultTheme = night
-    ? DefaultStyles.NIGHT_THEME
-    : DefaultStyles.DAY_THEME;
-
   return (
-    <NightModeContext.Provider value={{ night, action: { onChange } }}>
-      <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
+    <NightModeContext.Provider value={context}>
+      {props.children}
     </NightModeContext.Provider>
   );
-};
+}
 
-export default NightModeContainer;
-
-export const NightModeTrigger: React.FC = ({ children }) => {
+// TODO: Remove
+export function NightModeTrigger(props: INightModeContainerProps): JSX.Element {
   const { night, action } = React.useContext<INightModeContext>(NightModeContext);
   const onChange = () => {
     action.onChange();
   };
 
+  const cx = classNames("NightModeTrigger", night && "NightMode");
+
   return (
-    <NightContainer className={night ? "NightMode" : ""}>
-      <NightModeStyles />
-      <NightToggle role="form" tabIndex={-1} onSubmit={onChange}>
-        <NightController htmlFor="nightToggle">
+    <div className={cx}>
+      <form className="NightToggle" role="form" tabIndex={-1} onSubmit={onChange}>
+        <label className="NightController" htmlFor="nightToggle">
           <Checkbox
             role="checkbox"
             aria-checked={night}
@@ -126,10 +55,10 @@ export const NightModeTrigger: React.FC = ({ children }) => {
             id="nightToggle"
             onChange={onChange}
           />
-          <NightLabel>Night Mode</NightLabel>
-        </NightController>
-      </NightToggle>
-      {children}
-    </NightContainer>
+          <small className="NightLabel">Night Mode</small>
+        </label>
+      </form>
+      {props.children}
+    </div>
   );
-};
+}

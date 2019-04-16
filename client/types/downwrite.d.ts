@@ -1,6 +1,7 @@
 // import * as Draft from "draft-js";
 
 declare module "downwrite" {
+  /** Represents a Single Entry */
   export interface IPost {
     title: string;
     id: string;
@@ -25,8 +26,23 @@ declare module "downwrite" {
     statusCode: number;
   }
 
-  export interface AuthorType {
+  export interface IAuthorType {
     username: string;
     gradient: string[];
   }
+
+  export interface IPreviewEntry {
+    title: string;
+    content: string;
+    author: IAuthorType;
+    dateAdded: Date;
+  }
+
+  export interface IPreviewEntryError {
+    message: string;
+    error: string;
+  }
+
+  /** Represents a List of Entries */
+  export type EntryList = IPost[];
 }

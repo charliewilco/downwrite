@@ -1,6 +1,10 @@
 {
   "extends": "./tsconfig",
+
   "compilerOptions": {
-    "jsx": "react"
+    "jsx": "react",
+    "paths": {
+      "*": ["node_modules/*", "types/*"]
+    }
   }
 }

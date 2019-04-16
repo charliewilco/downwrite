@@ -1,0 +1,13 @@
+.Wrapper {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1088px;
+}
+
+.Wrapper--xs {
+  max-width: 384px;
+}
+
+.Wrapper--sm {
+  max-width: 768px;
+}

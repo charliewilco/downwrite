@@ -38,7 +38,7 @@ const PASSWORD_INPUTS: IInputs[] = [
   }
 ];
 
-const SettingsPassword: React.FC = function() {
+export default function SettingsPassword(): JSX.Element {
   const { token } = React.useContext<IAuthContext>(AuthContext);
   const [isOpen, setOpen] = React.useState(false);
 
@@ -54,13 +54,15 @@ const SettingsPassword: React.FC = function() {
     }
   };
 
+  const initialValues: IPasswordSettings = {
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  };
+
   return (
     <Formik
-      initialValues={{
-        oldPassword: "",
-        newPassword: "",
-        confirmPassword: ""
-      }}
+      initialValues={initialValues}
       validationSchema={UpdatePasswordSchema}
       onSubmit={onSubmit}>
       {({ values, handleChange, isSubmitting }: FormikProps<IPasswordSettings>) => (
@@ -94,6 +96,4 @@ const SettingsPassword: React.FC = function() {
       )}
     </Formik>
   );
-};
-
-export default SettingsPassword;
+}

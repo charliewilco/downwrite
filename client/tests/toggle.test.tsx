@@ -1,21 +1,27 @@
+import "jest";
 import * as React from "react";
-import "jest-styled-components";
 import "jest-dom/extend-expect";
-import Toggle from "../components/toggle";
 import { render, fireEvent } from "react-testing-library";
+import useToggle from "../hooks/toggle";
 
-let { getByTestId, container } = render(
-  <Toggle>
-    {({ isOpen, onToggle }) => (
-      <>
-        {isOpen && <h1 data-testid="TOGGLE_OPEN">I am open</h1>}
-        <button data-testid="TOGGLE_BUTTON" onClick={onToggle}>
-          Toggle
-        </button>
-      </>
-    )}
-  </Toggle>
-);
+const ToggleDemo = () => {
+  const [isOpen, { onToggle }] = useToggle();
+  return (
+    <>
+      {isOpen && <h1 data-testid="TOGGLE_OPEN">I am open</h1>}
+      <button data-testid="TOGGLE_BUTTON" onClick={onToggle}>
+        Toggle
+      </button>
+    </>
+  );
+};
+
+const ToggleDemoOpen = () => {
+  const [isOpen] = useToggle(true);
+  return <>{isOpen && <h1 data-testid="TOGGLE_OPEN">I am open</h1>}</>;
+};
+
+let { getByTestId, container } = render(<ToggleDemo />);
 
 describe("<Toggle />", () => {
   it("starts closed", () => {
@@ -30,11 +36,7 @@ describe("<Toggle />", () => {
   });
 
   it("can be open by default", () => {
-    const { container: openContainer } = render(
-      <Toggle defaultOpen>
-        {({ isOpen }) => isOpen && <h1 data-testid="TOGGLE_OPEN">I am open</h1>}
-      </Toggle>
-    );
+    const { container: openContainer } = render(<ToggleDemoOpen />);
     expect(
       openContainer.querySelector(`[data-testid="TOGGLE_OPEN"]`)
     ).toBeInTheDocument();

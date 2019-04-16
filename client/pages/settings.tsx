@@ -1,75 +1,28 @@
 import * as React from "react";
 import Head from "next/head";
-import { NextContext } from "next";
-import styled from "styled-components";
 import "isomorphic-fetch";
 import SettingsUser from "../components/settings-user-form";
 import SettingsPassword from "../components/settings-password";
 import SettingsLocal from "../components/settings-markdown";
-import Wrapper from "../components/wrapper";
-import ContainerTitle from "../components/container-title";
-import * as API from "../utils/api";
-import { authMiddleware } from "../utils/auth-middleware";
+import * as InitialProps from "../utils/initial-props";
 
-const SettingsWrapper = styled(Wrapper)`
-  padding: 8px;
-`;
+function Settings(props: InitialProps.IUserSettingsProps) {
+  return (
+    <div className="Wrapper Wrapper--sm" style={{ padding: 8 }}>
+      <Head>
+        <title>User Settings</title>
+      </Head>
 
-const SettingsTitle = styled(ContainerTitle)`
-  margin-bottom: 16px;
-`;
-
-interface IUserSettingsProps {
-  user: {
-    username: string;
-    email: string;
-  };
-  token: string;
+      <h1 className="ContainerTitle" style={{ marginBottom: 16 }}>
+        Settings
+      </h1>
+      <SettingsUser user={props.user} />
+      <SettingsPassword />
+      <SettingsLocal />
+    </div>
+  );
 }
 
-// interface IUserSettingsState {
-//   colors: {
-//     a: string;
-//     b: string;
-//   };
-// }
+Settings.getInitialProps = InitialProps.getInitialSettings;
 
-export default class Settings extends React.Component<IUserSettingsProps, {}> {
-  public static displayName = "Settings";
-
-  public static async getInitialProps(
-    ctx: NextContext<{ token: string }>
-  ): Promise<Partial<IUserSettingsProps>> {
-    const token = authMiddleware(ctx);
-
-    let host: string;
-
-    if (ctx.req) {
-      const serverURL: string = ctx.req.headers.host;
-
-      host = serverURL;
-    }
-
-    const user = await API.getUserDetails({ token, host });
-
-    return {
-      token,
-      user
-    };
-  }
-
-  public render(): JSX.Element {
-    const { user } = this.props;
-    return (
-      <SettingsWrapper sm>
-        <Head>
-          <title>User Settings</title>
-        </Head>
-        <SettingsTitle>Settings</SettingsTitle>
-        <SettingsUser user={user} />
-        <SettingsPassword />
-        <SettingsLocal />
-      </SettingsWrapper>
-    );
-  }
-}
+export default Settings;

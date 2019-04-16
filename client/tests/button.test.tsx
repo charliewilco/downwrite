@@ -1,11 +1,10 @@
 import * as React from "react";
-import "jest-styled-components";
 import "jest-dom/extend-expect";
 import { Button } from "../components/button";
 import { render, fireEvent } from "react-testing-library";
 
 const onClickHandler = jest.fn();
-const { getByText, container } = render(
+const { getByText } = render(
   <Button data-testid="TESTING_BUTTON" onClick={onClickHandler}>
     Button
   </Button>
@@ -16,6 +15,4 @@ describe("<Button />", () => {
     fireEvent.click(getByText("Button"));
     expect(onClickHandler).toHaveBeenCalled();
   });
-
-  it("matches snapshot", () => expect(container.firstChild).toMatchSnapshot());
 });

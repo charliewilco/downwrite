@@ -26,7 +26,12 @@ const LOCAL_SETTINGS_INPUTS = [
   }
 ];
 
-const SettingsLocalMarkdown: React.FC<{}> = function(props) {
+export enum LocalSettings {
+  EXTENSION = "DW_FILE_EXTENSION",
+  FONT = "DW_EDITOR_FONT"
+}
+
+export default function SettingsLocalMarkdown(): JSX.Element {
   const context = React.useContext<ILocalUISettings>(LocalUISettings);
 
   const [initialValues, setInitialValues] = React.useState<ILocalSettings>({
@@ -34,28 +39,28 @@ const SettingsLocalMarkdown: React.FC<{}> = function(props) {
     fontFamily: "SF Mono"
   });
 
-  const onSubmit = (
-    values: ILocalSettings,
+  function onSubmit(
+    { fileExtension, fontFamily }: ILocalSettings,
     actions: FormikActions<ILocalSettings>
-  ): void => {
-    localStorage.setItem("DW_FILE_EXTENSION", values.fileExtension);
-    localStorage.setItem("DW_EDITOR_FONT", values.fontFamily);
+  ): void {
+    localStorage.setItem(LocalSettings.EXTENSION, fileExtension);
+    localStorage.setItem(LocalSettings.FONT, fontFamily);
 
-    context.actions.updateFont(values.fontFamily);
+    context.actions.updateFont(fontFamily);
 
     if (
-      localStorage.getItem("DW_FILE_EXTENSION") === values.fileExtension &&
-      localStorage.getItem("DW_EDITOR_FONT") === values.fontFamily
+      localStorage.getItem(LocalSettings.EXTENSION) === fileExtension &&
+      localStorage.getItem(LocalSettings.FONT) === fontFamily
     ) {
       actions.setSubmitting(false);
     }
-  };
+  }
 
   React.useEffect(() => {
     let fileExtension =
-      localStorage.getItem("DW_FILE_EXTENSION") || initialValues.fileExtension;
+      localStorage.getItem(LocalSettings.EXTENSION) || initialValues.fileExtension;
     let fontFamily =
-      localStorage.getItem("DW_EDITOR_FONT") || initialValues.fontFamily;
+      localStorage.getItem(LocalSettings.FONT) || initialValues.fontFamily;
 
     setInitialValues({ fileExtension, fontFamily });
   }, []);
@@ -92,6 +97,4 @@ const SettingsLocalMarkdown: React.FC<{}> = function(props) {
       )}
     </Formik>
   );
-};
-
-export default SettingsLocalMarkdown;
+}

@@ -1,33 +1,16 @@
 import * as React from "react";
-import styled from "styled-components";
 import { ExportIcon } from "./icons";
 
-const ExportButton = styled.button`
-  border: 0;
-  display: flex;
-  align-items: center;
-  font-family: inherit;
-  appearance: none;
-  color: inherit;
-  line-height: inherit;
-  background: none;
-  box-sizing: inherit;
-`;
-
-const StyledExportIcon = styled(ExportIcon)`
-  display: block;
-  margin-right: 8px;
-`;
-
-const ExportLabel = styled.small`
-  font-size: 12px;
-`;
-
-const ExportMarkdownButton: React.FC<{ onClick: () => void }> = props => (
-  <ExportButton onClick={props.onClick}>
-    <StyledExportIcon />
-    <ExportLabel>Export</ExportLabel>
-  </ExportButton>
-);
-
-export default ExportMarkdownButton;
+interface IExportMarkdownButtonProps {
+  onClick: () => void;
+}
+export default function ExportMarkdownButton(
+  props: IExportMarkdownButtonProps
+): JSX.Element {
+  return (
+    <button className="ExportButton" onClick={props.onClick}>
+      <ExportIcon className="Icon" />
+      <small className="ExportLabel">Export</small>
+    </button>
+  );
+}

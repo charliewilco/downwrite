@@ -1,21 +1,20 @@
 import * as React from "react";
 import Link from "next/link";
-import styled from "styled-components";
+import { UrlObject } from "url";
 
-const PreviewAnchor = styled.a`
-  display: block;
-  font-size: 12px;
-  line-height: 1;
-`;
+interface IPreviewLinkProps {
+  publicStatus: boolean;
+  id: string;
+}
 
-const PreviewLink: React.FC<{ publicStatus: boolean; id: string }> = ({
-  publicStatus,
-  id
-}) =>
-  publicStatus && (
-    <Link prefetch passHref href={{ pathname: "/preview", query: { id } }}>
-      <PreviewAnchor>Preview</PreviewAnchor>
+export default function PreviewLink(props: IPreviewLinkProps): JSX.Element {
+  const link: UrlObject = {
+    pathname: "/preview",
+    query: { id: props.id }
+  };
+  return props.publicStatus ? (
+    <Link prefetch passHref href={link}>
+      <a className="AltPreviewLink">Preview</a>
     </Link>
-  );
-
-export default PreviewLink;
+  ) : null;
+}

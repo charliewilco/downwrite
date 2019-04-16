@@ -1,62 +1,37 @@
-import styled from "styled-components";
-import { ToastNoPosition as Toast } from "./toast";
+import * as React from "react";
+import classNames from "../utils/classnames";
 
-const StyledToast = styled(Toast)`
-  display: flex;
-  flex-wrap: wrap;
-  padding: 16px;
-  margin-bottom: 32px;
-  color: ${props => props.theme.color};
-  background: ${props => props.theme.cardBackground};
-`;
+interface ISettingsFormActionsProps {
+  split?: boolean;
+  children: React.ReactNode;
+  className?: string;
+}
 
-const SettingsTitleContainer = styled.header`
-  flex: 1 1 192px;
-  width: 100%;
-  padding-right: 32px;
-  margin-bottom: 32px;
-  p {
-    opacity: 0.75;
-    font-size: 11px;
-    font-weight: 300;
-    font-style: italic;
-  }
-`;
-
-const SettingsContent = styled.div`
-  padding: 8px 0 0 0;
-  flex: 1 1 62.5%;
-`;
-
-const SettingsTitle = styled.h4`
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 8px;
-`;
-
-export const SettingsFormActions = styled.div<{ split?: boolean }>`
-  margin-top: 16px;
-  display: flex;
-  justify-content: ${props => (props.split ? "space-between" : "flex-end")};
-`;
+export function SettingsFormActions(props: ISettingsFormActionsProps): JSX.Element {
+  const className = classNames(
+    "ActionsContainer",
+    props.split && "ActionsContainer--split",
+    props.className
+  );
+  return <div className={className}>{props.children}</div>;
+}
 
 interface ISettingsBlockProps {
   title: string;
   description?: string;
+  children: React.ReactNode;
 }
 
-const SettingsBlock: React.FC<ISettingsBlockProps> = ({
-  children,
-  title,
-  description
-}) => (
-  <StyledToast>
-    <SettingsTitleContainer>
-      <SettingsTitle>{title}</SettingsTitle>
-      {description && <p>{description}</p>}
-    </SettingsTitleContainer>
-    <SettingsContent>{children}</SettingsContent>
-  </StyledToast>
-);
-
-export default SettingsBlock;
+export default function SettingsBlock(props: ISettingsBlockProps): JSX.Element {
+  return (
+    <section className="SettingsBlock">
+      <div className="SettingsBlockTitleContainer">
+        <h4 className="SettingsBlockTitle">{props.title}</h4>
+        {props.description && (
+          <p className="SettingsBlockDescription">{props.description}</p>
+        )}
+      </div>
+      <div className="SettingsBlockContents">{props.children}</div>
+    </section>
+  );
+}

@@ -1,18 +1,19 @@
 import * as React from "react";
-import "jest-styled-components";
 import "jest-dom/extend-expect";
-import Preview, { IEntry } from "../pages/preview";
+import { LinkProps } from "next/link";
+import Preview from "../pages/preview";
 import Content from "../components/content";
 import { render, wait } from "react-testing-library";
 import { draftToMarkdown } from "markdown-draft-js";
 import { createMockPost } from "../utils/createMocks";
+import { IPreviewEntry } from "downwrite";
 import fetchMock, { FetchMock } from "jest-fetch-mock";
 // import MockNextContext from "../utils/mock-next-router";
 
 let title = "Starting Again";
 const mockPost = createMockPost({ title, public: true });
 
-let post: IEntry = {
+let post: IPreviewEntry = {
   ...mockPost,
   content: draftToMarkdown(mockPost.content),
   author: {
@@ -24,7 +25,7 @@ let post: IEntry = {
 let fetch = fetchMock as FetchMock;
 
 jest.mock("next/link", () => {
-  return jest.fn(props => <>{props.children}</>);
+  return jest.fn((props: LinkProps) => <>{props.children}</>);
 });
 
 describe("<Preview />", () => {

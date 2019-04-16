@@ -1,8 +1,6 @@
 import * as React from "react";
-import styled from "styled-components";
 import Link from "next/link";
 import AltAnchor from "./alt-anchor-link";
-import Wrapper from "./wrapper";
 
 interface IPage {
   name: string;
@@ -16,56 +14,23 @@ const PAGES: IPage[] = [
   { name: "@charlespeters", href: "https://twitter.com/charlespeters" }
 ];
 
-const Footer = styled.footer`
-  text-align: center;
-  padding-top: 32px;
-  padding-bottom: 32px;
-  padding-left: 8px;
-  padding-right: 8px;
-`;
-
-const FooterNav = styled.nav`
-  &::before {
-    content: "";
-    display: block;
-    width: 128px;
-    height: 2px;
-    background: ${props => props.theme.link};
-    margin: 0 auto 32px;
-  }
-`;
-
-const FooterList = styled.ul`
-  list-style: none inside;
-  padding: 0;
-  margin: 0;
-  font-size: 14px;
-`;
-
-const FooterListItem = styled.li`
-  display: inline-block;
-  margin-right: 16px;
-`;
-
-const UIFooter: React.FC<{}> = () => (
-  <Footer>
-    <Wrapper sm>
-      <FooterNav>
-        <FooterList>
-          <FooterListItem>
+export default function UIFooter() {
+  return (
+    <footer className="AppFooter Wrapper Wrapper--sm">
+      <nav className="AppFooterNav">
+        <ul>
+          <li>
             <span>&copy; 2019 Charles Peters</span>
-          </FooterListItem>
+          </li>
           {PAGES.map((page, i) => (
-            <FooterListItem key={i}>
+            <li key={i}>
               <Link href={page.href} passHref>
                 <AltAnchor>{page.name}</AltAnchor>
               </Link>
-            </FooterListItem>
+            </li>
           ))}
-        </FooterList>
-      </FooterNav>
-    </Wrapper>
-  </Footer>
-);
-
-export default UIFooter;
+        </ul>
+      </nav>
+    </footer>
+  );
+}

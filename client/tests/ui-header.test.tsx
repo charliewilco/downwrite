@@ -1,20 +1,33 @@
 import * as React from "react";
 import { render } from "react-testing-library";
-import "jest-styled-components";
 import "jest-dom/extend-expect";
-import Header from "../components/header";
+import { UIHeader } from "../components/header";
+import { SingletonRouter, WithRouterProps } from "next/router";
+import { LinkProps } from "next/link";
 
-jest.mock("next/link");
-jest.mock("next/router");
 jest.mock("universal-cookie", () => {
   return class Cookie {};
 });
 jest.mock("jwt-decode");
 jest.mock("../components/auth");
 
-let { getByTestId, container } = render(<Header />);
-
 // jest.mock("../components/auth", () => () => "Auth");
+
+jest.mock("next/router", () => {
+  return {
+    withRouter: (Component: React.ComponentType<{} & WithRouterProps<{}>>) => {
+      return <Component router={{ route: "/" } as SingletonRouter<{}>} />;
+    }
+  };
+});
+
+jest.mock("next/link", () => {
+  return jest.fn((props: LinkProps) => <>{props.children}</>);
+});
+
+let { getByTestId, container } = render(
+  <UIHeader router={{ route: "/" } as SingletonRouter<{}>} />
+);
 
 describe("Header Component", () => {
   it("contains application name", () => {

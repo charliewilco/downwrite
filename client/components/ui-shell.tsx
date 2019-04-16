@@ -1,51 +1,33 @@
 import * as React from "react";
-import styled from "styled-components";
 import Header from "./header";
 import Footer from "./footer";
-import NightMode, { NightModeTrigger } from "./night-mode";
-import UIContainer from "./ui-container";
-import { ErrorContainer, UIErrorBanner } from "./ui-error";
-import { LevelStyles } from "./level-styles";
+import NightMode from "./night-mode";
 import { LocalUISettingsProvider } from "./local-ui-settings";
-
-const ClearFixed = styled.div`
-  &::after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-`;
-
-const Container = styled.div`
-  min-height: 100%;
-`;
+import "./styles/base.css";
+import { NotificationProvider } from "../reducers/notifications";
+import { MessageList } from "./ui-notification";
 
 interface IUIShell {
-  authed?: boolean;
   children: React.ReactNode;
-  token: string;
 }
 
-export const UIShell: React.FC<IUIShell> = function(props) {
+export function UIShell(props: IUIShell) {
   return (
     <NightMode>
       <LocalUISettingsProvider>
-        <UIContainer>
-          <LevelStyles />
-          <ErrorContainer>
-            <NightModeTrigger>
-              <UIErrorBanner />
-              <ClearFixed>
-                <Container>
-                  <Header />
-                  {props.children}
-                  <Footer />
-                </Container>
-              </ClearFixed>
-            </NightModeTrigger>
-          </ErrorContainer>
-        </UIContainer>
+        <div className="UIContainer">
+          <NotificationProvider>
+            <div className="clearfix">
+              <div style={{ minHeight: "100%" }}>
+                <Header />
+                {props.children}
+                <Footer />
+              </div>
+            </div>
+            <MessageList />
+          </NotificationProvider>
+        </div>
       </LocalUISettingsProvider>
     </NightMode>
   );
-};
+}

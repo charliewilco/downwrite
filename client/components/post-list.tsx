@@ -1,58 +1,38 @@
 import * as React from "react";
-import styled from "styled-components";
 import Card from "./card";
 import LayoutControl from "./layout-control";
 import PostListItem from "./post-list-item";
-import ContainerTitle from "./container-title";
-import { Grid, GridItem } from "./post-grid";
-
-const ListHeader = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-`;
-
-const List = styled.ul`
-  width: 100%;
-  list-style: inside none;
-`;
-
-export const PostContainer = styled.div`
-  padding: 16px 8px;
-`;
+import { IPost } from "downwrite";
 
 interface IPostListProps {
   posts: any[];
-  onDelete: (post: any) => void;
+  onSelect: ({ id }: Partial<IPost>) => void;
 }
 
-const PostList: React.FC<IPostListProps> = function(props) {
-  const [isOpen, setOpen] = React.useState<boolean>(true);
+export default function PostList(props: IPostListProps): JSX.Element {
+  const [isGridView, setOpen] = React.useState<boolean>(true);
 
   return (
     <>
-      <ListHeader>
-        <ContainerTitle>Entries</ContainerTitle>
-        <LayoutControl layout={isOpen} layoutChange={setOpen} />
-      </ListHeader>
-      {isOpen ? (
-        <Grid data-testid="ENTRIES_GRIDVIEW">
+      <header className="PostListHeader">
+        <h1 className="ContainerTitle">Entries</h1>
+        <LayoutControl layout={isGridView} layoutChange={setOpen} />
+      </header>
+      {isGridView ? (
+        <ul className="PostList Grid" data-testid="ENTRIES_GRIDVIEW">
           {props.posts.map((p, i) => (
-            <GridItem key={i}>
-              <Card {...p} onDelete={() => props.onDelete(p)} />
-            </GridItem>
+            <li className="GridItem" key={i}>
+              <Card {...p} onDelete={props.onSelect} />
+            </li>
           ))}
-        </Grid>
+        </ul>
       ) : (
-        <List data-testid="ENTRIES_LISTVIEW">
+        <ul className="PostList" data-testid="ENTRIES_LISTVIEW">
           {props.posts.map((p, i) => (
-            <PostListItem key={i} {...p} onDelete={() => props.onDelete(p)} />
+            <PostListItem key={i} {...p} onDelete={props.onSelect} />
           ))}
-        </List>
+        </ul>
       )}
     </>
   );
-};
-
-export default PostList;
+}

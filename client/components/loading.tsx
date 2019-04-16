@@ -1,29 +1,41 @@
 import * as React from "react";
-import styled from "styled-components";
-import Spinner from "./spinner";
-import * as DefaultStyles from "../utils/defaultStyles";
 
 interface ILoadingProps {
   size: number;
 }
 
-const LoadingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  height: calc(100% - ${(props: ILoadingProps) => props.size}px);
-`;
+interface ISpinnerProps {
+  size: number;
+  color?: string;
+  delay?: string;
+}
 
-const Loading: React.FC<ILoadingProps> = props => (
-  <LoadingContainer size={props.size} data-testid="LOADING_SPINNER">
-    <Spinner size={props.size} color={DefaultStyles.colors.blue400} />
-  </LoadingContainer>
-);
+export function Spinner(props: ISpinnerProps): JSX.Element {
+  return (
+    <div role="image">
+      <div
+        className="InnerRing"
+        style={{ "--size": props.size, animationDelay: "-0.6s" }}
+      />
+      <div
+        className="InnerRing"
+        style={{ "--size": props.size, animationDelay: "-0.4s" }}
+      />
+      <div
+        className="InnerRing"
+        style={{ "--size": props.size, animationDelay: "-0.2s" }}
+      />
+    </div>
+  );
+}
 
-Loading.defaultProps = {
-  size: 75
-};
-
-export default Loading;
+export default function Loading(props: ILoadingProps): JSX.Element {
+  return (
+    <div
+      className="Loading"
+      style={{ "--size": props.size || 75 } as React.CSSProperties}
+      data-testid="LOADING_SPINNER">
+      <Spinner size={props.size || 75} />
+    </div>
+  );
+}

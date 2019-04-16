@@ -1,31 +1,29 @@
 import * as React from "react";
 import * as Draft from "draft-js";
 import { draftToMarkdown } from "markdown-draft-js";
-import styled from "styled-components";
 import FileSaver from "file-saver";
 import Markdown from "./export-markdown-button";
 import { createMarkdown } from "../utils/markdownTemplate";
+import classNames from "../utils/classnames";
+import { LocalSettings } from "./settings-markdown";
 
-interface ExportProps {
+interface IExportProps {
   title: string;
   className?: string;
   date: Date;
   editorState: Draft.EditorState;
 }
 
-interface ExportCallback {
+interface IExportCallback {
   title: string;
   content: Draft.RawDraftContentState;
   date: Date;
 }
 
-const ExportContainer = styled.div`
-  display: block;
-  margin: 0 16px;
-`;
-
 // TODO: use `React.useMemo()` to run export
-const UIMarkdownExport: React.FC<ExportProps> = function(props) {
+export default function UIMarkdownExport(props: IExportProps) {
+  const className = classNames("Export", props.className);
+
   const exportMarkdown = (): void => {
     const { title, date, editorState } = props;
     const cx: Draft.ContentState = editorState.getCurrentContent();
@@ -53,8 +51,8 @@ const UIMarkdownExport: React.FC<ExportProps> = function(props) {
       }
     });
 
-  const toMarkdown = ({ title, content, date }: ExportCallback): void => {
-    let localFileExtension = localStorage.getItem("DW_FILE_EXTENSION");
+  const toMarkdown = ({ title, content, date }: IExportCallback): void => {
+    let localFileExtension = localStorage.getItem(LocalSettings.EXTENSION);
     let extension = localFileExtension.replace(/\./g, "") || "md";
 
     try {
@@ -74,12 +72,8 @@ const UIMarkdownExport: React.FC<ExportProps> = function(props) {
   };
 
   return (
-    <ExportContainer
-      title="Export entry to a Markdown file."
-      className={props.className}>
+    <aside title="Export entry to a Markdown file." className={className}>
       <Markdown onClick={exportMarkdown} />
-    </ExportContainer>
+    </aside>
   );
-};
-
-export default UIMarkdownExport;
+}

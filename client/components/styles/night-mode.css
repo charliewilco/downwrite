@@ -1,0 +1,51 @@
+body {
+  transition: background 375ms ease-in-out;
+}
+
+.NightMode {
+  --background: #022438;
+  --color: #f9fbfc;
+  --border: #dbdcdd;
+  --link: #ffb600;
+  --linkHover: #d8eaf1;
+  --meta: #dbdcdd;
+  --inputBorder: rgba(219, 220, 221, 0.24);
+  --cardBackground: #093f5d linear-gradient(45deg, #093f5d, #072a3e);
+  --cardTrayBackground: rgba(219, 220, 221, 0.24);
+  --cardDeleteButton: #d8eaf1;
+  --headerLogoLink: #edf0f1;
+  --landingPageTitle: #4fa5c2;
+  --shadow: 0 0 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.12);
+}
+
+.NightMode .PreviewBody blockquote,
+.NightMode blockquote {
+  background: none;
+  color: var(--blue100) !important;
+}
+
+.NightModeTrigger {
+  padding-top: 16px;
+  position: relative;
+}
+
+.NightLabel {
+  margin-left: 8px;
+}
+
+.NightController {
+  display: flex;
+  align-items: center;
+}
+
+.NightToggle {
+  color: var(--text);
+  padding: 8px;
+  font-family: var(--sans);
+  margin: 16px 8px;
+  box-shadow: var(--shadow);
+  background: white;
+  bottom: 0;
+  z-index: 50;
+  position: fixed;
+}

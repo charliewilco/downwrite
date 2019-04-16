@@ -24,7 +24,7 @@ interface IMarkdown {
 }
 
 // TODO: use `React.useMemo()` on upload
-const Uploader: React.FC<IUploadProps> = function(props) {
+export default function Uploader(props: IUploadProps): JSX.Element {
   const reader: FileReader = __IS_BROWSER__ && new FileReader();
 
   const onDrop = (files: File[]) => extractMarkdown(files);
@@ -60,6 +60,4 @@ const Uploader: React.FC<IUploadProps> = function(props) {
       )}
     </Dropzone>
   );
-};
-
-export default Uploader;
+}

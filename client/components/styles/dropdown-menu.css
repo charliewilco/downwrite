@@ -1,0 +1,89 @@
+:root {
+  --reach-menu-button: 1;
+}
+
+[data-reach-menu] {
+  display: block;
+  position: absolute;
+  width: 384px;
+  font-family: var(--sans);
+  font-weight: 700;
+}
+
+[data-reach-menu-list] {
+  display: block;
+  white-space: nowrap;
+  outline: none;
+  padding: 0;
+}
+
+[data-reach-menu-item] {
+  display: block;
+}
+
+[data-reach-menu-item] {
+  cursor: pointer;
+  display: block;
+  color: inherit;
+  font: inherit;
+  text-decoration: initial;
+  padding: 5px 20px;
+}
+
+@keyframes FADE_IN_FROM_LEFT {
+  0% {
+    transform: translate(25%, 0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+.DropdownMenuButton {
+  appearance: none;
+  outline: none;
+  border: 0;
+  font-family: inherit;
+  background: none;
+  box-sizing: inherit;
+}
+
+.DropdownMenuList {
+  animation: FADE_IN_FROM_LEFT 0.45s;
+  color: var(--gray300);
+  background: var(--cardBackground);
+  box-shadow: var(--shadow);
+  font-size: 14px;
+}
+
+.DropdownMenuList > [data-reach-menu-item][data-selected] {
+  background: var(--link);
+  color: white;
+  outline: none;
+}
+
+.DropdownMenuList a {
+  display: block;
+  color: var(--gray300);
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.DropdownMenuList a[data-selected] {
+  background: var(--link);
+  color: white;
+  outline: none;
+}
+
+.DropdownMenuList .mid {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.NightMode .DropdownMenuList,
+.NightMode .DropdownMenuList a {
+  color: white;
+}

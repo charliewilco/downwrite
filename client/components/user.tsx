@@ -1,37 +1,20 @@
 import * as React from "react";
-import styled, { css } from "styled-components";
 import Avatar from "./avatar";
+import classNames from "../utils/classnames";
 
-interface IUserBlock {
+interface IUserBlockProps {
   name: string;
   border: boolean;
   colors: string[];
 }
 
-const border = css`
-  border-bottom: 1px solid ${props => props.theme.border};
-`;
+export default function UserBlock(props: IUserBlockProps): JSX.Element {
+  const className = classNames("User", props.border && "User--border");
 
-const UserBlockContainer = styled.div`
-  position: relative;
-  text-align: center;
-  padding: 32px 8px;
-  ${(props: { border: boolean }) => props.border && border};
-`;
-
-const DisplayUser = styled.span`
-  display: inline-block;
-  font-size: 16px;
-  font-weight: 700;
-`;
-
-const UserBlock: React.FC<IUserBlock> = props => {
   return (
-    <UserBlockContainer border={props.border}>
+    <div className={className}>
       <Avatar centered colors={props.colors} />
-      <DisplayUser>{props.name}</DisplayUser>
-    </UserBlockContainer>
+      <span className="UserName">{props.name}</span>
+    </div>
   );
-};
-
-export default UserBlock;
+}

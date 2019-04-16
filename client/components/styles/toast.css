@@ -1,0 +1,22 @@
+.Toast {
+  color: var(--text);
+  width: 10rem;
+  text-align: center;
+  top: 20px;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  position: fixed;
+  margin: auto;
+  background-color: white;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+  padding: 0.25rem;
+}
+
+.ToastNoPosition {
+  color: var(--text);
+  background-color: white;
+  box-shadow: var(--shadow);
+  padding: 0.25rem;
+}

@@ -1,14 +1,14 @@
 import * as React from "react";
 import debounce from "lodash/debounce";
 
-interface DebounceProps {
+interface IDebounceProps {
   method?: () => void;
   timeout: number;
 }
 
-const Debouncer: React.FC<DebounceProps> = function(props) {
+export default function Debouncer(props: IDebounceProps): null {
   if (props.method) {
-    const autoFire = debounce(props.method, props.timeout);
+    const autoFire = debounce(props.method, props.timeout || 3500);
     React.useEffect(() => {
       autoFire();
       return function cleanup() {
@@ -18,10 +18,4 @@ const Debouncer: React.FC<DebounceProps> = function(props) {
   }
 
   return null;
-};
-
-Debouncer.defaultProps = {
-  timeout: 3500
-};
-
-export default Debouncer;
+}
