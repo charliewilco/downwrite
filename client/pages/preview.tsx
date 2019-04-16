@@ -7,9 +7,9 @@ import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
 import { AuthContext } from "../components/auth";
 import NotFound from "../components/not-found";
-import { IPreviewProps, getInitialPreview } from "../utils/initial-props";
+import * as InitialProps from "../utils/initial-props";
 
-function PreviewEntry({ entry, url }: IPreviewProps) {
+function PreviewEntry({ entry, url }: InitialProps.IPreviewProps) {
   const { authed } = React.useContext(AuthContext);
   return (
     <>
@@ -52,6 +52,6 @@ PreviewEntry.defaultProps = {
   entry: {}
 };
 
-PreviewEntry.getInitialProps = getInitialPreview;
+PreviewEntry.getInitialProps = InitialProps.getInitialPreview;
 
 export default PreviewEntry;

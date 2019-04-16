@@ -4,9 +4,9 @@ import "isomorphic-fetch";
 import SettingsUser from "../components/settings-user-form";
 import SettingsPassword from "../components/settings-password";
 import SettingsLocal from "../components/settings-markdown";
-import { IUserSettingsProps, getInitialSettings } from "../utils/initial-props";
+import * as InitialProps from "../utils/initial-props";
 
-function Settings(props: IUserSettingsProps) {
+function Settings(props: InitialProps.IUserSettingsProps) {
   return (
     <div className="Wrapper Wrapper--sm" style={{ padding: 8 }}>
       <Head>
@@ -23,6 +23,6 @@ function Settings(props: IUserSettingsProps) {
   );
 }
 
-Settings.getInitialProps = getInitialSettings;
+Settings.getInitialProps = InitialProps.getInitialSettings;
 
 export default Settings;

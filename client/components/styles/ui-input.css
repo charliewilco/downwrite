@@ -24,14 +24,16 @@
 
 .UIInputElement {
   font-family: var(--monospace);
-  font-size: 16px;
+  font-size: 14px;
+  padding: 8px 0;
   font-weight: 400;
   appearance: none;
   display: block;
-  border: 0px;
   width: 100%;
-  border-radius: 0px;
-  border-bottom: 2px solid #b4b4b4;
+  border-radius: 0;
+  border: 0;
+  background: none;
+  border-bottom: 2px solid var(--gray200);
   transition: border-bottom 250ms ease-in-out;
 }
 
@@ -42,6 +44,8 @@
 }
 
 .UIInputElement:focus {
+  transition: border-bottom 250ms ease-in-out;
+  background: none;
   outline: none;
   border-bottom: 2px solid var(--yellow700);
 }

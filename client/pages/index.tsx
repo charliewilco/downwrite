@@ -9,11 +9,11 @@ import Loading from "../components/loading";
 import EmptyPosts from "../components/empty-posts";
 import InvalidToken from "../components/invalid-token";
 import useManagedDashboard from "../hooks/manage-dashboard";
-import { IDashboardProps, getInitialPostList } from "../utils/initial-props";
+import * as InitialProps from "../utils/initial-props";
 
 // TODO: refactor to have selected post, deletion to be handled by a lower level component
 // should be opened at this level and be handed a token and post to delete
-export function DashboardUI(props: IDashboardProps) {
+export function DashboardUI(props: InitialProps.IDashboardProps) {
   const [
     { entries, selectedPost, modalOpen, loaded, error },
     ManagedDashboard
@@ -52,7 +52,7 @@ export function DashboardUI(props: IDashboardProps) {
   );
 }
 
-DashboardUI.getInitialProps = getInitialPostList;
+DashboardUI.getInitialProps = InitialProps.getInitialPostList;
 
 DashboardUI.defaultProps = {
   entries: []

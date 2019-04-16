@@ -18,11 +18,11 @@ import TimeMarker from "../components/time-marker";
 import { superConverter } from "../utils/responseHandler";
 import { __IS_DEV__ } from "../utils/dev";
 import useUpdateEntry, { IFields } from "../hooks/update-entry";
-import { IEditProps, getInitialPost } from "../utils/initial-props";
+import * as InitialProps from "../utils/initial-props";
 
 const EDITOR_COMMAND = "myeditor-save";
 
-function EditUI(props: IEditProps) {
+function EditUI(props: InitialProps.IEditProps) {
   const initialEditorState = Draft.EditorState.createWithContent(
     superConverter((props.post as Dwnxt.IPost).content)
   );
@@ -107,6 +107,6 @@ function EditUI(props: IEditProps) {
   );
 }
 
-EditUI.getInitialProps = getInitialPost;
+EditUI.getInitialProps = InitialProps.getInitialPost;
 
 export default EditUI;
