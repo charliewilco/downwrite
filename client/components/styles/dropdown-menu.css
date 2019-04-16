@@ -7,6 +7,7 @@
   position: absolute;
   width: 384px;
   font-family: var(--sans);
+  font-weight: 700;
 }
 
 [data-reach-menu-list] {
@@ -55,6 +56,7 @@
   color: var(--gray300);
   background: var(--cardBackground);
   box-shadow: var(--shadow);
+  font-size: 14px;
 }
 
 .DropdownMenuList > [data-reach-menu-item][data-selected] {
@@ -66,7 +68,6 @@
 .DropdownMenuList a {
   display: block;
   color: var(--gray300);
-  font-size: 16px;
   padding-top: 4px;
   padding-bottom: 4px;
 }
