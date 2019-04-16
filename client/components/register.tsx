@@ -1,21 +1,12 @@
 import * as React from "react";
-import { Formik, Form, FormikProps, ErrorMessage, FormikActions } from "formik";
+import { Formik, Form, FormikProps, ErrorMessage } from "formik";
 import "isomorphic-fetch";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
 import LegalBoilerplate from "./legal-boilerplate";
-import { ErrorStateContext, IUIErrorMessage } from "./ui-error";
-import { AuthContext, IAuthContext } from "./auth";
-import * as API from "../utils/api";
+import useLoginFns, { IRegisterValues } from "../hooks/login";
 import { RegisterFormSchema } from "../utils/validations";
 import { StringTMap } from "../utils/types";
-
-interface IRegistration extends StringTMap<string | boolean> {
-  username: string;
-  password: string;
-  legalChecked: boolean;
-  email: string;
-}
 
 interface IInput extends StringTMap<string> {
   name?: string;
@@ -50,40 +41,9 @@ const REGISTER_INPUTS: IInput[] = [
 ];
 
 export default function RegisterForm(): JSX.Element {
-  const {
-    errorActions: { setError }
-  } = React.useContext<IUIErrorMessage>(ErrorStateContext);
-  const { signIn } = React.useContext<IAuthContext>(AuthContext);
-  const onSubmit = async ({
-    username,
-    email,
-    password
-  }: IRegistration): Promise<void> => {
-    const { host } = document.location;
-    const user = await API.createUser(
-      { username, email, password },
-      {
-        host
-      }
-    );
+  const { onRegisterSubmit } = useLoginFns();
 
-    if (user.userID) {
-      signIn(user.id_token !== undefined, user.id_token);
-    } else {
-      setError(user.message, "error");
-    }
-  };
-
-  const handleSubmit = (
-    values: IRegistration,
-    actions: FormikActions<IRegistration>
-  ): void => {
-    if (values.legalChecked) {
-      onSubmit(values);
-    }
-  };
-
-  const initialValues = {
+  const initialValues: IRegisterValues = {
     legalChecked: false,
     username: "",
     password: "",
@@ -94,8 +54,8 @@ export default function RegisterForm(): JSX.Element {
     <Formik
       validationSchema={RegisterFormSchema}
       initialValues={initialValues}
-      onSubmit={handleSubmit}>
-      {({ values, handleChange }: FormikProps<IRegistration>) => (
+      onSubmit={onRegisterSubmit}>
+      {({ values, handleChange }: FormikProps<IRegisterValues>) => (
         <Form>
           <div>
             {REGISTER_INPUTS.map(input => (

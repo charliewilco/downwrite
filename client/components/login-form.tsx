@@ -1,43 +1,14 @@
 import * as React from "react";
 import { Formik, Form, FormikProps, ErrorMessage, FormikActions } from "formik";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
-import { ErrorStateContext, IUIErrorMessage } from "./ui-error";
-import { AuthContext, IAuthContext } from "./auth";
 import { Button } from "./button";
-import * as API from "../utils/api";
+import useLoginFns, { ILoginValues } from "../hooks/login";
 import { LoginFormSchema } from "../utils/validations";
 
-interface ILoginForm {
-  user: string;
-  password: string;
-}
-
 export default function Login(): JSX.Element {
-  const {
-    errorActions: { setError }
-  } = React.useContext<IUIErrorMessage>(ErrorStateContext);
-  const { signIn } = React.useContext<IAuthContext>(AuthContext);
-  const handleFormSubmit = (
-    values: ILoginForm,
-    actions: FormikActions<ILoginForm>
-  ): void => {
-    onSubmit(values);
-  };
+  const { onLoginSubmit } = useLoginFns();
 
-  const onSubmit = async (values: ILoginForm): Promise<void> => {
-    const { host } = document.location;
-    const auth = await API.authUser(values, { host });
-
-    if (auth.error) {
-      setError(auth.message, "error");
-    }
-
-    if (auth.token) {
-      signIn(auth.token !== undefined, auth.token);
-    }
-  };
-
-  const initialValues: ILoginForm = {
+  const initialValues: ILoginValues = {
     user: "",
     password: ""
   };
@@ -46,8 +17,8 @@ export default function Login(): JSX.Element {
     <Formik
       validationSchema={LoginFormSchema}
       initialValues={initialValues}
-      onSubmit={handleFormSubmit}>
-      {({ values, errors, handleChange, handleSubmit }: FormikProps<ILoginForm>) => (
+      onSubmit={onLoginSubmit}>
+      {({ values, handleChange }: FormikProps<ILoginValues>) => (
         <Form>
           <UIInputContainer>
             <UIInput
