@@ -2,7 +2,7 @@
 
 exports[`<Card /> matches snapshot 1`] = `
 <div
-  class="Card"
+  class="Sheet Card"
   data-testid="CARD"
 >
   <header
@@ -12,9 +12,7 @@ exports[`<Card /> matches snapshot 1`] = `
       class="CardTitle"
       data-testid="CARD_TITLE"
     >
-      <a
-        class="link"
-      >
+      <a>
         Starting Again
       </a>
     </h2>
@@ -34,7 +32,6 @@ exports[`<Card /> matches snapshot 1`] = `
       data-testid="CARD_EXCERPT"
     >
       <a
-        class="link"
         style="margin-right: 8px;"
       >
         Edit
