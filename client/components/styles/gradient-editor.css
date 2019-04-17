@@ -1,6 +1,5 @@
 .GradientEditorContainer {
-  max-width: 512px;
-  margin: 64px auto;
+  margin: 64px inherit;
 }
 
 .GEAvatar {

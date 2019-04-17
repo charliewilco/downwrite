@@ -16,7 +16,7 @@ const PAGES: IPage[] = [
 
 export default function UIFooter() {
   return (
-    <footer className="AppFooter Wrapper Wrapper--sm">
+    <footer className="AppFooter Wrapper Wrapper--md">
       <nav className="AppFooterNav">
         <ul>
           <li>

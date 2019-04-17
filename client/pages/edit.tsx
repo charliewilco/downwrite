@@ -36,7 +36,7 @@ function EditUI(props: InitialProps.IEditProps) {
   return !loaded ? (
     <Loading size={75} />
   ) : (
-    <div className="Wrapper Wrapper--sm">
+    <div className="Wrapper Wrapper--md">
       <Formik
         onSubmit={onSubmit}
         initialValues={{

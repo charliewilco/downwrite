@@ -8,7 +8,7 @@ import * as InitialProps from "../utils/initial-props";
 
 function Settings(props: InitialProps.IUserSettingsProps) {
   return (
-    <div className="Wrapper Wrapper--sm" style={{ padding: 8 }}>
+    <div className="Wrapper Wrapper--md" style={{ padding: 8 }}>
       <Head>
         <title>User Settings</title>
       </Head>

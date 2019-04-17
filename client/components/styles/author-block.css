@@ -1,10 +1,6 @@
 .AuthorBlock {
   display: block;
-  max-width: 512px;
-  margin: 0 auto;
   padding: 16px 8px;
-  background-color: var(--cardBackground);
-  box-shadow: var(--shadow);
 }
 
 .AuthorBlockContent {

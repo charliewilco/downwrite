@@ -19,7 +19,7 @@ function FormHeader(props: IFormHeaderProps) {
 
 export default function LoginContainer(): JSX.Element {
   return (
-    <UITabs.Container className="FormWrapper">
+    <UITabs.Container className="Sheet FormWrapper Wrapper Wrapper--sm">
       <UITabs.List className="TabsList">
         <UITabs.ListItem
           className="ListItem"

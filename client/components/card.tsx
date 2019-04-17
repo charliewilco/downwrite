@@ -46,7 +46,7 @@ export default function Card(props: ICardProps) {
   }
 
   return (
-    <div className="Card" data-testid="CARD">
+    <div className="Sheet Card" data-testid="CARD">
       <header className="CardHeader">
         <h2 className="CardTitle" data-testid="CARD_TITLE">
           <EditLink title={props.title} id={props.id} />

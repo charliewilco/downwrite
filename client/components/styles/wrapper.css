@@ -9,5 +9,9 @@
 }
 
 .Wrapper--sm {
+  max-width: 528px;
+}
+
+.Wrapper--md {
   max-width: 768px;
 }

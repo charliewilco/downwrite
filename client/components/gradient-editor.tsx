@@ -26,7 +26,7 @@ export default function GradientEditor(props: IGradientEditorProps): JSX.Element
   const colors = colorsToArray(props.colors);
 
   return (
-    <div className="GradientEditorContainer">
+    <div className="Wrapper Wrapper--sm GradientEditorContainer">
       <Avatar className="GEAvatar" centered size={64} colors={colors} />
       <div className="Flexxy">
         <ColorPicker

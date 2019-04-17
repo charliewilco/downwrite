@@ -41,7 +41,7 @@ export default function NewEditor(props: INewPostProps): JSX.Element {
         handleSubmit,
         handleChange
       }: FormikProps<IFields>) => (
-        <Form className="Wrapper Wrapper--sm" style={EDITOR_SPACING}>
+        <Form className="Wrapper Wrapper--md" style={EDITOR_SPACING}>
           <Head>
             <title>{values.title ? values.title : "New"} | Downwrite</title>
           </Head>

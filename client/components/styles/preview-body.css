@@ -1,8 +1,5 @@
 .PreviewContainer {
   padding: 32px 0;
-  max-width: 512px;
-  margin-left: auto;
-  margin-right: auto;
   font-family: var(--sans);
 }
 

@@ -14,7 +14,7 @@ function TeaserCopy(): JSX.Element {
 
 export default function Author(props: IAuthorProps): JSX.Element {
   return (
-    <aside className="AuthorBlock">
+    <aside className="Sheet AuthorBlock Wrapper Wrapper--sm">
       <header className="AuthorBlockHeader">
         <Avatar colors={props.colors} />
         <h6 className="AuthorBlockTitle">Post from {props.name}</h6>

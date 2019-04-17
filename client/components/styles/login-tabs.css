@@ -6,11 +6,7 @@
 }
 
 .FormWrapper {
-  box-shadow: var(--shadow);
-  max-width: 544px;
   width: 100%;
-  background: var(--cardBackground);
-  color: var(--color);
 }
 
 .TabsList {

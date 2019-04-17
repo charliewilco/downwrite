@@ -10,7 +10,7 @@ interface IModalProps {
 export default function UIModal(props: IModalProps) {
   return (
     <Reach.DialogOverlay className="Overlay">
-      <Reach.DialogContent className="ModalContainer">
+      <Reach.DialogContent className="ModalContainer Wrapper Wrapper--sm">
         <button className="ModalCloseButton" onClick={props.closeUIModal}>
           <CloseIcon className="Modal__close" />
         </button>

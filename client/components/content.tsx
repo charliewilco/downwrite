@@ -42,7 +42,7 @@ export default function Content({
         </header>
         <section
           data-testid="PREVIEW_ENTRTY_BODY"
-          className="PreviewContentBody PreviewBody">
+          className="PreviewContentBody PreviewBody Wrapper Wrapper--sm">
           {content && <Markdown source={content} renderers={MARKDOWN_RENDERS} />}
           {children}
         </section>
