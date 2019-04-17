@@ -11,7 +11,7 @@ import { Button } from "../components/button";
 import Loading from "../components/loading";
 import { Input } from "../components/editor-input";
 import { ToggleBox } from "../components/toggle-box";
-import PreviewLink from "../components/preview-link";
+import { PreviewLink } from "../components/entry-links";
 import Editor from "../components/editor";
 import TimeMarker from "../components/time-marker";
 import { superConverter } from "../utils/responseHandler";
@@ -52,9 +52,7 @@ function EditUI(props: InitialProps.IEditProps) {
         }: FormikProps<IFields>) => (
           <>
             <Head>
-              <title>
-                {__IS_DEV__ && "DEVELOPMENT"} {values.title} | Downwrite
-              </title>
+              <title>{values.title} | Downwrite</title>
             </Head>
             {initialFocus && (
               <Autosaving
@@ -75,7 +73,9 @@ function EditUI(props: InitialProps.IEditProps) {
                     value={values.publicStatus}
                     onChange={handleChange}
                   />
-                  <PreviewLink id={props.id} publicStatus={values.publicStatus} />
+                  {!!values.publicStatus && (
+                    <PreviewLink className="AltPreviewLink" id={props.id} />
+                  )}
                 </div>
                 <div className="UtilityBarItems">
                   {!!values.editorState && (
