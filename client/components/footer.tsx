@@ -18,7 +18,7 @@ export default function UIFooter() {
   return (
     <footer className="AppFooter Wrapper Wrapper--md">
       <nav className="AppFooterNav">
-        <ul>
+        <ul className="u-center">
           <li>
             <span>&copy; 2019 Charles Peters</span>
           </li>

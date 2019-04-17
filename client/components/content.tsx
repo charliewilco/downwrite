@@ -25,7 +25,7 @@ export default function Content({
   return (
     <div className="PreviewContainer">
       <article className="harticle">
-        <header className="PreviewContentHeader">
+        <header className="PreviewContentHeader u-center">
           <h1
             data-testid="PREVIEW_ENTRTY_TITLE"
             className="ContentHeaderTitle u-center f4">

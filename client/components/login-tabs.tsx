@@ -9,7 +9,7 @@ interface IFormHeaderProps {
 
 function FormHeader(props: IFormHeaderProps) {
   return (
-    <header className="LoginFormHeader">
+    <header className="LoginFormHeader u-center">
       <h2 className="FormGreeting" data-testid="LOGIN_TITLE">
         {props.children}
       </h2>
@@ -20,7 +20,7 @@ function FormHeader(props: IFormHeaderProps) {
 export default function LoginContainer(): JSX.Element {
   return (
     <UITabs.Container className="Sheet FormWrapper Wrapper Wrapper--sm">
-      <UITabs.List className="TabsList">
+      <UITabs.List className="TabsList u-center">
         <UITabs.ListItem
           className="ListItem"
           data-testid="LOGIN_REGISTER_BUTTON"

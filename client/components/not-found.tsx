@@ -7,7 +7,7 @@ interface IPostErrorProps {
 
 export default function PostError({ error, message }: IPostErrorProps): JSX.Element {
   return (
-    <div className="NotFound Wrapper Wrapper--sm">
+    <div className="NotFound Wrapper Wrapper--sm u-center">
       <img
         className="NotFoundImage"
         alt="Document with an Negative mark"

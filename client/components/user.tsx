@@ -9,7 +9,7 @@ interface IUserBlockProps {
 }
 
 export default function UserBlock(props: IUserBlockProps): JSX.Element {
-  const className = classNames("User", props.border && "User--border");
+  const className = classNames("User", props.border && "User--border", "u-center");
 
   return (
     <div className={className}>
