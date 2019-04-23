@@ -5,7 +5,7 @@ import PostListItem from "./post-list-item";
 import { IPost } from "downwrite";
 
 interface IPostListProps {
-  posts: any[];
+  posts: IPost[];
   onSelect: ({ id }: Partial<IPost>) => void;
 }
 

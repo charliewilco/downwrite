@@ -2,7 +2,7 @@ import "jest";
 import * as React from "react";
 import "jest-dom/extend-expect";
 import { render, fireEvent } from "react-testing-library";
-import useToggle from "../hooks/toggle";
+import { useToggle } from "../hooks/toggle";
 
 const ToggleDemo = () => {
   const [isOpen, { onToggle }] = useToggle();
