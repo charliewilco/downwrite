@@ -28,7 +28,7 @@ export default function DropdownUI() {
       <Reach.MenuButton className="DropdownMenuButton">
         <NavIcon className="icon" />
       </Reach.MenuButton>
-      <Reach.MenuList className="DropdownMenuList">
+      <Reach.MenuList className="Sheet DropdownMenuList">
         <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
         <Reach.MenuLink onClick={() => Router.push("/")} component="a">
           <MenuEmoji label="Stack of books">📚</MenuEmoji>

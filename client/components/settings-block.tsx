@@ -24,7 +24,7 @@ interface ISettingsBlockProps {
 
 export default function SettingsBlock(props: ISettingsBlockProps): JSX.Element {
   return (
-    <section className="SettingsBlock">
+    <section className="Sheet SettingsBlock">
       <div className="SettingsBlockTitleContainer">
         <h4 className="SettingsBlockTitle">{props.title}</h4>
         {props.description && (

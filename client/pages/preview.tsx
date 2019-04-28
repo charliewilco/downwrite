@@ -9,36 +9,41 @@ import { AuthContext } from "../components/auth";
 import NotFound from "../components/not-found";
 import * as InitialProps from "../utils/initial-props";
 
-function PreviewEntry({ entry, url }: InitialProps.IPreviewProps) {
+function PreviewEntry(props: InitialProps.IPreviewProps) {
   const { authed } = React.useContext(AuthContext);
   return (
     <>
-      {!isEmpty((entry as Dwnxt.IPreviewEntryError).message) ? (
+      {!isEmpty((props.entry as Dwnxt.IPreviewEntryError).message) ? (
         <>
           <Head>
-            <title>{(entry as Dwnxt.IPreviewEntryError).error} | Downwrite</title>
+            <title>
+              {(props.entry as Dwnxt.IPreviewEntryError).error} | Downwrite
+            </title>
           </Head>
-          <NotFound {...entry as Dwnxt.IPreviewEntryError} />
+          <NotFound {...props.entry as Dwnxt.IPreviewEntryError} />
         </>
       ) : (
         <>
           <Head>
-            <title>{(entry as Dwnxt.IPreviewEntry).title} | Downwrite</title>
-            <meta name="og:title" content={(entry as Dwnxt.IPreviewEntry).title} />
+            <title>{(props.entry as Dwnxt.IPreviewEntry).title} | Downwrite</title>
+            <meta
+              name="og:title"
+              content={(props.entry as Dwnxt.IPreviewEntry).title}
+            />
             <meta
               name="og:description"
-              content={(entry as Dwnxt.IPreviewEntry).content.substr(0, 75)}
+              content={(props.entry as Dwnxt.IPreviewEntry).content.substr(0, 75)}
             />
-            <meta name="og:url" content={url} />
+            <meta name="og:url" content={props.url} />
             <meta
               name="description"
-              content={(entry as Dwnxt.IPreviewEntry).content.substr(0, 75)}
+              content={(props.entry as Dwnxt.IPreviewEntry).content.substr(0, 75)}
             />
           </Head>
-          <Content {...entry as Dwnxt.IPreviewEntry}>
+          <Content {...props.entry as Dwnxt.IPreviewEntry}>
             <AuthorBlock
-              name={(entry as Dwnxt.IPreviewEntry).author.username}
-              colors={(entry as Dwnxt.IPreviewEntry).author.gradient}
+              name={(props.entry as Dwnxt.IPreviewEntry).author.username}
+              colors={(props.entry as Dwnxt.IPreviewEntry).author.gradient}
               authed={authed}
             />
           </Content>

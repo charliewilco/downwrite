@@ -25,7 +25,7 @@ export default function Content({
   return (
     <div className="PreviewContainer">
       <article className="harticle">
-        <header className="PreviewContentHeader">
+        <header className="PreviewContentHeader u-center">
           <h1
             data-testid="PREVIEW_ENTRTY_TITLE"
             className="ContentHeaderTitle u-center f4">
@@ -42,7 +42,7 @@ export default function Content({
         </header>
         <section
           data-testid="PREVIEW_ENTRTY_BODY"
-          className="PreviewContentBody PreviewBody">
+          className="PreviewContentBody PreviewBody Wrapper Wrapper--sm">
           {content && <Markdown source={content} renderers={MARKDOWN_RENDERS} />}
           {children}
         </section>

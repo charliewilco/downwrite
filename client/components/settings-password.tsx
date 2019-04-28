@@ -7,10 +7,7 @@ import { Button } from "./button";
 import { IAuthContext, AuthContext } from "./auth";
 import { UpdatePasswordSchema } from "../utils/validations";
 import * as API from "../utils/api";
-
-export interface StringTMap<T> {
-  [key: string]: T;
-}
+import { StringTMap } from "../utils/types";
 
 interface IPasswordSettings extends StringTMap<string> {
   oldPassword: string;

@@ -4,8 +4,6 @@
   justify-content: space-between;
   font-weight: 400;
   padding: 8px;
-  box-shadow: var(--shadow);
-  background: var(--cardBackground);
 }
 
 .Card a {

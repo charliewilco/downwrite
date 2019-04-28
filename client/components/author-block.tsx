@@ -9,12 +9,14 @@ interface IAuthorProps {
 }
 
 function TeaserCopy(): JSX.Element {
-  return <>You can write and share on Downwrite, you can sign up or log in </>;
+  return (
+    <span>You can write and share on Downwrite, you can sign up or log in </span>
+  );
 }
 
 export default function Author(props: IAuthorProps): JSX.Element {
   return (
-    <aside className="AuthorBlock">
+    <aside className="Sheet AuthorBlock Wrapper Wrapper--sm">
       <header className="AuthorBlockHeader">
         <Avatar colors={props.colors} />
         <h6 className="AuthorBlockTitle">Post from {props.name}</h6>

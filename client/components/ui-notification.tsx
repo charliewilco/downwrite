@@ -29,12 +29,12 @@ function getTypeClassName(
   return [defaultName, type].join(" ");
 }
 
-interface UIMessageProps {
+interface IUIMessageProps {
   notification: UINotificationMessage;
   onDismiss(m: UINotificationMessage): void;
 }
 
-export function UIMessage(props: UIMessageProps): JSX.Element {
+export function UIMessage(props: IUIMessageProps): JSX.Element {
   const className = getTypeClassName(props.notification, "UINotification");
 
   const onRemove = () => props.onDismiss(props.notification);

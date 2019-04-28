@@ -1,7 +1,7 @@
 import * as React from "react";
 import Header from "./header";
 import Footer from "./footer";
-import NightMode from "./night-mode";
+import NightModeProvider from "./night-mode";
 import { LocalUISettingsProvider } from "./local-ui-settings";
 import "./styles/base.css";
 import { NotificationProvider } from "../reducers/notifications";
@@ -13,21 +13,21 @@ interface IUIShell {
 
 export function UIShell(props: IUIShell) {
   return (
-    <NightMode>
-      <LocalUISettingsProvider>
-        <div className="UIContainer">
-          <NotificationProvider>
-            <div className="clearfix">
-              <div style={{ minHeight: "100%" }}>
+    <LocalUISettingsProvider>
+      <div className="UIContainer">
+        <NotificationProvider>
+          <div className="clearfix">
+            <div style={{ minHeight: "100%" }}>
+              <NightModeProvider>
                 <Header />
-                {props.children}
-                <Footer />
-              </div>
+              </NightModeProvider>
+              {props.children}
+              <Footer />
             </div>
-            <MessageList />
-          </NotificationProvider>
-        </div>
-      </LocalUISettingsProvider>
-    </NightMode>
+          </div>
+          <MessageList />
+        </NotificationProvider>
+      </div>
+    </LocalUISettingsProvider>
   );
 }

@@ -12,9 +12,9 @@ export interface IFields {
   editorState: Draft.EditorState;
 }
 
-export type CreateEntryHander = (values: IFields) => void;
+export type CreateEntryHandler = (values: IFields) => void;
 
-export default function useCreateEntry(): CreateEntryHander {
+export default function useCreateEntry(): CreateEntryHandler {
   const { actions } = useUINotifications();
 
   const { token } = React.useContext<IAuthContext>(AuthContext);

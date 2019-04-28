@@ -1,5 +1,6 @@
 import "jest";
 
+// tslint:disable-next-line: interface-name
 interface Config {
   name?: string;
   only?: boolean;

@@ -1,11 +1,8 @@
 .SettingsBlock {
-  color: var(--color);
-  background: var(--background);
   display: flex;
   flex-wrap: wrap;
   padding: 16px;
   margin-bottom: 32px;
-  box-shadow: var(--shadow);
 }
 
 .SettingsBlockTitle {

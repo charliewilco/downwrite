@@ -27,7 +27,7 @@
   color: inherit;
   font: inherit;
   text-decoration: initial;
-  padding: 5px 20px;
+  padding: 8px;
 }
 
 @keyframes FADE_IN_FROM_LEFT {
@@ -53,9 +53,6 @@
 
 .DropdownMenuList {
   animation: FADE_IN_FROM_LEFT 0.45s;
-  color: var(--gray300);
-  background: var(--cardBackground);
-  box-shadow: var(--shadow);
   font-size: 14px;
 }
 
@@ -67,9 +64,7 @@
 
 .DropdownMenuList a {
   display: block;
-  color: var(--gray300);
-  padding-top: 4px;
-  padding-bottom: 4px;
+  color: var(--color);
 }
 
 .DropdownMenuList a[data-selected] {

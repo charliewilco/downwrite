@@ -7,15 +7,15 @@ interface IErrorViewProps {
   statusCode: number;
 }
 
-interface CustomError extends Error {
+interface ICustomError extends Error {
   statusCode: number;
 }
 
 interface IErrorPageContext extends NextContext<any> {
-  err: CustomError;
+  err: ICustomError;
 }
 
-function StatusCode(props: Partial<CustomError>) {
+function StatusCode(props: Partial<ICustomError>) {
   return (
     <p>
       {props.statusCode

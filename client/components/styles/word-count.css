@@ -1,7 +1,4 @@
 .WordCount {
-  color: var(--text);
-  background-color: white;
-  box-shadow: var(--shadow);
   padding: 12px;
 }
 .WordCountContainer {

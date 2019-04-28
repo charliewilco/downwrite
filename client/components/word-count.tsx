@@ -40,7 +40,7 @@ export default function WordCounter(props: IWordCounterProps): JSX.Element {
   }, [props.editorState]);
 
   return (
-    <div className="WordCountContainer">
+    <div className="Sheet WordCountContainer">
       <div className="WordCount">
         <small className="WordCountMeta">Word Count: {displayCount}</small>
       </div>

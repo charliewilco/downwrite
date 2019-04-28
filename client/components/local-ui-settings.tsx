@@ -17,7 +17,7 @@ interface ILocalSettingsProps {
   children: React.ReactNode;
 }
 
-export function LocalUISettingsProvider(props: ILocalSettingsProps): JSX.Element {
+function useLocalUISettings(): ILocalUISettings {
   const [monospace, updateFont] = React.useState<string>(
     DefaultStyles.Fonts.monospace
   );
@@ -31,15 +31,21 @@ export function LocalUISettingsProvider(props: ILocalSettingsProps): JSX.Element
     }
   }, []);
 
-  return (
-    <LocalUISettings.Provider
-      value={{
-        monospace,
-        actions: {
-          updateFont
-        }
-      }}>
-      {props.children}
-    </LocalUISettings.Provider>
-  );
+  function getUIContext() {
+    return {
+      monospace,
+      actions: {
+        updateFont
+      }
+    };
+  }
+
+  return React.useMemo<ILocalUISettings>(() => getUIContext(), [monospace]);
+}
+
+export function LocalUISettingsProvider({
+  children
+}: ILocalSettingsProps): JSX.Element {
+  const value = useLocalUISettings();
+  return React.createElement(LocalUISettings.Provider, { value }, children);
 }

@@ -5,13 +5,13 @@ import Dropzone from "react-dropzone";
 import { markdownToDraft } from "markdown-draft-js";
 import { __IS_BROWSER__ } from "../utils/dev";
 
-interface MarkdownConversion {
+interface IMarkdownConversion {
   title: string;
   editorState: Draft.EditorState;
 }
 
 interface IUploadProps {
-  onParsed: (o: MarkdownConversion) => void;
+  onParsed: (o: IMarkdownConversion) => void;
   disabled?: boolean;
   children: React.ReactNode;
 }

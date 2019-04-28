@@ -29,6 +29,16 @@ function getBlockStyle(block: Draft.ContentBlock) {
   }
 }
 
+// Custom overrides for "code" style.
+const styleMap = {
+  CODE: {
+    backgroundColor: "rgba(0, 0, 0, 0.05)",
+    fontFamily: DefaultStyles.Fonts.monospace,
+    fontSize: 14,
+    padding: 2
+  }
+};
+
 export default function DownwriteEditor(props: IEditorProps) {
   let editorRef = React.useRef<PluginsEditor>(null);
   const { monospace } = React.useContext<ILocalUISettings>(LocalUISettings);
@@ -105,13 +115,3 @@ export default function DownwriteEditor(props: IEditorProps) {
     </div>
   );
 }
-
-// Custom overrides for "code" style.
-const styleMap = {
-  CODE: {
-    backgroundColor: "rgba(0, 0, 0, 0.05)",
-    fontFamily: DefaultStyles.Fonts.monospace,
-    fontSize: 14,
-    padding: 2
-  }
-};

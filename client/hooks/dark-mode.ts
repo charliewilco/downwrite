@@ -1,17 +1,19 @@
 import * as React from "react";
 
-const NIGHT_MODE: string = "NightMode";
-const NIGHT_MODE_OFF: string = "NIGHT_MODE_OFF";
-const NIGHT_MODE_ON: string = "NIGHT_MODE_ON";
+export enum DarkModeVals {
+  NIGHT_MODE = "NightMode",
+  NIGHT_MODE_OFF = "NIGHT_MODE_OFF",
+  NIGHT_MODE_ON = "NIGHT_MODE_ON"
+}
 
 export default function useDarkModeEffect(className: string): [boolean, () => void] {
   const [night, setNight] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (typeof window !== undefined) {
-      const local = localStorage.getItem(NIGHT_MODE);
+      const local = localStorage.getItem(DarkModeVals.NIGHT_MODE);
 
-      if (local !== NIGHT_MODE_OFF) {
+      if (local !== DarkModeVals.NIGHT_MODE_OFF) {
         setNight(true);
       }
     }
@@ -20,7 +22,10 @@ export default function useDarkModeEffect(className: string): [boolean, () => vo
   React.useEffect(
     function() {
       if (document.body instanceof HTMLElement) {
-        localStorage.setItem(NIGHT_MODE, night ? NIGHT_MODE_ON : NIGHT_MODE_OFF);
+        localStorage.setItem(
+          DarkModeVals.NIGHT_MODE,
+          night ? DarkModeVals.NIGHT_MODE_ON : DarkModeVals.NIGHT_MODE_OFF
+        );
 
         night
           ? document.body.classList.add(className)

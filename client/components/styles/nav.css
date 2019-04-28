@@ -19,7 +19,6 @@
   display: flex;
   animation: FADE_IN_FROM_LEFT_NAV 0.45s;
   width: 75%;
-  box-shadow: var(--shadow);
   background: var(--background);
   position: fixed;
   z-index: 100;

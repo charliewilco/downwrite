@@ -13,54 +13,63 @@
   width: 100%;
   list-style: inside none;
 }
+
 .Grid {
   list-style: none inside;
   display: flex;
   flex-wrap: wrap;
 }
+
 .GridItem {
   margin-bottom: 24px;
   width: 100%;
 }
 
 @media (min-width: 48rem) {
+  :root {
+    --grid-item-count: 2;
+    --grid-spacing: 20px;
+    --grid-width: calc(100% + var(--grid-spacing));
+  }
+
   .Grid {
-    margin-left: -20px;
+    margin-left: calc(var(--grid-spacing) * -1);
+    width: var(--grid-width);
   }
 
   .GridItem {
-    padding-left: 20px;
-    width: 50%;
+    padding-left: var(--grid-spacing);
+    width: calc(100% / var(--grid-item-count));
   }
 }
 
 @media (min-width: 57.75rem) {
-  .GridItem {
-    width: calc(100% / 3);
+  :root {
+    --grid-item-count: 3;
   }
 }
 
 @media (min-width: 75rem) {
-  .GridItem {
-    width: calc(100% / 4);
+  :root {
+    --grid-item-count: 4;
   }
 }
 
 @media (min-width: 112.5rem) {
-  .GridItem {
-    width: calc(100% / 5);
+  :root {
+    --grid-item-count: 5;
   }
 }
 
 @media (min-width: 150rem) {
-  .GridItem {
-    width: calc(100% / 6);
+  :root {
+    --grid-item-count: 6;
   }
 }
 
 @media (min-width: 187.5rem) {
-  .GridItem {
-    width: calc(100% / 7);
+  :root {
+    --grid-item-count: 7;
   }
 }
 
@@ -68,10 +77,6 @@
 
 .PostItem {
   padding: 16px 0;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .PostItemTitle {
@@ -84,9 +89,11 @@
 }
 
 .PostItemTray {
-  margin-left: 16px;
-  display: inline-block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 12px;
+  font-weight: 700;
 }
 
 .PostItemDeleteButton {
@@ -95,8 +102,8 @@
   border: 0px;
   font-family: inherit;
   background: none;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: inherit;
+  font-weight: inherit;
 }
 
 .PostItemMeta {

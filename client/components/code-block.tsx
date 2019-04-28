@@ -10,11 +10,13 @@ export default function CodeBlock({
   language = "javascript",
   value
 }: ICodeBlockProps) {
-  return (
-    <pre>
-      <PrismCode className={`language-${language || "javascript"}`}>
-        {value}
-      </PrismCode>
-    </pre>
+  return React.createElement(
+    "pre",
+    {},
+    React.createElement(
+      PrismCode,
+      { className: `language-${language || "javascript"}` },
+      value
+    )
   );
 }

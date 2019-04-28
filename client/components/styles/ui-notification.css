@@ -12,11 +12,10 @@
 
 .UINotificationContainer {
   position: fixed;
-  max-width: 400px;
   right: 16px;
   width: 100%;
+  max-width: 400px;
   bottom: 16px;
-  height: 400px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -24,6 +23,13 @@
 
 .UINotificationContainerInner {
   position: relative;
+  max-width: 400px;
+}
+
+.UINotificationContainerInner:empty {
+  height: 0;
+  width: 0;
+  max-width: 0;
 }
 
 .UINotification {
