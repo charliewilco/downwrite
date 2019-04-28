@@ -44,6 +44,7 @@ describe("<Dashboard /> post lists", () => {
     ).not.toBeInTheDocument();
 
     fireEvent.click(FullDashboard.getByTestId("LAYOUT_CONTROL_LIST"));
+    await wait(() => FullDashboard.getByTestId("POST_LIST_ITEM"));
 
     expect(FullDashboard.getByTestId("ENTRIES_LISTVIEW")).toBeInTheDocument();
   });
