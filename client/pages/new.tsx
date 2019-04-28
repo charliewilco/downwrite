@@ -61,7 +61,7 @@ export default function NewEditor(props: INewPostProps): JSX.Element {
                 {isOffline && <span>You're Offline Right Now</span>}
               </div>
               <div className="UtilityBarItems">
-                <Button type="Submit">Add New</Button>
+                <Button type="submit">Add New</Button>
               </div>
             </aside>
             <Editor
