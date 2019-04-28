@@ -9,26 +9,39 @@ interface ICardLinks {
   className?: string;
 }
 
-export function EditLink(props: ICardLinks): JSX.Element {
-  const url: UrlObject = { pathname: "/edit", query: { id: props.id } };
+interface IInitialCardLinkProps {
+  pathname: string;
+}
 
-  return (
-    <Link prefetch passHref href={url}>
-      <a className={props.className} style={props.style}>
-        {props.title || "Edit"}
-      </a>
-    </Link>
+const defaultLinks = {
+  prefetch: true,
+  passHref: true
+};
+
+function CardLink(props: ICardLinks & IInitialCardLinkProps): JSX.Element {
+  const href: UrlObject = { pathname: props.pathname, query: { id: props.id } };
+
+  return React.createElement(Link, {
+    ...defaultLinks,
+    href,
+    children: React.createElement(
+      "a",
+      { className: props.className, style: props.style },
+      props.title
+    )
+  });
+}
+
+export function EditLink(props: ICardLinks): JSX.Element {
+  return React.createElement(
+    CardLink,
+    Object.assign({}, { pathname: "/edit", title: "Edit" }, props)
   );
 }
 
 export function PreviewLink(props: ICardLinks): JSX.Element {
-  const url: UrlObject = { pathname: "/preview", query: { id: props.id } };
-
-  return (
-    <Link prefetch passHref href={url}>
-      <a className={props.className} style={props.style}>
-        Preview
-      </a>
-    </Link>
+  return React.createElement(
+    CardLink,
+    Object.assign({}, { pathname: "/preview", title: "Preview" }, props)
   );
 }

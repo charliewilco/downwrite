@@ -75,29 +75,11 @@ function initializer(tokenInitial?: string): IAuthState {
   };
 }
 
-// Should be able to just request user details from another call
-export function AuthProvider(props: IAuthProps) {
+export function useAuthReducer(tokenInitial?: string): [IAuthState, IAuthActions] {
   const [state, dispatch] = React.useReducer<
     React.Reducer<IAuthState, IAuthReducerAction>,
     string
-  >(reducer, props.token, initializer);
-
-  React.useEffect(() => {
-    if (state.authed && Router.route === "/login") {
-      Router.push({ pathname: "/" });
-    }
-
-    if (!state.authed) {
-      Router.push({ pathname: "/login" });
-      cookie.remove("DW_TOKEN", cookieOptions);
-    }
-  }, [state.authed]);
-
-  React.useEffect(() => {
-    if (state.token) {
-      cookie.set("DW_TOKEN", state.token, cookieOptions);
-    }
-  }, [state.token]);
+  >(reducer, tokenInitial, initializer);
 
   function signIn(authed: boolean, token: string) {
     const { name } = jwt<IToken>(token);
@@ -116,13 +98,46 @@ export function AuthProvider(props: IAuthProps) {
     dispatch({ type: AuthActions.SIGN_OUT });
   }
 
-  const context: IAuthContext = {
-    ...state,
-    signIn,
-    signOut
-  };
+  return [state, { signIn, signOut }];
+}
 
-  return (
-    <AuthContext.Provider value={context}>{props.children}</AuthContext.Provider>
-  );
+export function useAuthSideEffects(state: IAuthState): void {
+  React.useEffect(() => {
+    if (state.authed && Router.route === "/login") {
+      Router.push({ pathname: "/" });
+    }
+
+    if (!state.authed) {
+      Router.push({ pathname: "/login" });
+      cookie.remove("DW_TOKEN", cookieOptions);
+    }
+  }, [state.authed]);
+
+  React.useEffect(() => {
+    if (state.token) {
+      cookie.set("DW_TOKEN", state.token, cookieOptions);
+    }
+  }, [state.token]);
+}
+
+// Should be able to just request user details from another call
+export function AuthProvider({ token, children }: IAuthProps) {
+  const [state, { signIn, signOut }] = useAuthReducer(token);
+
+  useAuthSideEffects(state);
+
+  function getAuthContext(): IAuthContext {
+    return {
+      ...state,
+      signIn,
+      signOut
+    };
+  }
+
+  const value = React.useMemo<IAuthContext>(() => getAuthContext(), [
+    state.token,
+    state.authed
+  ]);
+
+  return React.createElement(AuthContext.Provider, { value }, children);
 }

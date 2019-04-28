@@ -13,13 +13,13 @@ enum FetchActions {
   FETCH_ERROR = "FETCH_ERROR"
 }
 
-interface FetchState {
+interface IFetchState {
   posts: IPost[];
   isLoading: boolean;
   error?: string;
 }
 
-interface FetchAction {
+interface IFetchAction {
   type: FetchActions;
   payload?: {
     posts: IPost[];
@@ -27,10 +27,10 @@ interface FetchAction {
   };
 }
 
-const reducer: React.Reducer<FetchState, FetchAction> = (
+const reducer: React.Reducer<IFetchState, IFetchAction> = (
   state,
   action
-): FetchState => {
+): IFetchState => {
   switch (action.type) {
     case FetchActions.FETCH_COMPLETED: {
       return { ...state, posts: action.payload.posts, isLoading: false };
@@ -51,17 +51,16 @@ const reducer: React.Reducer<FetchState, FetchAction> = (
   }
 };
 
-const initialState: FetchState = {
+const initialState: IFetchState = {
   posts: [],
   isLoading: true,
   error: ""
 };
 
 export default function CollectionFetch() {
-  const [state, dispatch] = React.useReducer<React.Reducer<FetchState, FetchAction>>(
-    reducer,
-    initialState
-  );
+  const [state, dispatch] = React.useReducer<
+    React.Reducer<IFetchState, IFetchAction>
+  >(reducer, initialState);
 
   const { token } = React.useContext<IAuthContext>(AuthContext);
 

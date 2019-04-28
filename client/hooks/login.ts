@@ -43,18 +43,11 @@ export default function useLoginFns(): IFormHandlers {
     }
   };
 
-  const onRegisterSubmit = async ({
-    username,
-    email,
-    password
-  }: IRegisterValues): Promise<void> => {
+  const onRegisterSubmit = async (values: IRegisterValues): Promise<void> => {
     const { host } = document.location;
-    const user = await API.createUser(
-      { username, email, password },
-      {
-        host
-      }
-    );
+    const user = await API.createUser(values, {
+      host
+    });
 
     if (user.userID) {
       signIn(user.id_token !== undefined, user.id_token);
@@ -64,8 +57,10 @@ export default function useLoginFns(): IFormHandlers {
   };
 
   return {
-    onLoginSubmit: values => onLoginSubmit(values),
-    onRegisterSubmit: values => {
+    onLoginSubmit(values) {
+      onLoginSubmit(values);
+    },
+    onRegisterSubmit(values) {
       if (values.legalChecked) {
         onRegisterSubmit(values);
       }

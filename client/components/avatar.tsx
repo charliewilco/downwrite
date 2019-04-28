@@ -29,7 +29,7 @@ interface IAvatarProps {
 }
 
 export default function Avatar(props: IAvatarProps): JSX.Element {
-  const cx = classNames(
+  const className: string = classNames(
     "AvatarCircle",
     props.className,
     props.centered && "AvatarCircle--centered"
@@ -37,15 +37,16 @@ export default function Avatar(props: IAvatarProps): JSX.Element {
 
   const colors = gradientPoints(props.colors);
 
-  const styles = {
+  const style = {
     "--size": props.size || 48,
     "--colors-a": colors.a,
     "--colors-b": colors.b
   } as React.CSSProperties;
 
-  return (
-    <>
-      <div role="image" className={cx} style={styles} />
-    </>
-  );
+  return React.createElement("div", {
+    role: "img",
+    "aria-label": "Gradient in a circle to represent a user",
+    style,
+    className
+  });
 }

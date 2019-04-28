@@ -15,6 +15,7 @@ export const colors = {
 };
 
 /** UI Theme for Downwrite */
+// tslint:disable-next-line: interface-name
 export interface UIDefaultTheme {
   night: boolean;
   background: string;

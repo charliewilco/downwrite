@@ -10,7 +10,7 @@
     "max-line-length": false,
     "prefer-const": false,
     "member-ordering": false,
-    "interface-name": false,
+    "interface-name": true,
     "ordered-imports": false,
     "trailing-comma": [true, { "multiline": "never", "singleline": "never" }],
     "object-literal-sort-keys": false,
@@ -25,13 +25,10 @@
     "semicolon": [true, "always", "ignore-bound-class-methods"],
     "variable-name": [true, "ban-keywords", "allow-leading-underscore"],
     "only-arrow-functions": false,
+    "object-literal-key-quotes": false,
     "ban-types": {
       "options": [
         ["Object", "Avoid using the `Object` type. Did you mean `object`?"],
-        [
-          "Function",
-          "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."
-        ],
         ["Boolean", "Avoid using the `Boolean` type. Did you mean `boolean`?"],
         ["Number", "Avoid using the `Number` type. Did you mean `number`?"],
         ["String", "Avoid using the `String` type. Did you mean `string`?"],

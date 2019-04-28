@@ -5,10 +5,7 @@ import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
 import { LocalSettingsSchema } from "../utils/validations";
 import { LocalUISettings, ILocalUISettings } from "./local-ui-settings";
-
-export interface StringTMap<T> {
-  [key: string]: T;
-}
+import { StringTMap } from "../utils/types";
 
 interface ILocalSettings extends StringTMap<string> {
   fileExtension: string;

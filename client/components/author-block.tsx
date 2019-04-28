@@ -9,7 +9,9 @@ interface IAuthorProps {
 }
 
 function TeaserCopy(): JSX.Element {
-  return <>You can write and share on Downwrite, you can sign up or log in </>;
+  return (
+    <span>You can write and share on Downwrite, you can sign up or log in </span>
+  );
 }
 
 export default function Author(props: IAuthorProps): JSX.Element {

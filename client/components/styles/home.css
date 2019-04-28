@@ -15,6 +15,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  padding-top: 64px;
 }
 
 .IntroTitle {
@@ -39,13 +40,14 @@
 }
 
 .BannerImage {
-  max-width: 200px;
+  max-width: 128px;
   z-index: 0;
 }
 
 @media (min-width: 57.75rem) {
-  .LandingContainer {
-    padding-top: 65px;
+  .BannerImage {
+    max-width: 192px;
+    z-index: 0;
   }
 }
 

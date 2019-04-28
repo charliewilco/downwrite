@@ -14,7 +14,7 @@ export interface ICardProps {
   public: boolean;
 }
 
-export default function Card(props: ICardProps) {
+export default function Card(props: ICardProps): JSX.Element {
   function onDelete() {
     props.onDelete({ id: props.id, title: props.title });
   }
