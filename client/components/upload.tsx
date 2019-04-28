@@ -1,7 +1,7 @@
 import * as React from "react";
 import fm from "front-matter";
 import * as Draft from "draft-js";
-import Dropzone from "react-dropzone";
+import Dropzone, { useDropzone } from "react-dropzone";
 import { markdownToDraft } from "markdown-draft-js";
 import { __IS_BROWSER__ } from "../utils/dev";
 
@@ -25,39 +25,40 @@ interface IMarkdown {
 
 // TODO: use `React.useMemo()` on upload
 export default function Uploader(props: IUploadProps): JSX.Element {
-  const reader: FileReader = __IS_BROWSER__ && new FileReader();
+  const onDrop = React.useCallback((files: File[]) => {
+    const reader: FileReader = __IS_BROWSER__ && new FileReader();
 
-  const onDrop = (files: File[]) => extractMarkdown(files);
+    // tslint:disable-next-line: no-shadowed-variable
+    function extractMarkdown(files: File[]): void {
+      reader.onload = () => {
+        let md: IMarkdown = fm(reader.result as string);
 
-  const extractMarkdown = (files: File[]): void => {
-    reader.onload = () => {
-      let md: IMarkdown = fm(reader.result as string);
+        let markdown = markdownToDraft(md.body, { preserveNewlines: true });
 
-      let markdown = markdownToDraft(md.body, { preserveNewlines: true });
+        return props.onParsed({
+          title: md.attributes.title || "",
+          editorState: Draft.EditorState.createWithContent(
+            Draft.convertFromRaw(markdown)
+          )
+        });
+      };
 
-      return props.onParsed({
-        title: md.attributes.title || "",
-        editorState: Draft.EditorState.createWithContent(
-          Draft.convertFromRaw(markdown)
-        )
-      });
-    };
+      reader.readAsText(files[0]);
+    }
 
-    reader.readAsText(files[0]);
-  };
+    extractMarkdown(files);
+  }, []);
+
+  const { getRootProps } = useDropzone({
+    onDrop,
+    disabled: props.disabled,
+    multiple: false,
+    accept: "text/markdown, text/x-markdown, text/plain"
+  });
 
   return (
-    <Dropzone
-      accept="text/markdown, text/x-markdown, text/plain"
-      multiple={false}
-      onDrop={onDrop}
-      disableClick
-      disabled={props.disabled}>
-      {({ getRootProps }) => (
-        <div {...getRootProps()} style={{ border: 0, width: "100%" }}>
-          {props.children}
-        </div>
-      )}
-    </Dropzone>
+    <div {...getRootProps()} style={{ border: 0, width: "100%" }}>
+      {props.children}
+    </div>
   );
 }

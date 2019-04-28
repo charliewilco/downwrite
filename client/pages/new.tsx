@@ -67,7 +67,7 @@ export default function NewEditor(props: INewPostProps): JSX.Element {
             <Editor
               editorCommand={EDITOR_COMMAND}
               editorState={values.editorState}
-              onChange={es => setFieldValue("editorState", es)}
+              onChange={editorState => setFieldValue("editorState", editorState)}
               onSave={handleSubmit}
             />
           </Upload>
