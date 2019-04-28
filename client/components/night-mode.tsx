@@ -1,9 +1,7 @@
 import * as React from "react";
 import Checkbox from "./checkbox";
-import useDarkModeEffect from "../hooks/dark-mode";
+import useDarkModeEffect, { DarkModeVals } from "../hooks/dark-mode";
 import classNames from "../utils/classnames";
-
-const NIGHT_MODE: string = "NightMode";
 
 export interface INightModeContext {
   night: boolean;
@@ -18,16 +16,23 @@ interface INightModeContainerProps {
   children: React.ReactNode;
 }
 
+function useNightModeContext(): INightModeContext {
+  const [night, onChange] = useDarkModeEffect(DarkModeVals.NIGHT_MODE);
+
+  function getContext(): INightModeContext {
+    return {
+      night,
+      action: { onChange }
+    };
+  }
+
+  return React.useMemo<INightModeContext>(() => getContext(), [night]);
+}
+
 export default function NightModeContainer(
   props: INightModeContainerProps
 ): JSX.Element {
-  const [night, onChange] = useDarkModeEffect(NIGHT_MODE);
-
-  const context: INightModeContext = {
-    night,
-    action: { onChange }
-  };
-
+  const context = useNightModeContext();
   return (
     <NightModeContext.Provider value={context}>
       {props.children}
