@@ -92,17 +92,24 @@ export default function CollectionFetch() {
     };
   }, [token]);
 
-  return state.posts.length > 0 ? (
-    <SidebarPosts posts={state.posts} />
-  ) : (
-    <div
-      style={{
-        paddingTop: 64,
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column"
-      }}>
-      <Button onClick={() => Router.push("/new")}>Get Started</Button>
-    </div>
-  );
+  return state.posts.length > 0
+    ? React.createElement(SidebarPosts, { posts: state.posts })
+    : React.createElement(
+        "div",
+        {
+          style: {
+            paddingTop: 64,
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column"
+          }
+        },
+        React.createElement(
+          Button,
+          {
+            onClick: () => Router.push("/new")
+          },
+          "Get Started"
+        )
+      );
 }
