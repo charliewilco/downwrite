@@ -44,15 +44,18 @@ export default function useLoginFns(): IFormHandlers {
   };
 
   const onRegisterSubmit = async (values: IRegisterValues): Promise<void> => {
+    const { legalChecked, ...body } = values;
     const { host } = document.location;
-    const user = await API.createUser(values, {
-      host
-    });
+    if (legalChecked) {
+      const user = await API.createUser(body, {
+        host
+      });
 
-    if (user.userID) {
-      signIn(user.id_token !== undefined, user.id_token);
-    } else {
-      actions.add(user.message, NotificationType.ERROR);
+      if (user.userID) {
+        signIn(user.id_token !== undefined, user.id_token);
+      } else {
+        actions.add(user.message, NotificationType.ERROR);
+      }
     }
   };
 

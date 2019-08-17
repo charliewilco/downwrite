@@ -61,6 +61,7 @@ export default function RegisterForm(): JSX.Element {
             {REGISTER_INPUTS.map(input => (
               <UIInputContainer key={input.name}>
                 <UIInput
+                  type={input.type}
                   placeholder={input.placeholder}
                   label={input.label}
                   autoComplete={input.autoComplete}
