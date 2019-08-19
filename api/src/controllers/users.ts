@@ -1,6 +1,6 @@
 import * as Hapi from "hapi";
-import * as Boom from "boom";
-import * as uuid from "uuid/v4";
+import Boom from "boom";
+import uuid from "uuid/v4";
 import * as bcrypt from "bcrypt";
 import { UserModel as User, IUser } from "../models/User";
 import { createToken } from "../util/token";

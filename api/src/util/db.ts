@@ -1,12 +1,9 @@
-import * as Mongoose from "mongoose";
+import Mongoose from "mongoose";
 import Config from "./config";
 
 export const prepareDB = async (): Promise<typeof Mongoose> => {
   (<any>Mongoose).Promise = global.Promise;
-  const m = await Mongoose.connect(
-    Config.dbCreds,
-    { useNewUrlParser: true }
-  );
+  const m = await Mongoose.connect(Config.dbCreds, { useNewUrlParser: true });
 
   const db = m.connection;
 
