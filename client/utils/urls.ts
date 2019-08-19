@@ -1,32 +1,45 @@
 import { __IS_DEV__, __IS_BROWSER__, __IS_TEST__ } from "./dev";
 
-// const DEV_URL = "http://localhost:5000/api";
+// const DEV_URL = "http://localhost:3000/api";
 // const PROD_URL = "https://next.downwrite.us/api";
 // const URL: string = __IS_DEV__ ? DEV_URL : PROD_URL;
 
-export const prefixURL = (url: string): string => {
-  if (!url) {
-    return "";
+const PORT: string = process.env.PORT;
+
+export class URLEndpoints {
+  public static prefix(url: string, port: string = "3000"): string {
+    if (!url) {
+      return "";
+    }
+
+    if (__IS_DEV__ && port !== "5000") {
+      url = url.replace("5000", port);
+    }
+
+    let prefix = __IS_DEV__ ? "http://" : "https://";
+    return !url.startsWith("http") ? prefix + url : url;
   }
 
-  if (__IS_DEV__) {
-    url = url.replace("3000", "5000");
-  }
+  /**
+   * Creates url string for both server and client based off header
+   * @param url
+   * @param hostname
+   * @returns string
+   */
+  public static create(
+    endpoint: string,
+    hostname?: string,
+    port: string = process.env.PORT || "3000"
+  ): string {
+    if (__IS_BROWSER__ && !__IS_TEST__) {
+      return endpoint;
+    }
 
-  let prefix = __IS_DEV__ ? "http://" : "https://";
-  return !url.startsWith("http") ? prefix + url : url;
-};
+    if (__IS_DEV__) {
+      return `http://localhost:${PORT}`.concat(endpoint);
+    }
+    let url: string = URLEndpoints.prefix(hostname, port).concat(endpoint);
 
-/**
- * Creates url string for both server and client based off header
- * @param url
- * @param hostname
- * @returns string
- */
-export function createURL(endpoint: string, hostname?: string): string {
-  if (__IS_BROWSER__ && !__IS_TEST__) {
-    return endpoint;
+    return url;
   }
-  let url: string = prefixURL(hostname) + endpoint;
-  return url;
 }
