@@ -2,6 +2,22 @@ import * as React from "react";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
 import { __IS_BROWSER__ } from "../utils/dev";
 
+export function useOfflineDebug(): [
+  boolean,
+  React.Dispatch<React.SetStateAction<boolean>>
+] {
+  const [isOffline, setIsOffline] = React.useState<boolean>(true);
+  const { actions } = useUINotifications();
+
+  React.useEffect(() => {
+    if (isOffline) {
+      actions.add("Your network is currently offline", NotificationType.WARNING);
+    }
+  }, [isOffline]);
+
+  return [isOffline, setIsOffline];
+}
+
 export default function useOffline(): boolean {
   if (__IS_BROWSER__) {
     const [isOffline, setIsOffline] = React.useState<boolean>(false);

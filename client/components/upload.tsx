@@ -1,7 +1,7 @@
 import * as React from "react";
 import fm from "front-matter";
 import * as Draft from "draft-js";
-import Dropzone, { useDropzone } from "react-dropzone";
+import { useDropzone } from "react-dropzone";
 import { markdownToDraft } from "markdown-draft-js";
 import { __IS_BROWSER__ } from "../utils/dev";
 
@@ -23,9 +23,8 @@ interface IMarkdown {
   };
 }
 
-// TODO: use `React.useMemo()` on upload
 export default function Uploader(props: IUploadProps): JSX.Element {
-  const onDrop = React.useCallback((files: File[]) => {
+  const onDrop = React.useCallback((acceptedFiles: File[]) => {
     const reader: FileReader = __IS_BROWSER__ && new FileReader();
 
     // tslint:disable-next-line: no-shadowed-variable
@@ -46,19 +45,22 @@ export default function Uploader(props: IUploadProps): JSX.Element {
       reader.readAsText(files[0]);
     }
 
-    extractMarkdown(files);
+    extractMarkdown(acceptedFiles);
   }, []);
 
   const { getRootProps } = useDropzone({
     onDrop,
     disabled: props.disabled,
     multiple: false,
-    accept: "text/markdown, text/x-markdown, text/plain"
+    accept: ["text/markdown", "text/x-markdown", "text/plain"]
   });
 
-  return (
-    <div {...getRootProps()} style={{ border: 0, width: "100%" }}>
-      {props.children}
-    </div>
+  return React.createElement(
+    "div",
+    {
+      ...getRootProps(),
+      style: { border: 0, width: "100%" }
+    },
+    props.children
   );
 }
