@@ -1,10 +1,12 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import { Formik, Form, FormikProps } from "formik";
+import { Formik, Form, FormikActions, Field } from "formik";
 import Head from "next/head";
+import "isomorphic-fetch";
 import useCreatePost, { IFields } from "../hooks/create-entry";
 import useOffline from "../hooks/offline";
-import "isomorphic-fetch";
+import useLocalDrafts from "../hooks/local-draft";
+import DraftList from "../components/drafts-list";
 import { Input } from "../components/editor-input";
 import { Button } from "../components/button";
 import Upload from "../components/upload";
@@ -22,25 +24,20 @@ const EDITOR_SPACING: React.CSSProperties = {
   paddingRight: 4,
   paddingBottom: 0
 };
-
-// const saveLocalDraft = (id: string, post: Object): void => {
-//   localStorage.setItem("Draft " + id, JSON.stringify(post));
-// };
-
 export default function NewEditor(props: INewPostProps): JSX.Element {
   const createNewPost = useCreatePost();
   const isOffline = useOffline();
+  const { drafts, actions } = useLocalDrafts();
+
+  function onSubmit(values: IFields, formActions: FormikActions<IFields>) {
+    return isOffline ? actions.addDraft(values) : createNewPost(values);
+  }
 
   return (
-    <Formik
+    <Formik<IFields>
       initialValues={{ title: "", editorState: Draft.EditorState.createEmpty() }}
-      onSubmit={createNewPost}>
-      {({
-        values,
-        setFieldValue,
-        handleSubmit,
-        handleChange
-      }: FormikProps<IFields>) => (
+      onSubmit={onSubmit}>
+      {({ values, setFieldValue, handleSubmit, handleChange }) => (
         <Form className="Wrapper Wrapper--md" style={EDITOR_SPACING}>
           <Head>
             <title>{values.title ? values.title : "New"} | Downwrite</title>
@@ -50,12 +47,7 @@ export default function NewEditor(props: INewPostProps): JSX.Element {
               setFieldValue("title", parsed.title);
               setFieldValue("editorState", parsed.editorState);
             }}>
-            <Input
-              name="title"
-              placeholder="Untitled Document"
-              value={values.title}
-              onChange={handleChange}
-            />
+            <Field name="title" placeholder="Untitled Document" component={Input} />
             <aside className="UtilityBarContainer">
               <div className="UtilityBarItems">
                 {isOffline && <span>You're Offline Right Now</span>}
@@ -70,6 +62,8 @@ export default function NewEditor(props: INewPostProps): JSX.Element {
               onChange={editorState => setFieldValue("editorState", editorState)}
               onSave={handleSubmit}
             />
+
+            <DraftList drafts={drafts} onRemove={actions.removeDraft} />
           </Upload>
         </Form>
       )}

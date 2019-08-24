@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Draft from "draft-js";
 import Head from "next/head";
-import { Formik, Form, FormikProps } from "formik";
+import { Formik, Form } from "formik";
 import "isomorphic-fetch";
 import * as Dwnxt from "downwrite";
 import Autosaving from "../components/autosaving-interval";
@@ -37,19 +37,14 @@ function EditUI(props: InitialProps.IEditProps) {
     <Loading size={75} />
   ) : (
     <div className="Wrapper Wrapper--md">
-      <Formik
+      <Formik<IFields>
         onSubmit={onSubmit}
         initialValues={{
           editorState: initialEditorState,
           title: props.post.title,
           publicStatus: props.post.public
         }}>
-        {({
-          values,
-          handleChange,
-          handleSubmit,
-          setFieldValue
-        }: FormikProps<IFields>) => (
+        {({ values, handleChange, handleSubmit, setFieldValue }) => (
           <>
             <Head>
               <title>{values.title} | Downwrite</title>
