@@ -1,7 +1,7 @@
 import * as React from "react";
-import "jest-dom/extend-expect";
+import "@testing-library/jest-dom/extend-expect";
 import Export from "../components/export";
-import { render } from "react-testing-library";
+import { render } from "@testing-library/react";
 import { createEditorState } from "../utils/createMocks";
 
 const { container } = render(

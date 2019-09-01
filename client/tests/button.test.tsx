@@ -1,7 +1,7 @@
 import * as React from "react";
-import "jest-dom/extend-expect";
+import "@testing-library/jest-dom/extend-expect";
 import { Button } from "../components/button";
-import { render, fireEvent } from "react-testing-library";
+import { render, fireEvent } from "@testing-library/react";
 
 const onClickHandler = jest.fn();
 const { getByText } = render(

@@ -1,9 +1,9 @@
 import * as React from "react";
-import "jest-dom/extend-expect";
+import "@testing-library/jest-dom/extend-expect";
 import { LinkProps } from "next/link";
 import Preview from "../pages/preview";
 import Content from "../components/content";
-import { render, wait } from "react-testing-library";
+import { render, wait } from "@testing-library/react";
 import { draftToMarkdown } from "markdown-draft-js";
 import { createMockPost } from "../utils/createMocks";
 import { IPreviewEntry } from "downwrite";

@@ -84,6 +84,6 @@ export function reducer(
       };
 
     default:
-      throw new Error();
+      throw new Error("Must specify action type");
   }
 }
