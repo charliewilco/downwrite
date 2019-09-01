@@ -10,7 +10,7 @@ function Time(props: ITimeMarkProps) {
   let date: string = isDate(props.dateAdded)
     ? props.dateAdded.toString()
     : undefined;
-  return <time dateTime={date}>{format(props.dateAdded, "DD MMMM YYYY")}</time>;
+  return <time dateTime={date}>{format(props.dateAdded, "dd MMMM yyyy")}</time>;
 }
 
 export default function TimeMarker(props: ITimeMarkProps) {

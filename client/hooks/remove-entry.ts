@@ -3,7 +3,9 @@ import { SelectedPost } from "../reducers/dashboard";
 import { AuthContext, IAuthContext } from "../components/auth";
 import * as API from "../utils/api";
 
-export default function useRemoveEntry(onSuccess: Function) {
+type RemoveEntryCallBack = [(post: SelectedPost) => Promise<void>];
+
+export default function useRemoveEntry(onSuccess: Function): RemoveEntryCallBack {
   const { token } = React.useContext<IAuthContext>(AuthContext);
   async function onDelete({ id }: SelectedPost): Promise<void> {
     const { host } = document.location;

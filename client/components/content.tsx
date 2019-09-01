@@ -36,7 +36,7 @@ export default function Content({
               className="PreviewMeta"
               data-testid="PREVIEW_ENTRTY_META"
               dateTime={isDate(dateAdded) && dateAdded.toString()}>
-              {format(dateAdded, "DD MMMM YYYY")}
+              {format(dateAdded, "dd MMMM yyyy")}
             </time>
           )}
         </header>
