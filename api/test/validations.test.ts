@@ -1,4 +1,4 @@
-import * as Joi from "joi";
+import * as Joi from "@hapi/joi";
 import * as User from "../src/models/User";
 
 describe("validations", () => {

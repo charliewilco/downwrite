@@ -1,5 +1,5 @@
-import * as Hapi from "hapi";
-import Boom from "boom";
+import * as Hapi from "@hapi/hapi";
+import Boom from "@hapi/boom";
 import uuid from "uuid/v4";
 import * as bcrypt from "bcrypt";
 import { UserModel as User, IUser } from "../models/User";

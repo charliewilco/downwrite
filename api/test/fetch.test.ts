@@ -1,4 +1,4 @@
-import * as Hapi from "hapi";
+import * as Hapi from "@hapi/hapi";
 import * as Axios from "axios";
 import createServer from "../src/server";
 import { prepareDB } from "../src/util/db";

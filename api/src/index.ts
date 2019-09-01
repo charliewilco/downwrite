@@ -1,5 +1,5 @@
 import * as http from "http";
-import * as Hapi from "hapi";
+import * as Hapi from "@hapi/hapi";
 import { send, json } from "micro";
 import createServer from "./server";
 import { prepareDB } from "./util/db";

@@ -1,5 +1,5 @@
-import * as Hapi from "hapi";
-import Boom from "boom";
+import * as Hapi from "@hapi/hapi";
+import Boom from "@hapi/boom";
 import { draftToMarkdown } from "markdown-draft-js";
 
 import { PostModel as Post, IPost } from "../models/Post";
