@@ -2,7 +2,7 @@ import * as React from "react";
 import Cookies from "universal-cookie";
 import Router from "next/router";
 import * as jwt from "jwt-decode";
-import addDays from "date-fns/add_days";
+import addDays from "date-fns/addDays";
 import {
   IAuthReducerAction,
   IAuthState,

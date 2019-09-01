@@ -1,7 +1,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { IPost } from "downwrite";
-import distance from "date-fns/distance_in_words_to_now";
+import distance from "date-fns/formatDistanceToNow";
 import { EditLink, PreviewLink } from "./entry-links";
 
 interface IListItemProps {

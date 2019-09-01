@@ -15,15 +15,21 @@ export function Spinner(props: ISpinnerProps): JSX.Element {
     <div role="image">
       <div
         className="InnerRing"
-        style={{ "--size": props.size, animationDelay: "-0.6s" }}
+        style={
+          { "--size": props.size, animationDelay: "-0.6s" } as React.CSSProperties
+        }
       />
       <div
         className="InnerRing"
-        style={{ "--size": props.size, animationDelay: "-0.4s" }}
+        style={
+          { "--size": props.size, animationDelay: "-0.4s" } as React.CSSProperties
+        }
       />
       <div
         className="InnerRing"
-        style={{ "--size": props.size, animationDelay: "-0.2s" }}
+        style={
+          { "--size": props.size, animationDelay: "-0.2s" } as React.CSSProperties
+        }
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import distance from "date-fns/distance_in_words_to_now";
+import distance from "date-fns/formatDistanceToNow";
 import { IPost } from "downwrite";
 import { EditLink, PreviewLink } from "./entry-links";
 

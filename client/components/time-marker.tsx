@@ -1,6 +1,6 @@
 import * as React from "react";
 import format from "date-fns/format";
-import isDate from "date-fns/is_date";
+import isDate from "date-fns/isDate";
 
 interface ITimeMarkProps {
   dateAdded: Date;

@@ -21,7 +21,7 @@ const ToggleDemoOpen = () => {
   return <>{isOpen && <h1 data-testid="TOGGLE_OPEN">I am open</h1>}</>;
 };
 
-let { getByTestId, container } = render(<ToggleDemo />);
+let { container } = render(<ToggleDemo />);
 
 // NOTE: test broken by upgrading @testing-library
 xdescribe("<Toggle />", () => {

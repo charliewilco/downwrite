@@ -34,7 +34,6 @@ xdescribe("<Card />", () => {
   });
 
   it("matches snapshot", () => {
-    console.log(container);
     expect(container.firstChild).toMatchSnapshot();
   });
 
