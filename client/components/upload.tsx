@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback, createElement } from "react";
 import fm from "front-matter";
 import * as Draft from "draft-js";
 import { useDropzone } from "react-dropzone";
@@ -24,7 +24,8 @@ interface IMarkdown {
 }
 
 export default function Uploader(props: IUploadProps): JSX.Element {
-  const onDrop = React.useCallback((acceptedFiles: File[]) => {
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    // NOTE: Maybe use useRef for this?
     const reader: FileReader = __IS_BROWSER__ && new FileReader();
 
     // tslint:disable-next-line: no-shadowed-variable
@@ -55,7 +56,7 @@ export default function Uploader(props: IUploadProps): JSX.Element {
     accept: ["text/markdown", "text/x-markdown", "text/plain"]
   });
 
-  return React.createElement(
+  return createElement(
     "div",
     {
       ...getRootProps(),
