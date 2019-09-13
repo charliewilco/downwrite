@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Draft from "draft-js";
 import { Formik, Form, FormikActions, Field } from "formik";
 import Head from "next/head";
-import "isomorphic-fetch";
+import "isomorphic-unfetch";
 import useCreatePost, { IFields } from "../hooks/create-entry";
 import useOffline from "../hooks/offline";
 import useLocalDrafts from "../hooks/local-draft";

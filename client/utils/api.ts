@@ -2,7 +2,7 @@ import { URLEndpoints } from "./urls";
 import * as Dwnxt from "downwrite";
 import { __IS_DEV__, __IS_BROWSER__ } from "./dev";
 
-import "isomorphic-fetch";
+import "isomorphic-unfetch";
 import "abortcontroller-polyfill/dist/abortcontroller-polyfill-only";
 import { Omit } from "./types";
 

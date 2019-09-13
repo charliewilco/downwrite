@@ -1,6 +1,6 @@
 import * as React from "react";
 import Head from "next/head";
-import "isomorphic-fetch";
+import "isomorphic-unfetch";
 import SettingsUser from "../components/settings-user-form";
 import SettingsPassword from "../components/settings-password";
 import SettingsLocal from "../components/settings-markdown";

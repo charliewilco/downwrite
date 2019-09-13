@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Draft from "draft-js";
 import Head from "next/head";
 import { Formik, Form } from "formik";
-import "isomorphic-fetch";
+import "isomorphic-unfetch";
 import * as Dwnxt from "downwrite";
 import Autosaving from "../components/autosaving-interval";
 import ExportMarkdown from "../components/export";

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Dwnxt from "downwrite";
 import Head from "next/head";
-import "isomorphic-fetch";
+import "isomorphic-unfetch";
 
 import DeleteModal from "../components/delete-modal";
 import PostList from "../components/post-list";

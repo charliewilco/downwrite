@@ -2,7 +2,7 @@ import * as React from "react";
 import Head from "next/head";
 import isEmpty from "lodash/isEmpty";
 import * as Dwnxt from "downwrite";
-import "isomorphic-fetch";
+import "isomorphic-unfetch";
 import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
 import { AuthContext } from "../components/auth";
@@ -20,7 +20,7 @@ function PreviewEntry(props: InitialProps.IPreviewProps) {
               {(props.entry as Dwnxt.IPreviewEntryError).error} | Downwrite
             </title>
           </Head>
-          <NotFound {...props.entry as Dwnxt.IPreviewEntryError} />
+          <NotFound {...(props.entry as Dwnxt.IPreviewEntryError)} />
         </>
       ) : (
         <>
@@ -40,7 +40,7 @@ function PreviewEntry(props: InitialProps.IPreviewProps) {
               content={(props.entry as Dwnxt.IPreviewEntry).content.substr(0, 75)}
             />
           </Head>
-          <Content {...props.entry as Dwnxt.IPreviewEntry}>
+          <Content {...(props.entry as Dwnxt.IPreviewEntry)}>
             <AuthorBlock
               name={(props.entry as Dwnxt.IPreviewEntry).author.username}
               colors={(props.entry as Dwnxt.IPreviewEntry).author.gradient}
