@@ -1,6 +1,7 @@
 import * as React from "react";
 import format from "date-fns/format";
 import isDate from "date-fns/isDate";
+import parseISO from "date-fns/parseISO";
 import Markdown from "react-markdown";
 import "prismjs";
 import CodeBlock from "./code-block";
@@ -22,6 +23,8 @@ export default function Content({
   children,
   content
 }: IContentProps) {
+  const date = parseISO(dateAdded.toString());
+
   return (
     <div className="PreviewContainer">
       <article className="harticle">
@@ -35,8 +38,8 @@ export default function Content({
             <time
               className="PreviewMeta"
               data-testid="PREVIEW_ENTRTY_META"
-              dateTime={isDate(dateAdded) && dateAdded.toString()}>
-              {format(dateAdded, "dd MMMM yyyy")}
+              dateTime={date}>
+              {format(date, "dd MMMM yyyy")}
             </time>
           )}
         </header>

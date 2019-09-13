@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Draft from "draft-js";
 import distance from "date-fns/formatDistanceToNow";
+import parseISO from "date-fns/parseISO";
 import { IPost } from "downwrite";
 import { EditLink, PreviewLink } from "./entry-links";
 
@@ -9,9 +10,14 @@ export interface ICardProps {
   content: Draft.RawDraftContentState;
   excerpt?: string;
   id: string;
-  dateAdded: Date;
+  dateAdded: Date | string;
   onDelete?: ({ id }: Partial<IPost>) => void;
   public: boolean;
+}
+
+function getDateString(date: Date | string): string {
+  if (typeof date === "string") {
+  }
 }
 
 export default function Card(props: ICardProps): JSX.Element {
@@ -19,13 +25,15 @@ export default function Card(props: ICardProps): JSX.Element {
     props.onDelete({ id: props.id, title: props.title });
   }
 
+  const date = parseISO(props.dateAdded.toString());
+
   return (
     <div className="Sheet Card" data-testid="CARD">
       <header className="CardHeader">
         <h2 className="CardTitle" data-testid="CARD_TITLE">
           <EditLink title={props.title} id={props.id} />
         </h2>
-        <small className="CardMeta">added {distance(props.dateAdded)} ago</small>
+        <small className="CardMeta">added {distance(date)} ago</small>
       </header>
       <footer className="CardTray">
         <div className="links" data-testid="CARD_EXCERPT">

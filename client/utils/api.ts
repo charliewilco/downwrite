@@ -48,15 +48,12 @@ export const createHeader = (
   method: HeaderMethod = "GET",
   token?: string
 ): RequestInit => {
-  const Header = new Headers();
-  if (token) {
-    Header.set("Authorization", token);
-  }
-  Header.set("Content-Type", "application/json");
-
   return {
     method,
-    headers: Header,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token
+    },
     mode: "cors",
     cache: "default",
     signal
