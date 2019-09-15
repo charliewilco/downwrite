@@ -10,7 +10,7 @@ import NotFound from "../components/not-found";
 import * as InitialProps from "../utils/initial-props";
 
 function PreviewEntry(props: InitialProps.IPreviewProps) {
-  const { authed } = React.useContext(AuthContext);
+  const [{ authed }] = React.useContext(AuthContext);
   return (
     <>
       {!isEmpty((props.entry as Dwnxt.IPreviewEntryError).message) ? (

@@ -7,7 +7,7 @@ export const createMockPost = (overides?: Partial<IPost>): IPost => {
     Draft.ContentState.createFromText("Hello")
   );
   const content = Draft.convertToRaw(post.getCurrentContent());
-  const dateAdded = new Date();
+  const dateAdded = "2019-04-14T07:40:08.591Z";
   const id = uuid();
 
   return Object.assign(

@@ -15,11 +15,6 @@ export interface ICardProps {
   public: boolean;
 }
 
-function getDateString(date: Date | string): string {
-  if (typeof date === "string") {
-  }
-}
-
 export default function Card(props: ICardProps): JSX.Element {
   function onDelete() {
     props.onDelete({ id: props.id, title: props.title });
