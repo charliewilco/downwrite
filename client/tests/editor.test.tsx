@@ -37,18 +37,18 @@ function WrappedEditor() {
 }
 
 // NOTE: test broken by upgrading @testing-library
-xdescribe("<DWEditor />", () => {
-  it("Editor mounts", () => {
+describe("<DWEditor />", () => {
+  xit("Editor mounts", () => {
     const { container } = mockEditor(emptyContent);
     expect(container).toBeTruthy();
   });
 
-  it("Editor mounts with preloaded content", () => {
+  xit("Editor mounts with preloaded content", () => {
     const { container } = mockEditor(content);
     expect(container).toBeTruthy();
   });
 
-  it("Editor takes content", () => {
+  xit("Editor takes content", () => {
     const { container } = render(<WrappedEditor />);
     fireEvent.keyDown(container);
     // expect(editor.state).toBeTruthy()
