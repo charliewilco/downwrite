@@ -59,6 +59,13 @@ interface ILocalDraftActions {
   removeDraft(draft: ILocalDraft): void;
 }
 
+// function pushDraftToEditor({ title, content }: ILocalDraft) {
+//   const editorState = Draft.EditorState.createWithContent(
+//     Draft.convertFromRaw(content)
+//   );
+//   setInitialValues({ title, editorState });
+// }
+
 export default function useLocalDrafts(): [ILocalDraft[], ILocalDraftActions] {
   const [drafts, setDrafts] = React.useState<ILocalDraft[]>([]);
   const [getAllDrafts, writeToStorage, removeFromStorage] = useLocalDraftUtils();

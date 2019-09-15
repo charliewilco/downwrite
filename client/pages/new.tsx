@@ -22,34 +22,19 @@ const EDITOR_SPACING: React.CSSProperties = {
 };
 
 export default function NewEditor(): JSX.Element {
-  const [initialValues, setInitialValues] = React.useState<IFields>({
+  const [initialValues] = React.useState<IFields>({
     title: "",
     editorState: Draft.EditorState.createEmpty()
   });
   const createNewPost = useCreatePost();
   const isOffline = useOffline();
-  const [drafts, { addDraft, removeDraft }] = useLocalDrafts();
 
   function onSubmit(values: IFields, actions: FormikActions<IFields>): void {
-    return isOffline ? addDraft(values) : createNewPost(values);
-  }
-
-  function pushDraftToEditor({ title, content }: ILocalDraft) {
-    const editorState = Draft.EditorState.createWithContent(
-      Draft.convertFromRaw(content)
-    );
-    setInitialValues({ title, editorState });
+    return createNewPost(values);
   }
 
   return (
     <React.Fragment>
-      <div className="Wrapper Wrapper--md">
-        <DraftList
-          drafts={drafts}
-          onEdit={pushDraftToEditor}
-          onRemove={removeDraft}
-        />
-      </div>
       <Formik<IFields>
         initialValues={initialValues}
         onSubmit={onSubmit}
