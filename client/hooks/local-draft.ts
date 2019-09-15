@@ -1,9 +1,12 @@
 import * as React from "react";
+import * as Draft from "draft-js";
 import { IFields } from "./create-entry";
 import uuid from "uuid/v4";
 
-export interface ILocalDraft extends IFields {
+export interface ILocalDraft {
+  title: string;
   id: string;
+  content: Draft.RawDraftContentState;
 }
 
 type LocalDraft = [
@@ -16,12 +19,18 @@ export function useLocalDraftUtils(): LocalDraft {
   const PREFIX = "DOWNWRITE_DRAFT";
 
   function removeDraft(id: string): void {
-    localStorage.removeItem([PREFIX, id].join(" "));
+    const key = [PREFIX, id].join(" ");
+
+    localStorage.removeItem(key);
   }
 
-  function writeToStorage(draft: IFields): ILocalDraft {
+  function writeToStorage({ title, editorState }: IFields): ILocalDraft {
     const id = uuid();
-    const localDraft = Object.assign(draft, { id });
+    const content: Draft.RawDraftContentState = Draft.convertToRaw(
+      editorState.getCurrentContent()
+    );
+    const localDraft = { title, content, id };
+
     localStorage.setItem([PREFIX, id].join(" "), JSON.stringify(localDraft));
 
     return localDraft;
@@ -44,7 +53,13 @@ export function useLocalDraftUtils(): LocalDraft {
 }
 
 // TODO: Migrate to useReducer()
-export default function useLocalDrafts() {
+
+interface ILocalDraftActions {
+  addDraft(draft: IFields): void;
+  removeDraft(draft: ILocalDraft): void;
+}
+
+export default function useLocalDrafts(): [ILocalDraft[], ILocalDraftActions] {
   const [drafts, setDrafts] = React.useState<ILocalDraft[]>([]);
   const [getAllDrafts, writeToStorage, removeFromStorage] = useLocalDraftUtils();
 
@@ -57,16 +72,16 @@ export default function useLocalDrafts() {
     setDrafts(prev => [...prev, localDraft]);
   }
 
-  function removeDraft(draft: ILocalDraft) {
+  function removeDraft(draft: ILocalDraft): void {
     removeFromStorage(draft.id);
     setDrafts(getAllDrafts());
   }
 
-  return {
+  return [
     drafts,
-    actions: {
+    {
       addDraft,
       removeDraft
     }
-  };
+  ];
 }
