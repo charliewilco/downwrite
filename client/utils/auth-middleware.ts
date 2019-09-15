@@ -1,5 +1,5 @@
 // import Router from "next/router";
-import { NextContext } from "next";
+import { NextPageContext } from "next";
 import Cookies, { CookieGetOptions } from "universal-cookie";
 import { __IS_BROWSER__ } from "./dev";
 
@@ -8,7 +8,7 @@ export interface ICookie {
 }
 
 export function cookies<T>(
-  context: NextContext,
+  context: NextPageContext,
   options?: CookieGetOptions
 ): T | {} {
   options = options || {};
@@ -30,7 +30,7 @@ export function cookies<T>(
 
 export const WHITE_LIST: string[] = ["/about", "/preview"];
 
-export const authMiddleware = (ctx: NextContext): string => {
+export const authMiddleware = (ctx: NextPageContext): string => {
   const cookie = cookies<ICookie>(ctx) as ICookie;
   const token = cookie.DW_TOKEN;
 

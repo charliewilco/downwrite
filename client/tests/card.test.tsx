@@ -10,7 +10,9 @@ const post = createMockPost({ title, id: "4444" });
 const mockDelete = jest.fn();
 
 jest.mock("next/link", () => {
-  return jest.fn((props: LinkProps) => <>{props.children}</>);
+  return jest.fn((props: React.PropsWithChildren<LinkProps>) => (
+    <>{props.children}</>
+  ));
 });
 
 const { container, getByTestId } = render(

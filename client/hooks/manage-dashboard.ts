@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AuthContext, IAuthContext } from "../components/auth";
+import { AuthContext, AuthContextType } from "../components/auth";
 import {
   IDashboardAction,
   IDashboardState,
@@ -27,7 +27,7 @@ export default function useManagedDashboard(
   const [state, dispatch] = React.useReducer<
     React.Reducer<IDashboardState, IDashboardAction>
   >(reducer, { ...initialState(initialEntries) });
-  const { token } = React.useContext<IAuthContext>(AuthContext);
+  const [{ token }] = React.useContext<AuthContextType>(AuthContext);
 
   React.useEffect(() => {
     if (isEmpty(state.entries)) {

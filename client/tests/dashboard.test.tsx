@@ -11,8 +11,11 @@ const entries = createMockPosts(4);
 jest.mock("next/router");
 
 jest.mock("next/link", () => {
-  return jest.fn((props: LinkProps) => <>{props.children}</>);
+  return jest.fn((props: React.PropsWithChildren<LinkProps>) => (
+    <>{props.children}</>
+  ));
 });
+
 const PostDashboard = () => {
   return <Dashboard entries={entries} />;
 };

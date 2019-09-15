@@ -1,7 +1,7 @@
 import * as React from "react";
 import Router from "next/router";
 import orderBy from "lodash/orderBy";
-import { AuthContext, IAuthContext } from "./auth";
+import { AuthContext, AuthContextType } from "./auth";
 import { Button } from "./button";
 import SidebarPosts from "./sidebar-posts";
 import * as API from "../utils/api";
@@ -62,7 +62,7 @@ export default function CollectionFetch() {
     React.Reducer<IFetchState, IFetchAction>
   >(reducer, initialState);
 
-  const { token } = React.useContext<IAuthContext>(AuthContext);
+  const [{ token }] = React.useContext<AuthContextType>(AuthContext);
 
   React.useEffect(() => {
     const { host } = document.location;
