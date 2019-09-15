@@ -3,14 +3,14 @@ import Document, {
   Head,
   Main,
   NextScript,
-  NextDocumentContext
+  DocumentContext
 } from "next/document";
 // import Manifest from "next-manifest/manifest";
 
 const STYLESHEETS: string[] = ["https://unpkg.com/ganymede-light-duotone-prism"];
 
 export default class MyDocument extends Document {
-  public static async getInitialProps(context: NextDocumentContext) {
+  public static async getInitialProps(context: DocumentContext) {
     const initialProps = await Document.getInitialProps(context);
 
     return { ...initialProps };

@@ -1,7 +1,7 @@
 import * as React from "react";
 import Head from "next/head";
 import NotFound from "../components/not-found";
-import { NextContext } from "next";
+import { NextPageContext } from "next";
 
 interface IErrorViewProps {
   statusCode: number;
@@ -11,7 +11,7 @@ interface ICustomError extends Error {
   statusCode: number;
 }
 
-interface IErrorPageContext extends NextContext<any> {
+interface IErrorPageContext extends NextPageContext {
   err: ICustomError;
 }
 
