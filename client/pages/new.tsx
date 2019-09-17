@@ -5,8 +5,6 @@ import Head from "next/head";
 import "isomorphic-unfetch";
 import useCreatePost, { IFields } from "../hooks/create-entry";
 import useOffline from "../hooks/offline";
-import useLocalDrafts, { ILocalDraft } from "../hooks/local-draft";
-import DraftList from "../components/drafts-list";
 import { Input } from "../components/editor-input";
 import { Button } from "../components/button";
 import Upload from "../components/upload";
@@ -40,7 +38,7 @@ export default function NewEditor(): JSX.Element {
         onSubmit={onSubmit}
         enableReinitialize>
         {({ values, setFieldValue, handleSubmit, handleChange }) => (
-          <Form style={EDITOR_SPACING}>
+          <Form className="Wrapper Wrapper--md" style={EDITOR_SPACING}>
             <Head>
               <title>{values.title ? values.title : "New"} | Downwrite</title>
             </Head>
