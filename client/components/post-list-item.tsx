@@ -25,7 +25,7 @@ export default function PostListItem(props: IListItemProps): JSX.Element {
     <div className="PostItem" data-testid="POST_LIST_ITEM">
       <div>
         <h2 className="PostItemTitle">
-          <Link prefetch href={{ pathname: "/edit", query: { id: props.id } }}>
+          <Link href={{ pathname: "/edit", query: { id: props.id } }}>
             <a>{props.title}</a>
           </Link>
         </h2>

@@ -26,7 +26,7 @@ export default function Author(props: IAuthorProps): JSX.Element {
           <hr />
           <p className="AuthorBlockContent">
             <TeaserCopy />
-            <Link prefetch href="/login">
+            <Link href="/login">
               <a>here</a>
             </Link>
           </p>

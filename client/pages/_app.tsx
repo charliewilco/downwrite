@@ -1,5 +1,5 @@
 import * as React from "react";
-import App, { Container, AppProps, AppContext } from "next/app";
+import App, { AppProps, AppContext } from "next/app";
 import isEmpty from "lodash/isEmpty";
 import { UIShell } from "../components/ui-shell";
 import { AuthProvider } from "../components/auth";
@@ -25,13 +25,11 @@ export default class Downwrite extends App<IAppProps> {
     const { Component, pageProps, token } = this.props;
     const authed = !isEmpty(token);
     return (
-      <Container>
-        <AuthProvider token={token} authed={authed}>
-          <UIShell>
-            <Component {...pageProps} />
-          </UIShell>
-        </AuthProvider>
-      </Container>
+      <AuthProvider token={token} authed={authed}>
+        <UIShell>
+          <Component {...pageProps} />
+        </UIShell>
+      </AuthProvider>
     );
   }
 }

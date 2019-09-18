@@ -26,14 +26,14 @@ export function UIHeader(): JSX.Element {
       </nav>
       {authed ? (
         <nav className="AppHeaderNav">
-          <Link prefetch href="/new">
+          <Link href="/new">
             <AltAnchor style={style}>New</AltAnchor>
           </Link>
           <DropdownUI />
         </nav>
       ) : (
         <nav className="AppHeaderNav">
-          <Link prefetch href="/login">
+          <Link href="/login">
             <AltAnchor style={style}>Login or Sign Up</AltAnchor>
           </Link>
         </nav>
