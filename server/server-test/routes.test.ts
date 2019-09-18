@@ -3,10 +3,10 @@ import * as YesNo from "yesno-http";
 import * as Draft from "draft-js";
 import * as uuid from "uuid/v4";
 import * as Shot from "@hapi/shot";
-import createServer from "../src/server";
-import { prepareDB } from "../src/util/db";
-import { ICreateResponse } from "../src/controllers/users";
-import { IPost } from "../src/models/Post";
+import createServer from "../index";
+import { prepareDB } from "../util/db";
+import { ICreateResponse } from "../controllers/users";
+import { IPost } from "../models/Post";
 import { createdUser, createdPost } from "./create-mocks";
 
 // Routes to test
