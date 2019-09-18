@@ -2,26 +2,26 @@
 
 exports[`Header Component matches snapshot 1`] = `
 <header
-  class="AppHeader"
+  className="AppHeader"
   data-testid="APP_HEADER"
 >
   <nav
-    class="AppHeaderNav"
+    className="AppHeaderNav"
   >
     <div
-      class="Logo"
+      className="Logo"
     >
       <svg
-        class="LogoIcon"
-        height="50"
+        className="LogoIcon"
+        height={50}
         viewBox="0 0 33 50"
-        width="33"
+        width={33}
       >
         <title>
           Downwrite Logo
         </title>
         <defs>
-          <radialgradient
+          <radialGradient
             fx="50%"
             fy="50%"
             id="a"
@@ -29,22 +29,22 @@ exports[`Header Component matches snapshot 1`] = `
           >
             <stop
               offset="0%"
-              stop-color="#FFCE00"
+              stopColor="#FFCE00"
             />
             <stop
               offset="16.39%"
-              stop-color="#FFD600"
+              stopColor="#FFD600"
             />
             <stop
               offset="57.9%"
-              stop-color="#FFE600"
+              stopColor="#FFE600"
             />
             <stop
               offset="100%"
-              stop-color="#FFCE00"
+              stopColor="#FFCE00"
             />
-          </radialgradient>
-          <radialgradient
+          </radialGradient>
+          <radialGradient
             fx="50%"
             fy="50%"
             id="b"
@@ -52,21 +52,21 @@ exports[`Header Component matches snapshot 1`] = `
           >
             <stop
               offset="0%"
-              stop-color="#FFB600"
+              stopColor="#FFB600"
             />
             <stop
               offset="52.49%"
-              stop-color="#FFC200"
+              stopColor="#FFC200"
             />
             <stop
               offset="100%"
-              stop-color="#F4A903"
+              stopColor="#F4A903"
             />
-          </radialgradient>
+          </radialGradient>
         </defs>
         <g
           fill="none"
-          fill-rule="evenodd"
+          fillRule="evenodd"
         >
           <path
             d="M16.469 5.275V30.97c1.202 0 2.176.965 2.176 2.155s-.974 2.155-2.176 2.155v9.444l10.101-9.594L16.47 5.275z"
@@ -84,22 +84,26 @@ exports[`Header Component matches snapshot 1`] = `
       </svg>
     </div>
     <h1
-      class="AppHeaderTitle"
+      className="AppHeaderTitle"
       data-testid="APP_HEADER_TITLE"
     >
       <a
-        class="AppHeaderLink"
+        className="AppHeaderLink"
       >
         Downwrite
       </a>
     </h1>
   </nav>
   <nav
-    class="AppHeaderNav"
+    className="AppHeaderNav"
   >
     <a
-      class="AltLink"
-      style="margin-right: 16px;"
+      className="AltLink"
+      style={
+        Object {
+          "marginRight": 16,
+        }
+      }
     >
       Login or Sign Up
     </a>

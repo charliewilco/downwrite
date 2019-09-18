@@ -2,6 +2,7 @@
   "name": "integration",
   "version": "1.0.0",
   "scripts": {
+    "build": "echo \"Error: no build script specified\" && exit 0",
     "test": "jest"
   },
   "devDependencies": {

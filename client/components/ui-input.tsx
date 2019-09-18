@@ -30,26 +30,52 @@ export function UIInputError({
   return <span {...props} className={className} />;
 }
 
-export default function UIInput({ label, ...props }: IUIInputProps) {
-  const id = uuid();
+enum InputAction {
+  BLUR = "BLUR",
+  FOCUS = "FOCUS"
+}
 
-  const [active, setActive] = React.useState<boolean>(false);
+interface IInputState {
+  focused: boolean;
+}
+
+interface IInputAction {
+  type: InputAction;
+}
+
+function inputReducer(state: IInputState, action: IInputAction): IInputState {
+  switch (action.type) {
+    case InputAction.BLUR:
+      return { focused: false };
+    case InputAction.FOCUS:
+      return { focused: false };
+    default:
+      throw new Error("Must specify action type");
+  }
+}
+
+export default function UIInput({ label, ...props }: IUIInputProps) {
+  const id = React.useRef(uuid());
+
+  const [state, dispatch] = React.useReducer(inputReducer, {
+    focused: false
+  });
 
   const className = classNames("UIInputElement", props.className);
 
   return (
-    <label className="UIInputContainer" htmlFor={id}>
+    <label className="UIInputContainer" htmlFor={id.current}>
       <input
         type="text"
-        onFocus={() => setActive(true)}
-        onBlur={() => setActive(false)}
-        id={id}
+        onFocus={() => dispatch({ type: InputAction.FOCUS })}
+        onBlur={() => dispatch({ type: InputAction.BLUR })}
+        id={id.current}
         {...props}
         className={className}
       />
       <small
         className="UIInputLabel"
-        style={{ color: active ? "var(--yellow700)" : "#b4b4b4" }}>
+        style={{ color: state.focused ? "var(--yellow700)" : "#b4b4b4" }}>
         {label}
       </small>
     </label>

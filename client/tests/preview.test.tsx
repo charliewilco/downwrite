@@ -1,14 +1,14 @@
 import * as React from "react";
-import "jest-dom/extend-expect";
+import "@testing-library/jest-dom/extend-expect";
 import { LinkProps } from "next/link";
 import Preview from "../pages/preview";
 import Content from "../components/content";
-import { render, wait } from "react-testing-library";
+import { render, wait } from "@testing-library/react";
 import { draftToMarkdown } from "markdown-draft-js";
 import { createMockPost } from "../utils/createMocks";
 import { IPreviewEntry } from "downwrite";
 import fetchMock, { FetchMock } from "jest-fetch-mock";
-// import MockNextContext from "../utils/mock-next-router";
+import { MockAuthProvider } from "../components/auth";
 
 let title = "Starting Again";
 const mockPost = createMockPost({ title, public: true });
@@ -25,14 +25,18 @@ let post: IPreviewEntry = {
 let fetch = fetchMock as FetchMock;
 
 jest.mock("next/link", () => {
-  return jest.fn((props: LinkProps) => <>{props.children}</>);
+  return jest.fn((props: React.PropsWithChildren<LinkProps>) => (
+    <>{props.children}</>
+  ));
 });
 
 describe("<Preview />", () => {
   it("loads server content", async () => {
     fetch.mockResponse(JSON.stringify(post));
     let FetchContent = render(
-      <Preview authed={false} id={mockPost.id} entry={post} />
+      <MockAuthProvider>
+        <Preview authed={false} id={mockPost.id} entry={post} />
+      </MockAuthProvider>
     );
     await wait(() => FetchContent.getByTestId("PREVIEW_ENTRTY_TITLE"));
     expect(FetchContent.container).toBeTruthy();

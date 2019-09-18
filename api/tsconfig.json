@@ -5,24 +5,25 @@
     "target": "es6",
     "moduleResolution": "node",
     "noImplicitAny": true,
+    "esModuleInterop": true,
     "noImplicitReturns": true,
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
     "types": [
+      "@hapi/hapi",
+      "@hapi/boom",
+      "@hapi/shot",
+      "@hapi/joi",
       "node",
       "micro",
-      "hapi",
-      "boom",
       "bcrypt",
-      "joi",
       "uuid",
       "mongoose",
       "axios",
       "draft-js",
       "jest",
-      "jsonwebtoken",
-      "shot"
+      "jsonwebtoken"
     ],
     "paths": {
       "*": ["node_modules/*", "src/types/*"]

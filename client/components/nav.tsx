@@ -1,8 +1,8 @@
 import * as React from "react";
 import Link from "next/link";
-import { withRouter, WithRouterProps } from "next/router";
+import { useRouter } from "next/router";
 import * as Reach from "@reach/dialog";
-import { AuthContext, IAuthContext } from "./auth";
+import { AuthContext, AuthContextType } from "./auth";
 import User from "./user";
 import Fetch from "./collection-fetch";
 import { SignoutIcon } from "./icons";
@@ -10,21 +10,22 @@ import usePrevious from "../hooks/previous";
 import LockScroll from "./lock-scroll";
 
 // TODO: Slide to close navigation?
-interface INavigationProps extends WithRouterProps {
+interface INavigationProps {
   token: string;
   closeNav: () => void;
 }
 
-function NavBar(props: INavigationProps): JSX.Element {
-  const context = React.useContext<IAuthContext>(AuthContext);
+export default function NavBar(props: INavigationProps): JSX.Element {
+  const [{ name }, { signOut }] = React.useContext<AuthContextType>(AuthContext);
+  const { route } = useRouter();
 
-  const prevRoute = usePrevious(props.router.route);
+  const prevRoute = usePrevious(route);
 
   React.useEffect(() => {
-    if (prevRoute !== props.router.route) {
+    if (prevRoute !== route) {
       onBlur();
     }
-  }, [props.router.route]);
+  }, [route]);
 
   const onBlur = () => {
     // props.closeNav();
@@ -37,7 +38,7 @@ function NavBar(props: INavigationProps): JSX.Element {
           <nav className="Nav" role="navigation">
             <div className="NavColumn">
               <div>
-                <User border colors={["#FEB692", "#EA5455"]} name={context.name} />
+                <User border colors={["#FEB692", "#EA5455"]} name={name} />
                 <div className="UserActionContainer">
                   <Link href="/" passHref>
                     <a className="NavItem">All Entries</a>
@@ -56,7 +57,7 @@ function NavBar(props: INavigationProps): JSX.Element {
                 <Link href="/legal" passHref>
                   <a className="NavLink">Legal</a>
                 </Link>
-                <button className="NavButton" onClick={context.signOut}>
+                <button className="NavButton" onClick={signOut}>
                   <SignoutIcon
                     style={{ display: "inline-block", verticalAlign: "middle" }}
                   />
@@ -70,5 +71,3 @@ function NavBar(props: INavigationProps): JSX.Element {
     </LockScroll>
   );
 }
-
-export default withRouter(NavBar);

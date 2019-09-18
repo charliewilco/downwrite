@@ -1,3 +1,4 @@
+import * as Hapi from "@hapi/hapi";
 import * as PostController from "./controllers/posts";
 import * as UserController from "./controllers/users";
 import * as PostModel from "./models/Post";
@@ -14,13 +15,26 @@ const auth = {
 
 const urlCreator = (path: string) => `/api${path}`;
 
-const Relish = require("relish")({
-  messages: {
-    "data.username": "Please enter a valid username",
-    "data.email": "email...",
-    "data.password": "this password does not work."
-  }
-});
+// const Relish = require("relish")({
+//   messages: {
+//     "data.username": "Please enter a valid username",
+//     "data.email": "email...",
+//     "data.password": "this password does not work."
+//   }
+// });
+
+// TODO: investigate how to attach types for cors and auth properly
+interface IRoute extends Hapi.ServerRoute {
+  config: Partial<
+    | {
+        validate?: Hapi.ValidationObject;
+        auth: Hapi.ServerAuthConfig;
+        cors: Hapi.RouteOptionsCors;
+        pre: Hapi.RouteOptionsPreObject | Hapi.RouteOptionsPreArray;
+      }
+    | Hapi.ServerAuth
+  >;
+}
 
 const Routes = [
   {

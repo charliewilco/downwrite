@@ -4,7 +4,7 @@ import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
 import * as API from "../utils/api";
-import { AuthContext, IAuthContext } from "./auth";
+import { AuthContext, AuthContextType } from "./auth";
 import { UserSettingsSchema } from "../utils/validations";
 
 interface IUserFormValues {
@@ -17,7 +17,7 @@ interface ISettingsUserForm {
 }
 
 export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
-  const { token } = React.useContext<IAuthContext>(AuthContext);
+  const [{ token }] = React.useContext<AuthContextType>(AuthContext);
 
   const onSubmit = async (
     values: IUserFormValues,

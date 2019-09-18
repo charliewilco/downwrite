@@ -3,7 +3,7 @@ import * as Draft from "draft-js";
 import * as Dwnxt from "downwrite";
 import * as API from "../utils/api";
 import { sanitize } from "../utils/sanitize";
-import { AuthContext, IAuthContext } from "../components/auth";
+import { AuthContext, AuthContextType } from "../components/auth";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
 import isEmpty from "lodash/isEmpty";
 
@@ -23,7 +23,7 @@ export default function useUpdateEntry(
   id: string
 ): [boolean, (v: IFields) => void] {
   const loaded = React.useRef<boolean>(!isEmpty(post));
-  const { token } = React.useContext<IAuthContext>(AuthContext);
+  const [{ token }] = React.useContext<AuthContextType>(AuthContext);
   const dateRef = React.useRef<Date>(new Date());
   const { actions } = useUINotifications();
 

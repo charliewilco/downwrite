@@ -2,9 +2,9 @@ import * as React from "react";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
 import { __IS_BROWSER__ } from "../utils/dev";
 
-export default function useOffline(): boolean {
+export default function useOffline(debug: boolean = false): boolean {
   if (__IS_BROWSER__) {
-    const [isOffline, setIsOffline] = React.useState<boolean>(false);
+    const [isOffline, setIsOffline] = React.useState<boolean>(debug);
     const { actions } = useUINotifications();
 
     function handleChange(event: Event) {
@@ -12,12 +12,16 @@ export default function useOffline(): boolean {
     }
 
     React.useEffect(() => {
-      window.addEventListener("offline", handleChange);
-      window.addEventListener("online", handleChange);
+      if (!debug) {
+        window.addEventListener("offline", handleChange);
+        window.addEventListener("online", handleChange);
+      }
 
       return () => {
-        window.removeEventListener("offline", handleChange);
-        window.removeEventListener("online", handleChange);
+        if (!debug) {
+          window.removeEventListener("offline", handleChange);
+          window.removeEventListener("online", handleChange);
+        }
       };
     }, []);
 

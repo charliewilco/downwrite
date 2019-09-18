@@ -1,4 +1,4 @@
-import { NextContext } from "next";
+import { NextPageContext } from "next";
 import * as Dwnxt from "downwrite";
 import orderBy from "lodash/orderBy";
 import * as API from "../utils/api";
@@ -12,7 +12,7 @@ export interface IEditProps {
 }
 
 export async function getInitialPost(
-  ctx: NextContext<{ id: string; token: string }>
+  ctx: NextPageContext
 ): Promise<Partial<IEditProps>> {
   const token = authMiddleware(ctx);
 
@@ -23,14 +23,16 @@ export async function getInitialPost(
     host = serverURL;
   }
 
-  const post = (await API.getPost(ctx.query.id, {
+  const id = ctx.query.id.toString();
+
+  const post = (await API.getPost(id, {
     token,
     host
   })) as Dwnxt.IPost;
 
   return {
     post,
-    id: ctx.query.id
+    id
   };
 }
 
@@ -39,7 +41,7 @@ export interface IDashboardProps {
 }
 
 export async function getInitialPostList(
-  ctx: NextContext<{ token: string }>
+  ctx: NextPageContext
 ): Promise<Partial<IDashboardProps>> {
   let host: string;
 
@@ -64,9 +66,9 @@ export interface IPreviewProps {
 }
 
 export async function getInitialPreview(
-  ctx: NextContext<{ id: string }>
+  ctx: NextPageContext
 ): Promise<Partial<IPreviewProps>> {
-  let { id } = ctx.query;
+  let id: string = ctx.query.id.toString();
   let host: string;
 
   if (ctx.req) {
@@ -74,6 +76,7 @@ export async function getInitialPreview(
 
     host = serverURL;
   }
+
   const entry = await API.findPreviewEntry(id, { host });
 
   return {
@@ -92,7 +95,7 @@ export interface IUserSettingsProps {
 }
 
 export async function getInitialSettings(
-  ctx: NextContext<{ token: string }>
+  ctx: NextPageContext
 ): Promise<Partial<IUserSettingsProps>> {
   const token = authMiddleware(ctx);
 

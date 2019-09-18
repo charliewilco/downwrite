@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Formik, Form, FormikProps, ErrorMessage } from "formik";
-import "isomorphic-fetch";
+import "isomorphic-unfetch";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
 import LegalBoilerplate from "./legal-boilerplate";
@@ -61,6 +61,7 @@ export default function RegisterForm(): JSX.Element {
             {REGISTER_INPUTS.map(input => (
               <UIInputContainer key={input.name}>
                 <UIInput
+                  type={input.type}
                   placeholder={input.placeholder}
                   label={input.label}
                   autoComplete={input.autoComplete}

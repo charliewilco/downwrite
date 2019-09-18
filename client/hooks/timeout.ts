@@ -1,6 +1,8 @@
 import * as React from "react";
 
-export default function useTimeout(interval: number, cb: () => void): void {
+type Callback = () => void;
+
+export default function useTimeout(interval: number = 500, cb: Callback): void {
   React.useEffect(() => {
     const t = setTimeout(() => {
       cb();

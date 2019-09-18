@@ -1,7 +1,33 @@
-// const withOffline = require("next-offline");
-// const withManifest = require("next-manifest");
+const withOffline = require("next-offline");
+const withManifest = require("next-manifest");
+const withCSS = require("@zeit/next-css");
+const withMDX = require("@zeit/next-mdx")({
+  extension: /\.mdx?$/
+});
+
+const workboxOpts = {
+  runtimeCaching: [
+    {
+      urlPattern: /.png$/,
+      handler: "CacheFirst"
+    },
+    {
+      urlPattern: /api/,
+      handler: "NetworkFirst",
+      options: {
+        cacheableResponse: {
+          statuses: [0, 200],
+          headers: {
+            "x-test": "true"
+          }
+        }
+      }
+    }
+  ]
+};
 
 const manifest = {
+  output: "./static/",
   dir: "ltr",
   lang: "en",
   short_name: "Dwnxt",
@@ -35,62 +61,14 @@ const manifest = {
   display: "standalone"
 };
 
-const workboxOpts = {
-  swDest: "static/service-worker.js",
-  runtimeCaching: [
-    {
-      urlPattern: /^https?.*/,
-      handler: "networkFirst",
-      options: {
-        cacheName: "https-calls",
-        networkTimeoutSeconds: 15,
-        expiration: {
-          maxEntries: 150,
-          maxAgeSeconds: 30 * 24 * 60 * 60 // 1 month
-        },
-        cacheableResponse: {
-          statuses: [0, 200]
-        }
-      }
-    }
-  ]
-};
-
-// https://gist.github.com/roelvan/b3a9e138f2e409a1805e2a6be1c15092
-
-const { PHASE_PRODUCTION_SERVER } =
-  process.env.NODE_ENV === "development"
-    ? {}
-    : !process.env.NOW_REGION
-    ? require("next/constants")
-    : require("next-server/constants");
-
-const config = {
-  manifest,
-  workboxOpts
-};
-
-module.exports = (phase, { defaultConfig }) => {
-  if (phase === PHASE_PRODUCTION_SERVER) {
-    // Config used to run in production.
-    return {
-      target: "serverless"
-    };
-  }
-  // ✅ Put the require call here.
-  const withCSS = require("@zeit/next-css");
-  const withTypescript = require("@zeit/next-typescript");
-  const withMDX = require("@zeit/next-mdx")({
-    extension: /\.mdx?$/
-  });
-
-  //
-
-  return withCSS(
-    withTypescript(
+module.exports = withOffline(
+  withManifest(
+    withCSS(
       withMDX({
-        target: "serverless"
+        target: "serverless",
+        workboxOpts,
+        manifest
       })
     )
-  );
-};
+  )
+);

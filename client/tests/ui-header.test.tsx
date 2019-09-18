@@ -1,41 +1,58 @@
 import * as React from "react";
-import { render } from "react-testing-library";
-import "jest-dom/extend-expect";
+import * as ReactDOM from "react-dom";
+import TestRenderer from "react-test-renderer";
+
 import { UIHeader } from "../components/header";
-import { SingletonRouter, WithRouterProps } from "next/router";
 import { LinkProps } from "next/link";
+import { MockAuthProvider } from "../components/auth";
+import { act } from "react-dom/test-utils";
 
 jest.mock("universal-cookie", () => {
   return class Cookie {};
 });
 jest.mock("jwt-decode");
-jest.mock("../components/auth");
-
-// jest.mock("../components/auth", () => () => "Auth");
-
-jest.mock("next/router", () => {
-  return {
-    withRouter: (Component: React.ComponentType<{} & WithRouterProps<{}>>) => {
-      return <Component router={{ route: "/" } as SingletonRouter<{}>} />;
-    }
-  };
-});
 
 jest.mock("next/link", () => {
-  return jest.fn((props: LinkProps) => <>{props.children}</>);
+  return jest.fn((props: React.PropsWithChildren<LinkProps>) => (
+    <>{props.children}</>
+  ));
 });
 
-let { getByTestId, container } = render(
-  <UIHeader router={{ route: "/" } as SingletonRouter<{}>} />
+const app = (
+  <MockAuthProvider>
+    <UIHeader />
+  </MockAuthProvider>
 );
 
+let container: HTMLDivElement;
+
+const testMock = TestRenderer.create(app);
+
+beforeEach(() => {
+  container = document.createElement("div");
+  document.body.appendChild(container);
+});
+
+afterEach(() => {
+  document.body.removeChild(container);
+  container = null;
+});
+
+// NOTE: test broken by upgrading @testing-library
 describe("Header Component", () => {
   it("contains application name", () => {
-    expect(getByTestId("APP_HEADER_TITLE")).toHaveTextContent("Downwrite");
-    expect(getByTestId("APP_HEADER")).toBeTruthy();
+    act(() => {
+      ReactDOM.render(app, container);
+    });
+
+    const title = container.querySelector("h1");
+    const header = container.querySelector("header");
+
+    expect(title.textContent).toBe("Downwrite");
+    expect(header).toBeTruthy();
   });
 
   it("matches snapshot", () => {
-    expect(container.firstChild).toMatchSnapshot();
+    expect(testMock.toJSON()).toMatchSnapshot();
   });
 });

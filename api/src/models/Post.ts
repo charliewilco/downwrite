@@ -1,5 +1,5 @@
 import * as Mongoose from "mongoose";
-import * as Joi from "joi";
+import * as Joi from "@hapi/joi";
 
 const PostSchema = new Mongoose.Schema({
   id: String,

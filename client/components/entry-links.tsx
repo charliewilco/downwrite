@@ -13,23 +13,16 @@ interface IInitialCardLinkProps {
   pathname: string;
 }
 
-const defaultLinks = {
-  prefetch: true,
-  passHref: true
-};
-
 function CardLink(props: ICardLinks & IInitialCardLinkProps): JSX.Element {
   const href: UrlObject = { pathname: props.pathname, query: { id: props.id } };
 
-  return React.createElement(Link, {
-    ...defaultLinks,
-    href,
-    children: React.createElement(
-      "a",
-      { className: props.className, style: props.style },
-      props.title
-    )
-  });
+  return (
+    <Link href={href} passHref={true}>
+      <a className={props.className} style={props.style}>
+        {props.title}
+      </a>
+    </Link>
+  );
 }
 
 export function EditLink(props: ICardLinks): JSX.Element {

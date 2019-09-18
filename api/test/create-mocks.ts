@@ -1,5 +1,5 @@
 import * as Draft from "draft-js";
-import * as uuid from "uuid/v4";
+import uuid from "uuid/v4";
 
 const post = Draft.EditorState.createWithContent(
   Draft.ContentState.createFromText("Hello")

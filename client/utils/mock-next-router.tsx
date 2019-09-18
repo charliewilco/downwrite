@@ -1,11 +1,7 @@
+// @ts-ignore
 import * as React from "react";
 import PropTypes from "prop-types";
-import Router, {
-  RouterProps,
-  UrlLike,
-  EventChangeOptions,
-  PopStateCallback
-} from "next/router";
+import Router from "next/router";
 
 type EventName =
   | "routeChangeStart"
@@ -22,6 +18,7 @@ interface RouteChangeError {
 type EventHandler = (url: string) => any;
 type ErrorEventHandler = (err: RouteChangeError, url: string) => any;
 
+// @ts-ignore
 export const mockRouter: Partial<RouterProps<any>> = {
   components: {},
   asPath: "/",
@@ -30,6 +27,7 @@ export const mockRouter: Partial<RouterProps<any>> = {
   query: {},
   // TODO: Properly mock the following methods
   back() {},
+  // @ts-ignore
   beforePopState(cb: PopStateCallback) {
     return true;
   },
@@ -45,9 +43,13 @@ export const mockRouter: Partial<RouterProps<any>> = {
     let foo = null as Promise<void>;
     return foo;
   },
+  // @ts-ignore
   replace(
+    // @ts-ignore
     url: string | UrlLike,
+    // @ts-ignore
     as?: string | UrlLike,
+    // @ts-ignore
     options?: EventChangeOptions
   ) {
     let foo = null as Promise<boolean>;
@@ -65,6 +67,7 @@ export const mockRouter: Partial<RouterProps<any>> = {
   }
 };
 
+// @ts-ignore
 Router.router = mockRouter as RouterProps<any>;
 
 // https://github.com/zeit/next.js/issues/5205#issuecomment-422846339

@@ -3,7 +3,7 @@ import Router from "next/router";
 import * as Reach from "@reach/menu-button";
 import { NavIcon } from "./icons";
 import User from "./user";
-import { AuthContext, IAuthContext } from "./auth";
+import { AuthContext, AuthContextType } from "./auth";
 import { NightModeContext, INightModeContext } from "./night-mode";
 
 interface IMenuEmojiProps {
@@ -20,7 +20,7 @@ function MenuEmoji(props: IMenuEmojiProps) {
 }
 
 export default function DropdownUI() {
-  const auth = React.useContext<IAuthContext>(AuthContext);
+  const [auth, { signOut }] = React.useContext<AuthContextType>(AuthContext);
   const darkMode = React.useContext<INightModeContext>(NightModeContext);
 
   return (
@@ -55,7 +55,7 @@ export default function DropdownUI() {
             </>
           )}
         </Reach.MenuItem>
-        <Reach.MenuItem onSelect={auth.signOut}>
+        <Reach.MenuItem onSelect={signOut}>
           <MenuEmoji label="Fearful face">😨</MenuEmoji>
           Sign Out
         </Reach.MenuItem>

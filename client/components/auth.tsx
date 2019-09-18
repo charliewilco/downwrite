@@ -1,8 +1,8 @@
 import * as React from "react";
 import Cookies from "universal-cookie";
 import Router from "next/router";
-import * as jwt from "jwt-decode";
-import addDays from "date-fns/add_days";
+import jwt from "jwt-decode";
+import addDays from "date-fns/addDays";
 import {
   IAuthReducerAction,
   IAuthState,
@@ -48,7 +48,7 @@ export interface IAuthActions {
   signOut: () => void;
 }
 
-export interface IAuthContext extends IAuthState, IAuthActions {}
+export type AuthContextType = [IAuthState, IAuthActions];
 
 export interface IToken {
   name: string;
@@ -60,7 +60,10 @@ const EMPTY_USER: IToken = {
   name: null
 };
 
-export const AuthContext = React.createContext<IAuthContext>({} as IAuthContext);
+export const AuthContext = React.createContext<AuthContextType>([
+  null,
+  null
+] as AuthContextType);
 
 function initializer(tokenInitial?: string): IAuthState {
   let token = tokenInitial || cookie.get("DW_TOKEN");
@@ -126,18 +129,41 @@ export function AuthProvider({ token, children }: IAuthProps) {
 
   useAuthSideEffects(state);
 
-  function getAuthContext(): IAuthContext {
-    return {
-      ...state,
-      signIn,
-      signOut
-    };
+  function getAuthContext(): AuthContextType {
+    return [
+      state,
+      {
+        signIn,
+        signOut
+      }
+    ];
   }
 
-  const value = React.useMemo<IAuthContext>(() => getAuthContext(), [
+  const value = React.useMemo<AuthContextType>(() => getAuthContext(), [
     state.token,
     state.authed
   ]);
 
   return React.createElement(AuthContext.Provider, { value }, children);
+}
+
+export function MockAuthProvider(
+  props: React.PropsWithChildren<Partial<IAuthState>>
+): JSX.Element {
+  return (
+    <AuthContext.Provider
+      value={[
+        {
+          authed: props.authed || false,
+          token: props.token || ".....SOME_RANDOM_TOKEN....",
+          name: props.token || "Charles"
+        },
+        {
+          signIn: () => console.log("Sign in mock"),
+          signOut: () => console.log("Sign out mock")
+        }
+      ]}>
+      {props.children}
+    </AuthContext.Provider>
+  );
 }
