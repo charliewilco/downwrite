@@ -171,8 +171,9 @@ export async function getPosts(
   options: IOptions
 ): Promise<Dwnxt.IPost[] | Dwnxt.IPostError> {
   const url = URLEndpoints.create(Endpoints.POST_ENDPOINT, options.host);
+  console.log(url);
   const entries: Dwnxt.IPost[] = await fetch(
-    url,
+    "https://localhost:3000/api",
     createHeader("GET", options.token)
   ).then(res => res.json());
 

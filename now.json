@@ -11,9 +11,5 @@
     "DB_PASSWORD": "@dw-db-password",
     "DB_ADDRESS": "@dw-db-address"
   },
-  "builds": [{ "src": "client/next.config.js", "use": "@now/next" }],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/src/index.ts" },
-    { "src": "/(.*)", "dest": "/client/$1" }
-  ]
+  "builds": [{ "src": "next.config.js", "use": "@now/next" }]
 }
