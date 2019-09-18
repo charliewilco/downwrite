@@ -14,6 +14,8 @@
     "test": "NODE_ENV=test jest"
   },
   "dependencies": {
+    "@apollo/react-hooks": "^3.1.1",
+    "@apollo/react-ssr": "^3.1.1",
     "@hapi/boom": "^7.4.3",
     "@hapi/hapi": "^18.3.2",
     "@hapi/hoek": "^8.2.1",
@@ -27,6 +29,9 @@
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-mdx": "^1.2.0",
     "abortcontroller-polyfill": "^1.2.3",
+    "apollo-cache-inmemory": "^1.6.3",
+    "apollo-client": "^2.6.4",
+    "apollo-link-http": "^1.5.16",
     "apollo-server-micro": "^2.9.3",
     "autoprefixer": "^9.5.1",
     "bcrypt": "^3.0.6",
@@ -39,6 +44,7 @@
     "formik": "^1.5.0",
     "front-matter": "^3.0.1",
     "graphql": "^14.5.6",
+    "graphql-tag": "^2.10.1",
     "hapi-auth-jwt2": "^8.3.0",
     "isomorphic-unfetch": "^3.0.0",
     "jsonwebtoken": "^8.3.0",

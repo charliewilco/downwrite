@@ -39,6 +39,8 @@ export default function useManagedDashboard(
     const { host } = document.location;
     const entries = await API.getPosts({ token, host });
 
+    console.log(entries);
+
     if (Array.isArray(entries)) {
       dispatch({ type: DashboardAction.FETCH_ENTRIES, payload: { entries } });
     } else if (typeof entries === "object") {

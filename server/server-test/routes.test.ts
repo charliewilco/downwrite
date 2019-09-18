@@ -6,7 +6,7 @@ import * as Shot from "@hapi/shot";
 import createServer from "../index";
 import { prepareDB } from "../util/db";
 import { ICreateResponse } from "../controllers/users";
-import { IPost } from "../models/Post";
+import { IPost } from "../models";
 import { createdUser, createdPost } from "./create-mocks";
 
 // Routes to test
