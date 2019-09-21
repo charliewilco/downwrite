@@ -1,9 +1,6 @@
 const withOffline = require("next-offline");
 const withManifest = require("next-manifest");
 const withCSS = require("@zeit/next-css");
-const withMDX = require("@zeit/next-mdx")({
-  extension: /\.mdx?$/
-});
 
 const workboxOpts = {
   runtimeCaching: [
@@ -63,12 +60,10 @@ const manifest = {
 
 module.exports = withOffline(
   withManifest(
-    withCSS(
-      withMDX({
-        target: "serverless",
-        workboxOpts,
-        manifest
-      })
-    )
+    withCSS({
+      target: "serverless",
+      workboxOpts,
+      manifest
+    })
   )
 );
