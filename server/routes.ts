@@ -1,8 +1,12 @@
 import * as Hapi from "@hapi/hapi";
 import * as PostController from "./controllers/posts";
 import * as UserController from "./controllers/users";
-import * as PostModel from "./models/Post";
-import * as UserModel from "./models/User";
+import {
+  validAuthenticatedUser,
+  validPasswordUpdate,
+  validUser,
+  validPost
+} from "./models";
 
 const cors = {
   origin: ["*"],
@@ -13,7 +17,7 @@ const auth = {
   strategy: "jwt"
 };
 
-const urlCreator = (path: string) => `/api${path}`;
+// const urlCreator = (path: string) => `/api${path}`;
 
 // const Relish = require("relish")({
 //   messages: {
@@ -24,7 +28,7 @@ const urlCreator = (path: string) => `/api${path}`;
 // });
 
 // TODO: investigate how to attach types for cors and auth properly
-interface IRoute extends Hapi.ServerRoute {
+export interface IHapiRoute extends Hapi.ServerRoute {
   config: Partial<
     | {
         validate?: Hapi.ValidationObject;
@@ -52,7 +56,7 @@ const Routes = [
     handler: PostController.createPost,
     config: {
       validate: {
-        payload: PostModel.validPost
+        payload: validPost
       },
       auth,
       cors
@@ -90,7 +94,7 @@ const Routes = [
     handler: PostController.updatePost,
     config: {
       validate: {
-        payload: PostModel.validPost
+        payload: validPost
       },
       auth,
       cors
@@ -101,7 +105,7 @@ const Routes = [
     path: "/api/password",
     handler: UserController.updatePassword,
     config: {
-      validate: { payload: UserModel.validPasswordUpdate },
+      validate: { payload: validPasswordUpdate },
       pre: [
         {
           method: UserController.verifyValidPassword,
@@ -119,7 +123,7 @@ const Routes = [
     config: {
       pre: [{ method: UserController.verifyUniqueUser }],
       validate: {
-        payload: UserModel.validUser
+        payload: validUser
       },
       cors
     }
@@ -154,7 +158,7 @@ const Routes = [
       ],
       handler: UserController.authenticateUser,
       validate: {
-        payload: UserModel.validAuthenticatedUser
+        payload: validAuthenticatedUser
       },
       cors
     }

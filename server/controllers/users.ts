@@ -2,7 +2,7 @@ import * as Hapi from "@hapi/hapi";
 import Boom from "@hapi/boom";
 import uuid from "uuid/v4";
 import * as bcrypt from "bcrypt";
-import { UserModel as User, IUser } from "../models/User";
+import { UserModel as User, IUser } from "../models";
 import { createToken } from "../util/token";
 
 import { IRequest, IRegisterRequest, ILoginRequest } from "./types";
@@ -72,7 +72,7 @@ interface IUpdatePassword extends IRequest {
 
 export const updatePassword = async (request: IUpdatePassword) => {
   const { user } = request.auth.credentials;
-  const { oldPassword, newPassword } = request.payload;
+  const { newPassword } = request.payload;
   const salt = await bcrypt.genSalt(10);
   const newPasswordHash = await bcrypt.hash(newPassword, salt);
 
@@ -111,7 +111,7 @@ export const verifyValidPassword = async (request: IUpdatePassword) => {
     return Boom.badRequest("That wasn't your password");
   }
 
-  return request.payload;
+  return request.payload || newPasswordHash;
 };
 
 export const verifyUniqueUser = async (request: IRegisterRequest) => {

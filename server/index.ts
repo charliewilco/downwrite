@@ -1,8 +1,8 @@
 import * as Hapi from "@hapi/hapi";
 import routes from "./routes";
 import Config from "./util/config";
-import options from "./util/logging";
-const __IS_DEV__: boolean = process.env.NODE_ENV !== "production";
+// import options from "./util/logging";
+// const __IS_DEV__: boolean = process.env.NODE_ENV !== "production";
 
 const validateFn = async () => ({ isValid: true });
 

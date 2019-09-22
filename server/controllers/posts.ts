@@ -2,7 +2,7 @@ import * as Hapi from "@hapi/hapi";
 import Boom from "@hapi/boom";
 import { draftToMarkdown } from "markdown-draft-js";
 
-import { PostModel as Post, IPost, UserModel as User, IUser } from "../models";
+import { PostModel as Post, IPost, UserModel as User } from "../models";
 
 // TODO: remove user from the payload, get it from the
 // const { user } = req.auth.credentials;

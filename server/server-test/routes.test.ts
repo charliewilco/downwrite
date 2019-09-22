@@ -1,8 +1,8 @@
 import * as Hapi from "@hapi/hapi";
-import * as YesNo from "yesno-http";
-import * as Draft from "draft-js";
-import * as uuid from "uuid/v4";
-import * as Shot from "@hapi/shot";
+// import * as YesNo from "yesno-http";
+// import * as Draft from "draft-js";
+// import * as uuid from "uuid/v4";
+// import * as Shot from "@hapi/shot";
 import createServer from "../index";
 import { prepareDB } from "../util/db";
 import { ICreateResponse } from "../controllers/users";

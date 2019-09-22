@@ -1,5 +1,5 @@
 import * as Joi from "@hapi/joi";
-import * as User from "../src/models/User";
+import { validUser } from "../models";
 
 describe("validations", () => {
   it("user password", async () => {
@@ -9,7 +9,7 @@ describe("validations", () => {
         email: "hello@user.no",
         password: "Nothhing!12"
       },
-      User.validUser
+      validUser
     );
 
     const invalid = Joi.validate(
@@ -18,7 +18,7 @@ describe("validations", () => {
         email: "hello@user.no",
         password: "nothing"
       },
-      User.validUser
+      validUser
     );
     expect(valid.error).toBeNull();
     expect(invalid.error).not.toBeNull();

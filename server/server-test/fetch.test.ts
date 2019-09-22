@@ -1,9 +1,9 @@
 import * as Hapi from "@hapi/hapi";
 import * as Axios from "axios";
-import createServer from "../src/server";
-import { prepareDB } from "../src/util/db";
-import { ICreateResponse, IAuthUser } from "../src/controllers/users";
-import { IPost } from "../src/models/Post";
+import createServer from "../";
+import { prepareDB } from "../util/db";
+import { ICreateResponse, IAuthUser } from "../controllers/users";
+import { IPost } from "../models";
 import { createdUser, createdPost, updatedTitle } from "./create-mocks";
 
 // Routes to test
