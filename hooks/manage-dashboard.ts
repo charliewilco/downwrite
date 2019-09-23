@@ -35,9 +35,12 @@ export default function useManagedDashboard(
     }
   }, []);
 
-  async function getPosts(close?: boolean): Promise<void> {
+  async function getPosts(): Promise<void> {
     const { host } = document.location;
-    const entries = await API.getPosts({ token, host });
+    const entries: Dwnxt.IPost[] | Dwnxt.IPostError = await API.getPosts({
+      token,
+      host
+    });
 
     console.log(entries);
 
@@ -57,7 +60,7 @@ export default function useManagedDashboard(
     const response = await API.removePost(id, { token, host });
 
     if (response.ok) {
-      await getPosts(true);
+      await getPosts();
     }
   }
 

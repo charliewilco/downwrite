@@ -26,9 +26,7 @@ export default function useCreateEntry(): CreateEntryHandler {
     const body: Dwnxt.IPostCreation = {
       title: values.title.length > 0 ? values.title : `Untitled ${id.current}`,
       id: id.current,
-      content: JSON.stringify(Draft.convertToRaw(ContentState)),
-      dateAdded: new Date(),
-      public: false
+      content: Draft.convertToRaw(ContentState)
     };
 
     API.createPost(body, { token, host: document.location.host })

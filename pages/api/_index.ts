@@ -1,13 +1,12 @@
-import * as http from "http";
 import * as Hapi from "@hapi/hapi";
-import micro, { json } from "micro";
+import { json } from "micro";
 import createServer from "../../server";
 import { prepareDB } from "../../server/util/db";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export const __IS_DEV__: boolean = process.env.NODE_ENV === "development";
 
-export default micro(async (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   // NOTE: Must start server & and connect to DB
   let db = await prepareDB();
   const server: Hapi.Server = await createServer();
@@ -35,4 +34,4 @@ export default micro(async (req: NextApiRequest, res: NextApiResponse) => {
   console.log(req.method, response);
 
   res.status(response.statusCode).json(response.result);
-});
+};

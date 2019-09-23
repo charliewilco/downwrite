@@ -7,7 +7,7 @@ import { AuthContext, AuthContextType } from "../components/auth";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
 import isEmpty from "lodash/isEmpty";
 
-interface ResponsePost extends Dwnxt.IPost {
+interface IResponsePost extends Dwnxt.IPost {
   _id: string;
   __v: string;
 }
@@ -32,7 +32,7 @@ export default function useUpdateEntry(
     const content = Draft.convertToRaw(contentState);
     const { host } = document.location;
 
-    const body = sanitize<ResponsePost>(post, ["_id", "__v"]) as Dwnxt.IPost;
+    const body = sanitize<IResponsePost>(post, ["_id", "__v"]) as Dwnxt.IPost;
 
     await API.updatePost(
       id,
@@ -46,7 +46,9 @@ export default function useUpdateEntry(
       { token, host }
     )
       .then(() => {})
-      .catch(err => actions.add(err.message, NotificationType.ERROR));
+      .catch(err => {
+        actions.add(err.message, NotificationType.ERROR);
+      });
   }
 
   return [loaded.current, (values: IFields) => updatePostContent(values)];

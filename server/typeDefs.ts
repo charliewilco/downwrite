@@ -3,6 +3,7 @@ import { gql } from "apollo-server-micro";
 export const typeDefs = gql`
   scalar Date
 
+  # Models
   type Entry {
     id: ID
     title: String
@@ -22,6 +23,7 @@ export const typeDefs = gql`
 
   type Preview {
     title: String
+    id: ID
     content: String
     author: Author
     dateAdded: Date
@@ -30,10 +32,25 @@ export const typeDefs = gql`
   type User {
     username: String!
     email: String!
-    password: String
     admin: Boolean
     posts: [Entry]
   }
+
+  # Inputs
+
+  input UserSettingsInput {
+    username: String
+    email: String
+  }
+
+  # Payload
+
+  type CreateUserPayload {
+    user: User
+    token: String
+  }
+
+  # Root
 
   type Query {
     entry(id: ID): Entry
@@ -44,6 +61,8 @@ export const typeDefs = gql`
   type Mutation {
     createEntry(content: String, title: String): Entry
     deleteEntry(id: ID): Entry
+    createUser(username: String!, password: String!): CreateUserPayload
+    updateUserSettings(settings: UserSettingsInput!): User
   }
 
   schema {

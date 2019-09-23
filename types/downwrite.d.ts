@@ -14,10 +14,10 @@ declare module "downwrite" {
   export interface IPostCreation {
     title: string;
     id: string;
-    dateAdded: Date;
+    dateAdded?: Date;
     dateModified?: Date;
-    public: boolean;
-    content: string;
+    public?: boolean;
+    content: Draft.RawDraftContentState;
   }
 
   export interface IPostError {

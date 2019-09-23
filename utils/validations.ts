@@ -51,3 +51,9 @@ export const LocalSettingsSchema = Yup.object().shape({
     .matches(/.(md|mdx|txt)/)
     .required("Must be .md, .mdx or .txt")
 });
+
+export const ValidEntryCreation = Yup.object().shape({
+  id: Yup.string().required(),
+  title: Yup.string().required(),
+  content: Yup.object()
+});

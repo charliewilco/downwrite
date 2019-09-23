@@ -21,7 +21,7 @@ interface IUserResponse {
 
 export enum Endpoints {
   POST_ENDPOINT = "/api/posts",
-  PREVIEW_ENDPOINT = "/api/posts/preview",
+  PREVIEW_ENDPOINT = "/api/preview",
   USER_ENDPOINT = "/api/users",
   PASSWORD_ENDPOINT = "/api/password",
   SETTINGS_ENDPOINT = "/api/users/settings",
@@ -31,6 +31,8 @@ export enum Endpoints {
 type APIResponse = Dwnxt.IPost | Dwnxt.IPostError;
 
 type HeaderMethod = "GET" | "PUT" | "POST" | "DELETE";
+
+const DEFAULT_URL = "http://localhost:3000";
 
 const controller: AbortController = new AbortController();
 const signal: AbortSignal = controller.signal;
@@ -51,7 +53,7 @@ export const createHeader = (
   return {
     method,
     headers: {
-      "Content-Type": "application/json",
+      // "Content-Type": "application/json",
       Authorization: token
     },
     mode: "cors",
@@ -128,6 +130,7 @@ export async function createUser(
 // TODO: Remove Any
 export async function updatePassword(body: any, options: IOptions): Promise<any> {
   const url = URLEndpoints.create(Endpoints.PASSWORD_ENDPOINT, options.host);
+
   const password = await fetch(url, {
     ...createHeader("POST", options.token),
     body: JSON.stringify(body)
@@ -140,7 +143,7 @@ export async function findPreviewEntry(
   id: string,
   options?: IOptions
 ): Promise<null> {
-  const url = URLEndpoints.create(Endpoints.PREVIEW_ENDPOINT, options.host);
+  const url = DEFAULT_URL.concat(Endpoints.PREVIEW_ENDPOINT);
   const entry = await fetch(`${url}/${id}`, {
     method: "GET",
     mode: "cors"
@@ -150,10 +153,11 @@ export async function findPreviewEntry(
 }
 
 export async function getPost(id: string, options: IOptions): Promise<APIResponse> {
-  const url = URLEndpoints.create(Endpoints.POST_ENDPOINT, options.host);
-  const post = await fetch(`${url}/${id}`, createHeader("GET", options.token)).then(
-    res => res.json()
-  );
+  // const url = URLEndpoints.create(Endpoints.POST_ENDPOINT, options.host);
+  const post = await fetch(
+    `http://localhost:3000/api/posts/${id}`,
+    createHeader("GET", options.token)
+  ).then(res => res.json());
 
   return post;
 }
@@ -167,15 +171,13 @@ export async function removePost(id: string, options: IOptions): Promise<Respons
   return response;
 }
 
-export async function getPosts(
-  options: IOptions
-): Promise<Dwnxt.IPost[] | Dwnxt.IPostError> {
-  const url = URLEndpoints.create(Endpoints.POST_ENDPOINT, options.host);
-  console.log(url);
-  const entries: Dwnxt.IPost[] = await fetch(
-    "https://localhost:3000/api",
-    createHeader("GET", options.token)
-  ).then(res => res.json());
+export async function getPosts({
+  token
+}: IOptions): Promise<Dwnxt.IPost[] | Dwnxt.IPostError> {
+  const url = DEFAULT_URL.concat(Endpoints.POST_ENDPOINT);
+  const entries: Dwnxt.IPost[] = await fetch(url, createHeader("GET", token)).then(
+    res => res.json()
+  );
 
   return entries;
 }

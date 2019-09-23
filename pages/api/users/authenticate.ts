@@ -1,5 +1,5 @@
 import { NextApiResponse, NextApiRequest } from "next";
 
-export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
+export default (req: NextApiRequest, res: NextApiResponse): void => {
   console.log("Login!");
 };
