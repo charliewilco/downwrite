@@ -24,6 +24,6 @@
     "esModuleInterop": true,
     "isolatedModules": true
   },
-  "exclude": ["next.config.js", "postcss.config.js", "node_modules/@jest"],
+  "exclude": ["postcss.config.js", "node_modules/@jest"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

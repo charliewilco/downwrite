@@ -1,0 +1,5 @@
+{
+  "preset": "ts-jest",
+  "globalSetup": "<rootDir>/config/setup",
+  "globalTeardown": "<rootDir>/config/teardown"
+}

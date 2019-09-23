@@ -3,8 +3,8 @@ import * as puppeteer from "puppeteer";
 const BASE_URL = "http://localhost:3000";
 const getByTestID = (id: string): string => `[data-testid='${id}']`;
 
-let browser;
-let page;
+let browser: puppeteer.Browser;
+let page: puppeteer.Page;
 
 beforeAll(async () => {
   browser = await puppeteer.launch({ headless: true });
@@ -23,14 +23,18 @@ describe("Login Flow", () => {
   it("shows other registration form", async () => {
     const LOGIN_TEXT = "Welcome Back!";
     const REGISTER_TEXT = "Sign Up as a New User";
-    await page
-      .waitForSelector(getByTestID("LOGIN_TITLE"))
-      .then((title: string) => title === REGISTER_TEXT);
+    await page.waitForSelector(getByTestID("LOGIN_TITLE")).then(async element => {
+      const title = await element.jsonValue();
+
+      return title === REGISTER_TEXT;
+    });
     await page.waitForSelector(getByTestID("LOGIN_REGISTER_BUTTON"));
     await page.click(getByTestID("LOGIN_REGISTER_BUTTON"));
-    await page
-      .waitForSelector(getByTestID("LOGIN_TITLE"))
-      .then((title: string) => title === LOGIN_TEXT);
+    await page.waitForSelector(getByTestID("LOGIN_TITLE")).then(async element => {
+      const title = await element.jsonValue();
+
+      return title === LOGIN_TEXT;
+    });
   });
 });
 
