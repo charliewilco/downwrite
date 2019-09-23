@@ -20,15 +20,17 @@ export default function Card(props: ICardProps): JSX.Element {
     props.onDelete({ id: props.id, title: props.title });
   }
 
-  const date = parseISO(props.dateAdded.toString());
-
   return (
     <div className="Sheet Card" data-testid="CARD">
       <header className="CardHeader">
         <h2 className="CardTitle" data-testid="CARD_TITLE">
           <EditLink title={props.title} id={props.id} />
         </h2>
-        <small className="CardMeta">added {distance(date)} ago</small>
+        {props.dateAdded && (
+          <small className="CardMeta">
+            added {distance(parseISO(props.dateAdded.toString()))} ago
+          </small>
+        )}
       </header>
       <footer className="CardTray">
         <div className="links" data-testid="CARD_EXCERPT">

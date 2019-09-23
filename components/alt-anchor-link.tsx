@@ -5,12 +5,13 @@ interface IAltAnchorProps<T> extends React.AnchorHTMLAttributes<T> {
   space?: string;
 }
 
-export default function AltAnchorLink({
-  space,
-  className,
-  children,
-  ...props
-}: IAltAnchorProps<any>): JSX.Element {
-  const cx = classNames("AltLink", className);
-  return React.createElement("a", { ...props, className: cx }, children);
-}
+export default React.forwardRef<HTMLAnchorElement, IAltAnchorProps<any>>(
+  (props: IAltAnchorProps<any>, ref) => {
+    const cx = classNames("AltLink", props.className);
+    return (
+      <a href={props.href} className={cx} style={props.style} ref={ref}>
+        {props.children}
+      </a>
+    );
+  }
+);

@@ -2,7 +2,6 @@ import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Logo from "./logo";
-import AltAnchor from "./alt-anchor-link";
 import { AuthContext, AuthContextType } from "./auth";
 import DropdownUI from "./dropdown-ui";
 
@@ -19,22 +18,26 @@ export function UIHeader(): JSX.Element {
       <nav className="AppHeaderNav">
         <Logo />
         <h1 className="AppHeaderTitle" data-testid="APP_HEADER_TITLE">
-          <Link href={!authed ? "/login" : "/"}>
+          <Link href={!authed ? "/login" : "/"} passHref>
             <a className="AppHeaderLink">Downwrite</a>
           </Link>
         </h1>
       </nav>
       {authed ? (
         <nav className="AppHeaderNav">
-          <Link href="/new">
-            <AltAnchor style={style}>New</AltAnchor>
+          <Link href="/new" passHref>
+            <a className="AltLink" style={style}>
+              New
+            </a>
           </Link>
           <DropdownUI />
         </nav>
       ) : (
         <nav className="AppHeaderNav">
-          <Link href="/login">
-            <AltAnchor style={style}>Login or Sign Up</AltAnchor>
+          <Link href="/login" passHref>
+            <a className="AltLink" style={style}>
+              Login or Sign Up
+            </a>
           </Link>
         </nav>
       )}
