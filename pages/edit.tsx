@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Draft from "draft-js";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import { Formik, Form } from "formik";
 import "isomorphic-unfetch";
@@ -12,7 +13,6 @@ import Loading from "../components/loading";
 import { Input } from "../components/editor-input";
 import { ToggleBox } from "../components/toggle-box";
 import { PreviewLink } from "../components/entry-links";
-import Editor from "../components/editor";
 import TimeMarker from "../components/time-marker";
 import { superConverter } from "../utils/responseHandler";
 import { __IS_DEV__ } from "../utils/dev";
@@ -20,6 +20,10 @@ import useUpdateEntry, { IFields } from "../hooks/update-entry";
 import * as InitialProps from "../utils/initial-props";
 
 const EDITOR_COMMAND = "myeditor-save";
+
+const Editor = dynamic(() => import("../components/editor"), {
+  loading: () => <Loading size={50} />
+});
 
 function EditUI(props: InitialProps.IEditProps) {
   const initialEditorState = Draft.EditorState.createWithContent(

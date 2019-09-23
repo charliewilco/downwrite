@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Draft from "draft-js";
 import { Formik, Form, FormikActions } from "formik";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import "isomorphic-unfetch";
 import useCreatePost, { IFields } from "../hooks/create-entry";
@@ -8,7 +9,11 @@ import useOffline from "../hooks/offline";
 import { Input } from "../components/editor-input";
 import { Button } from "../components/button";
 import Upload from "../components/upload";
-import Editor from "../components/editor";
+import Loading from "../components/loading";
+
+const Editor = dynamic(() => import("../components/editor"), {
+  loading: () => <Loading size={50} />
+});
 
 const EDITOR_COMMAND: string = "create-new-post";
 
