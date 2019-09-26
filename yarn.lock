@@ -1488,6 +1488,11 @@
   resolved "https://registry.npmjs.org/@sheerun/mutationobserver-shim/-/mutationobserver-shim-0.3.2.tgz#8013f2af54a2b7d735f71560ff360d3a8176a87b"
   integrity sha512-vTCdPp/T/Q3oSqwHmZ5Kpa9oI7iLtGl3RQaA/NyLHikvcrPxACkkKVr/XzkSPJWXHRhKGzVvb0urJsbMlRxi1Q==
 
+"@sindresorhus/is@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/@sindresorhus/is/-/is-1.0.0.tgz#4f475ff3f32b0a309b7faffd33328e93d7953330"
+  integrity sha512-3rlOB53XCVO7LfjXFx4bCGrZPPjkgYD7pP0E/yo4d57H32aYqD/QNmeXcVnx7CM5SxGScwl2P0b1kCDYZgNWqw==
+
 "@testing-library/dom@^6.1.0":
   version "6.3.0"
   resolved "https://registry.npmjs.org/@testing-library/dom/-/dom-6.3.0.tgz#27376ddb61094cb43177af4c5def17aaedddd99b"
@@ -5211,6 +5216,14 @@ graphql-extensions@^0.10.3:
     "@apollographql/apollo-tools" "^0.4.0"
     apollo-server-env "^2.4.3"
     apollo-server-types "^0.2.4"
+
+graphql-import@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.npmjs.org/graphql-import/-/graphql-import-0.7.1.tgz#4add8d91a5f752d764b0a4a7a461fcd93136f223"
+  integrity sha512-YpwpaPjRUVlw2SN3OPljpWbVRWAhMAyfSba5U47qGMOSsPLi2gYeJtngGpymjm9nk57RFWEpjqwh4+dpYuFAPw==
+  dependencies:
+    lodash "^4.17.4"
+    resolve-from "^4.0.0"
 
 graphql-tag@^2.10.1, graphql-tag@^2.4.2, graphql-tag@^2.9.2:
   version "2.10.1"
@@ -9135,6 +9148,11 @@ resolve-from@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/resolve-from/-/resolve-from-3.0.0.tgz#b22c7af7d9d6881bc8b6e653335eebcb0a188748"
   integrity sha1-six699nWiBvItuZTM17rywoYh0g=
+
+resolve-from@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/resolve-from/-/resolve-from-4.0.0.tgz#4abcd852ad32dd7baabfe9b40e00a36db5f392e6"
+  integrity sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==
 
 resolve-url@^0.2.1:
   version "0.2.1"

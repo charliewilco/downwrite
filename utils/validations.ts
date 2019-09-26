@@ -57,3 +57,35 @@ export const ValidEntryCreation = Yup.object().shape({
   title: Yup.string().required(),
   content: Yup.object()
 });
+
+export const validPost = Yup.object().shape({
+  id: Yup.string(),
+  title: Yup.string(),
+  content: Yup.object(),
+  tags: Yup.array(),
+  dateAdded: Yup.date(),
+  dateModified: Yup.date(),
+  user: Yup.string(),
+  public: Yup.boolean()
+});
+
+// 1. must contain 1 lowercase letter
+// 2. must contain 1 uppercase letter
+// 3. must contain 1 numeric character
+// 4. must contain 1 special character
+// 5. must contain 6 characters
+
+export const validUser = Yup.object().shape({
+  username: Yup.string()
+    .min(2)
+    .max(30)
+    .required(),
+  email: Yup.string()
+    .email()
+    .required(),
+  password: Yup.string()
+    .matches(
+      /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/
+    )
+    .required()
+});
