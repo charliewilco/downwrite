@@ -58,12 +58,6 @@ const manifest = {
   display: "standalone"
 };
 
-module.exports = withOffline(
-  withManifest(
-    withCSS({
-      target: "serverless",
-      workboxOpts,
-      manifest
-    })
-  )
-);
+module.exports = withCSS({
+  target: "serverless"
+});
