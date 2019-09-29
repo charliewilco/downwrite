@@ -1429,6 +1429,14 @@
     "@types/istanbul-lib-coverage" "*"
     "@types/istanbul-lib-report" "*"
 
+"@types/jest-dev-server@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.npmjs.org/@types/jest-dev-server/-/jest-dev-server-4.2.0.tgz#72026a5c8c30e01a37df9b94af3ee7e886e5d132"
+  integrity sha512-3GYNmVxcLIdW892W1uuhjuBIcDpP7GqQd/YFfNNBKPhA6yaOXnP29QKUwAM8thZ516/f9VJ4m4gAl/o5hxnqNg==
+  dependencies:
+    "@types/node" "*"
+    "@types/wait-on" "*"
+
 "@types/jest-diff@*":
   version "20.0.1"
   resolved "https://registry.npmjs.org/@types/jest-diff/-/jest-diff-20.0.1.tgz#35cc15b9c4f30a18ef21852e255fdb02f6d59b89"
@@ -1611,6 +1619,11 @@
   integrity sha512-MNL15wC3EKyw1VLF+RoVO4hJJdk9t/Hlv3rt1OL65Qvuadm4BYo6g9ZJQqoq7X8NBFSsQXgAujWciovh2lpVjA==
   dependencies:
     "@types/node" "*"
+
+"@types/wait-on@*":
+  version "3.2.0"
+  resolved "https://registry.npmjs.org/@types/wait-on/-/wait-on-3.2.0.tgz#87bfa57af081cb57399d741a963d532946fcdc92"
+  integrity sha512-IBpiv5pRb0MFa7KoC1sqOKPGrZtQlCkXuU03VdlqoAqJXYJnkF0u0ERkzEW9AOA4Uv+HMHNSRJRSDB8JeraxKg==
 
 "@types/ws@^6.0.0":
   version "6.0.3"

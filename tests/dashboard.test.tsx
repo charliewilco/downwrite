@@ -6,6 +6,7 @@ import { render, wait, fireEvent } from "@testing-library/react";
 import Dashboard from "../pages/index";
 import fetchMock, { FetchMock } from "jest-fetch-mock";
 import { createMockPosts } from "../utils/createMocks";
+import ApolloClient from "apollo-client";
 
 const entries = createMockPosts(4);
 jest.mock("next/router");
@@ -17,7 +18,7 @@ jest.mock("next/link", () => {
 });
 
 const PostDashboard = () => {
-  return <Dashboard entries={entries} />;
+  return <Dashboard apolloClient={{} as ApolloClient<{}>} />;
 };
 
 let fetch = fetchMock as FetchMock;
@@ -55,7 +56,9 @@ xdescribe("<Dashboard /> post lists", () => {
 
   xit("shows error if error", async () => {
     fetch.mockResponseOnce(JSON.stringify([]));
-    const ErrorContainer = render(<Dashboard entries={[]} />);
+    const ErrorContainer = render(
+      <Dashboard apolloClient={{} as ApolloClient<{}>} />
+    );
     await wait(() => ErrorContainer.getByTestId("LOADING_SPINNER"));
 
     expect(

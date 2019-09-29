@@ -1,17 +1,28 @@
 import * as puppeteer from "puppeteer";
+import {
+  teardown as teardownDevServer,
+  setup as setupDevServer
+} from "jest-dev-server";
 
-const BASE_URL = "http://localhost:3000";
 const getByTestID = (id: string): string => `[data-testid='${id}']`;
 
 let browser: puppeteer.Browser;
 let page: puppeteer.Page;
 
+const port: number = 7000;
+const BASE_URL = "http://localhost:".concat(port.toString());
+
 beforeAll(async () => {
+  await setupDevServer({
+    command: `yarn dev -p ${port}`,
+    launchTimeout: 50000,
+    port
+  });
   browser = await puppeteer.launch({ headless: true });
   page = await browser.newPage();
 });
 
-describe("Login Flow", () => {
+xdescribe("Login Flow", () => {
   beforeAll(async () => {
     await page.goto(BASE_URL);
   });
@@ -38,6 +49,9 @@ describe("Login Flow", () => {
   });
 });
 
-afterAll(() => {
-  browser.close();
+afterAll(async () => {
+  await teardownDevServer();
+  if (browser) {
+    browser.close();
+  }
 });
