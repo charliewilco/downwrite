@@ -2,24 +2,39 @@ import * as React from "react";
 import * as Dwnxt from "downwrite";
 import Head from "next/head";
 import "isomorphic-unfetch";
+import gql from "graphql-tag";
 import DeleteModal from "../components/delete-modal";
 import PostList from "../components/post-list";
 import Loading from "../components/loading";
 import EmptyPosts from "../components/empty-posts";
 import InvalidToken from "../components/invalid-token";
 import useManagedDashboard from "../hooks/manage-dashboard";
-import * as InitialProps from "../utils/initial-props";
+import { useQuery } from "@apollo/react-hooks";
+import { NextPage } from "next";
+import { withApollo } from "../utils/with-apollo-client";
+
+export const ALL_POSTS_QUERY = gql`
+  query {
+    feed {
+      title
+      dateAdded
+      id
+      public
+    }
+  }
+`;
 
 // TODO: refactor to have selected post, deletion to be handled by a lower level component
 // should be opened at this level and be handed a token and post to delete
-export function DashboardUI(props: InitialProps.IDashboardProps) {
-  const [
-    { entries, selectedPost, modalOpen, loaded, error },
-    ManagedDashboard
-  ] = useManagedDashboard(props.entries);
+export const DashboardUI: NextPage<{}> = () => {
+  const [{ selectedPost, modalOpen }, ManagedDashboard] = useManagedDashboard();
+
+  const { data, loading, error } = useQuery(ALL_POSTS_QUERY, {
+    ssr: true
+  });
 
   return (
-    <>
+    <React.Fragment>
       {modalOpen && (
         <DeleteModal
           title={selectedPost.title}
@@ -29,17 +44,19 @@ export function DashboardUI(props: InitialProps.IDashboardProps) {
         />
       )}
       <Head>
-        <title>{Array.isArray(entries) && entries.length} Entries | Downwrite</title>
+        <title>
+          {loading ? "Loading" : `${data.feed.length} Entries`} | Downwrite
+        </title>
       </Head>
       <section className="PostContainer">
-        {loaded ? (
-          Array.isArray(entries) && entries.length > 0 ? (
+        {!loading ? (
+          Array.isArray(data.feed) && data.feed.length > 0 ? (
             <PostList
               onSelect={ManagedDashboard.onSelect}
-              posts={entries as Dwnxt.IPost[]}
+              posts={data.feed as Dwnxt.IPost[]}
             />
-          ) : error.length > 0 ? (
-            <InvalidToken error={error} />
+          ) : error.message.length > 0 ? (
+            <InvalidToken error={error.message} />
           ) : (
             <EmptyPosts />
           )
@@ -47,14 +64,8 @@ export function DashboardUI(props: InitialProps.IDashboardProps) {
           <Loading size={100} />
         )}
       </section>
-    </>
+    </React.Fragment>
   );
-}
-
-DashboardUI.getInitialProps = InitialProps.getInitialPostList;
-
-DashboardUI.defaultProps = {
-  entries: []
 };
 
-export default DashboardUI;
+export default withApollo(DashboardUI, { ssr: true });

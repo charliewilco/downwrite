@@ -12,7 +12,7 @@ import * as API from "../utils/api";
 import * as Dwnxt from "downwrite";
 import isEmpty from "lodash/isEmpty";
 
-type Entries = Dwnxt.IPost[] | Dwnxt.IPostError;
+// type Entries = Dwnxt.IPost[] | Dwnxt.IPostError;
 
 interface IManagedDashboardActions {
   onCancel: () => void;
@@ -21,12 +21,13 @@ interface IManagedDashboardActions {
   onConfirmDelete: () => void;
 }
 
-export default function useManagedDashboard(
-  initialEntries: Entries
-): [IDashboardState, IManagedDashboardActions] {
+export default function useManagedDashboard(): [
+  IDashboardState,
+  IManagedDashboardActions
+] {
   const [state, dispatch] = React.useReducer<
     React.Reducer<IDashboardState, IDashboardAction>
-  >(reducer, { ...initialState(initialEntries) });
+  >(reducer, { ...initialState() });
   const [{ token }] = React.useContext<AuthContextType>(AuthContext);
 
   React.useEffect(() => {
@@ -41,8 +42,6 @@ export default function useManagedDashboard(
       token,
       host
     });
-
-    console.log(entries);
 
     if (Array.isArray(entries)) {
       dispatch({ type: DashboardAction.FETCH_ENTRIES, payload: { entries } });

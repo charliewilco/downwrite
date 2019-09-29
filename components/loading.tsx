@@ -33,7 +33,6 @@ export default function Loading(props: ILoadingProps): JSX.Element {
           { "--size": props.size, animationDelay: "-0.2s" } as React.CSSProperties
         }
       />
-      >
     </div>
   );
 }

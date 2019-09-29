@@ -35,9 +35,10 @@ export function initialState(
   entries?: Dwnxt.IPost[] | Dwnxt.IPostError
 ): IDashboardState {
   return {
-    entries: entries || [],
+    entries: [],
     error: "",
-    loaded: (entries as Dwnxt.IPost[]).length > 0,
+    loaded: true,
+
     modalOpen: false,
     selectedPost: null
   };
