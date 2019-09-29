@@ -84,24 +84,20 @@ export default function Toolbar(props: any): JSX.Element {
     .getBlockForKey(selection.getStartKey())
     .getType();
 
-  return (
-    <>
-      {props.fullBar ? (
-        <SelectionToolBar
-          selectedText={selectedText}
-          blockType={blockType}
-          currentStyle={currentStyle}
-          onToggleInlineStyle={props.onToggleInlineStyle}
-          onToggleBlockType={props.onToggleBlockType}
-        />
-      ) : (
-        <FullToolBar
-          blockType={blockType}
-          currentStyle={currentStyle}
-          onToggleInlineStyle={props.onToggleInlineStyle}
-          onToggleBlockType={props.onToggleBlockType}
-        />
-      )}
-    </>
+  return props.fullBar ? (
+    <SelectionToolBar
+      selectedText={selectedText}
+      blockType={blockType}
+      currentStyle={currentStyle}
+      onToggleInlineStyle={props.onToggleInlineStyle}
+      onToggleBlockType={props.onToggleBlockType}
+    />
+  ) : (
+    <FullToolBar
+      blockType={blockType}
+      currentStyle={currentStyle}
+      onToggleInlineStyle={props.onToggleInlineStyle}
+      onToggleBlockType={props.onToggleBlockType}
+    />
   );
 }

@@ -8,6 +8,10 @@
   width: 100%;
 }
 
+.Tabs {
+  width: 100%;
+}
+
 .TabsList {
   display: flex;
   width: 100%;

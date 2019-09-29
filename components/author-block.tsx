@@ -8,12 +8,6 @@ interface IAuthorProps {
   colors: string[];
 }
 
-function TeaserCopy(): JSX.Element {
-  return (
-    <span>You can write and share on Downwrite, you can sign up or log in </span>
-  );
-}
-
 export default function Author(props: IAuthorProps): JSX.Element {
   return (
     <aside className="Sheet AuthorBlock Wrapper Wrapper--sm">
@@ -22,15 +16,17 @@ export default function Author(props: IAuthorProps): JSX.Element {
         <h6 className="AuthorBlockTitle">Post from {props.name}</h6>
       </header>
       {!props.authed && (
-        <>
+        <React.Fragment>
           <hr />
           <p className="AuthorBlockContent">
-            <TeaserCopy />
+            <span>
+              You can write and share on Downwrite, you can sign up or log in{" "}
+            </span>
             <Link href="/login">
               <a>here</a>
             </Link>
           </p>
-        </>
+        </React.Fragment>
       )}
     </aside>
   );

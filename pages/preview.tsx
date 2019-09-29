@@ -12,18 +12,18 @@ import * as InitialProps from "../utils/initial-props";
 function PreviewEntry(props: InitialProps.IPreviewProps) {
   const [{ authed }] = React.useContext(AuthContext);
   return (
-    <>
+    <React.Fragment>
       {!isEmpty((props.entry as Dwnxt.IPreviewEntryError).message) ? (
-        <>
+        <React.Fragment>
           <Head>
             <title>
               {(props.entry as Dwnxt.IPreviewEntryError).error} | Downwrite
             </title>
           </Head>
           <NotFound {...(props.entry as Dwnxt.IPreviewEntryError)} />
-        </>
+        </React.Fragment>
       ) : (
-        <>
+        <React.Fragment>
           <Head>
             <title>{(props.entry as Dwnxt.IPreviewEntry).title} | Downwrite</title>
             <meta
@@ -47,9 +47,9 @@ function PreviewEntry(props: InitialProps.IPreviewProps) {
               authed={authed}
             />
           </Content>
-        </>
+        </React.Fragment>
       )}
-    </>
+    </React.Fragment>
   );
 }
 

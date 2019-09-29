@@ -44,15 +44,15 @@ export default function DropdownUI() {
         </Reach.MenuLink>
         <Reach.MenuItem onSelect={darkMode.action.onChange}>
           {darkMode.night ? (
-            <>
+            <React.Fragment>
               <MenuEmoji label="Sun smiling">🌞</MenuEmoji>
               Switch to Light Mode
-            </>
+            </React.Fragment>
           ) : (
-            <>
+            <React.Fragment>
               <MenuEmoji label="Moon">🌙</MenuEmoji>
               Switch to Dark Mode
-            </>
+            </React.Fragment>
           )}
         </Reach.MenuItem>
         <Reach.MenuItem onSelect={signOut}>

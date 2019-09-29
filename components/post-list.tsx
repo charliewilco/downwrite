@@ -16,7 +16,7 @@ export default function PostList(props: IPostListProps): JSX.Element {
   const className = classNames("PostList", isGridView && "Grid");
 
   return (
-    <>
+    <React.Fragment>
       <header className="PostListHeader">
         <h1 className="ContainerTitle">Entries</h1>
         <LayoutControl layout={isGridView} layoutChange={setOpen} />
@@ -33,6 +33,6 @@ export default function PostList(props: IPostListProps): JSX.Element {
           )
         )}
       </ul>
-    </>
+    </React.Fragment>
   );
 }

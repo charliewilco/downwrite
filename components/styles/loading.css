@@ -15,12 +15,15 @@
 }
 
 .Loading {
+  --container: calc(var(--size) * 1px);
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
   position: relative;
-  height: calc(100% - (var(--size) * 1px));
+  height: calc(100% - var(--container));
+  max-width: var(--container);
+  margin: 16px auto;
 }
 
 .OuterRing {

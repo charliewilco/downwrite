@@ -49,7 +49,7 @@ function EditUI(props: InitialProps.IEditProps) {
           publicStatus: props.post.public
         }}>
         {({ values, handleChange, handleSubmit, setFieldValue }) => (
-          <>
+          <React.Fragment>
             <Head>
               <title>{values.title} | Downwrite</title>
             </Head>
@@ -100,7 +100,7 @@ function EditUI(props: InitialProps.IEditProps) {
             {!!values.editorState && (
               <WordCounter editorState={values.editorState} />
             )}
-          </>
+          </React.Fragment>
         )}
       </Formik>
     </div>
