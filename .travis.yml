@@ -8,8 +8,6 @@ cache:
 install:
   - yarn
 script:
-  - yarn workspace api build
-  - yarn workspace api test --silent --verbose
-  - yarn workspace client test
-  - yarn workspace client typecheck
-  - yarn workspace client build
+  - yarn build
+  - yarn test --silent --verbose
+  - yarn typecheck
