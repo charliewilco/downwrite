@@ -4,7 +4,9 @@ import Mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 import { resolvers } from "../../utils/resolvers";
 import { Config } from "../../utils/server-config";
-import { typeDefs } from "../../utils/typeDefs";
+import { importSchema } from "graphql-import";
+
+const typeDefs = importSchema("pages/api/schema.graphql");
 
 const prepareDB = async (): Promise<typeof Mongoose> => {
   Mongoose.Promise = global.Promise;
