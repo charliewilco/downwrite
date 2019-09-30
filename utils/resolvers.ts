@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import Mongoose from "mongoose";
 import is from "@sindresorhus/is";
 import { IUser, IPost, PostModel, UserModel } from "./models";
-import { createMarkdownServer } from "./markdownTemplate";
+import { createMarkdownServer } from "./markdown-template";
 import { Config } from "./server-config";
 
 interface ITokenContent {

@@ -4,7 +4,7 @@ export * from "./classnames";
 export * from "./dev";
 export * from "./defaultStyles";
 export * from "./local-drafts";
-export * from "./markdownTemplate";
+export * from "./markdown-template";
 export * from "./sanitize";
 export * from "./validations";
 export * from "./urls";

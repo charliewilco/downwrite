@@ -3,7 +3,7 @@ import * as Draft from "draft-js";
 import { draftToMarkdown } from "markdown-draft-js";
 import FileSaver from "file-saver";
 import Markdown from "./export-markdown-button";
-import { createMarkdown } from "../utils/markdownTemplate";
+import { createMarkdown } from "../utils/markdown-template";
 import classNames from "../utils/classnames";
 import { LocalSettings } from "./settings-markdown";
 
