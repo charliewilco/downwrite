@@ -135,6 +135,7 @@
     "jsonwebtoken": false,
     "node-pre-gyp": false,
     "mongoose": false,
-    "apollo-server-micro": false
+    "apollo-server-micro": false,
+    "aws-sdk": false
   }
 }
