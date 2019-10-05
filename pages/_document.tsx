@@ -5,7 +5,6 @@ import Document, {
   NextScript,
   DocumentContext
 } from "next/document";
-// import Manifest from "next-manifest/manifest";
 
 const STYLESHEETS: string[] = ["https://unpkg.com/ganymede-light-duotone-prism"];
 
@@ -29,7 +28,6 @@ export default class MyDocument extends Document {
             key="viewport"
           />
           <meta name="theme-color" content="#4FA5C2" />
-          {/* <Manifest /> */}
           <link rel="icon" href="/static/favicon.ico" />
         </Head>
         <body>
