@@ -1,6 +1,5 @@
 import { NextPageContext } from "next";
 import * as Dwnxt from "downwrite";
-import orderBy from "lodash/orderBy";
 import * as API from "../utils/api";
 import { authMiddleware } from "../utils/auth-middleware";
 
@@ -33,56 +32,6 @@ export async function getInitialPost(
   return {
     post,
     id
-  };
-}
-
-export interface IDashboardProps {
-  entries: Dwnxt.IPost[] | Dwnxt.IPostError;
-}
-
-export async function getInitialPostList(
-  ctx: NextPageContext
-): Promise<Partial<IDashboardProps>> {
-  let host: string;
-
-  if (ctx.req) {
-    const serverURL: string = ctx.req.headers.host;
-    host = serverURL;
-  }
-
-  const token = authMiddleware(ctx);
-  const entries = await API.getPosts({ token, host });
-
-  return {
-    entries: orderBy(entries, ["dateModified"], ["desc"])
-  };
-}
-
-export interface IPreviewProps {
-  authed: boolean;
-  url?: string;
-  entry: Dwnxt.IPreviewEntry | Dwnxt.IPreviewEntryError;
-  id: string;
-}
-
-export async function getInitialPreview(
-  ctx: NextPageContext
-): Promise<Partial<IPreviewProps>> {
-  let id: string = ctx.query.id.toString();
-  let host: string;
-
-  if (ctx.req) {
-    const serverURL: string = ctx.req.headers.host;
-
-    host = serverURL;
-  }
-
-  const entry = await API.findPreviewEntry(id, { host });
-
-  return {
-    id,
-    entry,
-    url: `https://next.downwrite.us/preview?id=${id}`
   };
 }
 
