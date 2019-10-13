@@ -3,7 +3,7 @@ import App, { AppProps, AppContext } from "next/app";
 import isEmpty from "lodash/isEmpty";
 import { UIShell } from "../components/ui-shell";
 import { AuthProvider } from "../components/auth";
-import { cookies, ICookie } from "../utils/auth-middleware";
+import Cookies from "universal-cookie";
 
 interface IAppProps extends AppProps {
   token: string;
@@ -12,7 +12,8 @@ interface IAppProps extends AppProps {
 export default class Downwrite extends App<IAppProps> {
   public static async getInitialProps({ Component, ctx, ...props }: AppContext) {
     let pageProps = {};
-    let { DW_TOKEN: token } = cookies<ICookie>(ctx) as ICookie;
+    const cookies = new Cookies(ctx.req);
+    const token = cookies.get<string>("DW_TOKEN");
 
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);

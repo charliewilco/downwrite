@@ -139,29 +139,6 @@ export async function updatePassword(body: any, options: IOptions): Promise<any>
   return password;
 }
 
-export async function findPreviewEntry(
-  id: string,
-  options?: IOptions
-): Promise<null> {
-  const url = DEFAULT_URL.concat(Endpoints.PREVIEW_ENDPOINT);
-  const entry = await fetch(`${url}/${id}`, {
-    method: "GET",
-    mode: "cors"
-  }).then(res => res.json());
-
-  return entry;
-}
-
-export async function getPost(id: string, options: IOptions): Promise<APIResponse> {
-  // const url = URLEndpoints.create(Endpoints.POST_ENDPOINT, options.host);
-  const post = await fetch(
-    `http://localhost:3000/api/posts/${id}`,
-    createHeader("GET", options.token)
-  ).then(res => res.json());
-
-  return post;
-}
-
 export async function removePost(id: string, options: IOptions): Promise<Response> {
   const url = URLEndpoints.create(Endpoints.POST_ENDPOINT, options.host);
   const response = await fetch(
@@ -193,18 +170,4 @@ export async function createPost(
   }).then(res => res.json());
 
   return post;
-}
-
-export async function updatePost(
-  id: string,
-  body: Dwnxt.IPost,
-  options: IOptions
-): Promise<Dwnxt.IPost | Dwnxt.IPostError> {
-  const url = URLEndpoints.create(Endpoints.POST_ENDPOINT, options.host);
-  const entry = await fetch(`${url}/${id}`, {
-    ...createHeader("PUT", options.token),
-    body: JSON.stringify(body)
-  }).then(res => res.json());
-
-  return entry;
 }
