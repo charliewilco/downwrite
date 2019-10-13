@@ -5,16 +5,12 @@ import { useQuery } from "@apollo/react-hooks";
 import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
 import Loading from "../components/loading";
-import { AuthContext } from "../components/auth";
+import { AvatarColors } from "../components/avatar";
 import NotFound from "../components/not-found";
-import { withApollo } from "../utils/apollo-auth";
+import { withApolloAuth } from "../utils/apollo-auth";
 import { PREVIEW_QUERY } from "../utils/queries";
 
-import { AvatarColors } from "../components/avatar";
-
-export default withApollo(function PreviewEntry() {
-  const [{ authed }] = React.useContext(AuthContext);
-
+export function PreviewEntry() {
   const router = useRouter();
 
   const { data, loading, error } = useQuery(PREVIEW_QUERY, {
@@ -39,14 +35,16 @@ export default withApollo(function PreviewEntry() {
     return <Loading size={100} />;
   }
 
+  const excerpt: string = data.preview.content.substr(0, 75);
+
   return (
     <React.Fragment>
       <Head>
         <title>{data.preview.title} | Downwrite</title>
         <meta name="og:title" content={data.preview.title} />
-        <meta name="og:description" content={data.preview.content.substr(0, 75)} />
+        <meta name="og:description" content={excerpt} />
         <meta name="og:url" content={router.route} />
-        <meta name="description" content={data.preview.content.substr(0, 75)} />
+        <meta name="description" content={excerpt} />
       </Head>
       <Content
         title={data.preview.title}
@@ -55,9 +53,11 @@ export default withApollo(function PreviewEntry() {
         <AuthorBlock
           name={data.preview.author.username}
           colors={AvatarColors}
-          authed={authed}
+          authed={false}
         />
       </Content>
     </React.Fragment>
   );
-});
+}
+
+export default withApolloAuth(PreviewEntry);

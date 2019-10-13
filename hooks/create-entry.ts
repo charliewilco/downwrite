@@ -36,7 +36,7 @@ export default function useCreateEntry(): CreateEntryHandler {
           query: { id: id.current }
         })
       )
-      .catch(err => actions.add(err.message, NotificationType.ERROR));
+      .catch(err => actions.addNotification(err.message, NotificationType.ERROR));
   }
 
   return (values: IFields) => createNewPost(values);

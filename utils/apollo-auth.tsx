@@ -48,7 +48,7 @@ function getToken(req?: IncomingMessage): string {
  * @param {Object} [config]
  * @param {Boolean} [config.ssr=true]
  */
-export function withApollo<T = {}>(
+export function withApolloAuth<T = {}>(
   PageComponent: IApolloPage<T & IApolloProps>,
   { ssr = true } = {}
 ) {

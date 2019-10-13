@@ -11,7 +11,7 @@ interface IPostListProps {
 }
 
 export default function PostList(props: IPostListProps): JSX.Element {
-  const [isGridView, setOpen] = React.useState<boolean>(false);
+  const [isGridView, setOpen] = React.useState<boolean>(true);
   const testID = isGridView ? "ENTRIES_GRIDVIEW" : "ENTRIES_LISTVIEW";
   const className = classNames(
     "PostList",

@@ -9,7 +9,7 @@ import Loading from "../components/loading";
 import EmptyPosts from "../components/empty-posts";
 import InvalidToken from "../components/invalid-token";
 import useManagedDashboard from "../hooks/manage-dashboard";
-import { withApollo } from "../utils/apollo-auth";
+import { withApolloAuth } from "../utils/apollo-auth";
 import { ALL_POSTS_QUERY } from "../utils/queries";
 
 // TODO: refactor to have selected post, deletion to be handled by a lower level component
@@ -63,4 +63,4 @@ export const DashboardUI: NextPage<{}> = () => {
   );
 };
 
-export default withApollo(DashboardUI, { ssr: true });
+export default withApolloAuth(DashboardUI, { ssr: true });
