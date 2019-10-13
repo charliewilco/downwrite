@@ -1,9 +1,9 @@
 import * as React from "react";
 import Head from "next/head";
 import Content from "../components/content";
-import Features from "../markdown/features";
-import Details from "../markdown/details";
-import Markdown from "../markdown/markdown";
+import Features from "../components/features";
+import Details from "../components/details";
+import Markdown from "../components/markdown";
 
 export default function AboutDetails(): JSX.Element {
   return (

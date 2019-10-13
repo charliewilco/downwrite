@@ -1,5 +1,5 @@
 import * as React from "react";
-import FeatureContent from "../markdown/features";
+import FeatureContent from "./features";
 
 export default function FeatureList() {
   return (
