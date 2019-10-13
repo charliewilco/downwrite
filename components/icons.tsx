@@ -7,7 +7,12 @@ interface IIconAttributes {
   style?: React.CSSProperties;
 }
 
-const CloseIcon: React.FC<IIconAttributes> = props => (
+const CloseIcon: React.FC<IIconAttributes> = (
+  props = {
+    size: 12,
+    fill: "#4382A1"
+  }
+) => (
   <svg
     width={props.size}
     height={props.size}
@@ -103,10 +108,5 @@ const ExportIcon: React.FC<IIconAttributes> = props => (
     </defs>
   </svg>
 );
-
-CloseIcon.defaultProps = {
-  size: 12,
-  fill: "#4382A1"
-};
 
 export { CloseIcon, NavIcon, ExportIcon, SignoutIcon };

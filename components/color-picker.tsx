@@ -8,7 +8,13 @@ interface IColorPickerProps {
   name: string;
 }
 
-function ColorPicker(props: IColorPickerProps): JSX.Element {
+function ColorPicker(
+  props: IColorPickerProps = {
+    colors: [],
+    onPress: (color: string, name: string) => ({ color, name }),
+    name: "Color Picker"
+  }
+): JSX.Element {
   return (
     <div className="PickerContainer">
       {props.title && <h4 className="PickerTitle">{props.title}</h4>}
@@ -26,11 +32,5 @@ function ColorPicker(props: IColorPickerProps): JSX.Element {
     </div>
   );
 }
-
-ColorPicker.defaultProps = {
-  colors: [],
-  onPress: (color: string, name: string) => ({ color, name }),
-  name: "Color Picker"
-};
 
 export default ColorPicker;
