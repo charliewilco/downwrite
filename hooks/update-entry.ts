@@ -1,55 +1,81 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import * as Dwnxt from "downwrite";
-import * as API from "../utils/api";
-import { sanitize } from "../utils/sanitize";
-import { AuthContext, AuthContextType } from "../components/auth";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { MutationUpdateEntryArgs } from "../types/generated";
+import { draftToMarkdown } from "markdown-draft-js";
+import { useRouter } from "next/router";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
-import isEmpty from "lodash/isEmpty";
+import { EDIT_QUERY, UPDATE_ENTRY_MUTATION } from "../utils/queries";
+import {
+  initializer,
+  reducer,
+  EditActions,
+  IEditorState,
+  EditorActions,
+  IQueryResult,
+  IQueryVars
+} from "../reducers/editor";
+import useLogging from "./logging";
 
-interface IResponsePost extends Dwnxt.IPost {
-  _id: string;
-  __v: string;
-}
+export default function useEdit() {
+  const {
+    actions: { addNotification }
+  } = useUINotifications();
 
-export interface IFields {
-  editorState: Draft.EditorState;
-  title: string;
-  publicStatus: boolean;
-}
+  const router = useRouter();
+  const { loading, data, error } = useQuery<IQueryResult, IQueryVars>(EDIT_QUERY, {
+    ssr: true,
+    variables: {
+      id: router.query.id as string
+    }
+  });
 
-export default function useUpdateEntry(
-  post: Dwnxt.IPost,
-  id: string
-): [boolean, (v: IFields) => void] {
-  const loaded = React.useRef<boolean>(!isEmpty(post));
-  const [{ token }] = React.useContext<AuthContextType>(AuthContext);
-  const dateRef = React.useRef<Date>(new Date());
-  const { actions } = useUINotifications();
+  const [updateEntry] = useMutation<any, MutationUpdateEntryArgs>(
+    UPDATE_ENTRY_MUTATION
+  );
 
-  async function updatePostContent(values: IFields): Promise<void> {
-    const contentState: Draft.ContentState = values.editorState.getCurrentContent();
-    const content = Draft.convertToRaw(contentState);
-    const { host } = document.location;
+  const [state, dispatch] = React.useReducer<
+    React.Reducer<IEditorState, EditorActions>,
+    IQueryResult
+  >(reducer, data, initializer);
 
-    const body = sanitize<IResponsePost>(post, ["_id", "__v"]) as Dwnxt.IPost;
+  useLogging("QUERY", [data]);
 
-    await API.updatePost(
-      id,
-      {
-        ...body,
-        title: values.title,
-        public: values.publicStatus,
-        content,
-        dateModified: dateRef.current
-      },
-      { token, host }
-    )
-      .then(() => {})
-      .catch(err => {
-        actions.add(err.message, NotificationType.ERROR);
-      });
+  async function handleSubmit() {
+    const content = Draft.convertToRaw(state.editorState.getCurrentContent());
+    await updateEntry({
+      variables: {
+        id: router.query.id as string,
+        content: draftToMarkdown(content),
+        title: state.title,
+        status: state.publicStatus
+      }
+    }).catch(err => addNotification(err.message, NotificationType.ERROR));
   }
 
-  return [loaded.current, (values: IFields) => updatePostContent(values)];
+  function handleTitleChange({
+    target: { value }
+  }: React.ChangeEvent<HTMLInputElement>) {
+    dispatch({ type: EditActions.UPDATE_TITLE, payload: value });
+  }
+
+  function handleEditorChange(editorState: Draft.EditorState) {
+    dispatch({ type: EditActions.UPDATE_EDITOR, payload: editorState });
+  }
+
+  const handleStatusChange = () =>
+    dispatch({ type: EditActions.TOGGLE_PUBLIC_STATUS });
+
+  const handleFocus = () => dispatch({ type: EditActions.SET_INITIAL_FOCUS });
+
+  return [
+    { data, loading, error, state, id: router.query.id },
+    {
+      handleEditorChange,
+      handleFocus,
+      handleSubmit,
+      handleTitleChange,
+      handleStatusChange
+    }
+  ] as const;
 }

@@ -1,12 +1,7 @@
 import * as React from "react";
-import * as Draft from "draft-js";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import { Formik, Form } from "formik";
-import "isomorphic-unfetch";
-import * as Dwnxt from "downwrite";
 import Autosaving from "../components/autosaving-interval";
-import ExportMarkdown from "../components/export";
 import WordCounter from "../components/word-count";
 import { Button } from "../components/button";
 import Loading from "../components/loading";
@@ -14,99 +9,97 @@ import { Input } from "../components/editor-input";
 import { ToggleBox } from "../components/toggle-box";
 import { PreviewLink } from "../components/entry-links";
 import TimeMarker from "../components/time-marker";
-import { superConverter } from "../utils/responseHandler";
 import { __IS_DEV__ } from "../utils/dev";
-import useUpdateEntry, { IFields } from "../hooks/update-entry";
-import * as InitialProps from "../utils/initial-props";
-
-const EDITOR_COMMAND = "myeditor-save";
+import { withApolloAuth } from "../utils/apollo-auth";
+import { EditActions } from "../reducers/editor";
+import useEdit from "../hooks/update-entry";
 
 const Editor = dynamic(() => import("../components/editor"), {
   loading: () => <Loading size={50} />
 });
 
-function EditUI(props: InitialProps.IEditProps) {
-  const initialEditorState = Draft.EditorState.createWithContent(
-    superConverter((props.post as Dwnxt.IPost).content)
-  );
+const ExportMarkdown = dynamic(() => import("../components/export"), {
+  loading: () => <Loading size={50} />
+});
 
-  const [initialFocus, setIntialFocus] = React.useState<boolean>(false);
-  const [loaded, onSubmit] = useUpdateEntry(props.post, props.id);
+export function EditUI() {
+  const [
+    { loading, error, state, data, id },
+    {
+      handleEditorChange,
+      handleFocus,
+      handleSubmit,
+      handleStatusChange,
+      handleTitleChange
+    }
+  ] = useEdit();
 
-  function onFocus(): void {
-    setIntialFocus(true);
+  if (error) {
+    return (
+      <div>
+        {error.name}
+        <p>{error.message}</p>
+      </div>
+    );
   }
 
-  return !loaded ? (
-    <Loading size={75} />
-  ) : (
-    <div className="Wrapper Wrapper--md">
-      <Formik<IFields>
-        onSubmit={onSubmit}
-        initialValues={{
-          editorState: initialEditorState,
-          title: props.post.title,
-          publicStatus: props.post.public
-        }}>
-        {({ values, handleChange, handleSubmit, setFieldValue }) => (
-          <React.Fragment>
-            <Head>
-              <title>{values.title} | Downwrite</title>
-            </Head>
-            {initialFocus && (
-              <Autosaving
-                title={values.title}
-                duration={__IS_DEV__ ? 30000 : 120000}
-                onUpdate={handleSubmit}
-              />
-            )}
+  if (loading) {
+    return <Loading size={75} />;
+  }
 
-            <Form style={{ padding: "0 8px" }}>
-              <TimeMarker dateAdded={props.post.dateAdded} />
-              <Input value={values.title} name="title" onChange={handleChange} />
-              <aside className="UtilityBarContainer">
-                <div className="UtilityBarItems">
-                  <ToggleBox
-                    label={value => (value ? "Public" : "Private")}
-                    name="publicStatus"
-                    value={values.publicStatus}
-                    onChange={handleChange}
-                  />
-                  {!!values.publicStatus && (
-                    <PreviewLink className="AltPreviewLink" id={props.id} />
-                  )}
-                </div>
-                <div className="UtilityBarItems">
-                  {!!values.editorState && (
-                    <ExportMarkdown
-                      editorState={values.editorState}
-                      title={values.title}
-                      date={props.post.dateAdded}
-                    />
-                  )}
-                  <Button type="submit">Save</Button>
-                </div>
-              </aside>
-              {!!values.editorState && (
-                <Editor
-                  editorState={values.editorState}
-                  editorCommand={EDITOR_COMMAND}
-                  onFocus={onFocus}
-                  onSave={handleSubmit}
-                  onChange={editorState => setFieldValue("editorState", editorState)}
+  return (
+    <div className="Wrapper Wrapper--md">
+      <React.Fragment>
+        <Head>
+          <title>{state.title} | Downwrite</title>
+        </Head>
+        {state.initialFocus && (
+          <Autosaving
+            title={state.title}
+            duration={__IS_DEV__ ? 30000 : 120000}
+            onUpdate={handleSubmit}
+          />
+        )}
+        <div style={{ padding: "0 8px" }}>
+          <TimeMarker dateAdded={data.entry.dateAdded} />
+          <Input value={state.title} name="title" onChange={handleTitleChange} />
+          <aside className="UtilityBarContainer">
+            <div className="UtilityBarItems">
+              <ToggleBox
+                label={value => (value ? "Public" : "Private")}
+                name="publicStatus"
+                value={state.publicStatus}
+                onChange={handleStatusChange}
+              />
+              {!!state.publicStatus && (
+                <PreviewLink className="AltPreviewLink" id={id as string} />
+              )}
+            </div>
+            <div className="UtilityBarItems">
+              {!!state.editorState && (
+                <ExportMarkdown
+                  editorState={state.editorState}
+                  title={state.title}
+                  date={data.entry.dateAdded}
                 />
               )}
-            </Form>
-            {!!values.editorState && (
-              <WordCounter editorState={values.editorState} />
-            )}
-          </React.Fragment>
-        )}
-      </Formik>
+              <Button type="submit">Save</Button>
+            </div>
+          </aside>
+          {!!state.editorState && (
+            <Editor
+              editorState={state.editorState}
+              editorCommand={EditActions.EDITOR_COMMAND}
+              onFocus={handleFocus}
+              onSave={handleSubmit}
+              onChange={handleEditorChange}
+            />
+          )}
+        </div>
+        {!!state.editorState && <WordCounter editorState={state.editorState} />}
+      </React.Fragment>
     </div>
   );
 }
 
-EditUI.getInitialProps = InitialProps.getInitialPost;
-
-export default EditUI;
+export default withApolloAuth(EditUI);
