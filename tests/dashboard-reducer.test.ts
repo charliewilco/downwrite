@@ -1,14 +1,10 @@
-import { reducer, initialState, DashboardAction } from "../reducers/dashboard";
+import { reducer, initialState, DashActions } from "../reducers/dashboard";
 
 describe("Dashboard Reducer", () => {
   it("runs without hook", () => {
-    const state = reducer(initialState([]), {
-      type: DashboardAction.FETCH_ENTRIES,
-      payload: {
-        entries: []
-      }
-    });
+    const state = reducer(initialState(), { type: DashActions.CANCEL_DELETE });
 
-    expect(state.entries).toHaveLength(0);
+    expect(state.modalOpen).toBeFalsy();
+    expect(state.selectedPost).toBeNull();
   });
 });

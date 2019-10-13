@@ -1,5 +1,4 @@
 import { URLEndpoints } from "./urls";
-import * as Dwnxt from "downwrite";
 import { __IS_DEV__, __IS_BROWSER__ } from "./dev";
 
 import "isomorphic-unfetch";
@@ -126,24 +125,4 @@ export async function updatePassword(body: any, options: IOptions): Promise<any>
   }).then(res => res.json());
 
   return password;
-}
-
-export async function removePost(id: string, options: IOptions): Promise<Response> {
-  const url = URLEndpoints.create(Endpoints.POST_ENDPOINT, options.host);
-  const response = await fetch(
-    `${url}/${id}`,
-    createHeader("DELETE", options.token)
-  );
-  return response;
-}
-
-export async function getPosts({
-  token
-}: IOptions): Promise<Dwnxt.IPost[] | Dwnxt.IPostError> {
-  const url = DEFAULT_URL.concat(Endpoints.POST_ENDPOINT);
-  const entries: Dwnxt.IPost[] = await fetch(url, createHeader("GET", token)).then(
-    res => res.json()
-  );
-
-  return entries;
 }

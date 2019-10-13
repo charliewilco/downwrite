@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as Dwnxt from "downwrite";
-import { useQuery } from "@apollo/react-hooks";
 import { NextPage } from "next";
 import Head from "next/head";
 import DeleteModal from "../components/delete-modal";
@@ -10,16 +9,19 @@ import EmptyPosts from "../components/empty-posts";
 import InvalidToken from "../components/invalid-token";
 import useManagedDashboard from "../hooks/manage-dashboard";
 import { withApolloAuth } from "../utils/apollo-auth";
-import { ALL_POSTS_QUERY } from "../utils/queries";
 
 // TODO: refactor to have selected post, deletion to be handled by a lower level component
 // should be opened at this level and be handed a token and post to delete
 export const DashboardUI: NextPage<{}> = () => {
-  const [{ selectedPost, modalOpen }, ManagedDashboard] = useManagedDashboard();
-
-  const { data, loading, error } = useQuery(ALL_POSTS_QUERY, {
-    ssr: true
-  });
+  const [
+    {
+      loading,
+      error,
+      data,
+      state: { selectedPost, modalOpen }
+    },
+    ManagedDashboard
+  ] = useManagedDashboard();
 
   if (loading) {
     return (
@@ -52,7 +54,7 @@ export const DashboardUI: NextPage<{}> = () => {
       <section className="PostContainer">
         {data.feed.length > 0 ? (
           <PostList
-            onSelect={ManagedDashboard.onSelect}
+            onSelect={({ title, id }) => ManagedDashboard.onSelect({ title, id })}
             posts={data.feed as Dwnxt.IPost[]}
           />
         ) : (

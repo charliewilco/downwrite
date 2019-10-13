@@ -1,88 +1,76 @@
 import * as Dwnxt from "downwrite";
-import orderBy from "lodash/orderBy";
+import { Entry } from "../types/generated";
 
 type Selected<T> = T | Partial<T>;
 
-export type SelectedPost = Selected<Dwnxt.IPost>;
+export type SelectedPost = Selected<Entry>;
 
 export interface IDashboardState {
-  entries: Dwnxt.IPost[] | Dwnxt.IPostError;
-  loaded: boolean;
   selectedPost?: SelectedPost;
   modalOpen: boolean;
-  error: string;
 }
 
-export enum DashboardAction {
-  ERROR_BIG_TIME = "ERROR_BIG_TIME",
+export enum DashActions {
   SELECT_POST = "SELECT_POST",
   CANCEL_DELETE = "CANCEL_DELETE",
-  FETCH_ENTRIES = "FETCH_ENTRIES",
   CLOSE_MODAL = "CLOSE_MODAL",
   DELETED = "DELETED"
 }
 
 export interface IDashboardAction {
-  type: DashboardAction;
+  type: DashActions;
   payload?: {
-    errorMessage?: Dwnxt.IPostError;
     selectedPost?: SelectedPost;
-    entries?: Dwnxt.IPost[];
   };
 }
 
-export function initialState(
-  entries?: Dwnxt.IPost[] | Dwnxt.IPostError
-): IDashboardState {
+export function initialState(): IDashboardState {
   return {
-    entries: [],
-    error: "",
-    loaded: true,
-
     modalOpen: false,
     selectedPost: null
   };
 }
 
+export type DashboardActionType =
+  | {
+      type: DashActions.SELECT_POST;
+      payload: SelectedPost;
+    }
+  | {
+      type: DashActions.CANCEL_DELETE;
+    }
+  | {
+      type: DashActions.DELETED;
+    }
+  | {
+      type: DashActions.CLOSE_MODAL;
+    };
+
 export function reducer(
   state: IDashboardState,
-  action: IDashboardAction
+  action: DashboardActionType
 ): IDashboardState {
   switch (action.type) {
-    case DashboardAction.SELECT_POST:
+    case DashActions.SELECT_POST:
       return {
         ...state,
         modalOpen: true,
-        selectedPost: action.payload.selectedPost
+        selectedPost: action.payload
       };
-    case DashboardAction.CLOSE_MODAL:
+    case DashActions.CLOSE_MODAL:
       return {
         ...state,
         modalOpen: false
       };
-    case DashboardAction.DELETED:
+    case DashActions.DELETED:
       return {
         ...state,
         modalOpen: false,
         selectedPost: null
       };
-    case DashboardAction.ERROR_BIG_TIME:
-      return {
-        ...state,
-        error: action.payload.errorMessage.message,
-        loaded: true,
-        selectedPost: null
-      };
-    case DashboardAction.CANCEL_DELETE:
+
+    case DashActions.CANCEL_DELETE:
       return { ...state, modalOpen: false, selectedPost: null };
-    case DashboardAction.FETCH_ENTRIES:
-      return {
-        ...state,
-        selectedPost: null,
-        loaded: true,
-        modalOpen: false,
-        entries: orderBy(action.payload.entries, "dateModified", ["desc"])
-      };
 
     default:
       throw new Error("Must specify action type");

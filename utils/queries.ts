@@ -56,3 +56,11 @@ export const CREATE_ENTRY_MUTATION = gql`
     }
   }
 `;
+
+export const REMOVE_ENTRY_MUTATION = gql`
+  mutation RemoveEntry($id: ID) {
+    deleteEntry(id: $id) {
+      title
+    }
+  }
+`;

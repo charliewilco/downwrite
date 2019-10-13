@@ -21,8 +21,6 @@ const MockLink: React.FC<MockLinkProps> = ({
 }) => {
   let props: Partial<MockLinkProps> = {};
 
-  console.log("Mocking card");
-
   if (href) {
     if (as) {
       props.href = as;
