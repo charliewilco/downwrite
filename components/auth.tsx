@@ -1,6 +1,6 @@
 import * as React from "react";
 import Cookies from "universal-cookie";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import jwt from "jwt-decode";
 import addDays from "date-fns/addDays";
 import {
@@ -105,13 +105,14 @@ export function useAuthReducer(tokenInitial?: string): [IAuthState, IAuthActions
 }
 
 export function useAuthSideEffects(state: IAuthState): void {
+  const router = useRouter();
   React.useEffect(() => {
-    if (state.authed && Router.route === "/login") {
-      Router.push({ pathname: "/" });
+    if (state.authed && router.route === "/login") {
+      router.push({ pathname: "/" });
     }
 
     if (!state.authed) {
-      Router.push({ pathname: "/login" });
+      router.push({ pathname: "/login" });
       cookie.remove("DW_TOKEN", cookieOptions);
     }
   }, [state.authed]);

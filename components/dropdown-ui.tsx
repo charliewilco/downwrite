@@ -1,5 +1,5 @@
 import * as React from "react";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import * as Reach from "@reach/menu-button";
 import { NavIcon } from "./icons";
 import User from "./user";
@@ -22,6 +22,7 @@ function MenuEmoji(props: IMenuEmojiProps) {
 export default function DropdownUI() {
   const [auth, { signOut }] = React.useContext<AuthContextType>(AuthContext);
   const darkMode = React.useContext<INightModeContext>(NightModeContext);
+  const router = useRouter();
 
   return (
     <Reach.Menu>
@@ -30,15 +31,15 @@ export default function DropdownUI() {
       </Reach.MenuButton>
       <Reach.MenuList className="Sheet DropdownMenuList">
         <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
-        <Reach.MenuLink onClick={() => Router.push("/")} component="a">
+        <Reach.MenuLink onClick={() => router.push("/")} component="a">
           <MenuEmoji label="Stack of books">📚</MenuEmoji>
           All Entries
         </Reach.MenuLink>
-        <Reach.MenuLink onClick={() => Router.push("/new")} component="a">
+        <Reach.MenuLink onClick={() => router.push("/new")} component="a">
           <MenuEmoji label="Writing with a Pen">✍️</MenuEmoji>
           Create New Entry
         </Reach.MenuLink>
-        <Reach.MenuLink onClick={() => Router.push("/settings")} component="a">
+        <Reach.MenuLink onClick={() => router.push("/settings")} component="a">
           <MenuEmoji label="Gear">⚙️</MenuEmoji>
           Settings
         </Reach.MenuLink>
