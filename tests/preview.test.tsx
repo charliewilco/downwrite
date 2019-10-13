@@ -8,7 +8,7 @@ import { IPreviewEntry } from "downwrite";
 
 import { PreviewEntry } from "../pages/preview";
 import Content from "../components/content";
-import { createMockPost } from "../utils/createMocks";
+import { createMockPost } from "../utils/create-mocks";
 import { PREVIEW_QUERY } from "../utils/queries";
 
 let title = "Starting Again";

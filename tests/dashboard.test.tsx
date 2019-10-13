@@ -5,7 +5,7 @@ import { LinkProps } from "next/link";
 import { render, wait, fireEvent } from "@testing-library/react";
 import Dashboard from "../pages/index";
 import fetchMock, { FetchMock } from "jest-fetch-mock";
-import { createMockPosts } from "../utils/createMocks";
+import { createMockPosts } from "../utils/create-mocks";
 import ApolloClient from "apollo-client";
 
 const entries = createMockPosts(4);

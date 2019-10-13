@@ -3,10 +3,6 @@ import { NextPageContext } from "next";
 import Cookies from "universal-cookie";
 import { __IS_BROWSER__ } from "./dev";
 
-export interface ICookie {
-  DW_TOKEN: string;
-}
-
 export const WHITE_LIST: string[] = ["/about", "/preview"];
 
 export const authMiddleware = (ctx: NextPageContext): string => {
