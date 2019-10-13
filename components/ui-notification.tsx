@@ -107,7 +107,7 @@ export function MessageList() {
       <div className="UINotificationContainerInner">
         {transitions.map(({ item, props: { life, ...style } }) => (
           <animated.div style={{ ...style, marginBottom: 8 }} key={item.id}>
-            <UIMessage notification={item} onDismiss={actions.remove} />
+            <UIMessage notification={item} onDismiss={actions.removeNotification} />
           </animated.div>
         ))}
       </div>

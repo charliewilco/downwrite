@@ -93,8 +93,8 @@ export function init(
 }
 
 interface INotificationActions {
-  add: (m: string, t?: NotificationType, d?: boolean) => void;
-  remove: (m: UINotificationMessage) => void;
+  addNotification: (m: string, t?: NotificationType, d?: boolean) => void;
+  removeNotification: (m: UINotificationMessage) => void;
 }
 
 export interface INotificationContext extends INotificationState {
@@ -135,8 +135,8 @@ export function useUINotificationsProvider(): INotificationContext {
   return {
     notifications: state.notifications,
     actions: {
-      add,
-      remove
+      addNotification: add,
+      removeNotification: remove
     }
   };
 }

@@ -15,7 +15,11 @@ export default function useAutosaving(
   React.useEffect(() => {
     interval = setInterval(async () => {
       if (cb) {
-        actions.add(message || "Autosaving", NotificationType.DEFAULT, true);
+        actions.addNotification(
+          message || "Autosaving",
+          NotificationType.DEFAULT,
+          true
+        );
         cb();
       }
     }, duration);

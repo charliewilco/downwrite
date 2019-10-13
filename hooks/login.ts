@@ -30,14 +30,14 @@ export default function useLoginFns(): IFormHandlers {
     const auth = await API.authUser(values, { host });
 
     if (auth.error) {
-      actions.add(auth.message, NotificationType.ERROR);
+      actions.addNotification(auth.message, NotificationType.ERROR);
     }
 
     if (auth.token) {
       signIn(auth.token !== undefined, auth.token);
       if (notifications.length > 0) {
         notifications.forEach(n => {
-          actions.remove(n);
+          actions.removeNotification(n);
         });
       }
     }
@@ -54,7 +54,7 @@ export default function useLoginFns(): IFormHandlers {
       if (user.userID) {
         signIn(user.id_token !== undefined, user.id_token);
       } else {
-        actions.add(user.message, NotificationType.ERROR);
+        actions.addNotification(user.message, NotificationType.ERROR);
       }
     }
   };
