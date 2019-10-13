@@ -1,9 +1,12 @@
 import * as React from "react";
-import * as DefaultStyles from "../utils/defaultStyles";
 
 interface IHexInputProps {
   onChange: (color: string) => void;
   initialValue?: string;
+}
+function isValidHex(hex: string): boolean {
+  let valid = /^#[0-9A-F]{6}$/i.test(hex);
+  return valid;
 }
 
 export default function FunHexInput(props: IHexInputProps): JSX.Element {
@@ -17,7 +20,7 @@ export default function FunHexInput(props: IHexInputProps): JSX.Element {
 
   React.useEffect(() => {
     const color = "#" + hex;
-    const isValid = DefaultStyles.isValidHex(color);
+    const isValid = isValidHex(color);
 
     if (isValid && props.onChange) {
       props.onChange(color);

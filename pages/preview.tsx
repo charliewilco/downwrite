@@ -60,4 +60,4 @@ export function PreviewEntry() {
   );
 }
 
-export default withApolloAuth(PreviewEntry);
+export default withApolloAuth(PreviewEntry, { ssr: true });

@@ -40,6 +40,10 @@ function getToken(req?: IncomingMessage): string {
   return DW_TOKEN;
 }
 
+interface IWithApolloConfig {
+  ssr: boolean;
+}
+
 /**
  * Creates and provides the apolloContext
  * to a next.js PageTree. Use it by wrapping
@@ -50,7 +54,7 @@ function getToken(req?: IncomingMessage): string {
  */
 export function withApolloAuth<T = {}>(
   PageComponent: IApolloPage<T & IApolloProps>,
-  { ssr = true } = {}
+  { ssr = true }: IWithApolloConfig
 ) {
   const WithApollo: IApolloPage<IApolloProps & T> = ({
     apolloClient,
