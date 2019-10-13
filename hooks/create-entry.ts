@@ -1,43 +1,43 @@
-import * as React from "react";
 import * as Draft from "draft-js";
-import Router from "next/router";
-import * as Dwnxt from "downwrite";
-import { AuthContext, AuthContextType } from "../components/auth";
-import * as API from "../utils/api";
-import uuid from "uuid/v4";
+import { useRouter } from "next/router";
+import { useMutation } from "@apollo/react-hooks";
+import { draftToMarkdown } from "markdown-draft-js";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
+import { MutationCreateEntryArgs } from "../types/generated";
+import { CREATE_ENTRY_MUTATION } from "../utils/queries";
+import useLogging from "./logging";
 
 export interface IFields {
   title: string;
   editorState: Draft.EditorState;
 }
 
-export type CreateEntryHandler = (values: IFields) => void;
-
-export default function useCreateEntry(): CreateEntryHandler {
+export function useNew() {
   const { actions } = useUINotifications();
+  const router = useRouter();
+  const [createEntry, { data }] = useMutation<any, MutationCreateEntryArgs>(
+    CREATE_ENTRY_MUTATION
+  );
+  useLogging("MUTATION", [data]);
 
-  const [{ token }] = React.useContext<AuthContextType>(AuthContext);
-  const id: React.MutableRefObject<string> = React.useRef(uuid());
-
-  function createNewPost(values: IFields) {
+  async function onSubmit(values: IFields) {
     const ContentState: Draft.ContentState = values.editorState.getCurrentContent();
+    const content = draftToMarkdown(Draft.convertToRaw(ContentState));
 
-    const body: Dwnxt.IPostCreation = {
-      title: values.title.length > 0 ? values.title : `Untitled ${id.current}`,
-      id: id.current,
-      content: Draft.convertToRaw(ContentState)
-    };
-
-    API.createPost(body, { token, host: document.location.host })
-      .then(() =>
-        Router.push({
+    await createEntry({
+      variables: {
+        title: values.title,
+        content
+      }
+    })
+      .then(value =>
+        router.push({
           pathname: `/edit`,
-          query: { id: id.current }
+          query: { id: value.data.id }
         })
       )
       .catch(err => actions.addNotification(err.message, NotificationType.ERROR));
   }
 
-  return (values: IFields) => createNewPost(values);
+  return [onSubmit] as const;
 }

@@ -6,8 +6,6 @@ import Document, {
   DocumentContext
 } from "next/document";
 
-const STYLESHEETS: string[] = ["https://unpkg.com/ganymede-light-duotone-prism"];
-
 export default class MyDocument extends Document {
   public static async getInitialProps(context: DocumentContext) {
     const initialProps = await Document.getInitialProps(context);
@@ -19,9 +17,10 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          {STYLESHEETS.map((sss, i) => (
-            <link rel="stylesheet" href={sss} key={i} />
-          ))}
+          <link
+            rel="stylesheet"
+            href="https://unpkg.com/ganymede-light-duotone-prism"
+          />
           <meta
             name="viewport"
             content="initial-scale=1.0, width=device-width"

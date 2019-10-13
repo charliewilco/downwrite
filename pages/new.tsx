@@ -3,8 +3,7 @@ import * as Draft from "draft-js";
 import { Formik, Form, FormikActions } from "formik";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import "isomorphic-unfetch";
-import useCreatePost, { IFields } from "../hooks/create-entry";
+import { IFields, useNew } from "../hooks/create-entry";
 import useOffline from "../hooks/offline";
 import { Input } from "../components/editor-input";
 import { Button } from "../components/button";
@@ -29,11 +28,11 @@ export default function NewEditor(): JSX.Element {
     title: "",
     editorState: Draft.EditorState.createEmpty()
   });
-  const createNewPost = useCreatePost();
+  const [createNewPost] = useNew();
   const isOffline = useOffline();
 
   function onSubmit(values: IFields, actions: FormikActions<IFields>): void {
-    return createNewPost(values);
+    createNewPost(values);
   }
 
   return (

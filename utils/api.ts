@@ -3,7 +3,6 @@ import * as Dwnxt from "downwrite";
 import { __IS_DEV__, __IS_BROWSER__ } from "./dev";
 
 import "isomorphic-unfetch";
-import "abortcontroller-polyfill/dist/abortcontroller-polyfill-only";
 import { Omit } from "./types";
 
 interface IOptions {
@@ -28,18 +27,9 @@ export enum Endpoints {
   AUTH_ENDPOINT = "/api/users/authenticate"
 }
 
-type APIResponse = Dwnxt.IPost | Dwnxt.IPostError;
-
 type HeaderMethod = "GET" | "PUT" | "POST" | "DELETE";
 
 const DEFAULT_URL = "http://localhost:3000";
-
-const controller: AbortController = new AbortController();
-const signal: AbortSignal = controller.signal;
-
-export function abortFetching() {
-  controller.abort();
-}
 
 /**
  * Creates header for Fetch request with Token
@@ -57,8 +47,7 @@ export const createHeader = (
       Authorization: token
     },
     mode: "cors",
-    cache: "default",
-    signal
+    cache: "default"
   };
 };
 
@@ -157,17 +146,4 @@ export async function getPosts({
   );
 
   return entries;
-}
-
-export async function createPost(
-  body: Dwnxt.IPostCreation,
-  options: IOptions
-): Promise<APIResponse> {
-  const url = URLEndpoints.create(Endpoints.POST_ENDPOINT, options.host);
-  const post = await fetch(url, {
-    ...createHeader("POST", options.token),
-    body: JSON.stringify(body)
-  }).then(res => res.json());
-
-  return post;
 }

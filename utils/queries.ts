@@ -48,3 +48,11 @@ export const UPDATE_ENTRY_MUTATION = gql`
     }
   }
 `;
+
+export const CREATE_ENTRY_MUTATION = gql`
+  mutation CreateEntry($content: String, $title: String) {
+    createEntry(content: $content, title: $title) {
+      id
+    }
+  }
+`;
