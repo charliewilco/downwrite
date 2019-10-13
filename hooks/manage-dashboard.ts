@@ -5,14 +5,13 @@ import {
   initialState,
   reducer,
   DashActions,
-  SelectedPost,
   DashboardActionType
 } from "../reducers/dashboard";
 
 import { ALL_POSTS_QUERY, REMOVE_ENTRY_MUTATION } from "../utils/queries";
-import { MutationDeleteEntryArgs, Entry } from "types/generated";
+import { MutationDeleteEntryArgs, Entry } from "../types/generated";
 
-export default function useManagedDashboard() {
+export default function useDashboard() {
   const [state, dispatch] = React.useReducer<
     React.Reducer<IDashboardState, DashboardActionType>
   >(reducer, { ...initialState() });
@@ -25,7 +24,7 @@ export default function useManagedDashboard() {
     REMOVE_ENTRY_MUTATION
   );
 
-  async function onDelete({ id }: SelectedPost): Promise<void> {
+  async function onDelete({ id }: Entry): Promise<void> {
     await deleteEntry({ variables: { id } })
       .then(() => refetch())
       .catch();
@@ -36,7 +35,7 @@ export default function useManagedDashboard() {
     {
       onCancel: () => dispatch({ type: DashActions.CANCEL_DELETE }),
       onCloseModal: () => dispatch({ type: DashActions.CLOSE_MODAL }),
-      onSelect: (payload: SelectedPost) =>
+      onSelect: (payload: Entry) =>
         dispatch({
           type: DashActions.SELECT_POST,
           payload

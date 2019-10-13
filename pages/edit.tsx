@@ -23,16 +23,7 @@ const ExportMarkdown = dynamic(() => import("../components/export"), {
 });
 
 export function EditUI() {
-  const [
-    { loading, error, state, data, id },
-    {
-      handleEditorChange,
-      handleFocus,
-      handleSubmit,
-      handleStatusChange,
-      handleTitleChange
-    }
-  ] = useEdit();
+  const [{ loading, error, state, data, id }, actions] = useEdit();
 
   if (error) {
     return (
@@ -57,19 +48,23 @@ export function EditUI() {
           <Autosaving
             title={state.title}
             duration={__IS_DEV__ ? 30000 : 120000}
-            onUpdate={handleSubmit}
+            onUpdate={actions.handleSubmit}
           />
         )}
         <div style={{ padding: "0 8px" }}>
           <TimeMarker dateAdded={data.entry.dateAdded} />
-          <Input value={state.title} name="title" onChange={handleTitleChange} />
+          <Input
+            value={state.title}
+            name="title"
+            onChange={actions.handleTitleChange}
+          />
           <aside className="UtilityBarContainer">
             <div className="UtilityBarItems">
               <ToggleBox
                 label={value => (value ? "Public" : "Private")}
                 name="publicStatus"
                 value={state.publicStatus}
-                onChange={handleStatusChange}
+                onChange={actions.handleStatusChange}
               />
               {!!state.publicStatus && (
                 <PreviewLink className="AltPreviewLink" id={id as string} />
@@ -90,9 +85,9 @@ export function EditUI() {
             <Editor
               editorState={state.editorState}
               editorCommand={EditActions.EDITOR_COMMAND}
-              onFocus={handleFocus}
-              onSave={handleSubmit}
-              onChange={handleEditorChange}
+              onFocus={actions.handleFocus}
+              onSave={actions.handleSubmit}
+              onChange={actions.handleEditorChange}
             />
           )}
         </div>

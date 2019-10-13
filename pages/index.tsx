@@ -7,7 +7,7 @@ import PostList from "../components/post-list";
 import Loading from "../components/loading";
 import EmptyPosts from "../components/empty-posts";
 import InvalidToken from "../components/invalid-token";
-import useManagedDashboard from "../hooks/manage-dashboard";
+import useDashboard from "../hooks/manage-dashboard";
 import { withApolloAuth } from "../utils/apollo-auth";
 
 // TODO: refactor to have selected post, deletion to be handled by a lower level component
@@ -20,8 +20,8 @@ export const DashboardUI: NextPage<{}> = () => {
       data,
       state: { selectedPost, modalOpen }
     },
-    ManagedDashboard
-  ] = useManagedDashboard();
+    actions
+  ] = useDashboard();
 
   if (loading) {
     return (
@@ -43,9 +43,9 @@ export const DashboardUI: NextPage<{}> = () => {
       {modalOpen && (
         <DeleteModal
           title={selectedPost.title}
-          onDelete={ManagedDashboard.onConfirmDelete}
-          onCancelDelete={ManagedDashboard.onCancel}
-          closeModal={ManagedDashboard.onCloseModal}
+          onDelete={actions.onConfirmDelete}
+          onCancelDelete={actions.onCancel}
+          closeModal={actions.onCloseModal}
         />
       )}
       <Head>
@@ -54,7 +54,7 @@ export const DashboardUI: NextPage<{}> = () => {
       <section className="PostContainer">
         {data.feed.length > 0 ? (
           <PostList
-            onSelect={({ title, id }) => ManagedDashboard.onSelect({ title, id })}
+            onSelect={({ title, id }) => actions.onSelect({ title, id })}
             posts={data.feed as Dwnxt.IPost[]}
           />
         ) : (

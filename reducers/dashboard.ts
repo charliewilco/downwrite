@@ -1,12 +1,7 @@
-import * as Dwnxt from "downwrite";
 import { Entry } from "../types/generated";
 
-type Selected<T> = T | Partial<T>;
-
-export type SelectedPost = Selected<Entry>;
-
 export interface IDashboardState {
-  selectedPost?: SelectedPost;
+  selectedPost?: Entry;
   modalOpen: boolean;
 }
 
@@ -17,13 +12,6 @@ export enum DashActions {
   DELETED = "DELETED"
 }
 
-export interface IDashboardAction {
-  type: DashActions;
-  payload?: {
-    selectedPost?: SelectedPost;
-  };
-}
-
 export function initialState(): IDashboardState {
   return {
     modalOpen: false,
@@ -32,19 +20,10 @@ export function initialState(): IDashboardState {
 }
 
 export type DashboardActionType =
-  | {
-      type: DashActions.SELECT_POST;
-      payload: SelectedPost;
-    }
-  | {
-      type: DashActions.CANCEL_DELETE;
-    }
-  | {
-      type: DashActions.DELETED;
-    }
-  | {
-      type: DashActions.CLOSE_MODAL;
-    };
+  | { type: DashActions.SELECT_POST; payload: Entry }
+  | { type: DashActions.CANCEL_DELETE }
+  | { type: DashActions.DELETED }
+  | { type: DashActions.CLOSE_MODAL };
 
 export function reducer(
   state: IDashboardState,
