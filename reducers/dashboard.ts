@@ -1,7 +1,7 @@
 import { Entry } from "../types/generated";
 
 export interface IDashboardState {
-  selectedPost?: Entry;
+  selectedPost: Entry | null;
   modalOpen: boolean;
 }
 
@@ -32,24 +32,13 @@ export function reducer(
   switch (action.type) {
     case DashActions.SELECT_POST:
       return {
-        ...state,
         modalOpen: true,
         selectedPost: action.payload
       };
     case DashActions.CLOSE_MODAL:
-      return {
-        ...state,
-        modalOpen: false
-      };
     case DashActions.DELETED:
-      return {
-        ...state,
-        modalOpen: false,
-        selectedPost: null
-      };
-
     case DashActions.CANCEL_DELETE:
-      return { ...state, modalOpen: false, selectedPost: null };
+      return initialState();
 
     default:
       throw new Error("Must specify action type");

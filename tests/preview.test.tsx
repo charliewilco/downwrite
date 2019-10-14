@@ -5,7 +5,6 @@ import { render, wait } from "@testing-library/react";
 import { MockedProvider, MockedResponse } from "@apollo/react-testing";
 import { draftToMarkdown } from "markdown-draft-js";
 import { IPreviewEntry } from "downwrite";
-
 import { PreviewEntry } from "../pages/preview";
 import Content from "../components/content";
 import { createMockPost } from "../utils/create-mocks";
@@ -32,9 +31,9 @@ jest.mock("next/link", () => {
 jest.mock("next/router", () => ({
   useRouter() {
     return {
-      route: "/preivew?id=3",
-      pathname: "/preview?id=3",
-      query: { id: "3" },
+      route: "/preview?id=3efc9fe8-ab26-4316-9453-889fe444a2a1",
+      pathname: "/preview?id=3efc9fe8-ab26-4316-9453-889fe444a2a1",
+      query: { id: "3efc9fe8-ab26-4316-9453-889fe444a2a1" },
       asPath: ""
     };
   }
@@ -44,7 +43,7 @@ const previewMock: MockedResponse = {
   request: {
     query: PREVIEW_QUERY,
     variables: {
-      id: 3
+      id: "3efc9fe8-ab26-4316-9453-889fe444a2a1"
     }
   },
   result: {
@@ -66,18 +65,24 @@ const previewMock: MockedResponse = {
 describe("<Preview />", () => {
   it("loads server content", async () => {
     const { getByTestId, container } = render(
-      <MockedProvider mocks={[previewMock]}>
+      <MockedProvider mocks={[previewMock]} addTypename={false}>
         <PreviewEntry />
       </MockedProvider>
     );
     await wait(() => getByTestId("PREVIEW_ENTRTY_TITLE"));
     expect(container).toBeTruthy();
-    expect(getByTestId("PREVIEW_ENTRTY_TITLE")).toHaveTextContent(title);
+    expect(getByTestId("PREVIEW_ENTRTY_TITLE")).toHaveTextContent(
+      "Hooks & TypeScript"
+    );
     expect(getByTestId("PREVIEW_ENTRTY_BODY")).toBeInTheDocument();
   });
 
   it("takes static content", () => {
     let { getByTestId } = render(<Content {...post} />);
     expect(getByTestId("PREVIEW_ENTRTY_TITLE")).toHaveTextContent(title);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 });

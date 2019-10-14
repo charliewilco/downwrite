@@ -14,7 +14,7 @@ import { MutationDeleteEntryArgs, Entry } from "../types/generated";
 export default function useDashboard() {
   const [state, dispatch] = React.useReducer<
     React.Reducer<IDashboardState, DashboardActionType>
-  >(reducer, { ...initialState() });
+  >(reducer, initialState());
 
   const { data, loading, error, refetch } = useQuery(ALL_POSTS_QUERY, {
     ssr: true
