@@ -10,10 +10,9 @@ interface IMarkdownConversion {
   editorState: Draft.EditorState;
 }
 
-interface IUploadProps {
+interface IUploadProps extends React.PropsWithChildren<{}> {
   onParsed: (o: IMarkdownConversion) => void;
   disabled?: boolean;
-  children: React.ReactNode;
 }
 
 interface IMarkdown {

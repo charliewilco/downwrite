@@ -13,9 +13,7 @@ export const LocalUISettings = React.createContext({
   actions: {}
 } as ILocalUISettings);
 
-interface ILocalSettingsProps {
-  children: React.ReactNode;
-}
+interface ILocalSettingsProps extends React.PropsWithChildren<{}> {}
 
 interface ILocalUISettingsState {
   monospace: string;

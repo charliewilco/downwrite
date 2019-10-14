@@ -7,9 +7,7 @@ import "./styles/base.css";
 import { NotificationProvider } from "../reducers/notifications";
 import { MessageList } from "./ui-notification";
 
-interface IUIShell {
-  children: React.ReactNode;
-}
+interface IUIShell extends React.PropsWithChildren<{}> {}
 
 export function UIShell(props: IUIShell) {
   // React.useEffect(() => {

@@ -1,9 +1,8 @@
 import * as React from "react";
 import classNames from "../utils/classnames";
 
-interface ISettingsFormActionsProps {
+interface ISettingsFormActionsProps extends React.PropsWithChildren<{}> {
   split?: boolean;
-  children: React.ReactNode;
   className?: string;
 }
 
@@ -16,10 +15,9 @@ export function SettingsFormActions(props: ISettingsFormActionsProps): JSX.Eleme
   return <div className={className}>{props.children}</div>;
 }
 
-interface ISettingsBlockProps {
+interface ISettingsBlockProps extends React.PropsWithChildren<{}> {
   title: string;
   description?: string;
-  children: React.ReactNode;
 }
 
 export default function SettingsBlock(props: ISettingsBlockProps): JSX.Element {

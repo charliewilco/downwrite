@@ -26,15 +26,19 @@ export enum NotificationActions {
   SORT_NOTIFICATIONS = "SORT_NOTIFICATIONS"
 }
 
-export interface INoticationAction {
-  type: NotificationActions;
-  payload?: {
-    text?: string;
-    type?: NotificationType;
-    dismissable?: boolean;
-    selected?: UINotificationMessage;
-  };
-}
+type NotificationActionType =
+  | {
+      type: NotificationActions.ADD_NOTIFICATION;
+      payload: {
+        text: string;
+        type: NotificationType;
+        dismissable: boolean;
+      };
+    }
+  | {
+      type: NotificationActions.REMOVE_NOTIFICATION;
+      payload: UINotificationMessage;
+    };
 
 export interface INotificationState {
   notifications: UINotificationMessage[];
@@ -67,7 +71,7 @@ function removeNotifications(
 
 export function reducer(
   state: INotificationState,
-  action: INoticationAction
+  action: NotificationActionType
 ): INotificationState {
   switch (action.type) {
     case NotificationActions.ADD_NOTIFICATION:
@@ -78,7 +82,7 @@ export function reducer(
         action.payload.dismissable
       );
     case NotificationActions.REMOVE_NOTIFICATION:
-      return removeNotifications(state, action.payload.selected);
+      return removeNotifications(state, action.payload);
     default:
       throw new Error();
   }
@@ -106,7 +110,7 @@ export const NotificationContext = React.createContext<NotificationContext>([
 
 export function useUINotificationsProvider(): NotificationContext {
   const [state, dispatch] = React.useReducer<
-    React.Reducer<INotificationState, INoticationAction>
+    React.Reducer<INotificationState, NotificationActionType>
   >(reducer, {
     notifications: []
   });
@@ -125,9 +129,7 @@ export function useUINotificationsProvider(): NotificationContext {
   function remove(selected: UINotificationMessage): void {
     dispatch({
       type: NotificationActions.REMOVE_NOTIFICATION,
-      payload: {
-        selected
-      }
+      payload: selected
     });
   }
 
@@ -146,9 +148,7 @@ export function useUINotifications(): NotificationContext {
   return notifications;
 }
 
-interface INotificationProps {
-  children: React.ReactNode;
-}
+interface INotificationProps extends React.PropsWithChildren<{}> {}
 
 export function NotificationProvider(props: INotificationProps): JSX.Element {
   const value = useUINotificationsProvider();

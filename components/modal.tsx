@@ -2,9 +2,8 @@ import * as React from "react";
 import * as Reach from "@reach/dialog";
 import { CloseIcon } from "./icons";
 
-interface IModalProps {
+interface IModalProps extends React.PropsWithChildren<{}> {
   closeUIModal: () => void;
-  children: React.ReactNode;
 }
 
 export default function UIModal(props: IModalProps) {

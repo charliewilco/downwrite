@@ -12,9 +12,7 @@ export interface INightModeContext {
 
 export const NightModeContext = React.createContext({} as INightModeContext);
 
-interface INightModeContainerProps {
-  children: React.ReactNode;
-}
+interface INightModeContainerProps extends React.PropsWithChildren<{}> {}
 
 function useNightModeContext(): INightModeContext {
   const [night, onChange] = useDarkModeEffect(DarkModeVals.NIGHT_MODE);

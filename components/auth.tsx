@@ -37,8 +37,7 @@ const cookieOptions = {
   expires: addDays(Date.now(), COOKIE_EXPIRATION)
 };
 
-export interface IAuthProps {
-  children: React.ReactNode;
+export interface IAuthProps extends React.PropsWithChildren<{}> {
   token: string;
   authed: boolean;
 }

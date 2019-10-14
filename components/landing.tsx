@@ -2,9 +2,7 @@ import * as React from "react";
 import { LocalUISettings } from "./local-ui-settings";
 import * as DefaultStyles from "../utils/defaultStyles";
 
-interface ILandingPageProps {
-  children: React.ReactNode;
-}
+interface ILandingPageProps extends React.PropsWithChildren<{}> {}
 
 export default function LandingPage(props: ILandingPageProps): JSX.Element {
   const { monospace } = React.useContext(LocalUISettings);

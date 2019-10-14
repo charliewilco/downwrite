@@ -106,10 +106,12 @@ export function ListItem({
 
 interface ITabsPanels extends ITabsModifier {
   isActive?: boolean;
-  children: React.ReactNode;
 }
 
-export function Panels({ children, className }: ITabsPanels): JSX.Element {
+export function Panels({
+  children,
+  className
+}: React.PropsWithChildren<ITabsPanels>): JSX.Element {
   const context = React.useContext<ITabsContext>(TabContext);
   const cloned = React.Children.map(
     children,
@@ -126,10 +128,9 @@ export function Panels({ children, className }: ITabsPanels): JSX.Element {
 interface ITabsPanelProps extends ITabsModifier {
   isActive?: boolean;
   label: string;
-  children: React.ReactNode;
 }
 
-export function Panel(props: ITabsPanelProps) {
+export function Panel(props: React.PropsWithChildren<ITabsPanelProps>) {
   const ref = React.useRef(null);
 
   React.useEffect(() => {

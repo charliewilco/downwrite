@@ -8,10 +8,9 @@ import { NightModeContext, INightModeContext } from "./night-mode";
 
 interface IMenuEmojiProps {
   label: string;
-  children: React.ReactNode;
 }
 
-function MenuEmoji(props: IMenuEmojiProps) {
+function MenuEmoji(props: React.PropsWithChildren<IMenuEmojiProps>) {
   return (
     <span role="img" aria-label={props.label}>
       {props.children}{" "}
