@@ -97,15 +97,14 @@ interface INotificationActions {
   removeNotification: (m: UINotificationMessage) => void;
 }
 
-export interface INotificationContext extends INotificationState {
-  actions: INotificationActions;
-}
+export type NotificationContext = [INotificationState, INotificationActions];
 
-export const NotificationContext = React.createContext<INotificationContext>(
-  {} as INotificationContext
-);
+export const NotificationContext = React.createContext<NotificationContext>([
+  { notifications: [] },
+  {}
+] as NotificationContext);
 
-export function useUINotificationsProvider(): INotificationContext {
+export function useUINotificationsProvider(): NotificationContext {
   const [state, dispatch] = React.useReducer<
     React.Reducer<INotificationState, INoticationAction>
   >(reducer, {
@@ -132,17 +131,17 @@ export function useUINotificationsProvider(): INotificationContext {
     });
   }
 
-  return {
-    notifications: state.notifications,
-    actions: {
+  return [
+    state,
+    {
       addNotification: add,
       removeNotification: remove
     }
-  };
+  ];
 }
 
-export function useUINotifications(): INotificationContext {
-  const notifications = React.useContext<INotificationContext>(NotificationContext);
+export function useUINotifications(): NotificationContext {
+  const notifications = React.useContext<NotificationContext>(NotificationContext);
 
   return notifications;
 }

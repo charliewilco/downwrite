@@ -72,7 +72,7 @@ interface ITransition {
 }
 
 export function MessageList() {
-  const { notifications, actions } = useUINotifications();
+  const [{ notifications }, actions] = useUINotifications();
   const transitions: ReadonlyArray<
     UseTransitionResult<UINotificationMessage, ITransition>
   > = useTransition<UINotificationMessage, ITransition>(

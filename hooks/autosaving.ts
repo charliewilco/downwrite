@@ -6,7 +6,7 @@ export default function useAutosaving(
   cb?: (...args: any[]) => void,
   message?: string
 ) {
-  const { actions } = useUINotifications();
+  const [, actions] = useUINotifications();
 
   duration = duration || 5000;
 

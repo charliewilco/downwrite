@@ -5,7 +5,7 @@ import { __IS_BROWSER__ } from "../utils/dev";
 export default function useOffline(debug: boolean = false): boolean {
   if (__IS_BROWSER__) {
     const [isOffline, setIsOffline] = React.useState<boolean>(debug);
-    const { actions } = useUINotifications();
+    const [, actions] = useUINotifications();
 
     function handleChange(event: Event) {
       setIsOffline(!(event.currentTarget as Window).navigator.onLine);

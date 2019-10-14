@@ -13,15 +13,7 @@ import { withApolloAuth } from "../utils/apollo-auth";
 // TODO: refactor to have selected post, deletion to be handled by a lower level component
 // should be opened at this level and be handed a token and post to delete
 export const DashboardUI: NextPage<{}> = () => {
-  const [
-    {
-      loading,
-      error,
-      data,
-      state: { selectedPost, modalOpen }
-    },
-    actions
-  ] = useDashboard();
+  const [{ loading, error, data, state }, actions] = useDashboard();
 
   if (loading) {
     return (
@@ -40,9 +32,9 @@ export const DashboardUI: NextPage<{}> = () => {
 
   return (
     <React.Fragment>
-      {modalOpen && (
+      {state.modalOpen && (
         <DeleteModal
-          title={selectedPost.title}
+          title={state.selectedPost.title}
           onDelete={actions.onConfirmDelete}
           onCancelDelete={actions.onCancel}
           closeModal={actions.onCloseModal}

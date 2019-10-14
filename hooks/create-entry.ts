@@ -13,7 +13,7 @@ export interface IFields {
 }
 
 export function useNew() {
-  const { actions } = useUINotifications();
+  const [, actions] = useUINotifications();
   const router = useRouter();
   const [createEntry, { data }] = useMutation<any, MutationCreateEntryArgs>(
     CREATE_ENTRY_MUTATION

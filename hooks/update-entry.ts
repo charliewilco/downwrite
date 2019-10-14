@@ -18,9 +18,7 @@ import {
 import useLogging from "./logging";
 
 export default function useEdit() {
-  const {
-    actions: { addNotification }
-  } = useUINotifications();
+  const [, { addNotification }] = useUINotifications();
 
   const router = useRouter();
   const { loading, data, error } = useQuery<IQueryResult, IQueryVars>(EDIT_QUERY, {
