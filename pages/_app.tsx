@@ -1,6 +1,6 @@
 import * as React from "react";
 import App, { AppProps, AppContext } from "next/app";
-import isEmpty from "lodash/isEmpty";
+import is from "@sindresorhus/is";
 import { UIShell } from "../components/ui-shell";
 import { AuthProvider } from "../components/auth";
 import Cookies from "universal-cookie";
@@ -24,7 +24,7 @@ export default class Downwrite extends App<IAppProps> {
 
   public render(): JSX.Element {
     const { Component, pageProps, token } = this.props;
-    const authed = !isEmpty(token);
+    const authed = !is.emptyString(token);
 
     return (
       <AuthProvider token={token} authed={authed}>
