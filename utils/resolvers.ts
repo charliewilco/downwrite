@@ -2,11 +2,11 @@ import { IResolvers, ApolloError, AuthenticationError } from "apollo-server-micr
 import jwt from "jsonwebtoken";
 import uuid from "uuid/v4";
 import bcrypt from "bcrypt";
-import Mongoose from "mongoose";
 import is from "@sindresorhus/is";
-import { IUser, IPost, PostModel, UserModel } from "./models";
+import { IUser, IPost } from "./models";
 import { createMarkdownServer } from "./markdown-template";
 import { Config } from "./server-config";
+import { MongoSource } from "./data-source";
 
 interface ITokenContent {
   user: string;
@@ -14,9 +14,12 @@ interface ITokenContent {
   scope?: "admin";
 }
 
-interface IResolverContext {
+export interface IResolverContext {
   authScope?: ITokenContent;
-  db: typeof Mongoose;
+  dataSources: {
+    posts: MongoSource<IResolverContext, IPost>;
+    users: MongoSource<IResolverContext, IUser>;
+  };
 }
 
 interface IMutationCreateEntryVars {
@@ -59,13 +62,11 @@ export function createToken(user: ITokenUser): string {
   return jwt.sign(data, Config.key, jwtConfig);
 }
 
-export const verifyUniqueUser = async ({
-  username,
-  email
-}: Omit<IMutationUserVars, "password">) => {
-  const user: IUser = await UserModel.findOne({
-    $or: [{ email }, { username }]
-  });
+export const verifyUniqueUser = async (
+  { username, email }: Omit<IMutationUserVars, "password">,
+  userGetter: (...args: string[]) => Promise<IUser>
+) => {
+  const user: IUser = await userGetter(username, email);
 
   if (user) {
     if (user.username === username) {
@@ -84,13 +85,11 @@ export const verifyUniqueUser = async ({
   };
 };
 
-export const verifyCredentials = async ({
-  password,
-  username: identifier
-}: Omit<IMutationUserVars, "email">) => {
-  const user: IUser = await UserModel.findOne({
-    $or: [{ email: identifier }, { username: identifier }]
-  });
+export const verifyCredentials = async (
+  { password, username: identifier }: Omit<IMutationUserVars, "email">,
+  userGetter: (id: string) => Promise<IUser>
+) => {
+  const user: IUser = await userGetter(identifier);
 
   if (user) {
     const isValid = await bcrypt.compare(password, user.password);
@@ -105,11 +104,11 @@ export const verifyCredentials = async ({
 
 export const resolvers: IResolvers<any, IResolverContext> = {
   Query: {
-    async feed(_, args, { authScope, db }, info) {
+    async feed(_, args, { dataSources: { posts }, authScope }) {
       const user = authScope.user;
-      const posts: IPost[] = await PostModel.find({ user: { $eq: user } });
+      const entries: IPost[] = await posts.getAll(user);
 
-      return posts.map(post => {
+      return entries.map(post => {
         const md = createMarkdownServer(post.content);
         return {
           id: post.id,
@@ -124,12 +123,9 @@ export const resolvers: IResolvers<any, IResolverContext> = {
         };
       });
     },
-    async entry(parent, args, { authScope, db }, info) {
+    async entry(_, args, { authScope, dataSources: { posts } }) {
       const user = authScope.user;
-      const post: IPost = await PostModel.findOne({
-        id: args.id,
-        user: { $eq: user }
-      });
+      const post: IPost = await posts.find(args.id, user);
 
       const md = createMarkdownServer(post.content);
       return {
@@ -144,15 +140,13 @@ export const resolvers: IResolvers<any, IResolverContext> = {
         excerpt: md.trim().substr(0, 90)
       };
     },
-    async preview(parent, args, { authScope, db }, info) {
-      const post: IPost = await PostModel.findOne({
-        id: args.id
-      });
+    async preview(_, { id }, { dataSources: { posts, users } }) {
+      const post: IPost = await posts.find(id);
 
-      const user = await UserModel.findOne({ _id: post.user });
+      const user = await users.findByRef(post.user);
 
       const markdown = {
-        id: args.id,
+        id,
         author: {
           username: user.username,
           avatar: user.gradient || ["#FEB692", "#EA5455"]
@@ -167,10 +161,9 @@ export const resolvers: IResolvers<any, IResolverContext> = {
   },
   Mutation: {
     async createEntry(
-      parent,
+      _,
       args: IMutationCreateEntryVars,
-      { authScope, db },
-      info
+      { authScope, dataSources: { posts } }
     ) {
       const user = authScope.user;
 
@@ -191,16 +184,15 @@ export const resolvers: IResolvers<any, IResolverContext> = {
           }
         );
 
-        const post = await PostModel.create(entry);
+        const post = await posts.create(entry);
 
         return post;
       }
     },
     async updateEntry(
-      parent,
+      _,
       args: IMutationCreateEntryVars,
-      { authScope, db },
-      info
+      { authScope, dataSources: { posts } }
     ) {
       const user = authScope.user;
       // TODO: check if values are empty
@@ -214,38 +206,38 @@ export const resolvers: IResolvers<any, IResolverContext> = {
           dateModifed: new Date()
         }
       );
-      const post: IPost = await PostModel.findOneAndUpdate(
-        { id: args.id, user: { $eq: user } },
-        entry,
-        {
-          upsert: true
-        }
-      );
+
+      const post: IPost = await posts.update(entry, args.id, user);
       // NOTE: This is not the updated entry object.
       return post;
     },
-    async deleteEntry(parent, { id }, { authScope }, info) {
+    async deleteEntry(_, { id }, { authScope, dataSources: { posts } }) {
       const user = authScope.user;
-      const post = await PostModel.findOneAndRemove({
-        id,
-        user: { $eq: user }
-      });
+      const post = await posts.remove(id, user);
       return post;
     },
-    async createUser(parent, args: IMutationUserVars, {}, info) {
-      const verifiedUser = await verifyUniqueUser({ ...args });
+    async createUser(
+      _,
+      { email, username, password }: IMutationUserVars,
+      { dataSources: { users } }
+    ) {
+      const verifiedUser = await verifyUniqueUser({ email, username }, (id1, id2) =>
+        users.findByCondition({
+          $or: [{ email: id1 }, { username: id2 }]
+        })
+      );
 
       if (!is.emptyObject(verifiedUser)) {
         const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(args.password, salt);
+        const hash = await bcrypt.hash(password, salt);
         const id = uuid();
 
-        let user: IUser = await UserModel.create(
+        let user: IUser = await users.create(
           Object.assign(
             {},
             {
-              email: args.email,
-              username: args.username,
+              email,
+              username,
               id,
               password: hash,
               admin: false
@@ -262,11 +254,21 @@ export const resolvers: IResolvers<any, IResolverContext> = {
         };
       }
     },
-    async authenticateUser(parent, args: IMutationUserVars, { authScope }, info) {
-      const verifiedUser = await verifyCredentials({
-        password: args.password,
-        username: args.username
-      });
+    async authenticateUser(
+      _,
+      { password, username }: IMutationUserVars,
+      { authScope, dataSources: { users } }
+    ) {
+      const verifiedUser = await verifyCredentials(
+        {
+          password,
+          username
+        },
+        identifier =>
+          users.findByCondition({
+            $or: [{ email: identifier }, { username: identifier }]
+          })
+      );
 
       if (!is.emptyObject(verifiedUser)) {
         const token: string = createToken(verifiedUser);

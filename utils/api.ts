@@ -115,8 +115,7 @@ export async function createUser(
   return user;
 }
 
-// TODO: Remove Any
-export async function updatePassword(body: any, options: IOptions): Promise<any> {
+export async function updatePassword<T>(body: T, options: IOptions): Promise<any> {
   const url = URLEndpoints.create(Endpoints.PASSWORD_ENDPOINT, options.host);
 
   const password = await fetch(url, {

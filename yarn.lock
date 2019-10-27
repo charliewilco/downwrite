@@ -2166,6 +2166,11 @@ apollo-server-errors@^2.3.3:
   resolved "https://registry.npmjs.org/apollo-server-errors/-/apollo-server-errors-2.3.3.tgz#83763b00352c10dc68fbb0d41744ade66de549ff"
   integrity sha512-MO4oJ129vuCcbqwr5ZwgxqGGiLz3hCyowz0bstUF7MR+vNGe4oe3DWajC9lv4CxrhcqUHQOeOPViOdIo1IxE3g==
 
+apollo-server-errors@^2.3.4:
+  version "2.3.4"
+  resolved "https://registry.npmjs.org/apollo-server-errors/-/apollo-server-errors-2.3.4.tgz#b70ef01322f616cbcd876f3e0168a1a86b82db34"
+  integrity sha512-Y0PKQvkrb2Kd18d1NPlHdSqmlr8TgqJ7JQcNIfhNDgdb45CnqZlxL1abuIRhr8tiw8OhVOcFxz2KyglBi8TKdA==
+
 apollo-server-micro@^2.9.4:
   version "2.9.4"
   resolved "https://registry.npmjs.org/apollo-server-micro/-/apollo-server-micro-2.9.4.tgz#6f640f9322e713ad66bf5256b527e2b396074ecc"

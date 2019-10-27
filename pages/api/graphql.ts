@@ -1,33 +1,15 @@
 import { ApolloServer } from "apollo-server-micro";
+import { importSchema } from "graphql-import";
+
 import jwt from "jsonwebtoken";
 import Mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
-import { resolvers } from "../../utils/resolvers";
-import { Config } from "../../utils/server-config";
-import { importSchema } from "graphql-import";
+import { resolvers, IResolverContext } from "../../utils/resolvers";
+import { IUser, IPost, PostModel, UserModel } from "../../utils/models";
+import { MongoSource } from "../../utils/data-source";
+import { prepareDB } from "../../utils/prepare-db";
 
 const typeDefs = importSchema("pages/api/schema.graphql");
-
-const prepareDB = async (): Promise<typeof Mongoose> => {
-  Mongoose.Promise = global.Promise;
-  const m = await Mongoose.connect(Config.dbCreds, { useNewUrlParser: true });
-
-  Mongoose.set("useFindAndModify", true);
-
-  const db = m.connection;
-
-  db.on("error", () => {
-    console.error("connection error");
-  });
-
-  db.once("open", () => {
-    // tslint:disable: no-console
-    console.info(`Connection with database succeeded.`);
-    console.info("--- DOWNWRITE API ---");
-  });
-
-  return m;
-};
 
 let connection: typeof Mongoose;
 
@@ -39,8 +21,7 @@ const server = new ApolloServer({
     const authScope = jwt.decode(token);
     connection = await prepareDB();
     return {
-      authScope,
-      db: connection
+      authScope
     };
   },
   playground: {
@@ -49,6 +30,12 @@ const server = new ApolloServer({
       "editor.theme": "light"
       // "schema.polling.enable": false
     }
+  },
+  dataSources: () => {
+    return {
+      posts: new MongoSource<IResolverContext, IPost>(PostModel),
+      users: new MongoSource<IResolverContext, IUser>(UserModel)
+    };
   }
 });
 
