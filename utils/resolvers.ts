@@ -127,8 +127,13 @@ export const resolvers: IResolvers<any, IResolverContext> = {
       const user = authScope.user;
       const post: IPost = await posts.find(args.id, user);
 
-      const md = createMarkdownServer(post.content);
-      return {
+      let md = ``;
+
+      if (post.content !== null) {
+        md = createMarkdownServer(post.content);
+      }
+
+      const entry = {
         id: post.id,
         title: post.title,
         author: post.author,
@@ -139,6 +144,8 @@ export const resolvers: IResolvers<any, IResolverContext> = {
         content: md,
         excerpt: md.trim().substr(0, 90)
       };
+
+      return entry;
     },
     async preview(_, { id }, { dataSources: { posts, users } }) {
       const post: IPost = await posts.find(id);

@@ -10,8 +10,36 @@ interface IPostListProps {
   onSelect: ({ id }: Partial<IPost>) => void;
 }
 
+enum ListActions {
+  TOGGLE,
+  SET
+}
+
+interface IListActions {
+  type: ListActions;
+  payload?: boolean;
+}
+
+interface IPostListState {
+  isGridView: boolean;
+}
+
+function listReducer(state: IPostListState, action: IListActions): IPostListState {
+  switch (action.type) {
+    case ListActions.TOGGLE:
+      return { isGridView: !state.isGridView };
+    case ListActions.SET:
+      return { isGridView: action.payload! };
+    default:
+      throw new Error("Must specify action type");
+  }
+}
+
 export default function PostList(props: IPostListProps): JSX.Element {
-  const [isGridView, setOpen] = React.useState<boolean>(true);
+  const [{ isGridView }, dispatch] = React.useReducer(listReducer, {
+    isGridView: true
+  });
+
   const testID = isGridView ? "ENTRIES_GRIDVIEW" : "ENTRIES_LISTVIEW";
   const className = classNames(
     "PostList",
@@ -23,7 +51,10 @@ export default function PostList(props: IPostListProps): JSX.Element {
     <React.Fragment>
       <header className="PostListHeader">
         <h1 className="ContainerTitle">Entries</h1>
-        <LayoutControl layout={isGridView} layoutChange={setOpen} />
+        <LayoutControl
+          layout={isGridView}
+          layoutChange={payload => dispatch({ type: ListActions.SET, payload })}
+        />
       </header>
 
       <ul className={className} data-testid={testID}>

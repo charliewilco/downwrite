@@ -14,6 +14,7 @@ export function createMarkdownServer(
     return "";
   }
   return draftToMarkdown(content, {
+    preserveNewlines: true,
     entityItems: {
       LINK: {
         open: () => {

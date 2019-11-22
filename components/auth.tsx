@@ -103,24 +103,24 @@ export function useAuthReducer(tokenInitial?: string): [IAuthState, IAuthActions
   return [state, { signIn, signOut }];
 }
 
-export function useAuthSideEffects(state: IAuthState): void {
+export function useAuthSideEffects({ authed, token }: IAuthState): void {
   const router = useRouter();
   React.useEffect(() => {
-    if (state.authed && router.route === "/login") {
+    if (authed && router.route === "/login") {
       router.push({ pathname: "/" });
     }
 
-    if (!state.authed) {
+    if (!authed) {
       router.push({ pathname: "/login" });
       cookie.remove("DW_TOKEN", cookieOptions);
     }
-  }, [state.authed]);
+  }, [authed]);
 
   React.useEffect(() => {
-    if (state.token) {
-      cookie.set("DW_TOKEN", state.token, cookieOptions);
+    if (token) {
+      cookie.set("DW_TOKEN", token, cookieOptions);
     }
-  }, [state.token]);
+  }, [token]);
 }
 
 // Should be able to just request user details from another call

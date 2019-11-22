@@ -5,7 +5,7 @@ scalar Date
 type Entry {
   id: ID
   title: String
-  author: String
+  author: Author
   content: String
   public: Boolean
   dateAdded: Date

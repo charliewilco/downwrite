@@ -7,7 +7,8 @@ export enum EditActions {
   UPDATE_EDITOR = "UPDATE_EDITOR",
   TOGGLE_PUBLIC_STATUS = "TOGGLE_PUBLIC_STATUS",
   SET_INITIAL_FOCUS = "SET_INITIAL_FOCUS",
-  EDITOR_COMMAND = "myeditor-save"
+  EDITOR_COMMAND = "myeditor-save",
+  INITIALIZE_EDITOR = "INITIALIZE_EDITOR"
 }
 
 export interface IEditorState {
@@ -26,6 +27,7 @@ export interface IQueryVars {
 }
 
 export type EditorActions =
+  | { type: EditActions.INITIALIZE_EDITOR; payload: Entry }
   | { type: EditActions.TOGGLE_PUBLIC_STATUS }
   | { type: EditActions.SET_INITIAL_FOCUS }
   | { type: EditActions.UPDATE_EDITOR; payload: Draft.EditorState }
@@ -33,6 +35,8 @@ export type EditorActions =
 
 export function reducer(state: IEditorState, action: EditorActions): IEditorState {
   switch (action.type) {
+    case EditActions.INITIALIZE_EDITOR:
+      return initializer({ entry: action.payload });
     case EditActions.SET_INITIAL_FOCUS:
       return { ...state, initialFocus: true };
     case EditActions.TOGGLE_PUBLIC_STATUS:
@@ -47,17 +51,26 @@ export function reducer(state: IEditorState, action: EditorActions): IEditorStat
 }
 
 export function initializer(initialData: { entry: Entry }): IEditorState {
-  let editorState = null;
+  console.log("EDITOR_INITIALIZER", initialData);
 
-  if (initialData.entry.content) {
+  if (initialData) {
     const draft = markdownToDraft(initialData.entry.content);
-    editorState = Draft.EditorState.createWithContent(Draft.convertFromRaw(draft));
-  }
+    const editorState = Draft.EditorState.createWithContent(
+      Draft.convertFromRaw(draft)
+    );
 
-  return {
-    editorState,
-    title: initialData.entry.title,
-    publicStatus: initialData.entry.public,
-    initialFocus: false
-  };
+    return {
+      editorState,
+      title: initialData.entry.title,
+      publicStatus: initialData.entry.public,
+      initialFocus: false
+    };
+  } else {
+    return {
+      editorState: null,
+      title: null,
+      publicStatus: null,
+      initialFocus: false
+    };
+  }
 }

@@ -34,7 +34,7 @@ export function EditUI() {
     );
   }
 
-  if (loading) {
+  if (loading || state.editorState === null) {
     return <Loading size={75} />;
   }
 
@@ -78,7 +78,9 @@ export function EditUI() {
                   date={data.entry.dateAdded}
                 />
               )}
-              <Button type="submit">Save</Button>
+              <Button type="submit" onClick={actions.handleSubmit}>
+                Save
+              </Button>
             </div>
           </aside>
           {!!state.editorState && (

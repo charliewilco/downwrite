@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useMutation, useLazyQuery } from "@apollo/react-hooks";
 import { MutationUpdateEntryArgs } from "../types/generated";
 import { draftToMarkdown } from "markdown-draft-js";
 import { useRouter } from "next/router";
@@ -21,7 +21,10 @@ export default function useEdit() {
   const [, { addNotification }] = useUINotifications();
 
   const router = useRouter();
-  const { loading, data, error } = useQuery<IQueryResult, IQueryVars>(EDIT_QUERY, {
+  const [getEntry, { loading, data, error }] = useLazyQuery<
+    IQueryResult,
+    IQueryVars
+  >(EDIT_QUERY, {
     ssr: true,
     variables: {
       id: router.query.id as string
@@ -37,10 +40,21 @@ export default function useEdit() {
     IQueryResult
   >(reducer, data, initializer);
 
-  useLogging("QUERY", [data]);
+  React.useEffect(() => {
+    getEntry();
+  }, []);
 
-  async function handleSubmit() {
+  React.useEffect(() => {
+    if (data && data.entry) {
+      dispatch({ type: EditActions.INITIALIZE_EDITOR, payload: data.entry });
+    }
+  }, [data]);
+
+  useLogging("EDITOR QUERY", [data]);
+
+  const handleSubmit = React.useCallback(async () => {
     const content = Draft.convertToRaw(state.editorState.getCurrentContent());
+    console.log(state);
     await updateEntry({
       variables: {
         id: router.query.id as string,
@@ -49,7 +63,7 @@ export default function useEdit() {
         status: state.publicStatus
       }
     }).catch(err => addNotification(err.message, NotificationType.ERROR));
-  }
+  }, [state]);
 
   function handleTitleChange({
     target: { value }
