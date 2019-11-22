@@ -1,0 +1,52 @@
+query AllPosts {
+  feed {
+    title
+    dateAdded
+    id
+    public
+  }
+}
+
+query Edit($id: ID!) {
+  entry(id: $id) {
+    title
+    dateAdded
+    content
+    public
+  }
+}
+
+query Preview($id: ID!) {
+  preview(id: $id) {
+    title
+    dateAdded
+    id
+    content
+    author {
+      username
+    }
+  }
+}
+
+mutation UpdateEntry(
+  $id: String
+  $content: String
+  $title: String
+  $status: Boolean
+) {
+  updateEntry(id: $id, content: $content, title: $title, status: $status) {
+    id
+  }
+}
+
+mutation CreateEntry($content: String, $title: String) {
+  createEntry(content: $content, title: $title) {
+    id
+  }
+}
+
+mutation RemoveEntry($id: ID) {
+  deleteEntry(id: $id) {
+    title
+  }
+}
