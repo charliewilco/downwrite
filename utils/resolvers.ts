@@ -8,12 +8,18 @@ import { createMarkdownServer } from "./markdown-template";
 import { Config } from "./server-config";
 import { MongoSource } from "./data-source";
 
+/**
+ * @deprecated
+ */
 interface ITokenContent {
   user: string;
   name: string;
   scope?: "admin";
 }
 
+/**
+ * @deprecated
+ */
 export interface IResolverContext {
   authScope?: ITokenContent;
   dataSources: {
@@ -22,6 +28,9 @@ export interface IResolverContext {
   };
 }
 
+/**
+ * @deprecated
+ */
 interface IMutationCreateEntryVars {
   title: string;
   content: string;
@@ -29,18 +38,27 @@ interface IMutationCreateEntryVars {
   status?: boolean;
 }
 
+/**
+ * @deprecated
+ */
 interface IMutationUserVars {
   email?: string;
   password: string;
   username: string;
 }
 
+/**
+ * @deprecated
+ */
 interface ITokenUser {
   username: string;
   _id: string;
   admin?: boolean;
 }
 
+/**
+ * @deprecated
+ */
 export function createToken(user: ITokenUser): string {
   let scopes: string;
 
@@ -62,6 +80,9 @@ export function createToken(user: ITokenUser): string {
   return jwt.sign(data, Config.key, jwtConfig);
 }
 
+/**
+ * @deprecated
+ */
 export const verifyUniqueUser = async (
   { username, email }: Omit<IMutationUserVars, "password">,
   userGetter: (...args: string[]) => Promise<IUser>
@@ -85,6 +106,9 @@ export const verifyUniqueUser = async (
   };
 };
 
+/**
+ * @deprecated
+ */
 export const verifyCredentials = async (
   { password, username: identifier }: Omit<IMutationUserVars, "email">,
   userGetter: (id: string) => Promise<IUser>
@@ -102,6 +126,9 @@ export const verifyCredentials = async (
   }
 };
 
+/**
+ * @deprecated
+ */
 export const resolvers: IResolvers<any, IResolverContext> = {
   Query: {
     async feed(_, args, { dataSources: { posts }, authScope }) {

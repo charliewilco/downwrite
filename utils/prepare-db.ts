@@ -1,6 +1,9 @@
 import Mongoose from "mongoose";
 import { Config } from "./server-config";
 
+/**
+ * @deprecated
+ */
 export const prepareDB = async (): Promise<typeof Mongoose> => {
   Mongoose.Promise = global.Promise;
   const m = await Mongoose.connect(Config.dbCreds, { useNewUrlParser: true });

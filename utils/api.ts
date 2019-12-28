@@ -4,12 +4,18 @@ import { __IS_DEV__, __IS_BROWSER__ } from "./dev";
 import "isomorphic-unfetch";
 import { Omit } from "./types";
 
+/**
+ * @deprecated
+ */
 interface IOptions {
   token?: string;
   host?: string;
   port?: string;
 }
 
+/**
+ * @deprecated
+ */
 interface IUserResponse {
   userID: string;
   id_token: string;
@@ -17,6 +23,9 @@ interface IUserResponse {
   message?: string;
 }
 
+/**
+ * @deprecated
+ */
 export enum Endpoints {
   POST_ENDPOINT = "/api/posts",
   PREVIEW_ENDPOINT = "/api/preview",
@@ -31,6 +40,7 @@ type HeaderMethod = "GET" | "PUT" | "POST" | "DELETE";
 export const DEFAULT_URL = "http://localhost:3000";
 
 /**
+ * @deprecated
  * Creates header for Fetch request with Token
  * @param method
  * @param token
@@ -50,11 +60,17 @@ export const createHeader = (
   };
 };
 
+/**
+ * @deprecated
+ */
 export interface IAuthUserBody {
   user: string;
   password: string;
 }
 
+/**
+ * @deprecated
+ */
 export async function authUser(
   body: IAuthUserBody,
   options?: IOptions
@@ -71,6 +87,9 @@ export async function authUser(
   return auth;
 }
 
+/**
+ * @deprecated
+ */
 export async function getUserDetails(options: IOptions): Promise<any> {
   const url = URLEndpoints.create(Endpoints.USER_ENDPOINT, options.host);
   const user = await fetch(url, createHeader("GET", options.token)).then(res =>
@@ -88,6 +107,9 @@ export interface ICreateUserBody {
 
 export type SettingsBody = Omit<ICreateUserBody, "password">;
 
+/**
+ * @deprecated
+ */
 export async function updateSettings(body: SettingsBody, options: IOptions) {
   const url = URLEndpoints.create(Endpoints.SETTINGS_ENDPOINT, options.host);
   const settings = await fetch(url, {
@@ -98,6 +120,9 @@ export async function updateSettings(body: SettingsBody, options: IOptions) {
   return settings;
 }
 
+/**
+ * @deprecated
+ */
 export async function createUser(
   body: ICreateUserBody,
   options?: IOptions
@@ -115,6 +140,9 @@ export async function createUser(
   return user;
 }
 
+/**
+ * @deprecated
+ */
 export async function updatePassword<T>(body: T, options: IOptions): Promise<any> {
   const url = URLEndpoints.create(Endpoints.PASSWORD_ENDPOINT, options.host);
 

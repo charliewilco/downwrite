@@ -1,6 +1,9 @@
 import { DataSource, DataSourceConfig } from "apollo-datasource";
 import Mongoose from "mongoose";
 
+/**
+ * @deprecated
+ */
 export class MongoSource<
   TContext extends any,
   M extends Mongoose.Document
