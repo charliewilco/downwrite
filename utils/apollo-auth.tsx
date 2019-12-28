@@ -11,7 +11,7 @@ import Cookies from "universal-cookie";
 import { IncomingMessage } from "http";
 import { GRAPHQL_ENDPOINT } from "./urls";
 
-interface IApolloProps {
+interface IApolloProps extends React.PropsWithChildren<{}> {
   apolloClient: ApolloClient<unknown>;
   apolloState?: NormalizedCacheObject;
 }
@@ -24,7 +24,7 @@ interface IApolloPage<P = {}, IP = P> {
   (props: P): JSX.Element;
   defaultProps?: Partial<P>;
   displayName?: string;
-  getInitialProps?(ctx: IApolloPageContext): Promise<Partial<IP>>;
+  getInitialProps?(ctx: IApolloPageContext): Partial<IP> | Promise<Partial<IP>>;
 }
 
 function getToken(req?: IncomingMessage): string {
