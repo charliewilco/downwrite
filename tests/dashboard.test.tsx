@@ -4,11 +4,8 @@ import { LinkProps } from "next/link";
 
 import { render, wait, fireEvent } from "@testing-library/react";
 import Dashboard from "../pages/index";
-import fetchMock, { FetchMock } from "jest-fetch-mock";
-import { createMockPosts } from "../utils/create-mocks";
 import ApolloClient from "apollo-client";
 
-const entries = createMockPosts(4);
 jest.mock("next/router");
 
 jest.mock("next/link", () => {
@@ -21,16 +18,9 @@ const PostDashboard = () => {
   return <Dashboard apolloClient={{} as ApolloClient<{}>} />;
 };
 
-let fetch = fetchMock as FetchMock;
-
 // NOTE: test broken by upgrading @testing-library
 xdescribe("<Dashboard /> post lists", () => {
-  beforeEach(() => {
-    fetch.resetMocks();
-  });
-
   it("shows list of Cards if authed and has posts", async () => {
-    fetch.mockResponseOnce(JSON.stringify(entries));
     const FullDashboard = render(<PostDashboard />);
     await wait(() => FullDashboard.getByTestId("CARD"));
 
@@ -39,7 +29,6 @@ xdescribe("<Dashboard /> post lists", () => {
   });
 
   it("can toggle from grid to list", async () => {
-    fetch.mockResponseOnce(JSON.stringify(entries));
     const FullDashboard = render(<PostDashboard />);
     await wait(() => FullDashboard.getByTestId("CARD"));
 
@@ -55,7 +44,6 @@ xdescribe("<Dashboard /> post lists", () => {
   });
 
   xit("shows error if error", async () => {
-    fetch.mockResponseOnce(JSON.stringify([]));
     const ErrorContainer = render(
       <Dashboard apolloClient={{} as ApolloClient<{}>} />
     );
