@@ -22,38 +22,52 @@ export interface IMutationUserVars {
 
 export const resolvers: IResolvers<unknown, IResolverContext> = {
   Query: {
-    async feed(_, __, { dataSources }) {
-      const feed = await dataSources.dwnxtAPI.getFeed();
+    async feed(_, __, context) {
+      const feed = await context.dataSources.dwnxtAPI.getFeed();
 
       return feed;
     },
-    async entry(_, { id }, { dataSources }) {
-      const entry = await dataSources.dwnxtAPI.getEntry(id);
+    async entry(_, { id }, context) {
+      const entry = await context.dataSources.dwnxtAPI.getEntry(id);
       return entry;
     },
-    async preview(_, { id }, { dataSources }) {
-      const md = await dataSources.dwnxtAPI.getPreview(id);
+    async preview(_, { id }, context) {
+      const md = await context.dataSources.dwnxtAPI.getPreview(id);
       return md;
     }
   },
   Mutation: {
-    async createEntry(
-      _,
-      { title, content }: IMutationCreateEntryVars,
-      { dataSources }
-    ) {
-      const entry = await dataSources.dwnxtAPI.createPost(title, content);
+    async createEntry(_, args: IMutationCreateEntryVars, context) {
+      const entry = await context.dataSources.dwnxtAPI.createPost(
+        args.title,
+        args.content
+      );
 
       return entry;
     },
-    updateEntry() {},
+    async updateEntry(_, args: IMutationCreateEntryVars, context) {
+      const { id, ...body } = args;
 
-    async deleteEntry(_, { id }, { dataSources }) {
-      const post = await dataSources.dwnxtAPI.removeEntry(id);
+      const post = await context.dataSources.dwnxtAPI.updatePost(id!, body);
       return post;
     },
-    createUser() {},
-    authenticateUser() {},
+    async deleteEntry(_, { id }, context) {
+      const post = await context.dataSources.dwnxtAPI.removeEntry(id);
+      return post;
+    },
+    async createUser(_, args: IMutationUserVars, context) {
+      const { token } = await context.dataSources.dwnxtAPI.createUser(args);
+
+      return { token };
+    },
+    async authenticateUser(_, args: IMutationUserVars, context) {
+      const { token } = await context.dataSources.dwnxtAPI.authenticateUser(
+        args.username,
+        args.password
+      );
+      return { token };
+    },
+    updatePassword() {},
     updateUserSettings() {}
   }
 };

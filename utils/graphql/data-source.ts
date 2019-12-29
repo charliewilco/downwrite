@@ -1,5 +1,6 @@
 import { RESTDataSource, RequestOptions } from "apollo-datasource-rest";
 import { createMarkdownServer } from "../markdown-template";
+import { IMutationCreateEntryVars, IMutationUserVars } from "./resolvers";
 import uuid from "uuid/v4";
 
 export interface ITokenContent {
@@ -139,6 +140,47 @@ export class DownwriteAPI extends RESTDataSource<IContext> {
     return this.post("posts", entry);
   }
 
+  public mergeUpdatedPost(args: IMutationCreateEntryVars, ref: IPost, id: string) {
+    const date = new Date();
+
+    const title = args.title
+      ? ref.title !== args.title
+        ? args.title
+        : ref.title
+      : ref.title;
+    const content = args.content
+      ? ref.content !== args.content
+        ? args.content
+        : ref.content
+      : ref.content;
+    const publicStatus = args.status
+      ? ref.public === args.status
+        ? ref.public
+        : args.status
+      : ref.public;
+
+    const post = {
+      title,
+      content,
+      id,
+      public: publicStatus,
+      dateAdded: ref.dateAdded,
+      dateModified: date
+    };
+
+    return post;
+  }
+
+  public async updatePost(id: string, args: IMutationCreateEntryVars) {
+    const ref = await this.fetchPost(id);
+    const post = this.mergeUpdatedPost(args, ref, id);
+
+    // NOTE: this is optimistic there needs to be a way
+    await this.put(`posts/${id}`, post);
+
+    return post;
+  }
+
   public async getEntry(id: string) {
     const post = await this.fetchPost(id);
     const entry = this.transformPostToEntry(post);
@@ -160,5 +202,16 @@ export class DownwriteAPI extends RESTDataSource<IContext> {
 
   public async fetchMarkdownPreview(id: string): Promise<IPost> {
     return this.get(`posts/preview/${id}`);
+  }
+
+  public async createUser(args: IMutationUserVars) {
+    const { id_token } = await this.post("users", args);
+    return { token: id_token };
+  }
+
+  public async authenticateUser(user: string, password: string) {
+    const { token } = await this.post("users/authenticate", { user, password });
+
+    return { token };
   }
 }
