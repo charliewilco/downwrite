@@ -32,6 +32,6 @@ export const config = {
   }
 };
 
-const handler = server.createHandler({ path: "/api/apollo" });
+const handler = server.createHandler({ path: "/api/graphql" });
 
 export default handler;

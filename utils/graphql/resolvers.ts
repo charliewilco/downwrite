@@ -67,7 +67,6 @@ export const resolvers: IResolvers<unknown, IResolverContext> = {
       );
       return { token };
     },
-    updatePassword() {},
     updateUserSettings() {}
   }
 };
