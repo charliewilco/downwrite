@@ -30,15 +30,15 @@ export default function DropdownUI() {
       </Reach.MenuButton>
       <Reach.MenuList className="Sheet DropdownMenuList">
         <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
-        <Reach.MenuLink onClick={() => router.push("/")} component="a">
+        <Reach.MenuLink onClick={() => router.push("/")} as="a">
           <MenuEmoji label="Stack of books">📚</MenuEmoji>
           All Entries
         </Reach.MenuLink>
-        <Reach.MenuLink onClick={() => router.push("/new")} component="a">
+        <Reach.MenuLink onSelect={() => router.push("/new")} as="a">
           <MenuEmoji label="Writing with a Pen">✍️</MenuEmoji>
           Create New Entry
         </Reach.MenuLink>
-        <Reach.MenuLink onClick={() => router.push("/settings")} component="a">
+        <Reach.MenuLink onSelect={() => router.push("/settings")} as="a">
           <MenuEmoji label="Gear">⚙️</MenuEmoji>
           Settings
         </Reach.MenuLink>
