@@ -7,7 +7,6 @@ const server = new ApolloServer({
   async context({ req }) {
     const token: string = req.cookies.DW_TOKEN || req.headers.authorization;
     return {
-      authScope,
       token
     };
   },

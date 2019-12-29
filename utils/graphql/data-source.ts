@@ -11,7 +11,6 @@ export interface ITokenContent {
 
 export interface IContext {
   token?: string;
-  authScope?: ITokenContent;
 }
 
 interface IUser {
