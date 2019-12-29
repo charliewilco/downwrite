@@ -184,16 +184,6 @@ function createApolloClient(
 ): ApolloClient<NormalizedCacheObject> {
   const fetchOptions: any = {};
 
-  // If you are using a https_proxy, add fetchOptions with 'https-proxy-agent' agent instance
-  // 'https-proxy-agent' is required here because it's a sever-side only module
-  if (typeof window === "undefined") {
-    if (process.env.https_proxy) {
-      fetchOptions.agent = new (require("https-proxy-agent"))(
-        process.env.https_proxy
-      );
-    }
-  }
-
   const httpLink = new HttpLink({
     uri: GRAPHQL_ENDPOINT, // Server URL (must be absolute)
     credentials: "same-origin",
