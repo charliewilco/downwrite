@@ -1,5 +1,4 @@
 import { ApolloServer } from "apollo-server-micro";
-import jwt from "jsonwebtoken";
 import { DownwriteAPI, schema } from "../../utils/graphql";
 import { REST_ENDPOINT } from "../../utils/urls";
 
@@ -7,7 +6,6 @@ const server = new ApolloServer({
   schema,
   async context({ req }) {
     const token: string = req.cookies.DW_TOKEN || req.headers.authorization;
-    const authScope = jwt.decode(token);
     return {
       authScope,
       token
