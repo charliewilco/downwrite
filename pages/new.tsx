@@ -1,8 +1,9 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import { Formik, Form, FormikActions } from "formik";
+import { Formik, Form } from "formik";
 import dynamic from "next/dynamic";
 import Head from "next/head";
+import { withApolloAuth } from "../utils/apollo-auth";
 import { IFields, useNew } from "../hooks/create-entry";
 import useOffline from "../hooks/offline";
 import { Input } from "../components/editor-input";
@@ -16,33 +17,33 @@ const Editor = dynamic(() => import("../components/editor"), {
 
 const EDITOR_COMMAND: string = "create-new-post";
 
-const EDITOR_SPACING: React.CSSProperties = {
-  paddingTop: 128,
-  paddingLeft: 4,
-  paddingRight: 4,
-  paddingBottom: 0
-};
-
-export default function NewEditor(): JSX.Element {
-  const [initialValues] = React.useState<IFields>({
+const NewEditor = (): JSX.Element => {
+  const initialValues = React.useRef<IFields>({
     title: "",
     editorState: Draft.EditorState.createEmpty()
   });
   const [createNewPost] = useNew();
   const isOffline = useOffline();
 
-  function onSubmit(values: IFields, actions: FormikActions<IFields>): void {
+  function onSubmit(values: IFields): void {
     createNewPost(values);
   }
 
   return (
     <React.Fragment>
       <Formik<IFields>
-        initialValues={initialValues}
+        initialValues={initialValues.current}
         onSubmit={onSubmit}
         enableReinitialize>
         {({ values, setFieldValue, handleSubmit, handleChange }) => (
-          <Form className="Wrapper Wrapper--md" style={EDITOR_SPACING}>
+          <Form
+            className="Wrapper Wrapper--md"
+            style={{
+              paddingTop: 128,
+              paddingLeft: 4,
+              paddingRight: 4,
+              paddingBottom: 0
+            }}>
             <Head>
               <title>{values.title ? values.title : "New"} | Downwrite</title>
             </Head>
@@ -77,4 +78,5 @@ export default function NewEditor(): JSX.Element {
       </Formik>
     </React.Fragment>
   );
-}
+};
+export default withApolloAuth(NewEditor, { ssr: true });
