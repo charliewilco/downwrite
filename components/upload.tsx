@@ -27,7 +27,6 @@ export default function Uploader(props: IUploadProps): JSX.Element {
     // NOTE: Maybe use useRef for this?
     const reader: FileReader = __IS_BROWSER__ && new FileReader();
 
-    // tslint:disable-next-line: no-shadowed-variable
     function extractMarkdown(files: File[]): void {
       reader.onload = () => {
         let md: IMarkdown = fm(reader.result as string);
