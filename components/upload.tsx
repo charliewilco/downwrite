@@ -1,4 +1,4 @@
-import { useCallback, createElement } from "react";
+import { useRef, useCallback, createElement, MutableRefObject } from "react";
 import fm from "front-matter";
 import * as Draft from "draft-js";
 import { useDropzone } from "react-dropzone";
@@ -22,14 +22,20 @@ interface IMarkdown {
   };
 }
 
-export default function Uploader(props: IUploadProps): JSX.Element {
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    // NOTE: Maybe use useRef for this?
-    const reader: FileReader = __IS_BROWSER__ && new FileReader();
+function useFileReader(): MutableRefObject<FileReader> {
+  const reader = useRef<FileReader>(__IS_BROWSER__ && new FileReader());
 
+  return reader;
+}
+
+type DropCallback = (files: File[]) => void;
+
+export default function Uploader(props: IUploadProps): JSX.Element {
+  const reader = useFileReader();
+  const onDrop = useCallback<DropCallback>((acceptedFiles: File[]) => {
     function extractMarkdown(files: File[]): void {
-      reader.onload = () => {
-        let md: IMarkdown = fm(reader.result as string);
+      reader.current.onload = () => {
+        let md: IMarkdown = fm(reader.current.result as string);
 
         let markdown = markdownToDraft(md.body, { preserveNewlines: true });
 
@@ -41,7 +47,7 @@ export default function Uploader(props: IUploadProps): JSX.Element {
         });
       };
 
-      reader.readAsText(files[0]);
+      reader.current.readAsText(files[0]);
     }
 
     extractMarkdown(acceptedFiles);
