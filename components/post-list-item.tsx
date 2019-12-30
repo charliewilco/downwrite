@@ -1,16 +1,15 @@
 import * as React from "react";
 import Link from "next/link";
-import { IPost } from "downwrite";
 import distance from "date-fns/formatDistanceToNow";
 import parseISO from "date-fns/parseISO";
 import { EditLink, PreviewLink } from "./entry-links";
+import { IPartialFeedItem } from "../reducers/dashboard";
 
 interface IListItemProps {
   title: string;
-  content: Draft.RawDraftContentState;
   id: string;
   dateAdded: Date;
-  onDelete: ({ id }: Partial<IPost>) => void;
+  onDelete: ({ id }: IPartialFeedItem) => void;
   public: boolean;
 }
 

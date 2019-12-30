@@ -2,12 +2,15 @@ import * as React from "react";
 import Card from "./card";
 import LayoutControl from "./layout-control";
 import PostListItem from "./post-list-item";
-import { IPost } from "downwrite";
 import classNames from "../utils/classnames";
+import { IEntry } from "../utils/generated";
+import { IPartialFeedItem } from "../reducers/dashboard";
+
+export type IFeedList = Pick<IEntry, "title" | "dateAdded" | "id" | "public">[];
 
 interface IPostListProps {
-  posts: IPost[];
-  onSelect: ({ id }: Partial<IPost>) => void;
+  posts: IFeedList;
+  onSelect: ({ id }: IPartialFeedItem) => void;
 }
 
 enum ListActions {

@@ -1,17 +1,15 @@
 import * as React from "react";
-import * as Draft from "draft-js";
 import distance from "date-fns/formatDistanceToNow";
 import parseISO from "date-fns/parseISO";
-import { IPost } from "downwrite";
 import { EditLink, PreviewLink } from "./entry-links";
+import { IPartialFeedItem } from "reducers/dashboard";
 
 export interface ICardProps {
   title: string;
-  content: Draft.RawDraftContentState;
   excerpt?: string;
   id: string;
   dateAdded: Date | string;
-  onDelete?: ({ id }: Partial<IPost>) => void;
+  onDelete?: ({ id }: Partial<IPartialFeedItem>) => void;
   public: boolean;
 }
 

@@ -14,6 +14,7 @@ import { reducer, EditActions, initializer } from "../reducers/editor";
 
 const defaultState = initializer({
   entry: {
+    dateAdded: new Date(),
     public: false,
     title: "Some Post",
     content: `

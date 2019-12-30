@@ -4,13 +4,10 @@ import {
   initialState,
   reducer,
   DashActions,
-  DashboardActionType
+  DashboardActionType,
+  IPartialFeedItem
 } from "../reducers/dashboard";
-import {
-  useRemoveEntryMutation,
-  useAllPostsQuery,
-  IEntry
-} from "../utils/generated";
+import { useRemoveEntryMutation, useAllPostsQuery } from "../utils/generated";
 
 export default function useDashboard() {
   const [state, dispatch] = React.useReducer<
@@ -23,7 +20,7 @@ export default function useDashboard() {
 
   const [deleteEntry] = useRemoveEntryMutation();
 
-  async function onDelete({ id }: IEntry): Promise<void> {
+  async function onDelete({ id }: IPartialFeedItem): Promise<void> {
     await deleteEntry({ variables: { id } })
       .then(() => refetch())
       .catch();
@@ -34,7 +31,7 @@ export default function useDashboard() {
     {
       onCancel: () => dispatch({ type: DashActions.CANCEL_DELETE }),
       onCloseModal: () => dispatch({ type: DashActions.CLOSE_MODAL }),
-      onSelect: (payload: IEntry) =>
+      onSelect: (payload: IPartialFeedItem) =>
         dispatch({
           type: DashActions.SELECT_POST,
           payload

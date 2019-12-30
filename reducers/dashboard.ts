@@ -1,7 +1,5 @@
-import { IEntry } from "../utils/generated";
-
 export interface IDashboardState {
-  selectedPost: IEntry;
+  selectedPost: IPartialFeedItem;
   modalOpen: boolean;
 }
 
@@ -19,8 +17,13 @@ export function initialState(): IDashboardState {
   };
 }
 
+export interface IPartialFeedItem {
+  id: string;
+  title: string;
+}
+
 export type DashboardActionType =
-  | { type: DashActions.SELECT_POST; payload: IEntry }
+  | { type: DashActions.SELECT_POST; payload: IPartialFeedItem }
   | { type: DashActions.CANCEL_DELETE }
   | { type: DashActions.DELETED }
   | { type: DashActions.CLOSE_MODAL };

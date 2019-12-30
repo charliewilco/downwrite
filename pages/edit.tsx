@@ -1,6 +1,7 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import Autosaving from "../components/autosaving-interval";
 import WordCounter from "../components/word-count";
 import { Button } from "../components/button";
@@ -23,7 +24,10 @@ const ExportMarkdown = dynamic(() => import("../components/export"), {
 });
 
 export function EditUI() {
-  const [{ loading, error, state, data, id }, actions] = useEdit();
+  const router = useRouter();
+  const [{ loading, error, state, data, id }, actions] = useEdit(
+    router.query.id as string
+  );
 
   if (error) {
     return (

@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as Dwnxt from "downwrite";
 import { NextPage } from "next";
 import Head from "next/head";
 import DeleteModal from "../components/delete-modal";
@@ -47,7 +46,7 @@ export const DashboardUI: NextPage<{}> = () => {
         {data.feed.length > 0 ? (
           <PostList
             onSelect={({ title, id }) => actions.onSelect({ title, id })}
-            posts={data.feed as Dwnxt.IPost[]}
+            posts={data.feed}
           />
         ) : (
           <EmptyPosts />
