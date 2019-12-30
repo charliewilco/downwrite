@@ -27,7 +27,10 @@ export interface IQueryVars {
 }
 
 export type EditorActions =
-  | { type: EditActions.INITIALIZE_EDITOR; payload: IEntry }
+  | {
+      type: EditActions.INITIALIZE_EDITOR;
+      payload: Pick<IEntry, "title" | "dateAdded" | "content" | "public">;
+    }
   | { type: EditActions.TOGGLE_PUBLIC_STATUS }
   | { type: EditActions.SET_INITIAL_FOCUS }
   | { type: EditActions.UPDATE_EDITOR; payload: Draft.EditorState }
@@ -50,7 +53,9 @@ export function reducer(state: IEditorState, action: EditorActions): IEditorStat
   }
 }
 
-export function initializer(initialData: { entry: IEntry }): IEditorState {
+export function initializer(initialData: {
+  entry: Pick<IEntry, "title" | "dateAdded" | "content" | "public">;
+}): IEditorState {
   console.log("EDITOR_INITIALIZER", initialData);
 
   if (initialData) {
