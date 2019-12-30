@@ -1,10 +1,8 @@
 import * as Draft from "draft-js";
 import { useRouter } from "next/router";
-import { useMutation } from "@apollo/react-hooks";
 import { draftToMarkdown } from "markdown-draft-js";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
-import { MutationCreateEntryArgs } from "../types/generated";
-import { CREATE_ENTRY_MUTATION } from "../utils/queries";
+import { useCreateEntryMutation } from "../utils/generated";
 import useLogging from "./logging";
 
 export interface IFields {
@@ -15,9 +13,7 @@ export interface IFields {
 export function useNew() {
   const [, actions] = useUINotifications();
   const router = useRouter();
-  const [createEntry, { data }] = useMutation<any, MutationCreateEntryArgs>(
-    CREATE_ENTRY_MUTATION
-  );
+  const [createEntry, { data }] = useCreateEntryMutation();
   useLogging("MUTATION", [data]);
 
   async function onSubmit(values: IFields) {
@@ -30,12 +26,14 @@ export function useNew() {
         content
       }
     })
-      .then(value =>
-        router.push({
-          pathname: `/edit`,
-          query: { id: value.data.id }
-        })
-      )
+      .then(value => {
+        if (value.data) {
+          router.push({
+            pathname: `/edit`,
+            query: { id: value.data.createEntry.id }
+          });
+        }
+      })
       .catch(err => actions.addNotification(err.message, NotificationType.ERROR));
   }
 

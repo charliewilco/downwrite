@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useQuery, useMutation } from "@apollo/react-hooks";
 import {
   IDashboardState,
   initialState,
@@ -7,24 +6,24 @@ import {
   DashActions,
   DashboardActionType
 } from "../reducers/dashboard";
-
-import { ALL_POSTS_QUERY, REMOVE_ENTRY_MUTATION } from "../utils/queries";
-import { MutationDeleteEntryArgs, Entry } from "../types/generated";
+import {
+  useRemoveEntryMutation,
+  useAllPostsQuery,
+  IEntry
+} from "../utils/generated";
 
 export default function useDashboard() {
   const [state, dispatch] = React.useReducer<
     React.Reducer<IDashboardState, DashboardActionType>
   >(reducer, initialState());
 
-  const { data, loading, error, refetch } = useQuery(ALL_POSTS_QUERY, {
+  const { data, loading, error, refetch } = useAllPostsQuery({
     ssr: true
   });
 
-  const [deleteEntry] = useMutation<Entry, MutationDeleteEntryArgs>(
-    REMOVE_ENTRY_MUTATION
-  );
+  const [deleteEntry] = useRemoveEntryMutation();
 
-  async function onDelete({ id }: Entry): Promise<void> {
+  async function onDelete({ id }: IEntry): Promise<void> {
     await deleteEntry({ variables: { id } })
       .then(() => refetch())
       .catch();
@@ -35,7 +34,7 @@ export default function useDashboard() {
     {
       onCancel: () => dispatch({ type: DashActions.CANCEL_DELETE }),
       onCloseModal: () => dispatch({ type: DashActions.CLOSE_MODAL }),
-      onSelect: (payload: Entry) =>
+      onSelect: (payload: IEntry) =>
         dispatch({
           type: DashActions.SELECT_POST,
           payload

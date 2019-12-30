@@ -44,7 +44,6 @@ input UserSettingsInput {
 # Payload
 
 type AuthUserPayload {
-  user: User
   token: String
 }
 

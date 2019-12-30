@@ -1,43 +1,38 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import { useMutation, useLazyQuery } from "@apollo/react-hooks";
-import { MutationUpdateEntryArgs } from "../types/generated";
 import { draftToMarkdown } from "markdown-draft-js";
-import { useRouter } from "next/router";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
-import { EDIT_QUERY, UPDATE_ENTRY_MUTATION } from "../utils/queries";
 import {
   initializer,
   reducer,
   EditActions,
   IEditorState,
-  EditorActions,
-  IQueryResult,
-  IQueryVars
+  EditorActions
 } from "../reducers/editor";
 import useLogging from "./logging";
+import {
+  useEditLazyQuery,
+  useUpdateEntryMutation,
+  IEditQuery
+} from "../utils/generated";
 
-export default function useEdit() {
+export default function useEdit(id: string) {
+  // TODO: Refactor to pass `id` from query as a parameter
+
   const [, { addNotification }] = useUINotifications();
 
-  const router = useRouter();
-  const [getEntry, { loading, data, error }] = useLazyQuery<
-    IQueryResult,
-    IQueryVars
-  >(EDIT_QUERY, {
+  const [getEntry, { loading, data, error }] = useEditLazyQuery({
     ssr: true,
     variables: {
-      id: router.query.id as string
+      id
     }
   });
 
-  const [updateEntry] = useMutation<any, MutationUpdateEntryArgs>(
-    UPDATE_ENTRY_MUTATION
-  );
+  const [updateEntry] = useUpdateEntryMutation();
 
   const [state, dispatch] = React.useReducer<
     React.Reducer<IEditorState, EditorActions>,
-    IQueryResult
+    IEditQuery
   >(reducer, data, initializer);
 
   React.useEffect(() => {
@@ -57,13 +52,13 @@ export default function useEdit() {
     console.log(state);
     await updateEntry({
       variables: {
-        id: router.query.id as string,
+        id,
         content: draftToMarkdown(content),
         title: state.title,
         status: state.publicStatus
       }
     }).catch(err => addNotification(err.message, NotificationType.ERROR));
-  }, [state]);
+  }, [state, id]);
 
   function handleTitleChange({
     target: { value }
@@ -81,7 +76,7 @@ export default function useEdit() {
   const handleFocus = () => dispatch({ type: EditActions.SET_INITIAL_FOCUS });
 
   return [
-    { data, loading, error, state, id: router.query.id },
+    { data, loading, error, state, id },
     {
       handleEditorChange,
       handleFocus,

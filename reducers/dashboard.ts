@@ -1,7 +1,7 @@
-import { Entry } from "../types/generated";
+import { IEntry } from "../utils/generated";
 
 export interface IDashboardState {
-  selectedPost: Entry | null;
+  selectedPost: IEntry;
   modalOpen: boolean;
 }
 
@@ -20,7 +20,7 @@ export function initialState(): IDashboardState {
 }
 
 export type DashboardActionType =
-  | { type: DashActions.SELECT_POST; payload: Entry }
+  | { type: DashActions.SELECT_POST; payload: IEntry }
   | { type: DashActions.CANCEL_DELETE }
   | { type: DashActions.DELETED }
   | { type: DashActions.CLOSE_MODAL };

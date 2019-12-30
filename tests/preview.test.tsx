@@ -8,7 +8,7 @@ import { IPreviewEntry } from "downwrite";
 import { PreviewEntry } from "../pages/preview";
 import Content from "../components/content";
 import { createMockPost } from "../utils/create-mocks";
-import { PREVIEW_QUERY } from "../utils/queries";
+import { PreviewDocument } from "../utils/generated";
 
 let title = "Starting Again";
 const mockPost = createMockPost({ title, public: true });
@@ -41,7 +41,7 @@ jest.mock("next/router", () => ({
 
 const previewMock: MockedResponse = {
   request: {
-    query: PREVIEW_QUERY,
+    query: PreviewDocument,
     variables: {
       id: "3efc9fe8-ab26-4316-9453-889fe444a2a1"
     }

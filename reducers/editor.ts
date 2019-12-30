@@ -1,6 +1,6 @@
 import * as Draft from "draft-js";
 import { markdownToDraft } from "markdown-draft-js";
-import { Entry } from "../types/generated";
+import { IEntry } from "../utils/generated";
 
 export enum EditActions {
   UPDATE_TITLE = "UPDATE_TITLE",
@@ -19,7 +19,7 @@ export interface IEditorState {
 }
 
 export interface IQueryResult {
-  entry: Entry;
+  entry: IEntry;
 }
 
 export interface IQueryVars {
@@ -27,7 +27,7 @@ export interface IQueryVars {
 }
 
 export type EditorActions =
-  | { type: EditActions.INITIALIZE_EDITOR; payload: Entry }
+  | { type: EditActions.INITIALIZE_EDITOR; payload: IEntry }
   | { type: EditActions.TOGGLE_PUBLIC_STATUS }
   | { type: EditActions.SET_INITIAL_FOCUS }
   | { type: EditActions.UPDATE_EDITOR; payload: Draft.EditorState }
@@ -50,7 +50,7 @@ export function reducer(state: IEditorState, action: EditorActions): IEditorStat
   }
 }
 
-export function initializer(initialData: { entry: Entry }): IEditorState {
+export function initializer(initialData: { entry: IEntry }): IEditorState {
   console.log("EDITOR_INITIALIZER", initialData);
 
   if (initialData) {
