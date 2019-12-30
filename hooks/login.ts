@@ -1,8 +1,8 @@
 import * as React from "react";
 import { AuthContext, AuthContextType } from "../components/auth";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
-import * as API from "../utils/api";
 import { StringTMap } from "../utils/types";
+import { useLoginUserMutation, useCreateUserMutation } from "../utils/generated";
 
 export interface IRegisterValues extends StringTMap<string | boolean> {
   username: string;
@@ -24,49 +24,61 @@ interface IFormHandlers {
 export default function useLoginFns(): IFormHandlers {
   const [, { signIn }] = React.useContext<AuthContextType>(AuthContext);
   const [{ notifications }, actions] = useUINotifications();
+  const [createUser] = useCreateUserMutation();
 
-  const onLoginSubmit = async (values: ILoginValues): Promise<void> => {
-    const { host } = document.location;
-    const auth = await API.authUser(values, { host });
+  const [authenticateUser] = useLoginUserMutation();
 
-    if (auth.error) {
-      actions.addNotification(auth.message, NotificationType.ERROR);
-    }
-
-    if (auth.token) {
-      signIn(auth.token !== undefined, auth.token);
-      if (notifications.length > 0) {
-        notifications.forEach(n => {
-          actions.removeNotification(n);
-        });
+  const onLoginSubmit = React.useCallback(async (values: ILoginValues): Promise<
+    void
+  > => {
+    await authenticateUser({
+      variables: {
+        username: values.user,
+        password: values.password
       }
-    }
-  };
-
-  const onRegisterSubmit = async (values: IRegisterValues): Promise<void> => {
-    const { legalChecked, ...body } = values;
-    const { host } = document.location;
-    if (legalChecked) {
-      const user = await API.createUser(body, {
-        host
+    })
+      .then(value => {
+        if (value.data.authenticateUser.token) {
+          const token = value.data.authenticateUser.token;
+          signIn(token !== undefined, token);
+          if (notifications.length > 0) {
+            notifications.forEach(n => {
+              actions.removeNotification(n);
+            });
+          }
+        }
+      })
+      .catch(error => {
+        actions.addNotification(error.message, NotificationType.ERROR);
       });
+  }, []);
 
-      if (user.userID) {
-        signIn(user.id_token !== undefined, user.id_token);
-      } else {
-        actions.addNotification(user.message, NotificationType.ERROR);
+  const onRegisterSubmit = React.useCallback(
+    async (values: IRegisterValues): Promise<void> => {
+      if (values.legalChecked) {
+        await createUser({
+          variables: {
+            email: values.email,
+            username: values.username,
+            password: values.password
+          }
+        })
+          .then(value => {
+            const token = value.data.createUser.token;
+
+            signIn(token !== undefined, token);
+          })
+          .catch(error => {
+            actions.addNotification(error.message, NotificationType.ERROR);
+          });
       }
-    }
-  };
+    },
+    []
+  );
 
   return {
-    onLoginSubmit(values) {
-      onLoginSubmit(values);
-    },
-    onRegisterSubmit(values) {
-      if (values.legalChecked) {
-        onRegisterSubmit(values);
-      }
-    }
+    onLoginSubmit,
+
+    onRegisterSubmit
   };
 }

@@ -49,7 +49,6 @@ export default function useEdit(id: string) {
 
   const handleSubmit = React.useCallback(async () => {
     const content = Draft.convertToRaw(state.editorState.getCurrentContent());
-    console.log(state);
     await updateEntry({
       variables: {
         id,

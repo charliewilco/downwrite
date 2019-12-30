@@ -16,16 +16,6 @@ interface IOptions {
 /**
  * @deprecated
  */
-interface IUserResponse {
-  userID: string;
-  id_token: string;
-  username: string;
-  message?: string;
-}
-
-/**
- * @deprecated
- */
 export enum Endpoints {
   POST_ENDPOINT = "/api/posts",
   PREVIEW_ENDPOINT = "/api/preview",
@@ -63,33 +53,6 @@ export const createHeader = (
 /**
  * @deprecated
  */
-export interface IAuthUserBody {
-  user: string;
-  password: string;
-}
-
-/**
- * @deprecated
- */
-export async function authUser(
-  body: IAuthUserBody,
-  options?: IOptions
-): Promise<any> {
-  const url = URLEndpoints.create(Endpoints.AUTH_ENDPOINT, options.host);
-  const auth = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(body)
-  }).then(res => res.json());
-
-  return auth;
-}
-
-/**
- * @deprecated
- */
 export async function getUserDetails(options: IOptions): Promise<any> {
   const url = URLEndpoints.create(Endpoints.USER_ENDPOINT, options.host);
   const user = await fetch(url, createHeader("GET", options.token)).then(res =>
@@ -99,7 +62,7 @@ export async function getUserDetails(options: IOptions): Promise<any> {
   return user;
 }
 
-export interface ICreateUserBody {
+interface ICreateUserBody {
   username: string;
   email: string;
   password: string;
@@ -118,26 +81,6 @@ export async function updateSettings(body: SettingsBody, options: IOptions) {
   }).then(res => res.json());
 
   return settings;
-}
-
-/**
- * @deprecated
- */
-export async function createUser(
-  body: ICreateUserBody,
-  options?: IOptions
-): Promise<IUserResponse> {
-  const url = URLEndpoints.create(Endpoints.USER_ENDPOINT, options.host);
-
-  const user = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(body)
-  }).then(res => res.json());
-
-  return user;
 }
 
 /**

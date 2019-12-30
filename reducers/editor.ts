@@ -56,8 +56,6 @@ export function reducer(state: IEditorState, action: EditorActions): IEditorStat
 export function initializer(initialData: {
   entry: Pick<IEntry, "title" | "dateAdded" | "content" | "public">;
 }): IEditorState {
-  console.log("EDITOR_INITIALIZER", initialData);
-
   if (initialData) {
     const draft = markdownToDraft(initialData.entry.content);
     const editorState = Draft.EditorState.createWithContent(
