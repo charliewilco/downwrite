@@ -62,7 +62,7 @@ export default function SettingsPassword(): JSX.Element {
       initialValues={initialValues}
       validationSchema={UpdatePasswordSchema}
       onSubmit={onSubmit}>
-      {({ values, handleChange, isSubmitting }: FormikProps<IPasswordSettings>) => (
+      {(formik: FormikProps<IPasswordSettings>) => (
         <SettingsBlock title="Password">
           <Form>
             {PASSWORD_INPUTS.map(({ name, label }: IInputs, idx) => (
@@ -72,8 +72,8 @@ export default function SettingsPassword(): JSX.Element {
                   name={name}
                   type={!isOpen ? "password" : "text"}
                   placeholder="*********"
-                  value={values[name]}
-                  onChange={handleChange}
+                  value={formik.values[name]}
+                  onChange={formik.handleChange}
                 />
                 <ErrorMessage name={name} component={UIInputError} />
               </UIInputContainer>
@@ -81,10 +81,10 @@ export default function SettingsPassword(): JSX.Element {
             <SettingsFormActions split>
               <ToggleBox
                 label={value => (!value ? "Values hidden" : "Values shown")}
-                onChange={() => setOpen(!isOpen)}
+                onChange={() => setOpen(prevIsOpen => !prevIsOpen)}
                 value={isOpen}
               />
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="submit" disabled={formik.isSubmitting}>
                 Save
               </Button>
             </SettingsFormActions>

@@ -68,7 +68,7 @@ export default function SettingsLocalMarkdown(): JSX.Element {
       initialValues={initialValues}
       validationSchema={LocalSettingsSchema}
       onSubmit={onSubmit}>
-      {({ values, handleChange, isSubmitting }: FormikProps<ILocalSettings>) => (
+      {(formik: FormikProps<ILocalSettings>) => (
         <SettingsBlock
           title="Local Settings"
           description="Settings only saved in your browser and won't sync across devices.">
@@ -78,14 +78,14 @@ export default function SettingsLocalMarkdown(): JSX.Element {
                 <UIInput
                   label={input.label}
                   name={input.name}
-                  value={values[input.name]}
-                  onChange={handleChange}
+                  value={formik.values[input.name]}
+                  onChange={formik.handleChange}
                 />
                 <ErrorMessage name={input.name} component={UIInputError} />
               </UIInputContainer>
             ))}
             <SettingsFormActions>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="submit" disabled={formik.isSubmitting}>
                 Save
               </Button>
             </SettingsFormActions>
