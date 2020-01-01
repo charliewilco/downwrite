@@ -42,7 +42,6 @@
     "formik": "^1.5.0",
     "front-matter": "^3.0.1",
     "graphql": "^14.5.8",
-    "graphql-import": "^0.7.1",
     "graphql-tag": "^2.10.1",
     "graphql-tools": "^4.0.6",
     "immer": "^5.1.0",

@@ -1,5 +1,5 @@
-schema: ./utils/schema.graphql
-documents: ./utils/document.graphql
+schema: ./utils/graphql/schema.graphql
+documents: ./utils/graphql/document.graphql
 generates:
   ./utils/generated.tsx:
     plugins:
@@ -13,3 +13,6 @@ config:
   withHOC: false
   withComponent: false
   withResultType: true
+hooks:
+  afterAllFileWrite:
+    - prettier --write
