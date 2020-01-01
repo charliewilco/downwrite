@@ -78,6 +78,7 @@
     "@types/react-dom": "^16.9.4",
     "@types/uuid": "^3.4.6",
     "@types/yup": "^0.26.27",
+    "apollo-server-testing": "^2.9.15",
     "husky": "^3.1.0",
     "jest": "^24.9.0",
     "jest-dev-server": "^4.4.0",
