@@ -8,21 +8,6 @@ interface IBaseA11ySwitchProps {
   onClick: (v: boolean) => void;
 }
 
-export function useSwitchProps(
-  defaultValue?: boolean,
-  label?: string
-): IBaseA11ySwitchProps {
-  const [state, { onSetInstance }] = useToggle(defaultValue);
-  return {
-    role: "switch",
-    "aria-label": label,
-    "aria-checked": state,
-    onClick: (v: boolean) => {
-      onSetInstance(v);
-    }
-  };
-}
-
 interface IToggleDispatches {
   onToggle: () => void;
   onSetInstance: (v: boolean) => void;
@@ -46,4 +31,19 @@ export function useToggle(defaultValue?: boolean): [boolean, IToggleDispatches] 
       onSetInstance: setInstance
     }
   ];
+}
+
+export function useSwitchProps(
+  defaultValue?: boolean,
+  label?: string
+): IBaseA11ySwitchProps {
+  const [state, { onSetInstance }] = useToggle(defaultValue);
+  return {
+    role: "switch",
+    "aria-label": label,
+    "aria-checked": state,
+    onClick: (v: boolean) => {
+      onSetInstance(v);
+    }
+  };
 }

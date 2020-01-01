@@ -26,6 +26,31 @@ export interface IQueryVars {
   id: string;
 }
 
+export function initializer(initialData: {
+  entry: Pick<IEntry, "title" | "dateAdded" | "content" | "public">;
+}): IEditorState {
+  if (initialData) {
+    const draft = markdownToDraft(initialData.entry.content);
+    const editorState = Draft.EditorState.createWithContent(
+      Draft.convertFromRaw(draft)
+    );
+
+    return {
+      editorState,
+      title: initialData.entry.title,
+      publicStatus: initialData.entry.public,
+      initialFocus: false
+    };
+  } else {
+    return {
+      editorState: null,
+      title: null,
+      publicStatus: null,
+      initialFocus: false
+    };
+  }
+}
+
 export type EditorActions =
   | {
       type: EditActions.INITIALIZE_EDITOR;
@@ -50,30 +75,5 @@ export function reducer(state: IEditorState, action: EditorActions): IEditorStat
       return { ...state, editorState: action.payload };
     default:
       throw new Error("Must specify type");
-  }
-}
-
-export function initializer(initialData: {
-  entry: Pick<IEntry, "title" | "dateAdded" | "content" | "public">;
-}): IEditorState {
-  if (initialData) {
-    const draft = markdownToDraft(initialData.entry.content);
-    const editorState = Draft.EditorState.createWithContent(
-      Draft.convertFromRaw(draft)
-    );
-
-    return {
-      editorState,
-      title: initialData.entry.title,
-      publicStatus: initialData.entry.public,
-      initialFocus: false
-    };
-  } else {
-    return {
-      editorState: null,
-      title: null,
-      publicStatus: null,
-      initialFocus: false
-    };
   }
 }

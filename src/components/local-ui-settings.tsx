@@ -8,10 +8,12 @@ export interface ILocalUISettings {
   };
 }
 
-export const LocalUISettings = React.createContext({
+export const LocalUISettings = React.createContext<ILocalUISettings>({
   monospace: "",
-  actions: {}
-} as ILocalUISettings);
+  actions: {
+    updateFont() {}
+  }
+});
 
 interface ILocalSettingsProps extends React.PropsWithChildren<{}> {}
 

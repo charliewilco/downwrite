@@ -57,7 +57,7 @@ export class DownwriteAPI extends RESTDataSource<IContext> implements IApiSource
     return feed;
   }
 
-  public async getUserDetails(id?: string): Promise<IUser> {
+  public async getUserDetails(): Promise<IUser> {
     const user = await this.get("users");
 
     return user;
@@ -117,12 +117,12 @@ export class DownwriteAPI extends RESTDataSource<IContext> implements IApiSource
   }
 
   public async createUser(args: IMutationUserVars) {
-    const { id_token } = await this.post("users", args);
+    const { id_token } = await this.post<{ id_token: string }>("users", args);
     return { token: id_token };
   }
 
   public async authenticateUser(user: string, password: string) {
-    const { token } = await this.post("users/authenticate", {
+    const { token } = await this.post<{ token: string }>("users/authenticate", {
       user,
       password
     });

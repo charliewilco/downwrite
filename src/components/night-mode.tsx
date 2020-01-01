@@ -10,7 +10,12 @@ export interface INightModeContext {
   };
 }
 
-export const NightModeContext = React.createContext({} as INightModeContext);
+export const NightModeContext = React.createContext<INightModeContext>({
+  night: false,
+  action: {
+    onChange() {}
+  }
+});
 
 interface INightModeContainerProps extends React.PropsWithChildren<{}> {}
 

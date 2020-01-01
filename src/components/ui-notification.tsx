@@ -34,17 +34,22 @@ interface IUIMessageProps {
   onDismiss(m: UINotificationMessage): void;
 }
 
+function Dismissable(props: { onDismiss(): void }): JSX.Element {
+  useTimeout(15000, props.onDismiss);
+  return null;
+}
+
 export function UIMessage(props: IUIMessageProps): JSX.Element {
   const className = getTypeClassName(props.notification, "UINotification");
 
-  const onRemove = () => props.onDismiss(props.notification);
-
-  if (props.notification.dismissable) {
-    useTimeout(15000, onRemove);
-  }
+  const onRemove = React.useCallback(() => props.onDismiss(props.notification), [
+    props.onDismiss,
+    props.notification
+  ]);
 
   return (
     <div className={className}>
+      {props.notification.dismissable && <Dismissable onDismiss={onRemove} />}
       <div className="UINotification__content">
         <p>
           {props.notification.type !== NotificationType.DEFAULT && (
@@ -73,12 +78,14 @@ interface ITransition {
 
 export function MessageList() {
   const [{ notifications }, actions] = useUINotifications();
+  // eslint-disable-next-line @typescript-eslint/array-type
   const transitions: ReadonlyArray<UseTransitionResult<
     UINotificationMessage,
     ITransition
   >> = useTransition<UINotificationMessage, ITransition>(
     notifications,
     item => item.id,
+    // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
     {
       from: {
         opacity: 0,

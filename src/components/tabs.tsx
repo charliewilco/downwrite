@@ -26,7 +26,7 @@ interface ITabsContext extends ITabsContainerState {
 const TabContext = React.createContext<ITabsContext>({
   activeIndex: 0,
   onSelectTab: null
-} as ITabsContext);
+});
 
 export function Container({ className, ...props }: ITabsContainerProps) {
   const [activeIndex, selectTabIndex] = React.useState(0);
@@ -45,7 +45,7 @@ export function Container({ className, ...props }: ITabsContainerProps) {
 }
 
 interface ITabsList extends ITabsModifier {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export function List(props: ITabsList): JSX.Element {

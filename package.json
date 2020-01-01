@@ -11,7 +11,8 @@
     "dev": "next dev",
     "typecheck": "tsc --noEmit",
     "test": "NODE_ENV=test jest",
-    "generate": "graphql-codegen"
+    "generate": "graphql-codegen",
+    "lint": "eslint --ext .js,.ts,.tsx src"
   },
   "engines": {
     "node": "12.x"
@@ -78,7 +79,16 @@
     "@types/react-dom": "^16.9.4",
     "@types/uuid": "^3.4.6",
     "@types/yup": "^0.26.27",
+    "@typescript-eslint/eslint-plugin": "^1.6.0",
+    "@typescript-eslint/parser": "^1.6.0",
     "apollo-server-testing": "^2.9.15",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-plugin-import": "2.18.2",
+    "eslint-plugin-jest": "^23.2.0",
+    "eslint-plugin-jsx-a11y": "6.2.1",
+    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react-hooks": "^1.6.0",
     "husky": "^3.1.0",
     "jest": "^24.9.0",
     "lint-staged": "^9.5.0",

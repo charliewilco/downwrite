@@ -15,6 +15,7 @@ jest.mock("next/link", () => {
 });
 
 const PostDashboard = () => {
+  // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
   return <Dashboard apolloClient={{} as ApolloClient<{}>} />;
 };
 
@@ -45,6 +46,7 @@ xdescribe("<Dashboard /> post lists", () => {
 
   xit("shows error if error", async () => {
     const ErrorContainer = render(
+      // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
       <Dashboard apolloClient={{} as ApolloClient<{}>} />
     );
     await wait(() => ErrorContainer.getByTestId("LOADING_SPINNER"));

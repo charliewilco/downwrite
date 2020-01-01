@@ -6,6 +6,14 @@ interface IWordCounterProps {
   editorState: Draft.EditorState;
 }
 
+function createWordCount(str: string): number {
+  let regex = /(?:\r\n|\r|\n)/g; // new line, carriage return, line feed
+  let cleanString = str.replace(regex, " ").trim(); // replace above characters w/ space
+  let wordArray = cleanString.match(/\S+/g); // matches words according to whitespace
+
+  return wordArray ? wordArray.length : 0;
+}
+
 function getSelectionCount(editorState: Draft.EditorState): number {
   let selectionState = editorState.getSelection();
   let anchorKey = selectionState.getAnchorKey();
@@ -16,14 +24,6 @@ function getSelectionCount(editorState: Draft.EditorState): number {
   let selectedText = currentContentBlock.getText().slice(start, end);
 
   return createWordCount(selectedText);
-}
-
-function createWordCount(str: string): number {
-  let regex = /(?:\r\n|\r|\n)/g; // new line, carriage return, line feed
-  let cleanString = str.replace(regex, " ").trim(); // replace above characters w/ space
-  let wordArray = cleanString.match(/\S+/g); // matches words according to whitespace
-
-  return wordArray ? wordArray.length : 0;
 }
 
 function getWordCount(editorState: Draft.EditorState): number {

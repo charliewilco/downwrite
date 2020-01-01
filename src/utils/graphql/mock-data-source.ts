@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { RESTDataSource } from "apollo-datasource-rest";
 import { IApiSource, IContext } from "./data-source";
 import { FixtureData } from "../fixtures/data";

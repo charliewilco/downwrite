@@ -23,19 +23,6 @@ interface IExportCallback {
 // TODO: use `React.useMemo()` to run export
 export default function UIMarkdownExport(props: IExportProps) {
   const className = classNames("Export", props.className);
-
-  const exportMarkdown = (): void => {
-    const { title, date, editorState } = props;
-    const cx: Draft.ContentState = editorState.getCurrentContent();
-    const content: Draft.RawDraftContentState = Draft.convertToRaw(cx);
-
-    return toMarkdown({
-      title,
-      content,
-      date
-    });
-  };
-
   const customDraft = (content: Draft.RawDraftContentState): string =>
     draftToMarkdown(content, {
       entityItems: {
@@ -56,7 +43,7 @@ export default function UIMarkdownExport(props: IExportProps) {
     let extension = localFileExtension.replace(/\./g, "") || "md";
 
     try {
-      let isFileSaverSupported: boolean = !!new Blob();
+      let isFileSaverSupported = !!new Blob();
 
       if (isFileSaverSupported) {
         let md = createMarkdown(title, customDraft(content), date);
@@ -69,6 +56,18 @@ export default function UIMarkdownExport(props: IExportProps) {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const exportMarkdown = (): void => {
+    const { title, date, editorState } = props;
+    const cx: Draft.ContentState = editorState.getCurrentContent();
+    const content: Draft.RawDraftContentState = Draft.convertToRaw(cx);
+
+    return toMarkdown({
+      title,
+      content,
+      date
+    });
   };
 
   return (

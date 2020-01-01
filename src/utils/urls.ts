@@ -6,10 +6,9 @@ import { __IS_DEV__, __IS_BROWSER__, __IS_TEST__ } from "./dev";
 
 const PORT: string = process.env.PORT;
 
-export const GRAPHQL_ENDPOINT: string = `http://localhost:${PORT ||
-  3000}/api/graphql`;
+export const GRAPHQL_ENDPOINT = `http://localhost:${PORT || 3000}/api/graphql`;
 
-export const REST_ENDPOINT: string = "http://localhost:4000/api";
+export const REST_ENDPOINT = "http://localhost:4000/api";
 
 export class URLEndpoints {
   public static prefix(url: string, port: string = "3000"): string {

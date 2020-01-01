@@ -1,8 +1,8 @@
 import * as React from "react";
+import { LinkProps } from "next/link";
 import { render } from "@testing-library/react";
 import { UIHeader } from "../components/header";
-import { LinkProps } from "next/link";
-import { MockAuthProvider } from "../components/auth";
+import { MockAuthProvider } from "../utils/testing";
 
 jest.mock("universal-cookie", () => {
   return class Cookie {};

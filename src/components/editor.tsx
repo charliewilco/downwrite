@@ -46,7 +46,7 @@ export default function DownwriteEditor(props: IEditorProps) {
     ? []
     : [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()];
 
-  let className: string = "EditorWrapper RichEditor-editor";
+  let className = "EditorWrapper RichEditor-editor";
 
   let contentState: Draft.ContentState = props.editorState.getCurrentContent();
   if (!contentState.hasText()) {

@@ -15,7 +15,7 @@ const Editor = dynamic(() => import("../components/editor"), {
   loading: () => <Loading size={50} />
 });
 
-const EDITOR_COMMAND: string = "create-new-post";
+const EDITOR_COMMAND = "create-new-post";
 
 const NewEditor = (): JSX.Element => {
   const initialValues = React.useRef<IFields>({

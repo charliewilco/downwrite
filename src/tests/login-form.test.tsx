@@ -4,7 +4,7 @@ import { LinkProps } from "next/link";
 import { render, act, fireEvent, wait } from "@testing-library/react";
 import { MockedProvider } from "@apollo/react-testing";
 import LoginForm from "../components/login-form";
-import { MockAuthProvider } from "../components/auth";
+import { MockAuthProvider } from "../utils/testing";
 
 jest.mock("next/link", () => {
   return jest.fn((props: React.PropsWithChildren<LinkProps>) => (
