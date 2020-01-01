@@ -7,7 +7,7 @@ import { draftToMarkdown } from "markdown-draft-js";
 import { IPreviewEntry } from "downwrite";
 import { PreviewEntry } from "../pages/preview";
 import Content from "../components/content";
-import { createMockPost } from "../utils/create-mocks";
+import { createMockPost } from "../utils/testing";
 import { PreviewDocument } from "../utils/generated";
 
 let title = "Starting Again";

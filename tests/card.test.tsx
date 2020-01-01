@@ -3,7 +3,7 @@ import "@testing-library/jest-dom/extend-expect";
 import { LinkProps } from "next/link";
 import { fireEvent, render, waitForElement } from "@testing-library/react";
 import Card from "../components/card";
-import { createMockPost } from "../utils/create-mocks";
+import { createMockPost } from "../utils/testing";
 
 const title = "Starting Again";
 const post = createMockPost({ title, id: "4444" });
