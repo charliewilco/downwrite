@@ -147,9 +147,14 @@ export function AuthProvider({ token, children }: IAuthProps) {
   return React.createElement(AuthContext.Provider, { value }, children);
 }
 
+interface IMockAuthProps extends IAuthState, IAuthActions {}
+
 export function MockAuthProvider(
-  props: React.PropsWithChildren<Partial<IAuthState>>
+  props: React.PropsWithChildren<Partial<IMockAuthProps>>
 ): JSX.Element {
+  const defaultSignIn = () => console.log("Sign in mock");
+  const defaultSignOut = () => console.log("Sign out mock");
+
   return (
     <AuthContext.Provider
       value={[
@@ -159,8 +164,8 @@ export function MockAuthProvider(
           name: props.token || "Charles"
         },
         {
-          signIn: () => console.log("Sign in mock"),
-          signOut: () => console.log("Sign out mock")
+          signIn: props.signIn || defaultSignIn,
+          signOut: props.signOut || defaultSignOut
         }
       ]}>
       {props.children}

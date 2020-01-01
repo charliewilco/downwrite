@@ -12,6 +12,7 @@ interface IUIInputProps {
   placeholder?: string;
   autoComplete?: string;
   className?: string;
+  testID?: string;
 }
 
 export function UIInputContainer({
@@ -54,7 +55,7 @@ function inputReducer(state: IInputState, action: IInputAction): IInputState {
   }
 }
 
-export default function UIInput({ label, ...props }: IUIInputProps) {
+export default function UIInput({ testID, label, ...props }: IUIInputProps) {
   const id = React.useRef(uuid());
 
   const [state, dispatch] = React.useReducer(inputReducer, {
@@ -66,6 +67,7 @@ export default function UIInput({ label, ...props }: IUIInputProps) {
   return (
     <label className="UIInputContainer" htmlFor={id.current}>
       <input
+        data-testid={testID}
         type="text"
         onFocus={() => dispatch({ type: InputAction.FOCUS })}
         onBlur={() => dispatch({ type: InputAction.BLUR })}

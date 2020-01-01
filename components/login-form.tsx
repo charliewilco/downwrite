@@ -22,6 +22,7 @@ export default function Login(): JSX.Element {
         <Form>
           <UIInputContainer>
             <UIInput
+              testID="LOGIN_USERNAME"
               placeholder="user@email.com"
               label="Username or Email"
               name="user"
@@ -33,6 +34,7 @@ export default function Login(): JSX.Element {
           </UIInputContainer>
           <UIInputContainer>
             <UIInput
+              testID="LOGIN_PASSWORD"
               placeholder="*********"
               name="password"
               label="Password"
@@ -45,7 +47,9 @@ export default function Login(): JSX.Element {
           </UIInputContainer>
           <div className="u-right">
             <UIInputContainer style={{ display: "inline-block" }}>
-              <Button type="submit">Login</Button>
+              <Button type="submit" data-testid="LOGIN_BUTTON">
+                Login
+              </Button>
             </UIInputContainer>
           </div>
         </Form>

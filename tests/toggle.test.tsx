@@ -21,17 +21,19 @@ const ToggleDemoOpen = () => {
   return <>{isOpen && <h1 data-testid="TOGGLE_OPEN">I am open</h1>}</>;
 };
 
-let { container } = render(<ToggleDemo />);
-
 // NOTE: test broken by upgrading @testing-library
-xdescribe("<Toggle />", () => {
+describe("<Toggle />", () => {
   it("starts closed", () => {
+    let { container } = render(<ToggleDemo />);
+
     expect(
       container.querySelector(`[data-testid="TOGGLE_OPEN"]`)
     ).not.toBeInTheDocument();
   });
 
   it("can be toggled open", () => {
+    let { container } = render(<ToggleDemo />);
+
     fireEvent.click(container.querySelector(`[data-testid="TOGGLE_BUTTON"]`));
     expect(container.querySelector(`[data-testid="TOGGLE_OPEN"]`)).toHaveTextContent(
       "I am open"

@@ -5,7 +5,7 @@ import Check from "../components/checkbox";
 
 describe("<Check />", () => {
   it("checks", () => {
-    const { debug, getByTestId } = render(
+    const { getByTestId } = render(
       <label data-testid="TEST_CHECKBOX_LABEL" htmlFor="check">
         <Check data-testid="TEST_CHECKBOX" id="check" />
       </label>

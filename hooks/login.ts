@@ -78,7 +78,6 @@ export default function useLoginFns(): IFormHandlers {
 
   return {
     onLoginSubmit,
-
     onRegisterSubmit
   };
 }
