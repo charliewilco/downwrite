@@ -20,7 +20,7 @@ exports[`<Card /> matches snapshot 1`] = `
       class="CardMeta"
     >
       added 
-      less than a minute
+      9 months
        ago
     </small>
   </header>
