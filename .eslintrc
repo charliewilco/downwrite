@@ -30,14 +30,20 @@
     "@typescript-eslint/no-var-requires": 0,
     "@typescript-eslint/no-non-null-assertion": "warn",
     "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/interface-name-prefix": {
-      "prefixWithI": "always"
-    },
-    "react/display-name": "never",
-    "react/prop-types": "never",
+    "@typescript-eslint/no-empty-function": 0,
+    "@typescript-eslint/interface-name-prefix": [
+      2,
+      {
+        "prefixWithI": "always",
+        "allowUnderscorePrefix": true
+      }
+    ],
+    "react/display-name": 0,
+    "react/prop-types": 0,
     "react/no-unescaped-entities": "warn",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
+    "prefer-const": 0,
     "no-console": [
       "error",
       {

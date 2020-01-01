@@ -17,7 +17,7 @@ type Merge<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] } & B;
 
 function getTypeClassName(
   notification: UINotificationMessage,
-  defaultName: string = ""
+  defaultName = ""
 ): string {
   const type: string =
     notification.type && notification.type === NotificationType.WARNING
@@ -85,7 +85,6 @@ export function MessageList() {
   >> = useTransition<UINotificationMessage, ITransition>(
     notifications,
     item => item.id,
-    // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
     {
       from: {
         opacity: 0,

@@ -44,6 +44,67 @@ interface IWithApolloConfig {
   ssr: boolean;
 }
 
+let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
+
+interface IApolloHelper {
+  getToken(): string;
+}
+
+/**
+ * Creates and configures the ApolloClient
+ * @param  {Object} [initialState={}]
+ * @param  {Object} config
+ */
+function createApolloClient(
+  initialState = {},
+  opts: IApolloHelper
+): ApolloClient<NormalizedCacheObject> {
+  const fetchOptions: any = {};
+
+  const httpLink = new HttpLink({
+    uri: GRAPHQL_ENDPOINT, // Server URL (must be absolute)
+    credentials: "same-origin",
+    fetch,
+    fetchOptions
+  });
+
+  const authLink = setContext((request, { headers }) => {
+    const token = opts.getToken();
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? token : ""
+      }
+    };
+  });
+
+  // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
+  return new ApolloClient({
+    ssrMode: typeof window === "undefined", // Disables forceFetch on the server (so queries are only run once)
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache().restore(initialState)
+  });
+}
+
+/**
+ * Always creates a new apollo client on the server
+ * Creates or reuses apollo client in the browser.
+ */
+function initApolloClient(initialState = {}, opts: IApolloHelper) {
+  // Make sure to create a new client for every server-side request so that data
+  // isn't shared between connections (which would be bad)
+  if (typeof window === "undefined") {
+    return createApolloClient(initialState, opts);
+  }
+
+  // Reuse client on the client-side
+  if (!apolloClient) {
+    apolloClient = createApolloClient(initialState, opts);
+  }
+
+  return apolloClient;
+}
+
 /**
  * Creates and provides the apolloContext
  * to a next.js PageTree. Use it by wrapping
@@ -146,65 +207,4 @@ export function withApolloAuth<T = {}>(
   }
 
   return WithApollo;
-}
-
-let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
-
-interface IApolloHelper {
-  getToken(): string;
-}
-
-/**
- * Always creates a new apollo client on the server
- * Creates or reuses apollo client in the browser.
- */
-function initApolloClient(initialState = {}, opts: IApolloHelper) {
-  // Make sure to create a new client for every server-side request so that data
-  // isn't shared between connections (which would be bad)
-  if (typeof window === "undefined") {
-    return createApolloClient(initialState, opts);
-  }
-
-  // Reuse client on the client-side
-  if (!apolloClient) {
-    apolloClient = createApolloClient(initialState, opts);
-  }
-
-  return apolloClient;
-}
-
-/**
- * Creates and configures the ApolloClient
- * @param  {Object} [initialState={}]
- * @param  {Object} config
- */
-function createApolloClient(
-  initialState = {},
-  opts: IApolloHelper
-): ApolloClient<NormalizedCacheObject> {
-  const fetchOptions: any = {};
-
-  const httpLink = new HttpLink({
-    uri: GRAPHQL_ENDPOINT, // Server URL (must be absolute)
-    credentials: "same-origin",
-    fetch,
-    fetchOptions
-  });
-
-  const authLink = setContext((request, { headers }) => {
-    const token = opts.getToken();
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? token : ""
-      }
-    };
-  });
-
-  // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
-  return new ApolloClient({
-    ssrMode: typeof window === "undefined", // Disables forceFetch on the server (so queries are only run once)
-    link: authLink.concat(httpLink),
-    cache: new InMemoryCache().restore(initialState)
-  });
 }
