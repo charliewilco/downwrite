@@ -86,7 +86,7 @@ export function withApolloAuth<T = {}>(
   if (ssr || PageComponent.getInitialProps) {
     WithApollo.getInitialProps = async (
       ctx: IApolloPageContext
-    ): Promise<IApolloProps & T | {}> => {
+    ): Promise<(IApolloProps & T) | {}> => {
       const { AppTree } = ctx;
 
       // Run all GraphQL queries in the component tree
