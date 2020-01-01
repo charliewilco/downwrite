@@ -2,7 +2,7 @@ export * from "./api";
 export * from "./auth-middleware";
 export * from "./classnames";
 export * from "./dev";
-export * from "./defaultStyles";
+export * from "./default-styles";
 export * from "./initial-props";
 export * from "./markdown-template";
 export * from "./sanitize";
