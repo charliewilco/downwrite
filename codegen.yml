@@ -1,7 +1,7 @@
-schema: ./utils/graphql/schema.graphql
-documents: ./utils/graphql/document.graphql
+schema: ./src/utils/graphql/schema.graphql
+documents: ./src/utils/graphql/document.graphql
 generates:
-  ./utils/generated.tsx:
+  ./src/utils/generated.tsx:
     plugins:
       - typescript
       - typescript-operations

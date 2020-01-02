@@ -1,12 +1,27 @@
 import * as React from "react";
 import Head from "next/head";
-import "isomorphic-unfetch";
+import { NextPage } from "next";
 import SettingsUser from "../components/settings-user-form";
 import SettingsPassword from "../components/settings-password";
 import SettingsLocal from "../components/settings-markdown";
-import * as InitialProps from "../utils/initial-props";
+import Loading from "../components/loading";
+import { useUserDetailsQuery } from "../utils/generated";
+import { withApolloAuth } from "../utils/apollo-auth";
 
-function Settings(props: InitialProps.IUserSettingsProps) {
+const SettingsPage: NextPage = () => {
+  const { error, loading, data } = useUserDetailsQuery();
+  if (loading) {
+    return <Loading size={50} />;
+  }
+
+  if (error) {
+    return (
+      <div>
+        <pre>{JSON.stringify(error, null, 2)}</pre>
+      </div>
+    );
+  }
+
   return (
     <div className="Wrapper Wrapper--md" style={{ padding: 8 }}>
       <Head>
@@ -16,13 +31,13 @@ function Settings(props: InitialProps.IUserSettingsProps) {
       <h1 className="ContainerTitle" style={{ marginBottom: 16 }}>
         Settings
       </h1>
-      <SettingsUser user={props.user} />
+      <SettingsUser user={data.settings} />
       <SettingsPassword />
       <SettingsLocal />
     </div>
   );
-}
+};
 
-Settings.getInitialProps = InitialProps.getInitialSettings;
-
-export default Settings;
+export default withApolloAuth(SettingsPage, {
+  ssr: false
+});

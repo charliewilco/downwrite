@@ -28,6 +28,13 @@ query Preview($id: ID!) {
   }
 }
 
+query UserDetails {
+  settings {
+    username
+    email
+  }
+}
+
 mutation UpdateEntry(
   $id: String
   $content: String

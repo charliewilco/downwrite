@@ -50,18 +50,6 @@ export const createHeader = (
   };
 };
 
-/**
- * @deprecated
- */
-export async function getUserDetails(options: IOptions): Promise<any> {
-  const url = URLEndpoints.create(Endpoints.USER_ENDPOINT, options.host);
-  const user = await fetch(url, createHeader("GET", options.token)).then(res =>
-    res.json()
-  );
-
-  return user;
-}
-
 interface ICreateUserBody {
   username: string;
   email: string;

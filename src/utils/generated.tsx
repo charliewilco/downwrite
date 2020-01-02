@@ -153,6 +153,12 @@ export type IPreviewQuery = { __typename?: "Query" } & {
   >;
 };
 
+export type IUserDetailsQueryVariables = {};
+
+export type IUserDetailsQuery = { __typename?: "Query" } & {
+  settings: Maybe<{ __typename?: "User" } & Pick<IUser, "username" | "email">>;
+};
+
 export type IUpdateEntryMutationVariables = {
   id: Maybe<Scalars["String"]>;
   content: Maybe<Scalars["String"]>;
@@ -367,6 +373,60 @@ export type PreviewLazyQueryHookResult = ReturnType<typeof usePreviewLazyQuery>;
 export type PreviewQueryResult = ApolloReactCommon.QueryResult<
   IPreviewQuery,
   IPreviewQueryVariables
+>;
+export const UserDetailsDocument = gql`
+  query UserDetails {
+    settings {
+      username
+      email
+    }
+  }
+`;
+
+/**
+ * __useUserDetailsQuery__
+ *
+ * To run a query within a React component, call `useUserDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserDetailsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUserDetailsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    IUserDetailsQuery,
+    IUserDetailsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<IUserDetailsQuery, IUserDetailsQueryVariables>(
+    UserDetailsDocument,
+    baseOptions
+  );
+}
+export function useUserDetailsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    IUserDetailsQuery,
+    IUserDetailsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    IUserDetailsQuery,
+    IUserDetailsQueryVariables
+  >(UserDetailsDocument, baseOptions);
+}
+export type UserDetailsQueryHookResult = ReturnType<typeof useUserDetailsQuery>;
+export type UserDetailsLazyQueryHookResult = ReturnType<
+  typeof useUserDetailsLazyQuery
+>;
+export type UserDetailsQueryResult = ApolloReactCommon.QueryResult<
+  IUserDetailsQuery,
+  IUserDetailsQueryVariables
 >;
 export const UpdateEntryDocument = gql`
   mutation UpdateEntry(

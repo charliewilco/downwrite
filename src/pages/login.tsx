@@ -1,24 +1,18 @@
 import * as React from "react";
+import { NextPage } from "next";
+import dynamic from "next/dynamic";
 import Head from "next/head";
-import LoginTabs from "../components/login-tabs";
+import Loading from "../components/loading";
 import Landing from "../components/landing";
 import Features from "../components/landing-features";
+import { withApolloAuth } from "../utils/apollo-auth";
 
-// TODO: Migrate back to dynamic element ASAP
-// import dynamic from "next/dynamic";
-// import Loading from "../components/loading";
+const LoginTabs = dynamic(import("../components/login-tabs"), {
+  loading: () => <Loading size={75} />,
+  ssr: false
+});
 
-// type Dynamic = Promise<React.ComponentType<{}>>;
-
-// const Login = dynamic(import('../components/login-form'), {
-//   loading: () => <Loading size={75} />
-// });
-//
-// const Register = dynamic(import("../components/register"), {
-//   loading: () => <Loading size={75} />
-// });
-
-export default function LoginPage(): JSX.Element {
+export const LoginPage: NextPage = () => {
   return (
     <main className="HomeContainer" data-testid="LOGIN_PAGE_CONTAINER">
       <Head>
@@ -30,4 +24,8 @@ export default function LoginPage(): JSX.Element {
       <LoginTabs />
     </main>
   );
-}
+};
+
+export default withApolloAuth(LoginPage, {
+  ssr: false
+});

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { IResolvers } from "apollo-server-micro";
 import { IContext, DownwriteAPI } from "./data-source";
 
@@ -34,8 +35,13 @@ export const resolvers: IResolvers<unknown, IResolverContext> = {
     async preview(_, { id }, context) {
       const md = await context.dataSources.dwnxtAPI.getPreview(id);
       return md;
+    },
+    async settings(_, __, context) {
+      const user = await context.dataSources.dwnxtAPI.getUserDetails();
+      return user;
     }
   },
+
   Mutation: {
     async createEntry(_, args: IMutationCreateEntryVars, context) {
       const entry = await context.dataSources.dwnxtAPI.createPost(
