@@ -1,6 +1,6 @@
 import * as Draft from "draft-js";
 import uuid from "uuid/v4";
-import { IPost } from "downwrite";
+import { IPost } from "../graphql/transform";
 
 const uid = Math.floor(Math.random() * 678) + 1;
 

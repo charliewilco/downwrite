@@ -4,23 +4,10 @@ import { LinkProps } from "next/link";
 import { render, wait } from "@testing-library/react";
 import { MockedProvider, MockedResponse } from "@apollo/react-testing";
 import { draftToMarkdown } from "markdown-draft-js";
-import { IPreviewEntry } from "downwrite";
 import { PreviewEntry } from "../pages/preview";
 import Content from "../components/content";
 import { createMockPost } from "../utils/testing";
 import { PreviewDocument } from "../utils/generated";
-
-let title = "Starting Again";
-const mockPost = createMockPost({ title, public: true });
-
-let post: IPreviewEntry = {
-  ...mockPost,
-  content: draftToMarkdown(mockPost.content),
-  author: {
-    username: "Hello",
-    gradient: ["...", "..."]
-  }
-};
 
 jest.mock("next/link", () => {
   return jest.fn((props: React.PropsWithChildren<LinkProps>) => (
@@ -78,7 +65,16 @@ describe("<Preview />", () => {
   });
 
   it("takes static content", () => {
-    let { getByTestId } = render(<Content {...post} />);
+    const title = "Starting Again";
+    const mockPost = createMockPost({ title, public: true });
+
+    const { getByTestId } = render(
+      <Content
+        title={title}
+        dateAdded={mockPost.dateAdded}
+        content={draftToMarkdown(mockPost.content)}
+      />
+    );
     expect(getByTestId("PREVIEW_ENTRTY_TITLE")).toHaveTextContent(title);
   });
 
