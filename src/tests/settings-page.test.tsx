@@ -1,6 +1,5 @@
 import * as React from "react";
 import "@testing-library/jest-dom/extend-expect";
-
 import { render, waitForElement } from "@testing-library/react";
 import { MockedProvider, MockedResponse, wait } from "@apollo/react-testing";
 import { SettingsPage } from "../pages/settings";
@@ -23,16 +22,19 @@ const mocks: MockedResponse[] = [
   }
 ];
 
-const Page = render(
-  <MockedProvider mocks={mocks} addTypename={false}>
-    <MockAuthProvider>
-      <SettingsPage />
-    </MockAuthProvider>
-  </MockedProvider>
-);
+function createPage(mocks: MockedResponse[]) {
+  return render(
+    <MockedProvider mocks={mocks} addTypename={false}>
+      <MockAuthProvider>
+        <SettingsPage />
+      </MockAuthProvider>
+    </MockedProvider>
+  );
+}
 
 describe("settings page", () => {
   it("renders settings page and form is prefilled", async () => {
+    const Page = createPage(mocks);
     await wait(0);
 
     const usernameInput = await waitForElement(() =>
