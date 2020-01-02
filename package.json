@@ -10,10 +10,10 @@
     "build": "next build",
     "dev": "next dev",
     "typecheck": "tsc --noEmit",
-    "test": "NODE_ENV=test jest --verbose --silent",
+    "test": "NODE_ENV=test jest --silent",
     "test:ci": "yarn test --runInBand --no-cache --coverage",
     "generate": "graphql-codegen",
-    "lint": "eslint --ext .js,.ts,.tsx src"
+    "lint": "eslint src --ext .ts,tsx"
   },
   "engines": {
     "node": "12.x"
@@ -108,7 +108,8 @@
     "testMatch": [
       "**/*.(test).(ts|tsx)"
     ],
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "verbose": true
   },
   "browserslist": [
     "last 1 version"
