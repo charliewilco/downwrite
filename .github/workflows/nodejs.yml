@@ -23,4 +23,4 @@ jobs:
       - name: Type Check
         run: yarn typecheck
       - name: Test
-        run: yarn test --runInBand --no-cache --coverage
+        run: yarn test:ci
