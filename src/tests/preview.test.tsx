@@ -67,13 +67,10 @@ describe("<Preview />", () => {
   it("takes static content", () => {
     const title = "Starting Again";
     const mockPost = createMockPost({ title, public: true });
+    const content = draftToMarkdown(mockPost.content as Draft.RawDraftContentState);
 
     const { getByTestId } = render(
-      <Content
-        title={title}
-        dateAdded={mockPost.dateAdded}
-        content={draftToMarkdown(mockPost.content)}
-      />
+      <Content title={title} dateAdded={mockPost.dateAdded} content={content} />
     );
     expect(getByTestId("PREVIEW_ENTRTY_TITLE")).toHaveTextContent(title);
   });

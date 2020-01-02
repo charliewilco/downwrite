@@ -24,8 +24,11 @@ export const createMockPost = (overides?: Partial<IPost>): IPost => {
       title: "Something",
       id,
       dateAdded,
+      dateModified: dateAdded,
       content,
-      public: false
+      public: false,
+      user: "someone",
+      excerpt: "Something is happening here"
     },
     overides || {}
   );
@@ -37,7 +40,7 @@ export const createMockPosts = (count: number): IPost[] => {
     .map(() => createMockPost({ title: "Mocked Posts" }));
 };
 
-export const createEditorState = (content: string): Draft.EditorState => {
+export const createEditorState = (content?: string): Draft.EditorState => {
   const state = Draft.EditorState.createWithContent(
     Draft.ContentState.createFromText("Hello")
   );
