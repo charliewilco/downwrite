@@ -2,14 +2,12 @@ import React from "react";
 import Head from "next/head";
 import { ApolloClient } from "apollo-client";
 import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
-import { HttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
 import { ApolloProvider } from "@apollo/react-hooks";
-import fetch from "isomorphic-unfetch";
+import "isomorphic-unfetch";
 import { NextPageContext } from "next";
 import Cookies from "universal-cookie";
 import { IncomingMessage } from "http";
-import { GRAPHQL_ENDPOINT } from "./urls";
 
 interface IApolloProps extends React.PropsWithChildren<{}> {
   apolloClient: ApolloClient<unknown>;
@@ -18,6 +16,20 @@ interface IApolloProps extends React.PropsWithChildren<{}> {
 
 interface IApolloPageContext extends NextPageContext {
   apolloClient: ApolloClient<unknown>;
+}
+
+function createIsomorphLink() {
+  if (typeof window === "undefined") {
+    const { SchemaLink } = require("apollo-link-schema");
+    const { schema } = require("./graphql/");
+    return new SchemaLink({ schema });
+  } else {
+    const { HttpLink } = require("apollo-link-http");
+    return new HttpLink({
+      uri: "/api/graphql",
+      credentials: "same-origin"
+    });
+  }
 }
 
 interface IApolloPage<P = {}, IP = P> {
@@ -61,12 +73,7 @@ function createApolloClient(
 ): ApolloClient<NormalizedCacheObject> {
   const fetchOptions: any = {};
 
-  const httpLink = new HttpLink({
-    uri: GRAPHQL_ENDPOINT, // Server URL (must be absolute)
-    credentials: "same-origin",
-    fetch,
-    fetchOptions
-  });
+  const httpLink = createIsomorphLink();
 
   const authLink = setContext((request, { headers }) => {
     const token = opts.getToken();
