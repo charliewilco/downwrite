@@ -4,7 +4,7 @@ import { ApolloClient } from "apollo-client";
 import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
 import { setContext } from "apollo-link-context";
 import { ApolloProvider } from "@apollo/react-hooks";
-import "isomorphic-unfetch";
+import fetch from "isomorphic-unfetch";
 import { NextPageContext } from "next";
 import Cookies from "universal-cookie";
 import { IncomingMessage } from "http";
@@ -21,13 +21,17 @@ interface IApolloPageContext extends NextPageContext {
 function createIsomorphLink() {
   if (typeof window === "undefined") {
     const { SchemaLink } = require("apollo-link-schema");
-    const { schema } = require("./graphql/");
+    const { schema } = require("./graphql/schema");
     return new SchemaLink({ schema });
   } else {
+    const fetchOptions: any = {};
+
     const { HttpLink } = require("apollo-link-http");
     return new HttpLink({
       uri: "/api/graphql",
-      credentials: "same-origin"
+      credentials: "same-origin",
+      fetch,
+      fetchOptions
     });
   }
 }
@@ -71,8 +75,6 @@ function createApolloClient(
   initialState = {},
   opts: IApolloHelper
 ): ApolloClient<NormalizedCacheObject> {
-  const fetchOptions: any = {};
-
   const httpLink = createIsomorphLink();
 
   const authLink = setContext((request, { headers }) => {
