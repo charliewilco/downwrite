@@ -8,7 +8,7 @@ import Loading from "../components/loading";
 import { useUserDetailsQuery } from "../utils/generated";
 import { withApolloAuth } from "../utils/apollo-auth";
 
-const SettingsPage: NextPage = () => {
+export const SettingsPage: NextPage = () => {
   const { error, loading, data } = useUserDetailsQuery();
   if (loading) {
     return <Loading size={50} />;

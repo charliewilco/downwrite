@@ -17,7 +17,7 @@ const Editor = dynamic(() => import("../components/editor"), {
 
 const EDITOR_COMMAND = "create-new-post";
 
-const NewEditor = (): JSX.Element => {
+export const NewEditor = (): JSX.Element => {
   const initialValues = React.useRef<IFields>({
     title: "",
     editorState: Draft.EditorState.createEmpty()

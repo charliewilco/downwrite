@@ -44,7 +44,8 @@ export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
           <Form>
             <UIInputContainer>
               <UIInput
-                placeholder="user@email.com"
+                testID="SETTINGS_USERNAME_INPUT"
+                placeholder="username"
                 label="Username"
                 name="username"
                 autoComplete="username"
@@ -55,6 +56,7 @@ export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
             </UIInputContainer>
             <UIInputContainer>
               <UIInput
+                testID="SETTINGS_EMAIL_INPUT"
                 placeholder="user@email.com"
                 label="Email"
                 autoComplete="email"
