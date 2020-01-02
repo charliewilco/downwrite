@@ -8,6 +8,9 @@ import fetch from "isomorphic-unfetch";
 import { NextPageContext } from "next";
 import Cookies from "universal-cookie";
 import { IncomingMessage } from "http";
+import { SchemaLink } from "apollo-link-schema";
+import { HttpLink } from "apollo-link-http";
+import { schema } from "./graphql";
 
 interface IApolloProps extends React.PropsWithChildren<{}> {
   apolloClient: ApolloClient<unknown>;
@@ -20,13 +23,10 @@ interface IApolloPageContext extends NextPageContext {
 
 function createIsomorphLink() {
   if (typeof window === "undefined") {
-    const { SchemaLink } = require("apollo-link-schema");
-    const { schema } = require("./graphql/schema");
     return new SchemaLink({ schema });
   } else {
     const fetchOptions: any = {};
 
-    const { HttpLink } = require("apollo-link-http");
     return new HttpLink({
       uri: "/api/graphql",
       credentials: "same-origin",
