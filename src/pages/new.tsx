@@ -79,4 +79,4 @@ export const NewEditor = (): JSX.Element => {
     </React.Fragment>
   );
 };
-export default withApolloAuth(NewEditor, { ssr: true });
+export default withApolloAuth(NewEditor, { ssr: false });

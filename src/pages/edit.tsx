@@ -103,4 +103,4 @@ export function EditUI() {
   );
 }
 
-export default withApolloAuth(EditUI, { ssr: true });
+export default withApolloAuth(EditUI, { ssr: false });

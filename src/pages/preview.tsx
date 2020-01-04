@@ -20,7 +20,6 @@ function usePreview(id: string) {
 
 export function PreviewEntry() {
   const router = useRouter();
-
   const { error, loading, data } = usePreview(router.query.id as string);
 
   if (error) {
