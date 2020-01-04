@@ -14,9 +14,7 @@ export default function useDashboard() {
     React.Reducer<IDashboardState, DashboardActionType>
   >(reducer, initialState());
 
-  const { data, loading, error, refetch } = useAllPostsQuery({
-    ssr: true
-  });
+  const { data, loading, error, refetch } = useAllPostsQuery();
 
   const [deleteEntry] = useRemoveEntryMutation();
 

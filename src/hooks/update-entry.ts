@@ -22,7 +22,6 @@ export default function useEdit(id: string) {
   const [, { addNotification }] = useUINotifications();
 
   const [getEntry, { loading, data, error }] = useEditLazyQuery({
-    ssr: true,
     variables: {
       id
     }
