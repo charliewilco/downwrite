@@ -1,5 +1,5 @@
 import { createTestClient } from "apollo-server-testing";
-import { testServer } from "../utils/graphql";
+import { testServer } from "../utils/graphql/server";
 import { AllPostsDocument } from "../utils/generated";
 
 const GraphQL = createTestClient(testServer);

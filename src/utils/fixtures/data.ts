@@ -1,6 +1,6 @@
 import uuid from "uuid/v4";
 import fakeMarkdown from "./fake-markdown";
-import { IUser } from "../graphql";
+import { IUser } from "../graphql/transform";
 import { IEntry, IPreview, IAuthor } from "../generated";
 
 export class FixtureData {

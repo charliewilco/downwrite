@@ -1,4 +1,6 @@
+/* eslint-disable no-console */
 import React from "react";
+import { NextApiRequest } from "next";
 import Head from "next/head";
 import { ApolloClient } from "apollo-client";
 import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
@@ -7,7 +9,6 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import fetch from "isomorphic-unfetch";
 import { NextPageContext } from "next";
 import Cookies from "universal-cookie";
-import { IncomingMessage } from "http";
 
 interface IApolloProps extends React.PropsWithChildren<{}> {
   apolloClient: ApolloClient<unknown>;
@@ -15,25 +16,28 @@ interface IApolloProps extends React.PropsWithChildren<{}> {
 }
 
 interface IApolloPageContext extends NextPageContext {
+  req: NextApiRequest;
   apolloClient: ApolloClient<unknown>;
 }
 
-function createIsomorphLink() {
+function createIsomorphLink(token?: string) {
   if (typeof window === "undefined") {
     const { SchemaLink } = require("apollo-link-schema");
     const { schema } = require("./graphql/schema");
 
-    return new SchemaLink({ schema });
+    return new SchemaLink({
+      schema,
+      context: {
+        token
+      }
+    });
   } else {
     const { HttpLink } = require("apollo-link-http");
-
-    const fetchOptions: any = {};
 
     return new HttpLink({
       uri: "/api/graphql",
       credentials: "same-origin",
-      fetch,
-      fetchOptions
+      fetch
     });
   }
 }
@@ -45,7 +49,13 @@ interface IApolloPage<P = {}, IP = P> {
   getInitialProps?(ctx: IApolloPageContext): Partial<IP> | Promise<Partial<IP>>;
 }
 
-function getToken(req?: IncomingMessage): string {
+// function getHost(req?: NextApiRequest) {
+//   console.log(req.headers.host);
+
+//   return req.headers.host;
+// }
+
+function getToken(req?: NextApiRequest): string {
   let cookies;
   if (req) {
     cookies = new Cookies(req.headers.cookie);
@@ -77,10 +87,11 @@ function createApolloClient(
   initialState = {},
   opts: IApolloHelper
 ): ApolloClient<NormalizedCacheObject> {
-  const httpLink = createIsomorphLink();
+  const token = opts.getToken();
+
+  const httpLink = createIsomorphLink(token);
 
   const authLink = setContext((request, { headers }) => {
-    const token = opts.getToken();
     return {
       headers: {
         ...headers,
@@ -93,7 +104,8 @@ function createApolloClient(
   return new ApolloClient({
     ssrMode: typeof window === "undefined", // Disables forceFetch on the server (so queries are only run once)
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache().restore(initialState)
+    cache: new InMemoryCache().restore(initialState),
+    connectToDevTools: typeof window == "undefined"
   });
 }
 

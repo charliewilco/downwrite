@@ -52,6 +52,7 @@ export class TransformResponses {
 
     return post;
   }
+
   public transformPostToEntry(post: IPost): Omit<IEntry, "author"> {
     let md = ``;
 

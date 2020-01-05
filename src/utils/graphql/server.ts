@@ -1,5 +1,7 @@
 import { ApolloServer } from "apollo-server-micro";
-import { DownwriteAPI, MockAPI, schema } from "./";
+import { DownwriteAPI } from "./data-source";
+import { MockAPI } from "./mock-data-source";
+import { schema } from "./schema";
 import { REST_ENDPOINT } from "../urls";
 
 export const server = new ApolloServer({

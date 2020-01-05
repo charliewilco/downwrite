@@ -4,7 +4,6 @@
   "name": "downwrite",
   "alias": ["next.downwrite.us", "beta.downwrite.us", "alpha.downwrite.us"],
   "env": {
-    "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true",
     "PORT": "3000",
     "SECRET_KEY": "@dw-key",
     "DB_USER": "@dw-db-user",
