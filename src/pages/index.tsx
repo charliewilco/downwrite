@@ -56,4 +56,4 @@ export const DashboardUI: NextPage<{}> = () => {
   );
 };
 
-export default withApolloAuth(DashboardUI, { ssr: false });
+export default withApolloAuth(DashboardUI, { ssr: true });

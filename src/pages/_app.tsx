@@ -4,6 +4,7 @@ import is from "@sindresorhus/is";
 import { UIShell } from "../components/ui-shell";
 import { AuthProvider } from "../components/auth";
 import Cookies from "universal-cookie";
+import "../components/styles/base.css";
 
 interface IAppProps extends AppProps {
   token: string;
