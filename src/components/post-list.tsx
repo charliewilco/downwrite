@@ -18,36 +18,43 @@ enum ListActions {
   SET
 }
 
-interface IListActions {
-  type: ListActions;
-  payload?: boolean;
-}
+type ListReducerAction =
+  | {
+      type: ListActions.TOGGLE;
+    }
+  | {
+      type: ListActions.SET;
+      payload: boolean;
+    };
 
 interface IPostListState {
   isGridView: boolean;
 }
 
-function listReducer(state: IPostListState, action: IListActions): IPostListState {
+function listReducer(
+  state: IPostListState,
+  action: ListReducerAction
+): IPostListState {
   switch (action.type) {
     case ListActions.TOGGLE:
       return { isGridView: !state.isGridView };
     case ListActions.SET:
-      return { isGridView: action.payload! };
+      return { isGridView: action.payload };
     default:
       throw new Error("Must specify action type");
   }
 }
 
 export default function PostList(props: IPostListProps): JSX.Element {
-  const [{ isGridView }, dispatch] = React.useReducer(listReducer, {
+  const [state, dispatch] = React.useReducer(listReducer, {
     isGridView: true
   });
 
-  const testID = isGridView ? "ENTRIES_GRIDVIEW" : "ENTRIES_LISTVIEW";
+  const testID = state.isGridView ? "ENTRIES_GRIDVIEW" : "ENTRIES_LISTVIEW";
   const className = classNames(
     "PostList",
-    isGridView && "Grid",
-    !isGridView && "Wrapper Wrapper--sm"
+    state.isGridView && "Grid",
+    !state.isGridView && "Wrapper Wrapper--sm"
   );
 
   return (
@@ -55,14 +62,14 @@ export default function PostList(props: IPostListProps): JSX.Element {
       <header className="PostListHeader">
         <h1 className="ContainerTitle">Entries</h1>
         <LayoutControl
-          layout={isGridView}
+          layout={state.isGridView}
           layoutChange={payload => dispatch({ type: ListActions.SET, payload })}
         />
       </header>
 
       <ul className={className} data-testid={testID}>
         {props.posts.map((p, i) =>
-          !isGridView ? (
+          !state.isGridView ? (
             <PostListItem key={i} {...p} onDelete={props.onSelect} />
           ) : (
             <li className="GridItem" key={i}>

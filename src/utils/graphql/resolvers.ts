@@ -32,6 +32,7 @@ export const resolvers: IResolvers<unknown, IResolverContext> = {
 
         return feed;
       } else {
+        console.log(context, "Context from Resolver");
         const r = await fetch("http://localhost:4000/api/posts", {
           headers: {
             Authorization: context.token
