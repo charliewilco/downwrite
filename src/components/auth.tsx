@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import jwt from "jwt-decode";
 import addDays from "date-fns/addDays";
 import {
-  IAuthReducerAction,
+  AuthReducerAction,
   IAuthState,
   AuthActions,
   reducer
@@ -78,7 +78,7 @@ function initializer(tokenInitial?: string): IAuthState {
 
 export function useAuthReducer(tokenInitial?: string): [IAuthState, IAuthActions] {
   const [state, dispatch] = React.useReducer<
-    React.Reducer<IAuthState, IAuthReducerAction>,
+    React.Reducer<IAuthState, AuthReducerAction>,
     string
   >(reducer, tokenInitial, initializer);
 

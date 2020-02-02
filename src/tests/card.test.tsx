@@ -1,5 +1,5 @@
 import * as React from "react";
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 import { LinkProps } from "next/link";
 import { fireEvent, render, waitForElement } from "@testing-library/react";
 import Card from "../components/card";

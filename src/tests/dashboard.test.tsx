@@ -1,6 +1,6 @@
 import * as React from "react";
 import { LinkProps } from "next/link";
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 
 import { render, fireEvent, waitForElement, act } from "@testing-library/react";
 import { wait, MockedProvider, MockedResponse } from "@apollo/react-testing";

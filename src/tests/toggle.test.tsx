@@ -1,6 +1,6 @@
 import "jest";
 import * as React from "react";
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 import { render, fireEvent } from "@testing-library/react";
 import { useToggle } from "../hooks/toggle";
 

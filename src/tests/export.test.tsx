@@ -1,5 +1,5 @@
 import * as React from "react";
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 import Export from "../components/export";
 import { render } from "@testing-library/react";
 import { createEditorState } from "../utils/testing";

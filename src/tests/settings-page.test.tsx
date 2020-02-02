@@ -1,5 +1,5 @@
 import * as React from "react";
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 import { render, waitForElement } from "@testing-library/react";
 import { MockedProvider, MockedResponse, wait } from "@apollo/react-testing";
 import { SettingsPage } from "../pages/settings";

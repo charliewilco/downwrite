@@ -1,5 +1,3 @@
-import produce from "immer";
-
 export enum AuthActions {
   SIGN_IN = "SIGN_IN",
   SIGN_OUT = "SIGN_OUT"
@@ -16,20 +14,24 @@ export interface IAuthReducerAction {
   payload?: IAuthState;
 }
 
-export const reducer = produce((draft: IAuthState, action: IAuthReducerAction) => {
+export type AuthReducerAction =
+  | { type: AuthActions.SIGN_IN; payload: IAuthState }
+  | { type: AuthActions.SIGN_OUT };
+
+export const reducer = (
+  state: IAuthState,
+  action: AuthReducerAction
+): IAuthState => {
   switch (action.type) {
     case AuthActions.SIGN_IN: {
-      draft = { ...action.payload };
-      break;
+      return { ...action.payload };
     }
     case AuthActions.SIGN_OUT: {
-      draft.authed = false;
-      draft.name = null;
-      draft.token = null;
-
-      break;
+      return {
+        authed: false,
+        name: null,
+        token: null
+      };
     }
-    default:
-      throw new Error();
   }
-});
+};

@@ -1,6 +1,6 @@
 import * as React from "react";
-import "@testing-library/jest-dom/extend-expect";
-import { render, fireEvent } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { render, fireEvent, act } from "@testing-library/react";
 import Check from "../components/checkbox";
 
 describe("<Check />", () => {
@@ -12,7 +12,9 @@ describe("<Check />", () => {
     );
     expect(getByTestId("TEST_CHECKBOX")).toBeInTheDocument();
 
-    fireEvent.click(getByTestId("TEST_CHECKBOX_LABEL"));
+    act(() => {
+      fireEvent.click(getByTestId("TEST_CHECKBOX_LABEL"));
+    });
     expect((getByTestId("TEST_CHECKBOX") as HTMLInputElement).checked).toBe(true);
   });
 });
