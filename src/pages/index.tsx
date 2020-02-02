@@ -63,8 +63,6 @@ export const DashboardUI: NextPage<{}> = () => {
     );
   }
 
-  console.log(state, data, loading, error);
-
   return null;
 };
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Formik, FormikProps, ErrorMessage, Form, FormikActions } from "formik";
+import { useFormik, FormikHelpers } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
@@ -18,14 +18,10 @@ interface ISettingsUserForm {
 
 export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
   const [{ token }] = React.useContext<AuthContextType>(AuthContext);
-  const initialValues = React.useRef<IUserFormValues>({
-    username: props.user.username,
-    email: props.user.email
-  });
 
   const onSubmit = async (
     values: IUserFormValues,
-    actions: FormikActions<IUserFormValues>
+    actions: FormikHelpers<IUserFormValues>
   ): Promise<void> => {
     const { host } = document.location;
     const settings = await API.updateSettings(values, { token, host });
@@ -34,47 +30,48 @@ export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
     }
   };
 
+  const formik = useFormik<IUserFormValues>({
+    initialValues: { ...props.user },
+    onSubmit,
+    validationSchema: UserSettingsSchema
+  });
+
   return (
-    <Formik
-      initialValues={initialValues.current}
-      onSubmit={onSubmit}
-      validationSchema={UserSettingsSchema}>
-      {(formik: FormikProps<IUserFormValues>) => (
-        <SettingsBlock title="User Settings">
-          <Form>
-            <UIInputContainer>
-              <UIInput
-                testID="SETTINGS_USERNAME_INPUT"
-                placeholder="username"
-                label="Username"
-                name="username"
-                autoComplete="username"
-                value={formik.values.username}
-                onChange={formik.handleChange}
-              />
-              <ErrorMessage name="username" component={UIInputError} />
-            </UIInputContainer>
-            <UIInputContainer>
-              <UIInput
-                testID="SETTINGS_EMAIL_INPUT"
-                placeholder="user@email.com"
-                label="Email"
-                autoComplete="email"
-                type="email"
-                name="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-              />
-              <ErrorMessage name="email" component={UIInputError} />
-            </UIInputContainer>
-            <SettingsFormActions>
-              <Button type="submit" disabled={formik.isSubmitting}>
-                Save
-              </Button>
-            </SettingsFormActions>
-          </Form>
-        </SettingsBlock>
-      )}
-    </Formik>
+    <SettingsBlock title="User Settings">
+      <form onSubmit={formik.handleSubmit}>
+        <UIInputContainer>
+          <UIInput
+            testID="SETTINGS_USERNAME_INPUT"
+            placeholder="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
+            value={formik.values.username}
+            onChange={formik.handleChange}
+          />
+          {formik.errors.username && (
+            <UIInputError>{formik.errors.username}</UIInputError>
+          )}
+        </UIInputContainer>
+        <UIInputContainer>
+          <UIInput
+            testID="SETTINGS_EMAIL_INPUT"
+            placeholder="user@email.com"
+            label="Email"
+            autoComplete="email"
+            type="email"
+            name="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+          />
+          {formik.errors.email && <UIInputError>{formik.errors.email}</UIInputError>}
+        </UIInputContainer>
+        <SettingsFormActions>
+          <Button type="submit" disabled={formik.isSubmitting}>
+            Save
+          </Button>
+        </SettingsFormActions>
+      </form>
+    </SettingsBlock>
   );
 }

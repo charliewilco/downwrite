@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import { Formik, Form } from "formik";
+import { useFormik } from "formik";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { withApolloAuth } from "../utils/apollo-auth";
@@ -29,53 +29,53 @@ export const NewEditor = (): JSX.Element => {
     createNewPost(values);
   }
 
+  const { values, setFieldValue, handleSubmit, handleChange } = useFormik({
+    enableReinitialize: true,
+    initialValues: initialValues.current,
+    onSubmit
+  });
+
   return (
     <React.Fragment>
-      <Formik<IFields>
-        initialValues={initialValues.current}
-        onSubmit={onSubmit}
-        enableReinitialize>
-        {({ values, setFieldValue, handleSubmit, handleChange }) => (
-          <Form
-            className="Wrapper Wrapper--md"
-            style={{
-              paddingTop: 128,
-              paddingLeft: 4,
-              paddingRight: 4,
-              paddingBottom: 0
-            }}>
-            <Head>
-              <title>{values.title ? values.title : "New"} | Downwrite</title>
-            </Head>
-            <Upload
-              onParsed={parsed => {
-                setFieldValue("title", parsed.title);
-                setFieldValue("editorState", parsed.editorState);
-              }}>
-              <Input
-                value={values.title}
-                onChange={handleChange}
-                name="title"
-                placeholder="Untitled Document"
-              />
-              <aside className="UtilityBarContainer">
-                <div className="UtilityBarItems">
-                  {isOffline && <span>You're Offline Right Now</span>}
-                </div>
-                <div className="UtilityBarItems">
-                  <Button type="submit">Add New</Button>
-                </div>
-              </aside>
-              <Editor
-                editorCommand={EDITOR_COMMAND}
-                editorState={values.editorState}
-                onChange={editorState => setFieldValue("editorState", editorState)}
-                onSave={handleSubmit}
-              />
-            </Upload>
-          </Form>
-        )}
-      </Formik>
+      <form
+        className="Wrapper Wrapper--md"
+        style={{
+          paddingTop: 128,
+          paddingLeft: 4,
+          paddingRight: 4,
+          paddingBottom: 0
+        }}
+        onSubmit={handleSubmit}>
+        <Head>
+          <title>{values.title ? values.title : "New"} | Downwrite</title>
+        </Head>
+        <Upload
+          onParsed={parsed => {
+            setFieldValue("title", parsed.title);
+            setFieldValue("editorState", parsed.editorState);
+          }}>
+          <Input
+            value={values.title}
+            onChange={handleChange}
+            name="title"
+            placeholder="Untitled Document"
+          />
+          <aside className="UtilityBarContainer">
+            <div className="UtilityBarItems">
+              {isOffline && <span>You're Offline Right Now</span>}
+            </div>
+            <div className="UtilityBarItems">
+              <Button type="submit">Add New</Button>
+            </div>
+          </aside>
+          <Editor
+            editorCommand={EDITOR_COMMAND}
+            editorState={values.editorState}
+            onChange={editorState => setFieldValue("editorState", editorState)}
+            onSave={handleSubmit}
+          />
+        </Upload>
+      </form>
     </React.Fragment>
   );
 };

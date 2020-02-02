@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Formik, FormikProps, ErrorMessage, Form, FormikActions } from "formik";
+import { useFormik, FormikHelpers } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { ToggleBox } from "../components/toggle-box";
@@ -41,7 +41,7 @@ export default function SettingsPassword(): JSX.Element {
 
   const onSubmit = (
     values: IPasswordSettings,
-    actions: FormikActions<IPasswordSettings>
+    actions: FormikHelpers<IPasswordSettings>
   ): void => {
     const { host } = document.location;
     const response = API.updatePassword(values, { token, host });
@@ -57,40 +57,41 @@ export default function SettingsPassword(): JSX.Element {
     confirmPassword: ""
   };
 
+  const formik = useFormik<IPasswordSettings>({
+    initialValues,
+    onSubmit,
+    validationSchema: UpdatePasswordSchema
+  });
+
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={UpdatePasswordSchema}
-      onSubmit={onSubmit}>
-      {(formik: FormikProps<IPasswordSettings>) => (
-        <SettingsBlock title="Password">
-          <Form>
-            {PASSWORD_INPUTS.map(({ name, label }: IInputs, idx) => (
-              <UIInputContainer key={idx}>
-                <UIInput
-                  label={label}
-                  name={name}
-                  type={!isOpen ? "password" : "text"}
-                  placeholder="*********"
-                  value={formik.values[name]}
-                  onChange={formik.handleChange}
-                />
-                <ErrorMessage name={name} component={UIInputError} />
-              </UIInputContainer>
-            ))}
-            <SettingsFormActions split>
-              <ToggleBox
-                label={value => (!value ? "Values hidden" : "Values shown")}
-                onChange={() => setOpen(prevIsOpen => !prevIsOpen)}
-                value={isOpen}
-              />
-              <Button type="submit" disabled={formik.isSubmitting}>
-                Save
-              </Button>
-            </SettingsFormActions>
-          </Form>
-        </SettingsBlock>
-      )}
-    </Formik>
+    <SettingsBlock title="Password">
+      <form onSubmit={formik.handleSubmit}>
+        {PASSWORD_INPUTS.map(({ name, label }: IInputs, idx) => (
+          <UIInputContainer key={idx}>
+            <UIInput
+              label={label}
+              name={name}
+              type={!isOpen ? "password" : "text"}
+              placeholder="*********"
+              value={formik.values[name]}
+              onChange={formik.handleChange}
+            />
+            {formik.errors[name] && (
+              <UIInputError>{formik.errors[name]}</UIInputError>
+            )}
+          </UIInputContainer>
+        ))}
+        <SettingsFormActions split>
+          <ToggleBox
+            label={value => (!value ? "Values hidden" : "Values shown")}
+            onChange={() => setOpen(prevIsOpen => !prevIsOpen)}
+            value={isOpen}
+          />
+          <Button type="submit" disabled={formik.isSubmitting}>
+            Save
+          </Button>
+        </SettingsFormActions>
+      </form>
+    </SettingsBlock>
   );
 }

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Formik, FormikProps, ErrorMessage, Form, FormikActions } from "formik";
+import { useFormik, FormikHelpers } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
@@ -29,7 +29,9 @@ export enum LocalSettings {
 }
 
 export default function SettingsLocalMarkdown(): JSX.Element {
-  const context = React.useContext<ILocalUISettings>(LocalUISettings);
+  const {
+    actions: { updateFont }
+  } = React.useContext<ILocalUISettings>(LocalUISettings);
 
   const [initialValues, setInitialValues] = React.useState<ILocalSettings>({
     fileExtension: ".md",
@@ -38,18 +40,18 @@ export default function SettingsLocalMarkdown(): JSX.Element {
 
   function onSubmit(
     { fileExtension, fontFamily }: ILocalSettings,
-    actions: FormikActions<ILocalSettings>
+    helpers: FormikHelpers<ILocalSettings>
   ): void {
     localStorage.setItem(LocalSettings.EXTENSION, fileExtension);
     localStorage.setItem(LocalSettings.FONT, fontFamily);
 
-    context.actions.updateFont(fontFamily);
+    updateFont(fontFamily);
 
     if (
       localStorage.getItem(LocalSettings.EXTENSION) === fileExtension &&
       localStorage.getItem(LocalSettings.FONT) === fontFamily
     ) {
-      actions.setSubmitting(false);
+      helpers.setSubmitting(false);
     }
   }
 
@@ -62,36 +64,37 @@ export default function SettingsLocalMarkdown(): JSX.Element {
     setInitialValues({ fileExtension, fontFamily });
   }, []);
 
+  const formik = useFormik({
+    initialValues,
+    enableReinitialize: true,
+    validationSchema: LocalSettingsSchema,
+    onSubmit
+  });
+
   return (
-    <Formik
-      enableReinitialize
-      initialValues={initialValues}
-      validationSchema={LocalSettingsSchema}
-      onSubmit={onSubmit}>
-      {(formik: FormikProps<ILocalSettings>) => (
-        <SettingsBlock
-          title="Local Settings"
-          description="Settings only saved in your browser and won't sync across devices.">
-          <Form>
-            {LOCAL_SETTINGS_INPUTS.map((input, idx) => (
-              <UIInputContainer key={idx}>
-                <UIInput
-                  label={input.label}
-                  name={input.name}
-                  value={formik.values[input.name]}
-                  onChange={formik.handleChange}
-                />
-                <ErrorMessage name={input.name} component={UIInputError} />
-              </UIInputContainer>
-            ))}
-            <SettingsFormActions>
-              <Button type="submit" disabled={formik.isSubmitting}>
-                Save
-              </Button>
-            </SettingsFormActions>
-          </Form>
-        </SettingsBlock>
-      )}
-    </Formik>
+    <SettingsBlock
+      title="Local Settings"
+      description="Settings only saved in your browser and won't sync across devices.">
+      <form onSubmit={formik.handleSubmit}>
+        {LOCAL_SETTINGS_INPUTS.map((input, idx) => (
+          <UIInputContainer key={idx}>
+            <UIInput
+              label={input.label}
+              name={input.name}
+              value={formik.values[input.name]}
+              onChange={formik.handleChange}
+            />
+            {formik.errors[input.name] && (
+              <UIInputError>{formik.errors[input.name]}</UIInputError>
+            )}
+          </UIInputContainer>
+        ))}
+        <SettingsFormActions>
+          <Button type="submit" disabled={formik.isSubmitting}>
+            Save
+          </Button>
+        </SettingsFormActions>
+      </form>
+    </SettingsBlock>
   );
 }
