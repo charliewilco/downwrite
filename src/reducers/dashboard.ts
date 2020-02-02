@@ -1,3 +1,5 @@
+import produce from "immer";
+
 export interface IDashboardState {
   selectedPost: IPartialFeedItem;
   modalOpen: boolean;
@@ -28,22 +30,24 @@ export type DashboardActionType =
   | { type: DashActions.DELETED }
   | { type: DashActions.CLOSE_MODAL };
 
-export function reducer(
-  state: IDashboardState,
-  action: DashboardActionType
-): IDashboardState {
-  switch (action.type) {
-    case DashActions.SELECT_POST:
-      return {
-        modalOpen: true,
-        selectedPost: action.payload
-      };
-    case DashActions.CLOSE_MODAL:
-    case DashActions.DELETED:
-    case DashActions.CANCEL_DELETE:
-      return initialState();
+export const reducer = produce(
+  (draft: IDashboardState, action: DashboardActionType) => {
+    switch (action.type) {
+      case DashActions.SELECT_POST: {
+        draft.modalOpen = true;
+        draft.selectedPost = action.payload;
+        break;
+      }
 
-    default:
-      throw new Error("Must specify action type");
+      case DashActions.CLOSE_MODAL:
+      case DashActions.DELETED:
+      case DashActions.CANCEL_DELETE: {
+        draft = initialState();
+        break;
+      }
+
+      default:
+        throw new Error("Must specify action type");
+    }
   }
-}
+);

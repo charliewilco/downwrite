@@ -1,5 +1,6 @@
 import * as React from "react";
 import uuid from "uuid/v4";
+import produce from "immer";
 
 export enum NotificationType {
   DEFAULT = "DEFAULT",
@@ -44,49 +45,29 @@ export interface INotificationState {
   notifications: UINotificationMessage[];
 }
 
-function addNotification(
-  state: INotificationState,
-  text: string,
-  type?: NotificationType,
-  dismissable?: boolean
-): INotificationState {
-  const notifications = [
-    new UINotificationMessage(text, type, dismissable),
-    ...state.notifications
-  ].sort();
-  return {
-    notifications
-  };
-}
-
-function removeNotifications(
-  state: INotificationState,
-  selected: UINotificationMessage
-): INotificationState {
-  const notifications = state.notifications.filter(t => t.id !== selected.id && t);
-  return {
-    notifications
-  };
-}
-
-export function reducer(
-  state: INotificationState,
-  action: NotificationActionType
-): INotificationState {
-  switch (action.type) {
-    case NotificationActions.ADD_NOTIFICATION:
-      return addNotification(
-        state,
-        action.payload.text,
-        action.payload.type,
-        action.payload.dismissable
-      );
-    case NotificationActions.REMOVE_NOTIFICATION:
-      return removeNotifications(state, action.payload);
-    default:
-      throw new Error();
+export const reducer = produce(
+  (draft: INotificationState, action: NotificationActionType) => {
+    switch (action.type) {
+      case NotificationActions.ADD_NOTIFICATION: {
+        draft.notifications.unshift(
+          new UINotificationMessage(
+            action.payload.text,
+            action.payload.type,
+            action.payload.dismissable
+          )
+        );
+        break;
+      }
+      case NotificationActions.REMOVE_NOTIFICATION: {
+        const i = draft.notifications.findIndex(n => n.id === action.payload.id);
+        draft.notifications.splice(i, 1);
+        break;
+      }
+      default:
+        throw new Error();
+    }
   }
-}
+);
 
 export function init(
   notifications: UINotificationMessage[] | []

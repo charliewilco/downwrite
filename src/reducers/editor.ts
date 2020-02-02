@@ -1,4 +1,5 @@
 import * as Draft from "draft-js";
+import produce from "immer";
 import { markdownToDraft } from "markdown-draft-js";
 import { IEntry } from "../utils/generated";
 
@@ -61,19 +62,29 @@ export type EditorActions =
   | { type: EditActions.UPDATE_EDITOR; payload: Draft.EditorState }
   | { type: EditActions.UPDATE_TITLE; payload: string };
 
-export function reducer(state: IEditorState, action: EditorActions): IEditorState {
+export const reducer = produce((draft: IEditorState, action: EditorActions) => {
   switch (action.type) {
-    case EditActions.INITIALIZE_EDITOR:
-      return initializer({ entry: action.payload });
-    case EditActions.SET_INITIAL_FOCUS:
-      return { ...state, initialFocus: true };
-    case EditActions.TOGGLE_PUBLIC_STATUS:
-      return { ...state, publicStatus: !state.publicStatus };
-    case EditActions.UPDATE_TITLE:
-      return { ...state, title: action.payload };
-    case EditActions.UPDATE_EDITOR:
-      return { ...state, editorState: action.payload };
+    case EditActions.INITIALIZE_EDITOR: {
+      draft = initializer({ entry: action.payload });
+      break;
+    }
+    case EditActions.SET_INITIAL_FOCUS: {
+      draft.initialFocus = true;
+      break;
+    }
+    case EditActions.TOGGLE_PUBLIC_STATUS: {
+      draft.publicStatus = !draft.publicStatus;
+      break;
+    }
+    case EditActions.UPDATE_TITLE: {
+      draft.title = action.payload;
+      break;
+    }
+    case EditActions.UPDATE_EDITOR: {
+      draft.editorState = action.payload;
+      break;
+    }
     default:
       throw new Error("Must specify type");
   }
-}
+});
