@@ -9,6 +9,5 @@
     "DB_USER": "@dw-db-user",
     "DB_PASSWORD": "@dw-db-password",
     "DB_ADDRESS": "@dw-db-address"
-  },
-  "builds": [{ "src": "next.config.js", "use": "@now/next" }]
+  }
 }
