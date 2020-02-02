@@ -1,8 +1,8 @@
-import { createTestClient } from "apollo-server-testing";
+import { createTestClient, ApolloServerTestClient } from "apollo-server-testing";
 import { testServer } from "../utils/graphql/server";
 import { AllPostsDocument } from "../utils/generated";
 
-const GraphQL = createTestClient(testServer);
+const GraphQL: ApolloServerTestClient = createTestClient(testServer as any);
 
 describe("GraphQL Server", () => {
   it("can query feed", async () => {
