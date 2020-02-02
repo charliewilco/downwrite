@@ -27,13 +27,16 @@
 }
 
 .OuterRing {
+  --size: 75px;
+  --translate: calc(var(--size / 2px));
   position: relative;
   margin: auto;
   color: var(--blue400);
-  transform: translateY(calc(var(--size) / 2px));
+  transform: translateY(var(--translate));
 }
 
 .InnerRing {
+  --size: 75px;
   position: absolute;
   top: -2px;
   left: calc(var(--size) / - 2 + 1px);
