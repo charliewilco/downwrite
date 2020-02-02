@@ -3,57 +3,69 @@ import { NextPage } from "next";
 import Head from "next/head";
 import DeleteModal from "../components/delete-modal";
 import PostList from "../components/post-list";
-import Loading from "../components/loading";
 import EmptyPosts from "../components/empty-posts";
-import InvalidToken from "../components/invalid-token";
+import { LoadingDashboard, ErrorDashboard } from "../components/dashboard-helpers";
 import useDashboard from "../hooks/manage-dashboard";
 import { withApolloAuth } from "../utils/apollo-auth";
+import { useRemoveEntryMutation, useAllPostsQuery } from "../utils/generated";
 
-// TODO: refactor to have selected post, deletion to be handled by a lower level component
-// should be opened at this level and be handed a token and post to delete
 export const DashboardUI: NextPage<{}> = () => {
-  const [{ loading, error, data, state }, actions] = useDashboard();
+  const [state, actions] = useDashboard();
 
-  if (loading) {
+  const { data, loading, error, refetch } = useAllPostsQuery({
+    ssr: false
+  });
+
+  const [deleteEntry] = useRemoveEntryMutation();
+
+  const onConfirmDelete = React.useCallback(
+    async function(): Promise<void> {
+      await deleteEntry({ variables: { id: state.selectedPost.id } })
+        .then(() => refetch())
+        .catch();
+    },
+    [state.selectedPost]
+  );
+
+  if (loading || data === undefined) {
+    <LoadingDashboard />;
+  }
+
+  if (error) {
+    return <ErrorDashboard error={error} />;
+  }
+
+  if (data) {
     return (
       <React.Fragment>
+        {state.modalOpen && (
+          <DeleteModal
+            title={state.selectedPost.title}
+            onDelete={onConfirmDelete}
+            onCancelDelete={actions.onCancel}
+            closeModal={actions.onCloseModal}
+          />
+        )}
         <Head>
-          <title>Loading | Downwrite</title>
+          <title>Entries | Downwrite</title>
         </Head>
-        <Loading size={100} />
+        <section className="PostContainer">
+          {data.feed.length > 0 ? (
+            <PostList
+              onSelect={({ title, id }) => actions.onSelect({ title, id })}
+              posts={data.feed}
+            />
+          ) : (
+            <EmptyPosts />
+          )}
+        </section>
       </React.Fragment>
     );
   }
 
-  if (error) {
-    return <InvalidToken error={error.message} />;
-  }
+  console.log(state, data, loading, error);
 
-  return (
-    <React.Fragment>
-      {state.modalOpen && (
-        <DeleteModal
-          title={state.selectedPost.title}
-          onDelete={actions.onConfirmDelete}
-          onCancelDelete={actions.onCancel}
-          closeModal={actions.onCloseModal}
-        />
-      )}
-      <Head>
-        <title>{data.feed.length} Entries | Downwrite</title>
-      </Head>
-      <section className="PostContainer">
-        {data.feed.length > 0 ? (
-          <PostList
-            onSelect={({ title, id }) => actions.onSelect({ title, id })}
-            posts={data.feed}
-          />
-        ) : (
-          <EmptyPosts />
-        )}
-      </section>
-    </React.Fragment>
-  );
+  return null;
 };
 
-export default withApolloAuth(DashboardUI, { ssr: true });
+export default withApolloAuth(DashboardUI, { ssr: false });

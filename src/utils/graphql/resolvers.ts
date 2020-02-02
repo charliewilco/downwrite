@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-console */
-import { IResolvers } from "apollo-server-micro";
+import { IResolvers, AuthenticationError } from "apollo-server-micro";
 import { IContext, DownwriteAPI } from "./data-source";
-const { TransformResponses } = require("./transform");
+import { TransformResponses } from "./transform";
 
 export interface IResolverContext extends IContext {
   dataSources: {
@@ -32,13 +32,20 @@ export const resolvers: IResolvers<unknown, IResolverContext> = {
 
         return feed;
       } else {
-        console.log(context, "Context from Resolver");
-        const r = await fetch("http://localhost:4000/api/posts", {
-          headers: {
-            Authorization: context.token
-          }
-        }).then(res => res.json());
-        return normalize.transformPostsToFeed(r);
+        if (context.token) {
+          const r = await fetch("http://localhost:4000/api/posts", {
+            headers: {
+              Authorization: context.token
+            }
+          }).then(res => res.json());
+
+          const feed = normalize.transformPostsToFeed(r);
+          console.log(context, "Context from Resolver");
+          console.log(feed.length);
+          return feed;
+        } else {
+          throw new AuthenticationError("Missing token");
+        }
       }
     },
     async entry(_, { id }, context) {
@@ -54,7 +61,7 @@ export const resolvers: IResolvers<unknown, IResolverContext> = {
           "http://localhost:4000/api/posts/preview/" + id
         ).then(res => res.json());
 
-        return normalize.transformMDToPreview(response, {});
+        return normalize.transformMDToPreview(response, {} as any);
       }
     },
     async settings(_, __, context) {

@@ -72,7 +72,7 @@ interface IWithApolloConfig {
   ssr: boolean;
 }
 
-let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
+let globalApolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
 interface IApolloHelper {
   getToken(): string;
@@ -89,7 +89,7 @@ function createApolloClient(
 ): ApolloClient<NormalizedCacheObject> {
   const token = opts.getToken();
 
-  const httpLink = createIsomorphLink(token);
+  const link = createIsomorphLink(token);
 
   const authLink = setContext((request, { headers }) => {
     return {
@@ -103,7 +103,7 @@ function createApolloClient(
   // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
   return new ApolloClient({
     ssrMode: typeof window === "undefined", // Disables forceFetch on the server (so queries are only run once)
-    link: authLink.concat(httpLink),
+    link: authLink.concat(link),
     cache: new InMemoryCache().restore(initialState),
     connectToDevTools: typeof window == "undefined"
   });
@@ -121,11 +121,11 @@ function initApolloClient(initialState = {}, opts: IApolloHelper) {
   }
 
   // Reuse client on the client-side
-  if (!apolloClient) {
-    apolloClient = createApolloClient(initialState, opts);
+  if (!globalApolloClient) {
+    globalApolloClient = createApolloClient(initialState, opts);
   }
 
-  return apolloClient;
+  return globalApolloClient;
 }
 
 /**
