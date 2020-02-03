@@ -6,17 +6,17 @@ import User from "./user";
 import { AuthContext, AuthContextType } from "./auth";
 import { NightModeContext, INightModeContext } from "./night-mode";
 
-interface IMenuEmojiProps {
-  label: string;
-}
+// interface IMenuEmojiProps {
+//   label: string;
+// }
 
-function MenuEmoji(props: React.PropsWithChildren<IMenuEmojiProps>) {
-  return (
-    <span role="img" aria-label={props.label}>
-      {props.children}{" "}
-    </span>
-  );
-}
+// function MenuEmoji(props: React.PropsWithChildren<IMenuEmojiProps>) {
+//   return (
+//     <span role="img" aria-label={props.label}>
+//       {props.children}{" "}
+//     </span>
+//   );
+// }
 
 export default function DropdownUI() {
   const [auth, { signOut }] = React.useContext<AuthContextType>(AuthContext);
@@ -31,32 +31,44 @@ export default function DropdownUI() {
       <Reach.MenuList className="Sheet DropdownMenuList">
         <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
         <Reach.MenuLink onClick={() => history.push("/")} as="a">
-          <MenuEmoji label="Stack of books">📚</MenuEmoji>
+          <span role="img" aria-label="Stack of books">
+            📚{" "}
+          </span>
           All Entries
         </Reach.MenuLink>
         <Reach.MenuLink onSelect={() => history.push("/new")} as="a">
-          <MenuEmoji label="Writing with a Pen">✍️</MenuEmoji>
+          <span role="img" aria-label="Writing with a Pen">
+            ✍️
+          </span>
           Create New Entry
         </Reach.MenuLink>
         <Reach.MenuLink onSelect={() => history.push("/settings")} as="a">
-          <MenuEmoji label="Gear">⚙️</MenuEmoji>
+          <span role="img" aria-label="Gear">
+            ⚙️
+          </span>
           Settings
         </Reach.MenuLink>
         <Reach.MenuItem onSelect={darkMode.action.onChange}>
           {darkMode.night ? (
             <React.Fragment>
-              <MenuEmoji label="Sun smiling">🌞</MenuEmoji>
+              <span role="img" aria-label="Sun smiling">
+                🌞
+              </span>
               Switch to Light Mode
             </React.Fragment>
           ) : (
             <React.Fragment>
-              <MenuEmoji label="Moon">🌙</MenuEmoji>
+              <span role="img" aria-label="Moon">
+                🌙
+              </span>
               Switch to Dark Mode
             </React.Fragment>
           )}
         </Reach.MenuItem>
         <Reach.MenuItem onSelect={signOut}>
-          <MenuEmoji label="Fearful face">😨</MenuEmoji>
+          <span role="img" aria-label="Fearful face">
+            😨
+          </span>
           Sign Out
         </Reach.MenuItem>
       </Reach.MenuList>

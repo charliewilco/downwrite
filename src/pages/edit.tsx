@@ -1,5 +1,5 @@
 import * as React from "react";
-import Head from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useParams } from "react-router-dom";
 import Autosaving from "../components/autosaving-interval";
 import WordCounter from "../components/word-count";
@@ -38,9 +38,9 @@ export default function EditUI() {
   return (
     <div className="Wrapper Wrapper--md">
       <React.Fragment>
-        <Head>
+        <Helmet>
           <title>{state.title} | Downwrite</title>
-        </Head>
+        </Helmet>
         {state.initialFocus && (
           <Autosaving
             title={state.title}

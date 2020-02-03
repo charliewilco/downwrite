@@ -3,7 +3,7 @@ import "@testing-library/jest-dom";
 
 import { render, fireEvent, waitForElement, act } from "@testing-library/react";
 import { wait, MockedProvider, MockedResponse } from "@apollo/react-testing";
-import { DashboardUI } from "../pages/index";
+import DashboardUI from "../pages/dashboard";
 import { AllPostsDocument } from "../utils/generated";
 import { data } from "./fixtures/feed.json";
 

@@ -3,7 +3,7 @@ import "@testing-library/jest-dom";
 
 import { render } from "@testing-library/react";
 import { MockedProvider, MockedResponse } from "@apollo/react-testing";
-import { NewEditor } from "../pages/new";
+import NewEditor from "../pages/new";
 
 function createPage(mocks?: MockedResponse[]) {
   return render(

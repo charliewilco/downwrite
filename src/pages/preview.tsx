@@ -1,5 +1,5 @@
 import * as React from "react";
-import Head from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useParams, useLocation } from "react-router-dom";
 import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
@@ -16,9 +16,9 @@ export default function PreviewEntry() {
   if (error) {
     return (
       <React.Fragment>
-        <Head>
+        <Helmet>
           <title>{error.name} | Downwrite</title>
-        </Head>
+        </Helmet>
         <NotFound error={error.name} message={error.message} />
       </React.Fragment>
     );
@@ -32,13 +32,13 @@ export default function PreviewEntry() {
 
   return (
     <React.Fragment>
-      <Head>
+      <Helmet>
         <title>{data.preview.title} | Downwrite</title>
         <meta name="og:title" content={data.preview.title} />
         <meta name="og:description" content={excerpt} />
         <meta name="og:url" content={location.pathname} />
         <meta name="description" content={excerpt} />
-      </Head>
+      </Helmet>
       <Content
         title={data.preview.title}
         content={data.preview.content}

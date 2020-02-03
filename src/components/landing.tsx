@@ -10,7 +10,7 @@ export default function LandingPage(props: ILandingPageProps): JSX.Element {
     <article
       className="LandingContainer Wrapper Wrapper--sm u-center"
       style={{ fontFamily: monospace || DefaultStyles.Fonts.monospace }}>
-      <img className="BannerImage" src="/static/landing.png" />
+      <img alt="Downwrite Logo" className="BannerImage" src="/static/landing.png" />
       <header className="IntroContents">
         <h1 className="IntroTitle" data-testid="Login Page Container">
           Downwrite

@@ -1,6 +1,4 @@
 import { URLEndpoints } from "./urls";
-import { __IS_DEV__, __IS_BROWSER__ } from "./dev";
-
 import "isomorphic-unfetch";
 import { Omit } from "./types";
 

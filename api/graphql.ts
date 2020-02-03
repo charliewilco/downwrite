@@ -15,7 +15,6 @@ const server = new ApolloServer({
   playground: {
     settings: {
       "editor.fontFamily": "Operator Mono, monospace"
-      // "schema.polling.enable": false
     }
   },
   dataSources() {

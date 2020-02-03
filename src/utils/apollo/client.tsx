@@ -23,7 +23,6 @@ export function createApolloClient(
   initialState = {}
 ): ApolloClient<NormalizedCacheObject> {
   const token = getToken();
-
   const httpLink = createLink();
 
   const authLink = setContext((request, { headers }) => {

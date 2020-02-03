@@ -28,9 +28,9 @@ export interface IQueryVars {
 }
 
 export function initializer(initialData: {
-  entry: Pick<IEntry, "title" | "dateAdded" | "content" | "public">;
+  entry: Pick<IEntry, "title" | "dateAdded" | "content" | "public"> | null;
 }): IEditorState {
-  if (initialData) {
+  if (initialData.entry !== null) {
     const draft = markdownToDraft(initialData.entry.content);
     const editorState = Draft.EditorState.createWithContent(
       Draft.convertFromRaw(draft)
@@ -65,7 +65,14 @@ export type EditorActions =
 export const reducer = produce((draft: IEditorState, action: EditorActions) => {
   switch (action.type) {
     case EditActions.INITIALIZE_EDITOR: {
-      draft = initializer({ entry: action.payload });
+      const { title, editorState, publicStatus, initialFocus } = initializer({
+        entry: action.payload
+      });
+      draft.editorState = editorState;
+      draft.title = title;
+      draft.publicStatus = publicStatus;
+      draft.initialFocus = initialFocus;
+
       break;
     }
     case EditActions.SET_INITIAL_FOCUS: {
@@ -84,7 +91,5 @@ export const reducer = produce((draft: IEditorState, action: EditorActions) => {
       draft.editorState = action.payload;
       break;
     }
-    default:
-      throw new Error("Must specify type");
   }
 });

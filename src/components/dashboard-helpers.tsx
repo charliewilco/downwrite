@@ -1,5 +1,5 @@
 import * as React from "react";
-import Head from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { ApolloError } from "apollo-client";
 
 import Loading from "./loading";
@@ -8,9 +8,9 @@ import InvalidToken from "./invalid-token";
 export const LoadingDashboard = () => {
   return (
     <React.Fragment>
-      <Head>
+      <Helmet>
         <title>Loading | Downwrite</title>
-      </Head>
+      </Helmet>
       <Loading size={100} />
     </React.Fragment>
   );
@@ -23,9 +23,9 @@ interface IErrorDashboard {
 export const ErrorDashboard = (props: IErrorDashboard) => {
   return (
     <React.Fragment>
-      <Head>
+      <Helmet>
         <title>Error | Downwrite</title>
-      </Head>
+      </Helmet>
       <InvalidToken error={props.error.message} />
     </React.Fragment>
   );

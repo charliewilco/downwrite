@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Draft from "draft-js";
 import { useFormik } from "formik";
-import Head from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { IFields, useNew } from "../hooks/create-entry";
 import useOffline from "../hooks/offline";
 import { Input } from "../components/editor-input";
@@ -41,9 +41,9 @@ export default function NewEntryPage() {
           paddingBottom: 0
         }}
         onSubmit={handleSubmit}>
-        <Head>
+        <Helmet>
           <title>{values.title ? values.title : "New"} | Downwrite</title>
-        </Head>
+        </Helmet>
         <Upload
           onParsed={parsed => {
             setFieldValue("title", parsed.title);

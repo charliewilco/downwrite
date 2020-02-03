@@ -28,17 +28,14 @@ export interface IApiSource {
 
 export class DownwriteAPI extends RESTDataSource<IContext> implements IApiSource {
   private normalize: TransformResponses;
-  private token?: string;
-  constructor(url: string, token?: string) {
+  constructor(url: string) {
     super();
     this.baseURL = url;
     this.normalize = new TransformResponses();
-    this.token = this.context.token || token;
   }
 
   public willSendRequest(request: RequestOptions): void {
-    console.log(this.context.token, "DATA SOURCE CONTEXT");
-    request.headers.set("Authorization", this.token);
+    request.headers.set("Authorization", this.context.token);
   }
 
   private async fetchPosts(): Promise<IPost[]> {

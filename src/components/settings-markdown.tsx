@@ -33,9 +33,11 @@ export default function SettingsLocalMarkdown(): JSX.Element {
     actions: { updateFont }
   } = React.useContext<ILocalUISettings>(LocalUISettings);
 
-  const [initialValues, setInitialValues] = React.useState<ILocalSettings>({
-    fileExtension: ".md",
-    fontFamily: "SF Mono"
+  const initialValues = React.useRef(() => {
+    return {
+      fileExtension: localStorage.getItem(LocalSettings.EXTENSION) || ".md",
+      fontFamily: localStorage.getItem(LocalSettings.FONT) || "SF Mono"
+    };
   });
 
   function onSubmit(
@@ -55,18 +57,8 @@ export default function SettingsLocalMarkdown(): JSX.Element {
     }
   }
 
-  React.useEffect(() => {
-    let fileExtension =
-      localStorage.getItem(LocalSettings.EXTENSION) || initialValues.fileExtension;
-    let fontFamily =
-      localStorage.getItem(LocalSettings.FONT) || initialValues.fontFamily;
-
-    setInitialValues({ fileExtension, fontFamily });
-  }, []);
-
   const formik = useFormik({
-    initialValues,
-    enableReinitialize: true,
+    initialValues: initialValues.current(),
     validationSchema: LocalSettingsSchema,
     onSubmit
   });

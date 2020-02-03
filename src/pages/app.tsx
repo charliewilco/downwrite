@@ -4,6 +4,7 @@ import { UIShell } from "../components/ui-shell";
 import { AuthProvider } from "../components/auth";
 import { CookiesProvider, useCookies } from "react-cookie";
 import "../components/styles/base.css";
+import { HelmetProvider } from "react-helmet-async";
 
 interface IAppProps {
   token?: string;
@@ -14,10 +15,12 @@ export function AppWrapper(props: React.PropsWithChildren<IAppProps>) {
   const authed = !is.emptyString(DW_TOKEN);
 
   return (
-    <CookiesProvider>
-      <AuthProvider token={DW_TOKEN} authed={authed}>
-        <UIShell>{props.children}</UIShell>
-      </AuthProvider>
-    </CookiesProvider>
+    <HelmetProvider>
+      <CookiesProvider>
+        <AuthProvider token={DW_TOKEN} authed={authed}>
+          <UIShell>{props.children}</UIShell>
+        </AuthProvider>
+      </CookiesProvider>
+    </HelmetProvider>
   );
 }

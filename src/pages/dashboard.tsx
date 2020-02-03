@@ -1,5 +1,5 @@
 import * as React from "react";
-import Head from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import DeleteModal from "../components/delete-modal";
 import PostList from "../components/post-list";
 import EmptyPosts from "../components/empty-posts";
@@ -10,9 +10,7 @@ import { useRemoveEntryMutation, useAllPostsQuery } from "../utils/generated";
 export default function DashboardUI() {
   const [state, actions] = useDashboard();
 
-  const { data, loading, error, refetch } = useAllPostsQuery({
-    ssr: false
-  });
+  const { data, loading, error, refetch } = useAllPostsQuery();
 
   const [deleteEntry] = useRemoveEntryMutation();
 
@@ -22,7 +20,7 @@ export default function DashboardUI() {
         .then(() => refetch())
         .catch();
     },
-    [state.selectedPost]
+    [state.selectedPost, deleteEntry, refetch]
   );
 
   if (loading || data === undefined) {
@@ -44,9 +42,9 @@ export default function DashboardUI() {
             closeModal={actions.onCloseModal}
           />
         )}
-        <Head>
+        <Helmet>
           <title>Entries | Downwrite</title>
-        </Head>
+        </Helmet>
         <section className="PostContainer">
           {data.feed.length > 0 ? (
             <PostList

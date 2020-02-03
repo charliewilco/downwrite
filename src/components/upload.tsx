@@ -32,26 +32,29 @@ type DropCallback = (files: File[]) => void;
 
 export default function Uploader(props: IUploadProps): JSX.Element {
   const reader = useFileReader();
-  const onDrop = useCallback<DropCallback>((acceptedFiles: File[]) => {
-    function extractMarkdown(files: File[]): void {
-      reader.current.onload = () => {
-        let md: IMarkdown = fm(reader.current.result as string);
+  const onDrop = useCallback<DropCallback>(
+    (acceptedFiles: File[]) => {
+      function extractMarkdown(files: File[]): void {
+        reader.current.onload = () => {
+          let md: IMarkdown = fm(reader.current.result as string);
 
-        let markdown = markdownToDraft(md.body, { preserveNewlines: true });
+          let markdown = markdownToDraft(md.body, { preserveNewlines: true });
 
-        return props.onParsed({
-          title: md.attributes.title || "",
-          editorState: Draft.EditorState.createWithContent(
-            Draft.convertFromRaw(markdown)
-          )
-        });
-      };
+          return props.onParsed({
+            title: md.attributes.title || "",
+            editorState: Draft.EditorState.createWithContent(
+              Draft.convertFromRaw(markdown)
+            )
+          });
+        };
 
-      reader.current.readAsText(files[0]);
-    }
+        reader.current.readAsText(files[0]);
+      }
 
-    extractMarkdown(acceptedFiles);
-  }, []);
+      extractMarkdown(acceptedFiles);
+    },
+    [props, reader]
+  );
 
   const { getRootProps } = useDropzone({
     onDrop,

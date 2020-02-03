@@ -22,14 +22,14 @@ interface INightModeContainerProps extends React.PropsWithChildren<{}> {}
 function useNightModeContext(): INightModeContext {
   const [night, onChange] = useDarkModeEffect(DarkModeVals.NIGHT_MODE);
 
-  function getContext(): INightModeContext {
+  const getContext = React.useCallback((): INightModeContext => {
     return {
       night,
       action: { onChange }
     };
-  }
+  }, [night, onChange]);
 
-  return React.useMemo<INightModeContext>(() => getContext(), [night]);
+  return React.useMemo<INightModeContext>(() => getContext(), [getContext]);
 }
 
 export default function NightModeContainer(
@@ -54,7 +54,7 @@ export function NightModeTrigger(props: INightModeContainerProps): JSX.Element {
 
   return (
     <div className={cx}>
-      <form className="NightToggle" role="form" tabIndex={-1} onSubmit={onChange}>
+      <form className="NightToggle" tabIndex={-1} onSubmit={onChange}>
         <label className="NightController" htmlFor="nightToggle">
           <Checkbox
             role="checkbox"

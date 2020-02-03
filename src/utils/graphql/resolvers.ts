@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-console */
-import { IResolvers, AuthenticationError } from "apollo-server-micro";
+import { IResolvers } from "apollo-server-micro";
 import { IContext, DownwriteAPI } from "./data-source";
 import { TransformResponses } from "./transform";
 
@@ -27,27 +27,9 @@ const normalize = new TransformResponses();
 export const resolvers: IResolvers<unknown, IResolverContext> = {
   Query: {
     async feed(_, __, context) {
-      console.log(context, "FROM QUERY RESOLVER");
-      if (context.dataSources) {
-        const feed = await context.dataSources.dwnxtAPI.getFeed();
+      const feed = await context.dataSources.dwnxtAPI.getFeed();
 
-        return feed;
-      } else {
-        if (context.token) {
-          const r = await fetch("http://localhost:4000/api/posts", {
-            headers: {
-              Authorization: context.token
-            }
-          }).then(res => res.json());
-
-          const feed = normalize.transformPostsToFeed(r);
-          console.log(context, "Context from Resolver");
-          console.log(feed.length);
-          return feed;
-        } else {
-          throw new AuthenticationError("Missing token");
-        }
-      }
+      return feed;
     },
     async entry(_, { id }, context) {
       const entry = await context.dataSources.dwnxtAPI.getEntry(id);

@@ -32,11 +32,11 @@ export default function useEdit(id: string) {
   const [state, dispatch] = React.useReducer<
     React.Reducer<IEditorState, EditorActions>,
     IEditQuery
-  >(reducer, data, initializer);
+  >(reducer, { entry: null }, initializer);
 
   React.useEffect(() => {
     getEntry();
-  }, []);
+  }, [getEntry]);
 
   React.useEffect(() => {
     if (data && data.entry) {
@@ -56,7 +56,7 @@ export default function useEdit(id: string) {
         status: state.publicStatus
       }
     }).catch(err => addNotification(err.message, NotificationType.ERROR));
-  }, [state, id]);
+  }, [state, id, updateEntry, addNotification]);
 
   function handleTitleChange({
     target: { value }

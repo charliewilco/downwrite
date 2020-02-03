@@ -9,6 +9,8 @@ const Edit = React.lazy(() => import("./edit"));
 const Legal = React.lazy(() => import("./legal"));
 const Login = React.lazy(() => import("./login"));
 const About = React.lazy(() => import("./about"));
+const IndexPage = React.lazy(() => import("./index"));
+const SettingsPage = React.lazy(() => import("./settings"));
 
 export function AppRoutes() {
   return (
@@ -21,6 +23,8 @@ export function AppRoutes() {
         <Route path="/preview/:id" component={Preview} />
         <Route path="/about" component={About} />
         <Route path="/legal" component={Legal} />
+        <Route path="/settings" component={SettingsPage} />
+        <Route path="/" exact component={IndexPage} />
       </Switch>
     </React.Suspense>
   );

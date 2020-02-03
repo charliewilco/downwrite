@@ -28,30 +28,31 @@ export default function useLoginFns(): IFormHandlers {
 
   const [authenticateUser] = useLoginUserMutation();
 
-  const onLoginSubmit = React.useCallback(async (values: ILoginValues): Promise<
-    void
-  > => {
-    await authenticateUser({
-      variables: {
-        username: values.user,
-        password: values.password
-      }
-    })
-      .then(value => {
-        if (value.data.authenticateUser.token) {
-          const token = value.data.authenticateUser.token;
-          signIn(token !== undefined, token);
-          if (notifications.length > 0) {
-            notifications.forEach(n => {
-              actions.removeNotification(n);
-            });
-          }
+  const onLoginSubmit = React.useCallback(
+    async (values: ILoginValues): Promise<void> => {
+      await authenticateUser({
+        variables: {
+          username: values.user,
+          password: values.password
         }
       })
-      .catch(error => {
-        actions.addNotification(error.message, NotificationType.ERROR);
-      });
-  }, []);
+        .then(value => {
+          if (value.data.authenticateUser.token) {
+            const token = value.data.authenticateUser.token;
+            signIn(token !== undefined, token);
+            if (notifications.length > 0) {
+              notifications.forEach(n => {
+                actions.removeNotification(n);
+              });
+            }
+          }
+        })
+        .catch(error => {
+          actions.addNotification(error.message, NotificationType.ERROR);
+        });
+    },
+    [actions, notifications, signIn, authenticateUser]
+  );
 
   const onRegisterSubmit = React.useCallback(
     async (values: IRegisterValues): Promise<void> => {
@@ -73,7 +74,7 @@ export default function useLoginFns(): IFormHandlers {
           });
       }
     },
-    []
+    [createUser, actions, signIn]
   );
 
   return {

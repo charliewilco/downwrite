@@ -114,7 +114,7 @@ export function useAuthSideEffects({ authed, token }: IAuthState): void {
       history.push({ pathname: "/login" });
       cookie.remove("DW_TOKEN", cookieOptions);
     }
-  }, [authed]);
+  }, [history, location.pathname, authed]);
 
   React.useEffect(() => {
     if (token) {
@@ -129,7 +129,7 @@ export function AuthProvider({ token, children }: IAuthProps) {
 
   useAuthSideEffects(state);
 
-  function getAuthContext(): AuthContextType {
+  const getAuthContext = React.useCallback((): AuthContextType => {
     return [
       state,
       {
@@ -137,11 +137,10 @@ export function AuthProvider({ token, children }: IAuthProps) {
         signOut
       }
     ];
-  }
+  }, [state, signIn, signOut]);
 
   const value = React.useMemo<AuthContextType>(() => getAuthContext(), [
-    state.token,
-    state.authed
+    getAuthContext
   ]);
 
   return React.createElement(AuthContext.Provider, { value }, children);

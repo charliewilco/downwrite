@@ -9,7 +9,7 @@ export interface ILocalUISettings {
 }
 
 export const LocalUISettings = React.createContext<ILocalUISettings>({
-  monospace: "",
+  monospace: "Operator Mono",
   actions: {
     updateFont() {}
   }
@@ -50,36 +50,30 @@ function useLocalUISettings(): ILocalUISettings {
   });
 
   React.useEffect(() => {
-    if (typeof window !== undefined) {
-      const local = localStorage.getItem("DW_EDITOR_FONT");
-      if (local) {
+    const local = localStorage.getItem("DW_EDITOR_FONT");
+    if (local) {
+      dispatch({
+        type: SettingsAction.UPDATE_FONT,
+        payload: {
+          font: [`${local},`, state.monospace].join(" ")
+        }
+      });
+    }
+  }, [state.monospace]);
+
+  return {
+    ...state,
+    actions: {
+      updateFont: (font: string): void => {
         dispatch({
           type: SettingsAction.UPDATE_FONT,
           payload: {
-            font: [`${local},`, state.monospace].join(" ")
+            font
           }
         });
       }
     }
-  }, []);
-
-  function getUIContext(): ILocalUISettings {
-    return {
-      ...state,
-      actions: {
-        updateFont: (font: string): void => {
-          dispatch({
-            type: SettingsAction.UPDATE_FONT,
-            payload: {
-              font
-            }
-          });
-        }
-      }
-    };
-  }
-
-  return React.useMemo<ILocalUISettings>(() => getUIContext(), [state]);
+  };
 }
 
 export function LocalUISettingsProvider({

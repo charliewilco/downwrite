@@ -1,14 +1,14 @@
 import * as React from "react";
-import Head from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import Content from "../components/content";
 import Features from "../components/features";
 
 export default function AboutDetails(): JSX.Element {
   return (
     <Content title="About Downwrite">
-      <Head>
+      <Helmet>
         <title>About Downwrite</title>
-      </Head>
+      </Helmet>
       <p>
         So the idea here was simple build a simple markdown writing application.
         Markdown is a huge deal and all the cool tools kept getting shut down and

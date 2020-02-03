@@ -1,5 +1,5 @@
 import * as React from "react";
-import Head from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import NotFound from "../components/not-found";
 
 interface IErrorViewProps {
@@ -30,9 +30,9 @@ export default function ErrorPage(props: IErrorViewProps) {
         paddingLeft: 16,
         paddingRight: 16
       }}>
-      <Head>
+      <Helmet>
         <title>Not Found | Downwrite</title>
-      </Head>
+      </Helmet>
       <h2 className="SuperErrorMessage">404</h2>
       <StatusCode statusCode={props.statusCode} />
       <NotFound

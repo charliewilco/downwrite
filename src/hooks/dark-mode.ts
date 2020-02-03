@@ -71,7 +71,7 @@ export default function useDarkModeEffect(className: string): [boolean, () => vo
         }
       };
     },
-    [night]
+    [night, className]
   );
 
   function onChange(): void {

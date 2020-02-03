@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { UrlObject } from "url";
 
 interface ICardLinks {
   id: string;
@@ -14,11 +13,12 @@ interface IInitialCardLinkProps {
 }
 
 function CardLink(props: ICardLinks & IInitialCardLinkProps): JSX.Element {
-  const href: UrlObject = { pathname: props.pathname, query: { id: props.id } };
-
   return (
-    <Link to={href} className={props.className} style={props.style}>
-      {props.title}s
+    <Link
+      to={`${props.pathname}/${props.id}`}
+      className={props.className}
+      style={props.style}>
+      {props.title}
     </Link>
   );
 }

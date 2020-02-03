@@ -25,13 +25,13 @@ export default function useOffline(debug = false): boolean {
         }
       };
     }
-  }, []);
+  }, [debug]);
 
   React.useEffect(() => {
     if (isOffline) {
       addNotification("Your network is currently offline", NotificationType.WARNING);
     }
-  }, [isOffline]);
+  }, [isOffline, addNotification]);
 
   return isOffline;
 }

@@ -11,5 +11,5 @@ export default function useTimeout(interval = 500, cb: Callback): void {
     return function cleanup() {
       clearTimeout(t);
     };
-  }, []);
+  }, [interval, cb]);
 }

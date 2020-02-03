@@ -43,8 +43,7 @@ export function UIMessage(props: IUIMessageProps): JSX.Element {
   const className = getTypeClassName(props.notification, "UINotification");
 
   const onRemove = React.useCallback(() => props.onDismiss(props.notification), [
-    props.onDismiss,
-    props.notification
+    props
   ]);
 
   return (
