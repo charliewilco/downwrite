@@ -20,7 +20,7 @@ function StatusCode(props: Partial<ICustomError>) {
   );
 }
 
-export function ErrorPage(props: IErrorViewProps) {
+export default function ErrorPage(props: IErrorViewProps) {
   return (
     <section
       className="Wrapper u-center"

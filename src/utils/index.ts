@@ -1,5 +1,4 @@
 export * from "./api";
-export * from "./auth-middleware";
 export * from "./classnames";
 export * from "./dev";
 export * from "./default-styles";

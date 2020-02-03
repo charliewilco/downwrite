@@ -6,7 +6,7 @@ import SettingsLocal from "../components/settings-markdown";
 import Loading from "../components/loading";
 import { useUserDetailsQuery } from "../utils/generated";
 
-export function SettingsPage() {
+export default function SettingsPage() {
   const { error, loading, data } = useUserDetailsQuery();
   if (loading) {
     return <Loading size={50} />;

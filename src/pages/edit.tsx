@@ -17,7 +17,7 @@ const Editor = React.lazy(() => import("../components/editor"));
 
 const ExportMarkdown = React.lazy(() => import("../components/export"));
 
-export function EditUI() {
+export default function EditUI() {
   const params = useParams<{ id: string }>();
 
   const [{ loading, error, state, data, id }, actions] = useEdit(params.id);

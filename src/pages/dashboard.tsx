@@ -7,7 +7,7 @@ import { LoadingDashboard, ErrorDashboard } from "../components/dashboard-helper
 import useDashboard from "../hooks/manage-dashboard";
 import { useRemoveEntryMutation, useAllPostsQuery } from "../utils/generated";
 
-export function DashboardUI() {
+export default function DashboardUI() {
   const [state, actions] = useDashboard();
 
   const { data, loading, error, refetch } = useAllPostsQuery({
@@ -26,7 +26,7 @@ export function DashboardUI() {
   );
 
   if (loading || data === undefined) {
-    <LoadingDashboard />;
+    return <LoadingDashboard />;
   }
 
   if (error) {

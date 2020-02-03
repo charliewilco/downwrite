@@ -5,7 +5,7 @@ import Features from "../components/landing-features";
 
 const LoginTabs = React.lazy(() => import("../components/login-tabs"));
 
-export function LoginPage() {
+export default function LoginPage() {
   return (
     <main className="HomeContainer" data-testid="LOGIN_PAGE_CONTAINER">
       <Head>

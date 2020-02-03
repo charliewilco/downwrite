@@ -8,7 +8,7 @@ import { AvatarColors } from "../components/avatar";
 import NotFound from "../components/not-found";
 import { usePreviewQuery } from "../utils/generated";
 
-export function PreviewEntry() {
+export default function PreviewEntry() {
   const { id } = useParams();
   const location = useLocation();
   const { error, loading, data } = usePreviewQuery({ variables: { id } });

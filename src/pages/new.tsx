@@ -12,7 +12,7 @@ const Editor = React.lazy(() => import("../components/editor"));
 
 const EDITOR_COMMAND = "create-new-post";
 
-export const NewEditor = (): JSX.Element => {
+export default function NewEntryPage() {
   const initialValues = React.useRef<IFields>({
     title: "",
     editorState: Draft.EditorState.createEmpty()
@@ -73,4 +73,4 @@ export const NewEditor = (): JSX.Element => {
       </form>
     </React.Fragment>
   );
-};
+}
