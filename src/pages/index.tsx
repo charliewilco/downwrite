@@ -1,15 +1,13 @@
 import * as React from "react";
-import { NextPage } from "next";
-import Head from "next/head";
+import Head from "react-helmet";
 import DeleteModal from "../components/delete-modal";
 import PostList from "../components/post-list";
 import EmptyPosts from "../components/empty-posts";
 import { LoadingDashboard, ErrorDashboard } from "../components/dashboard-helpers";
 import useDashboard from "../hooks/manage-dashboard";
-import { withApollo } from "../utils/apollo/client";
 import { useRemoveEntryMutation, useAllPostsQuery } from "../utils/generated";
 
-export const DashboardUI: NextPage<{}> = () => {
+export function DashboardUI() {
   const [state, actions] = useDashboard();
 
   const { data, loading, error, refetch } = useAllPostsQuery({
@@ -64,6 +62,4 @@ export const DashboardUI: NextPage<{}> = () => {
   }
 
   return null;
-};
-
-export default withApollo(DashboardUI, { ssr: true });
+}

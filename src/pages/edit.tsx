@@ -1,7 +1,6 @@
 import * as React from "react";
-import dynamic from "next/dynamic";
-import Head from "next/head";
-import { useRouter } from "next/router";
+import Head from "react-helmet";
+import { useParams } from "react-router-dom";
 import Autosaving from "../components/autosaving-interval";
 import WordCounter from "../components/word-count";
 import { Button } from "../components/button";
@@ -11,23 +10,17 @@ import { ToggleBox } from "../components/toggle-box";
 import { PreviewLink } from "../components/entry-links";
 import TimeMarker from "../components/time-marker";
 import { __IS_DEV__ } from "../utils/dev";
-import { withApolloAuth } from "../utils/apollo-auth";
 import { EditActions } from "../reducers/editor";
 import useEdit from "../hooks/update-entry";
 
-const Editor = dynamic(() => import("../components/editor"), {
-  loading: () => <Loading size={50} />
-});
+const Editor = React.lazy(() => import("../components/editor"));
 
-const ExportMarkdown = dynamic(() => import("../components/export"), {
-  loading: () => <Loading size={50} />
-});
+const ExportMarkdown = React.lazy(() => import("../components/export"));
 
 export function EditUI() {
-  const router = useRouter();
-  const [{ loading, error, state, data, id }, actions] = useEdit(
-    router.query.id as string
-  );
+  const params = useParams<{ id: string }>();
+
+  const [{ loading, error, state, data, id }, actions] = useEdit(params.id);
 
   if (error) {
     return (
@@ -71,7 +64,7 @@ export function EditUI() {
                 onChange={actions.handleStatusChange}
               />
               {!!state.publicStatus && (
-                <PreviewLink className="AltPreviewLink" id={id as string} />
+                <PreviewLink className="AltPreviewLink" id={id} />
               )}
             </div>
             <div className="UtilityBarItems">
@@ -102,5 +95,3 @@ export function EditUI() {
     </div>
   );
 }
-
-export default withApolloAuth(EditUI, { ssr: false });

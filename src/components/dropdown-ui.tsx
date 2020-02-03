@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useRouter } from "next/router";
+import { useHistory } from "react-router-dom";
 import * as Reach from "@reach/menu-button";
 import { NavIcon } from "./icons";
 import User from "./user";
@@ -21,7 +21,7 @@ function MenuEmoji(props: React.PropsWithChildren<IMenuEmojiProps>) {
 export default function DropdownUI() {
   const [auth, { signOut }] = React.useContext<AuthContextType>(AuthContext);
   const darkMode = React.useContext<INightModeContext>(NightModeContext);
-  const router = useRouter();
+  const history = useHistory();
 
   return (
     <Reach.Menu>
@@ -30,15 +30,15 @@ export default function DropdownUI() {
       </Reach.MenuButton>
       <Reach.MenuList className="Sheet DropdownMenuList">
         <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
-        <Reach.MenuLink onClick={() => router.push("/")} as="a">
+        <Reach.MenuLink onClick={() => history.push("/")} as="a">
           <MenuEmoji label="Stack of books">📚</MenuEmoji>
           All Entries
         </Reach.MenuLink>
-        <Reach.MenuLink onSelect={() => router.push("/new")} as="a">
+        <Reach.MenuLink onSelect={() => history.push("/new")} as="a">
           <MenuEmoji label="Writing with a Pen">✍️</MenuEmoji>
           Create New Entry
         </Reach.MenuLink>
-        <Reach.MenuLink onSelect={() => router.push("/settings")} as="a">
+        <Reach.MenuLink onSelect={() => history.push("/settings")} as="a">
           <MenuEmoji label="Gear">⚙️</MenuEmoji>
           Settings
         </Reach.MenuLink>

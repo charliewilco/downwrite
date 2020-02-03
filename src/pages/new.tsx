@@ -1,19 +1,14 @@
 import * as React from "react";
 import * as Draft from "draft-js";
 import { useFormik } from "formik";
-import dynamic from "next/dynamic";
-import Head from "next/head";
-import { withApolloAuth } from "../utils/apollo-auth";
+import Head from "react-helmet";
 import { IFields, useNew } from "../hooks/create-entry";
 import useOffline from "../hooks/offline";
 import { Input } from "../components/editor-input";
 import { Button } from "../components/button";
 import Upload from "../components/upload";
-import Loading from "../components/loading";
 
-const Editor = dynamic(() => import("../components/editor"), {
-  loading: () => <Loading size={50} />
-});
+const Editor = React.lazy(() => import("../components/editor"));
 
 const EDITOR_COMMAND = "create-new-post";
 
@@ -79,4 +74,3 @@ export const NewEditor = (): JSX.Element => {
     </React.Fragment>
   );
 };
-export default withApolloAuth(NewEditor, { ssr: false });

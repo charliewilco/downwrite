@@ -1,5 +1,5 @@
 import * as React from "react";
-import Head from "next/head";
+import Head from "react-helmet";
 import Content from "../components/content";
 import Features from "../components/features";
 

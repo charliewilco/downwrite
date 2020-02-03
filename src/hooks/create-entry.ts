@@ -1,5 +1,5 @@
 import * as Draft from "draft-js";
-import { useRouter } from "next/router";
+import { useHistory } from "react-router-dom";
 import { draftToMarkdown } from "markdown-draft-js";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
 import { useCreateEntryMutation } from "../utils/generated";
@@ -12,7 +12,7 @@ export interface IFields {
 
 export function useNew() {
   const [, actions] = useUINotifications();
-  const router = useRouter();
+  const history = useHistory();
   const [createEntry, { data }] = useCreateEntryMutation();
   useLogging("MUTATION", [data]);
 
@@ -28,10 +28,7 @@ export function useNew() {
     })
       .then(value => {
         if (value.data) {
-          router.push({
-            pathname: `/edit`,
-            query: { id: value.data.createEntry.id }
-          });
+          history.push(`/edit/${value.data.createEntry.id}`);
         }
       })
       .catch(err => actions.addNotification(err.message, NotificationType.ERROR));

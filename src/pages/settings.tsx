@@ -1,14 +1,12 @@
 import * as React from "react";
-import Head from "next/head";
-import { NextPage } from "next";
+import Head from "react-helmet";
 import SettingsUser from "../components/settings-user-form";
 import SettingsPassword from "../components/settings-password";
 import SettingsLocal from "../components/settings-markdown";
 import Loading from "../components/loading";
 import { useUserDetailsQuery } from "../utils/generated";
-import { withApolloAuth } from "../utils/apollo-auth";
 
-export const SettingsPage: NextPage = () => {
+export function SettingsPage() {
   const { error, loading, data } = useUserDetailsQuery();
   if (loading) {
     return <Loading size={50} />;
@@ -36,8 +34,4 @@ export const SettingsPage: NextPage = () => {
       <SettingsLocal />
     </div>
   );
-};
-
-export default withApolloAuth(SettingsPage, {
-  ssr: false
-});
+}

@@ -1,7 +1,6 @@
 import * as React from "react";
-import Head from "next/head";
+import Head from "react-helmet";
 import NotFound from "../components/not-found";
-import { NextPageContext } from "next";
 
 interface IErrorViewProps {
   statusCode: number;
@@ -9,10 +8,6 @@ interface IErrorViewProps {
 
 interface ICustomError extends Error {
   statusCode: number;
-}
-
-interface IErrorPageContext extends NextPageContext {
-  err: ICustomError;
 }
 
 function StatusCode(props: Partial<ICustomError>) {
@@ -25,7 +20,7 @@ function StatusCode(props: Partial<ICustomError>) {
   );
 }
 
-function ErrorPage(props: IErrorViewProps) {
+export function ErrorPage(props: IErrorViewProps) {
   return (
     <section
       className="Wrapper u-center"
@@ -51,10 +46,3 @@ function ErrorPage(props: IErrorViewProps) {
     </section>
   );
 }
-
-ErrorPage.getInitialProps = function({ res, err }: IErrorPageContext) {
-  const statusCode = res ? res.statusCode : err ? err.statusCode : null;
-  return { statusCode };
-};
-
-export default ErrorPage;

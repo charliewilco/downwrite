@@ -1,5 +1,4 @@
 import * as React from "react";
-import { LinkProps } from "next/link";
 import { render } from "@testing-library/react";
 import { UIHeader } from "../components/header";
 import { MockAuthProvider } from "../utils/testing";
@@ -8,12 +7,6 @@ jest.mock("universal-cookie", () => {
   return class Cookie {};
 });
 jest.mock("jwt-decode");
-
-jest.mock("next/link", () => {
-  return jest.fn((props: React.PropsWithChildren<LinkProps>) => (
-    <>{props.children}</>
-  ));
-});
 
 describe("Header Component", () => {
   it("contains application name", () => {

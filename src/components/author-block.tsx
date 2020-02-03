@@ -1,5 +1,5 @@
 import * as React from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import Avatar from "./avatar";
 
 interface IAuthorProps {
@@ -22,9 +22,7 @@ export default function Author(props: IAuthorProps): JSX.Element {
             <span>
               You can write and share on Downwrite, you can sign up or log in{" "}
             </span>
-            <Link href="/login">
-              <a>here</a>
-            </Link>
+            <Link to="/login">here</Link>
           </p>
         </React.Fragment>
       )}

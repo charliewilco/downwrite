@@ -1,26 +1,17 @@
 import * as React from "react";
-import Head from "next/head";
-import { useRouter } from "next/router";
+import Head from "react-helmet";
+import { useParams, useLocation } from "react-router-dom";
 import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
 import Loading from "../components/loading";
 import { AvatarColors } from "../components/avatar";
 import NotFound from "../components/not-found";
-import { withApolloAuth } from "../utils/apollo-auth";
 import { usePreviewQuery } from "../utils/generated";
 
-function usePreview(id: string) {
-  return usePreviewQuery({
-    ssr: true,
-    variables: {
-      id
-    }
-  });
-}
-
 export function PreviewEntry() {
-  const router = useRouter();
-  const { error, loading, data } = usePreview(router.query.id as string);
+  const { id } = useParams();
+  const location = useLocation();
+  const { error, loading, data } = usePreviewQuery({ variables: { id } });
 
   if (error) {
     return (
@@ -45,7 +36,7 @@ export function PreviewEntry() {
         <title>{data.preview.title} | Downwrite</title>
         <meta name="og:title" content={data.preview.title} />
         <meta name="og:description" content={excerpt} />
-        <meta name="og:url" content={router.route} />
+        <meta name="og:url" content={location.pathname} />
         <meta name="description" content={excerpt} />
       </Head>
       <Content
@@ -61,5 +52,3 @@ export function PreviewEntry() {
     </React.Fragment>
   );
 }
-
-export default withApolloAuth(PreviewEntry, { ssr: true });

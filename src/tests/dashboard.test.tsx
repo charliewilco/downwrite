@@ -1,5 +1,4 @@
 import * as React from "react";
-import { LinkProps } from "next/link";
 import "@testing-library/jest-dom";
 
 import { render, fireEvent, waitForElement, act } from "@testing-library/react";
@@ -7,14 +6,6 @@ import { wait, MockedProvider, MockedResponse } from "@apollo/react-testing";
 import { DashboardUI } from "../pages/index";
 import { AllPostsDocument } from "../utils/generated";
 import { data } from "./fixtures/feed.json";
-
-jest.mock("next/router");
-
-jest.mock("next/link", () => {
-  return jest.fn((props: React.PropsWithChildren<LinkProps>) => (
-    <>{props.children}</>
-  ));
-});
 
 function createPage(mocks?: MockedResponse[]) {
   return render(

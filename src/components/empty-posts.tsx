@@ -1,5 +1,5 @@
 import * as React from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import Nib from "./nib";
 
 export default function EmptyPosts(): JSX.Element {
@@ -13,8 +13,8 @@ export default function EmptyPosts(): JSX.Element {
           <h4 className="GettingStartedTitle">
             Looks like you don't have any entries
           </h4>
-          <Link href="/new">
-            <a className="GettingStarted">Get Started &rarr;</a>
+          <Link to="/new" className="GettingStarted">
+            Get Started &rarr;
           </Link>
         </div>
       </div>

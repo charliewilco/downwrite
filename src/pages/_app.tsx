@@ -1,40 +1,23 @@
 import * as React from "react";
-import App, { AppProps, AppContext } from "next/app";
 import is from "@sindresorhus/is";
 import { UIShell } from "../components/ui-shell";
 import { AuthProvider } from "../components/auth";
-import Cookies from "universal-cookie";
+import { CookiesProvider, useCookies } from "react-cookie";
 import "../components/styles/base.css";
 
-interface IAppProps extends AppProps {
-  token: string;
+interface IAppProps {
+  token?: string;
 }
 
-export default class Downwrite extends App<IAppProps> {
-  public static async getInitialProps({ Component, ctx, ...props }: AppContext) {
-    let pageProps = {};
-    const cookies = new Cookies(ctx.req);
-    const token = cookies.get<string>("DW_TOKEN");
+export function AppWrapper(props: React.PropsWithChildren<IAppProps>) {
+  const [{ DW_TOKEN }] = useCookies();
+  const authed = !is.emptyString(DW_TOKEN);
 
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
-
-    return { pageProps, token };
-  }
-
-  public render(): JSX.Element {
-    const { Component, pageProps, token } = this.props;
-    const authed = !is.emptyString(token);
-
-    console.log(token, "TOKEN FROM _app.tsx");
-
-    return (
-      <AuthProvider token={token} authed={authed}>
-        <UIShell>
-          <Component {...pageProps} />
-        </UIShell>
+  return (
+    <CookiesProvider>
+      <AuthProvider token={DW_TOKEN} authed={authed}>
+        <UIShell>{props.children}</UIShell>
       </AuthProvider>
-    );
-  }
+    </CookiesProvider>
+  );
 }

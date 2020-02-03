@@ -5,8 +5,6 @@ import { render } from "@testing-library/react";
 import { MockedProvider, MockedResponse } from "@apollo/react-testing";
 import { NewEditor } from "../pages/new";
 
-jest.mock("next/router");
-
 function createPage(mocks?: MockedResponse[]) {
   return render(
     <MockedProvider mocks={mocks} addTypename={false}>
