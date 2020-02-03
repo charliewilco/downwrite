@@ -7,7 +7,6 @@ import { REST_ENDPOINT } from "../../utils/urls";
 const server = new ApolloServer({
   schema,
   async context({ req }) {
-    console.log(req.cookies, req.headers.authorization, "From Apollo Context");
     const token: string = req.cookies.DW_TOKEN || req.headers.authorization;
     return {
       token

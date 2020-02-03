@@ -6,7 +6,7 @@ import PostList from "../components/post-list";
 import EmptyPosts from "../components/empty-posts";
 import { LoadingDashboard, ErrorDashboard } from "../components/dashboard-helpers";
 import useDashboard from "../hooks/manage-dashboard";
-import { withApolloAuth } from "../utils/apollo-auth";
+import { withApollo } from "../utils/apollo/client";
 import { useRemoveEntryMutation, useAllPostsQuery } from "../utils/generated";
 
 export const DashboardUI: NextPage<{}> = () => {
@@ -66,4 +66,4 @@ export const DashboardUI: NextPage<{}> = () => {
   return null;
 };
 
-export default withApolloAuth(DashboardUI, { ssr: false });
+export default withApollo(DashboardUI, { ssr: true });

@@ -27,6 +27,8 @@ export default class Downwrite extends App<IAppProps> {
     const { Component, pageProps, token } = this.props;
     const authed = !is.emptyString(token);
 
+    console.log(token, "TOKEN FROM _app.tsx");
+
     return (
       <AuthProvider token={token} authed={authed}>
         <UIShell>

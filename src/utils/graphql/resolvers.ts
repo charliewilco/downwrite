@@ -27,6 +27,7 @@ const normalize = new TransformResponses();
 export const resolvers: IResolvers<unknown, IResolverContext> = {
   Query: {
     async feed(_, __, context) {
+      console.log(context, "FROM QUERY RESOLVER");
       if (context.dataSources) {
         const feed = await context.dataSources.dwnxtAPI.getFeed();
 
