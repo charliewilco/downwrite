@@ -10,7 +10,7 @@ type RemoveFn = (id: string) => Promise<void>;
 export function useRemovePost(): RemoveFn {
   const [deleteEntry] = useRemoveEntryMutation();
 
-  const onConfirmDelete = React.useCallback(
+  const onConfirmDelete = React.useCallback<RemoveFn>(
     async function(id: string): Promise<void> {
       await deleteEntry({
         variables: { id },
