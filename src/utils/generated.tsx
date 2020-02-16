@@ -167,7 +167,9 @@ export type IUpdateEntryMutationVariables = {
 };
 
 export type IUpdateEntryMutation = { __typename?: "Mutation" } & {
-  updateEntry: Maybe<{ __typename?: "Entry" } & IEntryInfoFragment>;
+  updateEntry: Maybe<
+    { __typename?: "Entry" } & Pick<IEntry, "content"> & IEntryInfoFragment
+  >;
 };
 
 export type ICreateEntryMutationVariables = {
@@ -442,6 +444,7 @@ export const UpdateEntryDocument = gql`
   ) {
     updateEntry(id: $id, content: $content, title: $title, status: $status) {
       ...EntryInfo
+      content
     }
   }
   ${EntryInfoFragmentDoc}
