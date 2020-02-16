@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 import { IResolvers } from "apollo-server-micro";
 import { IContext, DownwriteAPI } from "./data-source";
-import { TransformResponses } from "./transform";
 
 export interface IResolverContext extends IContext {
   dataSources: {
@@ -22,60 +21,30 @@ export interface IMutationUserVars {
   password: string;
   username: string;
 }
-const normalize = new TransformResponses();
 
 export const resolvers: IResolvers<unknown, IResolverContext> = {
   Query: {
-    async feed(_, __, context) {
-      const feed = await context.dataSources.dwnxtAPI.getFeed();
-
-      return feed;
-    },
-    async entry(_, { id }, context) {
-      const entry = await context.dataSources.dwnxtAPI.getEntry(id);
-      return entry;
-    },
-    async preview(_, { id }, context) {
-      const md = await context.dataSources.dwnxtAPI.getPreview(id);
-      return md;
-    },
-    async settings(_, __, context) {
-      const user = await context.dataSources.dwnxtAPI.getUserDetails();
-      return user;
-    }
+    feed: async (_, __, { dataSources }) => dataSources.dwnxtAPI.getFeed(),
+    entry: async (_, { id }, { dataSources }) => dataSources.dwnxtAPI.getEntry(id),
+    preview: async (_, { id }, { dataSources }) =>
+      dataSources.dwnxtAPI.getPreview(id),
+    settings: async (_, __, { dataSources }) => dataSources.dwnxtAPI.getUserDetails()
   },
 
   Mutation: {
-    async createEntry(_, args: IMutationCreateEntryVars, context) {
-      const entry = await context.dataSources.dwnxtAPI.createPost(
-        args.title,
-        args.content
-      );
-
-      return entry;
-    },
-    async updateEntry(_, args: IMutationCreateEntryVars, context) {
-      const { id, ...body } = args;
-
-      const post = await context.dataSources.dwnxtAPI.updatePost(id!, body);
-      return post;
-    },
-    async deleteEntry(_, { id }, context) {
-      const post = await context.dataSources.dwnxtAPI.removeEntry(id);
-      return post;
-    },
-    async createUser(_, args: IMutationUserVars, context) {
-      const { token } = await context.dataSources.dwnxtAPI.createUser(args);
-
-      return { token };
-    },
-    async authenticateUser(_, args: IMutationUserVars, context) {
-      const { token } = await context.dataSources.dwnxtAPI.authenticateUser(
-        args.username,
-        args.password
-      );
-      return { token };
-    },
+    createEntry: async (_, args: IMutationCreateEntryVars, { dataSources }) =>
+      dataSources.dwnxtAPI.createPost(args.title, args.content),
+    updateEntry: async (
+      _,
+      { id, ...body }: IMutationCreateEntryVars,
+      { dataSources }
+    ) => dataSources.dwnxtAPI.updatePost(id!, body),
+    deleteEntry: async (_, { id }, { dataSources }) =>
+      dataSources.dwnxtAPI.removeEntry(id),
+    createUser: async (_, args: IMutationUserVars, { dataSources }) =>
+      dataSources.dwnxtAPI.createUser(args),
+    authenticateUser: async (_, args: IMutationUserVars, { dataSources }) =>
+      dataSources.dwnxtAPI.authenticateUser(args.username, args.password),
     updateUserSettings() {}
   }
 };
