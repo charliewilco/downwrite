@@ -13,7 +13,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "test:ci": "yarn test --runInBand --no-cache --coverage"
+    "test:ci": "yarn test --runInBand --no-cache --coverage",
+    "go": "now dev"
   },
   "engines": {
     "node": "12.x"
