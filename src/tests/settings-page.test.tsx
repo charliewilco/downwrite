@@ -1,10 +1,11 @@
 import * as React from "react";
 import "@testing-library/jest-dom";
-import { render, waitForElement } from "@testing-library/react";
+import { render, waitForElement, act } from "@testing-library/react";
 import { MockedProvider, MockedResponse, wait } from "@apollo/react-testing";
 import SettingsPage from "../pages/settings";
 import { UserDetailsDocument } from "../utils/generated";
 import { MockAuthProvider } from "../utils/testing";
+import { MemoryRouter } from "react-router-dom";
 
 const mocks: MockedResponse[] = [
   {
@@ -25,9 +26,11 @@ const mocks: MockedResponse[] = [
 function createPage(mocks: MockedResponse[]) {
   return render(
     <MockedProvider mocks={mocks} addTypename={false}>
-      <MockAuthProvider>
-        <SettingsPage />
-      </MockAuthProvider>
+      <MemoryRouter>
+        <MockAuthProvider>
+          <SettingsPage />
+        </MockAuthProvider>
+      </MemoryRouter>
     </MockedProvider>
   );
 }
@@ -35,7 +38,9 @@ function createPage(mocks: MockedResponse[]) {
 describe("settings page", () => {
   it("renders settings page and form is prefilled", async () => {
     const Page = createPage(mocks);
-    await wait(0);
+    act(async () => {
+      await wait(0);
+    });
 
     const usernameInput = await waitForElement(() =>
       Page.getByTestId("SETTINGS_USERNAME_INPUT")

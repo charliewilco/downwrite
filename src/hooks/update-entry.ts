@@ -11,32 +11,23 @@ import {
 } from "../reducers/editor";
 import useLogging from "./logging";
 import {
-  useEditLazyQuery,
+  useEditQuery,
   useUpdateEntryMutation,
   IEditQuery
 } from "../utils/generated";
 
 export default function useEdit(id: string) {
-  // TODO: Refactor to pass `id` from query as a parameter
-
   const [, { addNotification }] = useUINotifications();
-
-  const [getEntry, { loading, data, error }] = useEditLazyQuery({
+  const { loading, data, error } = useEditQuery({
     variables: {
       id
     }
   });
-
   const [updateEntry] = useUpdateEntryMutation();
-
   const [state, dispatch] = React.useReducer<
     React.Reducer<IEditorState, EditorActions>,
     IEditQuery
-  >(reducer, { entry: null }, initializer);
-
-  React.useEffect(() => {
-    getEntry();
-  }, [getEntry]);
+  >(reducer, data, initializer);
 
   React.useEffect(() => {
     if (data && data.entry) {
@@ -58,29 +49,22 @@ export default function useEdit(id: string) {
     }).catch(err => addNotification(err.message, NotificationType.ERROR));
   }, [state, id, updateEntry, addNotification]);
 
-  function handleTitleChange({
-    target: { value }
-  }: React.ChangeEvent<HTMLInputElement>) {
-    dispatch({ type: EditActions.UPDATE_TITLE, payload: value });
-  }
-
-  function handleEditorChange(editorState: Draft.EditorState) {
-    dispatch({ type: EditActions.UPDATE_EDITOR, payload: editorState });
-  }
-
-  const handleStatusChange = () =>
-    dispatch({ type: EditActions.TOGGLE_PUBLIC_STATUS });
-
-  const handleFocus = () => dispatch({ type: EditActions.SET_INITIAL_FOCUS });
-
   return [
     { data, loading, error, state, id },
     {
-      handleEditorChange,
-      handleFocus,
       handleSubmit,
-      handleTitleChange,
-      handleStatusChange
+      handleEditorChange(editorState: Draft.EditorState) {
+        dispatch({ type: EditActions.UPDATE_EDITOR, payload: editorState });
+      },
+      handleFocus() {
+        dispatch({ type: EditActions.SET_INITIAL_FOCUS });
+      },
+      handleTitleChange({ target: { value } }: React.ChangeEvent<HTMLInputElement>) {
+        dispatch({ type: EditActions.UPDATE_TITLE, payload: value });
+      },
+      handleStatusChange() {
+        dispatch({ type: EditActions.TOGGLE_PUBLIC_STATUS });
+      }
     }
   ] as const;
 }

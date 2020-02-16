@@ -7,6 +7,8 @@ import PreviewEntry from "../pages/preview";
 import Content from "../components/content";
 import { createMockPost } from "../utils/testing";
 import { PreviewDocument } from "../utils/generated";
+import { MemoryRouter, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 
 const previewMock: MockedResponse = {
   request: {
@@ -31,18 +33,23 @@ const previewMock: MockedResponse = {
   }
 };
 
-// const currentPage = {
-//   route: "/preview?id=3efc9fe8-ab26-4316-9453-889fe444a2a1",
-//   pathname: "/preview?id=3efc9fe8-ab26-4316-9453-889fe444a2a1",
-//   query: { id: "3efc9fe8-ab26-4316-9453-889fe444a2a1" },
-//   asPath: ""
-// };
-
 describe("<Preview />", () => {
   it("loads server content", async () => {
     const { getByTestId, container } = render(
       <MockedProvider mocks={[previewMock]} addTypename={false}>
-        <PreviewEntry />
+        <MemoryRouter
+          initialIndex={0}
+          initialEntries={[
+            {
+              pathname: "/preview/3efc9fe8-ab26-4316-9453-889fe444a2a1"
+            }
+          ]}>
+          <HelmetProvider>
+            <Route path="/preview/:id">
+              <PreviewEntry />
+            </Route>
+          </HelmetProvider>
+        </MemoryRouter>
       </MockedProvider>
     );
     await wait(() => getByTestId("PREVIEW_ENTRTY_TITLE"));

@@ -12,7 +12,9 @@ exports[`<Card /> matches snapshot 1`] = `
       class="CardTitle"
       data-testid="CARD_TITLE"
     >
-      <a>
+      <a
+        href="/edit/4444"
+      >
         Starting Again
       </a>
     </h2>
@@ -32,6 +34,7 @@ exports[`<Card /> matches snapshot 1`] = `
       data-testid="CARD_EXCERPT"
     >
       <a
+        href="/edit/4444"
         style="margin-right: 8px;"
       >
         Edit

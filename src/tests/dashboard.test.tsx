@@ -6,11 +6,17 @@ import { wait, MockedProvider, MockedResponse } from "@apollo/react-testing";
 import DashboardUI from "../pages/dashboard";
 import { AllPostsDocument } from "../utils/generated";
 import { data } from "./fixtures/feed.json";
+import { MemoryRouter } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 
 function createPage(mocks?: MockedResponse[]) {
   return render(
     <MockedProvider mocks={mocks} addTypename={false}>
-      <DashboardUI />
+      <MemoryRouter>
+        <HelmetProvider>
+          <DashboardUI />
+        </HelmetProvider>
+      </MemoryRouter>
     </MockedProvider>
   );
 }
@@ -74,7 +80,7 @@ describe("<Dashboard /> post lists", () => {
   it("shows error if error", async () => {
     const ErrorContainer = createPage([]);
 
-    // expect(ErrorContainer.getByTestId("LOADING_SPINNER")).toBeInTheDocument();
+    expect(ErrorContainer.getByTestId("LOADING_SPINNER")).toBeInTheDocument();
     await wait(0);
 
     expect(

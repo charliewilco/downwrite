@@ -36,16 +36,8 @@ export const resolvers: IResolvers<unknown, IResolverContext> = {
       return entry;
     },
     async preview(_, { id }, context) {
-      if (context.dataSources) {
-        const md = await context.dataSources.dwnxtAPI.getPreview(id);
-        return md;
-      } else {
-        const response = await fetch(
-          "http://localhost:4000/api/posts/preview/" + id
-        ).then(res => res.json());
-
-        return normalize.transformMDToPreview(response, {} as any);
-      }
+      const md = await context.dataSources.dwnxtAPI.getPreview(id);
+      return md;
     },
     async settings(_, __, context) {
       const user = await context.dataSources.dwnxtAPI.getUserDetails();
