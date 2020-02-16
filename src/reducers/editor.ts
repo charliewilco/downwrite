@@ -27,10 +27,18 @@ export interface IQueryVars {
   id: string;
 }
 
+const DEFAULT_EDITOR_STATE: IEditorState = {
+  editorState: null,
+  title: null,
+  publicStatus: null,
+  initialFocus: false
+};
+
 export function initializer(initialData: {
   entry: Pick<IEntry, "title" | "dateAdded" | "content" | "public"> | null;
 }): IEditorState {
-  if (initialData.entry !== null) {
+  console.log("INITIAL DATA EDITOR", initialData);
+  if (!!initialData && initialData.entry !== null) {
     const draft = markdownToDraft(initialData.entry.content);
     const editorState = Draft.EditorState.createWithContent(
       Draft.convertFromRaw(draft)
@@ -43,12 +51,7 @@ export function initializer(initialData: {
       initialFocus: false
     };
   } else {
-    return {
-      editorState: null,
-      title: null,
-      publicStatus: null,
-      initialFocus: false
-    };
+    return DEFAULT_EDITOR_STATE;
   }
 }
 

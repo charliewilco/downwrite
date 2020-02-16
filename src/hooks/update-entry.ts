@@ -9,11 +9,11 @@ import {
   IEditorState,
   EditorActions
 } from "../reducers/editor";
-import useLogging from "./logging";
 import {
   useEditQuery,
   useUpdateEntryMutation,
-  IEditQuery
+  IEditQuery,
+  EditDocument
 } from "../utils/generated";
 
 export default function useEdit(id: string) {
@@ -23,7 +23,19 @@ export default function useEdit(id: string) {
       id
     }
   });
-  const [updateEntry] = useUpdateEntryMutation();
+
+  const [updateEntry] = useUpdateEntryMutation({
+    update(cache, { data: { updateEntry } }) {
+      const { entry } = cache.readQuery({ query: EditDocument, variables: { id } });
+
+      cache.writeQuery({
+        query: EditDocument,
+        variables: { id },
+        data: Object.assign({}, entry, updateEntry)
+      });
+    }
+  });
+
   const [state, dispatch] = React.useReducer<
     React.Reducer<IEditorState, EditorActions>,
     IEditQuery
@@ -35,9 +47,12 @@ export default function useEdit(id: string) {
     }
   }, [data]);
 
-  useLogging("EDITOR QUERY", [data]);
+  React.useEffect(() => {
+    console.log("EDITOR DATA", data);
+  }, [data]);
 
   const handleSubmit = React.useCallback(async () => {
+    console.log("Submitting..");
     const content = Draft.convertToRaw(state.editorState.getCurrentContent());
     await updateEntry({
       variables: {
