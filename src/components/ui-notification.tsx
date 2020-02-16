@@ -11,7 +11,7 @@ import {
   NotificationType,
   useUINotifications
 } from "../reducers/notifications";
-import useTimeout from "../hooks/timeout";
+import { useTimeout } from "../hooks";
 
 type Merge<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] } & B;
 

@@ -8,7 +8,7 @@ import {
   IPartialFeedItem
 } from "../reducers/dashboard";
 
-export default function useDashboard() {
+export function useDashboard() {
   const [state, dispatch] = React.useReducer<
     React.Reducer<IDashboardState, DashboardActionType>
   >(reducer, initialState());

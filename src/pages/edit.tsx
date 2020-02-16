@@ -11,7 +11,7 @@ import { PreviewLink } from "../components/entry-links";
 import TimeMarker from "../components/time-marker";
 import { __IS_DEV__ } from "../utils/dev";
 import { EditActions } from "../reducers/editor";
-import useEdit from "../hooks/update-entry";
+import { useEdit } from "../hooks";
 
 const Editor = React.lazy(() => import("../components/editor"));
 

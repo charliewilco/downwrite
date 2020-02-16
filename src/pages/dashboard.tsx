@@ -4,8 +4,7 @@ import DeleteModal from "../components/delete-modal";
 import PostList from "../components/post-list";
 import EmptyPosts from "../components/empty-posts";
 import { LoadingDashboard, ErrorDashboard } from "../components/dashboard-helpers";
-import useDashboard from "../hooks/manage-dashboard";
-import { useRemovePost } from "../hooks/delete-post";
+import { useRemovePost, useDashboard } from "../hooks";
 import { useAllPostsQuery } from "../utils/generated";
 
 export default function DashboardUI() {
@@ -13,6 +12,11 @@ export default function DashboardUI() {
 
   const { data, loading, error } = useAllPostsQuery();
   const onConfirmDelete = useRemovePost();
+
+  const onDelete = React.useCallback(() => {
+    onConfirmDelete(state.selectedPost.id);
+    actions.onCloseModal();
+  }, [state.selectedPost, onConfirmDelete, actions]);
 
   if (loading || data === undefined) {
     return <LoadingDashboard />;
@@ -29,7 +33,7 @@ export default function DashboardUI() {
           {state.modalOpen && (
             <DeleteModal
               title={state.selectedPost.title}
-              onDelete={() => onConfirmDelete(state.selectedPost.id)}
+              onDelete={onDelete}
               onCancelDelete={actions.onCancel}
               closeModal={actions.onCloseModal}
             />

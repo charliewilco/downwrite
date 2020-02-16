@@ -2,7 +2,7 @@ import * as React from "react";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
 import { __IS_BROWSER__ } from "../utils/dev";
 
-export default function useOffline(debug = false): boolean {
+export function useOffline(debug = false): boolean {
   const [isOffline, setIsOffline] = React.useState<boolean>(debug);
   const [, { addNotification }] = useUINotifications();
 

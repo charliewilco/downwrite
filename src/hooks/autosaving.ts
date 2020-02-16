@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
 
-export default function useAutosaving(
+export function useAutosaving(
   duration: number = 5000,
   cb?: (...args: any[]) => void,
   message?: string

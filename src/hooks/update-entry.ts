@@ -16,7 +16,7 @@ import {
   EditDocument
 } from "../utils/generated";
 
-export default function useEdit(id: string) {
+export function useEdit(id: string) {
   const [, { addNotification }] = useUINotifications();
   const { loading, data, error } = useEditQuery({
     variables: {

@@ -39,7 +39,7 @@ export function darkModeReducer(
   }
 }
 
-export default function useDarkModeEffect(className: string): [boolean, () => void] {
+export function useDarkModeEffect(className: string): [boolean, () => void] {
   const [night, setNight] = React.useState<boolean>(false);
 
   React.useEffect(() => {

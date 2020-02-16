@@ -1,4 +1,4 @@
-import useAutosaving from "../hooks/autosaving";
+import { useAutosaving } from "../hooks";
 
 interface IAutosavingProps {
   onUpdate: (x?: any) => void;

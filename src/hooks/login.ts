@@ -21,7 +21,7 @@ interface IFormHandlers {
   onRegisterSubmit: (values: IRegisterValues) => void;
 }
 
-export default function useLoginFns(): IFormHandlers {
+export function useLoginFns(): IFormHandlers {
   const [, { signIn }] = React.useContext<AuthContextType>(AuthContext);
   const [{ notifications }, actions] = useUINotifications();
   const [createUser] = useCreateUserMutation();

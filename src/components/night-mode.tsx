@@ -1,6 +1,6 @@
 import * as React from "react";
 import Checkbox from "./checkbox";
-import useDarkModeEffect, { DarkModeVals } from "../hooks/dark-mode";
+import { useDarkModeEffect, DarkModeVals } from "../hooks";
 import classNames from "../utils/classnames";
 
 export interface INightModeContext {

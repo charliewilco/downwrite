@@ -5,7 +5,7 @@ type Tuple<A, B, C> = [A, B, C];
 type WriteLocal<T> = (val: T) => void;
 type DeleteLocal = () => void;
 
-export default function useLocalStorage(
+export function useLocalStorage(
   key: string
 ): Tuple<string, WriteLocal<string>, DeleteLocal> {
   const [localState, updateLocalState] = React.useState<string>(

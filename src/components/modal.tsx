@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as Reach from "@reach/dialog";
+import { DialogContent, DialogOverlay } from "@reach/dialog";
 import { CloseIcon } from "./icons";
 
 interface IModalProps extends React.PropsWithChildren<{}> {
@@ -8,15 +8,15 @@ interface IModalProps extends React.PropsWithChildren<{}> {
 
 export default function UIModal(props: IModalProps) {
   return (
-    <Reach.DialogOverlay className="Overlay">
-      <Reach.DialogContent className="ModalContainer Wrapper Wrapper--sm">
+    <DialogOverlay className="Overlay">
+      <DialogContent className="ModalContainer Wrapper Wrapper--sm">
         <button className="ModalCloseButton" onClick={props.closeUIModal}>
           <CloseIcon className="Modal__close" />
         </button>
         <div className="ModalBody">
           <div className="ModalContainerInner">{props.children}</div>
         </div>
-      </Reach.DialogContent>
-    </Reach.DialogOverlay>
+      </DialogContent>
+    </DialogOverlay>
   );
 }

@@ -66,13 +66,16 @@ interface ILocalDraftActions {
 //   setInitialValues({ title, editorState });
 // }
 
-export default function useLocalDrafts(): [ILocalDraft[], ILocalDraftActions] {
+export function useLocalDrafts(): [ILocalDraft[], ILocalDraftActions] {
   const [drafts, setDrafts] = React.useState<ILocalDraft[]>([]);
   const [getAllDrafts, writeToStorage, removeFromStorage] = useLocalDraftUtils();
 
-  React.useEffect(function() {
-    setDrafts(getAllDrafts());
-  }, []);
+  React.useEffect(
+    function() {
+      setDrafts(getAllDrafts());
+    },
+    [getAllDrafts]
+  );
 
   function addDraft(draft: IFields): void {
     const localDraft = writeToStorage(draft);
