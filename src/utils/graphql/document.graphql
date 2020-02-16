@@ -1,18 +1,20 @@
+fragment EntryInfo on Entry {
+  title
+  dateAdded
+  id
+  public
+}
+
 query AllPosts {
   feed {
-    title
-    dateAdded
-    id
-    public
+    ...EntryInfo
   }
 }
 
 query Edit($id: ID!) {
   entry(id: $id) {
-    title
-    dateAdded
+    ...EntryInfo
     content
-    public
   }
 }
 
@@ -42,7 +44,7 @@ mutation UpdateEntry(
   $status: Boolean
 ) {
   updateEntry(id: $id, content: $content, title: $title, status: $status) {
-    id
+    ...EntryInfo
   }
 }
 

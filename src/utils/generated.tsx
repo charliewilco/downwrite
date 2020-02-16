@@ -119,12 +119,15 @@ export type IUserSettingsInput = {
   email: Maybe<Scalars["String"]>;
 };
 
+export type IEntryInfoFragment = { __typename?: "Entry" } & Pick<
+  IEntry,
+  "title" | "dateAdded" | "id" | "public"
+>;
+
 export type IAllPostsQueryVariables = {};
 
 export type IAllPostsQuery = { __typename?: "Query" } & {
-  feed: Array<
-    { __typename?: "Entry" } & Pick<IEntry, "title" | "dateAdded" | "id" | "public">
-  >;
+  feed: Array<{ __typename?: "Entry" } & IEntryInfoFragment>;
 };
 
 export type IEditQueryVariables = {
@@ -133,10 +136,7 @@ export type IEditQueryVariables = {
 
 export type IEditQuery = { __typename?: "Query" } & {
   entry: Maybe<
-    { __typename?: "Entry" } & Pick<
-      IEntry,
-      "title" | "dateAdded" | "content" | "public"
-    >
+    { __typename?: "Entry" } & Pick<IEntry, "content"> & IEntryInfoFragment
   >;
 };
 
@@ -167,7 +167,7 @@ export type IUpdateEntryMutationVariables = {
 };
 
 export type IUpdateEntryMutation = { __typename?: "Mutation" } & {
-  updateEntry: Maybe<{ __typename?: "Entry" } & Pick<IEntry, "id">>;
+  updateEntry: Maybe<{ __typename?: "Entry" } & IEntryInfoFragment>;
 };
 
 export type ICreateEntryMutationVariables = {
@@ -210,15 +210,21 @@ export type ICreateUserMutation = { __typename?: "Mutation" } & {
   >;
 };
 
+export const EntryInfoFragmentDoc = gql`
+  fragment EntryInfo on Entry {
+    title
+    dateAdded
+    id
+    public
+  }
+`;
 export const AllPostsDocument = gql`
   query AllPosts {
     feed {
-      title
-      dateAdded
-      id
-      public
+      ...EntryInfo
     }
   }
+  ${EntryInfoFragmentDoc}
 `;
 
 /**
@@ -267,12 +273,11 @@ export type AllPostsQueryResult = ApolloReactCommon.QueryResult<
 export const EditDocument = gql`
   query Edit($id: ID!) {
     entry(id: $id) {
-      title
-      dateAdded
+      ...EntryInfo
       content
-      public
     }
   }
+  ${EntryInfoFragmentDoc}
 `;
 
 /**
@@ -436,9 +441,10 @@ export const UpdateEntryDocument = gql`
     $status: Boolean
   ) {
     updateEntry(id: $id, content: $content, title: $title, status: $status) {
-      id
+      ...EntryInfo
     }
   }
+  ${EntryInfoFragmentDoc}
 `;
 export type IUpdateEntryMutationFn = ApolloReactCommon.MutationFunction<
   IUpdateEntryMutation,
