@@ -51,7 +51,7 @@ mutation UpdateEntry(
 
 mutation CreateEntry($content: String, $title: String) {
   createEntry(content: $content, title: $title) {
-    id
+    ...EntryInfo
   }
 }
 

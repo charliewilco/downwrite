@@ -178,7 +178,7 @@ export type ICreateEntryMutationVariables = {
 };
 
 export type ICreateEntryMutation = { __typename?: "Mutation" } & {
-  createEntry: Maybe<{ __typename?: "Entry" } & Pick<IEntry, "id">>;
+  createEntry: Maybe<{ __typename?: "Entry" } & IEntryInfoFragment>;
 };
 
 export type IRemoveEntryMutationVariables = {
@@ -498,9 +498,10 @@ export type UpdateEntryMutationOptions = ApolloReactCommon.BaseMutationOptions<
 export const CreateEntryDocument = gql`
   mutation CreateEntry($content: String, $title: String) {
     createEntry(content: $content, title: $title) {
-      id
+      ...EntryInfo
     }
   }
+  ${EntryInfoFragmentDoc}
 `;
 export type ICreateEntryMutationFn = ApolloReactCommon.MutationFunction<
   ICreateEntryMutation,

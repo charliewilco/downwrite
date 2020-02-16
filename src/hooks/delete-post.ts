@@ -15,9 +15,9 @@ export function useRemovePost(): RemoveFn {
       await deleteEntry({
         variables: { id },
         update(cache, { data: { deleteEntry } }) {
-          const { feed } = cache.readQuery<IAllPostsQuery>(AllPostsDocument);
-
-          console.log("REMOVE FEED", feed, deleteEntry);
+          const { feed } = cache.readQuery<IAllPostsQuery>({
+            query: AllPostsDocument
+          });
 
           cache.writeQuery<IAllPostsQuery>({
             query: AllPostsDocument,
@@ -26,7 +26,7 @@ export function useRemovePost(): RemoveFn {
             }
           });
         }
-      }).catch();
+      }).catch(err => console.log(err));
     },
     [deleteEntry]
   );
