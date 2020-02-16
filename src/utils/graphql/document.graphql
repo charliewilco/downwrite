@@ -45,6 +45,7 @@ mutation UpdateEntry(
 ) {
   updateEntry(id: $id, content: $content, title: $title, status: $status) {
     ...EntryInfo
+    content
   }
 }
 
@@ -57,6 +58,7 @@ mutation CreateEntry($content: String, $title: String) {
 mutation RemoveEntry($id: ID) {
   deleteEntry(id: $id) {
     title
+    id
   }
 }
 

@@ -26,12 +26,15 @@ export default function useEdit(id: string) {
 
   const [updateEntry] = useUpdateEntryMutation({
     update(cache, { data: { updateEntry } }) {
-      const { entry } = cache.readQuery({ query: EditDocument, variables: { id } });
+      const { entry } = cache.readQuery<IEditQuery>({
+        query: EditDocument,
+        variables: { id }
+      });
 
-      cache.writeQuery({
+      cache.writeQuery<IEditQuery>({
         query: EditDocument,
         variables: { id },
-        data: Object.assign({}, entry, updateEntry)
+        data: { entry: Object.assign({}, entry, updateEntry) }
       });
     }
   });

@@ -186,7 +186,7 @@ export type IRemoveEntryMutationVariables = {
 };
 
 export type IRemoveEntryMutation = { __typename?: "Mutation" } & {
-  deleteEntry: Maybe<{ __typename?: "Entry" } & Pick<IEntry, "title">>;
+  deleteEntry: Maybe<{ __typename?: "Entry" } & Pick<IEntry, "title" | "id">>;
 };
 
 export type ILoginUserMutationVariables = {
@@ -550,6 +550,7 @@ export const RemoveEntryDocument = gql`
   mutation RemoveEntry($id: ID) {
     deleteEntry(id: $id) {
       title
+      id
     }
   }
 `;

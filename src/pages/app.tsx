@@ -10,6 +10,8 @@ interface IAppProps {
   token?: string;
 }
 
+const MemoUIShell = React.memo(UIShell);
+
 export function AppWrapper(props: React.PropsWithChildren<IAppProps>) {
   const [{ DW_TOKEN }] = useCookies();
   const authed = !is.emptyString(DW_TOKEN);
@@ -18,7 +20,7 @@ export function AppWrapper(props: React.PropsWithChildren<IAppProps>) {
     <HelmetProvider>
       <CookiesProvider>
         <AuthProvider token={DW_TOKEN} authed={authed}>
-          <UIShell>{props.children}</UIShell>
+          <MemoUIShell>{props.children}</MemoUIShell>
         </AuthProvider>
       </CookiesProvider>
     </HelmetProvider>
