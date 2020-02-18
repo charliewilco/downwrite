@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ILocalDraft } from "../hooks/local-draft";
+import { ILocalDraft } from "../hooks";
 
 interface IDraftListProps {
   drafts: ILocalDraft[];

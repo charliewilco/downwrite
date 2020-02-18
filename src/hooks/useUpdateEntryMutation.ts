@@ -29,7 +29,7 @@ export function useUpdateEntry(id: string, state: IEditorState) {
           query: AllPostsDocument,
           data: {
             feed: feed.map(item =>
-              item.id !== data.updateEntry.id ? data.updateEntry : item
+              item.id !== data.updateEntry.id ? item : data.updateEntry
             )
           }
         });

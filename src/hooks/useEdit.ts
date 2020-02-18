@@ -18,7 +18,7 @@ export function useEdit(id: string) {
     if (data && data.entry) {
       dispatch({ type: EditActions.INITIALIZE_EDITOR, payload: data.entry });
     }
-  }, [data]);
+  }, [data, dispatch]);
 
   return [
     { data, loading, error, state, id },

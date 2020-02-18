@@ -1,6 +1,6 @@
 import * as React from "react";
 import classNames from "../utils/classnames";
-import { useSwitchProps } from "../hooks/toggle";
+import { useSwitchProps } from "../hooks";
 
 interface ILayoutControl {
   layout: boolean;

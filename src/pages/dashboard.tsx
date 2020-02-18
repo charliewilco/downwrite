@@ -8,15 +8,14 @@ import { useRemovePost, useDashboard } from "../hooks";
 import { useAllPostsQuery } from "../utils/generated";
 
 export default function DashboardUI() {
-  const [state, actions] = useDashboard();
-
+  const [{ selectedPost, modalOpen }, actions] = useDashboard();
   const { data, loading, error } = useAllPostsQuery();
   const onConfirmDelete = useRemovePost();
 
   const onDelete = React.useCallback(() => {
-    onConfirmDelete(state.selectedPost.id);
+    onConfirmDelete(selectedPost.id);
     actions.onCloseModal();
-  }, [state.selectedPost, onConfirmDelete, actions]);
+  }, [selectedPost, onConfirmDelete, actions]);
 
   if (loading || data === undefined) {
     return <LoadingDashboard />;
@@ -28,31 +27,29 @@ export default function DashboardUI() {
 
   if (data) {
     return (
-      <React.StrictMode>
-        <React.Fragment>
-          {state.modalOpen && (
-            <DeleteModal
-              title={state.selectedPost.title}
-              onDelete={onDelete}
-              onCancelDelete={actions.onCancel}
-              closeModal={actions.onCloseModal}
+      <React.Fragment>
+        {modalOpen && (
+          <DeleteModal
+            title={selectedPost.title}
+            onDelete={onDelete}
+            onCancelDelete={actions.onCancel}
+            closeModal={actions.onCloseModal}
+          />
+        )}
+        <Helmet>
+          <title>Entries | Downwrite</title>
+        </Helmet>
+        <section className="PostContainer">
+          {data.feed.length > 0 ? (
+            <PostList
+              onSelect={({ title, id }) => actions.onSelect({ title, id })}
+              posts={data.feed}
             />
+          ) : (
+            <EmptyPosts />
           )}
-          <Helmet>
-            <title>Entries | Downwrite</title>
-          </Helmet>
-          <section className="PostContainer">
-            {data.feed.length > 0 ? (
-              <PostList
-                onSelect={({ title, id }) => actions.onSelect({ title, id })}
-                posts={data.feed}
-              />
-            ) : (
-              <EmptyPosts />
-            )}
-          </section>
-        </React.Fragment>
-      </React.StrictMode>
+        </section>
+      </React.Fragment>
     );
   }
 

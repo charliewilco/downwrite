@@ -23,7 +23,10 @@ interface IFormHandlers {
 
 export function useLoginFns(): IFormHandlers {
   const [, { signIn }] = React.useContext<AuthContextType>(AuthContext);
-  const [{ notifications }, actions] = useUINotifications();
+  const [
+    { notifications },
+    { addNotification, removeNotification }
+  ] = useUINotifications();
   const [createUser] = useCreateUserMutation();
 
   const [authenticateUser] = useLoginUserMutation();
@@ -42,16 +45,16 @@ export function useLoginFns(): IFormHandlers {
             signIn(token !== undefined, token);
             if (notifications.length > 0) {
               notifications.forEach(n => {
-                actions.removeNotification(n);
+                removeNotification(n);
               });
             }
           }
         })
         .catch(error => {
-          actions.addNotification(error.message, NotificationType.ERROR);
+          addNotification(error.message, NotificationType.ERROR);
         });
     },
-    [actions, notifications, signIn, authenticateUser]
+    [addNotification, removeNotification, notifications, signIn, authenticateUser]
   );
 
   const onRegisterSubmit = React.useCallback(
@@ -70,11 +73,11 @@ export function useLoginFns(): IFormHandlers {
             signIn(token !== undefined, token);
           })
           .catch(error => {
-            actions.addNotification(error.message, NotificationType.ERROR);
+            addNotification(error.message, NotificationType.ERROR);
           });
       }
     },
-    [createUser, actions, signIn]
+    [createUser, addNotification, signIn]
   );
 
   return {
