@@ -9,18 +9,18 @@ import {
   IAllPostsQuery
 } from "../utils/generated";
 
-export interface IFields {
+export interface INewEditorValues {
   title: string;
   editorState: Draft.EditorState;
 }
 
-export function useNew() {
+export function useNewEntry() {
   const [, actions] = useUINotifications();
   const history = useHistory();
   const [createEntry] = useCreateEntryMutation();
 
   const onSubmit = React.useCallback(
-    async (values: IFields) => {
+    async (values: INewEditorValues) => {
       const ContentState: Draft.ContentState = values.editorState.getCurrentContent();
       const content = draftToMarkdown(Draft.convertToRaw(ContentState));
 

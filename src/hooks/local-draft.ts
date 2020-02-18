@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import { IFields } from "./create-entry";
+import { INewEditorValues } from "./";
 import uuid from "uuid/v4";
 
 export interface ILocalDraft {
@@ -11,7 +11,7 @@ export interface ILocalDraft {
 
 type LocalDraft = [
   () => ILocalDraft[],
-  (post: IFields) => ILocalDraft,
+  (post: INewEditorValues) => ILocalDraft,
   (id: string) => void
 ];
 
@@ -24,7 +24,7 @@ export function useLocalDraftUtils(): LocalDraft {
     localStorage.removeItem(key);
   }
 
-  function writeToStorage({ title, editorState }: IFields): ILocalDraft {
+  function writeToStorage({ title, editorState }: INewEditorValues): ILocalDraft {
     const id = uuid();
     const content: Draft.RawDraftContentState = Draft.convertToRaw(
       editorState.getCurrentContent()
@@ -55,7 +55,7 @@ export function useLocalDraftUtils(): LocalDraft {
 // TODO: Migrate to useReducer()
 
 interface ILocalDraftActions {
-  addDraft(draft: IFields): void;
+  addDraft(draft: INewEditorValues): void;
   removeDraft(draft: ILocalDraft): void;
 }
 
@@ -77,7 +77,7 @@ export function useLocalDrafts(): [ILocalDraft[], ILocalDraftActions] {
     [getAllDrafts]
   );
 
-  function addDraft(draft: IFields): void {
+  function addDraft(draft: INewEditorValues): void {
     const localDraft = writeToStorage(draft);
     setDrafts(prev => [...prev, localDraft]);
   }

@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Draft from "draft-js";
 import { useFormik } from "formik";
 import { Helmet } from "react-helmet-async";
-import { useOffline, useNew, IFields } from "../hooks";
+import { useOffline, useNewEntry, INewEditorValues } from "../hooks";
 import { Input } from "../components/editor-input";
 import { Button } from "../components/button";
 import Upload from "../components/upload";
@@ -12,14 +12,14 @@ const Editor = React.lazy(() => import("../components/editor"));
 const EDITOR_COMMAND = "create-new-post";
 
 export default function NewEntryPage() {
-  const initialValues = React.useRef<IFields>({
+  const initialValues = React.useRef<INewEditorValues>({
     title: "",
     editorState: Draft.EditorState.createEmpty()
   });
-  const [createNewPost] = useNew();
+  const [createNewPost] = useNewEntry();
   const isOffline = useOffline();
 
-  function onSubmit(values: IFields): void {
+  function onSubmit(values: INewEditorValues): void {
     createNewPost(values);
   }
 
