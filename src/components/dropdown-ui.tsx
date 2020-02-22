@@ -35,7 +35,7 @@ export default function DropdownUI() {
           </span>
           Settings
         </MenuLink>
-        <MenuLink as={Link} to="/unstable_slates">
+        <MenuLink as={Link} to="/unstable_slate">
           Slate Editor
         </MenuLink>
         <MenuItem onSelect={darkMode.action.onChange}>

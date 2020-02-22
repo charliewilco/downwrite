@@ -20,7 +20,9 @@ const client = createApolloClient();
 
 render(
   <ApolloProvider client={client}>
-    <App />
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
   </ApolloProvider>,
   document.querySelector("#root")
 );

@@ -11,6 +11,7 @@ const Login = React.lazy(() => import("./login"));
 const About = React.lazy(() => import("./about"));
 const IndexPage = React.lazy(() => import("./index"));
 const SettingsPage = React.lazy(() => import("./settings"));
+const Slate = React.lazy(() => import("./slate"));
 
 export function AppRoutes() {
   return (
@@ -24,6 +25,7 @@ export function AppRoutes() {
         <Route path="/about" component={About} />
         <Route path="/legal" component={Legal} />
         <Route path="/settings" component={SettingsPage} />
+        <Route path="/unstable_slate" component={Slate} />
         <Route path="/" exact component={IndexPage} />
       </Switch>
     </React.Suspense>
