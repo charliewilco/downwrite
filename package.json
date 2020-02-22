@@ -8,7 +8,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "generate": "graphql-codegen",
-    "lint": "eslint src --ext .ts,tsx",
+    "format": "prettier --write src/**/* api/* ./*.json",
     "dev": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -53,7 +53,6 @@
     "isomorphic-unfetch": "^3.0.0",
     "jwt-decode": "^2.2.0",
     "markdown-draft-js": "^1.5.0",
-    "postcss-preset-env": "^6.7.0",
     "prismjs": "^1.15.0",
     "react": "^16.12.0",
     "react-cookie": "^4.0.3",
@@ -94,9 +93,8 @@
     "@types/react-router-dom": "^5.1.3",
     "@types/uuid": "^3.4.7",
     "@types/yup": "^0.26.31",
+    "@zeit/git-hooks": "^0.1.4",
     "apollo-server-testing": "^2.10.1",
-    "husky": "^4.2.1",
-    "lint-staged": "^10.0.7",
     "prettier": "^1.19.1",
     "prop-types": "^15.7.2",
     "ts-jest": "^25.1.0",
@@ -113,19 +111,9 @@
     "bracketSpacing": true,
     "jsxBracketSameLine": true
   },
-  "lint-staged": {
-    "*.{js,json,ts,tsx}": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.css": [
-      "prettier --parser postcss --write",
-      "git add"
+  "git": {
+    "pre-commit": [
+      "format"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   }
 }
