@@ -13,20 +13,33 @@ const IndexPage = React.lazy(() => import("./index"));
 const SettingsPage = React.lazy(() => import("./settings"));
 const Slate = React.lazy(() => import("./slate"));
 
+export enum Routes {
+  DASHBOARD = "/dashboard",
+  NEW = "/new",
+  LOGIN = "/login",
+  EDIT = "/edit/:id",
+  PREVIEW = "/preview/:id",
+  ABOUT = "/about",
+  LEGAL = "/legal",
+  SETTINGS = "/settings",
+  SLATE = "/unstable_slate",
+  INDEX = "/"
+}
+
 export function AppRoutes() {
   return (
     <React.Suspense fallback={<Loading size={50} />}>
       <Switch>
-        <Route path="/dashboard" component={Dashboard} />
-        <Route path="/new" component={NewEntryPage} />
-        <Route path="/login" component={Login} />
-        <Route path="/edit/:id" component={Edit} />
-        <Route path="/preview/:id" component={Preview} />
-        <Route path="/about" component={About} />
-        <Route path="/legal" component={Legal} />
-        <Route path="/settings" component={SettingsPage} />
-        <Route path="/unstable_slate" component={Slate} />
-        <Route path="/" exact component={IndexPage} />
+        <Route path={Routes.DASHBOARD} component={Dashboard} />
+        <Route path={Routes.NEW} component={NewEntryPage} />
+        <Route path={Routes.LOGIN} component={Login} />
+        <Route path={Routes.EDIT} component={Edit} />
+        <Route path={Routes.PREVIEW} component={Preview} />
+        <Route path={Routes.ABOUT} component={About} />
+        <Route path={Routes.LEGAL} component={Legal} />
+        <Route path={Routes.SETTINGS} component={SettingsPage} />
+        <Route path={Routes.SLATE} component={Slate} />
+        <Route path={Routes.INDEX} exact component={IndexPage} />
       </Switch>
     </React.Suspense>
   );

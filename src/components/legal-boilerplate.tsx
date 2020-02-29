@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import Checkbox from "./checkbox";
+import { Routes } from "../pages/routes";
 
 interface ILegalProps {
   name: string;
@@ -8,7 +9,7 @@ interface ILegalProps {
   onChange: (x: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const LegalLink = () => <Link to="/legal">legal stuff</Link>;
+const LegalLink = () => <Link to={Routes.LOGIN}>legal stuff</Link>;
 
 export default function LegalBoilerplate(props: ILegalProps) {
   return (

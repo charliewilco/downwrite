@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { Menu, MenuList, MenuItem, MenuButton, MenuLink } from "@reach/menu-button";
+import { Routes } from "../pages/routes";
 import { NavIcon } from "./icons";
 import User from "./user";
 import { AuthContext, AuthContextType } from "./auth";
@@ -17,25 +18,25 @@ export default function DropdownUI() {
       </MenuButton>
       <MenuList className="Sheet DropdownMenuList">
         <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
-        <MenuLink to="/" as={Link}>
+        <MenuLink to={Routes.INDEX} as={Link}>
           <span role="img" aria-label="Stack of books">
             📚{" "}
           </span>
           All Entries
         </MenuLink>
-        <MenuLink to="/new" as={Link}>
+        <MenuLink to={Routes.NEW} as={Link}>
           <span role="img" aria-label="Writing with a Pen">
             ✍️
           </span>
           Create New Entry
         </MenuLink>
-        <MenuLink as={Link} to="/settings">
+        <MenuLink to={Routes.SETTINGS} as={Link}>
           <span role="img" aria-label="Gear">
             ⚙️
           </span>
           Settings
         </MenuLink>
-        <MenuLink as={Link} to="/unstable_slate">
+        <MenuLink to={Routes.SLATE} as={Link}>
           Slate Editor
         </MenuLink>
         <MenuItem onSelect={darkMode.action.onChange}>

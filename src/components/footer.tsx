@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
+import { Routes } from "../pages/routes";
 
 interface IPage {
   name: string;
@@ -8,8 +9,8 @@ interface IPage {
 }
 
 const PAGES: IPage[] = [
-  { name: "About", href: "/about" },
-  { name: "Legal", href: "/legal" },
+  { name: "About", href: Routes.ABOUT },
+  { name: "Legal", href: Routes.LEGAL },
   {
     name: "Source Code",
     href: "https://github.com/charliewilco/downwrite",
