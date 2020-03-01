@@ -11,7 +11,7 @@ const Login = React.lazy(() => import("./login"));
 const About = React.lazy(() => import("./about"));
 const IndexPage = React.lazy(() => import("./index"));
 const SettingsPage = React.lazy(() => import("./settings"));
-const Slate = React.lazy(() => import("./slate"));
+const UnstableSlate = React.lazy(() => import("./slate"));
 
 export enum Routes {
   DASHBOARD = "/dashboard",
@@ -38,7 +38,7 @@ export function AppRoutes() {
         <Route path={Routes.ABOUT} component={About} />
         <Route path={Routes.LEGAL} component={Legal} />
         <Route path={Routes.SETTINGS} component={SettingsPage} />
-        <Route path={Routes.SLATE} component={Slate} />
+        <Route path={Routes.SLATE} component={UnstableSlate} />
         <Route path={Routes.INDEX} exact component={IndexPage} />
       </Switch>
     </React.Suspense>

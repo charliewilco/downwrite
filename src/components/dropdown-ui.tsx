@@ -37,6 +37,9 @@ export default function DropdownUI() {
           Settings
         </MenuLink>
         <MenuLink to={Routes.SLATE} as={Link}>
+          <span role="img" aria-label="Pen and Paper">
+            📝
+          </span>
           Slate Editor
         </MenuLink>
         <MenuItem onSelect={darkMode.action.onChange}>
