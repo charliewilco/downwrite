@@ -43,13 +43,4 @@ describe("<Card />", () => {
 
     expect(mockDelete).toHaveBeenCalled();
   });
-
-  it("matches snapshot", () => {
-    const TestCard = render(
-      <MemoryRouter>
-        <Card public={false} {...post} onDelete={mockDelete} />
-      </MemoryRouter>
-    );
-    expect(TestCard.container.firstChild).toMatchSnapshot();
-  });
 });

@@ -4,17 +4,24 @@ import "@testing-library/jest-dom";
 import { render, fireEvent, waitForElement, act } from "@testing-library/react";
 import { wait, MockedProvider, MockedResponse } from "@apollo/react-testing";
 import DashboardUI from "../pages/dashboard";
+import { UIShell } from "../components/ui-shell";
 import { AllPostsDocument } from "../utils/generated";
 import { data } from "./fixtures/feed.json";
+import { MockAuthProvider } from "../utils/testing";
 import { MemoryRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+import { GraphQLError } from "graphql";
 
-function createPage(mocks?: MockedResponse[]) {
+function createPage(mocks?: MockedResponse[], authed: boolean = true) {
   return render(
-    <MockedProvider mocks={mocks} addTypename={false}>
+    <MockedProvider mocks={mocks}>
       <MemoryRouter>
         <HelmetProvider>
-          <DashboardUI />
+          <MockAuthProvider authed={authed}>
+            <UIShell>
+              <DashboardUI />
+            </UIShell>
+          </MockAuthProvider>
         </HelmetProvider>
       </MemoryRouter>
     </MockedProvider>
@@ -31,6 +38,13 @@ const emptyFeedMocks: MockedResponse[] = [
         feed: []
       }
     }
+  }
+];
+
+const errorMock: MockedResponse[] = [
+  {
+    request: { query: AllPostsDocument },
+    error: new Error("...")
   }
 ];
 
@@ -78,14 +92,15 @@ describe("<Dashboard /> post lists", () => {
   });
 
   it("shows error if error", async () => {
-    const ErrorContainer = createPage([]);
+    const ErrorContainer = createPage(errorMock, false);
 
-    expect(ErrorContainer.getByTestId("LOADING_SPINNER")).toBeInTheDocument();
     await wait(0);
 
-    expect(
+    const errorDiv = await waitForElement(() =>
       ErrorContainer.getByTestId("INVALID_TOKEN_CONTAINER")
-    ).toBeInTheDocument();
+    );
+
+    expect(errorDiv).toBeInTheDocument();
   });
 
   it("shows prompt to write more if no posts", async () => {

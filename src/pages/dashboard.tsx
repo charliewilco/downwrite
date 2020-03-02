@@ -17,7 +17,7 @@ export default function DashboardUI() {
     actions.onCloseModal();
   }, [selectedPost, onConfirmDelete, actions]);
 
-  if (loading || data === undefined) {
+  if (loading || (data === undefined && error === undefined)) {
     return <LoadingDashboard />;
   }
 
