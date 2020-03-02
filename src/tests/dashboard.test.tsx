@@ -10,7 +10,6 @@ import { data } from "./fixtures/feed.json";
 import { MockAuthProvider } from "../utils/testing";
 import { MemoryRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { GraphQLError } from "graphql";
 
 function createPage(mocks?: MockedResponse[], authed: boolean = true) {
   return render(
