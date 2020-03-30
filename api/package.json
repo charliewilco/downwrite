@@ -22,7 +22,7 @@
     "@types/bcrypt": "^3.0.0",
     "@types/hapi__boom": "^7.4.1",
     "@types/hapi__hapi": "^18.2.5",
-    "@types/hapi__joi": "^15.0.3",
+    "@types/hapi__joi": "^16.0.12",
     "@types/jsonwebtoken": "^8.3.0",
     "@types/micro": "^7.3.3",
     "@types/mongoose": "^5.3.10",
