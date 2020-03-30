@@ -31,7 +31,7 @@
     "bcrypt": "^3.0.6",
     "hapi-auth-jwt2": "^8.3.0",
     "jsonwebtoken": "^8.3.0",
-    "markdown-draft-js": "^1.5.0",
+    "markdown-draft-js": "^2.2.0",
     "micro": "^9.3.3",
     "mongoose": "^5.4.7",
     "relish": "^3.0.0",
