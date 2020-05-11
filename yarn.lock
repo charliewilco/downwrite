@@ -1660,12 +1660,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/hapi__joi@*", "@types/hapi__joi@^15.0.3":
-  version "15.0.3"
-  resolved "https://registry.npmjs.org/@types/hapi__joi/-/hapi__joi-15.0.3.tgz#eeeca99e3829636975bf39532d6e8279409c78f2"
-  integrity sha512-kncvQstpAQSjQ+J+tL2oYerjOEepv+yJHKM/JD/NmFZyDcy3rYOBcMJhdHRDjBxuSZu3ipGECszhgtmug9VSuw==
-  dependencies:
-    "@types/hapi__joi" "*"
+"@types/hapi__joi@*", "@types/hapi__joi@^17.1.0":
+  version "17.1.0"
+  resolved "https://registry.yarnpkg.com/@types/hapi__joi/-/hapi__joi-17.1.0.tgz#b5324c423a49697ea0926f19cc90c6f5cbb68391"
+  integrity sha512-zqPGKJ3FUiut0NZUstLBm3gAkSMwWwn/soNi/KvefJfhlaQYYoLnMiMCaMN97dPK4iKjFSIVwRbHANSgUCKm7g==
 
 "@types/hapi__mimos@*":
   version "4.1.0"
