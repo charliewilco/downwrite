@@ -20,7 +20,7 @@
     "jest": "^24.6.0",
     "lint-staged": "^9.2.5",
     "micro-proxy": "^1.1.0",
-    "prettier": "^1.17.0",
+    "prettier": "^2.0.5",
     "tslint": "^5.14.0",
     "typescript": "^3.4.1"
   },
