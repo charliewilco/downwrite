@@ -28,7 +28,7 @@
     "@types/mongoose": "^5.3.10",
     "@types/node": "^11.13.0",
     "@types/uuid": "^3.4.4",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "hapi-auth-jwt2": "^8.3.0",
     "jsonwebtoken": "^8.3.0",
     "markdown-draft-js": "^1.5.0",
