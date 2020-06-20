@@ -1,13 +1,13 @@
 import * as React from "react";
-import { Helmet } from "react-helmet-async";
+import Head from "next/head";
 import Content from "../components/content";
 
 export default function LegalView(): JSX.Element {
   return (
     <Content title="Legal">
-      <Helmet>
+      <Head>
         <title>Legal Nonsense</title>
-      </Helmet>
+      </Head>
       <h2>Terms of Service</h2>
 
       <blockquote>

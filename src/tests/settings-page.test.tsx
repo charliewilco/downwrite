@@ -1,13 +1,11 @@
 import * as React from "react";
 import "@testing-library/jest-dom";
-import { HelmetProvider } from "react-helmet-async";
 import { render, waitForElement } from "@testing-library/react";
 import { MockedProvider, MockedResponse } from "@apollo/react-testing";
 import SettingsPage from "../pages/settings";
 import { UserDetailsDocument } from "../utils/generated";
 import { MockAuthProvider } from "../utils/testing";
-import { MemoryRouter } from "react-router-dom";
-import { UIShell } from "src/components/ui-shell";
+import { UIShell } from "../components/ui-shell";
 
 const mocks: MockedResponse[] = [
   {
@@ -27,17 +25,13 @@ const mocks: MockedResponse[] = [
 
 function createPage(mocks: MockedResponse[]) {
   return render(
-    <HelmetProvider>
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <MemoryRouter>
-          <MockAuthProvider>
-            <UIShell>
-              <SettingsPage />
-            </UIShell>
-          </MockAuthProvider>
-        </MemoryRouter>
-      </MockedProvider>
-    </HelmetProvider>
+    <MockedProvider mocks={mocks} addTypename={false}>
+      <MockAuthProvider>
+        <UIShell>
+          <SettingsPage />
+        </UIShell>
+      </MockAuthProvider>
+    </MockedProvider>
   );
 }
 

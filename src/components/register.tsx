@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useFormik } from "formik";
-import "isomorphic-unfetch";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
 import LegalBoilerplate from "./legal-boilerplate";

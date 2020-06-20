@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import Nib from "./nib";
 import { Routes } from "../pages/routes";
 
@@ -14,8 +14,8 @@ export default function EmptyPosts(): JSX.Element {
           <h4 className="GettingStartedTitle">
             Looks like you don't have any entries
           </h4>
-          <Link to={Routes.NEW} className="GettingStarted">
-            Get Started &rarr;
+          <Link href={Routes.NEW} passHref>
+            <a className="GettingStarted">Get Started &rarr; </a>
           </Link>
         </div>
       </div>

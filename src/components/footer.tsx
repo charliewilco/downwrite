@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Routes } from "../pages/routes";
 
 interface IPage {
@@ -38,8 +38,8 @@ export default function UIFooter() {
                   {page.name}
                 </a>
               ) : (
-                <Link to={page.href} className="AltLink">
-                  {page.name}
+                <Link href={page.href} passHref>
+                  <a className="AltLink">{page.name}</a>
                 </Link>
               )}
             </li>

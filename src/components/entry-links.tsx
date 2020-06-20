@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 interface ICardLinks {
   id: string;
@@ -14,11 +14,10 @@ interface IInitialCardLinkProps {
 
 function CardLink(props: ICardLinks & IInitialCardLinkProps): JSX.Element {
   return (
-    <Link
-      to={`${props.pathname}/${props.id}`}
-      className={props.className}
-      style={props.style}>
-      {props.title}
+    <Link href={`${props.pathname}/${props.id}`} passHref>
+      <a className={props.className} style={props.style}>
+        {props.title}
+      </a>
     </Link>
   );
 }

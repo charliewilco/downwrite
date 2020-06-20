@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import distance from "date-fns/formatDistanceToNow";
 import parseISO from "date-fns/parseISO";
 import { EditLink, PreviewLink } from "./entry-links";
@@ -24,7 +24,9 @@ export default function PostListItem(props: IListItemProps): JSX.Element {
     <div className="PostItem" data-testid="POST_LIST_ITEM">
       <div>
         <h2 className="PostItemTitle">
-          <Link to={`/edit/${props.id}`}>{props.title}</Link>
+          <Link href={`/edit/${props.id}`} passHref>
+            <a>{props.title}</a>
+          </Link>
         </h2>
         <small className="PostItemMeta">added {distance(date)} ago</small>
       </div>

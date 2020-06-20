@@ -1,5 +1,4 @@
 import { URLEndpoints } from "./urls";
-import "isomorphic-unfetch";
 import { Omit } from "./types";
 
 /**

@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Helmet } from "react-helmet-async";
-import { useParams } from "react-router-dom";
+import Head from "next/head";
 import Autosaving from "../components/autosaving-interval";
 import WordCounter from "../components/word-count";
 import { Button } from "../components/button";
@@ -12,15 +11,18 @@ import TimeMarker from "../components/time-marker";
 import { __IS_DEV__ } from "../utils/dev";
 import { EditActions } from "../reducers/editor";
 import { useEdit } from "../hooks";
+import { useRouter } from "next/router";
 
 const Editor = React.lazy(() => import("../components/editor"));
 
 const ExportMarkdown = React.lazy(() => import("../components/export"));
 
 export default function EditUI() {
-  const params = useParams<{ id: string }>();
+  const router = useRouter();
 
-  const [{ loading, error, state, data, id }, actions] = useEdit(params.id);
+  const [{ loading, error, state, data, id }, actions] = useEdit(
+    router.query.id! as string
+  );
 
   if (error) {
     return (
@@ -38,9 +40,9 @@ export default function EditUI() {
   return (
     <div className="Wrapper Wrapper--md">
       <React.Fragment>
-        <Helmet>
+        <Head>
           <title>{state.title} | Downwrite</title>
-        </Helmet>
+        </Head>
         {state.initialFocus && (
           <Autosaving
             title={state.title}

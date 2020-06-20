@@ -1,11 +1,19 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Menu, MenuList, MenuItem, MenuButton, MenuLink } from "@reach/menu-button";
 import { Routes } from "../pages/routes";
 import { NavIcon } from "./icons";
 import User from "./user";
 import { AuthContext, AuthContextType } from "./auth";
 import { NightModeContext, INightModeContext } from "./night-mode";
+
+function NextMenuLink({ to, ...props }: any): JSX.Element {
+  return (
+    <Link passHref href={to}>
+      <a {...props} />
+    </Link>
+  );
+}
 
 export default function DropdownUI() {
   const [auth, { signOut }] = React.useContext<AuthContextType>(AuthContext);
@@ -18,25 +26,25 @@ export default function DropdownUI() {
       </MenuButton>
       <MenuList className="Sheet DropdownMenuList">
         <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
-        <MenuLink to={Routes.INDEX} as={Link}>
+        <MenuLink to={Routes.INDEX} as={NextMenuLink}>
           <span role="img" aria-label="Stack of books">
             📚{" "}
           </span>
           All Entries
         </MenuLink>
-        <MenuLink to={Routes.NEW} as={Link}>
+        <MenuLink to={Routes.NEW} as={NextMenuLink}>
           <span role="img" aria-label="Writing with a Pen">
             ✍️
           </span>
           Create New Entry
         </MenuLink>
-        <MenuLink to={Routes.SETTINGS} as={Link}>
+        <MenuLink to={Routes.SETTINGS} as={NextMenuLink}>
           <span role="img" aria-label="Gear">
             ⚙️
           </span>
           Settings
         </MenuLink>
-        <MenuLink to={Routes.SLATE} as={Link}>
+        <MenuLink to={Routes.SLATE} as={NextMenuLink}>
           <span role="img" aria-label="Pen and Paper">
             📝
           </span>

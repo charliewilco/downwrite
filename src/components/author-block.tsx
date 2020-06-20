@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import Avatar from "./avatar";
 import { Routes } from "../pages/routes";
 
@@ -23,7 +23,9 @@ export default function Author(props: IAuthorProps): JSX.Element {
             <span>
               You can write and share on Downwrite, you can sign up or log in{" "}
             </span>
-            <Link to={Routes.LOGIN}>here</Link>
+            <Link href={Routes.LOGIN} passHref>
+              <a>here</a>
+            </Link>
           </p>
         </React.Fragment>
       )}

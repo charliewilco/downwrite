@@ -1,24 +1,24 @@
 import * as React from "react";
-import { Helmet } from "react-helmet-async";
-import { useParams, useLocation } from "react-router-dom";
+import Head from "next/head";
 import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
 import Loading from "../components/loading";
 import { AvatarColors } from "../components/avatar";
 import NotFound from "../components/not-found";
 import { usePreviewQuery } from "../utils/generated";
+import { useRouter } from "next/router";
 
 export default function PreviewEntry() {
-  const { id } = useParams();
-  const location = useLocation();
-  const { error, loading, data } = usePreviewQuery({ variables: { id } });
+  const { error, loading, data } = usePreviewQuery({
+    variables: { id: router.qu.id! as string }
+  });
 
   if (error) {
     return (
       <React.Fragment>
-        <Helmet>
+        <Head>
           <title>{error.name} | Downwrite</title>
-        </Helmet>
+        </Head>
         <NotFound error={error.name} message={error.message} />
       </React.Fragment>
     );
@@ -32,13 +32,13 @@ export default function PreviewEntry() {
 
   return (
     <React.Fragment>
-      <Helmet>
+      <Head>
         <title>{data.preview.title} | Downwrite</title>
         <meta name="og:title" content={data.preview.title} />
         <meta name="og:description" content={excerpt} />
-        <meta name="og:url" content={location.pathname} />
+        <meta name="og:url" content={router.pathname} />
         <meta name="description" content={excerpt} />
-      </Helmet>
+      </Head>
       <Content
         title={data.preview.title}
         content={data.preview.content}

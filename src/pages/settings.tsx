@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Helmet } from "react-helmet-async";
+import Head from "next/head";
 import SettingsUser from "../components/settings-user-form";
 import SettingsPassword from "../components/settings-password";
 import SettingsLocal from "../components/settings-markdown";
@@ -22,9 +22,9 @@ export default function SettingsPage() {
 
   return (
     <div className="Wrapper Wrapper--md" style={{ padding: 8 }}>
-      <Helmet>
+      <Head>
         <title>User Settings</title>
-      </Helmet>
+      </Head>
 
       <h1 className="ContainerTitle" style={{ marginBottom: 16 }}>
         Settings

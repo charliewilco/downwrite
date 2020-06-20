@@ -8,21 +8,15 @@ import { UIShell } from "../components/ui-shell";
 import { AllPostsDocument } from "../utils/generated";
 import { data } from "./fixtures/feed.json";
 import { MockAuthProvider } from "../utils/testing";
-import { MemoryRouter } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
 
 function createPage(mocks?: MockedResponse[], authed: boolean = true) {
   return render(
     <MockedProvider mocks={mocks}>
-      <MemoryRouter>
-        <HelmetProvider>
-          <MockAuthProvider authed={authed}>
-            <UIShell>
-              <DashboardUI />
-            </UIShell>
-          </MockAuthProvider>
-        </HelmetProvider>
-      </MemoryRouter>
+      <MockAuthProvider authed={authed}>
+        <UIShell>
+          <DashboardUI />
+        </UIShell>
+      </MockAuthProvider>
     </MockedProvider>
   );
 }

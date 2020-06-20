@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Routes } from "../pages/routes";
 
 interface IInvalidTokenProps {
@@ -10,7 +10,9 @@ export default function InvalidToken(props: IInvalidTokenProps): JSX.Element {
   return (
     <div data-testid="INVALID_TOKEN_CONTAINER">
       <p>{props.error}</p>
-      <Link to={Routes.LOGIN}>Let's sign in again.</Link>
+      <Link href={Routes.LOGIN} passHref>
+        <a>Let's sign in again.</a>
+      </Link>
     </div>
   );
 }

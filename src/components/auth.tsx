@@ -1,6 +1,5 @@
 import * as React from "react";
 import Cookies from "universal-cookie";
-import { useHistory, useLocation } from "react-router-dom";
 import jwt from "jwt-decode";
 import addDays from "date-fns/addDays";
 import {
@@ -9,6 +8,7 @@ import {
   AuthActions,
   reducer
 } from "../reducers/auth";
+import { useRouter } from "next/router";
 
 // NOTE:
 // This component should passdown the state of authed from withAuthCheck() HOC
@@ -103,18 +103,17 @@ export function useAuthReducer(tokenInitial?: string): [IAuthState, IAuthActions
 }
 
 export function useAuthSideEffects({ authed, token }: IAuthState): void {
-  const history = useHistory();
-  const location = useLocation();
+  const router = useRouter();
   React.useEffect(() => {
-    if (authed && location.pathname === "/login") {
-      history.push({ pathname: "/" });
+    if (authed && router.pathname === "/login") {
+      router.push({ pathname: "/" });
     }
 
     if (!authed) {
-      history.push({ pathname: "/login" });
+      router.push({ pathname: "/login" });
       cookie.remove("DW_TOKEN", cookieOptions);
     }
-  }, [history, location.pathname, authed]);
+  }, [router, router.pathname, authed]);
 
   React.useEffect(() => {
     if (token) {

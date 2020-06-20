@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import { useHistory } from "react-router-dom";
+import { useRouter } from "next/router";
 import { draftToMarkdown } from "markdown-draft-js";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
 import {
@@ -16,7 +16,7 @@ export interface INewEditorValues {
 
 export function useNewEntry() {
   const [, actions] = useUINotifications();
-  const history = useHistory();
+  const router = useRouter();
   const [createEntry] = useCreateEntryMutation();
 
   const onSubmit = React.useCallback(
@@ -46,7 +46,7 @@ export function useNewEntry() {
       })
         .then(({ data: { createEntry } }) => {
           if (createEntry) {
-            history.push(`/edit/${createEntry.id}`);
+            router.push(`/edit/${createEntry.id}`);
           }
         })
         .catch(err => actions.addNotification(err.message, NotificationType.ERROR));

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Helmet } from "react-helmet-async";
+import Head from "next/head";
 import DeleteModal from "../components/delete-modal";
 import PostList from "../components/post-list";
 import EmptyPosts from "../components/empty-posts";
@@ -36,12 +36,12 @@ export default function DashboardUI() {
             closeModal={actions.onCloseModal}
           />
         )}
-        <Helmet>
+        <Head>
           <title>
             {data.feed.length > 0 && data.feed.length.toString().concat(" ")}Entries
             | Downwrite
           </title>
-        </Helmet>
+        </Head>
         <section className="PostContainer">
           {data.feed.length > 0 ? (
             <PostList

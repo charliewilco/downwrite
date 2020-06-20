@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import Logo from "./logo";
 import { AuthContext, AuthContextType } from "./auth";
 import DropdownUI from "./dropdown-ui";
@@ -7,7 +8,7 @@ import { Routes } from "../pages/routes";
 
 export function UIHeader(): JSX.Element {
   const [{ authed }] = React.useContext<AuthContextType>(AuthContext);
-  const router = useLocation();
+  const router = useRouter();
 
   const style: React.CSSProperties = { marginRight: 16 };
 
@@ -19,27 +20,33 @@ export function UIHeader(): JSX.Element {
       <nav className="AppHeaderNav">
         <Logo />
         <h1 className="AppHeaderTitle" data-testid="APP_HEADER_TITLE">
-          <Link to={homeLink} className="AppHeaderLink">
-            Downwrite
+          <Link href={homeLink} passHref>
+            <a className="AppHeaderLink">Downwrite</a>
           </Link>
         </h1>
       </nav>
       {authed ? (
         <nav className="AppHeaderNav">
-          <Link to={Routes.NEW} className="AltLink" style={style}>
-            New
+          <Link href={Routes.NEW} passHref>
+            <a className="AltLink" style={style}>
+              New
+            </a>
           </Link>
           <DropdownUI />
         </nav>
       ) : (
         <nav className="AppHeaderNav">
-          <Link to={Routes.LOGIN} className="AltLink" style={style}>
-            Login or Sign Up
+          <Link href={Routes.LOGIN} passHref>
+            <a className="AltLink" style={style}>
+              Login or Sign Up
+            </a>
           </Link>
         </nav>
       )}
     </header>
-  ) : null;
+  ) : (
+    <React.Fragment />
+  );
 }
 
 export default UIHeader;

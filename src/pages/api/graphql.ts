@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import { ApolloServer } from "apollo-server-micro";
-import { DownwriteAPI } from "../src/utils/graphql/data-source";
-import { schema } from "../src/utils/graphql/schema";
-import { REST_ENDPOINT } from "../src/utils/urls";
+import { DownwriteAPI } from "../../utils/graphql/data-source";
+import { schema } from "../../utils/graphql/schema";
+import { REST_ENDPOINT } from "../../utils/urls";
 
 const server = new ApolloServer({
   schema,
