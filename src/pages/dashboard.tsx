@@ -37,7 +37,10 @@ export default function DashboardUI() {
           />
         )}
         <Helmet>
-          <title>Entries | Downwrite</title>
+          <title>
+            {data.feed.length > 0 && data.feed.length.toString().concat(" ")}Entries
+            | Downwrite
+          </title>
         </Helmet>
         <section className="PostContainer">
           {data.feed.length > 0 ? (

@@ -43,6 +43,7 @@ export function useLoginFns(): IFormHandlers {
           if (value.data.authenticateUser.token) {
             const token = value.data.authenticateUser.token;
             signIn(token !== undefined, token);
+
             if (notifications.length > 0) {
               notifications.forEach(n => {
                 removeNotification(n);

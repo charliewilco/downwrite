@@ -5,6 +5,11 @@ import { Button } from "./button";
 import { useLoginFns, ILoginValues } from "../hooks";
 import { LoginFormSchema } from "../utils/validations";
 
+/**
+ *
+ * Login functions
+ *
+ */
 export default function Login(): JSX.Element {
   const { onLoginSubmit } = useLoginFns();
 

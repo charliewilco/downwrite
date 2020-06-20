@@ -13,6 +13,8 @@ import { css } from "emotion";
 // eslint-disable-next-line
 Prism.languages.markdown=Prism.languages.extend("markup",{}),Prism.languages.insertBefore("markdown","prolog",{blockquote:{pattern:/^>(?:[\t ]*>)*/m,alias:"punctuation"},code:[{pattern:/^(?: {4}|\t).+/m,alias:"keyword"},{pattern:/``.+?``|`[^`\n]+`/,alias:"keyword"}],title:[{pattern:/\w+.*(?:\r?\n|\r)(?:==+|--+)/,alias:"important",inside:{punctuation:/==+$|--+$/}},{pattern:/(^\s*)#+.+/m,lookbehind:!0,alias:"important",inside:{punctuation:/^#+|#+$/}}],hr:{pattern:/(^\s*)([*-])([\t ]*\2){2,}(?=\s*$)/m,lookbehind:!0,alias:"punctuation"},list:{pattern:/(^\s*)(?:[*+-]|\d+\.)(?=[\t ].)/m,lookbehind:!0,alias:"punctuation"},"url-reference":{pattern:/!?\[[^\]]+\]:[\t ]+(?:\S+|<(?:\\.|[^>\\])+>)(?:[\t ]+(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\)))?/,inside:{variable:{pattern:/^(!?\[)[^\]]+/,lookbehind:!0},string:/(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\))$/,punctuation:/^[\[\]!:]|[<>]/},alias:"url"},bold:{pattern:/(^|[^\\])(\*\*|__)(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,lookbehind:!0,inside:{punctuation:/^\*\*|^__|\*\*$|__$/}},italic:{pattern:/(^|[^\\])([*_])(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,lookbehind:!0,inside:{punctuation:/^[*_]|[*_]$/}},url:{pattern:/!?\[[^\]]+\](?:\([^\s)]+(?:[\t ]+"(?:\\.|[^"\\])*")?\)| ?\[[^\]\n]*\])/,inside:{variable:{pattern:/(!?\[)[^\]]+(?=\]$)/,lookbehind:!0},string:{pattern:/"(?:\\.|[^"\\])*"(?=\)$)/}}}}),Prism.languages.markdown.bold.inside.url=Prism.util.clone(Prism.languages.markdown.url),Prism.languages.markdown.italic.inside.url=Prism.util.clone(Prism.languages.markdown.url),Prism.languages.markdown.bold.inside.italic=Prism.util.clone(Prism.languages.markdown.italic),Prism.languages.markdown.italic.inside.bold=Prism.util.clone(Prism.languages.markdown.bold); // prettier-ignore
 
+type Token = string | Prism.Token;
+
 export default function SlateEditor() {
   const editor = React.useMemo(() => withHistory(withReact(createEditor())), []);
   const renderLeaf = React.useCallback(props => <Leaf {...props} />, []);
@@ -24,13 +26,16 @@ export default function SlateEditor() {
       return ranges;
     }
 
-    const getLength = (token: any) => {
+    const getLength = (token: Token | Token[]): number => {
       if (typeof token === "string") {
         return token.length;
       } else if (typeof token.content === "string") {
         return token.content.length;
       } else {
-        return token.content.reduce((l: any, t: any) => l + getLength(t), 0);
+        return (token.content as Prism.Token[]).reduce<number>(
+          (l: number, t: any) => l + getLength(t),
+          0
+        );
       }
     };
 
@@ -59,6 +64,10 @@ export default function SlateEditor() {
     { type: "paragraph", children: [{ text: "A line of text in a paragraph." }] },
     { type: "paragraph", children: [{ text: "## Gay" }] },
     { type: "paragraph", children: [{ text: "## Bisexual" }] },
+    { type: "paragraph", children: [{ text: "" }] },
+    { type: "paragraph", children: [{ text: "## Hello" }] },
+    { type: "paragraph", children: [{ text: "" }] },
+    { type: "paragraph", children: [{ text: "`something`" }] },
     { type: "paragraph", children: [{ text: "" }] }
   ]);
 
@@ -106,6 +115,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
       marginBottom: 10
     }
   );
+
   return (
     <span
       {...attributes}
