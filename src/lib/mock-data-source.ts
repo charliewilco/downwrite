@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { RESTDataSource } from "apollo-datasource-rest";
 import { IApiSource, IContext } from "./data-source";
-import { FixtureData } from "../fixtures/data";
+import { FixtureData } from "../utils/fixtures/data";
 import { IMutationUserVars, IMutationCreateEntryVars } from "./resolvers";
 
 export class MockAPI extends RESTDataSource<IContext> implements IApiSource {

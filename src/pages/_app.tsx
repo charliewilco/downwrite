@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { AppProps } from "next/app";
 import is from "@sindresorhus/is";
 import { UIShell } from "../components/ui-shell";
@@ -9,7 +10,7 @@ interface IAppProps {
   token?: string;
 }
 
-const MemoUIShell = React.memo(UIShell);
+const MemoUIShell = memo(UIShell);
 
 export default function AppWrapper({ Component, pageProps }: AppProps<IAppProps>) {
   const [{ DW_TOKEN }] = useCookies();

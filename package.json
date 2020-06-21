@@ -6,14 +6,14 @@
   "author": "Charles ⚡ <charlespeters42@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "typecheck": "tsc --noEmit",
     "generate": "graphql-codegen",
     "format": "prettier --write src/**/* api/* ./*.json",
-    "dev": "BROWSER=none react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "next start",
+    "build": "next build",
+    "dev": "next dev",
+    "test": "jest",
     "test:ci": "yarn test --runInBand --no-cache --coverage",
+    "typecheck": "tsc --noEmit",
     "go": "now dev"
   },
   "engines": {
@@ -42,6 +42,7 @@
     "bcrypt": "^5.0.0",
     "date-fns": "^2.9.0",
     "draft-js": "^0.11.4",
+    "draft-js-fluent-markdown-plugin": "^0.1.15",
     "draft-js-markdown-plugin": "^3.0.5",
     "draft-js-plugins-editor": "^3.0.0",
     "draft-js-prism-plugin": "^0.1.3",
@@ -99,9 +100,7 @@
     "prop-types": "^15.7.2",
     "ts-jest": "^25.1.0"
   },
-  "browserslist": [
-    "last 1 version"
-  ],
+  "browserslist": ["last 1 version"],
   "prettier": {
     "printWidth": 85,
     "singleQuote": false,
