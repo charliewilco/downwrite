@@ -2998,14 +2998,6 @@ apollo-link-http-common@^0.2.14:
     ts-invariant "^0.4.0"
     tslib "^1.9.3"
 
-apollo-link-schema@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.npmjs.org/apollo-link-schema/-/apollo-link-schema-1.2.4.tgz#b7d7453edb604065e394f83117f122bbad332886"
-  integrity sha512-tLpqd2PSddXJDqA25aERh1U6SsZZBX1isPXSa8FbxvU4Dd8n/DmCOE4mqHyFasgjqLN1zFWL7jgf964LPrAp7A==
-  dependencies:
-    apollo-link "^1.2.13"
-    tslib "^1.9.3"
-
 apollo-link@^1.2.12, apollo-link@^1.2.14:
   version "1.2.14"
   resolved "https://registry.npmjs.org/apollo-link/-/apollo-link-1.2.14.tgz#3feda4b47f9ebba7f4160bef8b977ba725b684d9"
@@ -3016,7 +3008,7 @@ apollo-link@^1.2.12, apollo-link@^1.2.14:
     tslib "^1.9.3"
     zen-observable-ts "^0.8.21"
 
-apollo-link@^1.2.13, apollo-link@^1.2.3:
+apollo-link@^1.2.3:
   version "1.2.13"
   resolved "https://registry.npmjs.org/apollo-link/-/apollo-link-1.2.13.tgz#dff00fbf19dfcd90fddbc14b6a3f9a771acac6c4"
   integrity sha512-+iBMcYeevMm1JpYgwDEIDt/y0BB7VWyvlm/7x+TIPNLHCTCMgcEgDuW5kH86iQZWo0I7mNwQiTOz+/3ShPFmBw==
