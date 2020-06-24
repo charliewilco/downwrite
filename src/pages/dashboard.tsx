@@ -63,7 +63,7 @@ export default function DashboardUI() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  console.log("Cookies", parseCookies(req));
+  const { DW_TOKEN } = parseCookies(req);
 
   const client = initializeApollo({}, { req, res });
   await client.query({
@@ -73,6 +73,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
   return {
     props: {
+      token: DW_TOKEN,
       initialApolloState: client.cache.extract()
     }
   };

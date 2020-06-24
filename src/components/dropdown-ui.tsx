@@ -8,13 +8,15 @@ import User from "./user";
 import { useAuthContext } from "./auth";
 import { NightModeContext, INightModeContext } from "./night-mode";
 
-function NextMenuLink({ to, ...props }: any): JSX.Element {
-  return (
-    <Link passHref href={to}>
-      <a {...props} />
-    </Link>
-  );
-}
+const NextMenuLink = React.forwardRef<HTMLAnchorElement, any>(
+  ({ to, ...props }, ref) => {
+    return (
+      <Link passHref href={to}>
+        <a ref={ref} {...props} />
+      </Link>
+    );
+  }
+);
 
 export default function DropdownUI() {
   const [auth, { signOut }] = useAuthContext();

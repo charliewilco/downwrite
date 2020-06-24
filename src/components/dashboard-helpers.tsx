@@ -1,6 +1,6 @@
 import * as React from "react";
 import Head from "next/head";
-import { ApolloError } from "apollo-client";
+import { ApolloError } from "@apollo/client";
 
 import Loading from "./loading";
 import InvalidToken from "./invalid-token";

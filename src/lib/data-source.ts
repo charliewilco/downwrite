@@ -1,6 +1,6 @@
 import { RESTDataSource, RequestOptions } from "apollo-datasource-rest";
-import { TransformResponses } from "./transform";
-import { IMutationCreateEntryVars, IMutationUserVars } from "./resolvers";
+import { IMutationCreateEntryVars, IMutationUserVars } from "./mutations";
+import * as t from "./transform";
 import uuid from "uuid/v4";
 import { IEntry, IPreview } from "../utils/generated";
 import { IPostModel, IUserModel } from "./models";
@@ -28,11 +28,11 @@ export interface IApiSource {
 }
 
 export class DownwriteAPI extends RESTDataSource<IContext> implements IApiSource {
-  private normalize: TransformResponses;
+  private normalize: any;
   constructor(url: string) {
     super();
     this.baseURL = url;
-    this.normalize = new TransformResponses();
+    this.normalize = t;
   }
 
   public willSendRequest(request: RequestOptions): void {
