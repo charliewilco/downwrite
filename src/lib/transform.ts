@@ -11,102 +11,41 @@ export interface IUser {
   gradient?: string[];
 }
 
-export class TransformResponses {
-  public mergeUpdatedPost(
-    args: IMutationCreateEntryVars,
-    ref: IPostModel,
-    id: string
-  ) {
-    const date = new Date();
+export class TransformResponses {}
 
-    const title = args.title
-      ? ref.title !== args.title
-        ? args.title
-        : ref.title
-      : ref.title;
-    const content = args.content
-      ? ref.content !== args.content
-        ? args.content
-        : ref.content
-      : ref.content;
-    const publicStatus = args.status
-      ? ref.public === args.status
-        ? ref.public
-        : args.status
-      : ref.public;
+export function mergeUpdatedPost(
+  args: IMutationCreateEntryVars,
+  ref: IPostModel,
+  id: string
+) {
+  const date = new Date();
 
-    const post = {
-      title,
-      content: createMarkdownServer(content),
-      id,
-      public: publicStatus,
-      dateAdded: ref.dateAdded,
-      dateModified: date
-    };
+  const title = args.title
+    ? ref.title !== args.title
+      ? args.title
+      : ref.title
+    : ref.title;
+  const content = args.content
+    ? ref.content !== args.content
+      ? args.content
+      : ref.content
+    : ref.content;
+  const publicStatus = args.status
+    ? ref.public === args.status
+      ? ref.public
+      : args.status
+    : ref.public;
 
-    return post;
-  }
+  const post = {
+    title,
+    content: createMarkdownServer(content),
+    id,
+    public: publicStatus,
+    dateAdded: ref.dateAdded,
+    dateModified: date
+  };
 
-  public transformPostToEntry(post: IPostModel): Omit<IEntry, "author"> {
-    let md = ``;
-
-    if (post.content !== null) {
-      md = createMarkdownServer(post.content);
-    }
-
-    const entry = {
-      id: post.id,
-      title: post.title,
-      author: post.author,
-      user: post.user.toString(),
-      dateModified: post.dateModified.toString(),
-      dateAdded: post.dateAdded.toString(),
-      public: post.public,
-      content: md,
-      excerpt: md.trim().substr(0, 90)
-    };
-
-    return entry;
-  }
-
-  public transformPostsToFeed(posts: IPostModel[]): Omit<IEntry, "author">[] {
-    const feed = posts.map(post => {
-      const md = createMarkdownServer(post.content);
-      const user = post.user.toString();
-      const dateAdded = post.dateAdded.toString();
-      const dateModified = post.dateModified.toString();
-      return {
-        id: post.id,
-        title: post.title,
-        author: post.author,
-        user,
-        dateModified,
-        dateAdded,
-        public: post.public,
-        content: md,
-        excerpt: md.trim().substr(0, 90)
-      };
-    });
-
-    return feed;
-  }
-
-  public transformMDToPreview(post: IPostModel, user: IUserModel): IPreview {
-    const markdown = {
-      id: post.id,
-      author: {
-        username: user.username,
-        gradient: user.gradient || ["#FEB692", "#EA5455"],
-        avatar: user.gradient || ["#FEB692", "#EA5455"]
-      },
-      content: createMarkdownServer(post.content),
-      title: post.title,
-      dateModified: post.dateModified.toString() || "",
-      dateAdded: post.dateAdded.toString()
-    };
-
-    return markdown;
-  }
+  return post;
 }
 
 export function transformPostsToFeed(posts: IPostModel[]): Omit<IEntry, "author">[] {
