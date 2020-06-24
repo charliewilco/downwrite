@@ -1,10 +1,11 @@
 import * as React from "react";
+import { useContext } from "react";
 import Link from "next/link";
 import { Menu, MenuList, MenuItem, MenuButton, MenuLink } from "@reach/menu-button";
 import { Routes } from "../pages/routes";
 import { NavIcon } from "./icons";
 import User from "./user";
-import { AuthContext, AuthContextType } from "./auth";
+import { useAuthContext } from "./auth";
 import { NightModeContext, INightModeContext } from "./night-mode";
 
 function NextMenuLink({ to, ...props }: any): JSX.Element {
@@ -16,8 +17,8 @@ function NextMenuLink({ to, ...props }: any): JSX.Element {
 }
 
 export default function DropdownUI() {
-  const [auth, { signOut }] = React.useContext<AuthContextType>(AuthContext);
-  const darkMode = React.useContext<INightModeContext>(NightModeContext);
+  const [auth, { signOut }] = useAuthContext();
+  const darkMode = useContext<INightModeContext>(NightModeContext);
 
   return (
     <Menu>
@@ -25,7 +26,9 @@ export default function DropdownUI() {
         <NavIcon className="icon" />
       </MenuButton>
       <MenuList className="Sheet DropdownMenuList">
-        <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
+        {auth.name && (
+          <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
+        )}
         <MenuLink to={Routes.INDEX} as={NextMenuLink}>
           <span role="img" aria-label="Stack of books">
             📚{" "}

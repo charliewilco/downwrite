@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AuthContext, AuthContextType } from "../components/auth";
+import { useAuthContext } from "../components/auth";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
 import { StringTMap } from "../utils/types";
 import { useLoginUserMutation, useCreateUserMutation } from "../utils/generated";
@@ -22,7 +22,7 @@ interface IFormHandlers {
 }
 
 export function useLoginFns(): IFormHandlers {
-  const [, { signIn }] = React.useContext<AuthContextType>(AuthContext);
+  const [, { signIn }] = useAuthContext();
   const [
     { notifications },
     { addNotification, removeNotification }

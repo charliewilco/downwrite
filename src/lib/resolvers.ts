@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-console */
 import { IResolvers } from "apollo-server-micro";
-import { IContext, DownwriteAPI } from "./data-source";
+import { GetServerSidePropsContext } from "next";
+import { ResolverContext, feed, entry } from "./queries";
 
-export interface IResolverContext extends IContext {
-  dataSources: {
-    dwnxtAPI: DownwriteAPI;
-  };
-}
+export interface IResolverContext
+  extends Pick<GetServerSidePropsContext, "req" | "res"> {}
 
 export interface IMutationCreateEntryVars {
   title: string;
@@ -22,13 +20,12 @@ export interface IMutationUserVars {
   username: string;
 }
 
-export const resolvers: IResolvers<unknown, IResolverContext> = {
+export const resolvers: IResolvers<unknown, ResolverContext> = {
   Query: {
-    feed: async (_, __, { dataSources }) => dataSources.dwnxtAPI.getFeed(),
-    entry: async (_, { id }, { dataSources }) => dataSources.dwnxtAPI.getEntry(id),
-    preview: async (_, { id }, { dataSources }) =>
-      dataSources.dwnxtAPI.getPreview(id),
-    settings: async (_, __, { dataSources }) => dataSources.dwnxtAPI.getUserDetails()
+    feed: async (_, __, context) => feed(context),
+    entry: async (_, { id }, context) => entry(context, id),
+    preview: async (_, { id }, context) => console.log(context, id),
+    settings: async (_, __, context) => console.log(context)
   },
 
   Mutation: {

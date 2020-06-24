@@ -9,8 +9,9 @@ import { usePreviewQuery } from "../utils/generated";
 import { useRouter } from "next/router";
 
 export default function PreviewEntry() {
+  const router = useRouter();
   const { error, loading, data } = usePreviewQuery({
-    variables: { id: router.qu.id! as string }
+    variables: { id: router.query.id! as string }
   });
 
   if (error) {
@@ -28,19 +29,17 @@ export default function PreviewEntry() {
     return <Loading size={100} />;
   }
 
-  const excerpt: string = data.preview.content.substr(0, 75);
-
   return (
     <React.Fragment>
       <Head>
         <title>{data.preview.title} | Downwrite</title>
         <meta name="og:title" content={data.preview.title} />
-        <meta name="og:description" content={excerpt} />
+        <meta name="og:description" content={data.preview.content.substr(0, 75)} />
         <meta name="og:url" content={router.pathname} />
-        <meta name="description" content={excerpt} />
+        <meta name="description" content={data.preview.content.substr(0, 75)} />
       </Head>
       <Content
-        title={data.preview.title}
+        title={data?.preview?.title}
         content={data.preview.content}
         dateAdded={data.preview.dateAdded}>
         <AuthorBlock

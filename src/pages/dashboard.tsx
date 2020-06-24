@@ -1,18 +1,21 @@
-import * as React from "react";
+import { Fragment, useCallback } from "react";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
 import DeleteModal from "../components/delete-modal";
 import PostList from "../components/post-list";
 import EmptyPosts from "../components/empty-posts";
 import { LoadingDashboard, ErrorDashboard } from "../components/dashboard-helpers";
 import { useRemovePost, useDashboard } from "../hooks";
-import { useAllPostsQuery } from "../utils/generated";
+import { useAllPostsQuery, AllPostsDocument } from "../utils/generated";
+import { initializeApollo } from "../lib/apollo";
+import { parseCookies } from "../lib/cookie-managment";
 
 export default function DashboardUI() {
   const [{ selectedPost, modalOpen }, actions] = useDashboard();
-  const { data, loading, error } = useAllPostsQuery();
+  const { data, loading, error } = useAllPostsQuery({ ssr: true });
   const onConfirmDelete = useRemovePost();
 
-  const onDelete = React.useCallback(() => {
+  const onDelete = useCallback(() => {
     onConfirmDelete(selectedPost.id);
     actions.onCloseModal();
   }, [selectedPost, onConfirmDelete, actions]);
@@ -27,7 +30,7 @@ export default function DashboardUI() {
 
   if (data) {
     return (
-      <React.Fragment>
+      <Fragment>
         {modalOpen && (
           <DeleteModal
             title={selectedPost.title}
@@ -52,9 +55,25 @@ export default function DashboardUI() {
             <EmptyPosts />
           )}
         </section>
-      </React.Fragment>
+      </Fragment>
     );
   }
 
   return null;
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  console.log("Cookies", parseCookies(req));
+
+  const client = initializeApollo({}, { req, res });
+  await client.query({
+    query: AllPostsDocument,
+    context: { req, res }
+  });
+
+  return {
+    props: {
+      initialApolloState: client.cache.extract()
+    }
+  };
+};

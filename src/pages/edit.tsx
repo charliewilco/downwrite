@@ -1,5 +1,6 @@
 import * as React from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import Autosaving from "../components/autosaving-interval";
 import WordCounter from "../components/word-count";
 import { Button } from "../components/button";
@@ -11,7 +12,6 @@ import TimeMarker from "../components/time-marker";
 import { __IS_DEV__ } from "../utils/dev";
 import { EditActions } from "../reducers/editor";
 import { useEdit } from "../hooks";
-import { useRouter } from "next/router";
 
 const Editor = React.lazy(() => import("../components/editor"));
 

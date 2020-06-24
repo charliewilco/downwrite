@@ -1,10 +1,10 @@
-import * as React from "react";
+import { useState, useCallback } from "react";
 import { useFormik, FormikHelpers } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { ToggleBox } from "../components/toggle-box";
 import { Button } from "./button";
-import { AuthContext, AuthContextType } from "./auth";
+import { useAuthContext } from "./auth";
 import { UpdatePasswordSchema } from "../utils/validations";
 import * as API from "../utils/api";
 import { StringTMap } from "../utils/types";
@@ -36,20 +36,20 @@ const PASSWORD_INPUTS: IInputs[] = [
 ];
 
 export default function SettingsPassword(): JSX.Element {
-  const [{ token }] = React.useContext<AuthContextType>(AuthContext);
-  const [isOpen, setOpen] = React.useState(false);
+  const [{ token }] = useAuthContext();
+  const [isOpen, setOpen] = useState(false);
 
-  const onSubmit = (
-    values: IPasswordSettings,
-    actions: FormikHelpers<IPasswordSettings>
-  ): void => {
-    const { host } = document.location;
-    const response = API.updatePassword(values, { token, host });
+  const onSubmit = useCallback(
+    (values: IPasswordSettings, actions: FormikHelpers<IPasswordSettings>): void => {
+      const { host } = document.location;
+      const response = API.updatePassword(values, { token, host });
 
-    if (response) {
-      actions.setSubmitting(false);
-    }
-  };
+      if (response) {
+        actions.setSubmitting(false);
+      }
+    },
+    []
+  );
 
   const initialValues: IPasswordSettings = {
     oldPassword: "",

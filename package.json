@@ -29,6 +29,9 @@
     "@reach/tabs": "^0.10.4",
     "@reach/visually-hidden": "^0.10.4",
     "@sindresorhus/is": "^2.1.0",
+    "@types/bcrypt": "^3.0.0",
+    "@types/cookie": "^0.4.0",
+    "@types/jsonwebtoken": "^8.5.0",
     "@zeit/git-hooks": "^0.1.4",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",
@@ -40,6 +43,7 @@
     "apollo-server-errors": "^2.3.4",
     "apollo-server-micro": "^2.10.1",
     "bcrypt": "^5.0.0",
+    "cookie": "^0.4.1",
     "date-fns": "^2.9.0",
     "draft-js": "^0.11.4",
     "draft-js-fluent-markdown-plugin": "^0.1.15",
@@ -100,7 +104,9 @@
     "prop-types": "^15.7.2",
     "ts-jest": "^25.1.0"
   },
-  "browserslist": ["last 1 version"],
+  "browserslist": [
+    "last 1 version"
+  ],
   "prettier": {
     "printWidth": 85,
     "singleQuote": false,

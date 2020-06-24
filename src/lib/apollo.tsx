@@ -1,14 +1,16 @@
 import { useMemo } from "react";
 import { ApolloClient } from "apollo-client";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { SchemaLink } from "apollo-link-schema";
+import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
+import { IExecaSchema } from "./schema";
 
-let apolloClient: ApolloClient<any>;
+let apolloClient: ApolloClient<NormalizedCacheObject>;
 
-function createIsomorphLink() {
+function createIsomorphLink(context?: any) {
   if (typeof window === "undefined") {
-    const { SchemaLink } = require("apollo-link-schema");
-    const { schema } = require("./schema");
-    return new SchemaLink({ schema });
+    // const { SchemaLink } = require("apollo-link-schema");
+    const { schema }: IExecaSchema = require("./schema");
+    return new SchemaLink({ schema, context });
   } else {
     const { HttpLink } = require("apollo-link-http");
     return new HttpLink({
@@ -18,16 +20,19 @@ function createIsomorphLink() {
   }
 }
 
-function createApolloClient() {
+function createApolloClient(context?: any) {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
-    link: createIsomorphLink(),
+    link: createIsomorphLink(context),
     cache: new InMemoryCache()
   });
 }
 
-export function initializeApollo(initialState = null) {
-  const _apolloClient = apolloClient ?? createApolloClient();
+export function initializeApollo(
+  initialState: NormalizedCacheObject | null = null,
+  context?: any
+) {
+  const _apolloClient = apolloClient ?? createApolloClient(context);
 
   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
   // get hydrated here
@@ -42,7 +47,12 @@ export function initializeApollo(initialState = null) {
   return _apolloClient;
 }
 
-export function useApollo(initialState) {
-  const store = useMemo(() => initializeApollo(initialState), [initialState]);
+export function useApollo(
+  initialState: NormalizedCacheObject | null,
+  context?: any
+) {
+  const store = useMemo(() => initializeApollo(initialState, context), [
+    initialState
+  ]);
   return store;
 }

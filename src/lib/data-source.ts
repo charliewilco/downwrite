@@ -1,8 +1,9 @@
 import { RESTDataSource, RequestOptions } from "apollo-datasource-rest";
-import { IPost, IUser, TransformResponses } from "./transform";
+import { TransformResponses } from "./transform";
 import { IMutationCreateEntryVars, IMutationUserVars } from "./resolvers";
 import uuid from "uuid/v4";
-import { IEntry, IPreview } from "../generated";
+import { IEntry, IPreview } from "../utils/generated";
+import { IPostModel, IUserModel } from "./models";
 
 export interface ITokenContent {
   user: string;
@@ -15,7 +16,7 @@ export interface IContext {
 }
 
 export interface IApiSource {
-  getUserDetails(id?: string): Promise<IUser>;
+  getUserDetails(id?: string): Promise<IUserModel>;
   getPreview(id: string): Promise<IPreview>;
   getFeed(): Promise<Omit<IEntry, "author">[]>;
   getEntry(id: string): Promise<Omit<IEntry, "author">>;
@@ -35,18 +36,20 @@ export class DownwriteAPI extends RESTDataSource<IContext> implements IApiSource
   }
 
   public willSendRequest(request: RequestOptions): void {
-    request.headers.set("Authorization", this.context.token);
+    if (this.context.token) {
+      request.headers.set("Authorization", this.context.token);
+    }
   }
 
-  private async fetchPosts(): Promise<IPost[]> {
+  private async fetchPosts(): Promise<IPostModel[]> {
     return this.get("posts");
   }
 
-  private async fetchPost(id: string): Promise<IPost> {
+  private async fetchPost(id: string): Promise<IPostModel> {
     return this.get(`posts/${id}`);
   }
 
-  private async fetchMarkdownPreview(id: string): Promise<IPost> {
+  private async fetchMarkdownPreview(id: string): Promise<IPostModel> {
     return this.get(`posts/preview/${id}`);
   }
 
@@ -57,7 +60,7 @@ export class DownwriteAPI extends RESTDataSource<IContext> implements IApiSource
     return feed;
   }
 
-  public async getUserDetails(): Promise<IUser> {
+  public async getUserDetails(): Promise<IUserModel> {
     const user = await this.get("users");
 
     return user;
@@ -103,7 +106,7 @@ export class DownwriteAPI extends RESTDataSource<IContext> implements IApiSource
   }
 
   public async removeEntry(id: string): Promise<Omit<IEntry, "author">> {
-    const post = await this.delete<IPost>(`posts/${id}`);
+    const post = await this.delete<IPostModel>(`posts/${id}`);
     const entry = this.normalize.transformPostToEntry(post);
     return entry;
   }

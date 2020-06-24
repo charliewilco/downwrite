@@ -1,4 +1,11 @@
-import * as React from "react";
+import {
+  createContext,
+  useMemo,
+  useContext,
+  useEffect,
+  useCallback,
+  useReducer
+} from "react";
 import Cookies from "universal-cookie";
 import jwt from "jwt-decode";
 import addDays from "date-fns/addDays";
@@ -58,7 +65,7 @@ const EMPTY_USER: IToken = {
   name: null
 };
 
-export const AuthContext = React.createContext<AuthContextType>([
+export const AuthContext = createContext<AuthContextType>([
   null,
   null
 ] as AuthContextType);
@@ -77,7 +84,7 @@ function initializer(tokenInitial?: string): IAuthState {
 }
 
 export function useAuthReducer(tokenInitial?: string): [IAuthState, IAuthActions] {
-  const [state, dispatch] = React.useReducer<
+  const [state, dispatch] = useReducer<
     React.Reducer<IAuthState, AuthReducerAction>,
     string
   >(reducer, tokenInitial, initializer);
@@ -104,7 +111,8 @@ export function useAuthReducer(tokenInitial?: string): [IAuthState, IAuthActions
 
 export function useAuthSideEffects({ authed, token }: IAuthState): void {
   const router = useRouter();
-  React.useEffect(() => {
+
+  useEffect(() => {
     if (authed && router.pathname === "/login") {
       router.push({ pathname: "/" });
     }
@@ -115,7 +123,7 @@ export function useAuthSideEffects({ authed, token }: IAuthState): void {
     }
   }, [router, router.pathname, authed]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (token) {
       cookie.set("DW_TOKEN", token, cookieOptions);
     }
@@ -123,12 +131,12 @@ export function useAuthSideEffects({ authed, token }: IAuthState): void {
 }
 
 // Should be able to just request user details from another call
-export function AuthProvider({ token, children }: IAuthProps) {
-  const [state, { signIn, signOut }] = useAuthReducer(token);
+export function AuthProvider(props: IAuthProps) {
+  const [state, { signIn, signOut }] = useAuthReducer(props.token);
 
   useAuthSideEffects(state);
 
-  const getAuthContext = React.useCallback((): AuthContextType => {
+  const getAuthContext = useCallback((): AuthContextType => {
     return [
       state,
       {
@@ -138,9 +146,11 @@ export function AuthProvider({ token, children }: IAuthProps) {
     ];
   }, [state, signIn, signOut]);
 
-  const value = React.useMemo<AuthContextType>(() => getAuthContext(), [
-    getAuthContext
-  ]);
+  const value = useMemo<AuthContextType>(() => getAuthContext(), [getAuthContext]);
 
-  return React.createElement(AuthContext.Provider, { value }, children);
+  return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>;
+}
+
+export function useAuthContext() {
+  return useContext<AuthContextType>(AuthContext);
 }

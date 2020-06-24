@@ -1,13 +1,13 @@
-import * as React from "react";
+import { Fragment } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Logo from "./logo";
-import { AuthContext, AuthContextType } from "./auth";
+import { useAuthContext } from "./auth";
 import DropdownUI from "./dropdown-ui";
 import { Routes } from "../pages/routes";
 
 export function UIHeader(): JSX.Element {
-  const [{ authed }] = React.useContext<AuthContextType>(AuthContext);
+  const [{ authed }] = useAuthContext();
   const router = useRouter();
 
   const style: React.CSSProperties = { marginRight: 16 };
@@ -45,7 +45,7 @@ export function UIHeader(): JSX.Element {
       )}
     </header>
   ) : (
-    <React.Fragment />
+    <Fragment />
   );
 }
 

@@ -1,10 +1,10 @@
-import * as React from "react";
+import { useCallback } from "react";
 import { useFormik, FormikHelpers } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
 import * as API from "../utils/api";
-import { AuthContext, AuthContextType } from "./auth";
+import { useAuthContext } from "./auth";
 import { UserSettingsSchema } from "../utils/validations";
 
 interface IUserFormValues {
@@ -17,18 +17,21 @@ interface ISettingsUserForm {
 }
 
 export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
-  const [{ token }] = React.useContext<AuthContextType>(AuthContext);
+  const [{ token }] = useAuthContext();
 
-  const onSubmit = async (
-    values: IUserFormValues,
-    actions: FormikHelpers<IUserFormValues>
-  ): Promise<void> => {
-    const { host } = document.location;
-    const settings = await API.updateSettings(values, { token, host });
-    if (settings) {
-      actions.setSubmitting(false);
-    }
-  };
+  const onSubmit = useCallback(
+    async (
+      values: IUserFormValues,
+      actions: FormikHelpers<IUserFormValues>
+    ): Promise<void> => {
+      const { host } = document.location;
+      const settings = await API.updateSettings(values, { token, host });
+      if (settings) {
+        actions.setSubmitting(false);
+      }
+    },
+    []
+  );
 
   const formik = useFormik<IUserFormValues>({
     initialValues: { ...props.user },
