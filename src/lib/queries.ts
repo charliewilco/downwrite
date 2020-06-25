@@ -12,10 +12,26 @@ import { createMarkdownServer } from "../utils";
 
 export type ResolverContext = Pick<GetServerSidePropsContext, "req" | "res">;
 
+export async function verifyUser<T>(
+  context: ResolverContext,
+  cb: (user: string) => T
+) {
+  const token = getUserToken(context.req);
+  console.log("Token", token);
+
+  if (token) {
+    await dbConnect();
+
+    if (cb) {
+      return cb(token.user);
+    }
+  } else {
+    throw new AuthenticationError("No valid token in cookie");
+  }
+}
+
 export async function feed(context: ResolverContext) {
   const token = getUserToken(context.req);
-
-  console.log("Token", token);
 
   if (token) {
     await dbConnect();

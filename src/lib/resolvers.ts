@@ -7,7 +7,8 @@ import {
   IMutationCreateEntryVars,
   IMutationUserVars,
   createPost,
-  updatePost
+  updatePost,
+  removePost
 } from "./mutations";
 
 export interface IResolverContext
@@ -20,16 +21,14 @@ export const resolvers: IResolvers<unknown, ResolverContext> = {
     preview: async (_, { id }, context) => preview(context, id),
     settings: async (_, __, context) => settings(context)
   },
-
   Mutation: {
     createEntry: async (_, args: IMutationCreateEntryVars, context) =>
-      createPost(context),
+      createPost(context, args),
     updateEntry: async (_, { id, ...body }: IMutationCreateEntryVars, context) =>
       updatePost(context, id!, body),
-    deleteEntry: async (_, { id }, context) =>
-      console.log("delete entry", context, id),
+    deleteEntry: async (_, { id }, context) => removePost(context, id),
     createUser: async (_, args: IMutationUserVars, context) =>
-      console.log("create user", context),
+      console.log("create user", context, args),
     authenticateUser: async (_, args: IMutationUserVars, context) =>
       console.log("authenticate user", context, args.username, args.password),
     updateUserSettings() {}
