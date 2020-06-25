@@ -64,7 +64,7 @@
     "@types/react": "^16.9.2",
     "@types/react-dom": "^16.9.0",
     "@types/react-test-renderer": "^16.9.0",
-    "@types/uuid": "^3.4.3",
+    "@types/uuid": "^8.0.0",
     "@types/yup": "^0.26.9",
     "babel-jest": "^24.5.0",
     "jest": "^24.6.0",
