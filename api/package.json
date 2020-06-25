@@ -39,7 +39,7 @@
     "uuid": "^3.1.0"
   },
   "devDependencies": {
-    "@hapi/shot": "^4.1.1",
+    "@hapi/shot": "^5.0.0",
     "@types/draft-js": "^0.10.27",
     "@types/hapi__hoek": "^6.2.0",
     "@types/hapi__shot": "^4.1.0",
