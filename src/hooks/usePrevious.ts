@@ -1,8 +1,8 @@
-import * as React from "react";
+import { useRef, useEffect, MutableRefObject } from "react";
 
-export function usePrevious<T>(value: T): T {
-  const ref = React.useRef<T>(null);
-  React.useEffect(() => {
+export function usePrevious<T>(value: T): T | null {
+  const ref: MutableRefObject<T | null> = useRef<T>(null);
+  useEffect(() => {
     ref.current = value;
   });
   return ref.current;

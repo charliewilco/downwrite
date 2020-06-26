@@ -1,13 +1,12 @@
-import * as React from "react";
+import { useRef, useContext } from "react";
 import { useFormik, FormikHelpers } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
 import { LocalSettingsSchema } from "../utils/validations";
 import { LocalUISettings, ILocalUISettings } from "./local-ui-settings";
-import { StringTMap } from "../utils/types";
 
-interface ILocalSettings extends StringTMap<string> {
+interface ILocalSettings extends Record<string, string> {
   fileExtension: string;
   fontFamily: string;
 }
@@ -31,9 +30,9 @@ export enum LocalSettings {
 export default function SettingsLocalMarkdown(): JSX.Element {
   const {
     actions: { updateFont }
-  } = React.useContext<ILocalUISettings>(LocalUISettings);
+  } = useContext<ILocalUISettings>(LocalUISettings);
 
-  const initialValues = React.useRef(() => {
+  const initialValues = useRef(() => {
     return {
       fileExtension: localStorage.getItem(LocalSettings.EXTENSION) || ".md",
       fontFamily: localStorage.getItem(LocalSettings.FONT) || "SF Mono"
@@ -57,7 +56,7 @@ export default function SettingsLocalMarkdown(): JSX.Element {
     }
   }
 
-  const formik = useFormik({
+  const formik = useFormik<ILocalSettings>({
     initialValues: initialValues.current(),
     validationSchema: LocalSettingsSchema,
     onSubmit
@@ -73,7 +72,7 @@ export default function SettingsLocalMarkdown(): JSX.Element {
             <UIInput
               label={input.label}
               name={input.name}
-              value={formik.values[input.name]}
+              value={formik.values[input.name as keyof ILocalSettings]}
               onChange={formik.handleChange}
             />
             {formik.errors[input.name] && (

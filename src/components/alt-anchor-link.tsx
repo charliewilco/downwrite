@@ -1,11 +1,11 @@
-import * as React from "react";
+import { forwardRef, AnchorHTMLAttributes } from "react";
 import classNames from "../utils/classnames";
 
-interface IAltAnchorProps<T> extends React.AnchorHTMLAttributes<T> {
+interface IAltAnchorProps<T> extends AnchorHTMLAttributes<T> {
   space?: string;
 }
 
-export default React.forwardRef<HTMLAnchorElement, IAltAnchorProps<unknown>>(
+export default forwardRef<HTMLAnchorElement, IAltAnchorProps<unknown>>(
   (props: IAltAnchorProps<unknown>, ref) => {
     const cx = classNames("AltLink", props.className);
     return (

@@ -1,8 +1,7 @@
-import { AuthenticationError, ApolloError } from "apollo-server-micro";
-import uuid from "uuid/v4";
-import { getUserToken } from "./cookie-managment";
-import { ResolverContext } from "./queries";
-import { PostModel, IPostModel } from "./models";
+import { ApolloError } from "apollo-server-micro";
+import { v4 as uuid } from "uuid";
+import { ResolverContext, verifyUser } from "./queries";
+import { PostModel } from "./models";
 import {} from "./transform";
 import dbConnect from "./db";
 
@@ -23,10 +22,7 @@ export async function createPost(
   context: ResolverContext,
   { title, content }: IMutationCreateEntryVars
 ) {
-  const token = getUserToken(context.req);
-
-  if (token) {
-    await dbConnect();
+  return verifyUser(context, async ({ user, name }) => {
     try {
       const id = uuid();
       const date = new Date();
@@ -38,8 +34,8 @@ export async function createPost(
         public: false,
         dateAdded: date,
         dateModified: date,
-        user: token.user,
-        author: token.name
+        user,
+        author: name
       };
 
       const post = await PostModel.create(entry);
@@ -47,9 +43,7 @@ export async function createPost(
     } catch (error) {
       throw new ApolloError(error);
     }
-  } else {
-    throw new AuthenticationError("No valid token in cookies");
-  }
+  });
 }
 
 export async function updatePost(
@@ -59,20 +53,15 @@ export async function updatePost(
 ) {}
 
 export async function removePost(context: ResolverContext, id: string) {
-  const token = getUserToken(context.req);
-  if (token) {
-    await dbConnect();
-
+  return verifyUser(context, async ({ user }) => {
     try {
       const post = await PostModel.findOneAndRemove({
         id,
-        user: { $eq: token.user }
+        user: { $eq: user }
       });
       return post;
     } catch (error) {}
-  } else {
-    throw new AuthenticationError("No valid token in cookies");
-  }
+  });
 }
 
 export async function authenticateUser() {}

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useMemo, useContext, useCallback, createContext } from "react";
 import Checkbox from "./checkbox";
 import { useDarkModeEffect, DarkModeVals } from "../hooks";
 import classNames from "../utils/classnames";
@@ -10,7 +10,7 @@ export interface INightModeContext {
   };
 }
 
-export const NightModeContext = React.createContext<INightModeContext>({
+export const NightModeContext = createContext<INightModeContext>({
   night: false,
   action: {
     onChange() {}
@@ -22,14 +22,14 @@ interface INightModeContainerProps extends React.PropsWithChildren<{}> {}
 function useNightModeContext(): INightModeContext {
   const [night, onChange] = useDarkModeEffect(DarkModeVals.NIGHT_MODE);
 
-  const getContext = React.useCallback((): INightModeContext => {
+  const getContext = useCallback((): INightModeContext => {
     return {
       night,
       action: { onChange }
     };
   }, [night, onChange]);
 
-  return React.useMemo<INightModeContext>(() => getContext(), [getContext]);
+  return useMemo<INightModeContext>(() => getContext(), [getContext]);
 }
 
 export default function NightModeContainer(
@@ -45,7 +45,7 @@ export default function NightModeContainer(
 
 // TODO: Remove
 export function NightModeTrigger(props: INightModeContainerProps): JSX.Element {
-  const { night, action } = React.useContext<INightModeContext>(NightModeContext);
+  const { night, action } = useContext<INightModeContext>(NightModeContext);
   const onChange = () => {
     action.onChange();
   };

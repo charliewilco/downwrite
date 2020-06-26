@@ -1,9 +1,9 @@
-import * as React from "react";
+import { PropsWithChildren } from "react";
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 import LoginForm from "./login-form";
 import Register from "./register";
 
-function FormHeader(props: React.PropsWithChildren<{}>) {
+function FormHeader(props: PropsWithChildren<{}>) {
   return (
     <header className="LoginFormHeader u-center">
       <h2 className="FormGreeting" data-testid="LOGIN_TITLE">
@@ -12,6 +12,13 @@ function FormHeader(props: React.PropsWithChildren<{}>) {
     </header>
   );
 }
+
+/// Reference:
+// ---
+//
+// https://developers.google.com/web/fundamentals/accessibility/focus/using-tabindex
+// http://simplyaccessible.com/article/danger-aria-tabs/
+// https://inclusive-components.design/tabbed-interfaces/
 
 export default function LoginContainer(): JSX.Element {
   return (

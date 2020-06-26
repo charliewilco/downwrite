@@ -1,5 +1,5 @@
 import PluginsEditor from "draft-js-plugins-editor";
-import * as React from "react";
+import { useRef, useContext } from "react";
 import * as Draft from "draft-js";
 import Prism from "prismjs";
 import createMarkdownPlugin from "draft-js-markdown-plugin";
@@ -39,8 +39,8 @@ const styleMap = {
 };
 
 export default function DownwriteEditor(props: IEditorProps) {
-  let editorRef = React.useRef<PluginsEditor>(null);
-  const { monospace } = React.useContext<ILocalUISettings>(LocalUISettings);
+  let editorRef = useRef<PluginsEditor>(null);
+  const { monospace } = useContext<ILocalUISettings>(LocalUISettings);
 
   const plugins = __IS_TEST__
     ? []
@@ -61,7 +61,7 @@ export default function DownwriteEditor(props: IEditorProps) {
   }
 
   function onFocus(): void {
-    editorRef.current.focus();
+    editorRef.current!.focus();
   }
 
   function onTab(e: React.KeyboardEvent<{}>): void {

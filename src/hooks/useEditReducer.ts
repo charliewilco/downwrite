@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useReducer } from "react";
 import { IEditQuery } from "../utils/generated";
 import {
   IEditorState,
@@ -8,7 +8,7 @@ import {
 } from "../reducers/editor";
 
 export function useEditReducer(data: IEditQuery) {
-  return React.useReducer<React.Reducer<IEditorState, EditorActions>, IEditQuery>(
+  return useReducer<React.Reducer<IEditorState, EditorActions>, IEditQuery>(
     reducer,
     data,
     initializer

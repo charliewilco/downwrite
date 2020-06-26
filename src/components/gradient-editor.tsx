@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useMemo } from "react";
 import Avatar from "./avatar";
 import ColorPicker from "./color-picker";
 import * as DefaultStyles from "../utils/default-styles";
@@ -19,11 +19,7 @@ export default function GradientEditor(props: IGradientEditorProps): JSX.Element
     props.onColorChange(value, name);
   }
 
-  const colorsToArray = ({ a, b }: IColors): string[] => {
-    return [a, b];
-  };
-
-  const colors = colorsToArray(props.colors);
+  const colors = useMemo(() => [props.colors.a, props.colors.b], [props.colors]);
 
   return (
     <div className="Wrapper Wrapper--sm GradientEditorContainer">

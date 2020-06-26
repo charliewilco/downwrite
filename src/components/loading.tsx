@@ -1,5 +1,3 @@
-import * as React from "react";
-
 interface ILoadingProps {
   size: number;
   color?: string;

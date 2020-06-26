@@ -1,5 +1,5 @@
 import * as Draft from "draft-js";
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import { IPostModel } from "../../lib/models";
 
 const uid = Math.floor(Math.random() * 678) + 1;

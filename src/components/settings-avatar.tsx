@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useFormik } from "formik";
 import SettingsBlock from "./settings-block";
 import GradientEditor from "./gradient-editor";
@@ -18,7 +17,7 @@ export default function SettingsAvatar(): JSX.Element {
     initialValues: {
       colors: gradientPoints()
     },
-    onSubmit: () => null
+    onSubmit: () => {}
   });
   return (
     <SettingsBlock title="Avatar">

@@ -1,4 +1,3 @@
-import * as React from "react";
 import Link from "next/link";
 import Nib from "./nib";
 import { Routes } from "../pages/routes";

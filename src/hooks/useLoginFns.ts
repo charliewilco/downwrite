@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback } from "react";
 import { useAuthContext } from "../components/auth";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
 import { StringTMap } from "../utils/types";
@@ -31,7 +31,7 @@ export function useLoginFns(): IFormHandlers {
 
   const [authenticateUser] = useLoginUserMutation();
 
-  const onLoginSubmit = React.useCallback(
+  const onLoginSubmit = useCallback(
     async (values: ILoginValues): Promise<void> => {
       await authenticateUser({
         variables: {
@@ -40,7 +40,7 @@ export function useLoginFns(): IFormHandlers {
         }
       })
         .then(value => {
-          if (value.data.authenticateUser.token) {
+          if (value?.data?.authenticateUser?.token) {
             const token = value.data.authenticateUser.token;
             signIn(token !== undefined, token);
 
@@ -58,7 +58,7 @@ export function useLoginFns(): IFormHandlers {
     [addNotification, removeNotification, notifications, signIn, authenticateUser]
   );
 
-  const onRegisterSubmit = React.useCallback(
+  const onRegisterSubmit = useCallback(
     async (values: IRegisterValues): Promise<void> => {
       if (values.legalChecked) {
         await createUser({
@@ -69,9 +69,9 @@ export function useLoginFns(): IFormHandlers {
           }
         })
           .then(value => {
-            const token = value.data.createUser.token;
+            const token = value.data?.createUser?.token;
 
-            signIn(token !== undefined, token);
+            signIn(token !== undefined, token!);
           })
           .catch(error => {
             addNotification(error.message, NotificationType.ERROR);

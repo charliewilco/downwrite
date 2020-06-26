@@ -1,5 +1,4 @@
-import * as React from "react";
-import { useContext } from "react";
+import { Fragment, forwardRef, useContext } from "react";
 import Link from "next/link";
 import { Menu, MenuList, MenuItem, MenuButton, MenuLink } from "@reach/menu-button";
 import { Routes } from "../pages/routes";
@@ -8,15 +7,13 @@ import User from "./user";
 import { useAuthContext } from "./auth";
 import { NightModeContext, INightModeContext } from "./night-mode";
 
-const NextMenuLink = React.forwardRef<HTMLAnchorElement, any>(
-  ({ to, ...props }, ref) => {
-    return (
-      <Link passHref href={to}>
-        <a ref={ref} {...props} />
-      </Link>
-    );
-  }
-);
+const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) => {
+  return (
+    <Link passHref href={to}>
+      <a ref={ref} {...props} />
+    </Link>
+  );
+});
 
 export default function DropdownUI() {
   const [auth, { signOut }] = useAuthContext();
@@ -57,19 +54,19 @@ export default function DropdownUI() {
         </MenuLink>
         <MenuItem onSelect={darkMode.action.onChange}>
           {darkMode.night ? (
-            <React.Fragment>
+            <Fragment>
               <span role="img" aria-label="Sun smiling">
                 🌞
               </span>
               Switch to Light Mode
-            </React.Fragment>
+            </Fragment>
           ) : (
-            <React.Fragment>
+            <Fragment>
               <span role="img" aria-label="Moon">
                 🌙
               </span>
               Switch to Dark Mode
-            </React.Fragment>
+            </Fragment>
           )}
         </MenuItem>
         <MenuItem onSelect={signOut}>

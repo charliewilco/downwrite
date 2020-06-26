@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useRef, useEffect } from "react";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
 
 export function useAutosaving(
@@ -7,9 +7,9 @@ export function useAutosaving(
   message?: string
 ) {
   const [, actions] = useUINotifications();
-  const interval = React.useRef<NodeJS.Timeout>();
+  const interval = useRef<NodeJS.Timeout | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     interval.current = setInterval(async () => {
       if (cb) {
         actions.addNotification(
@@ -22,7 +22,9 @@ export function useAutosaving(
     }, duration);
 
     return function cleanup() {
-      clearInterval(interval.current);
+      if (interval.current !== null) {
+        clearInterval(interval.current);
+      }
     };
   }, [actions, message, cb, duration]);
 }

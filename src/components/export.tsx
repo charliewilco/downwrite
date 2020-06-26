@@ -1,4 +1,3 @@
-import * as React from "react";
 import * as Draft from "draft-js";
 import { draftToMarkdown } from "markdown-draft-js";
 import FileSaver from "file-saver";

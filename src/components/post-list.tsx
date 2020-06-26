@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useReducer, Fragment } from "react";
 import Card from "./card";
 import LayoutControl from "./layout-control";
 import PostListItem from "./post-list-item";
@@ -46,7 +46,7 @@ function listReducer(
 }
 
 export default function PostList(props: IPostListProps): JSX.Element {
-  const [state, dispatch] = React.useReducer(listReducer, {
+  const [state, dispatch] = useReducer(listReducer, {
     isGridView: true
   });
 
@@ -58,7 +58,7 @@ export default function PostList(props: IPostListProps): JSX.Element {
   );
 
   return (
-    <React.Fragment>
+    <Fragment>
       <header className="PostListHeader">
         <h1 className="ContainerTitle">Entries</h1>
         <LayoutControl
@@ -78,6 +78,6 @@ export default function PostList(props: IPostListProps): JSX.Element {
           )
         )}
       </ul>
-    </React.Fragment>
+    </Fragment>
   );
 }

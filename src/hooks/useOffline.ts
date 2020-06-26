@@ -1,9 +1,9 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
 import { __IS_BROWSER__ } from "../utils/dev";
 
 export function useOffline(debug = false): boolean {
-  const [isOffline, setIsOffline] = React.useState<boolean>(debug);
+  const [isOffline, setIsOffline] = useState<boolean>(debug);
   const [, { addNotification }] = useUINotifications();
 
   function handleChange(event: Event) {
@@ -11,7 +11,7 @@ export function useOffline(debug = false): boolean {
       setIsOffline(!(event.currentTarget as Window).navigator.onLine);
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (__IS_BROWSER__) {
       if (!debug) {
         window.addEventListener("offline", handleChange);
@@ -27,7 +27,7 @@ export function useOffline(debug = false): boolean {
     }
   }, [debug]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOffline) {
       addNotification("Your network is currently offline", NotificationType.WARNING);
     }

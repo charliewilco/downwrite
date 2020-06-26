@@ -1,5 +1,3 @@
-import * as React from "react";
-
 interface IIconAttributes {
   size?: number;
   fill?: string;

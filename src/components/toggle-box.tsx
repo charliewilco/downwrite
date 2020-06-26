@@ -1,4 +1,3 @@
-import * as React from "react";
 import Check from "./checkbox";
 
 interface ICheckboxToggle {

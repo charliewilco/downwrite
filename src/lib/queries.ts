@@ -8,13 +8,14 @@ import dbConnect from "./db";
 import { PostModel, UserModel } from "./models";
 import { transformPostsToFeed, transformPostToEntry } from "./transform";
 import { getUserToken } from "./cookie-managment";
+import { TokenContents } from "./token";
 import { createMarkdownServer } from "../utils";
 
 export type ResolverContext = Pick<GetServerSidePropsContext, "req" | "res">;
 
 export async function verifyUser<T>(
   context: ResolverContext,
-  cb: (user: string) => T
+  cb: (user: TokenContents) => T
 ) {
   const token = getUserToken(context.req);
   console.log("Token", token);
@@ -23,7 +24,7 @@ export async function verifyUser<T>(
     await dbConnect();
 
     if (cb) {
-      return cb(token.user);
+      return cb(token);
     }
   } else {
     throw new AuthenticationError("No valid token in cookie");
@@ -31,43 +32,32 @@ export async function verifyUser<T>(
 }
 
 export async function feed(context: ResolverContext) {
-  const token = getUserToken(context.req);
-
-  if (token) {
-    await dbConnect();
-
+  return verifyUser(context, async ({ user }) => {
     try {
-      const posts = await PostModel.find({ user: { $eq: token.user } });
-      console.log(transformPostsToFeed(posts).map(p => p.title));
+      const posts = await PostModel.find({ user: { $eq: user } });
       return transformPostsToFeed(posts);
     } catch (error) {
       throw new ApolloError(error.message);
     }
-  } else {
-    throw new AuthenticationError("No valid token in cookie");
-  }
+  });
 }
 
 export async function entry(context: ResolverContext, id: string) {
-  const token = getUserToken(context.req);
-
-  if (token) {
-    await dbConnect();
+  return verifyUser(context, async ({ user }) => {
     try {
       const post = await PostModel.findOne({
         id,
-        user: { $eq: token.user }
+        user: { $eq: user }
       });
       return transformPostToEntry(post);
     } catch (error) {
       throw new ApolloError(error.message);
     }
-  } else {
-    throw new AuthenticationError("No valid token in cookie");
-  }
+  });
 }
 
 export async function preview(context: ResolverContext, id: string) {
+  await dbConnect();
   const post = await PostModel.findOne({ id });
   const user = await UserModel.findOne({ _id: post!.user });
 
@@ -97,15 +87,8 @@ export async function preview(context: ResolverContext, id: string) {
 }
 
 export async function settings(context: ResolverContext) {
-  const token = getUserToken(context.req);
-
-  if (token) {
-    const details = await UserModel.findById(token.user, [
-      "username",
-      "email"
-    ]).lean();
+  return verifyUser(context, async ({ user }) => {
+    const details = await UserModel.findById(user, ["username", "email"]).lean();
     return details;
-  } else {
-    throw new AuthenticationError("No valid token in cookie");
-  }
+  });
 }

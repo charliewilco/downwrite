@@ -1,15 +1,17 @@
-import * as React from "react";
+import { useEffect } from "react";
 
 type Callback = () => void;
 
-export function useTimeout(interval = 500, cb: Callback): void {
-  React.useEffect(() => {
-    const t = setTimeout(() => {
-      cb();
-    }, interval);
+export function useTimeout(interval: number = 500, cb?: Callback): void {
+  useEffect(() => {
+    if (cb) {
+      const t = setTimeout(() => {
+        cb();
+      }, interval);
 
-    return function cleanup() {
-      clearTimeout(t);
-    };
+      return function cleanup() {
+        clearTimeout(t);
+      };
+    }
   }, [interval, cb]);
 }

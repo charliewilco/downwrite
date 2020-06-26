@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback } from "react";
 import {
   useRemoveEntryMutation,
   IAllPostsQuery,
@@ -10,7 +10,7 @@ type RemoveFn = (id: string) => Promise<void>;
 export function useRemovePost(): RemoveFn {
   const [deleteEntry] = useRemoveEntryMutation();
 
-  const onConfirmDelete = React.useCallback<RemoveFn>(
+  const onConfirmDelete = useCallback<RemoveFn>(
     async function(id: string): Promise<void> {
       await deleteEntry({
         variables: { id },

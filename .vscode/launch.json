@@ -21,8 +21,8 @@
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "runtimeExecutable": "yarn",
-      "port": 4000,
-      "runtimeArgs": ["workspace", "api", "dev"]
+      "port": 3000,
+      "runtimeArgs": ["dev"]
     }
   ]
 }

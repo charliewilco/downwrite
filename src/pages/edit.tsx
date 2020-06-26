@@ -1,5 +1,6 @@
-import * as React from "react";
+import { Fragment } from "react";
 import Head from "next/head";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import Autosaving from "../components/autosaving-interval";
 import WordCounter from "../components/word-count";
@@ -13,9 +14,9 @@ import { __IS_DEV__ } from "../utils/dev";
 import { EditActions } from "../reducers/editor";
 import { useEdit } from "../hooks";
 
-const Editor = React.lazy(() => import("../components/editor"));
+const Editor = dynamic(() => import("../components/editor"));
 
-const ExportMarkdown = React.lazy(() => import("../components/export"));
+const ExportMarkdown = dynamic(() => import("../components/export"));
 
 export default function EditUI() {
   const router = useRouter();
@@ -39,7 +40,7 @@ export default function EditUI() {
 
   return (
     <div className="Wrapper Wrapper--md">
-      <React.Fragment>
+      <Fragment>
         <Head>
           <title>{state.title} | Downwrite</title>
         </Head>
@@ -51,7 +52,7 @@ export default function EditUI() {
           />
         )}
         <div style={{ padding: "0 8px" }}>
-          <TimeMarker dateAdded={data.entry.dateAdded} />
+          <TimeMarker dateAdded={data?.entry?.dateAdded} />
           <Input
             value={state.title}
             name="title"
@@ -74,7 +75,7 @@ export default function EditUI() {
                 <ExportMarkdown
                   editorState={state.editorState}
                   title={state.title}
-                  date={data.entry.dateAdded}
+                  date={data?.entry?.dateAdded}
                 />
               )}
               <Button type="submit" onClick={actions.handleSubmit}>
@@ -93,7 +94,7 @@ export default function EditUI() {
           )}
         </div>
         {!!state.editorState && <WordCounter editorState={state.editorState} />}
-      </React.Fragment>
+      </Fragment>
     </div>
   );
 }

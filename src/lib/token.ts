@@ -8,7 +8,7 @@ type ITokenUser = {
   admin?: boolean;
 };
 
-type TokenContents = {
+export type TokenContents = {
   user: string;
   name: string;
 };

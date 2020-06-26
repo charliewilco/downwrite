@@ -1,5 +1,6 @@
-import * as React from "react";
+import { useRef, Fragment } from "react";
 import Head from "next/head";
+import dynamic from "next/dynamic";
 import * as Draft from "draft-js";
 import { useFormik } from "formik";
 import { useOffline, useNewEntry, INewEditorValues } from "../hooks";
@@ -7,12 +8,12 @@ import { Input } from "../components/editor-input";
 import { Button } from "../components/button";
 import Upload from "../components/upload";
 
-const Editor = React.lazy(() => import("../components/editor"));
+const Editor = dynamic(() => import("../components/editor"));
 
 const EDITOR_COMMAND = "create-new-post";
 
 export default function NewEntryPage() {
-  const initialValues = React.useRef<INewEditorValues>({
+  const initialValues = useRef<INewEditorValues>({
     title: "",
     editorState: Draft.EditorState.createEmpty()
   });
@@ -30,7 +31,7 @@ export default function NewEntryPage() {
   });
 
   return (
-    <React.Fragment>
+    <Fragment>
       <form
         className="Wrapper Wrapper--md"
         style={{
@@ -70,6 +71,6 @@ export default function NewEntryPage() {
           />
         </Upload>
       </form>
-    </React.Fragment>
+    </Fragment>
   );
 }

@@ -1,4 +1,3 @@
-import * as React from "react";
 import Modal from "./modal";
 import { Button, AltButton } from "./button";
 

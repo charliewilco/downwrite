@@ -1,4 +1,3 @@
-import * as React from "react";
 import HexInput from "./hex-input";
 
 interface IColorPickerProps {

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { Fragment } from "react";
 import Head from "next/head";
 import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
@@ -16,12 +16,12 @@ export default function PreviewEntry() {
 
   if (error) {
     return (
-      <React.Fragment>
+      <Fragment>
         <Head>
           <title>{error.name} | Downwrite</title>
         </Head>
         <NotFound error={error.name} message={error.message} />
-      </React.Fragment>
+      </Fragment>
     );
   }
 
@@ -30,7 +30,10 @@ export default function PreviewEntry() {
   }
 
   return (
-    <React.Fragment>
+    <Content
+      title={data?.preview?.title}
+      content={data.preview.content}
+      dateAdded={data.preview.dateAdded}>
       <Head>
         <title>{data.preview.title} | Downwrite</title>
         <meta name="og:title" content={data.preview.title} />
@@ -38,16 +41,11 @@ export default function PreviewEntry() {
         <meta name="og:url" content={router.pathname} />
         <meta name="description" content={data.preview.content.substr(0, 75)} />
       </Head>
-      <Content
-        title={data?.preview?.title}
-        content={data.preview.content}
-        dateAdded={data.preview.dateAdded}>
-        <AuthorBlock
-          name={data.preview.author.username}
-          colors={AvatarColors}
-          authed={false}
-        />
-      </Content>
-    </React.Fragment>
+      <AuthorBlock
+        name={data.preview.author.username}
+        colors={AvatarColors}
+        authed={false}
+      />
+    </Content>
   );
 }

@@ -1,4 +1,3 @@
-import * as React from "react";
 import FeatureContent from "./features";
 
 export default function FeatureList() {

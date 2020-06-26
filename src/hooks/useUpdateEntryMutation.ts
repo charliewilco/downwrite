@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback } from "react";
 import * as Draft from "draft-js";
 import { draftToMarkdown } from "markdown-draft-js";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
@@ -43,7 +43,7 @@ export function useUpdateEntry(id: string, state: IEditorState) {
     }
   });
 
-  const handleSubmit = React.useCallback(async () => {
+  const handleSubmit = useCallback(async () => {
     console.log("Submitting..");
     const content = Draft.convertToRaw(state.editorState.getCurrentContent());
     await updateEntry({

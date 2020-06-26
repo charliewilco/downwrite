@@ -1,4 +1,3 @@
-import * as React from "react";
 import { DialogContent, DialogOverlay } from "@reach/dialog";
 import { CloseIcon } from "./icons";
 

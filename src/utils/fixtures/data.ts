@@ -1,4 +1,4 @@
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import fakeMarkdown from "./fake-markdown";
 import { IEntry, IPreview, IAuthor } from "../generated";
 import { IUserModel } from "../../lib/models";

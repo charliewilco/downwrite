@@ -1,4 +1,3 @@
-import * as React from "react";
 import Head from "next/head";
 import Content from "../components/content";
 import Features from "../components/features";

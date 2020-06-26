@@ -1,5 +1,3 @@
-import * as React from "react";
-
 export function activeStyle(active: boolean): string {
   return active ? "#2584A5" : "#A9C2CA";
 }

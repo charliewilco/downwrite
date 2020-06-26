@@ -1,11 +1,11 @@
-import * as React from "react";
+import { useContext } from "react";
 import { LocalUISettings } from "./local-ui-settings";
 import * as DefaultStyles from "../utils/default-styles";
 
 interface ILandingPageProps extends React.PropsWithChildren<{}> {}
 
 export default function LandingPage(props: ILandingPageProps): JSX.Element {
-  const { monospace } = React.useContext(LocalUISettings);
+  const { monospace } = useContext(LocalUISettings);
   return (
     <article
       className="LandingContainer Wrapper Wrapper--sm u-center"

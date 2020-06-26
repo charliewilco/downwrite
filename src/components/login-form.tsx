@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useFormik } from "formik";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";

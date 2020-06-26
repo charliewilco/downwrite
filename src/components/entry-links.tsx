@@ -1,4 +1,3 @@
-import * as React from "react";
 import Link from "next/link";
 
 interface ICardLinks {
@@ -23,15 +22,9 @@ function CardLink(props: ICardLinks & IInitialCardLinkProps): JSX.Element {
 }
 
 export function EditLink(props: ICardLinks): JSX.Element {
-  return React.createElement(
-    CardLink,
-    Object.assign({}, { pathname: "/edit", title: "Edit" }, props)
-  );
+  return <CardLink {...props} pathname="/edit" title="Edit" />;
 }
 
 export function PreviewLink(props: ICardLinks): JSX.Element {
-  return React.createElement(
-    CardLink,
-    Object.assign({}, { pathname: "/preview", title: "Preview" }, props)
-  );
+  return <CardLink {...props} pathname="/preview" title="Preview" />;
 }

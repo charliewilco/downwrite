@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useReducer } from "react";
 import {
   IDashboardState,
   initialState,
@@ -9,7 +9,7 @@ import {
 } from "../reducers/dashboard";
 
 export function useDashboard() {
-  const [state, dispatch] = React.useReducer<
+  const [state, dispatch] = useReducer<
     React.Reducer<IDashboardState, DashboardActionType>
   >(reducer, initialState());
 

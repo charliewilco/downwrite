@@ -1,5 +1,3 @@
-import * as React from "react";
-
 interface IPostErrorProps {
   message: string;
   error: string;

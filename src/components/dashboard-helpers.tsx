@@ -1,4 +1,4 @@
-import * as React from "react";
+import { Fragment } from "react";
 import Head from "next/head";
 import { ApolloError } from "@apollo/client";
 
@@ -7,12 +7,12 @@ import InvalidToken from "./invalid-token";
 
 export const LoadingDashboard = () => {
   return (
-    <React.Fragment>
+    <Fragment>
       <Head>
         <title>Loading | Downwrite</title>
       </Head>
       <Loading size={100} />
-    </React.Fragment>
+    </Fragment>
   );
 };
 
@@ -22,11 +22,11 @@ interface IErrorDashboard {
 
 export const ErrorDashboard = (props: IErrorDashboard) => {
   return (
-    <React.Fragment>
+    <Fragment>
       <Head>
         <title>Error | Downwrite</title>
       </Head>
       <InvalidToken error={props.error.message} />
-    </React.Fragment>
+    </Fragment>
   );
 };

@@ -1,7 +1,7 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 import * as Draft from "draft-js";
 import { INewEditorValues } from "./";
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 
 export interface ILocalDraft {
   title: string;
@@ -67,10 +67,10 @@ interface ILocalDraftActions {
 // }
 
 export function useLocalDrafts(): [ILocalDraft[], ILocalDraftActions] {
-  const [drafts, setDrafts] = React.useState<ILocalDraft[]>([]);
+  const [drafts, setDrafts] = useState<ILocalDraft[]>([]);
   const [getAllDrafts, writeToStorage, removeFromStorage] = useLocalDraftUtils();
 
-  React.useEffect(
+  useEffect(
     function() {
       setDrafts(getAllDrafts());
     },

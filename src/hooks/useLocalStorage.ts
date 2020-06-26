@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 
 type Tuple<A, B, C> = [A, B, C];
 
@@ -7,8 +7,8 @@ type DeleteLocal = () => void;
 
 export function useLocalStorage(
   key: string
-): Tuple<string, WriteLocal<string>, DeleteLocal> {
-  const [localState, updateLocalState] = React.useState<string>(
+): Tuple<string | null, WriteLocal<string>, DeleteLocal> {
+  const [localState, updateLocalState] = useState<string | null>(
     localStorage.getItem(key)
   );
 

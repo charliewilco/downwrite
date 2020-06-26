@@ -1,7 +1,7 @@
 import { RESTDataSource, RequestOptions } from "apollo-datasource-rest";
 import { IMutationCreateEntryVars, IMutationUserVars } from "./mutations";
 import * as t from "./transform";
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import { IEntry, IPreview } from "../utils/generated";
 import { IPostModel, IUserModel } from "./models";
 

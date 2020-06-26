@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   BlockQuote,
   BulletedList,
@@ -19,26 +18,25 @@ interface IToolbarButtonProps {
 }
 
 function findIcon(label: string, active: boolean): React.ReactNode {
-  const props = { active };
   switch (label) {
     case "Quote":
-      return React.createElement(BlockQuote, props);
+      return <BlockQuote active={active} />;
     case "Bullets":
-      return React.createElement(BulletedList, props);
+      return <BulletedList active={active} />;
     case "Numbers":
-      return React.createElement(Numbers, props);
+      return <Numbers active={active} />;
     case "Code":
-      return React.createElement(Code, props);
+      return <Code active={active} />;
     case "Bold":
-      return React.createElement(Bold, props);
+      return <Bold active={active} />;
     case "Italic":
-      return React.createElement(Italic, props);
+      return <Italic active={active} />;
     case "Underline":
-      return React.createElement(Underline, props);
+      return <Underline active={active} />;
     case "Mono":
-      return React.createElement(Mono, props);
+      return <Mono active={active} />;
     default:
-      return React.createElement(Label, { label, active });
+      return <Label label={label} active={active} />;
   }
 }
 

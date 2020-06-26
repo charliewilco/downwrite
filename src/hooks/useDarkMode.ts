@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 
 export enum DarkModeVals {
   NIGHT_MODE = "NightMode",
@@ -40,9 +40,9 @@ export function darkModeReducer(
 }
 
 export function useDarkModeEffect(className: string): [boolean, () => void] {
-  const [night, setNight] = React.useState<boolean>(false);
+  const [night, setNight] = useState<boolean>(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (typeof window !== undefined) {
       const local = localStorage.getItem(DarkModeVals.NIGHT_MODE);
 
@@ -52,7 +52,7 @@ export function useDarkModeEffect(className: string): [boolean, () => void] {
     }
   }, []);
 
-  React.useEffect(
+  useEffect(
     function() {
       if (document.body instanceof HTMLElement) {
         localStorage.setItem(

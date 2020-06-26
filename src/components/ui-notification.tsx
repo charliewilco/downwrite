@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback } from "react";
 import {
   useTransition,
   animated,
@@ -34,21 +34,15 @@ interface IUIMessageProps {
   onDismiss(m: UINotificationMessage): void;
 }
 
-function Dismissable(props: { onDismiss(): void }): JSX.Element {
-  useTimeout(15000, props.onDismiss);
-  return null;
-}
-
 export function UIMessage(props: IUIMessageProps): JSX.Element {
   const className = getTypeClassName(props.notification, "UINotification");
 
-  const onRemove = React.useCallback(() => props.onDismiss(props.notification), [
-    props
-  ]);
+  const onRemove = useCallback(() => props.onDismiss(props.notification), [props]);
+
+  useTimeout(15000, props.notification.dismissable ? onRemove : undefined);
 
   return (
     <div className={className}>
-      {props.notification.dismissable && <Dismissable onDismiss={onRemove} />}
       <div className="UINotification__content">
         <p>
           {props.notification.type !== NotificationType.DEFAULT && (

@@ -1,4 +1,3 @@
-import * as React from "react";
 import Head from "next/head";
 import SettingsUser from "../components/settings-user-form";
 import SettingsPassword from "../components/settings-password";

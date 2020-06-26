@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback } from "react";
 import classNames from "../utils/classnames";
 import { useSwitchProps } from "../hooks";
 
@@ -10,7 +10,7 @@ interface ILayoutControl {
 export default function LayoutControl({ layout, layoutChange }: ILayoutControl) {
   const { onClick, ...switchProps } = useSwitchProps(layout, "Grid or List Layout");
 
-  const wrappedLayoutChange = React.useCallback(
+  const wrappedLayoutChange = useCallback(
     (val: boolean) => {
       onClick(val);
       layoutChange(val);

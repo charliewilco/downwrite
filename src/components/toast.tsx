@@ -1,4 +1,3 @@
-import * as React from "react";
 import classNames from "../utils/classnames";
 
 // TODO: container should have the positioning

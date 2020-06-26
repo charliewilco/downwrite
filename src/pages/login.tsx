@@ -1,9 +1,9 @@
-import * as React from "react";
 import Head from "next/head";
 import Landing from "../components/landing";
 import Features from "../components/landing-features";
+import dynamic from "next/dynamic";
 
-const LoginTabs = React.lazy(() => import("../components/login-tabs"));
+const LoginTabs = dynamic(() => import("../components/login-tabs"));
 
 export default function LoginPage() {
   return (

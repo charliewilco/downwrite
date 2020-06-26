@@ -1,4 +1,3 @@
-import * as React from "react";
 import classNames from "../utils/classnames";
 
 interface ISettingsFormActionsProps extends React.PropsWithChildren<{}> {
