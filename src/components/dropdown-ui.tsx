@@ -1,4 +1,4 @@
-import { Fragment, forwardRef, useContext } from "react";
+import { forwardRef, useContext } from "react";
 import Link from "next/link";
 import { Menu, MenuList, MenuItem, MenuButton, MenuLink } from "@reach/menu-button";
 import { Routes } from "../pages/routes";
@@ -54,19 +54,19 @@ export default function DropdownUI() {
         </MenuLink>
         <MenuItem onSelect={darkMode.action.onChange}>
           {darkMode.night ? (
-            <Fragment>
+            <>
               <span role="img" aria-label="Sun smiling">
                 🌞
               </span>
               Switch to Light Mode
-            </Fragment>
+            </>
           ) : (
-            <Fragment>
+            <>
               <span role="img" aria-label="Moon">
                 🌙
               </span>
               Switch to Dark Mode
-            </Fragment>
+            </>
           )}
         </MenuItem>
         <MenuItem onSelect={signOut}>

@@ -1,4 +1,4 @@
-import { useRef, Fragment } from "react";
+import { useRef } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import * as Draft from "draft-js";
@@ -31,7 +31,7 @@ export default function NewEntryPage() {
   });
 
   return (
-    <Fragment>
+    <>
       <form
         className="Wrapper Wrapper--md"
         style={{
@@ -71,6 +71,6 @@ export default function NewEntryPage() {
           />
         </Upload>
       </form>
-    </Fragment>
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import { Fragment, useCallback } from "react";
+import { useCallback } from "react";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import DeleteModal from "../components/delete-modal";
@@ -30,7 +30,7 @@ export default function DashboardUI() {
 
   if (data) {
     return (
-      <Fragment>
+      <>
         {modalOpen && (
           <DeleteModal
             title={selectedPost.title}
@@ -55,7 +55,7 @@ export default function DashboardUI() {
             <EmptyPosts />
           )}
         </section>
-      </Fragment>
+      </>
     );
   }
 

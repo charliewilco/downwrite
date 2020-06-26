@@ -1,6 +1,6 @@
-import { Fragment } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import VisuallyHidden from "@reach/visually-hidden";
 import Logo from "./logo";
 import { useAuthContext } from "./auth";
 import DropdownUI from "./dropdown-ui";
@@ -45,7 +45,7 @@ export function UIHeader(): JSX.Element {
       )}
     </header>
   ) : (
-    <Fragment />
+    <VisuallyHidden />
   );
 }
 

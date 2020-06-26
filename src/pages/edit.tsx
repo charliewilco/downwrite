@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -40,7 +39,7 @@ export default function EditUI() {
 
   return (
     <div className="Wrapper Wrapper--md">
-      <Fragment>
+      <>
         <Head>
           <title>{state.title} | Downwrite</title>
         </Head>
@@ -94,7 +93,7 @@ export default function EditUI() {
           )}
         </div>
         {!!state.editorState && <WordCounter editorState={state.editorState} />}
-      </Fragment>
+      </>
     </div>
   );
 }

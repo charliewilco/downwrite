@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import Link from "next/link";
 import Avatar from "./avatar";
 import { Routes } from "../pages/routes";
@@ -17,7 +16,7 @@ export default function Author(props: IAuthorProps): JSX.Element {
         <h6 className="AuthorBlockTitle">Post from {props.name}</h6>
       </header>
       {!props.authed && (
-        <Fragment>
+        <>
           <hr />
           <p className="AuthorBlockContent">
             <span>
@@ -27,7 +26,7 @@ export default function Author(props: IAuthorProps): JSX.Element {
               <a>here</a>
             </Link>
           </p>
-        </Fragment>
+        </>
       )}
     </aside>
   );

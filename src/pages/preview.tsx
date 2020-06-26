@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import Head from "next/head";
 import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
@@ -16,12 +15,12 @@ export default function PreviewEntry() {
 
   if (error) {
     return (
-      <Fragment>
+      <>
         <Head>
           <title>{error.name} | Downwrite</title>
         </Head>
         <NotFound error={error.name} message={error.message} />
-      </Fragment>
+      </>
     );
   }
 

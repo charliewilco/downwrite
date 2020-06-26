@@ -1,8 +1,6 @@
-import { Fragment } from "react";
-
 export default function Features(): JSX.Element {
   return (
-    <Fragment>
+    <>
       <h2>Focus on Markdown</h2>
 
       <p>
@@ -22,6 +20,6 @@ export default function Features(): JSX.Element {
           <code>Sign up below and get to writing.</code>
         </em>
       </p>
-    </Fragment>
+    </>
   );
 }

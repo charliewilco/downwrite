@@ -11,7 +11,7 @@ import * as DefaultStyles from "../utils/default-styles";
 type Handler = "handled" | "not-handled";
 
 interface IEditorProps {
-  editorCommand: string;
+  editorCommand: Draft.DraftEditorCommand;
   editorState: Draft.EditorState;
   onChange: (e: Draft.EditorState) => void;
   onSave: () => void;
@@ -24,7 +24,7 @@ function getBlockStyle(block: Draft.ContentBlock) {
     case "blockquote":
       return "RichEditor-blockquote";
     default:
-      return null;
+      return "";
   }
 }
 
@@ -69,7 +69,7 @@ export default function DownwriteEditor(props: IEditorProps) {
     props.onChange(Draft.RichUtils.onTab(e, props.editorState, maxDepth));
   }
 
-  function saveKeyListener(e: React.KeyboardEvent): string {
+  function saveKeyListener(e: React.KeyboardEvent): Draft.DraftEditorCommand | null {
     if (e.keyCode === 83 && Draft.KeyBindingUtil.hasCommandModifier(e)) {
       return props.editorCommand;
     }
