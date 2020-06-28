@@ -6,10 +6,13 @@ import {
 import { GetServerSidePropsContext } from "next";
 import dbConnect from "./db";
 import { PostModel, UserModel } from "./models";
-import { transformPostsToFeed, transformPostToEntry } from "./transform";
+import {
+  transformPostsToFeed,
+  transformPostToEntry,
+  transformMDToPreview
+} from "./transform";
 import { getUserToken } from "./cookie-managment";
 import { TokenContents } from "./token";
-import { createMarkdownServer } from "../utils";
 
 export type ResolverContext = Pick<GetServerSidePropsContext, "req" | "res">;
 
@@ -74,16 +77,18 @@ export async function preview(context: ResolverContext, id: string) {
     );
   }
 
-  return {
-    id,
-    author: {
-      username: user.username,
-      avatar: user.gradient || ["#FEB692", "#EA5455"]
-    },
-    content: createMarkdownServer(post.content),
-    title: post.title,
-    dateAdded: post.dateAdded
-  };
+  return transformMDToPreview(post, user);
+
+  // return {
+  //   id,
+  //   author: {
+  //     username: user.username,
+  //     avatar: user.gradient || ["#FEB692", "#EA5455"]
+  //   },
+  //   content: createMarkdownServer(post.content),
+  //   title: post.title,
+  //   dateAdded: post.dateAdded
+  // };
 }
 
 export async function settings(context: ResolverContext) {

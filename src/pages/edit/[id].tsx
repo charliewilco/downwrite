@@ -1,21 +1,21 @@
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import Autosaving from "../components/autosaving-interval";
-import WordCounter from "../components/word-count";
-import { Button } from "../components/button";
-import Loading from "../components/loading";
-import { Input } from "../components/editor-input";
-import { ToggleBox } from "../components/toggle-box";
-import { PreviewLink } from "../components/entry-links";
-import TimeMarker from "../components/time-marker";
-import { __IS_DEV__ } from "../utils/dev";
-import { EditActions } from "../reducers/editor";
-import { useEdit } from "../hooks";
+import Autosaving from "../../components/autosaving-interval";
+import WordCounter from "../../components/word-count";
+import { Button } from "../../components/button";
+import Loading from "../../components/loading";
+import { Input } from "../../components/editor-input";
+import { ToggleBox } from "../../components/toggle-box";
+import { PreviewLink } from "../../components/entry-links";
+import TimeMarker from "../../components/time-marker";
+import { __IS_DEV__ } from "../../utils/dev";
+import { EditActions } from "../../reducers/editor";
+import { useEdit } from "../../hooks";
 
-const Editor = dynamic(() => import("../components/editor"));
+const Editor = dynamic(() => import("../../components/editor"));
 
-const ExportMarkdown = dynamic(() => import("../components/export"));
+const ExportMarkdown = dynamic(() => import("../../components/export"));
 
 export default function EditUI() {
   const router = useRouter();

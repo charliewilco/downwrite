@@ -1,5 +1,5 @@
 .UIButton {
-  background-color: var(--yellow700);
+  background-color: var(--link);
   border-radius: 0.25rem;
   border: 0;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.037), 0 4px 8px rgba(0, 0, 0, 0.07);

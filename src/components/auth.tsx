@@ -61,13 +61,16 @@ export interface IToken {
 }
 
 const EMPTY_USER: IToken = {
-  user: null,
-  name: null
+  user: "",
+  name: ""
 };
 
 export const AuthContext = createContext<AuthContextType>([
-  null,
-  null
+  {},
+  {
+    signIn: () => {},
+    signOut: () => {}
+  }
 ] as AuthContextType);
 
 function initializer(tokenInitial?: string): IAuthState {
@@ -79,7 +82,7 @@ function initializer(tokenInitial?: string): IAuthState {
   return {
     token,
     authed: __TOKEN_EXISTS__,
-    name: name || null
+    name: name || ""
   };
 }
 

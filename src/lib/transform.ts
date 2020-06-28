@@ -1,8 +1,8 @@
-import { createMarkdownServer } from "../utils/markdown-template";
-import { IMutationCreateEntryVars } from "./resolvers";
-import { IEntry, IPreview } from "../utils/generated";
-import { IPostModel, IUserModel } from "./models";
 import { ApolloError } from "apollo-server-micro";
+import { IPostModel, IUserModel } from "./models";
+import { IMutationCreateEntryVars } from "./mutations";
+import { IEntry, IPreview } from "../utils/generated";
+import { createMarkdownServer } from "../utils/markdown-template";
 
 export interface IUser {
   _id: string;
