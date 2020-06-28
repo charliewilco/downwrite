@@ -8,7 +8,7 @@ export interface ICardProps {
   excerpt?: string;
   id: string;
   dateAdded: Date | string;
-  onDelete?: ({ id }: Partial<IPartialFeedItem>) => void;
+  onDelete: ({ id, title }: IPartialFeedItem) => void;
   public: boolean;
 }
 

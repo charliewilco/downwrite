@@ -16,16 +16,20 @@ enum DarkModeAction {
   TURN_OFF_DARK_MODE = "DARK_MODE_OFF"
 }
 
-interface IDarkModeAction {
-  type: DarkModeAction;
-  payload?: {
-    local: boolean;
-  };
-}
+type DarkModeActions =
+  | {
+      type: DarkModeAction.TURN_ON_DARK_MODE | DarkModeAction.TURN_OFF_DARK_MODE;
+    }
+  | {
+      type: DarkModeAction.SET_DARK_MODE_FROM_LOCAL;
+      payload: {
+        local: boolean;
+      };
+    };
 
 export function darkModeReducer(
-  state: IDarkModeState,
-  action: IDarkModeAction
+  _: IDarkModeState,
+  action: DarkModeActions
 ): IDarkModeState {
   switch (action.type) {
     case DarkModeAction.TURN_ON_DARK_MODE:
@@ -35,7 +39,7 @@ export function darkModeReducer(
     case DarkModeAction.SET_DARK_MODE_FROM_LOCAL:
       return { darkMode: action.payload.local };
     default:
-      break;
+      throw new Error("must speficy type");
   }
 }
 

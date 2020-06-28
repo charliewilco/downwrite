@@ -2,7 +2,7 @@ import { memo } from "react";
 import { AppProps } from "next/app";
 import is from "@sindresorhus/is";
 import { ApolloProvider } from "@apollo/client";
-import { RecoilRoot, MutableSnapshot } from "recoil";
+import { RecoilRoot } from "recoil";
 import { UIShell } from "../components/ui-shell";
 import { AuthProvider } from "../components/auth";
 import "../components/styles/base.css";

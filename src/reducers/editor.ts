@@ -34,7 +34,7 @@ const DEFAULT_EDITOR_STATE: IEditorState = {
   initialFocus: false
 };
 
-export function initializer(initialData: {
+export function initializer(initialData?: {
   entry: Pick<IEntry, "title" | "dateAdded" | "content" | "public"> | null;
 }): IEditorState {
   console.log("INITIAL DATA EDITOR", initialData);

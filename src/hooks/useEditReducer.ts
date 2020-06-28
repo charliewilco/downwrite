@@ -7,10 +7,9 @@ import {
   initializer
 } from "../reducers/editor";
 
-export function useEditReducer(data: IEditQuery) {
-  return useReducer<React.Reducer<IEditorState, EditorActions>, IEditQuery>(
-    reducer,
-    data,
-    initializer
-  );
+export function useEditReducer(data?: IEditQuery) {
+  return useReducer<
+    React.Reducer<IEditorState, EditorActions>,
+    IEditQuery | undefined
+  >(reducer, data, initializer);
 }

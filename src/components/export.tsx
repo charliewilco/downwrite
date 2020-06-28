@@ -38,7 +38,7 @@ export default function UIMarkdownExport(props: IExportProps) {
     });
 
   const toMarkdown = ({ title, content, date }: IExportCallback): void => {
-    let localFileExtension = localStorage.getItem(LocalSettings.EXTENSION);
+    let localFileExtension = localStorage.getItem(LocalSettings.EXTENSION) || "";
     let extension = localFileExtension.replace(/\./g, "") || "md";
 
     try {

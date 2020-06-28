@@ -1,7 +1,7 @@
 import produce from "immer";
 
 export interface IDashboardState {
-  selectedPost: IPartialFeedItem;
+  selectedPost: null | IPartialFeedItem;
   modalOpen: boolean;
 }
 

@@ -10,19 +10,19 @@ import { useAllPostsQuery, AllPostsDocument } from "../utils/generated";
 import { initializeApollo } from "../lib/apollo";
 import { parseCookies } from "../lib/cookie-managment";
 import { useRecoilValue } from "recoil";
-import { notificationState } from "../reducers/app-state";
+import { notificationsAtom } from "../reducers/app-state";
 
 export default function DashboardUI() {
   const [{ selectedPost, modalOpen }, actions] = useDashboard();
   const { data, loading, error } = useAllPostsQuery({ ssr: true });
   const onConfirmDelete = useRemovePost();
 
-  const notifications = useRecoilValue(notificationState);
+  const notifications = useRecoilValue(notificationsAtom);
 
   console.log(notifications);
 
   const onDelete = useCallback(() => {
-    onConfirmDelete(selectedPost.id);
+    onConfirmDelete(selectedPost!.id);
     actions.onCloseModal();
   }, [selectedPost, onConfirmDelete, actions]);
 
@@ -37,7 +37,7 @@ export default function DashboardUI() {
   if (data) {
     return (
       <>
-        {modalOpen && (
+        {modalOpen && selectedPost !== null && (
           <DeleteModal
             title={selectedPost.title}
             onDelete={onDelete}
@@ -53,10 +53,7 @@ export default function DashboardUI() {
         </Head>
         <section className="PostContainer">
           {data.feed.length > 0 ? (
-            <PostList
-              onSelect={({ title, id }) => actions.onSelect({ title, id })}
-              posts={data.feed}
-            />
+            <PostList onSelect={actions.onSelect} posts={data.feed} />
           ) : (
             <EmptyPosts />
           )}

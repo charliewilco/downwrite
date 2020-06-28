@@ -7,7 +7,7 @@ interface IListItemProps {
   title: string;
   id: string;
   dateAdded: Date;
-  onDelete: ({ id }: IPartialFeedItem) => void;
+  onDelete: ({ id, title }: IPartialFeedItem) => void;
   public: boolean;
 }
 

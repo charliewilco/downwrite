@@ -66,7 +66,7 @@ const EMPTY_USER: IToken = {
 };
 
 export const AuthContext = createContext<AuthContextType>([
-  {},
+  { authed: false, name: "", token: "" },
   {
     signIn: () => {},
     signOut: () => {}
@@ -89,7 +89,7 @@ function initializer(tokenInitial?: string): IAuthState {
 export function useAuthReducer(tokenInitial?: string): [IAuthState, IAuthActions] {
   const [state, dispatch] = useReducer<
     React.Reducer<IAuthState, AuthReducerAction>,
-    string
+    string | undefined
   >(reducer, tokenInitial, initializer);
 
   function signIn(authed: boolean, token: string) {
