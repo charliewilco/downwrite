@@ -1,6 +1,5 @@
 import { UINotificationMessage } from "./notifications";
-import { atom } from "recoil";
-import { createStore } from "redux";
+import { atom, MutableSnapshot } from "recoil";
 import produce from "immer";
 
 export interface ISettings {
@@ -23,13 +22,13 @@ export interface IAppState {
 
 enum UIHeader {}
 
-export const notificationState = atom<Notifications>({
+export const notificationsAtom = atom<Notifications>({
   key: "notifications",
   default: []
 });
 
-export const settingState = atom<ISettings>({
-  key: "",
+export const settingsAtom = atom<ISettings>({
+  key: "settings",
   default: {
     isDarkMode: true,
     fileExtension: ".md",
@@ -45,18 +44,6 @@ enum StoreActions {
   UPDATE_SETTINGS = "UPDATE_SETTINGS"
 }
 
-const reducer = produce<(s: IAppState, action: { type: StoreActions }) => void>(
-  (draft, action) => {
-    switch (action.type) {
-      case StoreActions.ADD_NOTIFICATION:
-        draft.notifications;
-
-        break;
-
-      default:
-        break;
-    }
-  }
-);
-
-export const store = createStore(reducer);
+export function initializeState(m: MutableSnapshot) {
+  m.set(notificationsAtom, [new UINotificationMessage("Something")]);
+}

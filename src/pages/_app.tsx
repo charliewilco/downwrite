@@ -7,8 +7,7 @@ import { UIShell } from "../components/ui-shell";
 import { AuthProvider } from "../components/auth";
 import "../components/styles/base.css";
 import { useApollo } from "../lib/apollo";
-import { UINotificationMessage } from "../reducers/notifications";
-import { notificationState } from "../reducers/app-state";
+import { initializeState } from "../reducers/app-state";
 
 interface IAppProps {
   token?: string;
@@ -17,10 +16,6 @@ interface IAppProps {
 const MemoUIShell = memo(UIShell);
 
 const DW_TOKEN = "";
-
-function initializeState(m: MutableSnapshot) {
-  m.set(notificationState, [new UINotificationMessage("Something")]);
-}
 
 export default function AppWrapper({ Component, pageProps }: AppProps<IAppProps>) {
   const authed = !is.emptyString(DW_TOKEN);
