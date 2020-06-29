@@ -32,13 +32,15 @@ jobs:
         run: yarn build
         env:
           CI: TRUE
-          NODE_ENV: TEST
+          NODE_ENV: test
           DB_ADDRESS: localhost:27017
+          SECRET_KEY: "foo"
       - name: Type Check
         run: yarn typecheck
       - name: Test
         run: yarn test:ci
         env:
-          NODE_ENV: TEST
+          NODE_ENV: test
           CI: TRUE
           DB_ADDRESS: localhost:27017
+          SECRET_KEY: "foo"
