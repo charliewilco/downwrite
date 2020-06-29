@@ -16,29 +16,31 @@ export function useUpdateEntry(id: string, state: IEditorState) {
   const [updateEntry] = useUpdateEntryMutation({
     update(cache, { data }) {
       if (data) {
-        const { entry } = cache.readQuery<IEditQuery>({
+        const editQuery = cache.readQuery<IEditQuery>({
           query: EditDocument,
           variables: { id }
         });
 
-        const { feed } = cache.readQuery<IAllPostsQuery>({
+        const allPosts = cache.readQuery<IAllPostsQuery>({
           query: AllPostsDocument
         });
 
-        cache.writeQuery<IAllPostsQuery>({
-          query: AllPostsDocument,
-          data: {
-            feed: feed.map(item =>
-              item.id !== data.updateEntry.id ? item : data.updateEntry
-            )
-          }
-        });
+        if (data && editQuery?.entry) {
+          cache.writeQuery<IAllPostsQuery>({
+            query: AllPostsDocument,
+            data: {
+              feed: allPosts!.feed.map(item =>
+                item.id !== data.updateEntry!.id ? item : data.updateEntry!
+              )
+            }
+          });
 
-        cache.writeQuery<IEditQuery>({
-          query: EditDocument,
-          variables: { id },
-          data: { entry: Object.assign({}, entry, data.updateEntry) }
-        });
+          cache.writeQuery<IEditQuery>({
+            query: EditDocument,
+            variables: { id },
+            data: { entry: Object.assign({}, editQuery.entry, data.updateEntry) }
+          });
+        }
       }
     }
   });

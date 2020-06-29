@@ -14,17 +14,19 @@ export function useRemovePost(): RemoveFn {
     async function(id: string): Promise<void> {
       await deleteEntry({
         variables: { id },
-        update(cache, { data: { deleteEntry } }) {
-          const { feed } = cache.readQuery<IAllPostsQuery>({
+        update(cache, { data }) {
+          const allPosts = cache.readQuery<IAllPostsQuery>({
             query: AllPostsDocument
           });
 
-          cache.writeQuery<IAllPostsQuery>({
-            query: AllPostsDocument,
-            data: {
-              feed: feed.filter(item => item.id !== deleteEntry.id)
-            }
-          });
+          if (data) {
+            cache.writeQuery<IAllPostsQuery>({
+              query: AllPostsDocument,
+              data: {
+                feed: allPosts!.feed.filter(item => item.id !== data.deleteEntry!.id)
+              }
+            });
+          }
         }
       }).catch(err => console.log(err));
     },

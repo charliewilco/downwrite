@@ -2,7 +2,7 @@ import { ApolloError } from "apollo-server-micro";
 import { v4 as uuid } from "uuid";
 import { ResolverContext, verifyUser } from "./queries";
 import { PostModel } from "./models";
-import {} from "./transform";
+import { mergeUpdatedPost } from "./transform";
 import dbConnect from "./db";
 
 export interface IMutationCreateEntryVars {
@@ -50,7 +50,18 @@ export async function updatePost(
   context: ResolverContext,
   id: string,
   body: IMutationCreateEntryVars
-) {}
+) {
+  return verifyUser(context, async ({ user }) => {
+    const ref = await PostModel.findOne({
+      id,
+      user: { $eq: user }
+    });
+    if (ref !== null) {
+      return mergeUpdatedPost(body, ref, id);
+    }
+    throw new ApolloError("Could not find post to update");
+  });
+}
 
 export async function removePost(context: ResolverContext, id: string) {
   return verifyUser(context, async ({ user }) => {
@@ -64,6 +75,8 @@ export async function removePost(context: ResolverContext, id: string) {
   });
 }
 
-export async function authenticateUser() {}
+export async function authenticateUser() {
+  await dbConnect();
+}
 
 export async function createUser() {}

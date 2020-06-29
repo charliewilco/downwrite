@@ -39,7 +39,7 @@ export function useNewEntry() {
             const updatedFeed: Pick<
               IEntry,
               "title" | "dateAdded" | "id" | "public"
-            >[] = [...result.feed, { ...data.createEntry }];
+            >[] = [...result.feed, data.createEntry!];
 
             cache.writeQuery<IAllPostsQuery>({
               query: AllPostsDocument,

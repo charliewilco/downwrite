@@ -42,7 +42,8 @@ export function useLocalDraftUtils(): LocalDraft {
         return key.includes(PREFIX);
       })
       .map(function(key) {
-        const draft = localStorage.getItem(key);
+        // can assume this isn't null because it passes the filter
+        const draft = localStorage.getItem(key)!;
         return JSON.parse(draft);
       });
 

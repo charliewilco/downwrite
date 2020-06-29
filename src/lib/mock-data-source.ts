@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 import { RESTDataSource } from "apollo-datasource-rest";
-import { IApiSource, IContext } from "./data-source";
+import { IContext } from "./data-source";
 import { FixtureData } from "../utils/fixtures/data";
-import { IMutationUserVars, IMutationCreateEntryVars } from "./resolvers";
+import { IMutationUserVars, IMutationCreateEntryVars } from "./mutations";
 
-export class MockAPI extends RESTDataSource<IContext> implements IApiSource {
+export class MockAPI extends RESTDataSource<IContext> {
   private data = new FixtureData();
   public async getUserDetails() {
     return this.data.createUser();

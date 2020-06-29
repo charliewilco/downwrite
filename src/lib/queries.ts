@@ -59,7 +59,7 @@ export async function entry(context: ResolverContext, id: string) {
   });
 }
 
-export async function preview(context: ResolverContext, id: string) {
+export async function preview(_: ResolverContext, id: string) {
   await dbConnect();
   const post = await PostModel.findOne({ id });
   const user = await UserModel.findOne({ _id: post!.user });
