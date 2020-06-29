@@ -1,9 +1,9 @@
 import * as React from "react";
 import "@testing-library/jest-dom";
 import { render, wait } from "@testing-library/react";
-import { MockedProvider, MockedResponse } from "@apollo/react-testing";
+import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import { draftToMarkdown } from "markdown-draft-js";
-import PreviewEntry from "../pages/preview";
+import PreviewEntry from "../pages/preview/[id]";
 import Content from "../components/content";
 import { createMockPost } from "../utils/testing";
 import { PreviewDocument } from "../utils/generated";

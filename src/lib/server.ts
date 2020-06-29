@@ -1,8 +1,5 @@
 import { ApolloServer } from "apollo-server-micro";
-import { DownwriteAPI } from "./data-source";
-import { MockAPI } from "./mock-data-source";
 import { schema } from "./schema";
-import { REST_ENDPOINT } from "../utils/urls";
 
 export const server = new ApolloServer({
   schema,
@@ -17,11 +14,6 @@ export const server = new ApolloServer({
       "editor.fontFamily": "Operator Mono, monospace"
       // "schema.polling.enable": false
     }
-  },
-  dataSources() {
-    return {
-      dwnxtAPI: new DownwriteAPI(REST_ENDPOINT)
-    };
   }
 });
 
@@ -30,11 +22,6 @@ export const testServer = new ApolloServer({
   context() {
     return {
       token: "..."
-    };
-  },
-  dataSources() {
-    return {
-      dwnxtAPI: new MockAPI()
     };
   }
 });

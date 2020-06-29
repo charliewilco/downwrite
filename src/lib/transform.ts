@@ -4,15 +4,6 @@ import { IMutationCreateEntryVars } from "./mutations";
 import { IEntry, IPreview } from "../utils/generated";
 import { createMarkdownServer } from "../utils/markdown-template";
 
-export interface IUser {
-  _id: string;
-  email: string;
-  username: string;
-  gradient?: string[];
-}
-
-export class TransformResponses {}
-
 export function mergeUpdatedPost(
   args: IMutationCreateEntryVars,
   ref: IPostModel,

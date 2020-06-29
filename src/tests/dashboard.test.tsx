@@ -2,21 +2,27 @@ import * as React from "react";
 import "@testing-library/jest-dom";
 
 import { render, fireEvent, waitForElement, act } from "@testing-library/react";
-import { wait, MockedProvider, MockedResponse } from "@apollo/react-testing";
+import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import DashboardUI from "../pages/dashboard";
 import { UIShell } from "../components/ui-shell";
 import { AllPostsDocument } from "../utils/generated";
 import { data } from "./fixtures/feed.json";
 import { MockAuthProvider } from "../utils/testing";
+import { RecoilRoot } from "recoil";
+
+const wait = async (n: number) =>
+  await new Promise(resolve => setTimeout(resolve, n));
 
 function createPage(mocks?: MockedResponse[], authed: boolean = true) {
   return render(
     <MockedProvider mocks={mocks}>
-      <MockAuthProvider authed={authed}>
-        <UIShell>
-          <DashboardUI />
-        </UIShell>
-      </MockAuthProvider>
+      <RecoilRoot>
+        <MockAuthProvider authed={authed}>
+          <UIShell>
+            <DashboardUI />
+          </UIShell>
+        </MockAuthProvider>
+      </RecoilRoot>
     </MockedProvider>
   );
 }

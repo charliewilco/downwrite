@@ -1,7 +1,7 @@
 import * as React from "react";
 import "@testing-library/jest-dom";
 import { render, act, fireEvent, wait } from "@testing-library/react";
-import { MockedProvider } from "@apollo/react-testing";
+import { MockedProvider } from "@apollo/client/testing";
 import LoginForm from "../components/login-form";
 import { MockAuthProvider } from "../utils/testing";
 

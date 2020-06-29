@@ -98,7 +98,7 @@ This project depends on MongoDB 🍍 so if you're not using Docker 🐳🐋 loca
 
 #### Info 📝
 
-Using Gapi allows you to organize your endpoints very easiy and all the controllers are async so making database queries are fast and clean. All the routes are kept in `./api/src/routes.ts`. 🛣
+Using Hapi allows you to organize your endpoints very easiy and all the controllers are async so making database queries are fast and clean. All the routes are kept in `./api/src/routes.ts`. 🛣
 
 This service handles authentication with JWT and basic CRUD functions. 🔐
 

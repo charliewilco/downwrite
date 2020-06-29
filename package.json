@@ -47,7 +47,6 @@
     "@types/uuid": "^8.0.0",
     "@types/yup": "^0.29.3",
     "@zeit/git-hooks": "^0.1.4",
-    "apollo-datasource-rest": "^0.7.0",
     "apollo-server-env": "^2.4.3",
     "apollo-server-errors": "^2.3.4",
     "apollo-server-micro": "^2.10.1",
@@ -93,7 +92,6 @@
     "yup": "^0.29.1"
   },
   "devDependencies": {
-    "@apollo/react-testing": "^3.1.4",
     "@graphql-codegen/cli": "^1.15.4",
     "@graphql-codegen/typescript": "^1.15.4",
     "@graphql-codegen/typescript-operations": "^1.15.4",
@@ -102,9 +100,10 @@
     "@testing-library/jest-dom": "^5.1.0",
     "@testing-library/react": "^9.4.0",
     "apollo-server-testing": "^2.10.1",
+    "babel-jest": "^26.1.0",
+    "identity-obj-proxy": "^3.0.0",
     "prettier": "^1.19.1",
-    "prop-types": "^15.7.2",
-    "ts-jest": "^26.1.1"
+    "prop-types": "^15.7.2"
   },
   "browserslist": [
     "last 1 version"
