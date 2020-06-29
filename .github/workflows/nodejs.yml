@@ -31,10 +31,14 @@ jobs:
       - name: Build
         run: yarn build
         env:
+          CI: TRUE
+          NODE_ENV: TEST
           DB_ADDRESS: localhost:27017
       - name: Type Check
         run: yarn typecheck
       - name: Test
         run: yarn test:ci
         env:
+          NODE_ENV: TEST
+          CI: TRUE
           DB_ADDRESS: localhost:27017
