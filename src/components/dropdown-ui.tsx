@@ -9,7 +9,7 @@ import {
   FiSun,
   FiMoon
 } from "react-icons/fi";
-import { Routes } from "../pages/routes";
+import { Routes } from "../utils/routes";
 import { NavIcon } from "./icons";
 import User from "./user";
 import { useAuthContext } from "./auth";

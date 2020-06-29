@@ -14,7 +14,7 @@ export enum EditActions {
 
 export interface IEditorState {
   publicStatus: boolean;
-  editorState: Draft.EditorState;
+  editorState: Draft.EditorState | null;
   title: string;
   initialFocus: boolean;
 }
@@ -29,8 +29,8 @@ export interface IQueryVars {
 
 const DEFAULT_EDITOR_STATE: IEditorState = {
   editorState: null,
-  title: null,
-  publicStatus: null,
+  title: "",
+  publicStatus: false,
   initialFocus: false
 };
 
@@ -39,15 +39,15 @@ export function initializer(initialData?: {
 }): IEditorState {
   console.log("INITIAL DATA EDITOR", initialData);
   if (!!initialData && initialData.entry !== null) {
-    const draft = markdownToDraft(initialData.entry.content);
+    const draft = markdownToDraft(initialData.entry.content!);
     const editorState = Draft.EditorState.createWithContent(
       Draft.convertFromRaw(draft)
     );
 
     return {
       editorState,
-      title: initialData.entry.title,
-      publicStatus: initialData.entry.public,
+      title: initialData.entry.title || "",
+      publicStatus: !!initialData.entry.public,
       initialFocus: false
     };
   } else {

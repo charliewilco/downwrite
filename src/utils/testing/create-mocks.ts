@@ -42,7 +42,7 @@ export const createMockPosts = (count: number): IPostModel[] => {
 
 export const createEditorState = (content?: string): Draft.EditorState => {
   const state = Draft.EditorState.createWithContent(
-    Draft.ContentState.createFromText("Hello")
+    Draft.ContentState.createFromText(content || "Hello")
   );
 
   return state;

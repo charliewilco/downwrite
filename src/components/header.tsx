@@ -4,7 +4,7 @@ import VisuallyHidden from "@reach/visually-hidden";
 import Logo from "./logo";
 import { useAuthContext } from "./auth";
 import DropdownUI from "./dropdown-ui";
-import { Routes } from "../pages/routes";
+import { Routes } from "../utils/routes";
 
 export function UIHeader(): JSX.Element {
   const [{ authed }] = useAuthContext();

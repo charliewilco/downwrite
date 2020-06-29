@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Avatar from "./avatar";
-import { Routes } from "../pages/routes";
+import { Routes } from "../utils/routes";
 
 interface IAuthorProps {
   authed: boolean;

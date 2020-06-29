@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Nib from "./nib";
-import { Routes } from "../pages/routes";
+import { Routes } from "../utils/routes";
 
 export default function EmptyPosts(): JSX.Element {
   return (

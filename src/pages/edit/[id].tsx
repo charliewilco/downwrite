@@ -85,7 +85,7 @@ export default function EditUI() {
           {!!state.editorState && (
             <Editor
               editorState={state.editorState}
-              editorCommand={EditActions.EDITOR_COMMAND}
+              editorCommand={EditActions.EDITOR_COMMAND as any}
               onFocus={actions.handleFocus}
               onSave={actions.handleSubmit}
               onChange={actions.handleEditorChange}

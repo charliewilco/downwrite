@@ -47,15 +47,17 @@ export function useUpdateEntry(id: string, state: IEditorState) {
 
   const handleSubmit = useCallback(async () => {
     console.log("Submitting..");
-    const content = Draft.convertToRaw(state.editorState.getCurrentContent());
-    await updateEntry({
-      variables: {
-        id,
-        content: draftToMarkdown(content),
-        title: state.title,
-        status: state.publicStatus
-      }
-    }).catch(err => addNotification(err.message, NotificationType.ERROR));
+    if (state.editorState !== null) {
+      const content = Draft.convertToRaw(state.editorState.getCurrentContent());
+      await updateEntry({
+        variables: {
+          id,
+          content: draftToMarkdown(content),
+          title: state.title,
+          status: state.publicStatus
+        }
+      }).catch(err => addNotification(err.message, NotificationType.ERROR));
+    }
   }, [state, id, updateEntry, addNotification]);
 
   return handleSubmit;

@@ -57,7 +57,7 @@ export function useNewEntry() {
         })
         .catch(err => actions.addNotification(err.message, NotificationType.ERROR));
     },
-    [history, actions, createEntry]
+    [actions, createEntry]
   );
 
   return [onSubmit] as const;

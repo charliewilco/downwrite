@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Routes } from "../pages/routes";
+import { Routes } from "../utils/routes";
 
 interface IPage {
   name: string;

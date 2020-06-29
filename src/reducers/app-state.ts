@@ -1,6 +1,5 @@
 import { UINotificationMessage } from "./notifications";
 import { atom, MutableSnapshot } from "recoil";
-import produce from "immer";
 
 export interface ISettings {
   isDarkMode: boolean;
@@ -35,14 +34,6 @@ export const settingsAtom = atom<ISettings>({
     editorFont: "Operator Mono"
   }
 });
-
-enum StoreActions {
-  ADD_NOTIFICATION = "ADD_NOTIFICATION",
-  REMOVE_NOTIFICATION = "REMOVE_NOTIFICATION",
-  SORT_NOTIFICATIONS = "SORT_NOTIFICATIONS",
-  ADD_ME = "ADD ME",
-  UPDATE_SETTINGS = "UPDATE_SETTINGS"
-}
 
 export function initializeState(m: MutableSnapshot) {
   m.set(notificationsAtom, [new UINotificationMessage("Something")]);

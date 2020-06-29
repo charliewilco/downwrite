@@ -18,10 +18,7 @@ export type AuthReducerAction =
   | { type: AuthActions.SIGN_IN; payload: IAuthState }
   | { type: AuthActions.SIGN_OUT };
 
-export const reducer = (
-  state: IAuthState,
-  action: AuthReducerAction
-): IAuthState => {
+export const reducer = (_: IAuthState, action: AuthReducerAction): IAuthState => {
   switch (action.type) {
     case AuthActions.SIGN_IN: {
       return { ...action.payload };
@@ -29,8 +26,8 @@ export const reducer = (
     case AuthActions.SIGN_OUT: {
       return {
         authed: false,
-        name: null,
-        token: null
+        name: "",
+        token: ""
       };
     }
   }

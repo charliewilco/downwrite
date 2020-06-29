@@ -28,7 +28,7 @@ export default function SettingsPage() {
       <h1 className="ContainerTitle" style={{ marginBottom: 16 }}>
         Settings
       </h1>
-      <SettingsUser user={data.settings} />
+      <SettingsUser user={data?.settings!} />
       <SettingsPassword />
       <SettingsLocal />
     </div>

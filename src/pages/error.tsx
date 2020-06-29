@@ -35,7 +35,6 @@ export default function ErrorPage(props: IErrorViewProps) {
       <h2 className="SuperErrorMessage">404</h2>
       <StatusCode statusCode={props.statusCode} />
       <NotFound
-        error={null}
         message={
           props.statusCode
             ? "An error " + props.statusCode + "occurred on server"

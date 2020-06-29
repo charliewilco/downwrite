@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Checkbox from "./checkbox";
-import { Routes } from "../pages/routes";
+import { Routes } from "../utils/routes";
 
 interface ILegalProps {
   name: string;

@@ -64,7 +64,7 @@ export default function NewEntryPage() {
             </div>
           </aside>
           <Editor
-            editorCommand={EDITOR_COMMAND}
+            editorCommand={EDITOR_COMMAND as any}
             editorState={values.editorState}
             onChange={editorState => setFieldValue("editorState", editorState)}
             onSave={handleSubmit}
