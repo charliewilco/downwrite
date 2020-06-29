@@ -1,6 +1,6 @@
 name: Node CI
 
-on: [push,pull_request]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -10,7 +10,17 @@ jobs:
       matrix:
         node-version: [12.x]
 
+    services:
+      mongodb:
+        image: mongo:3.4.23
+        ports:
+          - 27017:27017
+
     steps:
+      - uses: actions/cache@v1
+        with:
+          path: ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
       - uses: actions/checkout@v1
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -24,3 +34,5 @@ jobs:
         run: yarn typecheck
       - name: Test
         run: yarn test:ci
+        env:
+          DB_ADDRESS: localhost:27017
