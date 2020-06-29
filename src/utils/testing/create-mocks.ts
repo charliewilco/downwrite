@@ -1,6 +1,6 @@
 import * as Draft from "draft-js";
-import uuid from "uuid/v4";
-import { IPost } from "../graphql/transform";
+import { v4 as uuid } from "uuid";
+import { IPostModel } from "../../lib/models";
 
 const uid = Math.floor(Math.random() * 678) + 1;
 
@@ -10,7 +10,7 @@ export const createdUser = {
   password: "Because1234"
 };
 
-export const createMockPost = (overides?: Partial<IPost>): IPost => {
+export const createMockPost = (overides?: Partial<IPostModel>): IPostModel => {
   const post = Draft.EditorState.createWithContent(
     Draft.ContentState.createFromText("Hello")
   );
@@ -31,10 +31,10 @@ export const createMockPost = (overides?: Partial<IPost>): IPost => {
       excerpt: "Something is happening here"
     },
     overides || {}
-  );
+  ) as any;
 };
 
-export const createMockPosts = (count: number): IPost[] => {
+export const createMockPosts = (count: number): IPostModel[] => {
   return Array(count || 1)
     .fill(null)
     .map(() => createMockPost({ title: "Mocked Posts" }));
@@ -42,7 +42,7 @@ export const createMockPosts = (count: number): IPost[] => {
 
 export const createEditorState = (content?: string): Draft.EditorState => {
   const state = Draft.EditorState.createWithContent(
-    Draft.ContentState.createFromText("Hello")
+    Draft.ContentState.createFromText(content || "Hello")
   );
 
   return state;

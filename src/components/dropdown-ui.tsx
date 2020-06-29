@@ -1,65 +1,84 @@
-import * as React from "react";
-import { useRouter } from "next/router";
-import * as Reach from "@reach/menu-button";
+import { forwardRef, useContext } from "react";
+import Link from "next/link";
+import { Menu, MenuList, MenuItem, MenuButton, MenuLink } from "@reach/menu-button";
+import {
+  FiLogOut,
+  FiBook,
+  FiEdit3,
+  FiSettings,
+  FiSun,
+  FiMoon
+} from "react-icons/fi";
+import { Routes } from "../utils/routes";
 import { NavIcon } from "./icons";
 import User from "./user";
-import { AuthContext, AuthContextType } from "./auth";
+import { useAuthContext } from "./auth";
 import { NightModeContext, INightModeContext } from "./night-mode";
 
-interface IMenuEmojiProps {
-  label: string;
-}
-
-function MenuEmoji(props: React.PropsWithChildren<IMenuEmojiProps>) {
+const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) => {
   return (
-    <span role="img" aria-label={props.label}>
-      {props.children}{" "}
-    </span>
+    <Link passHref href={to}>
+      <a ref={ref} {...props} />
+    </Link>
   );
-}
+});
 
 export default function DropdownUI() {
-  const [auth, { signOut }] = React.useContext<AuthContextType>(AuthContext);
-  const darkMode = React.useContext<INightModeContext>(NightModeContext);
-  const router = useRouter();
+  const [auth, { signOut }] = useAuthContext();
+  const darkMode = useContext<INightModeContext>(NightModeContext);
 
   return (
-    <Reach.Menu>
-      <Reach.MenuButton className="DropdownMenuButton">
+    <Menu>
+      <MenuButton className="DropdownMenuButton">
         <NavIcon className="icon" />
-      </Reach.MenuButton>
-      <Reach.MenuList className="Sheet DropdownMenuList">
-        <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
-        <Reach.MenuLink onClick={() => router.push("/")} as="a">
-          <MenuEmoji label="Stack of books">📚</MenuEmoji>
+      </MenuButton>
+      <MenuList className="Sheet DropdownMenuList">
+        {auth.name && (
+          <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
+        )}
+        <MenuLink to={Routes.INDEX} as={NextMenuLink}>
+          <span role="img" aria-label="Stack of books">
+            <FiBook size={16} />
+          </span>
           All Entries
-        </Reach.MenuLink>
-        <Reach.MenuLink onSelect={() => router.push("/new")} as="a">
-          <MenuEmoji label="Writing with a Pen">✍️</MenuEmoji>
+        </MenuLink>
+        <MenuLink to={Routes.NEW} as={NextMenuLink}>
+          <span role="img" aria-label="Writing with a Pen">
+            <FiEdit3 size={16} />
+          </span>
           Create New Entry
-        </Reach.MenuLink>
-        <Reach.MenuLink onSelect={() => router.push("/settings")} as="a">
-          <MenuEmoji label="Gear">⚙️</MenuEmoji>
+        </MenuLink>
+        <MenuLink to={Routes.SETTINGS} as={NextMenuLink}>
+          <span role="img" aria-label="Gear">
+            <FiSettings size={16} />
+          </span>
           Settings
-        </Reach.MenuLink>
-        <Reach.MenuItem onSelect={darkMode.action.onChange}>
+        </MenuLink>
+
+        <MenuItem onSelect={darkMode.action.onChange}>
           {darkMode.night ? (
-            <React.Fragment>
-              <MenuEmoji label="Sun smiling">🌞</MenuEmoji>
+            <>
+              <span role="img" aria-label="Sun smiling">
+                <FiSun size={16} />
+              </span>
               Switch to Light Mode
-            </React.Fragment>
+            </>
           ) : (
-            <React.Fragment>
-              <MenuEmoji label="Moon">🌙</MenuEmoji>
+            <>
+              <span role="img" aria-label="Moon">
+                <FiMoon size={16} />
+              </span>
               Switch to Dark Mode
-            </React.Fragment>
+            </>
           )}
-        </Reach.MenuItem>
-        <Reach.MenuItem onSelect={signOut}>
-          <MenuEmoji label="Fearful face">😨</MenuEmoji>
+        </MenuItem>
+        <MenuItem onSelect={signOut}>
+          <span role="img" aria-label="Fearful face">
+            <FiLogOut size={16} />
+          </span>
           Sign Out
-        </Reach.MenuItem>
-      </Reach.MenuList>
-    </Reach.Menu>
+        </MenuItem>
+      </MenuList>
+    </Menu>
   );
 }

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useMemo } from "react";
 import * as Draft from "draft-js";
 
 interface IWordCounterProps {
@@ -33,7 +33,7 @@ function getWordCount(editorState: Draft.EditorState): number {
 }
 
 export default function WordCounter(props: IWordCounterProps): JSX.Element {
-  const displayCount = React.useMemo<number>(() => {
+  const displayCount = useMemo<number>(() => {
     const selection = getSelectionCount(props.editorState);
     const words = getWordCount(props.editorState);
     return selection > 0 ? selection : words;

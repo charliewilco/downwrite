@@ -1,7 +1,7 @@
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import fakeMarkdown from "./fake-markdown";
-import { IUser } from "../graphql/transform";
 import { IEntry, IPreview, IAuthor } from "../generated";
+import { IUserModel } from "../../lib/models";
 
 export class FixtureData {
   private fakePostContent: string = fakeMarkdown();
@@ -57,7 +57,7 @@ export class FixtureData {
     return preview;
   }
 
-  public createUser(): IUser {
+  public createUser(): Partial<IUserModel> {
     return {
       username: "test-user",
       email: "test@test.com",

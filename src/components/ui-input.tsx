@@ -1,5 +1,5 @@
-import * as React from "react";
-import uuid from "uuid/v4";
+import { useRef, useReducer } from "react";
+import { v4 as uuid } from "uuid";
 
 import classNames from "../utils/classnames";
 
@@ -44,7 +44,7 @@ interface IInputAction {
   type: InputAction;
 }
 
-function inputReducer(state: IInputState, action: IInputAction): IInputState {
+function inputReducer(_: IInputState, action: IInputAction): IInputState {
   switch (action.type) {
     case InputAction.BLUR:
       return { focused: false };
@@ -56,9 +56,9 @@ function inputReducer(state: IInputState, action: IInputAction): IInputState {
 }
 
 export default function UIInput({ testID, label, ...props }: IUIInputProps) {
-  const id = React.useRef(uuid());
+  const id = useRef(uuid());
 
-  const [state, dispatch] = React.useReducer(inputReducer, {
+  const [state, dispatch] = useReducer(inputReducer, {
     focused: false
   });
 

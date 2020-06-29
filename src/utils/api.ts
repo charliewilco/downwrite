@@ -1,7 +1,4 @@
 import { URLEndpoints } from "./urls";
-import { __IS_DEV__, __IS_BROWSER__ } from "./dev";
-
-import "isomorphic-unfetch";
 import { Omit } from "./types";
 
 /**
@@ -35,16 +32,9 @@ export const DEFAULT_URL = "http://localhost:3000";
  * @param method
  * @param token
  */
-export const createHeader = (
-  method: HeaderMethod = "GET",
-  token?: string
-): RequestInit => {
+export const createHeader = (method: HeaderMethod = "GET"): RequestInit => {
   return {
     method,
-    headers: {
-      // "Content-Type": "application/json",
-      Authorization: token
-    },
     mode: "cors",
     cache: "default"
   };
@@ -64,7 +54,7 @@ export type SettingsBody = Omit<ICreateUserBody, "password">;
 export async function updateSettings(body: SettingsBody, options: IOptions) {
   const url = URLEndpoints.create(Endpoints.SETTINGS_ENDPOINT, options.host);
   const settings = await fetch(url, {
-    ...createHeader("POST", options.token),
+    ...createHeader("POST"),
     body: JSON.stringify(body)
   }).then(res => res.json());
 
@@ -78,7 +68,7 @@ export async function updatePassword<T>(body: T, options: IOptions): Promise<any
   const url = URLEndpoints.create(Endpoints.PASSWORD_ENDPOINT, options.host);
 
   const password = await fetch(url, {
-    ...createHeader("POST", options.token),
+    ...createHeader("POST"),
     body: JSON.stringify(body)
   }).then(res => res.json());
 

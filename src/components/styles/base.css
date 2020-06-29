@@ -1,4 +1,9 @@
+@import "~typeface-ibm-plex-sans";
+@import "~typeface-ibm-plex-mono";
 @import "~@reach/tabs/styles.css";
+@import "~@reach/menu-button/styles.css";
+@import "~@reach/dialog/styles.css";
+
 @import "./variables.css";
 @import "./reset.css";
 @import "./level.css";

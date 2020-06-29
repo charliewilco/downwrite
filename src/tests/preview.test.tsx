@@ -1,30 +1,12 @@
 import * as React from "react";
 import "@testing-library/jest-dom";
-import { LinkProps } from "next/link";
 import { render, wait } from "@testing-library/react";
-import { MockedProvider, MockedResponse } from "@apollo/react-testing";
+import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import { draftToMarkdown } from "markdown-draft-js";
-import { PreviewEntry } from "../pages/preview";
+import PreviewEntry from "../pages/preview/[id]";
 import Content from "../components/content";
 import { createMockPost } from "../utils/testing";
 import { PreviewDocument } from "../utils/generated";
-
-jest.mock("next/link", () => {
-  return jest.fn((props: React.PropsWithChildren<LinkProps>) => (
-    <>{props.children}</>
-  ));
-});
-
-jest.mock("next/router", () => ({
-  useRouter() {
-    return {
-      route: "/preview?id=3efc9fe8-ab26-4316-9453-889fe444a2a1",
-      pathname: "/preview?id=3efc9fe8-ab26-4316-9453-889fe444a2a1",
-      query: { id: "3efc9fe8-ab26-4316-9453-889fe444a2a1" },
-      asPath: ""
-    };
-  }
-}));
 
 const previewMock: MockedResponse = {
   request: {
@@ -49,11 +31,25 @@ const previewMock: MockedResponse = {
   }
 };
 
+jest.mock("next/router", () => ({
+  useRouter() {
+    return {
+      route: "/",
+      pathname: "/preview",
+      query: "",
+      asPath: ""
+    };
+  }
+}));
 describe("<Preview />", () => {
   it("loads server content", async () => {
+    // const pathname = "/preview/3efc9fe8-ab26-4316-9453-889fe444a2a1";
     const { getByTestId, container } = render(
       <MockedProvider mocks={[previewMock]} addTypename={false}>
-        <PreviewEntry />
+        <PreviewEntry
+          id="3efc9fe8-ab26-4316-9453-889fe444a2a1"
+          initialApolloState={{}}
+        />
       </MockedProvider>
     );
     await wait(() => getByTestId("PREVIEW_ENTRTY_TITLE"));

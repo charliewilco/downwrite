@@ -1,4 +1,4 @@
-import { useRef, useCallback, createElement, MutableRefObject } from "react";
+import { useRef, useCallback, MutableRefObject } from "react";
 import fm from "front-matter";
 import * as Draft from "draft-js";
 import { useDropzone } from "react-dropzone";
@@ -22,36 +22,39 @@ interface IMarkdown {
   };
 }
 
-function useFileReader(): MutableRefObject<FileReader> {
-  const reader = useRef<FileReader>(__IS_BROWSER__ && new FileReader());
-
-  return reader;
+function useFileReader(): MutableRefObject<FileReader | null> {
+  return useRef<FileReader>(__IS_BROWSER__ ? new FileReader() : null);
 }
 
 type DropCallback = (files: File[]) => void;
 
 export default function Uploader(props: IUploadProps): JSX.Element {
   const reader = useFileReader();
-  const onDrop = useCallback<DropCallback>((acceptedFiles: File[]) => {
-    function extractMarkdown(files: File[]): void {
-      reader.current.onload = () => {
-        let md: IMarkdown = fm(reader.current.result as string);
+  const onDrop = useCallback<DropCallback>(
+    (acceptedFiles: File[]) => {
+      function extractMarkdown(files: File[]): void {
+        if (reader.current !== null) {
+          reader.current.onload = () => {
+            let md: IMarkdown = fm(reader.current!.result as string);
 
-        let markdown = markdownToDraft(md.body, { preserveNewlines: true });
+            let markdown = markdownToDraft(md.body, { preserveNewlines: true });
 
-        return props.onParsed({
-          title: md.attributes.title || "",
-          editorState: Draft.EditorState.createWithContent(
-            Draft.convertFromRaw(markdown)
-          )
-        });
-      };
+            return props.onParsed({
+              title: md.attributes.title || "",
+              editorState: Draft.EditorState.createWithContent(
+                Draft.convertFromRaw(markdown)
+              )
+            });
+          };
 
-      reader.current.readAsText(files[0]);
-    }
+          reader.current.readAsText(files[0]);
+        }
+      }
 
-    extractMarkdown(acceptedFiles);
-  }, []);
+      extractMarkdown(acceptedFiles);
+    },
+    [props, reader]
+  );
 
   const { getRootProps } = useDropzone({
     onDrop,
@@ -60,12 +63,9 @@ export default function Uploader(props: IUploadProps): JSX.Element {
     accept: ["text/markdown", "text/x-markdown", "text/plain"]
   });
 
-  return createElement(
-    "div",
-    {
-      ...getRootProps(),
-      style: { border: 0, width: "100%" }
-    },
-    props.children
+  return (
+    <div {...getRootProps()} style={{ border: 0, width: "100%" }}>
+      {props.children}
+    </div>
   );
 }

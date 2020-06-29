@@ -2,7 +2,6 @@ import Cookies from "universal-cookie";
 import { IncomingMessage } from "http";
 
 export function splitCookies(cookies: string) {
-  console.log(cookies);
   const map = new Map();
 
   const cookieJar = cookies.split("; ");

@@ -1,15 +1,15 @@
-import * as React from "react";
 import Link from "next/link";
 import Checkbox from "./checkbox";
+import { Routes } from "../utils/routes";
 
 interface ILegalProps {
   name: string;
   checked: boolean;
-  onChange: (x: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange(x: React.ChangeEvent<HTMLInputElement>): void;
 }
 
 const LegalLink = () => (
-  <Link href="/legal">
+  <Link href={Routes.LOGIN} passHref>
     <a>legal stuff</a>
   </Link>
 );

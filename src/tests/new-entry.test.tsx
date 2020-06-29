@@ -1,11 +1,9 @@
 import * as React from "react";
 import "@testing-library/jest-dom";
-
+import preloadAll from "../utils/testing/preload";
 import { render } from "@testing-library/react";
-import { MockedProvider, MockedResponse } from "@apollo/react-testing";
-import { NewEditor } from "../pages/new";
-
-jest.mock("next/router");
+import { MockedProvider, MockedResponse } from "@apollo/client/testing";
+import NewEditor from "../pages/new";
 
 function createPage(mocks?: MockedResponse[]) {
   return render(
@@ -15,10 +13,14 @@ function createPage(mocks?: MockedResponse[]) {
   );
 }
 
+beforeAll(async () => {
+  await preloadAll();
+});
+
 describe("New Editor", () => {
   it("can render new editor", () => {
     const { container } = createPage();
 
-    expect(container.firstChild).toBeInTheDOM();
+    expect(container.firstChild).toBeInTheDocument();
   });
 });

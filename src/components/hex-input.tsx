@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 
 interface IHexInputProps {
   onChange: (color: string) => void;
@@ -10,7 +10,7 @@ function isValidHex(hex: string): boolean {
 }
 
 export default function FunHexInput(props: IHexInputProps): JSX.Element {
-  const [hex, setHexColor] = React.useState<string>(props.initialValue || "");
+  const [hex, setHexColor] = useState<string>(props.initialValue || "");
 
   function handleChange({
     target: { value }
@@ -18,7 +18,7 @@ export default function FunHexInput(props: IHexInputProps): JSX.Element {
     setHexColor(value);
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     const color = "#" + hex;
     const isValid = isValidHex(color);
 

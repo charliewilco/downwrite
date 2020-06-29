@@ -1,19 +1,16 @@
-import * as React from "react";
 import { useFormik } from "formik";
-import "isomorphic-unfetch";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
 import LegalBoilerplate from "./legal-boilerplate";
-import useLoginFns, { IRegisterValues } from "../hooks/login";
+import { useLoginFns, IRegisterValues } from "../hooks";
 import { RegisterFormSchema } from "../utils/validations";
-import { StringTMap } from "../utils/types";
 
-interface IInput extends StringTMap<string> {
-  name?: string;
-  type?: string;
-  placeholder?: string;
-  label?: string;
-  autoComplete?: string;
+interface IInput {
+  name: string;
+  type: string;
+  placeholder: string;
+  label: string;
+  autoComplete: string;
 }
 
 const REGISTER_INPUTS: IInput[] = [

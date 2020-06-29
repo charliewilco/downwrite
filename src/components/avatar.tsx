@@ -1,4 +1,3 @@
-import * as React from "react";
 import classNames from "../utils/classnames";
 
 export type GradientColors = string[];
@@ -43,10 +42,12 @@ export default function Avatar(props: IAvatarProps): JSX.Element {
     "--colors-b": colors.b
   } as React.CSSProperties;
 
-  return React.createElement("div", {
-    role: "img",
-    "aria-label": "Gradient in a circle to represent a user",
-    style,
-    className
-  });
+  return (
+    <div
+      className={className}
+      style={style}
+      role="img"
+      aria-label="Gradient in a circle to represent a user"
+    />
+  );
 }

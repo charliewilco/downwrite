@@ -1,5 +1,5 @@
 import PluginsEditor from "draft-js-plugins-editor";
-import * as React from "react";
+import { useRef, useContext } from "react";
 import * as Draft from "draft-js";
 import Prism from "prismjs";
 import createMarkdownPlugin from "draft-js-markdown-plugin";
@@ -11,7 +11,7 @@ import * as DefaultStyles from "../utils/default-styles";
 type Handler = "handled" | "not-handled";
 
 interface IEditorProps {
-  editorCommand: string;
+  editorCommand: Draft.DraftEditorCommand;
   editorState: Draft.EditorState;
   onChange: (e: Draft.EditorState) => void;
   onSave: () => void;
@@ -24,7 +24,7 @@ function getBlockStyle(block: Draft.ContentBlock) {
     case "blockquote":
       return "RichEditor-blockquote";
     default:
-      return null;
+      return "";
   }
 }
 
@@ -39,8 +39,8 @@ const styleMap = {
 };
 
 export default function DownwriteEditor(props: IEditorProps) {
-  let editorRef = React.useRef<PluginsEditor>(null);
-  const { monospace } = React.useContext<ILocalUISettings>(LocalUISettings);
+  let editorRef = useRef<PluginsEditor>(null);
+  const { monospace } = useContext<ILocalUISettings>(LocalUISettings);
 
   const plugins = __IS_TEST__
     ? []
@@ -61,7 +61,7 @@ export default function DownwriteEditor(props: IEditorProps) {
   }
 
   function onFocus(): void {
-    editorRef.current.focus();
+    editorRef.current!.focus();
   }
 
   function onTab(e: React.KeyboardEvent<{}>): void {
@@ -69,7 +69,7 @@ export default function DownwriteEditor(props: IEditorProps) {
     props.onChange(Draft.RichUtils.onTab(e, props.editorState, maxDepth));
   }
 
-  function saveKeyListener(e: React.KeyboardEvent): string {
+  function saveKeyListener(e: React.KeyboardEvent): Draft.DraftEditorCommand | null {
     if (e.keyCode === 83 && Draft.KeyBindingUtil.hasCommandModifier(e)) {
       return props.editorCommand;
     }

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useReducer } from "react";
 import Card from "./card";
 import LayoutControl from "./layout-control";
 import PostListItem from "./post-list-item";
@@ -10,7 +10,7 @@ export type IFeedList = Pick<IEntry, "title" | "dateAdded" | "id" | "public">[];
 
 interface IPostListProps {
   posts: IFeedList;
-  onSelect: ({ id }: IPartialFeedItem) => void;
+  onSelect: ({ id, title }: IPartialFeedItem) => void;
 }
 
 enum ListActions {
@@ -46,7 +46,7 @@ function listReducer(
 }
 
 export default function PostList(props: IPostListProps): JSX.Element {
-  const [state, dispatch] = React.useReducer(listReducer, {
+  const [state, dispatch] = useReducer(listReducer, {
     isGridView: true
   });
 
@@ -58,7 +58,7 @@ export default function PostList(props: IPostListProps): JSX.Element {
   );
 
   return (
-    <React.Fragment>
+    <>
       <header className="PostListHeader">
         <h1 className="ContainerTitle">Entries</h1>
         <LayoutControl
@@ -70,14 +70,27 @@ export default function PostList(props: IPostListProps): JSX.Element {
       <ul className={className} data-testid={testID}>
         {props.posts.map((p, i) =>
           !state.isGridView ? (
-            <PostListItem key={i} {...p} onDelete={props.onSelect} />
+            <PostListItem
+              key={i}
+              title={p.title!}
+              dateAdded={p.dateAdded!}
+              public={p.public!}
+              id={p.id!}
+              onDelete={props.onSelect}
+            />
           ) : (
             <li className="GridItem" key={i}>
-              <Card {...p} onDelete={props.onSelect} />
+              <Card
+                title={p.title!}
+                dateAdded={p.dateAdded!}
+                public={p.public!}
+                id={p.id!}
+                onDelete={props.onSelect}
+              />
             </li>
           )
         )}
       </ul>
-    </React.Fragment>
+    </>
   );
 }

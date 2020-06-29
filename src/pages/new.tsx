@@ -1,31 +1,26 @@
-import * as React from "react";
+import { useRef } from "react";
+import Head from "next/head";
+import dynamic from "next/dynamic";
 import * as Draft from "draft-js";
 import { useFormik } from "formik";
-import dynamic from "next/dynamic";
-import Head from "next/head";
-import { withApolloAuth } from "../utils/apollo-auth";
-import { IFields, useNew } from "../hooks/create-entry";
-import useOffline from "../hooks/offline";
+import { useOffline, useNewEntry, INewEditorValues } from "../hooks";
 import { Input } from "../components/editor-input";
 import { Button } from "../components/button";
 import Upload from "../components/upload";
-import Loading from "../components/loading";
 
-const Editor = dynamic(() => import("../components/editor"), {
-  loading: () => <Loading size={50} />
-});
+const Editor = dynamic(() => import("../components/editor"));
 
 const EDITOR_COMMAND = "create-new-post";
 
-export const NewEditor = (): JSX.Element => {
-  const initialValues = React.useRef<IFields>({
+export default function NewEntryPage() {
+  const initialValues = useRef<INewEditorValues>({
     title: "",
     editorState: Draft.EditorState.createEmpty()
   });
-  const [createNewPost] = useNew();
+  const [createNewPost] = useNewEntry();
   const isOffline = useOffline();
 
-  function onSubmit(values: IFields): void {
+  function onSubmit(values: INewEditorValues): void {
     createNewPost(values);
   }
 
@@ -36,7 +31,7 @@ export const NewEditor = (): JSX.Element => {
   });
 
   return (
-    <React.Fragment>
+    <>
       <form
         className="Wrapper Wrapper--md"
         style={{
@@ -69,14 +64,13 @@ export const NewEditor = (): JSX.Element => {
             </div>
           </aside>
           <Editor
-            editorCommand={EDITOR_COMMAND}
+            editorCommand={EDITOR_COMMAND as any}
             editorState={values.editorState}
             onChange={editorState => setFieldValue("editorState", editorState)}
             onSave={handleSubmit}
           />
         </Upload>
       </form>
-    </React.Fragment>
+    </>
   );
-};
-export default withApolloAuth(NewEditor, { ssr: false });
+}

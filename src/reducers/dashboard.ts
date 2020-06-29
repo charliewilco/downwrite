@@ -1,7 +1,7 @@
 import produce from "immer";
 
 export interface IDashboardState {
-  selectedPost: IPartialFeedItem;
+  selectedPost: null | IPartialFeedItem;
   modalOpen: boolean;
 }
 
@@ -42,7 +42,9 @@ export const reducer = produce(
       case DashActions.CLOSE_MODAL:
       case DashActions.DELETED:
       case DashActions.CANCEL_DELETE: {
-        draft = initialState();
+        const state = initialState();
+        draft.modalOpen = state.modalOpen;
+        draft.selectedPost = state.selectedPost;
         break;
       }
 

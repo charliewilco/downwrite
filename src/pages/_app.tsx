@@ -1,40 +1,36 @@
-import * as React from "react";
-import App, { AppProps, AppContext } from "next/app";
+import { memo } from "react";
+import { AppProps } from "next/app";
 import is from "@sindresorhus/is";
+import { ApolloProvider } from "@apollo/client";
+import { RecoilRoot } from "recoil";
 import { UIShell } from "../components/ui-shell";
 import { AuthProvider } from "../components/auth";
-import Cookies from "universal-cookie";
 import "../components/styles/base.css";
+import { useApollo } from "../lib/apollo";
+import { initializeState } from "../reducers/app-state";
 
-interface IAppProps extends AppProps {
-  token: string;
+interface IAppProps {
+  token?: string;
 }
 
-export default class Downwrite extends App<IAppProps> {
-  public static async getInitialProps({ Component, ctx, ...props }: AppContext) {
-    let pageProps = {};
-    const cookies = new Cookies(ctx.req);
-    const token = cookies.get<string>("DW_TOKEN");
+const MemoUIShell = memo(UIShell);
 
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
+const DW_TOKEN = "";
 
-    return { pageProps, token };
-  }
+export default function AppWrapper({ Component, pageProps }: AppProps<IAppProps>) {
+  const authed = !is.emptyString(DW_TOKEN);
 
-  public render(): JSX.Element {
-    const { Component, pageProps, token } = this.props;
-    const authed = !is.emptyString(token);
+  const client = useApollo(pageProps.initialApolloState);
 
-    console.log(token, "TOKEN FROM _app.tsx");
-
-    return (
-      <AuthProvider token={token} authed={authed}>
-        <UIShell>
-          <Component {...pageProps} />
-        </UIShell>
-      </AuthProvider>
-    );
-  }
+  return (
+    <ApolloProvider client={client}>
+      <RecoilRoot initializeState={initializeState}>
+        <AuthProvider token={DW_TOKEN} authed={authed}>
+          <MemoUIShell>
+            <Component {...pageProps} />
+          </MemoUIShell>
+        </AuthProvider>
+      </RecoilRoot>
+    </ApolloProvider>
+  );
 }

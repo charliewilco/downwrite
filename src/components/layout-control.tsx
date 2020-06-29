@@ -1,37 +1,34 @@
-import * as React from "react";
+import { useCallback } from "react";
 import classNames from "../utils/classnames";
-import { useSwitchProps } from "../hooks/toggle";
+import { useSwitchProps } from "../hooks";
 
 interface ILayoutControl {
   layout: boolean;
   layoutChange: (x: boolean) => void;
 }
 
-export default function LayoutControl(props: ILayoutControl) {
-  const { onClick, ...switchProps } = useSwitchProps(
-    props.layout,
-    "Grid or List Layout"
-  );
+export default function LayoutControl({ layout, layoutChange }: ILayoutControl) {
+  const { onClick, ...switchProps } = useSwitchProps(layout, "Grid or List Layout");
 
-  React.useEffect(
-    function() {
-      props.layoutChange(switchProps["aria-checked"]);
+  const wrappedLayoutChange = useCallback(
+    (val: boolean) => {
+      onClick(val);
+      layoutChange(val);
     },
-    [switchProps["aria-checked"]]
+    [onClick, layoutChange]
   );
-
   return (
     <div {...switchProps}>
       <div
         data-testid="LAYOUT_CONTROL_GRID"
-        className={classNames("LayoutTrigger", props.layout && "active")}
-        onClick={() => onClick(true)}>
+        className={classNames("LayoutTrigger", layout && "active")}
+        onClick={() => wrappedLayoutChange(true)}>
         Grid
       </div>
       <div
-        className={classNames("LayoutTrigger", !props.layout && "active")}
+        className={classNames("LayoutTrigger", !layout && "active")}
         data-testid="LAYOUT_CONTROL_LIST"
-        onClick={() => onClick(false)}>
+        onClick={() => wrappedLayoutChange(false)}>
         List
       </div>
     </div>

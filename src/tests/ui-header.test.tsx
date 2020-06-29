@@ -1,5 +1,4 @@
 import * as React from "react";
-import { LinkProps } from "next/link";
 import { render } from "@testing-library/react";
 import { UIHeader } from "../components/header";
 import { MockAuthProvider } from "../utils/testing";
@@ -9,12 +8,6 @@ jest.mock("universal-cookie", () => {
 });
 jest.mock("jwt-decode");
 
-jest.mock("next/link", () => {
-  return jest.fn((props: React.PropsWithChildren<LinkProps>) => (
-    <>{props.children}</>
-  ));
-});
-
 describe("Header Component", () => {
   it("contains application name", () => {
     const utils = render(
@@ -23,7 +16,7 @@ describe("Header Component", () => {
       </MockAuthProvider>
     );
 
-    const title = utils.container.querySelector("h1");
+    const title = utils.container.querySelector("h1")!;
     const header = utils.container.querySelector("header");
 
     expect(title.textContent).toBe("Downwrite");

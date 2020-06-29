@@ -1,5 +1,3 @@
-import * as React from "react";
-
 interface ILoadingProps {
   size: number;
   color?: string;
@@ -9,7 +7,7 @@ interface ILoadingProps {
 export default function Loading(props: ILoadingProps): JSX.Element {
   return (
     <div
-      role="image"
+      role="img"
       className="Loading"
       style={
         { "--size": props.size || 75, height: props.size } as React.CSSProperties

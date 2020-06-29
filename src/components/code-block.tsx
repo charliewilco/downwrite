@@ -1,4 +1,3 @@
-import * as React from "react";
 import PrismCode from "react-prism";
 
 interface ICodeBlockProps {
@@ -10,13 +9,10 @@ export default function CodeBlock({
   language = "javascript",
   value
 }: ICodeBlockProps) {
-  return React.createElement(
-    "pre",
-    {},
-    React.createElement(
-      PrismCode,
-      { className: `language-${language || "javascript"}` },
-      value
-    )
+  const className = `language-${language || "javascript"}`;
+  return (
+    <pre>
+      <PrismCode value={value} className={className} />
+    </pre>
   );
 }

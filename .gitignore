@@ -9,6 +9,7 @@ coverage
 # production
 build
 .next/
+.now/
 
 # misc
 .DS_Store

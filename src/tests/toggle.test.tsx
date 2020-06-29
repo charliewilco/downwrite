@@ -2,7 +2,7 @@ import "jest";
 import * as React from "react";
 import "@testing-library/jest-dom";
 import { render, fireEvent } from "@testing-library/react";
-import { useToggle } from "../hooks/toggle";
+import { useToggle } from "../hooks";
 
 const ToggleDemo = () => {
   const [isOpen, { onToggle }] = useToggle();
@@ -34,7 +34,7 @@ describe("<Toggle />", () => {
   it("can be toggled open", () => {
     let { container } = render(<ToggleDemo />);
 
-    fireEvent.click(container.querySelector(`[data-testid="TOGGLE_BUTTON"]`));
+    fireEvent.click(container.querySelector(`[data-testid="TOGGLE_BUTTON"]`)!);
     expect(container.querySelector(`[data-testid="TOGGLE_OPEN"]`)).toHaveTextContent(
       "I am open"
     );

@@ -1,13 +1,11 @@
-import * as React from "react";
 import format from "date-fns/format";
-import parseISO from "date-fns/parseISO";
 
 interface ITimeMarkProps {
   dateAdded: Date;
 }
 
 function Time(props: ITimeMarkProps) {
-  const date = parseISO(props.dateAdded.toString());
+  const date = new Date(props.dateAdded.toString());
 
   return <time dateTime={date.toString()}>{format(date, "dd MMMM yyyy")}</time>;
 }

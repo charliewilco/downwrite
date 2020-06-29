@@ -1,6 +1,6 @@
-import * as React from "react";
 import Link from "next/link";
 import Avatar from "./avatar";
+import { Routes } from "../utils/routes";
 
 interface IAuthorProps {
   authed: boolean;
@@ -16,17 +16,17 @@ export default function Author(props: IAuthorProps): JSX.Element {
         <h6 className="AuthorBlockTitle">Post from {props.name}</h6>
       </header>
       {!props.authed && (
-        <React.Fragment>
+        <>
           <hr />
           <p className="AuthorBlockContent">
             <span>
               You can write and share on Downwrite, you can sign up or log in{" "}
             </span>
-            <Link href="/login">
+            <Link href={Routes.LOGIN} passHref>
               <a>here</a>
             </Link>
           </p>
-        </React.Fragment>
+        </>
       )}
     </aside>
   );

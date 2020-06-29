@@ -76,12 +76,17 @@
 /* Item */
 
 .PostItem {
-  padding: 16px 0;
+  padding: 16px 8px;
+  border-left: 2px solid transparent;
 }
 
 .PostItemTitle {
   font-size: 16px;
   font-weight: 700;
+}
+
+.PostItem:hover {
+  border-left: 2px solid var(--link);
 }
 
 .PostItem:not(:last-of-type) {

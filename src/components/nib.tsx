@@ -1,5 +1,3 @@
-import * as React from "react";
-
 export default function Nib(): JSX.Element {
   return (
     <div className="NibContainer">

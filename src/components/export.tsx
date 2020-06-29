@@ -1,4 +1,3 @@
-import * as React from "react";
 import * as Draft from "draft-js";
 import { draftToMarkdown } from "markdown-draft-js";
 import FileSaver from "file-saver";
@@ -39,7 +38,7 @@ export default function UIMarkdownExport(props: IExportProps) {
     });
 
   const toMarkdown = ({ title, content, date }: IExportCallback): void => {
-    let localFileExtension = localStorage.getItem(LocalSettings.EXTENSION);
+    let localFileExtension = localStorage.getItem(LocalSettings.EXTENSION) || "";
     let extension = localFileExtension.replace(/\./g, "") || "md";
 
     try {

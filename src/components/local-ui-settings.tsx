@@ -1,4 +1,4 @@
-import * as React from "react";
+import { createContext, useReducer, useEffect } from "react";
 import * as DefaultStyles from "../utils/default-styles";
 
 export interface ILocalUISettings {
@@ -8,8 +8,8 @@ export interface ILocalUISettings {
   };
 }
 
-export const LocalUISettings = React.createContext<ILocalUISettings>({
-  monospace: "",
+export const LocalUISettings = createContext<ILocalUISettings>({
+  monospace: "Operator Mono",
   actions: {
     updateFont() {}
   }
@@ -33,58 +33,54 @@ interface ILocalUISettingsAction {
 }
 
 function localSettingsReducer(
-  state: ILocalUISettingsState,
+  _: ILocalUISettingsState,
   action: ILocalUISettingsAction
 ): ILocalUISettingsState {
   switch (action.type) {
     case SettingsAction.UPDATE_FONT:
-      return { monospace: action.payload.font };
+      return { monospace: action.payload.font! };
     default:
       throw new Error("Must provide an action.type");
   }
 }
 
 function useLocalUISettings(): ILocalUISettings {
-  const [state, dispatch] = React.useReducer(localSettingsReducer, {
+  const [state, dispatch] = useReducer(localSettingsReducer, {
     monospace: DefaultStyles.Fonts.monospace
   });
 
-  React.useEffect(() => {
-    if (typeof window !== undefined) {
-      const local = localStorage.getItem("DW_EDITOR_FONT");
-      if (local) {
+  useEffect(() => {
+    const local = localStorage.getItem("DW_EDITOR_FONT");
+    if (local) {
+      dispatch({
+        type: SettingsAction.UPDATE_FONT,
+        payload: {
+          font: [`${local},`, state.monospace].join(" ")
+        }
+      });
+    }
+  }, [state.monospace]);
+
+  return {
+    ...state,
+    actions: {
+      updateFont: (font: string): void => {
         dispatch({
           type: SettingsAction.UPDATE_FONT,
           payload: {
-            font: [`${local},`, state.monospace].join(" ")
+            font
           }
         });
       }
     }
-  }, []);
-
-  function getUIContext(): ILocalUISettings {
-    return {
-      ...state,
-      actions: {
-        updateFont: (font: string): void => {
-          dispatch({
-            type: SettingsAction.UPDATE_FONT,
-            payload: {
-              font
-            }
-          });
-        }
-      }
-    };
-  }
-
-  return React.useMemo<ILocalUISettings>(() => getUIContext(), [state]);
+  };
 }
 
 export function LocalUISettingsProvider({
   children
 }: ILocalSettingsProps): JSX.Element {
   const value = useLocalUISettings();
-  return React.createElement(LocalUISettings.Provider, { value }, children);
+  return (
+    <LocalUISettings.Provider value={value}>{children}</LocalUISettings.Provider>
+  );
 }

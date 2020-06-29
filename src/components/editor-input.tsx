@@ -1,4 +1,3 @@
-import * as React from "react";
 import classNames from "../utils/classnames";
 
 export function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {

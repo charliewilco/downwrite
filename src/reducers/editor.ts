@@ -14,7 +14,7 @@ export enum EditActions {
 
 export interface IEditorState {
   publicStatus: boolean;
-  editorState: Draft.EditorState;
+  editorState: Draft.EditorState | null;
   title: string;
   initialFocus: boolean;
 }
@@ -27,28 +27,31 @@ export interface IQueryVars {
   id: string;
 }
 
-export function initializer(initialData: {
-  entry: Pick<IEntry, "title" | "dateAdded" | "content" | "public">;
+const DEFAULT_EDITOR_STATE: IEditorState = {
+  editorState: null,
+  title: "",
+  publicStatus: false,
+  initialFocus: false
+};
+
+export function initializer(initialData?: {
+  entry: Pick<IEntry, "title" | "dateAdded" | "content" | "public"> | null;
 }): IEditorState {
-  if (initialData) {
-    const draft = markdownToDraft(initialData.entry.content);
+  console.log("INITIAL DATA EDITOR", initialData);
+  if (!!initialData && initialData.entry !== null) {
+    const draft = markdownToDraft(initialData.entry.content!);
     const editorState = Draft.EditorState.createWithContent(
       Draft.convertFromRaw(draft)
     );
 
     return {
       editorState,
-      title: initialData.entry.title,
-      publicStatus: initialData.entry.public,
+      title: initialData.entry.title || "",
+      publicStatus: !!initialData.entry.public,
       initialFocus: false
     };
   } else {
-    return {
-      editorState: null,
-      title: null,
-      publicStatus: null,
-      initialFocus: false
-    };
+    return DEFAULT_EDITOR_STATE;
   }
 }
 
@@ -65,7 +68,14 @@ export type EditorActions =
 export const reducer = produce((draft: IEditorState, action: EditorActions) => {
   switch (action.type) {
     case EditActions.INITIALIZE_EDITOR: {
-      draft = initializer({ entry: action.payload });
+      const { title, editorState, publicStatus, initialFocus } = initializer({
+        entry: action.payload
+      });
+      draft.editorState = editorState;
+      draft.title = title;
+      draft.publicStatus = publicStatus;
+      draft.initialFocus = initialFocus;
+
       break;
     }
     case EditActions.SET_INITIAL_FOCUS: {
@@ -84,7 +94,5 @@ export const reducer = produce((draft: IEditorState, action: EditorActions) => {
       draft.editorState = action.payload;
       break;
     }
-    default:
-      throw new Error("Must specify type");
   }
 });

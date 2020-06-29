@@ -1,4 +1,3 @@
-import * as React from "react";
 import { ExportIcon } from "./icons";
 
 interface IExportMarkdownButtonProps {

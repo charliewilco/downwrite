@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback } from "react";
 import {
   useTransition,
   animated,
@@ -11,7 +11,7 @@ import {
   NotificationType,
   useUINotifications
 } from "../reducers/notifications";
-import useTimeout from "../hooks/timeout";
+import { useTimeout } from "../hooks";
 
 type Merge<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] } & B;
 
@@ -34,22 +34,15 @@ interface IUIMessageProps {
   onDismiss(m: UINotificationMessage): void;
 }
 
-function Dismissable(props: { onDismiss(): void }): JSX.Element {
-  useTimeout(15000, props.onDismiss);
-  return null;
-}
-
 export function UIMessage(props: IUIMessageProps): JSX.Element {
   const className = getTypeClassName(props.notification, "UINotification");
 
-  const onRemove = React.useCallback(() => props.onDismiss(props.notification), [
-    props.onDismiss,
-    props.notification
-  ]);
+  const onRemove = useCallback(() => props.onDismiss(props.notification), [props]);
+
+  useTimeout(15000, props.notification.dismissable ? onRemove : undefined);
 
   return (
     <div className={className}>
-      {props.notification.dismissable && <Dismissable onDismiss={onRemove} />}
       <div className="UINotification__content">
         <p>
           {props.notification.type !== NotificationType.DEFAULT && (
@@ -101,7 +94,7 @@ export function MessageList() {
         transform: "translate3d(0, -100%, 0) scale(0)",
         height: 0
       },
-      config: (item: UINotificationMessage, state: string) =>
+      config: (_: UINotificationMessage, state: string) =>
         state === "leave" ? [altConfig, config, config] : config
     } as Merge<
       ITransition & React.CSSProperties,

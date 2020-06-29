@@ -1,7 +1,8 @@
 import gql from "graphql-tag";
-import * as ApolloReactCommon from "@apollo/react-common";
-import * as ApolloReactHooks from "@apollo/react-hooks";
+import * as ApolloReactCommon from "@apollo/client";
+import * as ApolloReactHooks from "@apollo/client";
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -119,30 +120,30 @@ export type IUserSettingsInput = {
   email: Maybe<Scalars["String"]>;
 };
 
-export type IAllPostsQueryVariables = {};
+export type IEntryInfoFragment = { __typename?: "Entry" } & Pick<
+  IEntry,
+  "title" | "dateAdded" | "id" | "public"
+>;
+
+export type IAllPostsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type IAllPostsQuery = { __typename?: "Query" } & {
-  feed: Array<
-    { __typename?: "Entry" } & Pick<IEntry, "title" | "dateAdded" | "id" | "public">
-  >;
+  feed: Array<{ __typename?: "Entry" } & IEntryInfoFragment>;
 };
 
-export type IEditQueryVariables = {
+export type IEditQueryVariables = Exact<{
   id: Scalars["ID"];
-};
+}>;
 
 export type IEditQuery = { __typename?: "Query" } & {
   entry: Maybe<
-    { __typename?: "Entry" } & Pick<
-      IEntry,
-      "title" | "dateAdded" | "content" | "public"
-    >
+    { __typename?: "Entry" } & Pick<IEntry, "content"> & IEntryInfoFragment
   >;
 };
 
-export type IPreviewQueryVariables = {
+export type IPreviewQueryVariables = Exact<{
   id: Scalars["ID"];
-};
+}>;
 
 export type IPreviewQuery = { __typename?: "Query" } & {
   preview: Maybe<
@@ -153,44 +154,46 @@ export type IPreviewQuery = { __typename?: "Query" } & {
   >;
 };
 
-export type IUserDetailsQueryVariables = {};
+export type IUserDetailsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type IUserDetailsQuery = { __typename?: "Query" } & {
   settings: Maybe<{ __typename?: "User" } & Pick<IUser, "username" | "email">>;
 };
 
-export type IUpdateEntryMutationVariables = {
+export type IUpdateEntryMutationVariables = Exact<{
   id: Maybe<Scalars["String"]>;
   content: Maybe<Scalars["String"]>;
   title: Maybe<Scalars["String"]>;
   status: Maybe<Scalars["Boolean"]>;
-};
+}>;
 
 export type IUpdateEntryMutation = { __typename?: "Mutation" } & {
-  updateEntry: Maybe<{ __typename?: "Entry" } & Pick<IEntry, "id">>;
+  updateEntry: Maybe<
+    { __typename?: "Entry" } & Pick<IEntry, "content"> & IEntryInfoFragment
+  >;
 };
 
-export type ICreateEntryMutationVariables = {
+export type ICreateEntryMutationVariables = Exact<{
   content: Maybe<Scalars["String"]>;
   title: Maybe<Scalars["String"]>;
-};
+}>;
 
 export type ICreateEntryMutation = { __typename?: "Mutation" } & {
-  createEntry: Maybe<{ __typename?: "Entry" } & Pick<IEntry, "id">>;
+  createEntry: Maybe<{ __typename?: "Entry" } & IEntryInfoFragment>;
 };
 
-export type IRemoveEntryMutationVariables = {
+export type IRemoveEntryMutationVariables = Exact<{
   id: Maybe<Scalars["ID"]>;
-};
+}>;
 
 export type IRemoveEntryMutation = { __typename?: "Mutation" } & {
-  deleteEntry: Maybe<{ __typename?: "Entry" } & Pick<IEntry, "title">>;
+  deleteEntry: Maybe<{ __typename?: "Entry" } & Pick<IEntry, "title" | "id">>;
 };
 
-export type ILoginUserMutationVariables = {
+export type ILoginUserMutationVariables = Exact<{
   username: Scalars["String"];
   password: Scalars["String"];
-};
+}>;
 
 export type ILoginUserMutation = { __typename?: "Mutation" } & {
   authenticateUser: Maybe<
@@ -198,11 +201,11 @@ export type ILoginUserMutation = { __typename?: "Mutation" } & {
   >;
 };
 
-export type ICreateUserMutationVariables = {
+export type ICreateUserMutationVariables = Exact<{
   username: Scalars["String"];
   email: Scalars["String"];
   password: Scalars["String"];
-};
+}>;
 
 export type ICreateUserMutation = { __typename?: "Mutation" } & {
   createUser: Maybe<
@@ -210,15 +213,21 @@ export type ICreateUserMutation = { __typename?: "Mutation" } & {
   >;
 };
 
+export const EntryInfoFragmentDoc = gql`
+  fragment EntryInfo on Entry {
+    title
+    dateAdded
+    id
+    public
+  }
+`;
 export const AllPostsDocument = gql`
   query AllPosts {
     feed {
-      title
-      dateAdded
-      id
-      public
+      ...EntryInfo
     }
   }
+  ${EntryInfoFragmentDoc}
 `;
 
 /**
@@ -267,12 +276,11 @@ export type AllPostsQueryResult = ApolloReactCommon.QueryResult<
 export const EditDocument = gql`
   query Edit($id: ID!) {
     entry(id: $id) {
-      title
-      dateAdded
+      ...EntryInfo
       content
-      public
     }
   }
+  ${EntryInfoFragmentDoc}
 `;
 
 /**
@@ -436,9 +444,11 @@ export const UpdateEntryDocument = gql`
     $status: Boolean
   ) {
     updateEntry(id: $id, content: $content, title: $title, status: $status) {
-      id
+      ...EntryInfo
+      content
     }
   }
+  ${EntryInfoFragmentDoc}
 `;
 export type IUpdateEntryMutationFn = ApolloReactCommon.MutationFunction<
   IUpdateEntryMutation,
@@ -489,9 +499,10 @@ export type UpdateEntryMutationOptions = ApolloReactCommon.BaseMutationOptions<
 export const CreateEntryDocument = gql`
   mutation CreateEntry($content: String, $title: String) {
     createEntry(content: $content, title: $title) {
-      id
+      ...EntryInfo
     }
   }
+  ${EntryInfoFragmentDoc}
 `;
 export type ICreateEntryMutationFn = ApolloReactCommon.MutationFunction<
   ICreateEntryMutation,
@@ -541,6 +552,7 @@ export const RemoveEntryDocument = gql`
   mutation RemoveEntry($id: ID) {
     deleteEntry(id: $id) {
       title
+      id
     }
   }
 `;

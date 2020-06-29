@@ -1,8 +1,6 @@
-import * as React from "react";
-
 export default function AboutBlurb(): JSX.Element {
   return (
-    <React.Fragment>
+    <>
       <p>
         So the idea here was simple build a simple markdown writing application.
         Markdown is a huge deal and all the cool tools kept getting shut down and
@@ -19,6 +17,6 @@ export default function AboutBlurb(): JSX.Element {
         learning languages and frameworks in the abstract, I decided to take up
         Downwrite as an excuse to build those microservice.
       </p>
-    </React.Fragment>
+    </>
   );
 }

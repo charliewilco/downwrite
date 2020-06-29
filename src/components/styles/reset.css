@@ -92,7 +92,6 @@ svg:not(:root) {
   overflow: hidden;
 }
 svg {
-  fill: currentColor;
   pointer-events: none;
   max-height: 100%;
 }

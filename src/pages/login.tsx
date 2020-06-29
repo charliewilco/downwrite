@@ -1,18 +1,11 @@
-import * as React from "react";
-import { NextPage } from "next";
-import dynamic from "next/dynamic";
 import Head from "next/head";
-import Loading from "../components/loading";
 import Landing from "../components/landing";
 import Features from "../components/landing-features";
-import { withApolloAuth } from "../utils/apollo-auth";
+import dynamic from "next/dynamic";
 
-const LoginTabs = dynamic(import("../components/login-tabs"), {
-  loading: () => <Loading size={75} />,
-  ssr: false
-});
+const LoginTabs = dynamic(() => import("../components/login-tabs"));
 
-export const LoginPage: NextPage = () => {
+export default function LoginPage() {
   return (
     <main className="HomeContainer" data-testid="LOGIN_PAGE_CONTAINER">
       <Head>
@@ -24,8 +17,4 @@ export const LoginPage: NextPage = () => {
       <LoginTabs />
     </main>
   );
-};
-
-export default withApolloAuth(LoginPage, {
-  ssr: false
-});
+}

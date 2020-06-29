@@ -1,25 +1,28 @@
 import * as React from "react";
-import { LinkProps } from "next/link";
 import "@testing-library/jest-dom";
 
 import { render, fireEvent, waitForElement, act } from "@testing-library/react";
-import { wait, MockedProvider, MockedResponse } from "@apollo/react-testing";
-import { DashboardUI } from "../pages/index";
+import { MockedProvider, MockedResponse } from "@apollo/client/testing";
+import DashboardUI from "../pages/dashboard";
+import { UIShell } from "../components/ui-shell";
 import { AllPostsDocument } from "../utils/generated";
 import { data } from "./fixtures/feed.json";
+import { MockAuthProvider } from "../utils/testing";
+import { RecoilRoot } from "recoil";
 
-jest.mock("next/router");
+const wait = async (n: number) =>
+  await new Promise(resolve => setTimeout(resolve, n));
 
-jest.mock("next/link", () => {
-  return jest.fn((props: React.PropsWithChildren<LinkProps>) => (
-    <>{props.children}</>
-  ));
-});
-
-function createPage(mocks?: MockedResponse[]) {
+function createPage(mocks?: MockedResponse[], authed: boolean = true) {
   return render(
-    <MockedProvider mocks={mocks} addTypename={false}>
-      <DashboardUI />
+    <MockedProvider mocks={mocks}>
+      <RecoilRoot>
+        <MockAuthProvider authed={authed}>
+          <UIShell>
+            <DashboardUI />
+          </UIShell>
+        </MockAuthProvider>
+      </RecoilRoot>
     </MockedProvider>
   );
 }
@@ -34,6 +37,13 @@ const emptyFeedMocks: MockedResponse[] = [
         feed: []
       }
     }
+  }
+];
+
+const errorMock: MockedResponse[] = [
+  {
+    request: { query: AllPostsDocument },
+    error: new Error("...")
   }
 ];
 
@@ -81,14 +91,15 @@ describe("<Dashboard /> post lists", () => {
   });
 
   it("shows error if error", async () => {
-    const ErrorContainer = createPage([]);
+    const ErrorContainer = createPage(errorMock, false);
 
-    // expect(ErrorContainer.getByTestId("LOADING_SPINNER")).toBeInTheDocument();
     await wait(0);
 
-    expect(
+    const errorDiv = await waitForElement(() =>
       ErrorContainer.getByTestId("INVALID_TOKEN_CONTAINER")
-    ).toBeInTheDocument();
+    );
+
+    expect(errorDiv).toBeInTheDocument();
   });
 
   it("shows prompt to write more if no posts", async () => {

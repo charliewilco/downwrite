@@ -1,5 +1,5 @@
-schema: ./src/utils/graphql/schema.graphql
-documents: ./src/utils/graphql/document.graphql
+schema: ./src/lib/schema.graphql
+documents: ./src/lib/document.graphql
 generates:
   ./src/utils/generated.tsx:
     plugins:
@@ -13,6 +13,9 @@ config:
   withHOC: false
   withComponent: false
   withResultType: true
+  apolloReactHooksImportFrom: "@apollo/client"
+  apolloReactCommonImportFrom: "@apollo/client"
+
 hooks:
   afterAllFileWrite:
     - prettier --write

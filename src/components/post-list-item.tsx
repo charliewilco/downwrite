@@ -1,7 +1,5 @@
-import * as React from "react";
 import Link from "next/link";
 import distance from "date-fns/formatDistanceToNow";
-import parseISO from "date-fns/parseISO";
 import { EditLink, PreviewLink } from "./entry-links";
 import { IPartialFeedItem } from "../reducers/dashboard";
 
@@ -9,7 +7,7 @@ interface IListItemProps {
   title: string;
   id: string;
   dateAdded: Date;
-  onDelete: ({ id }: IPartialFeedItem) => void;
+  onDelete: ({ id, title }: IPartialFeedItem) => void;
   public: boolean;
 }
 
@@ -18,17 +16,17 @@ export default function PostListItem(props: IListItemProps): JSX.Element {
     props.onDelete({ id: props.id, title: props.title });
   }
 
-  const date = parseISO(props.dateAdded.toString());
-
   return (
     <div className="PostItem" data-testid="POST_LIST_ITEM">
       <div>
         <h2 className="PostItemTitle">
-          <Link href={{ pathname: "/edit", query: { id: props.id } }}>
+          <Link href={`/edit/${props.id}`} passHref>
             <a>{props.title}</a>
           </Link>
         </h2>
-        <small className="PostItemMeta">added {distance(date)} ago</small>
+        <small className="PostItemMeta">
+          added {distance(new Date(props.dateAdded))} ago
+        </small>
       </div>
       <div className="PostItemTray">
         <div>
