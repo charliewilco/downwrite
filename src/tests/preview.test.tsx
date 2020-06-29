@@ -31,12 +31,25 @@ const previewMock: MockedResponse = {
   }
 };
 
+jest.mock("next/router", () => ({
+  useRouter() {
+    return {
+      route: "/",
+      pathname: "/preview",
+      query: "",
+      asPath: ""
+    };
+  }
+}));
 describe("<Preview />", () => {
   it("loads server content", async () => {
     // const pathname = "/preview/3efc9fe8-ab26-4316-9453-889fe444a2a1";
     const { getByTestId, container } = render(
       <MockedProvider mocks={[previewMock]} addTypename={false}>
-        <PreviewEntry />
+        <PreviewEntry
+          id="3efc9fe8-ab26-4316-9453-889fe444a2a1"
+          initialApolloState={{}}
+        />
       </MockedProvider>
     );
     await wait(() => getByTestId("PREVIEW_ENTRTY_TITLE"));

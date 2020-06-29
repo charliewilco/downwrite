@@ -15,7 +15,7 @@ const emptyContent = Draft.EditorState.createEmpty();
 const mockEditor = (state: Draft.EditorState) =>
   render(
     <DWEditor
-      editorCommand="nope"
+      editorCommand={"nope" as any}
       onSave={onSave}
       onFocus={onFocus}
       onChange={onChange}
@@ -27,7 +27,7 @@ function WrappedEditor() {
   const [editorState, setEditorState] = React.useState(emptyContent);
   return (
     <DWEditor
-      editorCommand="nope"
+      editorCommand={"nope" as any}
       onSave={onSave}
       onFocus={onFocus}
       editorState={editorState}

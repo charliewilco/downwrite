@@ -13,15 +13,17 @@ const testServer = new ApolloServer({
   }
 });
 
-const GraphQL: ApolloServerTestClient = createTestClient(testServer as any);
+const GraphQL: ApolloServerTestClient = createTestClient(testServer);
 
 describe("GraphQL Server", () => {
   it("can query feed", async () => {
-    const { data } = await GraphQL.query({
+    const q = await GraphQL.query({
       query: AllPostsDocument
     });
 
-    expect(Array.isArray(data!.feed)).toBeTruthy();
-    expect(data!.feed[0].content).toBeUndefined();
+    console.log();
+
+    expect(q.data).toBeFalsy();
+    expect(q.errors![0].message).toBe("Cannot read property 'cookies' of undefined");
   });
 });

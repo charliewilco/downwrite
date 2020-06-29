@@ -9,17 +9,11 @@ import { useRemovePost, useDashboard } from "../hooks";
 import { useAllPostsQuery, AllPostsDocument } from "../utils/generated";
 import { initializeApollo } from "../lib/apollo";
 import { parseCookies } from "../lib/cookie-managment";
-import { useRecoilValue } from "recoil";
-import { notificationsAtom } from "../reducers/app-state";
 
 export default function DashboardUI() {
   const [{ selectedPost, modalOpen }, actions] = useDashboard();
   const { data, loading, error } = useAllPostsQuery({ ssr: true });
   const onConfirmDelete = useRemovePost();
-
-  const notifications = useRecoilValue(notificationsAtom);
-
-  console.log(notifications);
 
   const onDelete = useCallback(() => {
     onConfirmDelete(selectedPost!.id);
