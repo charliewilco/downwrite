@@ -30,6 +30,8 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build
         run: yarn build
+        env:
+          DB_ADDRESS: localhost:27017
       - name: Type Check
         run: yarn typecheck
       - name: Test
