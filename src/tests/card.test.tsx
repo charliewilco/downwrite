@@ -11,7 +11,7 @@ describe("<Card />", () => {
   it("contains snippet from content", () => {
     const TestCard = render(<Card {...post} onDelete={mockDelete} />);
     const snippet = TestCard.getByTestId("CARD_EXCERPT").textContent;
-    expect(snippet.length).toBeLessThanOrEqual(90);
+    expect(snippet!.length).toBeLessThanOrEqual(90);
   });
 
   it("contains a title", () => {

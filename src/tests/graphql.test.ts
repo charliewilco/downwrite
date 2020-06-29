@@ -21,8 +21,6 @@ describe("GraphQL Server", () => {
       query: AllPostsDocument
     });
 
-    console.log();
-
     expect(q.data).toBeFalsy();
     expect(q.errors![0].message).toBe("Cannot read property 'cookies' of undefined");
   });

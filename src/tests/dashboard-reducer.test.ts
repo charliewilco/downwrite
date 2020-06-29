@@ -22,7 +22,7 @@ describe("Dashboard Reducer", () => {
       }
     });
 
-    expect(state.selectedPost.title).toBe("Some Post");
+    expect(state.selectedPost!.title).toBe("Some Post");
     expect(state.modalOpen).toBeTruthy();
   });
 

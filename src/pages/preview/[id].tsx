@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -89,4 +90,6 @@ export default function PreviewEntry(
       </Content>
     );
   }
+
+  return <Fragment />;
 }

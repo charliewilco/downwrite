@@ -34,7 +34,7 @@ describe("<Toggle />", () => {
   it("can be toggled open", () => {
     let { container } = render(<ToggleDemo />);
 
-    fireEvent.click(container.querySelector(`[data-testid="TOGGLE_BUTTON"]`));
+    fireEvent.click(container.querySelector(`[data-testid="TOGGLE_BUTTON"]`)!);
     expect(container.querySelector(`[data-testid="TOGGLE_OPEN"]`)).toHaveTextContent(
       "I am open"
     );

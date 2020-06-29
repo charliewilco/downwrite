@@ -16,7 +16,7 @@ describe("Header Component", () => {
       </MockAuthProvider>
     );
 
-    const title = utils.container.querySelector("h1");
+    const title = utils.container.querySelector("h1")!;
     const header = utils.container.querySelector("header");
 
     expect(title.textContent).toBe("Downwrite");

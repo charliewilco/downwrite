@@ -1,6 +1,12 @@
 import mongoose from "mongoose";
+import { __IS_PROD__ } from "../utils";
 
-const address: string = `mongodb://${process.env.DB_ADDRESS!}`;
+function getAddress() {
+  if (__IS_PROD__) {
+    return `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_ADDRESS}`;
+  }
+  return `mongodb://${process.env.DB_ADDRESS!}`;
+}
 
 const connection: {
   isConnected?: number;
@@ -11,6 +17,8 @@ async function dbConnect() {
     console.log("DB Connection", connection);
     return;
   }
+
+  const address = getAddress();
 
   /* connecting to our database */
   const db = await mongoose.connect(address, {
