@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { __IS_PROD__ } from "../utils";
 
 function getAddress() {
+  console.log("IS PROD", __IS_PROD__);
   if (__IS_PROD__) {
     return `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_ADDRESS}`;
   }
