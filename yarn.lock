@@ -1027,6 +1027,11 @@
     "@hapi/hoek" "8.x.x"
     "@hapi/joi" "15.x.x"
 
+"@hapi/hoek@*":
+  version "9.0.4"
+  resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.0.4.tgz#e80ad4e8e8d2adc6c77d985f698447e8628b6010"
+  integrity sha512-EwaJS7RjoXUZ2cXXKZZxZqieGtc7RbvQhUy8FwDoMQtxWVi14tFjeFCYPZAM1mBCpOpiBpyaZbb9NeHc7eGKgw==
+
 "@hapi/hoek@8.x.x", "@hapi/hoek@^8.2.1":
   version "8.2.1"
   resolved "https://registry.npmjs.org/@hapi/hoek/-/hoek-8.2.1.tgz#924af04cbb22e17359c620d2a9c946e63f58eb77"
@@ -1648,10 +1653,12 @@
     "@types/hapi__shot" "*"
     "@types/node" "*"
 
-"@types/hapi__hoek@^6.2.0":
-  version "6.2.0"
-  resolved "https://registry.npmjs.org/@types/hapi__hoek/-/hapi__hoek-6.2.0.tgz#61ec4dfb93e6aaccf2b407d6074a0633069e5d2d"
-  integrity sha512-MMS8ZD0SR2lklVkpNJw7iUYBmlvBLw1T04VSBhbWpiOi0ee6RoJUCcocVao1FLnSYR8Tt03dykRBv+FkvPIJSg==
+"@types/hapi__hoek@^9.0.1":
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/@types/hapi__hoek/-/hapi__hoek-9.0.1.tgz#7c68476e5a63c4fd7b4541ee306281af91d76ae3"
+  integrity sha512-Rd3KrTg/RaE/JVVWL1uB+I1cfpM7xCj+qjGHnI0QKRc/thHdc0K2yIue3zQceBfIECuPaTaoGZm4OQBUTmNZIw==
+  dependencies:
+    "@hapi/hoek" "*"
 
 "@types/hapi__iron@*":
   version "5.1.0"

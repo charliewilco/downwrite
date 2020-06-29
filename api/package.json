@@ -41,7 +41,7 @@
   "devDependencies": {
     "@hapi/shot": "^4.1.1",
     "@types/draft-js": "^0.10.27",
-    "@types/hapi__hoek": "^6.2.0",
+    "@types/hapi__hoek": "^9.0.1",
     "@types/hapi__shot": "^4.1.0",
     "@types/jest": "^24.0.11",
     "axios": "^0.19.0",
