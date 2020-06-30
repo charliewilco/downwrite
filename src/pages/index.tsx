@@ -10,6 +10,7 @@ interface IIndexProps {
   initialApolloState: NormalizedCacheObject;
   redirect: string;
 }
+
 type IndexProps = IIndexProps | {};
 
 export const getServerSideProps: GetServerSideProps<IndexProps> = async context => {
@@ -32,15 +33,19 @@ export const getServerSideProps: GetServerSideProps<IndexProps> = async context 
   }
 };
 
+const isProps = <K extends any>(props: any): props is K => {
+  return !!props && props !== {};
+};
+
 export default function IndexPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!!props && props !== {}) {
-      if ((props as IIndexProps).redirect) {
-        router.replace((props as IIndexProps).redirect);
+    if (isProps<IIndexProps>(props)) {
+      if (props.redirect) {
+        router.replace(props.redirect);
       }
     }
   }, [router, props]);
