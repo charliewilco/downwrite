@@ -1,6 +1,4 @@
 import { useRef, useReducer } from "react";
-import { v4 as uuid } from "uuid";
-
 import classNames from "../utils/classnames";
 
 interface IUIInputProps {
@@ -56,7 +54,7 @@ function inputReducer(_: IInputState, action: IInputAction): IInputState {
 }
 
 export default function UIInput({ testID, label, ...props }: IUIInputProps) {
-  const id = useRef(uuid());
+  const id = useRef("UI_TEXT_INPUT".concat(label));
 
   const [state, dispatch] = useReducer(inputReducer, {
     focused: false

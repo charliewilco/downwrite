@@ -4,6 +4,7 @@ import { render, act, fireEvent, wait } from "@testing-library/react";
 import { MockedProvider } from "@apollo/client/testing";
 import LoginForm from "../components/login-form";
 import { MockAuthProvider } from "../utils/testing";
+import { RecoilRoot } from "recoil";
 
 const signIn = jest.fn();
 
@@ -11,7 +12,9 @@ const testLoginForm = () =>
   render(
     <MockedProvider>
       <MockAuthProvider signIn={signIn}>
-        <LoginForm />
+        <RecoilRoot>
+          <LoginForm />
+        </RecoilRoot>
       </MockAuthProvider>
     </MockedProvider>
   );

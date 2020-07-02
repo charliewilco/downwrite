@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useSettings } from "../reducers/app-state";
 
 export enum DarkModeVals {
   NIGHT_MODE = "NightMode",
@@ -6,81 +7,35 @@ export enum DarkModeVals {
   NIGHT_MODE_ON = "NIGHT_MODE_ON"
 }
 
-interface IDarkModeState {
-  darkMode: boolean;
-}
-
-enum DarkModeAction {
-  SET_DARK_MODE_FROM_LOCAL = "SET_DARK_MODE_FROM_LOCAL",
-  TURN_ON_DARK_MODE = "DARK_MODE_ON",
-  TURN_OFF_DARK_MODE = "DARK_MODE_OFF"
-}
-
-type DarkModeActions =
-  | {
-      type: DarkModeAction.TURN_ON_DARK_MODE | DarkModeAction.TURN_OFF_DARK_MODE;
-    }
-  | {
-      type: DarkModeAction.SET_DARK_MODE_FROM_LOCAL;
-      payload: {
-        local: boolean;
-      };
-    };
-
-export function darkModeReducer(
-  _: IDarkModeState,
-  action: DarkModeActions
-): IDarkModeState {
-  switch (action.type) {
-    case DarkModeAction.TURN_ON_DARK_MODE:
-      return { darkMode: true };
-    case DarkModeAction.TURN_OFF_DARK_MODE:
-      return { darkMode: false };
-    case DarkModeAction.SET_DARK_MODE_FROM_LOCAL:
-      return { darkMode: action.payload.local };
-    default:
-      throw new Error("must speficy type");
-  }
-}
-
-export function useDarkModeEffect(className: string): [boolean, () => void] {
-  const [night, setNight] = useState<boolean>(false);
+export function useDarkModeEffect(className: string): void {
+  const [night, { toggleDarkMode }] = useSettings();
 
   useEffect(() => {
     if (typeof window !== undefined) {
       const local = localStorage.getItem(DarkModeVals.NIGHT_MODE);
 
       if (local !== DarkModeVals.NIGHT_MODE_OFF) {
-        setNight(true);
+        toggleDarkMode(true);
       }
     }
   }, []);
 
-  useEffect(
-    function() {
-      if (document.body instanceof HTMLElement) {
-        localStorage.setItem(
-          DarkModeVals.NIGHT_MODE,
-          night ? DarkModeVals.NIGHT_MODE_ON : DarkModeVals.NIGHT_MODE_OFF
-        );
+  useEffect(() => {
+    if (document.body instanceof HTMLElement) {
+      localStorage.setItem(
+        DarkModeVals.NIGHT_MODE,
+        night ? DarkModeVals.NIGHT_MODE_ON : DarkModeVals.NIGHT_MODE_OFF
+      );
 
-        night
-          ? document.body.classList.add(className)
-          : document.body.classList.remove(className);
+      night
+        ? document.body.classList.add(className)
+        : document.body.classList.remove(className);
+    }
+
+    return function cleanup() {
+      if (document.body) {
+        document.body.classList.remove(className);
       }
-
-      return function cleanup() {
-        if (document.body) {
-          document.body.classList.remove(className);
-        }
-      };
-    },
-    [night, className]
-  );
-
-  function onChange(): void {
-    setNight(prev => !prev);
-  }
-
-  return [night, onChange];
+    };
+  }, [night, className]);
 }

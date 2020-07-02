@@ -1,4 +1,3 @@
-import { memo } from "react";
 import { AppProps } from "next/app";
 import is from "@sindresorhus/is";
 import { ApolloProvider } from "@apollo/client";
@@ -13,8 +12,6 @@ interface IAppProps {
   token?: string;
 }
 
-const MemoUIShell = memo(UIShell);
-
 const DW_TOKEN = "";
 
 export default function AppWrapper({ Component, pageProps }: AppProps<IAppProps>) {
@@ -26,9 +23,9 @@ export default function AppWrapper({ Component, pageProps }: AppProps<IAppProps>
     <ApolloProvider client={client}>
       <RecoilRoot initializeState={initializeState}>
         <AuthProvider token={DW_TOKEN} authed={authed}>
-          <MemoUIShell>
+          <UIShell>
             <Component {...pageProps} />
-          </MemoUIShell>
+          </UIShell>
         </AuthProvider>
       </RecoilRoot>
     </ApolloProvider>

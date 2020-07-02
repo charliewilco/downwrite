@@ -6,6 +6,7 @@ import SettingsPage from "../pages/settings";
 import { UserDetailsDocument } from "../utils/generated";
 import { MockAuthProvider } from "../utils/testing";
 import { UIShell } from "../components/ui-shell";
+import { RecoilRoot } from "recoil";
 
 const mocks: MockedResponse[] = [
   {
@@ -26,11 +27,13 @@ const mocks: MockedResponse[] = [
 function createPage(mocks: MockedResponse[]) {
   return render(
     <MockedProvider mocks={mocks} addTypename={false}>
-      <MockAuthProvider>
-        <UIShell>
-          <SettingsPage />
-        </UIShell>
-      </MockAuthProvider>
+      <RecoilRoot>
+        <MockAuthProvider>
+          <UIShell>
+            <SettingsPage />
+          </UIShell>
+        </MockAuthProvider>
+      </RecoilRoot>
     </MockedProvider>
   );
 }

@@ -120,7 +120,7 @@ export function useAuthSideEffects({ authed, token }: IAuthState): void {
       router.push({ pathname: "/" });
     }
 
-    if (!authed) {
+    if (!authed && router.pathname !== "/login") {
       router.push({ pathname: "/login" });
       cookie.remove("DW_TOKEN", cookieOptions);
     }

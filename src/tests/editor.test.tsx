@@ -4,6 +4,7 @@ import "@testing-library/jest-dom";
 import DWEditor from "../components/editor";
 import * as Draft from "draft-js";
 import { createEditorState } from "../utils/testing";
+import { RecoilRoot } from "recoil";
 
 const onChange = jest.fn();
 const onFocus = jest.fn();
@@ -14,25 +15,29 @@ const emptyContent = Draft.EditorState.createEmpty();
 
 const mockEditor = (state: Draft.EditorState) =>
   render(
-    <DWEditor
-      editorCommand={"nope" as any}
-      onSave={onSave}
-      onFocus={onFocus}
-      onChange={onChange}
-      editorState={state}
-    />
+    <RecoilRoot>
+      <DWEditor
+        editorCommand={"nope" as any}
+        onSave={onSave}
+        onFocus={onFocus}
+        onChange={onChange}
+        editorState={state}
+      />
+    </RecoilRoot>
   );
 
 function WrappedEditor() {
   const [editorState, setEditorState] = React.useState(emptyContent);
   return (
-    <DWEditor
-      editorCommand={"nope" as any}
-      onSave={onSave}
-      onFocus={onFocus}
-      editorState={editorState}
-      onChange={state => setEditorState(state)}
-    />
+    <RecoilRoot>
+      <DWEditor
+        editorCommand={"nope" as any}
+        onSave={onSave}
+        onFocus={onFocus}
+        editorState={editorState}
+        onChange={state => setEditorState(state)}
+      />
+    </RecoilRoot>
   );
 }
 

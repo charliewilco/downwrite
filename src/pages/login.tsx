@@ -1,9 +1,7 @@
 import Head from "next/head";
 import Landing from "../components/landing";
 import Features from "../components/landing-features";
-import dynamic from "next/dynamic";
-
-const LoginTabs = dynamic(() => import("../components/login-tabs"));
+import LoginTabs from "../components/login-tabs";
 
 export default function LoginPage() {
   return (

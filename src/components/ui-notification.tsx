@@ -1,10 +1,7 @@
 import { useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  UINotificationMessage,
-  NotificationType,
-  useUINotifications
-} from "../reducers/notifications";
+import { useNotifications } from "../reducers/app-state";
+import { NotificationType, UINotificationMessage } from "../reducers/notifications";
 import { useTimeout } from "../hooks";
 
 function getTypeClassName(
@@ -51,7 +48,7 @@ export function UIMessage(props: IUIMessageProps): JSX.Element {
 }
 
 export function MessageList() {
-  const [{ notifications }, actions] = useUINotifications();
+  const [notifications, actions] = useNotifications();
 
   return (
     <div className="UINotificationContainer">
@@ -59,6 +56,7 @@ export function MessageList() {
         <AnimatePresence initial={false}>
           {notifications.map((notification, i) => (
             <motion.div
+              aria-live="polite"
               style={{ marginBottom: 8 }}
               key={i}
               positionTransition

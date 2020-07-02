@@ -43,6 +43,7 @@ export default function IndexPage(
   const router = useRouter();
 
   useEffect(() => {
+    console.log("REDIRECT");
     if (isProps<IIndexProps>(props)) {
       if (props.redirect) {
         router.replace(props.redirect);
