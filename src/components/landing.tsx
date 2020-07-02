@@ -1,5 +1,5 @@
 import * as DefaultStyles from "../utils/default-styles";
-import { useSettings } from "../reducers/app-state";
+import { useSettings } from "../atoms";
 
 interface ILandingPageProps extends React.PropsWithChildren<{}> {}
 

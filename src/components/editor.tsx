@@ -6,7 +6,7 @@ import createMarkdownPlugin from "draft-js-markdown-plugin";
 import createPrismPlugin from "draft-js-prism-plugin";
 import { __IS_TEST__ } from "../utils/dev";
 import * as DefaultStyles from "../utils/default-styles";
-import { useSettings } from "../reducers/app-state";
+import { useSettings } from "../atoms";
 
 type Handler = "handled" | "not-handled";
 

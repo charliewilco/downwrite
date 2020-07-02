@@ -6,7 +6,7 @@ import { UIShell } from "../components/ui-shell";
 import { AuthProvider } from "../components/auth";
 import "../components/styles/base.css";
 import { useApollo } from "../lib/apollo";
-import { initializeState } from "../reducers/app-state";
+import { initializeState } from "../atoms";
 
 interface IAppProps {
   token?: string;

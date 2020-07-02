@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSettings } from "../reducers/app-state";
+import { useSettings } from "../atoms";
 
 export enum DarkModeVals {
   NIGHT_MODE = "NightMode",

@@ -13,7 +13,7 @@ import { Routes } from "../utils/routes";
 import { NavIcon } from "./icons";
 import User from "./user";
 import { useAuthContext } from "./auth";
-import { useSettings } from "../reducers/app-state";
+import { useSettings } from "../atoms";
 
 const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) => {
   return (

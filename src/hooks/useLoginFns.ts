@@ -1,8 +1,7 @@
 import { useCallback } from "react";
 import { useAuthContext } from "../components/auth";
-import { NotificationType } from "../reducers/notifications";
 import { useLoginUserMutation, useCreateUserMutation } from "../utils/generated";
-import { useNotifications } from "../reducers/app-state";
+import { useNotifications, NotificationType } from "../atoms";
 
 export interface IRegisterValues extends Record<string, string | boolean> {
   username: string;

@@ -2,14 +2,13 @@ import { useCallback } from "react";
 import * as Draft from "draft-js";
 import { useRouter } from "next/router";
 import { draftToMarkdown } from "markdown-draft-js";
-import { NotificationType } from "../reducers/notifications";
 import {
   useCreateEntryMutation,
   AllPostsDocument,
   IAllPostsQuery,
   IEntry
 } from "../utils/generated";
-import { useNotifications } from "../reducers/app-state";
+import { useNotifications, NotificationType } from "../atoms";
 
 export interface INewEditorValues {
   title: string;

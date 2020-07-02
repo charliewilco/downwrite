@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNotifications } from "../reducers/app-state";
-import { NotificationType, UINotificationMessage } from "../reducers/notifications";
+import { useNotifications, UINotificationMessage, NotificationType } from "../atoms";
 import { useTimeout } from "../hooks";
 
 function getTypeClassName(

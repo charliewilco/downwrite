@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { NotificationType } from "../reducers/notifications";
 import { __IS_BROWSER__ } from "../utils/dev";
-import { useNotifications } from "../reducers/app-state";
+import { useNotifications, NotificationType } from "../atoms";
 
 export function useOffline(debug = false): boolean {
   const [isOffline, setIsOffline] = useState<boolean>(debug);
