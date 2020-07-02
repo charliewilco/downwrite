@@ -18,7 +18,9 @@ export interface IAppState {
 }
 
 export function initializeState(m: MutableSnapshot) {
-  m.set(notificationsAtom, [new UINotificationMessage("Something")]);
+  m.set(notificationsAtom, [
+    new UINotificationMessage("Something", NotificationType.WARNING, true)
+  ]);
   m.set(settingsAtom, {
     isDarkMode: true,
     fileExtension: ".md",
