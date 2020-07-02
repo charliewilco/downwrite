@@ -3,7 +3,7 @@ import { serialize, parse } from "cookie";
 import { ServerResponse, IncomingMessage } from "http";
 import { readToken } from "./token";
 
-const TOKEN_NAME = "DW_TOKEN";
+export const TOKEN_NAME = "DW_TOKEN";
 
 export const MAX_AGE = 60 * 60 * 8; // 8 hours
 

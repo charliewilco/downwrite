@@ -46,6 +46,10 @@ export function createToken(user: ITokenUser): string {
   return jwt.sign(data, SECRET_KEY, jwtConfig);
 }
 
+export async function isValidPassword(password: string, hashPassword: string) {
+  return bcrypt.compare(password, hashPassword);
+}
+
 export function readToken(token: string): TokenContents | null {
   return jwt.verify(token, SECRET_KEY, { complete: false }) as TokenContents | null;
 }

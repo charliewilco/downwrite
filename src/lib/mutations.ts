@@ -1,9 +1,11 @@
 import { ApolloError } from "apollo-server-micro";
 import { v4 as uuid } from "uuid";
 import { ResolverContext, verifyUser } from "./queries";
-import { PostModel } from "./models";
+import { PostModel, UserModel } from "./models";
 import { mergeUpdatedPost } from "./transform";
 import dbConnect from "./db";
+import { getSaltedHash, createToken } from "./token";
+import { setTokenCookie } from "./cookie-managment";
 
 export interface IMutationCreateEntryVars {
   title: string;
@@ -63,6 +65,21 @@ export async function updatePost(
   });
 }
 
+export async function verifyUniqueUser(username: string, email: string) {
+  const user = await UserModel.findOne({
+    $or: [{ email }, { username }]
+  });
+
+  if (user) {
+    if (user.username === username) {
+      throw new ApolloError("Username taken");
+    }
+    if (user.email === email) {
+      throw new ApolloError("Email taken");
+    }
+  }
+}
+
 export async function removePost(context: ResolverContext, id: string) {
   return verifyUser(context, async ({ user }) => {
     try {
@@ -75,8 +92,37 @@ export async function removePost(context: ResolverContext, id: string) {
   });
 }
 
-export async function authenticateUser() {
+export async function authenticateUser(
+  context: ResolverContext,
+  username: string,
+  email: string,
+  password: string
+) {
   await dbConnect();
 }
 
-export async function createUser() {}
+export async function createUser(
+  context: ResolverContext,
+  username: string,
+  email: string,
+  password: string
+) {
+  await dbConnect();
+
+  await verifyUniqueUser(username, email);
+
+  try {
+    const id = uuid();
+    const hash = getSaltedHash(password);
+    let user = await UserModel.create(
+      Object.assign({}, { email, username, id, password: hash, admin: false })
+    );
+    let token = createToken(user);
+
+    setTokenCookie(context.res, token);
+
+    return { token };
+  } catch (error) {
+    throw new ApolloError(error);
+  }
+}
