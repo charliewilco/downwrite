@@ -1,4 +1,4 @@
-import { forwardRef, useContext } from "react";
+import { forwardRef } from "react";
 import Link from "next/link";
 import { Menu, MenuList, MenuItem, MenuButton, MenuLink } from "@reach/menu-button";
 import {
@@ -13,7 +13,7 @@ import { Routes } from "../utils/routes";
 import { NavIcon } from "./icons";
 import User from "./user";
 import { useAuthContext } from "./auth";
-import { NightModeContext, INightModeContext } from "./night-mode";
+import { useSettings } from "../atoms";
 
 const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) => {
   return (
@@ -25,7 +25,7 @@ const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) 
 
 export default function DropdownUI() {
   const [auth, { signOut }] = useAuthContext();
-  const darkMode = useContext<INightModeContext>(NightModeContext);
+  const [settings, { toggleDarkMode }] = useSettings();
 
   return (
     <Menu>
@@ -55,8 +55,8 @@ export default function DropdownUI() {
           Settings
         </MenuLink>
 
-        <MenuItem onSelect={darkMode.action.onChange}>
-          {darkMode.night ? (
+        <MenuItem onSelect={() => toggleDarkMode()}>
+          {settings.isDarkMode ? (
             <>
               <span role="img" aria-label="Sun smiling">
                 <FiSun size={16} />

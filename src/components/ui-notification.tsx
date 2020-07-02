@@ -1,19 +1,7 @@
 import { useCallback } from "react";
-import {
-  useTransition,
-  animated,
-  UseTransitionResult,
-  UseTransitionProps,
-  SpringConfig
-} from "react-spring";
-import {
-  UINotificationMessage,
-  NotificationType,
-  useUINotifications
-} from "../reducers/notifications";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNotifications, UINotificationMessage, NotificationType } from "../atoms";
 import { useTimeout } from "../hooks";
-
-type Merge<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] } & B;
 
 function getTypeClassName(
   notification: UINotificationMessage,
@@ -58,58 +46,29 @@ export function UIMessage(props: IUIMessageProps): JSX.Element {
   );
 }
 
-const config: SpringConfig = { tension: 125, friction: 20, precision: 0.1 };
-const altConfig: SpringConfig = Object.assign({}, config, { duration: 350 });
-// [altConfig, config, config]
-
-interface ITransition {
-  opacity: number;
-  transform: string;
-  height: number;
-  life?: string;
-}
-
 export function MessageList() {
-  const [{ notifications }, actions] = useUINotifications();
-  // eslint-disable-next-line @typescript-eslint/array-type
-  const transitions: ReadonlyArray<UseTransitionResult<
-    UINotificationMessage,
-    ITransition
-  >> = useTransition<UINotificationMessage, ITransition>(
-    notifications,
-    item => item.id,
-    {
-      from: {
-        opacity: 0,
-        transform: "translate3d(0, -100%, 0) scale(1)",
-        height: 56
-      },
-      enter: {
-        opacity: 1,
-        transform: "translate3d(0, 0, 0) scale(1)",
-        height: 56
-      },
-      leave: {
-        opacity: 0,
-        transform: "translate3d(0, -100%, 0) scale(0)",
-        height: 0
-      },
-      config: (_: UINotificationMessage, state: string) =>
-        state === "leave" ? [altConfig, config, config] : config
-    } as Merge<
-      ITransition & React.CSSProperties,
-      UseTransitionProps<UINotificationMessage, ITransition>
-    >
-  );
+  const [notifications, actions] = useNotifications();
 
   return (
     <div className="UINotificationContainer">
       <div className="UINotificationContainerInner">
-        {transitions.map(({ item, props: { life, ...style } }) => (
-          <animated.div style={{ ...style, marginBottom: 8 }} key={item.id}>
-            <UIMessage notification={item} onDismiss={actions.removeNotification} />
-          </animated.div>
-        ))}
+        <AnimatePresence initial={false}>
+          {notifications.map((notification, i) => (
+            <motion.div
+              aria-live="polite"
+              style={{ marginBottom: 8 }}
+              key={i}
+              positionTransition
+              initial={{ opacity: 0, y: 50, scale: 0.3 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}>
+              <UIMessage
+                notification={notification}
+                onDismiss={actions.removeNotification}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
     </div>
   );

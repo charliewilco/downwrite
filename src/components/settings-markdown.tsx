@@ -1,10 +1,10 @@
-import { useRef, useContext } from "react";
-import { useFormik, FormikHelpers } from "formik";
+import { useRef } from "react";
+import { useFormik } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
 import { LocalSettingsSchema } from "../utils/validations";
-import { LocalUISettings, ILocalUISettings } from "./local-ui-settings";
+import { useSettings } from "../atoms";
 
 interface ILocalSettings extends Record<string, string> {
   fileExtension: string;
@@ -28,32 +28,21 @@ export enum LocalSettings {
 }
 
 export default function SettingsLocalMarkdown(): JSX.Element {
-  const {
-    actions: { updateFont }
-  } = useContext<ILocalUISettings>(LocalUISettings);
+  const [
+    { fileExtension, editorFont },
+    { updateFileExtension, updateEditorFont }
+  ] = useSettings();
 
   const initialValues = useRef(() => {
     return {
-      fileExtension: localStorage.getItem(LocalSettings.EXTENSION) || ".md",
-      fontFamily: localStorage.getItem(LocalSettings.FONT) || "SF Mono"
+      fileExtension: fileExtension || ".md",
+      fontFamily: editorFont || "SF Mono"
     };
   });
 
-  function onSubmit(
-    { fileExtension, fontFamily }: ILocalSettings,
-    helpers: FormikHelpers<ILocalSettings>
-  ): void {
-    localStorage.setItem(LocalSettings.EXTENSION, fileExtension);
-    localStorage.setItem(LocalSettings.FONT, fontFamily);
-
-    updateFont(fontFamily);
-
-    if (
-      localStorage.getItem(LocalSettings.EXTENSION) === fileExtension &&
-      localStorage.getItem(LocalSettings.FONT) === fontFamily
-    ) {
-      helpers.setSubmitting(false);
-    }
+  function onSubmit({ fileExtension, fontFamily }: ILocalSettings): void {
+    updateEditorFont(fontFamily);
+    updateFileExtension(fileExtension);
   }
 
   const formik = useFormik<ILocalSettings>({

@@ -1,12 +1,12 @@
 import { useRef, useEffect } from "react";
-import { useUINotifications, NotificationType } from "../reducers/notifications";
+import { useNotifications, NotificationType } from "../atoms";
 
 export function useAutosaving(
   duration: number = 5000,
   cb?: (...args: any[]) => void,
   message?: string
 ) {
-  const [, actions] = useUINotifications();
+  const [, actions] = useNotifications();
   const interval = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {

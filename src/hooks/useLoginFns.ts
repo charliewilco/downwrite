@@ -1,17 +1,16 @@
 import { useCallback } from "react";
 import { useAuthContext } from "../components/auth";
-import { useUINotifications, NotificationType } from "../reducers/notifications";
-import { StringTMap } from "../utils/types";
 import { useLoginUserMutation, useCreateUserMutation } from "../utils/generated";
+import { useNotifications, NotificationType } from "../atoms";
 
-export interface IRegisterValues extends StringTMap<string | boolean> {
+export interface IRegisterValues extends Record<string, string | boolean> {
   username: string;
   password: string;
   legalChecked: boolean;
   email: string;
 }
 
-export interface ILoginValues extends StringTMap<string> {
+export interface ILoginValues extends Record<string, string> {
   user: string;
   password: string;
 }
@@ -24,9 +23,9 @@ interface IFormHandlers {
 export function useLoginFns(): IFormHandlers {
   const [, { signIn }] = useAuthContext();
   const [
-    { notifications },
+    notifications,
     { addNotification, removeNotification }
-  ] = useUINotifications();
+  ] = useNotifications();
   const [createUser] = useCreateUserMutation();
 
   const [authenticateUser] = useLoginUserMutation();

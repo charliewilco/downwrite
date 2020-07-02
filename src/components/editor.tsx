@@ -1,12 +1,12 @@
 import PluginsEditor from "draft-js-plugins-editor";
-import { useRef, useContext } from "react";
+import { useRef } from "react";
 import * as Draft from "draft-js";
 import Prism from "prismjs";
 import createMarkdownPlugin from "draft-js-markdown-plugin";
 import createPrismPlugin from "draft-js-prism-plugin";
-import { LocalUISettings, ILocalUISettings } from "./local-ui-settings";
 import { __IS_TEST__ } from "../utils/dev";
 import * as DefaultStyles from "../utils/default-styles";
+import { useSettings } from "../atoms";
 
 type Handler = "handled" | "not-handled";
 
@@ -40,7 +40,7 @@ const styleMap = {
 
 export default function DownwriteEditor(props: IEditorProps) {
   let editorRef = useRef<PluginsEditor>(null);
-  const { monospace } = useContext<ILocalUISettings>(LocalUISettings);
+  const [{ editorFont }] = useSettings();
 
   const plugins = __IS_TEST__
     ? []
@@ -94,7 +94,7 @@ export default function DownwriteEditor(props: IEditorProps) {
   }
 
   return (
-    <div className="EditorShell" style={{ fontFamily: monospace }}>
+    <div className="EditorShell" style={{ fontFamily: editorFont }}>
       <div className={className} onClick={onFocus}>
         <PluginsEditor
           onFocus={props.onFocus}

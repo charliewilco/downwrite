@@ -2,13 +2,13 @@ import { useCallback } from "react";
 import * as Draft from "draft-js";
 import { useRouter } from "next/router";
 import { draftToMarkdown } from "markdown-draft-js";
-import { useUINotifications, NotificationType } from "../reducers/notifications";
 import {
   useCreateEntryMutation,
   AllPostsDocument,
   IAllPostsQuery,
   IEntry
 } from "../utils/generated";
+import { useNotifications, NotificationType } from "../atoms";
 
 export interface INewEditorValues {
   title: string;
@@ -16,7 +16,7 @@ export interface INewEditorValues {
 }
 
 export function useNewEntry() {
-  const [, actions] = useUINotifications();
+  const [, actions] = useNotifications();
   const router = useRouter();
   const [createEntry] = useCreateEntryMutation();
 

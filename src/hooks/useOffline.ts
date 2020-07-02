@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useUINotifications, NotificationType } from "../reducers/notifications";
 import { __IS_BROWSER__ } from "../utils/dev";
+import { useNotifications, NotificationType } from "../atoms";
 
 export function useOffline(debug = false): boolean {
   const [isOffline, setIsOffline] = useState<boolean>(debug);
-  const [, { addNotification }] = useUINotifications();
+  const [, { addNotification }] = useNotifications();
 
   function handleChange(event: Event) {
     __IS_BROWSER__ &&
