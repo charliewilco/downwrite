@@ -9,10 +9,12 @@ export default function LoginPage() {
       <Head>
         <title>Downwrite</title>
       </Head>
-      <Landing>
-        <Features />
-      </Landing>
-      <LoginTabs />
+      <div>
+        <Landing>
+          <Features />
+        </Landing>
+        <LoginTabs />
+      </div>
     </main>
   );
 }

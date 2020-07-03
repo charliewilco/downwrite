@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { MutableSnapshot } from "recoil";
 import {
   UINotificationMessage,
@@ -7,6 +8,7 @@ import {
   useNotifications
 } from "./notifications";
 import { ISettings, settingsAtom, useSettings } from "./settings";
+import * as DefaultStyles from "../utils/default-styles";
 
 export interface IAppState {
   me: {
@@ -24,8 +26,23 @@ export function initializeState(m: MutableSnapshot) {
   m.set(settingsAtom, {
     isDarkMode: true,
     fileExtension: ".md",
-    editorFont: "Operator Mono"
+    editorFont: DefaultStyles.Fonts.monospace
   });
+}
+
+export function useInitialRecoilSnapshot(initialState: any) {
+  return useCallback(() => {
+    return function initializeState(m: MutableSnapshot) {
+      m.set(notificationsAtom, [
+        new UINotificationMessage("Something", NotificationType.WARNING, true)
+      ]);
+      m.set(settingsAtom, {
+        isDarkMode: true,
+        fileExtension: ".md",
+        editorFont: DefaultStyles.Fonts.monospace
+      });
+    };
+  }, [initialState]);
 }
 
 export { useNotifications, useSettings, UINotificationMessage, NotificationType };

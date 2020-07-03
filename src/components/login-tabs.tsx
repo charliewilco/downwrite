@@ -5,8 +5,8 @@ import Register from "./register";
 
 function FormHeader(props: PropsWithChildren<{}>) {
   return (
-    <header className="LoginFormHeader u-center">
-      <h2 className="FormGreeting" data-testid="LOGIN_TITLE">
+    <header className="LoginFormHeader text-center">
+      <h2 className="text-xl mb-6" data-testid="LOGIN_TITLE">
         {props.children}
       </h2>
     </header>
@@ -22,8 +22,8 @@ function FormHeader(props: PropsWithChildren<{}>) {
 
 export default function LoginContainer(): JSX.Element {
   return (
-    <Tabs className="Tabs Wrapper Wrapper--sm">
-      <TabList className="TabsList u-center">
+    <Tabs className="bg-blk-800 container container-sm mx-auto">
+      <TabList className="TabsList text-center">
         <Tab className="ListItem" data-testid="LOGIN_REGISTER_BUTTON" id="Register">
           Register
         </Tab>

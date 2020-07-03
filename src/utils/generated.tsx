@@ -13,17 +13,6 @@ export type Scalars = {
   Date: any;
 };
 
-export type IAuthor = {
-  __typename?: "Author";
-  username: Maybe<Scalars["String"]>;
-  gradient: Maybe<Array<Maybe<Scalars["String"]>>>;
-};
-
-export type IAuthUserPayload = {
-  __typename?: "AuthUserPayload";
-  token: Maybe<Scalars["String"]>;
-};
-
 export type IEntry = {
   __typename?: "Entry";
   id: Maybe<Scalars["ID"]>;
@@ -35,6 +24,59 @@ export type IEntry = {
   dateModified: Maybe<Scalars["Date"]>;
   excerpt: Maybe<Scalars["String"]>;
   user: Maybe<Scalars["String"]>;
+};
+
+export type IAuthor = {
+  __typename?: "Author";
+  username: Maybe<Scalars["String"]>;
+  gradient: Maybe<Array<Maybe<Scalars["String"]>>>;
+};
+
+export type IPreview = {
+  __typename?: "Preview";
+  title: Maybe<Scalars["String"]>;
+  id: Maybe<Scalars["ID"]>;
+  content: Maybe<Scalars["String"]>;
+  author: Maybe<IAuthor>;
+  dateAdded: Maybe<Scalars["Date"]>;
+};
+
+export type IUser = {
+  __typename?: "User";
+  username: Scalars["String"];
+  email: Scalars["String"];
+  admin: Maybe<Scalars["Boolean"]>;
+  posts: Maybe<Array<Maybe<IEntry>>>;
+};
+
+export type IUserSettingsInput = {
+  username: Maybe<Scalars["String"]>;
+  email: Maybe<Scalars["String"]>;
+};
+
+export type IAuthUserPayload = {
+  __typename?: "AuthUserPayload";
+  token: Maybe<Scalars["String"]>;
+};
+
+export type IQuery = {
+  __typename?: "Query";
+  /** Markdown document */
+  entry: Maybe<IEntry>;
+  /** List of Markdown documents */
+  feed: Array<IEntry>;
+  /** Public preview of Markdown document */
+  preview: Maybe<IPreview>;
+  /** User Settings */
+  settings: Maybe<IUser>;
+};
+
+export type IQueryEntryArgs = {
+  id: Maybe<Scalars["ID"]>;
+};
+
+export type IQueryPreviewArgs = {
+  id: Maybe<Scalars["ID"]>;
 };
 
 export type IMutation = {
@@ -76,48 +118,6 @@ export type IMutationAuthenticateUserArgs = {
 
 export type IMutationUpdateUserSettingsArgs = {
   settings: IUserSettingsInput;
-};
-
-export type IPreview = {
-  __typename?: "Preview";
-  title: Maybe<Scalars["String"]>;
-  id: Maybe<Scalars["ID"]>;
-  content: Maybe<Scalars["String"]>;
-  author: Maybe<IAuthor>;
-  dateAdded: Maybe<Scalars["Date"]>;
-};
-
-export type IQuery = {
-  __typename?: "Query";
-  /** Markdown document */
-  entry: Maybe<IEntry>;
-  /** List of Markdown documents */
-  feed: Array<IEntry>;
-  /** Public preview of Markdown document */
-  preview: Maybe<IPreview>;
-  /** User Settings */
-  settings: Maybe<IUser>;
-};
-
-export type IQueryEntryArgs = {
-  id: Maybe<Scalars["ID"]>;
-};
-
-export type IQueryPreviewArgs = {
-  id: Maybe<Scalars["ID"]>;
-};
-
-export type IUser = {
-  __typename?: "User";
-  username: Scalars["String"];
-  email: Scalars["String"];
-  admin: Maybe<Scalars["Boolean"]>;
-  posts: Maybe<Array<Maybe<IEntry>>>;
-};
-
-export type IUserSettingsInput = {
-  username: Maybe<Scalars["String"]>;
-  email: Maybe<Scalars["String"]>;
 };
 
 export type IEntryInfoFragment = { __typename?: "Entry" } & Pick<

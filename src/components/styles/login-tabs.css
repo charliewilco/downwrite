@@ -35,8 +35,8 @@
 }
 
 .ListItem[data-selected] {
-  color: var(--yellow700);
-  border-bottom-color: var(--yellow700);
+  color: var(--link);
+  border-bottom-color: var(--link);
 }
 
 .LoginForm {

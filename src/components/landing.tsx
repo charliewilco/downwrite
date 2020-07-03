@@ -1,20 +1,25 @@
-import * as DefaultStyles from "../utils/default-styles";
-import { useSettings } from "../atoms";
-
 interface ILandingPageProps extends React.PropsWithChildren<{}> {}
 
 export default function LandingPage(props: ILandingPageProps): JSX.Element {
-  const [{ editorFont }] = useSettings();
   return (
-    <article
-      className="LandingContainer Wrapper Wrapper--sm u-center"
-      style={{ fontFamily: editorFont || DefaultStyles.Fonts.monospace }}>
-      <img alt="Downwrite Logo" className="BannerImage" src="/static/landing.png" />
+    <article className="LandingContainer font-mono text-center container container-sm mx-auto">
+      <img
+        alt="Downwrite Logo"
+        className="BannerImage"
+        style={{
+          filter: "grayscale(100%)"
+        }}
+        src="/static/landing.png"
+      />
       <header className="IntroContents">
-        <h1 className="IntroTitle" data-testid="Login Page Container">
+        <h1
+          className="text-3xl font-sans font-black"
+          data-testid="Login Page Container">
           Downwrite
         </h1>
-        <span className="Tagline">A place to write</span>
+        <span className="text-sm uppercase tracking-widest opacity-50">
+          A place to write
+        </span>
       </header>
       {props.children}
     </article>

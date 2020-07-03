@@ -34,9 +34,9 @@
   align-items: center;
 }
 .Tagline {
-  font-weight: 700;
+  font-weight: 400;
   font-style: italic;
-  color: var(--landingPageTitle);
+  color: var(--link);
 }
 
 .BannerImage {

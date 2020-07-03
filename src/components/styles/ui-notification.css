@@ -89,7 +89,7 @@
 .UINotification__id {
   margin-right: 4px;
   font-weight: 700;
-  font-family: Operator Mono, Consolas, Liberation Mono, Menlo, Courier, monospace;
+  /* font-family: Operator Mono, Consolas, Liberation Mono, Menlo, Courier, monospace; */
   font-size: 12px;
   opacity: 0.5;
 }

@@ -1,6 +1,7 @@
 import { atom, useRecoilState } from "recoil";
 import produce from "immer";
 import { useCallback } from "react";
+import * as DefaultStyles from "../utils/default-styles";
 
 export interface ISettings {
   isDarkMode: boolean;
@@ -13,7 +14,7 @@ export const settingsAtom = atom<ISettings>({
   default: {
     isDarkMode: true,
     fileExtension: ".md",
-    editorFont: "Operator Mono"
+    editorFont: DefaultStyles.Fonts.monospace
   }
 });
 

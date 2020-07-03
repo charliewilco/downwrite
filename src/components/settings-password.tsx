@@ -4,9 +4,7 @@ import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { ToggleBox } from "../components/toggle-box";
 import { Button } from "./button";
-import { useAuthContext } from "./auth";
 import { UpdatePasswordSchema } from "../utils/validations";
-import * as API from "../utils/api";
 import { StringTMap } from "../utils/types";
 
 interface IPasswordSettings extends StringTMap<string> {
@@ -36,13 +34,12 @@ const PASSWORD_INPUTS: IInputs[] = [
 ];
 
 export default function SettingsPassword(): JSX.Element {
-  const [{ token }] = useAuthContext();
   const [isOpen, setOpen] = useState(false);
 
   const onSubmit = useCallback(
     (values: IPasswordSettings, actions: FormikHelpers<IPasswordSettings>): void => {
-      const { host } = document.location;
-      const response = API.updatePassword(values, { token, host });
+      const response = false;
+      console.log(values);
 
       if (response) {
         actions.setSubmitting(false);

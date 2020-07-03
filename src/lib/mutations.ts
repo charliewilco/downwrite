@@ -48,6 +48,7 @@ export async function createPost(
   });
 }
 
+// TODO: This is WRONG
 export async function updatePost(
   context: ResolverContext,
   id: string,

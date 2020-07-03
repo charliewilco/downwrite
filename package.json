@@ -6,11 +6,12 @@
   "author": "Charles ⚡ <charlespeters42@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "generate": "graphql-codegen",
-    "format": "prettier --write src/**/* api/* ./*.json",
     "start": "next start",
     "build": "next build",
-    "dev": "next dev",
+    "dev": "next",
+    "prebuild": "yarn generate",
+    "predev": "yarn generate",
+    "generate": "graphql-codegen",
     "test": "jest",
     "test:ci": "jest --ci --runInBand --no-cache",
     "typecheck": "tsc --noEmit",
@@ -73,6 +74,7 @@
     "mongoose": "^5.9.19",
     "next": "^9.4.4",
     "next-fonts": "^1.2.0",
+    "postcss-preset-env": "^6.7.0",
     "prismjs": "^1.15.0",
     "react": "^16.13.1",
     "react-cookie": "^4.0.3",
@@ -84,8 +86,9 @@
     "react-redux": "^7.2.0",
     "recoil": "^0.0.10",
     "redux": "^4.0.5",
-    "typeface-ibm-plex-mono": "^0.0.61",
-    "typeface-ibm-plex-sans": "^0.0.75",
+    "tailwindcss": "^1.4.6",
+    "typeface-inter": "^3.12.0",
+    "typeface-roboto-mono": "^0.0.75",
     "typescript": "^3.9.5",
     "universal-cookie": "^4.0.3",
     "uuid": "^8.2.0",
@@ -105,9 +108,7 @@
     "prettier": "^1.19.1",
     "prop-types": "^15.7.2"
   },
-  "browserslist": [
-    "last 1 version"
-  ],
+  "browserslist": ["last 1 version"],
   "prettier": {
     "printWidth": 85,
     "singleQuote": false,

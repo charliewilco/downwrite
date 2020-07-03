@@ -1,6 +1,4 @@
 .UIContainer {
-  color: var(--color);
-  background: var(--background);
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -10,18 +8,6 @@
   right: 0;
   left: 0;
   overflow: scroll;
-}
-
-.UIContainer::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  display: block;
-  height: 4px;
-  width: 100%;
-  background-image: linear-gradient(to right, #2584a5, #4fa5c2);
 }
 
 .clearfix::after {
