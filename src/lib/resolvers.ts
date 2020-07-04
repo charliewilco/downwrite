@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable no-console */
 import { IResolvers } from "apollo-server-micro";
 import { GetServerSidePropsContext } from "next";
 import { ResolverContext, feed, entry, preview, settings } from "./queries";
@@ -8,7 +6,9 @@ import {
   IMutationUserVars,
   createPost,
   updatePost,
-  removePost
+  removePost,
+  authenticateUser,
+  createUser
 } from "./mutations";
 
 export interface IResolverContext
@@ -28,9 +28,9 @@ export const resolvers: IResolvers<unknown, ResolverContext> = {
       updatePost(context, id!, body),
     deleteEntry: async (_, { id }, context) => removePost(context, id),
     createUser: async (_, args: IMutationUserVars, context) =>
-      console.log("create user", context, args),
+      createUser(context, args.username, args.email!, args.password),
     authenticateUser: async (_, args: IMutationUserVars, context) =>
-      console.log("authenticate user", context, args.username, args.password),
+      authenticateUser(context, args.username, args.password),
     updateUserSettings() {}
   }
 };

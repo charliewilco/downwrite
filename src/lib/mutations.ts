@@ -1,10 +1,10 @@
-import { ApolloError } from "apollo-server-micro";
+import { ApolloError, AuthenticationError } from "apollo-server-micro";
 import { v4 as uuid } from "uuid";
 import { ResolverContext, verifyUser } from "./queries";
-import { PostModel, UserModel } from "./models";
+import { PostModel, UserModel, IUserModel } from "./models";
 import { mergeUpdatedPost } from "./transform";
 import dbConnect from "./db";
-import { getSaltedHash, createToken } from "./token";
+import { getSaltedHash, createToken, isValidPassword } from "./token";
 import { setTokenCookie } from "./cookie-managment";
 
 export interface IMutationCreateEntryVars {
@@ -81,6 +81,24 @@ export async function verifyUniqueUser(username: string, email: string) {
   }
 }
 
+export async function verifyCredentials(
+  identifier: string,
+  password: string
+): Promise<IUserModel> {
+  const user = await UserModel.findOne({
+    $or: [{ email: identifier }, { username: identifier }]
+  });
+
+  if (user) {
+    const isValid = await isValidPassword(password, user.password);
+    if (isValid) return user;
+
+    throw new AuthenticationError("Incorrect password");
+  } else {
+    throw new AuthenticationError("Incorrect username or email!");
+  }
+}
+
 export async function removePost(context: ResolverContext, id: string) {
   return verifyUser(context, async ({ user }) => {
     try {
@@ -96,10 +114,20 @@ export async function removePost(context: ResolverContext, id: string) {
 export async function authenticateUser(
   context: ResolverContext,
   username: string,
-  email: string,
   password: string
 ) {
   await dbConnect();
+
+  try {
+    const user = await verifyCredentials(username, password);
+    const token = createToken(user);
+
+    setTokenCookie(context.res, token);
+
+    return { token };
+  } catch (error) {
+    throw new ApolloError(error);
+  }
 }
 
 export async function createUser(

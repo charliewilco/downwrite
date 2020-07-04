@@ -5,9 +5,8 @@ import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { ToggleBox } from "../components/toggle-box";
 import { Button } from "./button";
 import { UpdatePasswordSchema } from "../utils/validations";
-import { StringTMap } from "../utils/types";
 
-interface IPasswordSettings extends StringTMap<string> {
+interface IPasswordSettings extends Record<string, string> {
   oldPassword: string;
   newPassword: string;
   confirmPassword: string;
