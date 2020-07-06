@@ -67,7 +67,6 @@
     "graphql-tag": "^2.10.3",
     "graphql-tools": "^6.0.10",
     "immer": "^7.0.3",
-    "jest": "^26.1.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
     "markdown-draft-js": "^1.5.0",
@@ -98,17 +97,21 @@
     "@graphql-codegen/typescript-operations": "^1.15.4",
     "@graphql-codegen/typescript-react-apollo": "^1.15.4",
     "@graphql-codegen/typescript-resolvers": "^1.15.4",
-    "@testing-library/jest-dom": "^5.1.0",
-    "@testing-library/react": "^9.4.0",
     "apollo-server-testing": "^2.10.1",
-    "babel-jest": "^26.1.0",
-    "identity-obj-proxy": "^3.0.0",
     "prettier": "^1.19.1",
-    "prop-types": "^15.7.2"
+    "jest": "^26.1.0",
+    "prop-types": "^15.7.2",
+    "ts-jest": "^26.1.1"
   },
   "browserslist": [
     "last 1 version"
   ],
+  "postcss": {
+    "plugins": [
+      "tailwindcss",
+      "postcss-preset-env"
+    ]
+  },
   "prettier": {
     "printWidth": 85,
     "singleQuote": false,
@@ -116,5 +119,8 @@
     "useTabs": false,
     "bracketSpacing": true,
     "jsxBracketSameLine": true
+  },
+  "jest": {
+    "preset": "ts-jest"
   }
 }

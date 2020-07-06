@@ -48,7 +48,7 @@ export async function createPost(
   });
 }
 
-// TODO: This is WRONG
+// TODO: This is WRONG, this should be find one and update.
 export async function updatePost(
   context: ResolverContext,
   id: string,

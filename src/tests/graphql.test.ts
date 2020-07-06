@@ -1,8 +1,5 @@
 import { createTestClient, ApolloServerTestClient } from "apollo-server-testing";
 import { AllPostsDocument } from "../utils/generated";
-/**
- * @jest-environment jsdom
- */
 import { ApolloServer } from "apollo-server-micro";
 import { schema } from "../lib/schema";
 
