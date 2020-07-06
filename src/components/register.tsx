@@ -48,7 +48,7 @@ export default function RegisterForm(): JSX.Element {
       email: ""
     },
     validationSchema: RegisterFormSchema,
-
+    validateOnChange: false,
     onSubmit: onRegisterSubmit
   });
 

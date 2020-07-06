@@ -7,6 +7,6 @@ export enum Routes {
   ABOUT = "/about",
   LEGAL = "/legal",
   SETTINGS = "/settings",
-  SLATE = "/unstable_slate",
+  SIGN_OUT = "/signout",
   INDEX = "/"
 }

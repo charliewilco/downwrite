@@ -13,7 +13,7 @@ export default function EmptyPosts(): JSX.Element {
           <h4 className="GettingStartedTitle">
             Looks like you don't have any entries
           </h4>
-          <Link href={Routes.NEW} passHref>
+          <Link href={Routes.NEW}>
             <a className="GettingStarted">Get Started &rarr; </a>
           </Link>
         </div>

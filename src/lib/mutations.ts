@@ -142,7 +142,7 @@ export async function createUser(
 
   try {
     const id = uuid();
-    const hash = getSaltedHash(password);
+    const hash = await getSaltedHash(password);
     let user = await UserModel.create(
       Object.assign({}, { email, username, id, password: hash, admin: false })
     );

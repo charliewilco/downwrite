@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
+import decode from "jwt-decode";
 import DeleteModal from "../components/delete-modal";
 import PostList from "../components/post-list";
 import EmptyPosts from "../components/empty-posts";
@@ -9,6 +10,8 @@ import { useRemovePost, useDashboard } from "../hooks";
 import { useAllPostsQuery, AllPostsDocument } from "../utils/generated";
 import { initializeApollo } from "../lib/apollo";
 import { parseCookies } from "../lib/cookie-managment";
+import { TokenContents } from "../lib/token";
+import { IInitialState } from "../atoms/initial";
 
 export default function DashboardUI() {
   const [{ selectedPost, modalOpen }, actions] = useDashboard();
@@ -41,7 +44,9 @@ export default function DashboardUI() {
         )}
         <Head>
           <title>
-            {data.feed.length > 0 && data.feed.length.toString().concat(" ")}Entries
+            {data.feed.length > 0
+              ? data.feed.length.toString().concat(" Entries")
+              : "No Entries"}
             | Downwrite
           </title>
         </Head>
@@ -68,9 +73,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     context: { req, res }
   });
 
+  const d = decode<TokenContents>(DW_TOKEN);
+
+  const initialState: IInitialState = { username: d.name, userId: d.user };
+
   return {
     props: {
-      token: DW_TOKEN,
+      initialState,
       initialApolloState: client.cache.extract()
     }
   };

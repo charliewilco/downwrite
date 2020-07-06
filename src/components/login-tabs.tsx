@@ -22,7 +22,7 @@ function FormHeader(props: PropsWithChildren<{}>) {
 
 export default function LoginContainer(): JSX.Element {
   return (
-    <Tabs className="bg-blk-800 container container-sm mx-auto">
+    <Tabs className="bg-blk-800 max-w-lg mx-auto">
       <TabList className="TabsList text-center">
         <Tab className="ListItem" data-testid="LOGIN_REGISTER_BUTTON" id="Register">
           Register

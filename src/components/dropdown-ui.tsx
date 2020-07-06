@@ -12,10 +12,10 @@ import {
 import { Routes } from "../utils/routes";
 import { NavIcon } from "./icons";
 import User from "./user";
-import { useAuthContext } from "./auth";
-import { useSettings } from "../atoms";
+import { useSettings, useCurrentUser } from "../atoms";
 
 const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) => {
+  console.log(props);
   return (
     <Link passHref href={to}>
       <a ref={ref} {...props} />
@@ -24,60 +24,73 @@ const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) 
 });
 
 export default function DropdownUI() {
-  const [auth, { signOut }] = useAuthContext();
+  const [currentUser] = useCurrentUser();
   const [settings, { toggleDarkMode }] = useSettings();
 
   return (
     <Menu>
-      <MenuButton className="DropdownMenuButton">
+      <MenuButton className="appearance-none border-0">
         <NavIcon className="icon" />
       </MenuButton>
       <MenuList className="Sheet DropdownMenuList">
-        {auth.name && (
-          <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
+        {currentUser.username && (
+          <User border colors={["#FEB692", "#EA5455"]} name={currentUser.username} />
         )}
-        <MenuLink to={Routes.INDEX} as={NextMenuLink}>
+        <MenuLink
+          to={Routes.INDEX}
+          as={NextMenuLink}
+          className="flex items-center w-full">
           <span role="img" aria-label="Stack of books">
-            <FiBook size={16} />
+            <FiBook size={16} className="mr-2" />
           </span>
           All Entries
         </MenuLink>
-        <MenuLink to={Routes.NEW} as={NextMenuLink}>
+        <MenuLink
+          to={Routes.NEW}
+          as={NextMenuLink}
+          className="flex items-center w-full">
           <span role="img" aria-label="Writing with a Pen">
-            <FiEdit3 size={16} />
+            <FiEdit3 size={16} className="mr-2" />
           </span>
           Create New Entry
         </MenuLink>
-        <MenuLink to={Routes.SETTINGS} as={NextMenuLink}>
+        <MenuLink
+          to={Routes.SETTINGS}
+          as={NextMenuLink}
+          className="flex items-center w-full">
           <span role="img" aria-label="Gear">
-            <FiSettings size={16} />
+            <FiSettings size={16} className="mr-2" />
           </span>
           Settings
         </MenuLink>
-
-        <MenuItem onSelect={() => toggleDarkMode()}>
+        <MenuItem
+          onSelect={() => toggleDarkMode()}
+          className="flex items-center w-full">
           {settings.isDarkMode ? (
             <>
               <span role="img" aria-label="Sun smiling">
-                <FiSun size={16} />
+                <FiSun size={16} className="mr-2" />
               </span>
               Switch to Light Mode
             </>
           ) : (
             <>
               <span role="img" aria-label="Moon">
-                <FiMoon size={16} />
+                <FiMoon size={16} className="mr-2" />
               </span>
               Switch to Dark Mode
             </>
           )}
         </MenuItem>
-        <MenuItem onSelect={signOut}>
+        <MenuLink
+          to={Routes.SIGN_OUT}
+          as={NextMenuLink}
+          className="flex items-center w-full">
           <span role="img" aria-label="Fearful face">
-            <FiLogOut size={16} />
+            <FiLogOut size={16} className="mr-2" />
           </span>
           Sign Out
-        </MenuItem>
+        </MenuLink>
       </MenuList>
     </Menu>
   );

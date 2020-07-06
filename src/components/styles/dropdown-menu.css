@@ -62,11 +62,6 @@
   outline: none;
 }
 
-.DropdownMenuList a {
-  display: block;
-  color: var(--color);
-}
-
 .DropdownMenuList a[data-selected] {
   background: var(--link);
   color: white;

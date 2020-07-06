@@ -1,7 +1,7 @@
 export default function Features(): JSX.Element {
   return (
     <>
-      <h2>Focus on Markdown</h2>
+      <h2 className="font-bold text-xl mb-4">Focus on Markdown</h2>
 
       <p>
         Writing should be easy. But as each tool, each static site builder comes and

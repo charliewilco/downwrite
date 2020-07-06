@@ -1,7 +1,9 @@
 import { useCallback } from "react";
-import { useAuthContext } from "../components/auth";
+import { useRouter } from "next/router";
+import decode from "jwt-decode";
+import { TokenContents } from "../lib/token";
 import { useLoginUserMutation, useCreateUserMutation } from "../utils/generated";
-import { useNotifications, NotificationType } from "../atoms";
+import { useNotifications, NotificationType, useCurrentUser } from "../atoms";
 
 export interface IRegisterValues extends Record<string, string | boolean> {
   username: string;
@@ -21,14 +23,28 @@ interface IFormHandlers {
 }
 
 export function useLoginFns(): IFormHandlers {
-  const [, { signIn }] = useAuthContext();
+  const router = useRouter();
   const [
     notifications,
     { addNotification, removeNotification }
   ] = useNotifications();
   const [createUser] = useCreateUserMutation();
+  const [, { onCurrentUserLogin }] = useCurrentUser();
 
   const [authenticateUser] = useLoginUserMutation();
+
+  const onSuccess = useCallback((token: string) => {
+    const d = decode<TokenContents>(token);
+    onCurrentUserLogin(d.name, d.user);
+
+    router.push("/dashboard");
+
+    if (notifications.length > 0) {
+      notifications.forEach(n => {
+        removeNotification(n);
+      });
+    }
+  }, []);
 
   const onLoginSubmit = useCallback(
     async (values: ILoginValues): Promise<void> => {
@@ -41,25 +57,20 @@ export function useLoginFns(): IFormHandlers {
         .then(value => {
           if (value?.data?.authenticateUser?.token) {
             const token = value.data.authenticateUser.token;
-            signIn(token !== undefined, token);
-
-            if (notifications.length > 0) {
-              notifications.forEach(n => {
-                removeNotification(n);
-              });
-            }
+            onSuccess(token);
           }
         })
         .catch(error => {
           addNotification(error.message, NotificationType.ERROR);
         });
     },
-    [addNotification, removeNotification, notifications, signIn, authenticateUser]
+    [addNotification, authenticateUser, onSuccess]
   );
 
   const onRegisterSubmit = useCallback(
     async (values: IRegisterValues): Promise<void> => {
       if (values.legalChecked) {
+        console.log(values);
         await createUser({
           variables: {
             email: values.email,
@@ -68,16 +79,18 @@ export function useLoginFns(): IFormHandlers {
           }
         })
           .then(value => {
-            const token = value.data?.createUser?.token;
+            if (value?.data?.createUser?.token) {
+              const token = value.data.createUser.token;
 
-            signIn(token !== undefined, token!);
+              onSuccess(token);
+            }
           })
           .catch(error => {
             addNotification(error.message, NotificationType.ERROR);
           });
       }
     },
-    [createUser, addNotification, signIn]
+    [createUser, addNotification, onSuccess]
   );
 
   return {

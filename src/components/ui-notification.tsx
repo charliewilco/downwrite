@@ -25,7 +25,10 @@ interface IUIMessageProps {
 export function UIMessage(props: IUIMessageProps): JSX.Element {
   const className = getTypeClassName(props.notification, "UINotification");
 
-  const onRemove = useCallback(() => props.onDismiss(props.notification), [props]);
+  const onRemove = useCallback(() => {
+    console.log("Notification", props);
+    props.onDismiss(props.notification);
+  }, [props]);
 
   useTimeout(15000, props.notification.dismissable ? onRemove : undefined);
 

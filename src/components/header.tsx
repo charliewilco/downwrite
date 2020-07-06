@@ -2,15 +2,16 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import VisuallyHidden from "@reach/visually-hidden";
 import Logo from "./logo";
-import { useAuthContext } from "./auth";
 import DropdownUI from "./dropdown-ui";
 import { Routes } from "../utils/routes";
+import { useCurrentUser } from "../atoms";
 
 export function UIHeader(): JSX.Element {
-  const [{ authed }] = useAuthContext();
+  const [currentUser] = useCurrentUser();
   const router = useRouter();
 
   const style: React.CSSProperties = { marginRight: 16 };
+  const authed = currentUser && currentUser.id && currentUser.username;
 
   const isLogin: boolean = router ? router.pathname === "/login" : false;
   const homeLink: string = !authed ? Routes.LOGIN : Routes.INDEX;

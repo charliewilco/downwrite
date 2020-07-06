@@ -5,16 +5,14 @@ import LoginTabs from "../components/login-tabs";
 
 export default function LoginPage() {
   return (
-    <main className="HomeContainer" data-testid="LOGIN_PAGE_CONTAINER">
+    <main data-testid="LOGIN_PAGE_CONTAINER" className="my-16">
       <Head>
         <title>Downwrite</title>
       </Head>
-      <div>
-        <Landing>
-          <Features />
-        </Landing>
-        <LoginTabs />
-      </div>
+      <Landing>
+        <Features />
+      </Landing>
+      <LoginTabs />
     </main>
   );
 }

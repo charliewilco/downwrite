@@ -5,7 +5,7 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      sans: ["Roboto Mono", "Inter", "system-ui", "-apple-system", "sans-serif"],
+      sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
       mono: ["Roboto Mono", "monospace"]
     },
     extend: {
@@ -19,6 +19,9 @@ module.exports = {
           "800": "#1E1E1E",
           "900": "#121212"
         }
+      },
+      maxWidth: {
+        xxs: "16rem"
       }
     }
   },

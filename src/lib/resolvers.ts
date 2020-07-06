@@ -28,7 +28,7 @@ export const resolvers: IResolvers<unknown, ResolverContext> = {
       updatePost(context, id!, body),
     deleteEntry: async (_, { id }, context) => removePost(context, id),
     createUser: async (_, args: IMutationUserVars, context) =>
-      createUser(context, args.username, args.email!, args.password),
+      await createUser(context, args.username, args.email!, args.password),
     authenticateUser: async (_, args: IMutationUserVars, context) =>
       authenticateUser(context, args.username, args.password),
     updateUserSettings() {}

@@ -2,16 +2,16 @@ interface ILandingPageProps extends React.PropsWithChildren<{}> {}
 
 export default function LandingPage(props: ILandingPageProps): JSX.Element {
   return (
-    <article className="LandingContainer font-mono text-center container container-sm mx-auto">
+    <article className="font-mono text-center max-w-lg mx-auto mb-24">
       <img
         alt="Downwrite Logo"
-        className="BannerImage"
+        className="mx-auto max-w-xxs w-full h-auto block mb-12"
         style={{
-          filter: "grayscale(100%)"
+          filter: "grayscale(50%)"
         }}
         src="/static/landing.png"
       />
-      <header className="IntroContents">
+      <header className="mb-12">
         <h1
           className="text-3xl font-sans font-black"
           data-testid="Login Page Container">
@@ -21,7 +21,7 @@ export default function LandingPage(props: ILandingPageProps): JSX.Element {
           A place to write
         </span>
       </header>
-      {props.children}
+      <section className="text-left">{props.children}</section>
     </article>
   );
 }
