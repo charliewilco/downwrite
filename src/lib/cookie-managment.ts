@@ -34,7 +34,7 @@ export function parseCookies(req: IncomingMessage | NextApiRequest) {
   }
 
   // For pages we do need to parse the cookies.
-  const cookie = req.headers?.cookie;
+  const cookie = req.headers!.cookie;
   return parse(cookie || "");
 }
 

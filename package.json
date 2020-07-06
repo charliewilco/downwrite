@@ -121,6 +121,7 @@
     "jsxBracketSameLine": true
   },
   "jest": {
-    "preset": "ts-jest"
+    "preset": "ts-jest",
+    "testEnvironment": "node"
   }
 }
