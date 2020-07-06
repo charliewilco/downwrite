@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 import fakeMarkdown from "./fake-markdown";
-import { IEntry, IPreview, IAuthor } from "../generated";
+import { IEntry, IPreview, IAuthor } from "../../utils/generated";
 import { IUserModel } from "../../lib/models";
 
 export class FixtureData {
