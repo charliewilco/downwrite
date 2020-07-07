@@ -45,8 +45,8 @@ export default function DashboardUI() {
         <Head>
           <title>
             {data.feed.length > 0
-              ? data.feed.length.toString().concat(" Entries")
-              : "No Entries"}
+              ? data.feed.length.toString().concat(" Entries ")
+              : "No Entries "}
             | Downwrite
           </title>
         </Head>
@@ -65,13 +65,12 @@ export default function DashboardUI() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const { DW_TOKEN } = parseCookies(req);
-
   const client = initializeApollo({}, { req, res });
   await client.query({
     query: AllPostsDocument,
     context: { req, res }
   });
+  const { DW_TOKEN } = parseCookies(req);
 
   const d = decode<TokenContents>(DW_TOKEN);
 

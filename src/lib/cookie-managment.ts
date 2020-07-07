@@ -1,7 +1,9 @@
 import { NextApiRequest } from "next";
 import { serialize, parse } from "cookie";
 import { ServerResponse, IncomingMessage } from "http";
-import { readToken } from "./token";
+import decode from "jwt-decode";
+import { readToken, TokenContents } from "./token";
+import { IInitialState } from "../atoms/initial";
 
 export const TOKEN_NAME = "DW_TOKEN";
 
@@ -49,4 +51,17 @@ export function getUserToken(req: IncomingMessage | NextApiRequest) {
   if (!token) return;
 
   return readToken(token);
+}
+
+export function getInitialStateFromCookie(
+  req: IncomingMessage | NextApiRequest
+): IInitialState {
+  const { DW_TOKEN } = parseCookies(req);
+
+  const d = decode<TokenContents>(DW_TOKEN);
+
+  return {
+    userId: d.user,
+    username: d.name
+  };
 }

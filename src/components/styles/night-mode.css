@@ -37,15 +37,3 @@ body {
   display: flex;
   align-items: center;
 }
-
-.NightToggle {
-  color: var(--text);
-  padding: 8px;
-  font-family: var(--sans);
-  margin: 16px 8px;
-  box-shadow: var(--shadow);
-  background: white;
-  bottom: 0;
-  z-index: 50;
-  position: fixed;
-}

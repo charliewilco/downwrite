@@ -23,15 +23,16 @@ const PAGES: IPage[] = [
 ];
 
 export default function UIFooter() {
+  const date = new Date(Date.now());
   return (
-    <footer className="AppFooter Wrapper Wrapper--md">
+    <footer className="max-w-2xl py-8 px-4 mx-auto">
       <nav className="AppFooterNav">
-        <ul className="u-center">
-          <li>
-            <span>&copy; 2019 Charles Peters</span>
+        <ul className="text-center p-0 m-0 text-sm">
+          <li className="inline-block mr-4">
+            <span>&copy; {date.getFullYear()} Charles Peters</span>
           </li>
           {PAGES.map((page, i) => (
-            <li key={i}>
+            <li key={i} className="inline-block mr-4">
               {page.external ? (
                 <a className="AltLink" href={page.href}>
                   {page.name}

@@ -1,34 +1,5 @@
-.UIContainer {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  overflow: scroll;
-}
-
 .clearfix::after {
   content: "";
   display: table;
   clear: both;
-}
-
-.UIContainer a {
-  background-color: transparent;
-  text-decoration: none;
-  color: var(--link);
-}
-
-.UIContainer a:active,
-.UIContainer a:hover {
-  color: var(--linkHover);
-  outline: 0;
-}
-
-.ContainerTitle {
-  font-weight: 900;
-  font-size: 24px;
 }

@@ -6,7 +6,6 @@
   display: block;
   position: absolute;
   width: 384px;
-  font-family: var(--sans);
   font-weight: 700;
 }
 
@@ -42,38 +41,38 @@
   }
 }
 
-.DropdownMenuButton {
-  appearance: none;
-  outline: none;
-  border: 0;
-  font-family: inherit;
-  background: none;
-  box-sizing: inherit;
-}
+/* .DropdownMenuButton { */
+/*   appearance: none; */
+/*   outline: none; */
+/*   border: 0; */
+/*   font-family: inherit; */
+/*   background: none; */
+/*   box-sizing: inherit; */
+/* } */
 
-.DropdownMenuList {
-  animation: FADE_IN_FROM_LEFT 0.45s;
-  font-size: 14px;
-}
+/* .DropdownMenuList { */
+/*   animation: FADE_IN_FROM_LEFT 0.45s; */
+/*   font-size: 14px; */
+/* } */
 
-.DropdownMenuList > [data-reach-menu-item][data-selected] {
-  background: var(--link);
-  color: white;
-  outline: none;
-}
+/* .DropdownMenuList > [data-reach-menu-item][data-selected] { */
+/*   background: var(--link); */
+/*   color: white; */
+/*   outline: none; */
+/* } */
 
-.DropdownMenuList a[data-selected] {
-  background: var(--link);
-  color: white;
-  outline: none;
-}
+/* .DropdownMenuList a[data-selected] { */
+/*   background: var(--link); */
+/*   color: white; */
+/*   outline: none; */
+/* } */
 
-.DropdownMenuList .mid {
-  display: inline-block;
-  vertical-align: middle;
-}
+/* .DropdownMenuList .mid { */
+/*   display: inline-block; */
+/*   vertical-align: middle; */
+/* } */
 
-.NightMode .DropdownMenuList,
-.NightMode .DropdownMenuList a {
-  color: white;
-}
+/* .NightMode .DropdownMenuList, */
+/* .NightMode .DropdownMenuList a { */
+/*   color: white; */
+/* } */

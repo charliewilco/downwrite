@@ -18,7 +18,6 @@
 
 .UIInputLabel {
   font-weight: 700;
-  font-family: var(--sans);
   transition: color 250ms ease-in-out;
 }
 

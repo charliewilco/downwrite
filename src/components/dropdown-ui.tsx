@@ -32,7 +32,7 @@ export default function DropdownUI() {
       <MenuButton className="appearance-none border-0">
         <NavIcon className="icon" />
       </MenuButton>
-      <MenuList className="Sheet DropdownMenuList">
+      <MenuList className="Sheet ">
         {currentUser.username && (
           <User border colors={["#FEB692", "#EA5455"]} name={currentUser.username} />
         )}
