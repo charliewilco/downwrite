@@ -18,7 +18,7 @@ export function UIHeader(): JSX.Element {
 
   return !isLogin ? (
     <header
-      className="AppHeader flex items-center justify-between px-2 py-4"
+      className="bg-blk-800 flex items-center justify-between px-2 py-4"
       data-testid="APP_HEADER">
       <nav className="flex items-center">
         <Logo />
