@@ -34,11 +34,11 @@ export default function EditUI() {
   }
 
   if (loading || state.editorState === null) {
-    return <Loading size={75} />;
+    return <Loading />;
   }
 
   return (
-    <div className="Wrapper Wrapper--md">
+    <div className="max-w-2xl mx-auto">
       <>
         <Head>
           <title>{state.title} | Downwrite</title>
@@ -57,8 +57,8 @@ export default function EditUI() {
             name="title"
             onChange={actions.handleTitleChange}
           />
-          <aside className="UtilityBarContainer">
-            <div className="UtilityBarItems">
+          <aside className="flex justify-between items-center mt-2 mx-0 mb-4 py-2">
+            <div className="flex items-center">
               <ToggleBox
                 label={value => (value ? "Public" : "Private")}
                 name="publicStatus"
@@ -66,10 +66,10 @@ export default function EditUI() {
                 onChange={actions.handleStatusChange}
               />
               {!!state.publicStatus && (
-                <PreviewLink className="AltPreviewLink" id={id} />
+                <PreviewLink className="block text-xs leading-none" id={id} />
               )}
             </div>
-            <div className="UtilityBarItems">
+            <div className="flex items-center">
               {!!state.editorState && (
                 <ExportMarkdown
                   editorState={state.editorState}

@@ -10,7 +10,7 @@ export const LoadingDashboard = () => {
       <Head>
         <title>Loading | Downwrite</title>
       </Head>
-      <Loading size={100} />
+      <Loading />
     </>
   );
 };

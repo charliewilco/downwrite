@@ -25,7 +25,7 @@ export default function PostList(props: IPostListProps): JSX.Element {
 
   return (
     <>
-      <header className="PostListHeader">
+      <header className="flex justify-between mb-24 items-center">
         <h1 className="ContainerTitle">Entries</h1>
         <LayoutControl
           layout={state.isGridView}

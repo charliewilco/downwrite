@@ -1,8 +1,0 @@
-.AppFooterNav::before {
-  content: "";
-  display: block;
-  width: 128px;
-  height: 2px;
-  background: var(--link);
-  margin: 0 auto 32px;
-}

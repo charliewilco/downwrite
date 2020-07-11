@@ -46,7 +46,7 @@ export default function DownwriteEditor(props: IEditorProps) {
     ? []
     : [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()];
 
-  let className = "EditorWrapper RichEditor-editor";
+  let className = "px-0 py-4 w-full h-full RichEditor-editor";
 
   let contentState: Draft.ContentState = props.editorState.getCurrentContent();
   if (!contentState.hasText()) {
@@ -94,7 +94,7 @@ export default function DownwriteEditor(props: IEditorProps) {
   }
 
   return (
-    <div className="EditorShell" style={{ fontFamily: editorFont }}>
+    <div className="relative pt-6 pb-64 mb-64" style={{ fontFamily: editorFont }}>
       <div className={className} onClick={onFocus}>
         <PluginsEditor
           onFocus={props.onFocus}

@@ -7,13 +7,15 @@ interface IModalProps extends React.PropsWithChildren<{}> {
 
 export default function UIModal(props: IModalProps) {
   return (
-    <DialogOverlay className="Overlay">
-      <DialogContent className="ModalContainer Wrapper Wrapper--sm">
-        <button className="ModalCloseButton" onClick={props.closeUIModal}>
-          <CloseIcon className="Modal__close" />
+    <DialogOverlay className="overflow-auto fixed z-50 top-0 bottom-0 flex justify-center flex-col items-center w-full p-2 ">
+      <DialogContent className="w-full m-auto bg-white h-auto flex relative">
+        <button
+          className="absolute m-0 appearance-none p-4"
+          onClick={props.closeUIModal}>
+          <CloseIcon className="" />
         </button>
-        <div className="ModalBody">
-          <div className="ModalContainerInner">{props.children}</div>
+        <div className="flex flex-col justify-center flex-1">
+          <div className="m-0">{props.children}</div>
         </div>
       </DialogContent>
     </DialogOverlay>

@@ -15,15 +15,15 @@ function ColorPicker(
   }
 ): JSX.Element {
   return (
-    <div className="PickerContainer">
-      {props.title && <h4 className="PickerTitle">{props.title}</h4>}
-      <div className="SwatchContainer">
-        {props.colors.map(color => (
+    <div className="p-1 m-1 rounded w-full max-w-xxs flex-1 border-onyx-100">
+      {props.title && <h4 className="opacity-50 mb-2 text-xs">{props.title}</h4>}
+      <div className="flex flex-wrap flex-1 items-center -m-1">
+        {props.colors.map(background => (
           <div
-            className="SwatchBox"
-            onClick={() => props.onPress(color, props.name)}
-            style={{ background: color }}
-            key={color}
+            className="w-8 h-8 mt-0 mx-1 mb-2 rounded"
+            onClick={() => props.onPress(background, props.name)}
+            style={{ background }}
+            key={background}
           />
         ))}
       </div>

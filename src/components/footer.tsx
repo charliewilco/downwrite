@@ -26,7 +26,7 @@ export default function UIFooter() {
   const date = new Date(Date.now());
   return (
     <footer className="max-w-2xl py-8 px-4 mx-auto">
-      <nav className="AppFooterNav">
+      <nav>
         <ul className="text-center p-0 m-0 text-sm">
           <li className="inline-block mr-4">
             <span>&copy; {date.getFullYear()} Charles Peters</span>
@@ -34,12 +34,16 @@ export default function UIFooter() {
           {PAGES.map((page, i) => (
             <li key={i} className="inline-block mr-4">
               {page.external ? (
-                <a className="AltLink" href={page.href}>
+                <a
+                  className="text-white leading-none cursor-pointer opacity-50 text-sm"
+                  href={page.href}>
                   {page.name}
                 </a>
               ) : (
                 <Link href={page.href} passHref>
-                  <a className="AltLink">{page.name}</a>
+                  <a className="text-white leading-none cursor-pointer opacity-50 text-sm">
+                    {page.name}
+                  </a>
                 </Link>
               )}
             </li>

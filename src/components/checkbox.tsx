@@ -5,10 +5,6 @@ export default function CheckboxInput(
   props: InputHTMLAttributes<HTMLInputElement>
 ): JSX.Element {
   return (
-    <input
-      type="checkbox"
-      {...props}
-      className={classNames("UICheck", props.className)}
-    />
+    <input type="checkbox" {...props} className={classNames("", props.className)} />
   );
 }

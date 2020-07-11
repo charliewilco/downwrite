@@ -34,14 +34,18 @@ export function UIHeader(): JSX.Element {
       {authed ? (
         <nav className="flex items-center">
           <Link href={Routes.NEW} passHref>
-            <a className="AltLink mr-8">New</a>
+            <a className="text-white leading-none cursor-pointer opacity-50 text-sm mr-8">
+              New
+            </a>
           </Link>
           <DropdownUI />
         </nav>
       ) : (
         <nav className="flex items-center">
           <Link href={Routes.LOGIN} passHref>
-            <a className="AltLink mr-8">Login or Sign Up</a>
+            <a className="text-white leading-none cursor-pointer opacity-50 text-sm mr-8">
+              Login or Sign Up
+            </a>
           </Link>
         </nav>
       )}

@@ -70,7 +70,7 @@ export default function UIInput({ testID, label, ...props }: IUIInputProps) {
         id={id.current}
         {...props}
         className={classNames(
-          "font-mono  font-normal py-2 px-0 appearance-none block w-full border-0 border-b-2 border-onyx-400",
+          "font-mono text-sm font-normal py-2 px-0 appearance-none block w-full border-0 border-b-2 border-onyx-400",
           props.className
         )}
       />

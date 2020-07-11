@@ -28,13 +28,20 @@ export default function FunHexInput(props: IHexInputProps): JSX.Element {
   }, [hex]);
 
   return (
-    <div className="HexInputWrapper">
-      <span>#</span>
+    <div className="flex border-b font-mono overflow-hidden rounded">
+      <span
+        className="w-6 text-sm py-1 px-2 text-center"
+        style={{
+          background: "#dadada",
+          color: "#4f4f4f"
+        }}>
+        #
+      </span>
       <input
         value={hex.replace("#", "")}
         onChange={handleChange}
         type="text"
-        className="HexInput"
+        className="block w-full p-1 text-sm border-0"
         spellCheck={false}
         maxLength={6}
       />

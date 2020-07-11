@@ -22,9 +22,9 @@ export default function GradientEditor(props: IGradientEditorProps): JSX.Element
   const colors = useMemo(() => [props.colors.a, props.colors.b], [props.colors]);
 
   return (
-    <div className="Wrapper Wrapper--sm GradientEditorContainer">
-      <Avatar className="GEAvatar" centered size={64} colors={colors} />
-      <div className="Flexxy">
+    <div className="my-64">
+      <Avatar className="mb-32" centered size={64} colors={colors} />
+      <div className="flex items-center flex-wrap justify-between">
         <ColorPicker
           title="Start Color"
           name="a"

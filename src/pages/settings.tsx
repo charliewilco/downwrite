@@ -11,7 +11,7 @@ import { useUserDetailsQuery, UserDetailsDocument } from "../utils/generated";
 export default function SettingsPage() {
   const { error, loading, data } = useUserDetailsQuery();
   if (loading) {
-    return <Loading size={50} />;
+    return <Loading />;
   }
 
   if (error) {

@@ -34,13 +34,7 @@ export default function NewEntryPage() {
 
   return (
     <form
-      className="Wrapper Wrapper--md"
-      style={{
-        paddingTop: 128,
-        paddingLeft: 4,
-        paddingRight: 4,
-        paddingBottom: 0
-      }}
+      className="max-w-2xl mx-auto pt-64 mt-64 px-2 pb-0"
       onSubmit={handleSubmit}>
       <Head>
         <title>{values.title ? values.title : "New"} | Downwrite</title>
@@ -56,11 +50,11 @@ export default function NewEntryPage() {
           name="title"
           placeholder="Untitled Document"
         />
-        <aside className="UtilityBarContainer">
-          <div className="UtilityBarItems">
+        <aside className="flex justify-between items-center mt-2 mx-0 mb-4 py-2">
+          <div className="flex items-center">
             {isOffline && <span>You're Offline Right Now</span>}
           </div>
-          <div className="UtilityBarItems">
+          <div className="flex items-center">
             <Button type="submit">Add New</Button>
           </div>
         </aside>

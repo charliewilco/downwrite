@@ -15,7 +15,7 @@ import { IInitialState } from "../atoms/initial";
 
 export default function DashboardUI() {
   const [{ selectedPost, modalOpen }, actions] = useDashboard();
-  const { data, loading, error } = useAllPostsQuery({ ssr: true });
+  const { data, loading, error } = useAllPostsQuery();
   const onConfirmDelete = useRemovePost();
 
   const onDelete = useCallback(() => {
@@ -50,7 +50,7 @@ export default function DashboardUI() {
             | Downwrite
           </title>
         </Head>
-        <section className="PostContainer">
+        <section className="py-4 px-2">
           {data.feed.length > 0 ? (
             <PostList onSelect={actions.onSelect} posts={data.feed} />
           ) : (

@@ -5,7 +5,7 @@ import { Routes } from "../utils/routes";
 export default function EmptyPosts(): JSX.Element {
   return (
     <section className="mx-auto max-w-lg" data-testid="NO_ENTRIES_PROMPT">
-      <div className="pt-64i flex items-center flex-col">
+      <div className="pt-64 flex items-center flex-col">
         <div className="w-full max-w-sm mb-8">
           <Nib />
         </div>

@@ -8,27 +8,177 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "./level.css";
+body,
+#__next {
+  width: 100%;
+  height: 100%;
+}
 
-@import "./checkbox.css";
-@import "./alt-link.css";
-@import "./ui-notification.css";
-@import "./utility-bar.css";
-@import "./loading.css";
+#__next {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+:root {
+  --reach-menu-button: 1;
+}
+
+[data-reach-menu] {
+  display: block;
+  position: absolute;
+  width: 384px;
+  font-weight: 700;
+}
+
+[data-reach-menu-list] {
+  display: block;
+  white-space: nowrap;
+  outline: none;
+  padding: 0;
+}
+
+[data-reach-menu-item] {
+  display: block;
+}
+
+[data-reach-menu-item] {
+  cursor: pointer;
+  display: block;
+  color: inherit;
+  font: inherit;
+  text-decoration: initial;
+  padding: 8px;
+}
+
+:root {
+  --reach-dialog: 1;
+}
+
+[data-reach-dialog-overlay] {
+  overflow: auto;
+}
+
+[data-reach-dialog-content] {
+  width: 50vw;
+  margin: 10vh auto;
+  outline: none;
+}
+
+@keyframes FADE_IN {
+  0% {
+    transform: translate(0, 75%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+[data-reach-dialog-content] {
+  animation: FADE_IN 0.45s;
+}
+
+.RichEditor-root {
+  font-size: 14px;
+}
+
+.RichEditor-editor {
+  cursor: text;
+  position: relative;
+}
+
+.public-DraftEditorPlaceholder-inner {
+  opacity: 0.5;
+  margin-top: 16px;
+  position: absolute;
+  top: 0;
+  font-style: italic;
+}
+
+.RichEditor-editor .public-DraftEditor-content {
+  min-height: 100px;
+}
+
+.RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
+  display: none;
+}
+
+.RichEditor-editor .RichEditor-blockquote {
+  border-left: 5px solid #eee;
+  color: #666;
+  font-family: inherit;
+  font-style: italic;
+  margin: 16px 0 16px -5px;
+  padding: 10px 20px;
+}
+
+.RichEditor-editor .public-DraftStyleDefault-pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  @apply font-mono;
+  font-size: 16px;
+  padding: 20px;
+}
+
+.RichEditor-controls {
+  font-family: inherit;
+  font-size: 13px;
+  user-select: none;
+}
+
+.RichEditor-styleButton {
+  color: #999;
+  cursor: pointer;
+  margin-right: 16px;
+  padding: 2px 0;
+  display: inline-block;
+}
+
+.RichEditor-activeButton {
+  color: #5890ff;
+}
+
+/*
+** Overrides for Draft.js
+*/
+
+.RichEditor-editor h2 {
+  font-size: 137.5%;
+}
+
+.RichEditor-editor h3 {
+  font-size: 125%;
+}
+
+.RichEditor-editor h4 {
+  font-size: 112.5%;
+}
+
+.RichEditor-editor h5 {
+  font-size: 100%;
+}
+
+.RichEditor-editor h6 {
+  font-size: 87.5%;
+}
+
+.RichEditor-editor pre {
+  background: #f4f5f5;
+  padding: 0.75rem;
+  font-size: 13px;
+}
+
+.NightMode .RichEditor-editor pre {
+  color: #4c4c4c;
+}
+
+.public-DraftStyleDefault-orderedListItem > *,
+.public-DraftStyleDefault-unorderedListItem > * {
+  display: inline;
+}
+
 @import "./post-list.css";
-@import "./dropdown-menu.css";
-@import "./editor-input.css";
-@import "./hex-input.css";
-@import "./gradient-editor.css";
-@import "./login-tabs.css";
-@import "./color-picker.css";
-@import "./modal.css";
-@import "./delete-modal.css";
-@import "./time-marker-meta.css";
-@import "./footer.css";
-@import "./toggle-box.css";
-@import "./editor.css";
-@import "./draft.css";
-@import "./nib.css";
 @import "./preview-body.css";
-@import "./not-found.css";

@@ -63,7 +63,7 @@ export default function PreviewEntry(
   }
 
   if (loading) {
-    return <Loading size={100} />;
+    return <Loading />;
   }
 
   if (!!data) {

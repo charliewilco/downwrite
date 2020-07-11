@@ -2,20 +2,7 @@ import { useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNotifications, UINotificationMessage, NotificationType } from "../atoms";
 import { useTimeout } from "../hooks";
-
-function getTypeClassName(
-  notification: UINotificationMessage,
-  defaultName = ""
-): string {
-  const type: string =
-    notification.type && notification.type === NotificationType.WARNING
-      ? "warning"
-      : notification.type === NotificationType.ERROR
-      ? "error"
-      : "default";
-
-  return [defaultName, type].join(" ");
-}
+import classNames from "../utils/classnames";
 
 interface IUIMessageProps {
   notification: UINotificationMessage;
@@ -23,18 +10,20 @@ interface IUIMessageProps {
 }
 
 export function UIMessage(props: IUIMessageProps): JSX.Element {
-  const className = getTypeClassName(props.notification, "UINotification");
-
   const onRemove = useCallback(() => {
-    console.log("Notification", props);
     props.onDismiss(props.notification);
   }, [props]);
 
   useTimeout(15000, props.notification.dismissable ? onRemove : undefined);
 
   return (
-    <div className={className}>
-      <div className="UINotification__content">
+    <div
+      className={classNames(
+        "flex items center justify-between w-full h-full bg-white px-2 pr-4 pl-2 mt-2",
+        props.notification.type === NotificationType.WARNING && "bg-goldar-500",
+        props.notification.type === NotificationType.ERROR && "bg-red-500"
+      )}>
+      <div className="m-0 leading-snug text-sm opacity-75">
         <p>
           {props.notification.type !== NotificationType.DEFAULT && (
             <b>{props.notification.type} </b>
@@ -43,7 +32,11 @@ export function UIMessage(props: IUIMessageProps): JSX.Element {
         </p>
       </div>
       {!props.notification.dismissable && (
-        <button onClick={onRemove}>Dismiss</button>
+        <button
+          className="ml-4 p-0 border-0 appearance-none font-bold"
+          onClick={onRemove}>
+          Dismiss
+        </button>
       )}
     </div>
   );
@@ -52,9 +45,14 @@ export function UIMessage(props: IUIMessageProps): JSX.Element {
 export function MessageList() {
   const [notifications, actions] = useNotifications();
 
+  const innerClassName = classNames(
+    "relative max-w-sm",
+    notifications.length === 0 && "w-0 h-0 max-w-0"
+  );
+
   return (
-    <div className="UINotificationContainer">
-      <div className="UINotificationContainerInner">
+    <div className="fixed p-4 w-full max-w-sm flex flex-col justify-end">
+      <div className={innerClassName}>
         <AnimatePresence initial={false}>
           {notifications.map((notification, i) => (
             <motion.div

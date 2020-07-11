@@ -12,7 +12,7 @@ function Time(props: ITimeMarkProps) {
 
 export default function TimeMarker(props: ITimeMarkProps) {
   return (
-    <div className="TimeMarker">
+    <div className="opacity-50 text-xs mb-2">
       Added on <Time dateAdded={props.dateAdded} />
     </div>
   );
