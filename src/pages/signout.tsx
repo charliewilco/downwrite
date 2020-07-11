@@ -1,9 +1,8 @@
 import { GetServerSideProps } from "next";
 import { removeTokenCookie } from "../lib/cookie-managment";
-import { IAppState } from "../atoms";
 
 export const getServerSideProps: GetServerSideProps<
-  { token: "" } & Partial<IAppState>,
+  { token: "" },
   any
 > = async context => {
   removeTokenCookie(context.res);

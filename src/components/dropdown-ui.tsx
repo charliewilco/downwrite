@@ -7,15 +7,14 @@ import {
   FiEdit3,
   FiSettings,
   FiSun,
-  FiMoon
+  FiMoon,
+  FiMenu
 } from "react-icons/fi";
 import { Routes } from "../utils/routes";
-import { NavIcon } from "./icons";
 import User from "./user";
 import { useSettings, useCurrentUser } from "../atoms";
 
 const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) => {
-  console.log(props);
   return (
     <Link passHref href={to}>
       <a ref={ref} {...props} />
@@ -30,9 +29,9 @@ export default function DropdownUI() {
   return (
     <Menu>
       <MenuButton className="appearance-none border-0">
-        <NavIcon className="icon" />
+        <FiMenu size={16} />
       </MenuButton>
-      <MenuList className="Sheet ">
+      <MenuList className="shadow-md bg-onyx-800  ">
         {currentUser.username && (
           <User border colors={["#FEB692", "#EA5455"]} name={currentUser.username} />
         )}

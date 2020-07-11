@@ -21,7 +21,7 @@ interface IExportCallback {
 
 // TODO: use `React.useMemo()` to run export
 export default function UIMarkdownExport(props: IExportProps) {
-  const className = classNames("Export", props.className);
+  const className = classNames("block mx-4 my-0", props.className);
   const customDraft = (content: Draft.RawDraftContentState): string =>
     draftToMarkdown(content, {
       entityItems: {

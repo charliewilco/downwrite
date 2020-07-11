@@ -29,31 +29,3 @@
   color: var(--meta);
   font-weight: 400;
 }
-
-.CardTray {
-  display: flex;
-  font-weight: 700;
-  font-size: 12px;
-  justify-content: space-between;
-}
-
-.CardTray a:hover {
-  color: var(--blue500);
-}
-
-.CardDeleteButton {
-  color: var(--cardDeleteButton);
-  border: 0px;
-  background: none;
-  appearance: none;
-  font-family: inherit;
-  box-sizing: inherit;
-  font-size: 12px;
-  -webkit-font-smoothing: antialiased;
-}
-
-@media (min-width: 57.75rem) {
-  h2 {
-    font-size: 18px;
-  }
-}

@@ -17,28 +17,32 @@ export default function PostListItem(props: IListItemProps): JSX.Element {
   }
 
   return (
-    <div className="PostItem" data-testid="POST_LIST_ITEM">
-      <div>
-        <h2 className="PostItemTitle">
-          <Link href={`/edit/${props.id}`} passHref>
-            <a>{props.title}</a>
-          </Link>
-        </h2>
-        <small className="PostItemMeta">
-          added {distance(new Date(props.dateAdded))} ago
-        </small>
-      </div>
-      <div className="PostItemTray">
+    <li>
+      <div
+        className="p-4 border-l-2 border-transparent hover:border-pixieblue-500 transition duration-500 ease-in-out "
+        data-testid="POST_LIST_ITEM">
         <div>
-          <EditLink id={props.id} style={{ marginRight: 8 }} />
-          {props.public && <PreviewLink id={props.id} />}
+          <h2 className="text-base font-bold">
+            <Link href={`/edit/${props.id}`} passHref>
+              <a>{props.title}</a>
+            </Link>
+          </h2>
+          <small className="text-sm block opacity-50 font-normal mb-2">
+            added {distance(new Date(props.dateAdded))} ago
+          </small>
         </div>
-        {props.onDelete && (
-          <button className="PostItemDeleteButton" onClick={onDelete}>
-            Delete
-          </button>
-        )}
+        <div className="flex justify-between items-center text-xs font-bold">
+          <div>
+            <EditLink id={props.id} style={{ marginRight: 8 }} />
+            {props.public && <PreviewLink id={props.id} />}
+          </div>
+          {props.onDelete && (
+            <button className="font-bold text-xs" onClick={onDelete}>
+              Delete
+            </button>
+          )}
+        </div>
       </div>
-    </div>
+    </li>
   );
 }

@@ -57,7 +57,7 @@ export default function SettingsLocalMarkdown(): JSX.Element {
       description="Settings only saved in your browser and won't sync across devices.">
       <form onSubmit={formik.handleSubmit}>
         {LOCAL_SETTINGS_INPUTS.map((input, idx) => (
-          <UIInputContainer key={idx}>
+          <UIInputContainer key={idx} className="mb-4">
             <UIInput
               label={input.label}
               name={input.name}

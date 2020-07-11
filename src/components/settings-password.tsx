@@ -63,7 +63,7 @@ export default function SettingsPassword(): JSX.Element {
     <SettingsBlock title="Password">
       <form onSubmit={formik.handleSubmit}>
         {PASSWORD_INPUTS.map(({ name, label }: IInputs, idx) => (
-          <UIInputContainer key={idx}>
+          <UIInputContainer key={idx} className="mb-4">
             <UIInput
               label={label}
               name={name}

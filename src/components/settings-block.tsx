@@ -7,8 +7,8 @@ interface ISettingsFormActionsProps extends React.PropsWithChildren<{}> {
 
 export function SettingsFormActions(props: ISettingsFormActionsProps): JSX.Element {
   const className = classNames(
-    "ActionsContainer",
-    props.split && "ActionsContainer--split",
+    "mt-4 flex justify-end",
+    props.split && "justify-between",
     props.className
   );
   return <div className={className}>{props.children}</div>;
@@ -21,14 +21,14 @@ interface ISettingsBlockProps extends React.PropsWithChildren<{}> {
 
 export default function SettingsBlock(props: ISettingsBlockProps): JSX.Element {
   return (
-    <section className="Sheet SettingsBlock">
-      <div className="SettingsBlockTitleContainer">
-        <h4 className="SettingsBlockTitle">{props.title}</h4>
+    <section className="flex bg-onyx-800 flex-wrap mb-8 p-4">
+      <div className="pt-2 w-1/4 pr-2">
+        <h4 className="text-base mb-2 font-bold">{props.title}</h4>
         {props.description && (
-          <p className="SettingsBlockDescription">{props.description}</p>
+          <p className="opacity-75 text-xs font-light italic">{props.description}</p>
         )}
       </div>
-      <div className="SettingsBlockContents">{props.children}</div>
+      <div className="p-2 w-3/4">{props.children}</div>
     </section>
   );
 }

@@ -38,7 +38,7 @@ export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
   return (
     <SettingsBlock title="User Settings">
       <form onSubmit={formik.handleSubmit}>
-        <UIInputContainer>
+        <UIInputContainer className="mb-4">
           <UIInput
             testID="SETTINGS_USERNAME_INPUT"
             placeholder="username"
@@ -52,7 +52,7 @@ export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
             <UIInputError>{formik.errors.username}</UIInputError>
           )}
         </UIInputContainer>
-        <UIInputContainer>
+        <UIInputContainer className="mb-4">
           <UIInput
             testID="SETTINGS_EMAIL_INPUT"
             placeholder="user@email.com"

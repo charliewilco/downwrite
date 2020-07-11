@@ -6,3 +6,5 @@ export {
 export { useSettings } from "./settings";
 export { useCurrentUser } from "./current-user";
 export { useInitialRecoilSnapshot } from "./initial";
+
+export interface IAppState {}

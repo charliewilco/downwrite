@@ -27,7 +27,6 @@ export default function SettingsPage() {
       <Head>
         <title>User Settings</title>
       </Head>
-
       <h1 className="font-black text-xl mb-8">Settings</h1>
       <SettingsUser user={data?.settings!} />
       <SettingsPassword />

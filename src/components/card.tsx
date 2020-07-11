@@ -20,25 +20,25 @@ export default function Card(props: ICardProps): JSX.Element {
   }, [props.onDelete, props.id, props.title]);
 
   return (
-    <div className="Sheet Card" data-testid="CARD">
-      <header className="CardHeader">
-        <h2 className="CardTitle" data-testid="CARD_TITLE">
+    <div className="shadow-md bg-onyx-800 p-2" data-testid="CARD">
+      <header className="border-b-2 border-onyx-600 pb-2 mb-12">
+        <h2 className="text-base leading-none" data-testid="CARD_TITLE">
           <EditLink title={props.title} id={props.id} />
         </h2>
         {props.dateAdded && (
-          <small className="CardMeta">
+          <small className="opacity-50 text-xs">
             added {distance(new Date(props.dateAdded))} ago
           </small>
         )}
       </header>
-      <footer className="CardTray">
-        <div className="links" data-testid="CARD_EXCERPT">
+      <footer className="text-xs flex font-bold justify-between">
+        <div data-testid="CARD_EXCERPT">
           <EditLink style={{ marginRight: 8 }} id={props.id} />
           {props.public && <PreviewLink style={{ marginRight: 8 }} id={props.id} />}
         </div>
         {props.onDelete && (
           <button
-            className="CardDeleteButton"
+            className="text-xs font-bold"
             data-testid="CARD_DELETE_BUTTON"
             onClick={onDelete}>
             Delete

@@ -16,15 +16,16 @@ const LegalLink = () => (
 
 export default function LegalBoilerplate(props: ILegalProps) {
   return (
-    <label className="LegalConfirm" htmlFor={props.name}>
+    <label
+      className="flex items-center font-bold p-2 bg-onyx-900 my-4 text-white"
+      htmlFor={props.name}>
       <Checkbox
-        className="LegalCheck"
         name={props.name}
         id={props.name}
         checked={props.checked}
         onChange={props.onChange}
       />
-      <small className="LegalDisclaimer">
+      <small className="ml-4 block leading-tight flex-1">
         I'm agreeing to abide in all the <LegalLink />.
       </small>
     </label>

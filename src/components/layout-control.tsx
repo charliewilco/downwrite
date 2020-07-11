@@ -10,6 +10,10 @@ interface ILayoutControl {
 export default function LayoutControl({ layout, layoutChange }: ILayoutControl) {
   const { onClick, ...switchProps } = useSwitchProps(layout, "Grid or List Layout");
 
+  const defaultClassName =
+    "inline-block text-sm my-2 ml-4 border-b-2 opacity-50 border-transparent py-2";
+  const activeClassName = "border-pixieblue-500 opacity-100";
+
   const wrappedLayoutChange = useCallback(
     (val: boolean) => {
       onClick(val);
@@ -17,16 +21,17 @@ export default function LayoutControl({ layout, layoutChange }: ILayoutControl) 
     },
     [onClick, layoutChange]
   );
+
   return (
     <div {...switchProps}>
       <div
         data-testid="LAYOUT_CONTROL_GRID"
-        className={classNames("LayoutTrigger", layout && "active")}
+        className={classNames(defaultClassName, layout && activeClassName)}
         onClick={() => wrappedLayoutChange(true)}>
         Grid
       </div>
       <div
-        className={classNames("LayoutTrigger", !layout && "active")}
+        className={classNames(defaultClassName, !layout && activeClassName)}
         data-testid="LAYOUT_CONTROL_LIST"
         onClick={() => wrappedLayoutChange(false)}>
         List

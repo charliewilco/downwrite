@@ -16,7 +16,7 @@ interface IUIInputProps {
 export function UIInputContainer({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>): JSX.Element {
-  const className = classNames("UIInputContainer", props.className);
+  const className = classNames("relative", props.className);
   return <div {...props} className={className} />;
 }
 
@@ -60,10 +60,8 @@ export default function UIInput({ testID, label, ...props }: IUIInputProps) {
     focused: false
   });
 
-  const className = classNames("UIInputElement", props.className);
-
   return (
-    <label className="UIInputContainer" htmlFor={id.current}>
+    <label className="relative" htmlFor={id.current}>
       <input
         data-testid={testID}
         type="text"
@@ -71,10 +69,13 @@ export default function UIInput({ testID, label, ...props }: IUIInputProps) {
         onBlur={() => dispatch({ type: InputAction.BLUR })}
         id={id.current}
         {...props}
-        className={className}
+        className={classNames(
+          "font-mono  font-normal py-2 px-0 appearance-none block w-full border-0 border-b-2 border-onyx-400",
+          props.className
+        )}
       />
       <small
-        className="UIInputLabel"
+        className="font-bold"
         style={{ color: state.focused ? "var(--yellow700)" : "#b4b4b4" }}>
         {label}
       </small>

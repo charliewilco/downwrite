@@ -2,7 +2,7 @@ import FeatureContent from "./features";
 
 export default function FeatureList() {
   return (
-    <section className="FeaturesContainer">
+    <section>
       <FeatureContent />
     </section>
   );

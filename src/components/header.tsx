@@ -10,15 +10,16 @@ export function UIHeader(): JSX.Element {
   const [currentUser] = useCurrentUser();
   const router = useRouter();
 
-  const style: React.CSSProperties = { marginRight: 16 };
   const authed = currentUser && currentUser.id && currentUser.username;
 
   const isLogin: boolean = router ? router.pathname === "/login" : false;
-  const homeLink: string = !authed ? Routes.LOGIN : Routes.DASHBOARD;
+  const homeLink: string = !!authed ? Routes.DASHBOARD : Routes.LOGIN;
+
+  console.log(authed, homeLink);
 
   return !isLogin ? (
     <header
-      className="bg-blk-800 flex items-center justify-between px-2 py-4"
+      className="flex items-center justify-between px-2 py-4"
       data-testid="APP_HEADER">
       <nav className="flex items-center">
         <Logo />
@@ -33,18 +34,14 @@ export function UIHeader(): JSX.Element {
       {authed ? (
         <nav className="flex items-center">
           <Link href={Routes.NEW} passHref>
-            <a className="AltLink" style={style}>
-              New
-            </a>
+            <a className="AltLink mr-8">New</a>
           </Link>
           <DropdownUI />
         </nav>
       ) : (
         <nav className="flex items-center">
           <Link href={Routes.LOGIN} passHref>
-            <a className="AltLink" style={style}>
-              Login or Sign Up
-            </a>
+            <a className="AltLink mr-8">Login or Sign Up</a>
           </Link>
         </nav>
       )}

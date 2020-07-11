@@ -75,7 +75,7 @@ export default function RegisterForm(): JSX.Element {
         checked={values.legalChecked}
         onChange={handleChange}
       />
-      <div className="u-right">
+      <div className="text-right">
         <UIInputContainer style={{ display: "inline-block" }}>
           <Button disabled={!values.legalChecked} type="submit">
             Register
