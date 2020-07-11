@@ -1,4 +1,5 @@
 import classNames from "../utils/classnames";
+import { useMemo } from "react";
 
 export type GradientColors = string[];
 
@@ -28,14 +29,12 @@ interface IAvatarProps {
 }
 
 export default function Avatar(props: IAvatarProps): JSX.Element {
-  const colors = gradientPoints(props.colors);
-
-  const style: React.CSSProperties = {
-    background: `linear-gradient(135deg,
-      var(${colors.a}, #feb692) 10%,
-      var(${colors.b}, #ea5455) 100%
-    )`
-  };
+  const style = useMemo<React.CSSProperties>(() => {
+    const colors = gradientPoints(props.colors);
+    return {
+      background: `linear-gradient(135deg, ${colors.a} 10%, ${colors.b} 100%)`
+    };
+  }, [props.colors]);
 
   return (
     <div

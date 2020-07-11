@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import decode from "jwt-decode";
@@ -12,11 +12,19 @@ import { initializeApollo } from "../lib/apollo";
 import { parseCookies } from "../lib/cookie-managment";
 import { TokenContents } from "../lib/token";
 import { IInitialState } from "../atoms/initial";
+import { useNotifications, NotificationType } from "../atoms";
 
 export default function DashboardUI() {
   const [{ selectedPost, modalOpen }, actions] = useDashboard();
   const { data, loading, error } = useAllPostsQuery();
   const onConfirmDelete = useRemovePost();
+  const [, { addNotification }] = useNotifications();
+
+  useEffect(() => {
+    addNotification("Hello", NotificationType.DEFAULT, false);
+    addNotification("Not Now", NotificationType.WARNING, false);
+    addNotification("Hello", NotificationType.ERROR, false);
+  }, []);
 
   const onDelete = useCallback(() => {
     onConfirmDelete(selectedPost!.id);

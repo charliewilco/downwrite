@@ -19,12 +19,12 @@ export function UIMessage(props: IUIMessageProps): JSX.Element {
   return (
     <div
       className={classNames(
-        "flex items center justify-between w-full h-full bg-white px-2 pr-4 pl-2 mt-2",
+        "flex items center justify-between w-full h-full bg-white py-2 pr-4 pl-2 mt-2 text-onyx-900 rounded",
         props.notification.type === NotificationType.WARNING && "bg-goldar-500",
         props.notification.type === NotificationType.ERROR && "bg-red-500"
       )}>
-      <div className="m-0 leading-snug text-sm opacity-75">
-        <p>
+      <div className="m-0 text-sm opacity-75">
+        <p className="m-0">
           {props.notification.type !== NotificationType.DEFAULT && (
             <b>{props.notification.type} </b>
           )}
@@ -33,7 +33,7 @@ export function UIMessage(props: IUIMessageProps): JSX.Element {
       </div>
       {!props.notification.dismissable && (
         <button
-          className="ml-4 p-0 border-0 appearance-none font-bold"
+          className="ml-4 p-0 border-0 appearance-none font-bold text-xs"
           onClick={onRemove}>
           Dismiss
         </button>
@@ -43,7 +43,7 @@ export function UIMessage(props: IUIMessageProps): JSX.Element {
 }
 
 export function MessageList() {
-  const [notifications, actions] = useNotifications();
+  const [notifications, { removeNotification }] = useNotifications();
 
   const innerClassName = classNames(
     "relative max-w-sm",
@@ -51,7 +51,7 @@ export function MessageList() {
   );
 
   return (
-    <div className="fixed p-4 w-full max-w-sm flex flex-col justify-end">
+    <div className="fixed p-4 w-full max-w-sm flex flex-col justify-end bottom-0 right-0">
       <div className={innerClassName}>
         <AnimatePresence initial={false}>
           {notifications.map((notification, i) => (
@@ -65,7 +65,7 @@ export function MessageList() {
               exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}>
               <UIMessage
                 notification={notification}
-                onDismiss={actions.removeNotification}
+                onDismiss={removeNotification}
               />
             </motion.div>
           ))}
