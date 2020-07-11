@@ -10,7 +10,6 @@ export interface IInitialState {
 }
 
 export function useInitialRecoilSnapshot(initialState?: IInitialState) {
-  console.log("INITIAL RECOIL STATE", initialState);
   return useCallback(
     (m: MutableSnapshot) => {
       m.set(settingsAtom, {

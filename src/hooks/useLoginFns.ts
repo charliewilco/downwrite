@@ -70,7 +70,6 @@ export function useLoginFns(): IFormHandlers {
   const onRegisterSubmit = useCallback(
     async (values: IRegisterValues): Promise<void> => {
       if (values.legalChecked) {
-        console.log(values);
         await createUser({
           variables: {
             email: values.email,

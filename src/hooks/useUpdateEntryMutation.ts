@@ -46,7 +46,6 @@ export function useUpdateEntry(id: string, state: IEditorState) {
   });
 
   const handleSubmit = useCallback(async () => {
-    console.log("Submitting..");
     if (state.editorState !== null) {
       const content = Draft.convertToRaw(state.editorState.getCurrentContent());
       await updateEntry({

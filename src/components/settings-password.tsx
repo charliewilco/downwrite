@@ -38,7 +38,6 @@ export default function SettingsPassword(): JSX.Element {
   const onSubmit = useCallback(
     (values: IPasswordSettings, actions: FormikHelpers<IPasswordSettings>): void => {
       const response = false;
-      console.log(values);
 
       if (response) {
         actions.setSubmitting(false);

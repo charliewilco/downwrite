@@ -21,7 +21,6 @@ export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
       actions: FormikHelpers<IUserFormValues>
     ): Promise<void> => {
       const settings = false;
-      console.log(values);
       if (settings) {
         actions.setSubmitting(false);
       }

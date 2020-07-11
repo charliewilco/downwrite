@@ -17,7 +17,6 @@ export const getServerSideProps: GetServerSideProps<IndexProps> = async context 
   const { DW_TOKEN } = parseCookies(context.req);
 
   if (DW_TOKEN) {
-    console.log("TOKEN", DW_TOKEN);
     return {
       props: {
         token: DW_TOKEN,
@@ -43,7 +42,6 @@ export default function IndexPage(
   const router = useRouter();
 
   useEffect(() => {
-    console.log("REDIRECT");
     if (isProps<IIndexProps>(props)) {
       if (props.redirect) {
         router.replace(props.redirect);

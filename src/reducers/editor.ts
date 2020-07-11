@@ -37,7 +37,6 @@ const DEFAULT_EDITOR_STATE: IEditorState = {
 export function initializer(initialData?: {
   entry: Pick<IEntry, "title" | "dateAdded" | "content" | "public"> | null;
 }): IEditorState {
-  console.log("INITIAL DATA EDITOR", initialData);
   if (!!initialData && initialData.entry !== null) {
     const draft = markdownToDraft(initialData.entry.content!);
     const editorState = Draft.EditorState.createWithContent(
