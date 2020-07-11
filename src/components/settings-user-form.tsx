@@ -17,7 +17,7 @@ interface ISettingsUserForm {
 export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
   const onSubmit = useCallback(
     async (
-      values: IUserFormValues,
+      _: IUserFormValues,
       actions: FormikHelpers<IUserFormValues>
     ): Promise<void> => {
       const settings = false;
