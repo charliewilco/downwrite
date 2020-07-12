@@ -1,5 +1,4 @@
 export * from "./useAutosaving";
-export * from "./useDarkMode";
 export * from "./useLocalDraft";
 export * from "./useLocalStorage";
 export * from "./useLogging";

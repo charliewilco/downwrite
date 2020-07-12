@@ -4,7 +4,7 @@ import { RecoilRoot } from "recoil";
 import { UIShell } from "../components/ui-shell";
 import { useApollo } from "../lib/apollo";
 import { useInitialRecoilSnapshot } from "../atoms";
-import "../components/styles/base.css";
+import "../styles.css";
 
 interface IAppProps {
   token?: string;
