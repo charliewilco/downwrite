@@ -1,6 +1,6 @@
 import Head from "next/head";
-import Content from "../components/content";
-import Features from "../components/features";
+import Content from "@components/content";
+import Features from "@components/features";
 
 export default function AboutDetails(): JSX.Element {
   return (

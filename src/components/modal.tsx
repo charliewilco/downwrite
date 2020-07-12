@@ -1,5 +1,5 @@
 import { DialogContent, DialogOverlay } from "@reach/dialog";
-import { CloseIcon } from "./icons";
+import { FiX } from "react-icons/fi";
 
 interface IModalProps extends React.PropsWithChildren<{}> {
   closeUIModal: () => void;
@@ -12,7 +12,7 @@ export default function UIModal(props: IModalProps) {
         <button
           className="absolute m-0 appearance-none p-4"
           onClick={props.closeUIModal}>
-          <CloseIcon className="" />
+          <FiX className="" />
         </button>
         <div className="flex flex-col justify-center flex-1">
           <div className="m-0">{props.children}</div>

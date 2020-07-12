@@ -21,7 +21,6 @@ export async function verifyUser<T>(
   cb: (user: TokenContents) => T
 ) {
   const token = getUserToken(context.req);
-  console.log("Token", token);
 
   if (token) {
     await dbConnect();

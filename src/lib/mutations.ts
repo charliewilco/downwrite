@@ -2,7 +2,7 @@ import { ApolloError, AuthenticationError } from "apollo-server-micro";
 import { v4 as uuid } from "uuid";
 import { ResolverContext, verifyUser } from "./queries";
 import { PostModel, UserModel, IUserModel } from "./models";
-import { mergeUpdatedPost } from "./transform";
+import { transformPostToEntry } from "./transform";
 import dbConnect from "./db";
 import { getSaltedHash, createToken, isValidPassword } from "./token";
 import { setTokenCookie } from "./cookie-managment";
@@ -48,21 +48,29 @@ export async function createPost(
   });
 }
 
-// TODO: This is WRONG, this should be find one and update.
 export async function updatePost(
   context: ResolverContext,
   id: string,
   body: IMutationCreateEntryVars
 ) {
   return verifyUser(context, async ({ user }) => {
-    const ref = await PostModel.findOne({
-      id,
-      user: { $eq: user }
-    });
-    if (ref !== null) {
-      return mergeUpdatedPost(body, ref, id);
+    try {
+      const n = await PostModel.findOneAndUpdate(
+        { id, user: { $eq: user } },
+        {
+          content: body.content,
+          public: body.status,
+          title: body.title,
+          dateModified: new Date()
+        },
+        {
+          new: true
+        }
+      );
+      return transformPostToEntry(n);
+    } catch (error) {
+      throw new ApolloError(error, "Could not find post to update");
     }
-    throw new ApolloError("Could not find post to update");
   });
 }
 

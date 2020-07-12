@@ -1,7 +1,7 @@
 import Head from "next/head";
-import Landing from "../components/landing";
-import Features from "../components/landing-features";
-import LoginTabs from "../components/login-tabs";
+import Landing from "@components/landing";
+import Features from "@components/landing-features";
+import LoginTabs from "@components/login-tabs";
 
 export default function LoginPage() {
   return (

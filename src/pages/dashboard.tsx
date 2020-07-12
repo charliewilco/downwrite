@@ -2,16 +2,16 @@ import { useCallback } from "react";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import decode from "jwt-decode";
-import DeleteModal from "../components/delete-modal";
-import PostList from "../components/post-list";
-import EmptyPosts from "../components/empty-posts";
-import { LoadingDashboard, ErrorDashboard } from "../components/dashboard-helpers";
+import DeleteModal from "@components/delete-modal";
+import PostList from "@components/post-list";
+import EmptyPosts from "@components/empty-posts";
+import { LoadingDashboard, ErrorDashboard } from "@components/dashboard-helpers";
 import { useRemovePost, useDashboard } from "../hooks";
-import { useAllPostsQuery, AllPostsDocument } from "../utils/generated";
-import { initializeApollo } from "../lib/apollo";
-import { parseCookies } from "../lib/cookie-managment";
-import { TokenContents } from "../lib/token";
-import { IInitialState } from "../atoms/initial";
+import { useAllPostsQuery, AllPostsDocument } from "@utils/generated";
+import { initializeApollo } from "@lib/apollo";
+import { parseCookies } from "@lib/cookie-managment";
+import { TokenContents } from "@lib/token";
+import { IInitialState } from "@atoms/initial";
 
 export default function DashboardUI() {
   const [{ selectedPost, modalOpen }, actions] = useDashboard();

@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import distance from "date-fns/formatDistanceToNow";
 import { EditLink, PreviewLink } from "./entry-links";
-import { IPartialFeedItem } from "../reducers/dashboard";
+import { IPartialFeedItem } from "@reducers/dashboard";
 
 export interface ICardProps {
   title: string;

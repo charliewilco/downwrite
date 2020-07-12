@@ -1,13 +1,13 @@
 import { GetServerSideProps } from "next";
 import Head from "next/head";
-import SettingsUser from "../components/settings-user-form";
-import SettingsPassword from "../components/settings-password";
-import SettingsLocal from "../components/settings-markdown";
-import Loading from "../components/loading";
-import { initializeApollo } from "../lib/apollo";
-import { getInitialStateFromCookie } from "../lib/cookie-managment";
-import { useUserDetailsQuery, UserDetailsDocument } from "../utils/generated";
-import { PageTitle } from "../components/page-title";
+import SettingsUser from "@components/settings-user-form";
+import SettingsPassword from "@components/settings-password";
+import SettingsLocal from "@components/settings-markdown";
+import Loading from "@components/loading";
+import { PageTitle } from "@components/page-title";
+import { initializeApollo } from "@lib/apollo";
+import { getInitialStateFromCookie } from "@lib/cookie-managment";
+import { useUserDetailsQuery, UserDetailsDocument } from "@utils/generated";
 
 export default function SettingsPage() {
   const { error, loading, data } = useUserDetailsQuery();

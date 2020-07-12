@@ -1,43 +1,7 @@
 import { ApolloError } from "apollo-server-micro";
 import { IPostModel, IUserModel } from "./models";
-import { IMutationCreateEntryVars } from "./mutations";
 import { IEntry, IPreview } from "../utils/generated";
 import { createMarkdownServer } from "../utils/markdown-template";
-
-export function mergeUpdatedPost(
-  args: IMutationCreateEntryVars,
-  ref: IPostModel,
-  id: string
-) {
-  const date = new Date();
-
-  const title = args.title
-    ? ref.title !== args.title
-      ? args.title
-      : ref.title
-    : ref.title;
-  const content = args.content
-    ? ref.content !== args.content
-      ? args.content
-      : ref.content
-    : ref.content;
-  const publicStatus = args.status
-    ? ref.public === args.status
-      ? ref.public
-      : args.status
-    : ref.public;
-
-  const post = {
-    title,
-    content: createMarkdownServer(content),
-    id,
-    public: publicStatus,
-    dateAdded: ref.dateAdded,
-    dateModified: date
-  };
-
-  return post;
-}
 
 export function transformPostsToFeed(posts: IPostModel[]): Omit<IEntry, "author">[] {
   const feed = posts.map(post => {

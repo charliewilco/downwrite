@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { NormalizedCacheObject } from "@apollo/client";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
-import { parseCookies } from "../lib/cookie-managment";
+import { NormalizedCacheObject } from "@apollo/client";
+import { parseCookies } from "@lib/cookie-managment";
 // import { initializeApollo } from "../lib/apollo";
 
 interface IIndexProps {

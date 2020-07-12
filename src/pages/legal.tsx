@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Content from "../components/content";
+import Content from "@components/content";
 
 export default function LegalView(): JSX.Element {
   return (

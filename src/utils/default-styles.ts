@@ -1,5 +1,5 @@
 export enum Fonts {
-  monospace = "SF Mono, Input Mono Condensed, Roboto Mono, Menlo, monospace",
+  monospace = "Jetbrains Mono, SF Mono, Input Mono Condensed, Roboto Mono, Menlo, monospace",
   sans = "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
   code = "'SF Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace"
 }

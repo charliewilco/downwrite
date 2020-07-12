@@ -3,24 +3,24 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
-import Content from "../../components/content";
-import AuthorBlock from "../../components/author-block";
-import Loading from "../../components/loading";
-import { AvatarColors } from "../../components/avatar";
-import NotFound from "../../components/not-found";
-import { usePreviewQuery, PreviewDocument } from "../../utils/generated";
-import dbConnect from "../../lib/db";
-import { PostModel } from "../../lib/models";
-import { initializeApollo } from "../../lib/apollo";
-import { useCurrentUser } from "../../atoms";
-import { Routes } from "../../utils/routes";
-import { useAuthCheck } from "../../atoms/current-user";
+import Content from "@components/content";
+import AuthorBlock from "@components/author-block";
+import Loading from "@components/loading";
+import { AvatarColors } from "@components/avatar";
+import NotFound from "@components/not-found";
+import { usePreviewQuery, PreviewDocument } from "@utils/generated";
+import dbConnect from "@lib/db";
+import { PostModel } from "@lib/models";
+import { initializeApollo } from "@lib/apollo";
+import { Routes } from "@utils/routes";
+import { useAuthCheck, useCurrentUser } from "@atoms/current-user";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   await dbConnect();
 
   const publicPosts = await PostModel.find({ public: { $eq: true } });
   const paths = publicPosts.map(p => ({ params: { id: p.id } }));
+
   return {
     paths,
     fallback: true

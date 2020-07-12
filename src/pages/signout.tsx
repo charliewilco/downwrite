@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import { removeTokenCookie } from "../lib/cookie-managment";
+import { removeTokenCookie } from "@lib/cookie-managment";
 
 export const getServerSideProps: GetServerSideProps<
   { token: "" },

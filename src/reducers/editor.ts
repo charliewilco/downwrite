@@ -1,7 +1,7 @@
 import * as Draft from "draft-js";
 import produce from "immer";
 import { markdownToDraft } from "markdown-draft-js";
-import { IEntry } from "../utils/generated";
+import { IEntry } from "@utils/generated";
 
 export enum EditActions {
   UPDATE_TITLE = "UPDATE_TITLE",

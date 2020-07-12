@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import VisuallyHidden from "@reach/visually-hidden";
 import Logo from "./logo";
 import DropdownUI from "./dropdown-ui";
-import { Routes } from "../utils/routes";
-import { useCurrentUser } from "../atoms";
+import { Routes } from "@utils/routes";
+import { useCurrentUser } from "@atoms/current-user";
 
 export function UIHeader(): JSX.Element {
   const [currentUser] = useCurrentUser();

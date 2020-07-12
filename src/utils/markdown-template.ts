@@ -1,6 +1,5 @@
 import format from "date-fns/format";
 import { draftToMarkdown } from "markdown-draft-js";
-
 import is from "@sindresorhus/is";
 
 export function createMarkdownServer(

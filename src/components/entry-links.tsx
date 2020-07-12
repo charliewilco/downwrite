@@ -11,13 +11,13 @@ interface IInitialCardLinkProps {
   pathname: string;
 }
 
-function CardLink({
+function DefaultLink({
   pathname,
   id,
   ...props
 }: ICardLinks & IInitialCardLinkProps): JSX.Element {
-  const href = `${pathname}/[id]`;
-  const as = `${pathname}/${id}`;
+  const href = `/[id]/${pathname}`;
+  const as = `/${id}/${pathname}`;
   return (
     <Link href={href} as={as} passHref>
       <a className={props.className} style={props.style}>
@@ -28,9 +28,9 @@ function CardLink({
 }
 
 export function EditLink(props: ICardLinks): JSX.Element {
-  return <CardLink title="Edit" {...props} pathname="/edit" />;
+  return <DefaultLink title="Edit" {...props} pathname="edit" />;
 }
 
 export function PreviewLink(props: ICardLinks): JSX.Element {
-  return <CardLink title="Preview" {...props} pathname="/preview" />;
+  return <DefaultLink title="Preview" {...props} pathname="preview" />;
 }
