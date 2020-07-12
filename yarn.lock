@@ -11782,6 +11782,11 @@ source-map@^0.5.0, source-map@^0.5.6:
   resolved "https://registry.npmjs.org/source-map/-/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
   integrity sha1-igOdLRAh0i0eoUyA2OpGi6LvP8w=
 
+source-serif-pro@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.npmjs.org/source-serif-pro/-/source-serif-pro-3.1.0.tgz#22e4916c537a610d27cfa3b51a7f2057d06963ef"
+  integrity sha512-b4/f5JilgkEGbFjLh7M9safsjWTovyfvpiQIgGY8pigRkH5lAfO+9jLxbRnKoekBQqmnhacWxiRsCJu4JB4Qhg==
+
 sparse-bitfield@^3.0.3:
   version "3.0.3"
   resolved "https://registry.npmjs.org/sparse-bitfield/-/sparse-bitfield-3.0.3.tgz#ff4ae6e68656056ba4b3e792ab3334d38273ca11"
