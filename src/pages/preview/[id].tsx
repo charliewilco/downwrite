@@ -91,14 +91,16 @@ export default function PreviewEntry(
         </Head>
         <AuthorBlock name={data.preview?.author?.username!} colors={AvatarColors} />
         {!state.authed && (
-          <p className="text-small italic mb-0">
-            <span>
-              You can write and share on Downwrite, you can sign up or log in{" "}
-            </span>
-            <Link href={Routes.LOGIN} passHref>
-              <a>here</a>
-            </Link>
-          </p>
+          <div className="space-y-8 py-8">
+            <p className="text-sm italic mb-0">
+              <span>
+                You can write and share on Downwrite, you can sign up or log in{" "}
+              </span>
+              <Link href={Routes.LOGIN} passHref>
+                <a className="text-pixieblue-500 font-bold">here</a>
+              </Link>
+            </p>
+          </div>
         )}
       </Content>
     );

@@ -18,10 +18,10 @@ export default function Content(props: IContentProps): JSX.Element {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 xl:max-w-5xl xl:px-0">
       <article className="harticle">
-        <header className="space-y-1 pt-6 xl:pb-10 border-b border-onyx-200 mb-10">
+        <header className="space-y-1 pt-6 xl:pb-10 border-b border-onyx-200 mb-2">
           {props.dateAdded && (
             <time
-              className="PreviewMeta"
+              className="text-sm font-mono uppercase tracking-widest opacity-50 mb-4 block"
               data-testid="PREVIEW_ENTRTY_META"
               dateTime={props.dateAdded.toString()}>
               {format(new Date(props.dateAdded.toString()), "dd MMMM yyyy")}
@@ -35,16 +35,14 @@ export default function Content(props: IContentProps): JSX.Element {
         </header>
         <section
           data-testid="PREVIEW_ENTRTY_BODY"
-          className="__content divide-y xl:divide-y-0 divide-gray-200 xl:grid xl:grid-cols-4 xl:col-gap-6 pb-16 xl:pb-20"
+          className="divide-y xl:divide-y-0 divide-gray-200 xl:grid xl:grid-cols-4 xl:col-gap-8 pb-16 xl:pb-20"
           style={{
             gridTemplateRows: "auto 1fr"
           }}>
-          <aside className="border-red-400 border-t pt-10 pb-8">
-            {props.children}
-          </aside>
+          <aside className="divide-y space-y-8 py-8">{props.children}</aside>
           {props.content && (
             <div className="xl:pb-0 xl:col-span-3 xl:row-span-2">
-              <div className="border-red-400 border-t pt-10 pb-8">
+              <div className="__content py-8 ">
                 <Markdown source={props.content} renderers={MARKDOWN_RENDERS} />
               </div>
             </div>
