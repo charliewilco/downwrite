@@ -10,12 +10,8 @@ export function UIHeader(): JSX.Element {
   const [currentUser] = useCurrentUser();
   const router = useRouter();
 
-  const authed = currentUser && currentUser.id && currentUser.username;
-
   const isLogin: boolean = router ? router.pathname === "/login" : false;
-  const homeLink: string = !!authed ? Routes.DASHBOARD : Routes.LOGIN;
-
-  console.log(authed, homeLink);
+  const homeLink: string = currentUser.authed ? Routes.DASHBOARD : Routes.LOGIN;
 
   return !isLogin ? (
     <header
@@ -31,7 +27,7 @@ export function UIHeader(): JSX.Element {
           </Link>
         </h1>
       </nav>
-      {authed ? (
+      {currentUser.authed ? (
         <nav className="flex items-center">
           <Link href={Routes.NEW} passHref>
             <a className="text-white leading-none cursor-pointer opacity-50 text-sm mr-8">

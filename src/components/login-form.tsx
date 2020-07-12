@@ -48,8 +48,8 @@ export default function Login(): JSX.Element {
         />
         {errors.password && <UIInputError>{errors.password}</UIInputError>}
       </UIInputContainer>
-      <div className="u-right">
-        <UIInputContainer style={{ display: "inline-block" }}>
+      <div>
+        <UIInputContainer className="flex justify-end">
           <Button type="submit" data-testid="LOGIN_BUTTON">
             Login
           </Button>

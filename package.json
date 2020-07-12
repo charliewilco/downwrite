@@ -85,6 +85,7 @@
     "recoil": "^0.0.10",
     "tailwindcss": "^1.4.6",
     "typeface-inter": "^3.12.0",
+    "typeface-jetbrains-mono": "^1.0.5",
     "typeface-roboto-mono": "^0.0.75",
     "typescript": "^3.9.5",
     "universal-cookie": "^4.0.3",
@@ -98,8 +99,8 @@
     "@graphql-codegen/typescript-react-apollo": "^1.15.4",
     "@graphql-codegen/typescript-resolvers": "^1.15.4",
     "apollo-server-testing": "^2.10.1",
-    "prettier": "^1.19.1",
     "jest": "^26.1.0",
+    "prettier": "^1.19.1",
     "prop-types": "^15.7.2",
     "ts-jest": "^26.1.1"
   },

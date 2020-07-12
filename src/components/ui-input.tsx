@@ -1,4 +1,5 @@
 import { useRef, useReducer } from "react";
+import { inputReducer, InputAction } from "../reducers/input";
 import classNames from "../utils/classnames";
 
 interface IUIInputProps {
@@ -24,33 +25,15 @@ export function UIInputError({
   style,
   ...props
 }: React.HTMLAttributes<HTMLSpanElement>): JSX.Element {
-  const className = classNames("UIInputError", props.className);
-
-  return <span {...props} className={className} />;
-}
-
-enum InputAction {
-  BLUR = "BLUR",
-  FOCUS = "FOCUS"
-}
-
-interface IInputState {
-  focused: boolean;
-}
-
-interface IInputAction {
-  type: InputAction;
-}
-
-function inputReducer(_: IInputState, action: IInputAction): IInputState {
-  switch (action.type) {
-    case InputAction.BLUR:
-      return { focused: false };
-    case InputAction.FOCUS:
-      return { focused: false };
-    default:
-      throw new Error("Must specify action type");
-  }
+  return (
+    <span
+      {...props}
+      className={classNames(
+        "block text-sm uppercase tracking-wider",
+        props.className
+      )}
+    />
+  );
 }
 
 export default function UIInput({ testID, label, ...props }: IUIInputProps) {
@@ -70,7 +53,7 @@ export default function UIInput({ testID, label, ...props }: IUIInputProps) {
         id={id.current}
         {...props}
         className={classNames(
-          "font-mono text-sm font-normal py-2 px-0 appearance-none block w-full border-0 border-b-2 border-onyx-400",
+          "font-mono text-sm font-normal py-2 px-0 appearance-none block w-full border-0 border-b-2 border-onyx-400 bg-transparent",
           props.className
         )}
       />

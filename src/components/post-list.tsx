@@ -21,8 +21,6 @@ export default function PostList(props: IPostListProps): JSX.Element {
 
   const testID = state.isGridView ? "ENTRIES_GRIDVIEW" : "ENTRIES_LISTVIEW";
 
-  const POSTS = Array(21).fill(props.posts[0]);
-
   return (
     <>
       <header className="flex justify-between mb-6 items-center">
@@ -41,7 +39,7 @@ export default function PostList(props: IPostListProps): JSX.Element {
             "max-w-xl mx-auto divide-y divide-opacity-50 divide-onyx-300"
         )}
         data-testid={testID}>
-        {POSTS.map((p, i) =>
+        {props.posts.map((p, i) =>
           !state.isGridView ? (
             <PostListItem
               key={i}
