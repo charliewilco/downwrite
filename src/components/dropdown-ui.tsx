@@ -36,7 +36,7 @@ export default function DropdownUI() {
           <User border colors={["#FEB692", "#EA5455"]} name={currentUser.username} />
         )}
         <MenuLink
-          to={Routes.INDEX}
+          to={Routes.DASHBOARD}
           as={NextMenuLink}
           className="flex items-center w-full">
           <span role="img" aria-label="Stack of books">

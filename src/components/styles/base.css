@@ -1,5 +1,5 @@
 @import "~typeface-inter";
-@import "~typeface-roboto-mono";
+@import "~typeface-jetbrains-mono";
 @import "~source-serif-pro/source-serif-pro.css";
 @import "~@reach/tabs/styles.css";
 @import "~@reach/menu-button/styles.css";
@@ -216,5 +216,3 @@ body,
 .__content blockquote p {
   @apply text-base p-4;
 }
-
-@import "./post-list.css";

@@ -10,6 +10,9 @@ module.exports = {
       serif: ["Source Serif Pro", "Charter", "Georgia", "serif"]
     },
     extend: {
+      screens: {
+        "2xl": "1536px"
+      },
       colors: {
         accent: {
           "200": "#6ca4ff",

@@ -7,6 +7,7 @@ import Loading from "../components/loading";
 import { initializeApollo } from "../lib/apollo";
 import { getInitialStateFromCookie } from "../lib/cookie-managment";
 import { useUserDetailsQuery, UserDetailsDocument } from "../utils/generated";
+import { PageTitle } from "../components/page-title";
 
 export default function SettingsPage() {
   const { error, loading, data } = useUserDetailsQuery();
@@ -27,7 +28,9 @@ export default function SettingsPage() {
       <Head>
         <title>User Settings</title>
       </Head>
-      <h1 className="font-black text-xl mb-8">Settings</h1>
+      <header className="flex justify-between mb-6 items-center">
+        <PageTitle>Settings</PageTitle>
+      </header>
       <SettingsUser user={data?.settings!} />
       <SettingsPassword />
       <SettingsLocal />
