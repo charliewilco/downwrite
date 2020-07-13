@@ -37,12 +37,11 @@ export function useCurrentUser() {
 export function useAuthCheck() {
   const [state, { onCurrentUserLogin }] = useCurrentUser();
   useEffect(() => {
-    console.log("Checking auth on client");
     if (!state.authed) {
       const cookies = new Cookies();
       const m = cookies.get("DW_TOKEN");
       const x = cookies.getAll();
-      console.log(m, x, state);
+      console.log("Checking auth on client", m, x, state);
 
       if (m) {
         const d = decode<TokenContents>(m);
