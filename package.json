@@ -98,7 +98,7 @@
     "@graphql-codegen/typescript-operations": "^1.15.4",
     "@graphql-codegen/typescript-react-apollo": "^1.15.4",
     "@graphql-codegen/typescript-resolvers": "^1.15.4",
-    "apollo-server-testing": "^2.10.1",
+    "apollo-server-testing": "^2.15.1",
     "jest": "^26.1.0",
     "prettier": "^1.19.1",
     "prop-types": "^15.7.2",
