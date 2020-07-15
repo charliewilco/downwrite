@@ -1,14 +1,12 @@
 import { useMemo } from "react";
 import { ApolloClient, InMemoryCache, NormalizedCacheObject } from "@apollo/client";
-import { SchemaLink } from "@apollo/link-schema";
-import { IExecaSchema } from "./schema";
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
 function createIsomorphLink(context?: any) {
   if (typeof window === "undefined") {
-    // const { SchemaLink } = require("apollo-link-schema");
-    const { schema }: IExecaSchema = require("./schema");
+    const { SchemaLink } = require("@apollo/client/link/schema");
+    const { schema } = require("./schema");
     return new SchemaLink({ schema, context });
   } else {
     const { HttpLink } = require("@apollo/client");

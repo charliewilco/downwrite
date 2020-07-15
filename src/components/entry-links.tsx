@@ -19,7 +19,7 @@ function DefaultLink({
   const href = `/[id]/${pathname}`;
   const as = `/${id}/${pathname}`;
   return (
-    <Link href={href} as={as} passHref>
+    <Link href={href} as={as}>
       <a className={props.className} style={props.style}>
         {props.title}
       </a>

@@ -22,7 +22,7 @@ const PAGES: IPage[] = [
   }
 ];
 
-export default function UIFooter() {
+export function UIFooter() {
   const date = new Date(Date.now());
   return (
     <footer className="max-w-2xl py-8 px-4 mx-auto">
@@ -40,7 +40,7 @@ export default function UIFooter() {
                   {page.name}
                 </a>
               ) : (
-                <Link href={page.href} passHref>
+                <Link href={page.href}>
                   <a className="text-white leading-none cursor-pointer opacity-50 text-sm">
                     {page.name}
                   </a>

@@ -1,4 +1,4 @@
-import * as Draft from "draft-js";
+import { EditorState, convertFromRaw } from "draft-js";
 import produce from "immer";
 import { markdownToDraft } from "markdown-draft-js";
 import { IEntry } from "@utils/generated";
@@ -14,17 +14,9 @@ export enum EditActions {
 
 export interface IEditorState {
   publicStatus: boolean;
-  editorState: Draft.EditorState | null;
+  editorState: EditorState | null;
   title: string;
   initialFocus: boolean;
-}
-
-export interface IQueryResult {
-  entry: IEntry;
-}
-
-export interface IQueryVars {
-  id: string;
 }
 
 const DEFAULT_EDITOR_STATE: IEditorState = {
@@ -39,9 +31,7 @@ export function initializer(initialData?: {
 }): IEditorState {
   if (!!initialData && initialData.entry !== null) {
     const draft = markdownToDraft(initialData.entry.content!);
-    const editorState = Draft.EditorState.createWithContent(
-      Draft.convertFromRaw(draft)
-    );
+    const editorState = EditorState.createWithContent(convertFromRaw(draft));
 
     return {
       editorState,
@@ -61,7 +51,7 @@ export type EditorActions =
     }
   | { type: EditActions.TOGGLE_PUBLIC_STATUS }
   | { type: EditActions.SET_INITIAL_FOCUS }
-  | { type: EditActions.UPDATE_EDITOR; payload: Draft.EditorState }
+  | { type: EditActions.UPDATE_EDITOR; payload: EditorState }
   | { type: EditActions.UPDATE_TITLE; payload: string };
 
 export const reducer = produce((draft: IEditorState, action: EditorActions) => {

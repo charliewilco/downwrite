@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { useNotifications, NotificationType } from "../atoms";
+import { useNotifications, NotificationType } from "@reducers/app";
 
 export function useAutosaving(
   duration: number = 5000,

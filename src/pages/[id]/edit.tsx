@@ -1,8 +1,6 @@
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import Autosaving from "@components/autosaving-interval";
-import WordCounter from "@components/word-count";
 import { Button } from "@components/button";
 import Loading from "@components/loading";
 import { Input } from "@components/editor-input";
@@ -13,9 +11,10 @@ import { __IS_DEV__ } from "@utils/dev";
 import { EditActions } from "@reducers/editor";
 import { useEdit } from "@hooks/useEdit";
 
-const Editor = dynamic(() => import("../../components/editor"));
-
-const ExportMarkdown = dynamic(() => import("../../components/export"));
+const Autosaving = dynamic(() => import("@components/autosaving-interval"));
+const Editor = dynamic(() => import("@components/editor"));
+const WordCounter = dynamic(() => import("@components/word-count"));
+const ExportMarkdown = dynamic(() => import("@components/export"));
 
 export default function EditUI() {
   const router = useRouter();

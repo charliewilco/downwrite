@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -13,7 +12,7 @@ import dbConnect from "@lib/db";
 import { PostModel } from "@lib/models";
 import { initializeApollo } from "@lib/apollo";
 import { Routes } from "@utils/routes";
-import { useAuthCheck, useCurrentUser } from "@atoms/current-user";
+import { useCurrentUser } from "@reducers/app";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   await dbConnect();
@@ -55,8 +54,6 @@ export default function PreviewEntry(
   const { error, loading, data } = usePreviewQuery({
     variables: { id: props.id }
   });
-
-  useAuthCheck();
 
   if (error) {
     return (
@@ -106,5 +103,5 @@ export default function PreviewEntry(
     );
   }
 
-  return <Fragment />;
+  return <div />;
 }

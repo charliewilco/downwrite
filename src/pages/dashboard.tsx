@@ -11,7 +11,7 @@ import { useAllPostsQuery, AllPostsDocument } from "@utils/generated";
 import { initializeApollo } from "@lib/apollo";
 import { parseCookies } from "@lib/cookie-managment";
 import { TokenContents } from "@lib/token";
-import { IInitialState } from "@atoms/initial";
+import { IInitialState } from "@reducers/app";
 
 export default function DashboardUI() {
   const [{ selectedPost, modalOpen }, actions] = useDashboard();

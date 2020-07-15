@@ -1,16 +1,18 @@
-import Header from "./header";
-import Footer from "./footer";
-import { MessageList } from "./ui-notification";
+import dynamic from "next/dynamic";
+import { UIHeader } from "./header";
+import { UIFooter } from "./footer";
 
 interface IUIShell extends React.PropsWithChildren<{}> {}
+
+const MessageList = dynamic(() => import("@components/notification-list"));
 
 export function UIShell(props: IUIShell): JSX.Element {
   return (
     <div className="flex flex-col">
       <div className="clearfix min-h-full">
-        <Header />
+        <UIHeader />
         <main>{props.children}</main>
-        <Footer />
+        <UIFooter />
       </div>
       <MessageList />
     </div>

@@ -10,13 +10,13 @@ import {
   FiMoon,
   FiMenu
 } from "react-icons/fi";
-import { Routes } from "../utils/routes";
+import { Routes } from "@utils/routes";
 import User from "./user";
-import { useSettings, useCurrentUser } from "../atoms";
+import { useSettings, useCurrentUser } from "@reducers/app";
 
 const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) => {
   return (
-    <Link passHref href={to}>
+    <Link href={to}>
       <a ref={ref} {...props} />
     </Link>
   );

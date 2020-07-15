@@ -1,13 +1,13 @@
 import { useRef, useCallback, MutableRefObject } from "react";
 import fm from "front-matter";
-import * as Draft from "draft-js";
+import { EditorState, convertFromRaw } from "draft-js";
 import { useDropzone } from "react-dropzone";
 import { markdownToDraft } from "markdown-draft-js";
 import { __IS_BROWSER__ } from "../utils/dev";
 
 interface IMarkdownConversion {
   title: string;
-  editorState: Draft.EditorState;
+  editorState: EditorState;
 }
 
 interface IUploadProps extends React.PropsWithChildren<{}> {
@@ -41,9 +41,7 @@ export default function Uploader(props: IUploadProps): JSX.Element {
 
             return props.onParsed({
               title: md.attributes.title || "",
-              editorState: Draft.EditorState.createWithContent(
-                Draft.convertFromRaw(markdown)
-              )
+              editorState: EditorState.createWithContent(convertFromRaw(markdown))
             });
           };
 

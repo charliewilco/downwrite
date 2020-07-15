@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import * as Draft from "draft-js";
+import { EditorState } from "draft-js";
 
 interface IWordCounterProps {
   limit?: number;
-  editorState: Draft.EditorState;
+  editorState: EditorState;
 }
 
 function createWordCount(str: string): number {
@@ -14,7 +14,7 @@ function createWordCount(str: string): number {
   return wordArray ? wordArray.length : 0;
 }
 
-function getSelectionCount(editorState: Draft.EditorState): number {
+function getSelectionCount(editorState: EditorState): number {
   let selectionState = editorState.getSelection();
   let anchorKey = selectionState.getAnchorKey();
   let currentContent = editorState.getCurrentContent();
@@ -26,7 +26,7 @@ function getSelectionCount(editorState: Draft.EditorState): number {
   return createWordCount(selectedText);
 }
 
-function getWordCount(editorState: Draft.EditorState): number {
+function getWordCount(editorState: EditorState): number {
   let plainText = editorState.getCurrentContent().getPlainText("");
 
   return createWordCount(plainText);

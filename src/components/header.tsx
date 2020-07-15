@@ -1,16 +1,15 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import VisuallyHidden from "@reach/visually-hidden";
 import Logo from "./logo";
 import DropdownUI from "./dropdown-ui";
 import { Routes } from "@utils/routes";
-import { useCurrentUser } from "@atoms/current-user";
+import { useCurrentUser } from "@reducers/app";
 
 export function UIHeader(): JSX.Element {
   const [currentUser] = useCurrentUser();
   const router = useRouter();
 
-  const isLogin: boolean = router ? router.pathname === "/login" : false;
+  const isLogin: boolean = router.pathname === "/login";
   const homeLink: string = currentUser.authed ? Routes.DASHBOARD : Routes.LOGIN;
 
   return !isLogin ? (
@@ -47,8 +46,6 @@ export function UIHeader(): JSX.Element {
       )}
     </header>
   ) : (
-    <VisuallyHidden />
+    <div />
   );
 }
-
-export default UIHeader;

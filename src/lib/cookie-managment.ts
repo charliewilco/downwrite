@@ -3,7 +3,7 @@ import { serialize, parse } from "cookie";
 import { ServerResponse, IncomingMessage } from "http";
 import decode from "jwt-decode";
 import { readToken, TokenContents } from "./token";
-import { IInitialState } from "../atoms/initial";
+import { IInitialState } from "@reducers/app";
 
 export const TOKEN_NAME = "DW_TOKEN";
 

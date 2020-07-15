@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import * as Draft from "draft-js";
+import { convertToRaw, RawDraftContentState } from "draft-js";
 import { INewEditorValues } from "./";
 import { v4 as uuid } from "uuid";
 
 export interface ILocalDraft {
   title: string;
   id: string;
-  content: Draft.RawDraftContentState;
+  content: RawDraftContentState;
 }
 
 type LocalDraft = [
@@ -26,7 +26,7 @@ export function useLocalDraftUtils(): LocalDraft {
 
   function writeToStorage({ title, editorState }: INewEditorValues): ILocalDraft {
     const id = uuid();
-    const content: Draft.RawDraftContentState = Draft.convertToRaw(
+    const content: RawDraftContentState = convertToRaw(
       editorState.getCurrentContent()
     );
     const localDraft = { title, content, id };

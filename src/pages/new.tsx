@@ -2,22 +2,22 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useRef } from "react";
-import * as Draft from "draft-js";
+import { EditorState } from "draft-js";
 import { useFormik } from "formik";
 import { useOffline, useNewEntry, INewEditorValues } from "../hooks";
 import { Input } from "@components/editor-input";
 import { Button } from "@components/button";
-import Upload from "@components/upload";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
 
 const Editor = dynamic(() => import("@components/editor"));
+const Upload = dynamic(() => import("@components/upload"));
 
 const EDITOR_COMMAND = "create-new-post";
 
 export default function NewEntryPage() {
   const initialValues = useRef<INewEditorValues>({
     title: "",
-    editorState: Draft.EditorState.createEmpty()
+    editorState: EditorState.createEmpty()
   });
   const [createNewPost] = useNewEntry();
   const isOffline = useOffline();

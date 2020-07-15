@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import * as Draft from "draft-js";
+import { convertToRaw } from "draft-js";
 import { draftToMarkdown } from "markdown-draft-js";
 import {
   useUpdateEntryMutation,
@@ -9,7 +9,7 @@ import {
   AllPostsDocument
 } from "../utils/generated";
 import { IEditorState } from "../reducers/editor";
-import { useNotifications, NotificationType } from "../atoms";
+import { useNotifications, NotificationType } from "@reducers/app";
 
 export function useUpdateEntry(id: string, state: IEditorState) {
   const [, { addNotification }] = useNotifications();
@@ -47,7 +47,7 @@ export function useUpdateEntry(id: string, state: IEditorState) {
 
   const handleSubmit = useCallback(async () => {
     if (state.editorState !== null) {
-      const content = Draft.convertToRaw(state.editorState.getCurrentContent());
+      const content = convertToRaw(state.editorState.getCurrentContent());
       await updateEntry({
         variables: {
           id,

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import * as Draft from "draft-js";
+import { EditorState } from "draft-js";
 import { EditActions } from "../reducers/editor";
 import { useEditQuery } from "../utils/generated";
 import { useUpdateEntry, useEditReducer } from "./";
@@ -24,7 +24,7 @@ export function useEdit(id: string) {
     { data, loading, error, state, id },
     {
       handleSubmit,
-      handleEditorChange(editorState: Draft.EditorState) {
+      handleEditorChange(editorState: EditorState) {
         dispatch({ type: EditActions.UPDATE_EDITOR, payload: editorState });
       },
       handleFocus() {

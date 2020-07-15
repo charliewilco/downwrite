@@ -1,25 +1,32 @@
 import PluginsEditor from "draft-js-plugins-editor";
 import { useRef } from "react";
-import * as Draft from "draft-js";
+import {
+  DraftEditorCommand,
+  EditorState,
+  ContentBlock,
+  getDefaultKeyBinding,
+  KeyBindingUtil,
+  RichUtils
+} from "draft-js";
 import Prism from "prismjs";
 import createMarkdownPlugin from "draft-js-markdown-plugin";
 import createPrismPlugin from "draft-js-prism-plugin";
-import { __IS_TEST__ } from "../utils/dev";
-import * as DefaultStyles from "../utils/default-styles";
-import { useSettings } from "../atoms";
+import { __IS_TEST__ } from "@utils/dev";
+import * as DefaultStyles from "@utils/default-styles";
+import { useSettings } from "@reducers/app";
 
 type Handler = "handled" | "not-handled";
 
 interface IEditorProps {
-  editorCommand: Draft.DraftEditorCommand;
-  editorState: Draft.EditorState;
-  onChange: (e: Draft.EditorState) => void;
+  editorCommand: DraftEditorCommand;
+  editorState: EditorState;
+  onChange: (e: EditorState) => void;
   onSave: () => void;
   onFocus?: () => void;
   toolbar?: boolean;
 }
 
-function getBlockStyle(block: Draft.ContentBlock) {
+function getBlockStyle(block: ContentBlock) {
   switch (block.getType()) {
     case "blockquote":
       return "RichEditor-blockquote";
@@ -66,19 +73,19 @@ export default function DownwriteEditor(props: IEditorProps) {
 
   function onTab(e: React.KeyboardEvent<{}>): void {
     const maxDepth = 4;
-    props.onChange(Draft.RichUtils.onTab(e, props.editorState, maxDepth));
+    props.onChange(RichUtils.onTab(e, props.editorState, maxDepth));
   }
 
-  function saveKeyListener(e: React.KeyboardEvent): Draft.DraftEditorCommand | null {
-    if (e.keyCode === 83 && Draft.KeyBindingUtil.hasCommandModifier(e)) {
+  function saveKeyListener(e: React.KeyboardEvent): DraftEditorCommand | null {
+    if (e.keyCode === 83 && KeyBindingUtil.hasCommandModifier(e)) {
       return props.editorCommand;
     }
 
-    return Draft.getDefaultKeyBinding(e);
+    return getDefaultKeyBinding(e);
   }
 
   function handleKeyCommand(command: string, state: Draft.EditorState): Handler {
-    const newState = Draft.RichUtils.handleKeyCommand(state, command);
+    const newState = RichUtils.handleKeyCommand(state, command);
 
     if (newState) {
       props.onChange(newState);

@@ -2,8 +2,8 @@ import { useCallback } from "react";
 import { useRouter } from "next/router";
 import decode from "jwt-decode";
 import { TokenContents } from "../lib/token";
-import { useLoginUserMutation, useCreateUserMutation } from "../utils/generated";
-import { useNotifications, NotificationType, useCurrentUser } from "../atoms";
+import { useLoginUserMutation, useCreateUserMutation } from "@utils/generated";
+import { useNotifications, NotificationType, useCurrentUser } from "@reducers/app";
 
 export interface IRegisterValues extends Record<string, string | boolean> {
   username: string;

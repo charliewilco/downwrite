@@ -23,7 +23,6 @@
       "@hooks/*": ["src/hooks/*"],
       "@lib/*": ["src/lib/*"],
       "@reducers/*": ["src/reducers/*"],
-      "@atoms/*": ["src/atoms/*"],
       "@utils/*": ["src/utils/*"]
     }
   },

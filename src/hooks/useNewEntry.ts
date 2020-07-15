@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import * as Draft from "draft-js";
+import { ContentState, EditorState, convertToRaw } from "draft-js";
 import { useRouter } from "next/router";
 import { draftToMarkdown } from "markdown-draft-js";
 import {
@@ -8,11 +8,11 @@ import {
   IAllPostsQuery,
   IEntry
 } from "../utils/generated";
-import { useNotifications, NotificationType } from "../atoms";
+import { useNotifications, NotificationType } from "@reducers/app";
 
 export interface INewEditorValues {
   title: string;
-  editorState: Draft.EditorState;
+  editorState: EditorState;
 }
 
 export function useNewEntry() {
@@ -22,8 +22,8 @@ export function useNewEntry() {
 
   const onSubmit = useCallback(
     async (values: INewEditorValues) => {
-      const ContentState: Draft.ContentState = values.editorState.getCurrentContent();
-      const content = draftToMarkdown(Draft.convertToRaw(ContentState));
+      const ContentState: ContentState = values.editorState.getCurrentContent();
+      const content = draftToMarkdown(convertToRaw(ContentState));
 
       await createEntry({
         variables: {

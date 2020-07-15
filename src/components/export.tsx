@@ -1,4 +1,9 @@
-import * as Draft from "draft-js";
+import {
+  RawDraftContentState,
+  ContentState,
+  EditorState,
+  convertToRaw
+} from "draft-js";
 import { draftToMarkdown } from "markdown-draft-js";
 import FileSaver from "file-saver";
 import Markdown from "./export-markdown-button";
@@ -10,19 +15,19 @@ interface IExportProps {
   title: string;
   className?: string;
   date: Date;
-  editorState: Draft.EditorState;
+  editorState: EditorState;
 }
 
 interface IExportCallback {
   title: string;
-  content: Draft.RawDraftContentState;
+  content: RawDraftContentState;
   date: Date;
 }
 
 // TODO: use `React.useMemo()` to run export
 export default function UIMarkdownExport(props: IExportProps) {
   const className = classNames("block mx-4 my-0", props.className);
-  const customDraft = (content: Draft.RawDraftContentState): string =>
+  const customDraft = (content: RawDraftContentState): string =>
     draftToMarkdown(content, {
       entityItems: {
         LINK: {
@@ -59,8 +64,8 @@ export default function UIMarkdownExport(props: IExportProps) {
 
   const exportMarkdown = (): void => {
     const { title, date, editorState } = props;
-    const cx: Draft.ContentState = editorState.getCurrentContent();
-    const content: Draft.RawDraftContentState = Draft.convertToRaw(cx);
+    const cx: ContentState = editorState.getCurrentContent();
+    const content: RawDraftContentState = convertToRaw(cx);
 
     return toMarkdown({
       title,
