@@ -35,7 +35,7 @@ export const createMarkdown = (
 ): string => `
 ---
 title: ${title}
-${date && `dateAdded: ${format(date, "dd MMMM yyyy")}`}
+${date && `dateAdded: ${format(new Date(date), "dd MMMM yyyy")}`}
 ---
 
 ${content}
