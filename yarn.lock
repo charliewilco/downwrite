@@ -2596,10 +2596,10 @@
     "@types/keygrip" "*"
     "@types/node" "*"
 
-"@types/draft-js@^0.10.41":
-  version "0.10.41"
-  resolved "https://registry.npmjs.org/@types/draft-js/-/draft-js-0.10.41.tgz#179b652ecafd2c7056f462458b74af9eecd7b414"
-  integrity sha512-Q5pf1y1KdprTjAELQgGjDJXa5eSBghk3OvL07kFdgAxDSLqkWXvbxKBqX32JDt/3pizAl8sOpmVbGbRAFcAO9A==
+"@types/draft-js@^0.10.43":
+  version "0.10.43"
+  resolved "https://registry.npmjs.org/@types/draft-js/-/draft-js-0.10.43.tgz#6b1ed4b848ae0a169e3343b5923e013e3bfc29d0"
+  integrity sha512-vy6hVgA/6uZhqBCinYw4lGVsjL/GnqwYTl2zUC8lMAHanwK9/tcVVDApWPf2GFvU/Nd986nVbUXPHDbKMrdSug==
   dependencies:
     "@types/react" "*"
     immutable "~3.7.4"
@@ -6700,10 +6700,10 @@ graphql@^14.5.3:
   dependencies:
     iterall "^1.2.2"
 
-graphql@^15.1.0:
-  version "15.1.0"
-  resolved "https://registry.npmjs.org/graphql/-/graphql-15.1.0.tgz#b93e28de805294ec08e1630d901db550cb8960a1"
-  integrity sha512-0TVyfOlCGhv/DBczQkJmwXOK6fjWkjzY3Pt7wY8i0gcYXq8aogG3weCsg48m72lywKSeOqedEHvVPOvZvSD51Q==
+graphql@^15.3.0:
+  version "15.3.0"
+  resolved "https://registry.npmjs.org/graphql/-/graphql-15.3.0.tgz#3ad2b0caab0d110e3be4a5a9b2aa281e362b5278"
+  integrity sha512-GTCJtzJmkFLWRfFJuoo9RWWa/FfamUHgiFosxi/X1Ani4AVWbeyBenZTNX6dM+7WSbbFfTo/25eh0LLkwHMw2w==
 
 growly@^1.3.0:
   version "1.3.0"
@@ -7042,6 +7042,11 @@ immutable@*:
   version "3.8.2"
   resolved "https://registry.npmjs.org/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
   integrity sha1-wkOZUUVbs5kT2vKBN28VMOEErfM=
+
+immutable@^4.0.0-rc.12:
+  version "4.0.0-rc.12"
+  resolved "https://registry.npmjs.org/immutable/-/immutable-4.0.0-rc.12.tgz#ca59a7e4c19ae8d9bf74a97bdf0f6e2f2a5d0217"
+  integrity sha512-0M2XxkZLx/mi3t8NVwIm1g8nHoEmM9p9UBl/G9k4+hm0kBgOVdMV/B3CY5dQ8qG8qc80NN4gDV4HQv6FTJ5q7A==
 
 immutable@~3.7.4, immutable@~3.7.6:
   version "3.7.6"

@@ -7,10 +7,8 @@ interface ICodeBlockProps {
 
 export default function CodeBlock({
   language = "javascript",
-  value,
-  ...props
+  value
 }: ICodeBlockProps) {
-  console.log(language, value, props);
   const className = `language-${language || "javascript"}`;
   return <PrismCode component="pre" children={value} className={className} />;
 }
