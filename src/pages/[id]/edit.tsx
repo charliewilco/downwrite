@@ -26,7 +26,7 @@ export default function EditUI() {
   if (error) {
     return (
       <div>
-        {error.name}
+        <h2>{error.name}</h2>
         <p>{error.message}</p>
       </div>
     );

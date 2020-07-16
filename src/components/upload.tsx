@@ -1,9 +1,9 @@
 import { useRef, useCallback, MutableRefObject } from "react";
-import fm from "front-matter";
 import { EditorState, convertFromRaw } from "draft-js";
 import { useDropzone } from "react-dropzone";
 import { markdownToDraft } from "markdown-draft-js";
-import { __IS_BROWSER__ } from "../utils/dev";
+import { fm } from "@utils/fm";
+import { __IS_BROWSER__ } from "@utils/dev";
 
 interface IMarkdownConversion {
   title: string;

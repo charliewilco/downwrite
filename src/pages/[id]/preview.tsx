@@ -50,7 +50,7 @@ export default function PreviewEntry(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
   const router = useRouter();
-  const [state] = useCurrentUser();
+  const [currentUser] = useCurrentUser();
   const { error, loading, data } = usePreviewQuery({
     variables: { id: props.id }
   });
@@ -87,7 +87,7 @@ export default function PreviewEntry(
           <meta name="description" content={data.preview?.content!.substr(0, 75)} />
         </Head>
         <AuthorBlock name={data.preview?.author?.username!} colors={AvatarColors} />
-        {!state.authed && (
+        {!currentUser.authed && (
           <div className="space-y-8 py-8">
             <p className="text-sm italic mb-0">
               <span>
