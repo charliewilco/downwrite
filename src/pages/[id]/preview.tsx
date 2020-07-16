@@ -7,7 +7,12 @@ import AuthorBlock from "@components/author-block";
 import Loading from "@components/loading";
 import { AvatarColors } from "@components/avatar";
 import NotFound from "@components/not-found";
-import { usePreviewQuery, PreviewDocument } from "@utils/generated";
+import {
+  usePreviewQuery,
+  PreviewDocument,
+  IPreviewQuery,
+  IPreviewQueryVariables
+} from "@utils/generated";
 import dbConnect from "@lib/db";
 import { PostModel } from "@lib/models";
 import { initializeApollo } from "@lib/apollo";
@@ -31,7 +36,7 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
 }) => {
   const client = initializeApollo({});
 
-  await client.query({
+  await client.query<IPreviewQuery, IPreviewQueryVariables>({
     query: PreviewDocument,
     variables: {
       id: params!.id

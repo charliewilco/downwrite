@@ -77,17 +77,6 @@ export async function preview(_: ResolverContext, id: string) {
   }
 
   return transformMDToPreview(post, user);
-
-  // return {
-  //   id,
-  //   author: {
-  //     username: user.username,
-  //     avatar: user.gradient || ["#FEB692", "#EA5455"]
-  //   },
-  //   content: createMarkdownServer(post.content),
-  //   title: post.title,
-  //   dateAdded: post.dateAdded
-  // };
 }
 
 export async function settings(context: ResolverContext) {
