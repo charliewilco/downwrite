@@ -70,10 +70,10 @@ export default function NewEntryPage() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const initialState = getInitialStateFromCookie(req);
+  const initialAppState = getInitialStateFromCookie(req);
   return {
     props: {
-      initialState
+      initialAppState
     }
   };
 };

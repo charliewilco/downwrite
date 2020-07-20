@@ -46,11 +46,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     context: { req, res }
   });
 
-  const initialState = getInitialStateFromCookie(req);
+  const initialAppState = getInitialStateFromCookie(req);
 
   return {
     props: {
-      initialState,
+      initialAppState,
       initialApolloState: client.cache.extract()
     }
   };
