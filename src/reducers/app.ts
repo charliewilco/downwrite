@@ -43,7 +43,7 @@ export interface ICurrentUserState {
   id?: string;
 }
 
-interface IAppState {
+export interface IAppState {
   settings: ISettings;
   me: ICurrentUserState;
   notifications: Notifications;
@@ -154,7 +154,7 @@ const reducer: React.Reducer<IAppState, ReducerActions> = produce<
       break;
     }
     default:
-      throw new Error();
+      throw new Error("Must specify an action type");
   }
 });
 

@@ -53,3 +53,5 @@ export async function isValidPassword(password: string, hashPassword: string) {
 export function readToken(token: string): TokenContents | null {
   return jwt.verify(token, SECRET_KEY, { complete: false }) as TokenContents | null;
 }
+
+export function getInitialState(t?: TokenContents): Partial<{}> {}
