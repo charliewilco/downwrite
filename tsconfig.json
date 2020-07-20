@@ -16,7 +16,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "esnext",
+    "target": "ES2019",
     "baseUrl": ".",
     "paths": {
       "@components/*": ["src/components/*"],

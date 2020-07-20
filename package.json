@@ -99,14 +99,9 @@
     "prop-types": "^15.7.2",
     "ts-jest": "^26.1.3"
   },
-  "browserslist": [
-    "last 1 version"
-  ],
+  "browserslist": ["last 1 version"],
   "postcss": {
-    "plugins": [
-      "tailwindcss",
-      "postcss-preset-env"
-    ]
+    "plugins": ["tailwindcss", "postcss-preset-env"]
   },
   "prettier": {
     "printWidth": 85,
@@ -118,6 +113,11 @@
   },
   "jest": {
     "preset": "ts-jest",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@utils/(.*)$": "<rootDir>/src/utils/$1",
+      "^@lib/(.*)$": "<rootDir>/src/lib/$1",
+      "^@reducers/(.*)$": "<rootDir>/src/reducers/$1"
+    }
   }
 }
