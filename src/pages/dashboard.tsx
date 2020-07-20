@@ -10,8 +10,7 @@ import { useRemovePost, useDashboard } from "../hooks";
 import { useAllPostsQuery, AllPostsDocument } from "@utils/generated";
 import { initializeApollo } from "@lib/apollo";
 import { parseCookies } from "@lib/cookie-managment";
-import { TokenContents } from "@lib/token";
-import { IInitialState } from "@reducers/app";
+import { TokenContents, getInitialState } from "@lib/token";
 
 export default function DashboardUI() {
   const [{ selectedPost, modalOpen }, actions] = useDashboard();
@@ -74,11 +73,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
   const d = decode<TokenContents>(DW_TOKEN);
 
-  const initialState: IInitialState = { username: d.name, userId: d.user };
+  const initialAppState = getInitialState(d);
 
   return {
     props: {
-      initialState,
+      initialAppState,
       initialApolloState: client.cache.extract()
     }
   };

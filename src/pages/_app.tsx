@@ -10,7 +10,7 @@ export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
 
   return (
     <ApolloProvider client={client}>
-      <AppProvider>
+      <AppProvider initial={pageProps.initialAppState}>
         <UIShell>
           <Component {...pageProps} />
         </UIShell>

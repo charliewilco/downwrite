@@ -7,10 +7,9 @@ import {
   useContext,
   useCallback
 } from "react";
+import { v4 as uuid } from "uuid";
 import produce from "immer";
 import { Fonts } from "@utils/default-styles";
-
-import { v4 as uuid } from "uuid";
 
 export enum NotificationType {
   DEFAULT = "DEFAULT",
@@ -163,8 +162,9 @@ const AppContext = createContext<[IAppState, Dispatch<ReducerActions>]>([
   () => {}
 ]);
 
-export function AppProvider(props: PropsWithChildren<{}>) {
-  const value = useReducer(reducer, initialState);
+export function AppProvider(props: PropsWithChildren<{ initial?: IAppState }>) {
+  const state = props.initial ?? initialState;
+  const value = useReducer(reducer, state);
   return createElement(AppContext.Provider, { value }, props.children);
 }
 

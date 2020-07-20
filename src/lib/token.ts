@@ -1,5 +1,6 @@
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
+import { IAppState, initialState } from "../reducers/app";
 import { SECRET_KEY } from "../utils";
 
 type ITokenUser = {
@@ -54,4 +55,15 @@ export function readToken(token: string): TokenContents | null {
   return jwt.verify(token, SECRET_KEY, { complete: false }) as TokenContents | null;
 }
 
-export function getInitialState(t?: TokenContents): Partial<{}> {}
+export function getInitialState(t?: TokenContents): IAppState {
+  if (t) {
+    return Object.assign(initialState, {
+      me: {
+        id: t.user,
+        username: t.name
+      }
+    });
+  }
+
+  return initialState;
+}
