@@ -6,7 +6,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 module.exports = withBundleAnalyzer(
   withFonts({
     experimental: {
-      jsconfigPaths: true // enables it for both jsconfig.json and tsconfig.json
+      jsconfigPaths: true
     }
   })
 );

@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import { NormalizedCacheObject } from "@apollo/client";
-import { parseCookies } from "@lib/cookie-managment";
-// import { initializeApollo } from "../lib/apollo";
+import { getInitialStateFromCookie } from "@lib/cookie-managment";
 
 interface IIndexProps {
   token: string;
@@ -14,12 +13,12 @@ interface IIndexProps {
 type IndexProps = IIndexProps | {};
 
 export const getServerSideProps: GetServerSideProps<IndexProps> = async context => {
-  const { DW_TOKEN } = parseCookies(context.req);
+  const initialAppState = getInitialStateFromCookie(context.req);
 
-  if (DW_TOKEN) {
+  if (initialAppState.me.id) {
     return {
       props: {
-        token: DW_TOKEN,
+        initialAppState,
         initialApolloState: {},
         redirect: "/dashboard"
       }

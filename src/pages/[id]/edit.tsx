@@ -1,6 +1,9 @@
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
+import { RawDraftContentState } from "draft-js";
+import { markdownToDraft } from "markdown-draft-js";
+import { NormalizedCacheObject } from "@apollo/client";
 import { Button } from "@components/button";
 import Loading from "@components/loading";
 import { Input } from "@components/editor-input";
@@ -10,18 +13,20 @@ import TimeMarker from "@components/time-marker";
 import { __IS_DEV__ } from "@utils/dev";
 import { EditActions } from "@reducers/editor";
 import { useEdit } from "@hooks/useEdit";
+import { initializeApollo } from "@lib/apollo";
+import { getInitialStateFromCookie } from "@lib/cookie-managment";
+import { EditDocument, IEditQuery, IEditQueryVariables } from "@utils/generated";
+import { IAppState } from "@reducers/app";
 
 const Autosaving = dynamic(() => import("@components/autosaving-interval"));
 const Editor = dynamic(() => import("@components/editor"));
 const WordCounter = dynamic(() => import("@components/word-count"));
 const ExportMarkdown = dynamic(() => import("@components/export"));
 
-export default function EditUI() {
-  const router = useRouter();
-
-  const [{ loading, error, state, data, id }, actions] = useEdit(
-    router.query.id! as string
-  );
+export default function EditUI(
+  props: InferGetServerSidePropsType<typeof getServerSideProps>
+) {
+  const [{ loading, error, state, data, id }, actions] = useEdit(props.id);
 
   if (error) {
     return (
@@ -55,7 +60,7 @@ export default function EditUI() {
           name="title"
           onChange={actions.handleTitleChange}
         />
-        <aside className="flex justify-between items-center mt-2 mx-0 mb-4 py-2">
+        <aside className="flex items-center justify-between py-2 mx-0 mt-2 mb-4">
           <div className="flex items-center">
             <ToggleBox
               label={value => (value ? "Public" : "Private")}
@@ -94,3 +99,39 @@ export default function EditUI() {
     </div>
   );
 }
+
+interface IEditPageProps {
+  initialAppState: IAppState;
+  initialApolloState: NormalizedCacheObject;
+  rawEditorState: RawDraftContentState;
+  id: string;
+}
+
+type EditPageParams = {
+  id: string;
+};
+
+type EditPageHandler = GetServerSideProps<IEditPageProps, EditPageParams>;
+
+export const getServerSideProps: EditPageHandler = async ({ req, res, params }) => {
+  const client = initializeApollo({}, { req, res });
+  const id = params?.id!;
+
+  const { data } = await client.query<IEditQuery, IEditQueryVariables>({
+    query: EditDocument,
+    variables: { id },
+    context: { req, res }
+  });
+
+  const initialAppState = getInitialStateFromCookie(req);
+  const rawEditorState = markdownToDraft(data?.entry?.content!);
+
+  return {
+    props: {
+      id,
+      rawEditorState,
+      initialAppState,
+      initialApolloState: client.cache.extract()
+    }
+  };
+};

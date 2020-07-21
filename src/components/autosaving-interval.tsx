@@ -9,7 +9,7 @@ interface IAutosavingProps {
 }
 
 export default function AutosavingInterval(props: IAutosavingProps): JSX.Element {
-  const message = `Autosaving “${props.title || "Your Entry"}”`;
+  const message = `Autosaving “${props.title ?? "Your Entry"}”`;
   useAutosaving(props.duration, props.onUpdate, message);
   return <Fragment />;
 }
