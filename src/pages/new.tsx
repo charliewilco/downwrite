@@ -33,9 +33,7 @@ export default function NewEntryPage() {
   });
 
   return (
-    <form
-      className="max-w-2xl mx-auto pt-64 mt-64 px-2 pb-0"
-      onSubmit={handleSubmit}>
+    <form className="max-w-2xl mx-auto pt-32 px-2 pb-0" onSubmit={handleSubmit}>
       <Head>
         <title>{values.title ? values.title : "New"} | Downwrite</title>
       </Head>

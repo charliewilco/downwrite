@@ -22,9 +22,31 @@ const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) 
   );
 });
 
+export function DropdownDarkMode() {
+  const [settings, { toggleDarkMode }] = useSettings();
+  return (
+    <MenuItem onSelect={() => toggleDarkMode()} className="flex items-center w-full">
+      {settings.isDarkMode ? (
+        <>
+          <span role="img" aria-label="Sun smiling">
+            <FiSun size={16} className="mr-2" />
+          </span>
+          Switch to Light Mode
+        </>
+      ) : (
+        <>
+          <span role="img" aria-label="Moon">
+            <FiMoon size={16} className="mr-2" />
+          </span>
+          Switch to Dark Mode
+        </>
+      )}
+    </MenuItem>
+  );
+}
+
 export default function DropdownUI() {
   const [currentUser] = useCurrentUser();
-  const [settings, { toggleDarkMode }] = useSettings();
 
   return (
     <Menu>
@@ -62,25 +84,7 @@ export default function DropdownUI() {
           </span>
           Settings
         </MenuLink>
-        <MenuItem
-          onSelect={() => toggleDarkMode()}
-          className="flex items-center w-full">
-          {settings.isDarkMode ? (
-            <>
-              <span role="img" aria-label="Sun smiling">
-                <FiSun size={16} className="mr-2" />
-              </span>
-              Switch to Light Mode
-            </>
-          ) : (
-            <>
-              <span role="img" aria-label="Moon">
-                <FiMoon size={16} className="mr-2" />
-              </span>
-              Switch to Dark Mode
-            </>
-          )}
-        </MenuItem>
+
         <MenuLink
           to={Routes.SIGN_OUT}
           as={NextMenuLink}
