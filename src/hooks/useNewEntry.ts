@@ -52,7 +52,7 @@ export function useNewEntry() {
       })
         .then(({ data }) => {
           if (!!data) {
-            router.push(`/edit/${data.createEntry?.id}`);
+            router.push(`/${data.createEntry?.id}/edit`);
           }
         })
         .catch(err => actions.addNotification(err.message, NotificationType.ERROR));
