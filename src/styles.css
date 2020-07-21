@@ -56,8 +56,9 @@ body,
 }
 
 [data-reach-dialog-content] {
-  width: 50vw;
-  margin: 10vh auto;
+  @apply mx-auto max-w-lg;
+  margin-top: auto;
+  margin-bottom: auto;
   outline: none;
 }
 
@@ -75,6 +76,7 @@ body,
 
 [data-reach-dialog-content] {
   animation: FADE_IN 0.45s;
+  @apply p-0;
 }
 
 .RichEditor-root {
