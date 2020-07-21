@@ -14,11 +14,12 @@ export function UIShell(props: IUIShell): JSX.Element {
       <div className="clearfix min-h-full">
         <UIHeader />
         <Banner>
-          <FiAlertTriangle className="inline-block mr-4 align-middle" />
-          <span className="text-base">
-            {" "}
-            This app is currently in a major major alpha. Swim at your own risk
-          </span>
+          <div className="flex items-center">
+            <FiAlertTriangle className="mr-4 " />
+            <span className="text-sm font-bold">
+              This app is currently in a major major alpha. Swim at your own risk.
+            </span>
+          </div>
         </Banner>
         <main>{props.children}</main>
         <UIFooter />
