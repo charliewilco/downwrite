@@ -1,18 +1,43 @@
 import { useCallback } from "react";
-import { ContentState, EditorState, convertToRaw } from "draft-js";
+import { ApolloCache, FetchResult } from "@apollo/client";
 import { useRouter } from "next/router";
+import { ContentState, EditorState, convertToRaw } from "draft-js";
 import { draftToMarkdown } from "markdown-draft-js";
 import {
   useCreateEntryMutation,
   AllPostsDocument,
   IAllPostsQuery,
+  ICreateEntryMutation,
   IEntry
-} from "../utils/generated";
+} from "@utils/generated";
 import { useNotifications, NotificationType } from "@reducers/app";
 
 export interface INewEditorValues {
   title: string;
   editorState: EditorState;
+}
+
+function updateEntries(
+  cache: ApolloCache<ICreateEntryMutation>,
+  { data }: FetchResult<ICreateEntryMutation>
+) {
+  const result = cache.readQuery<IAllPostsQuery>({
+    query: AllPostsDocument
+  });
+
+  if (result !== null && !!data) {
+    const updatedFeed: Pick<IEntry, "title" | "dateAdded" | "id" | "public">[] = [
+      ...result.feed,
+      data.createEntry!
+    ];
+
+    cache.writeQuery<IAllPostsQuery>({
+      query: AllPostsDocument,
+      data: {
+        feed: updatedFeed
+      }
+    });
+  }
 }
 
 export function useNewEntry() {
@@ -30,25 +55,7 @@ export function useNewEntry() {
           title: values.title,
           content
         },
-        update(cache, { data }) {
-          const result = cache.readQuery<IAllPostsQuery>({
-            query: AllPostsDocument
-          });
-
-          if (result !== null && !!data) {
-            const updatedFeed: Pick<
-              IEntry,
-              "title" | "dateAdded" | "id" | "public"
-            >[] = [...result.feed, data.createEntry!];
-
-            cache.writeQuery<IAllPostsQuery>({
-              query: AllPostsDocument,
-              data: {
-                feed: updatedFeed
-              }
-            });
-          }
-        }
+        update: updateEntries
       })
         .then(({ data }) => {
           if (!!data) {

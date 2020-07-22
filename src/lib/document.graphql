@@ -73,3 +73,10 @@ mutation CreateUser($username: String!, $email: String!, $password: String!) {
     token
   }
 }
+
+mutation UpdateUserSettings($settings: UserSettingsInput!) {
+  updateUserSettings(settings: $settings) {
+    username
+    email
+  }
+}

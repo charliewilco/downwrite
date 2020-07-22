@@ -1,37 +1,21 @@
-import { useCallback } from "react";
-import { useFormik, FormikHelpers } from "formik";
+import { useFormik } from "formik";
+import { useUpdateSettings, IUserFormValues } from "@hooks/useUpdateSettings";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
-import { UserSettingsSchema } from "../utils/validations";
-
-interface IUserFormValues {
-  username: string;
-  email: string;
-}
+import { UserSettingsSchema as validationSchema } from "@utils/validations";
 
 interface ISettingsUserForm {
   user: IUserFormValues;
 }
 
 export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
-  const onSubmit = useCallback(
-    async (
-      _: IUserFormValues,
-      actions: FormikHelpers<IUserFormValues>
-    ): Promise<void> => {
-      const settings = false;
-      if (settings) {
-        actions.setSubmitting(false);
-      }
-    },
-    []
-  );
+  const onSubmit = useUpdateSettings();
 
   const formik = useFormik<IUserFormValues>({
     initialValues: { ...props.user },
     onSubmit,
-    validationSchema: UserSettingsSchema
+    validationSchema
   });
 
   return (

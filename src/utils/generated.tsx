@@ -213,6 +213,16 @@ export type ICreateUserMutation = { __typename?: "Mutation" } & {
   >;
 };
 
+export type IUpdateUserSettingsMutationVariables = Exact<{
+  settings: IUserSettingsInput;
+}>;
+
+export type IUpdateUserSettingsMutation = { __typename?: "Mutation" } & {
+  updateUserSettings: Maybe<
+    { __typename?: "User" } & Pick<IUser, "username" | "email">
+  >;
+};
+
 export const EntryInfoFragmentDoc = gql`
   fragment EntryInfo on Entry {
     title
@@ -697,4 +707,55 @@ export type CreateUserMutationResult = ApolloReactCommon.MutationResult<
 export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ICreateUserMutation,
   ICreateUserMutationVariables
+>;
+export const UpdateUserSettingsDocument = gql`
+  mutation UpdateUserSettings($settings: UserSettingsInput!) {
+    updateUserSettings(settings: $settings) {
+      username
+      email
+    }
+  }
+`;
+export type IUpdateUserSettingsMutationFn = ApolloReactCommon.MutationFunction<
+  IUpdateUserSettingsMutation,
+  IUpdateUserSettingsMutationVariables
+>;
+
+/**
+ * __useUpdateUserSettingsMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserSettingsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserSettingsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserSettingsMutation, { data, loading, error }] = useUpdateUserSettingsMutation({
+ *   variables: {
+ *      settings: // value for 'settings'
+ *   },
+ * });
+ */
+export function useUpdateUserSettingsMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    IUpdateUserSettingsMutation,
+    IUpdateUserSettingsMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    IUpdateUserSettingsMutation,
+    IUpdateUserSettingsMutationVariables
+  >(UpdateUserSettingsDocument, baseOptions);
+}
+export type UpdateUserSettingsMutationHookResult = ReturnType<
+  typeof useUpdateUserSettingsMutation
+>;
+export type UpdateUserSettingsMutationResult = ApolloReactCommon.MutationResult<
+  IUpdateUserSettingsMutation
+>;
+export type UpdateUserSettingsMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  IUpdateUserSettingsMutation,
+  IUpdateUserSettingsMutationVariables
 >;
