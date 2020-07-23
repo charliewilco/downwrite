@@ -1,7 +1,7 @@
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
-import { IAppState, initialState } from "../reducers/app";
-import { SECRET_KEY } from "../utils";
+import { IAppState, initialState } from "@reducers/app";
+import { SECRET_KEY } from "@utils/urls";
 
 type ITokenUser = {
   username: string;

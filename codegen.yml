@@ -6,7 +6,7 @@ generates:
       - typescript
       - typescript-operations
       - typescript-react-apollo
-  ./src/utils/resolvers.ts:
+  ./src/utils/resolver-types.ts:
     config:
       useIndexSignature: true
     plugins:

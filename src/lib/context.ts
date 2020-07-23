@@ -1,8 +1,8 @@
 import { GetServerSidePropsContext } from "next";
 import { AuthenticationError } from "apollo-server-micro";
-import { TokenContents } from "./token";
-import { getUserToken } from "./cookie-managment";
-import dbConnect from "./db";
+import { TokenContents } from "@lib/token";
+import { getUserToken } from "@lib/cookie-managment";
+import dbConnect from "@lib/db";
 
 export type ResolverContext = Pick<GetServerSidePropsContext, "req" | "res">;
 

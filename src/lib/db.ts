@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { __IS_PROD__ } from "../utils";
+import { __IS_PROD__ } from "@utils/dev";
 
 function getAddress() {
   return `mongodb://${process.env.DB_ADDRESS!}`;

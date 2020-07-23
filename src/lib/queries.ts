@@ -1,13 +1,13 @@
 import { ApolloError, UserInputError } from "apollo-server-micro";
-import dbConnect from "./db";
-import { PostModel, UserModel, IUserModel } from "./models";
+import dbConnect from "@lib/db";
+import { PostModel, UserModel, IUserModel } from "@lib/models";
 import {
   transformPostsToFeed,
   transformPostToEntry,
   transformMDToPreview
-} from "./transform";
-import { ResolverContext, verifyUser } from "./context";
-import { IEntry, IQueryResolvers, IUser } from "@utils/resolvers";
+} from "@lib/transform";
+import { ResolverContext, verifyUser } from "@lib/context";
+import { IEntry, IQueryResolvers, IUser } from "@utils/resolver-types";
 import { Many } from "@utils/types";
 
 export const Query: IQueryResolvers<ResolverContext> = {

@@ -15,7 +15,7 @@ import {
   IMutationUpdateEntryArgs,
   IMutationDeleteEntryArgs,
   IMutationUpdateUserSettingsArgs
-} from "@utils/resolvers";
+} from "@utils/resolver-types";
 import { __IS_DEV__ } from "@utils/dev";
 
 export interface IMutationCreateEntryVars {
