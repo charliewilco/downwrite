@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useRouter } from "next/router";
 import decode from "jwt-decode";
-import { TokenContents } from "../lib/token";
+import { TokenContents } from "@lib/token";
 import { useLoginUserMutation, useCreateUserMutation } from "@utils/generated";
 import { useNotifications, NotificationType, useCurrentUser } from "@reducers/app";
 
@@ -18,8 +18,8 @@ export interface ILoginValues extends Record<string, string> {
 }
 
 interface IFormHandlers {
-  onLoginSubmit: (values: ILoginValues) => void;
-  onRegisterSubmit: (values: IRegisterValues) => void;
+  onLoginSubmit(values: ILoginValues): void;
+  onRegisterSubmit(values: IRegisterValues): void;
 }
 
 export function useLoginFns(): IFormHandlers {
@@ -68,13 +68,11 @@ export function useLoginFns(): IFormHandlers {
   );
 
   const onRegisterSubmit = useCallback(
-    async (values: IRegisterValues): Promise<void> => {
+    async ({ legalChecked, ...values }: IRegisterValues): Promise<void> => {
       if (values.legalChecked) {
         await createUser({
           variables: {
-            email: values.email,
-            username: values.username,
-            password: values.password
+            ...values
           }
         })
           .then(value => {

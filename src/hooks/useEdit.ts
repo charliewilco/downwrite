@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { EditorState } from "draft-js";
-import { EditActions } from "../reducers/editor";
-import { useEditQuery } from "../utils/generated";
+import { EditActions } from "@reducers/editor";
+import { useEditQuery } from "@utils/generated";
 import { useUpdateEntry, useEditReducer } from "./";
 
 export function useEdit(id: string) {

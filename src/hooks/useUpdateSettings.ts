@@ -15,15 +15,15 @@ export interface IUserFormValues {
 
 function updateSettings(
   cache: ApolloCache<IUpdateUserSettingsMutation>,
-  { data }: FetchResult<IUpdateUserSettingsMutation>
+  result: FetchResult<IUpdateUserSettingsMutation>
 ) {
-  if (data) {
+  if (result.data) {
     cache.writeQuery<IUserDetailsQuery>({
       query: UserDetailsDocument,
       data: {
         settings: {
-          username: data.updateUserSettings?.username!,
-          email: data.updateUserSettings?.email!
+          username: result.data.updateUserSettings?.username!,
+          email: result.data.updateUserSettings?.email!
         }
       }
     });

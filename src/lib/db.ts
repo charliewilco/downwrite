@@ -9,7 +9,7 @@ const connection: {
   isConnected?: number;
 } = {}; /* creating connection object*/
 
-async function dbConnect() {
+export default async function dbConnect() {
   if (connection.isConnected) {
     console.log("DB Connection", connection);
     return;
@@ -33,5 +33,3 @@ async function dbConnect() {
 
   connection.isConnected = db.connections[0].readyState;
 }
-
-export default dbConnect;
