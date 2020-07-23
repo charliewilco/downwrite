@@ -1,16 +1,17 @@
 import classNames from "../utils/classnames";
 import { useMemo } from "react";
+import { Gradient } from "@utils/default-styles";
 
 export type GradientColors = string[];
 
-export const AvatarColors: GradientColors = ["#FEB692", "#EA5455"];
+export const AvatarColors: Gradient = ["#FEB692", "#EA5455"];
 
 export interface IPointedGradientColors {
   a: string;
   b: string;
 }
 
-export const gradientPoints = (colors: GradientColors = AvatarColors) => ({
+export const gradientPoints = (colors: Gradient = AvatarColors) => ({
   a: colors[0],
   b: colors[1]
 });
@@ -22,7 +23,7 @@ export interface IAvatarCircleProps {
 }
 
 interface IAvatarProps {
-  colors: GradientColors;
+  colors: Gradient;
   size?: number;
   centered?: boolean;
   className?: string;

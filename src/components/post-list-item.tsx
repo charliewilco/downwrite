@@ -1,7 +1,7 @@
 import Link from "next/link";
 import distance from "date-fns/formatDistanceToNow";
 import { EditLink, PreviewLink } from "./entry-links";
-import { IPartialFeedItem } from "../reducers/dashboard";
+import { IPartialFeedItem } from "@reducers/dashboard";
 
 interface IListItemProps {
   title: string;
@@ -33,7 +33,7 @@ export default function PostListItem(props: IListItemProps): JSX.Element {
         </div>
         <div className="flex justify-between items-center text-xs font-bold">
           <div>
-            <EditLink id={props.id} style={{ marginRight: 8 }} />
+            <EditLink id={props.id} className="mr-4" />
             {props.public && <PreviewLink id={props.id} />}
           </div>
           {props.onDelete && (

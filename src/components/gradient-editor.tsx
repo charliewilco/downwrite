@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import Avatar from "./avatar";
 import ColorPicker from "./color-picker";
-import * as DefaultStyles from "../utils/default-styles";
+import { startColors, endColors, Gradient } from "@utils/default-styles";
 
 interface IColors {
   a: string;
@@ -19,7 +19,9 @@ export default function GradientEditor(props: IGradientEditorProps): JSX.Element
     props.onColorChange(value, name);
   }
 
-  const colors = useMemo(() => [props.colors.a, props.colors.b], [props.colors]);
+  const colors = useMemo<Gradient>(() => [props.colors.a, props.colors.b], [
+    props.colors
+  ]);
 
   return (
     <div className="my-64">
@@ -29,13 +31,13 @@ export default function GradientEditor(props: IGradientEditorProps): JSX.Element
           title="Start Color"
           name="a"
           onPress={handleColorChange}
-          colors={DefaultStyles.startColors}
+          colors={startColors}
         />
         <ColorPicker
           title="End Color"
           name="b"
           onPress={handleColorChange}
-          colors={DefaultStyles.endColors}
+          colors={endColors}
         />
       </div>
     </div>

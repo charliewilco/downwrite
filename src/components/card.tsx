@@ -33,8 +33,8 @@ export default function Card(props: ICardProps): JSX.Element {
       </header>
       <footer className="text-xs flex font-bold justify-between">
         <div data-testid="CARD_EXCERPT">
-          <EditLink style={{ marginRight: 8 }} id={props.id} />
-          {props.public && <PreviewLink style={{ marginRight: 8 }} id={props.id} />}
+          <EditLink className="mr-2" id={props.id} />
+          {props.public && <PreviewLink className="mr-2" id={props.id} />}
         </div>
         {props.onDelete && (
           <button

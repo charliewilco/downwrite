@@ -35,9 +35,8 @@ export default function Uploader(props: IUploadProps): JSX.Element {
       function extractMarkdown(files: File[]): void {
         if (reader.current !== null) {
           reader.current.onload = () => {
-            let md: IMarkdown = fm(reader.current!.result as string);
-
-            let markdown = markdownToDraft(md.body, { preserveNewlines: true });
+            const md: IMarkdown = fm(reader.current!.result as string);
+            const markdown = markdownToDraft(md.body);
 
             return props.onParsed({
               title: md.attributes.title || "",
@@ -62,7 +61,7 @@ export default function Uploader(props: IUploadProps): JSX.Element {
   });
 
   return (
-    <div {...getRootProps()} style={{ border: 0, width: "100%" }}>
+    <div {...getRootProps()} className="border-0 w-full">
       {props.children}
     </div>
   );

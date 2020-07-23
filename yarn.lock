@@ -2088,7 +2088,7 @@
     "@types/keygrip" "*"
     "@types/node" "*"
 
-"@types/draft-js@^0.10.43":
+"@types/draft-js@*", "@types/draft-js@^0.10.43":
   version "0.10.43"
   resolved "https://registry.npmjs.org/@types/draft-js/-/draft-js-0.10.43.tgz#6b1ed4b848ae0a169e3343b5923e013e3bfc29d0"
   integrity sha512-vy6hVgA/6uZhqBCinYw4lGVsjL/GnqwYTl2zUC8lMAHanwK9/tcVVDApWPf2GFvU/Nd986nVbUXPHDbKMrdSug==
@@ -2231,6 +2231,13 @@
   version "4.0.1"
   resolved "https://registry.npmjs.org/@types/long/-/long-4.0.1.tgz#459c65fa1867dafe6a8f322c4c51695663cc55e9"
   integrity sha512-5tXH6Bx/kNGd3MgffdmP4dy2Z+G4eaXw0SE81Tq3BNadtnMR5/ySMzX4SLEzHJzSmPNn4HIdpQsBvXMUykr58w==
+
+"@types/markdown-draft-js@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.npmjs.org/@types/markdown-draft-js/-/markdown-draft-js-2.2.1.tgz#7bc687b73677129b44d2df8d3075234ba77e226d"
+  integrity sha512-o0RVL1A/B5FRibwEOi+P3X1oSZM0pJcD9derqkwgCSwjtkW2jPfkE6t/AQM20Vgrm0LvV1oHts3+cEyaIDX5LA==
+  dependencies:
+    "@types/draft-js" "*"
 
 "@types/mime@*":
   version "2.0.2"
@@ -2953,20 +2960,12 @@ arg@4.1.0:
   resolved "https://registry.npmjs.org/arg/-/arg-4.1.0.tgz#583c518199419e0037abb74062c37f8519e575f0"
   integrity sha512-ZWc51jO3qegGkVh8Hwpv636EkbesNV5ZNQPCtRa+0qytRYPEs9IYT9qITY9buezqUH5uqyzlWLcufrzU2rffdg==
 
-argparse@^1.0.7:
+argparse@^1.0.10, argparse@^1.0.7:
   version "1.0.10"
   resolved "https://registry.npmjs.org/argparse/-/argparse-1.0.10.tgz#bcd6791ea5ae09725e17e5ad988134cd40b3d911"
   integrity sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==
   dependencies:
     sprintf-js "~1.0.2"
-
-argparse@~0.1.15:
-  version "0.1.16"
-  resolved "https://registry.npmjs.org/argparse/-/argparse-0.1.16.tgz#cfd01e0fbba3d6caed049fbd758d40f65196f57c"
-  integrity sha1-z9AeD7uj1srtBJ+9dY1A9lGW9Xw=
-  dependencies:
-    underscore "~1.7.0"
-    underscore.string "~2.4.0"
 
 arity-n@^1.0.4:
   version "1.0.4"
@@ -3100,10 +3099,12 @@ auto-bind@~4.0.0:
   resolved "https://registry.npmjs.org/auto-bind/-/auto-bind-4.0.0.tgz#e3589fc6c2da8f7ca43ba9f84fa52a744fc997fb"
   integrity sha512-Hdw8qdNiqdJ8LqT0iK0sVzkFbzg6fhnQqqfWhBDxcHZvU75+B+ayzTy8x+k5Ix0Y92XOhOUlx74ps+bA6BeYMQ==
 
-autolinker@~0.15.0:
-  version "0.15.3"
-  resolved "https://registry.npmjs.org/autolinker/-/autolinker-0.15.3.tgz#342417d8f2f3461b14cf09088d5edf8791dc9832"
-  integrity sha1-NCQX2PLzRhsUzwkIjV7fh5HcmDI=
+autolinker@^3.11.0:
+  version "3.14.1"
+  resolved "https://registry.npmjs.org/autolinker/-/autolinker-3.14.1.tgz#6ae4b812b6eaf42d4d68138b9e67757cbf2bc1e4"
+  integrity sha512-yvsRHIaY51EYDml6MGlbqyJGfl4n7zezGYf+R7gvM8c5LNpRGc4SISkvgAswSS8SWxk/OrGCylKV9mJyVstz7w==
+  dependencies:
+    tslib "^1.9.3"
 
 autoprefixer@^9.4.5, autoprefixer@^9.6.1:
   version "9.8.5"
@@ -7794,12 +7795,12 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-markdown-draft-js@^1.5.0:
-  version "1.7.1"
-  resolved "https://registry.npmjs.org/markdown-draft-js/-/markdown-draft-js-1.7.1.tgz#893ddf0f9739cf44d69c66d5691add42e7af0cb7"
-  integrity sha512-rr5EtEy7eGm8Wok090Pi/Yj0r5TSwMmBqNKcnvE0/h1LrLJcQARZlf8/rYpyRDS4Fnq7ao1rtisZ6J4RjCF90Q==
+markdown-draft-js@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.npmjs.org/markdown-draft-js/-/markdown-draft-js-2.2.1.tgz#7200d74ab98c060cfc234e344a79b53816600ba6"
+  integrity sha512-G0UeVRHnH1B13u6k7xIZY3YnkmK7NpEIphYx87HkHH4fLlWrhMDS5KJKUeXiVKrSpTl5jDITbiEyb8po1xj0Ig==
   dependencies:
-    remarkable "1.7.1"
+    remarkable "^2.0.1"
 
 markdown-escapes@^1.0.0:
   version "1.0.4"
@@ -10287,13 +10288,13 @@ remark-parse@^5.0.0:
     vfile-location "^2.0.0"
     xtend "^4.0.1"
 
-remarkable@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.npmjs.org/remarkable/-/remarkable-1.7.1.tgz#aaca4972100b66a642a63a1021ca4bac1be3bff6"
-  integrity sha1-qspJchALZqZCpjoQIcpLrBvjv/Y=
+remarkable@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/remarkable/-/remarkable-2.0.1.tgz#280ae6627384dfb13d98ee3995627ca550a12f31"
+  integrity sha512-YJyMcOH5lrR+kZdmB0aJJ4+93bEojRZ1HGDn9Eagu6ibg7aVZhc3OWbbShRid+Q5eAfsEqWxpe+g5W5nYNfNiA==
   dependencies:
-    argparse "~0.1.15"
-    autolinker "~0.15.0"
+    argparse "^1.0.10"
+    autolinker "^3.11.0"
 
 remedial@^1.0.7:
   version "1.0.8"
@@ -11360,10 +11361,10 @@ tabbable@^4.0.0:
   resolved "https://registry.npmjs.org/tabbable/-/tabbable-4.0.0.tgz#5bff1d1135df1482cf0f0206434f15eadbeb9261"
   integrity sha512-H1XoH1URcBOa/rZZWxLxHCtOdVUEev+9vo5YdYhC9tCY4wnybX+VQrCYuy9ubkg69fCBxCONJOSLGfw0DWMffQ==
 
-tailwindcss@^1.4.6:
-  version "1.5.1"
-  resolved "https://registry.npmjs.org/tailwindcss/-/tailwindcss-1.5.1.tgz#a3eb10024f8e10786b8b6badcf9665b013bd03ee"
-  integrity sha512-mBOxIk+U+9xECC6wllWiupPVfLuwTDvHb4d+8XTdZ8oYrZEH+NpFSlbATF5xWuCJQxDOZ1Dz7C0KN5tylcFhFg==
+tailwindcss@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.npmjs.org/tailwindcss/-/tailwindcss-1.5.2.tgz#3e99526e55c600b9df9152b0db12449ed9770855"
+  integrity sha512-OR7wxFetvHruLkQABeQac7jFdTOs+MwXzsuccOuMItva9GBANPd2VX8NgJ3pdvuGSL23c5cVId9jsvuKgulBiQ==
   dependencies:
     "@fullhuman/postcss-purgecss" "^2.1.2"
     autoprefixer "^9.4.5"
@@ -11769,16 +11770,6 @@ unc-path-regex@^0.1.2:
   version "0.1.2"
   resolved "https://registry.npmjs.org/unc-path-regex/-/unc-path-regex-0.1.2.tgz#e73dd3d7b0d7c5ed86fbac6b0ae7d8c6a69d50fa"
   integrity sha1-5z3T17DXxe2G+6xrCufYxqadUPo=
-
-underscore.string@~2.4.0:
-  version "2.4.0"
-  resolved "https://registry.npmjs.org/underscore.string/-/underscore.string-2.4.0.tgz#8cdd8fbac4e2d2ea1e7e2e8097c42f442280f85b"
-  integrity sha1-jN2PusTi0uoefi6Al8QvRCKA+Fs=
-
-underscore@~1.7.0:
-  version "1.7.0"
-  resolved "https://registry.npmjs.org/underscore/-/underscore-1.7.0.tgz#6bbaf0877500d36be34ecaa584e0db9fef035209"
-  integrity sha1-a7rwh3UA02vjTsqlhODbn+8DUgk=
 
 unherit@^1.0.4:
   version "1.1.3"

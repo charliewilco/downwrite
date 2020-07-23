@@ -1,10 +1,11 @@
 import Avatar from "./avatar";
 import classNames from "../utils/classnames";
+import { Gradient } from "@utils/default-styles";
 
 interface IUserBlockProps {
   name: string;
   border: boolean;
-  colors: string[];
+  colors: Gradient;
 }
 
 export default function UserBlock(props: IUserBlockProps): JSX.Element {

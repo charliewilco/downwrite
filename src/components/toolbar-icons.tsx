@@ -1,3 +1,5 @@
+import { CSSProperties } from "react";
+
 export function activeStyle(active: boolean): string {
   return active ? "#2584A5" : "#A9C2CA";
 }
@@ -185,12 +187,11 @@ interface IToolbarLabelProps {
 }
 
 export function Label(props: IToolbarLabelProps) {
+  const style: CSSProperties = {
+    color: activeStyle(props.active)
+  };
   return (
-    <span
-      style={{
-        display: "inline-block",
-        color: activeStyle(props.active)
-      }}>
+    <span className="inline-block" style={style}>
       {props.label}
     </span>
   );

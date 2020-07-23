@@ -3,7 +3,6 @@ import Link from "next/link";
 interface ICardLinks {
   id: string;
   title?: string;
-  style?: React.CSSProperties;
   className?: string;
 }
 
@@ -20,9 +19,7 @@ function DefaultLink({
   const as = `/${id}/${pathname}`;
   return (
     <Link href={href} as={as}>
-      <a className={props.className} style={props.style}>
-        {props.title}
-      </a>
+      <a className={props.className}>{props.title}</a>
     </Link>
   );
 }

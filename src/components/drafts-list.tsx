@@ -25,7 +25,7 @@ export default function DraftList(props: IDraftListProps): JSX.Element {
                 <button
                   type="button"
                   onClick={() => props.onEdit(draft)}
-                  style={{ marginRight: 16 }}>
+                  className="mr-4">
                   Edit
                 </button>
                 <button type="button" onClick={() => props.onRemove(draft)}>

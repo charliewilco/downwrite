@@ -1,15 +1,16 @@
 import HexInput from "./hex-input";
+import { Gradient, startColors } from "@utils/default-styles";
 
 interface IColorPickerProps {
   title?: string;
-  colors: string[];
+  colors: Gradient;
   onPress: (color: string, name: string) => void;
   name: string;
 }
 
 function ColorPicker(
   props: IColorPickerProps = {
-    colors: [],
+    colors: startColors,
     onPress: (color: string, name: string) => ({ color, name }),
     name: "Color Picker"
   }

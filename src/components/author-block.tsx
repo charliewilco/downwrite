@@ -1,8 +1,9 @@
 import Avatar from "./avatar";
+import { Gradient } from "@utils/default-styles";
 
 interface IAuthorProps {
   name: string;
-  colors: string[];
+  colors: Gradient;
 }
 
 export default function Author(props: IAuthorProps): JSX.Element {
