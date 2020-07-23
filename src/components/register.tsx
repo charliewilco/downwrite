@@ -3,7 +3,7 @@ import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
 import LegalBoilerplate from "./legal-boilerplate";
 import { useLoginFns, IRegisterValues } from "../hooks";
-import { RegisterFormSchema } from "../utils/validations";
+import { RegisterFormSchema as validationSchema } from "../utils/validations";
 
 interface IInput {
   name: string;
@@ -37,17 +37,19 @@ const REGISTER_INPUTS: IInput[] = [
   }
 ];
 
+const initialValues: IRegisterValues = {
+  legalChecked: false,
+  username: "",
+  password: "",
+  email: ""
+};
+
 export default function RegisterForm(): JSX.Element {
   const { onRegisterSubmit } = useLoginFns();
 
   const { values, handleChange, handleSubmit, errors } = useFormik<IRegisterValues>({
-    initialValues: {
-      legalChecked: false,
-      username: "",
-      password: "",
-      email: ""
-    },
-    validationSchema: RegisterFormSchema,
+    initialValues,
+    validationSchema,
     validateOnChange: false,
     onSubmit: onRegisterSubmit
   });

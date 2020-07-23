@@ -1,39 +1,23 @@
-import {
-  ApolloError,
-  AuthenticationError,
-  UserInputError
-} from "apollo-server-micro";
-import { GetServerSidePropsContext } from "next";
+import { ApolloError, UserInputError } from "apollo-server-micro";
 import dbConnect from "./db";
-import { PostModel, UserModel } from "./models";
+import { PostModel, UserModel, IUserModel } from "./models";
 import {
   transformPostsToFeed,
   transformPostToEntry,
   transformMDToPreview
 } from "./transform";
-import { getUserToken } from "./cookie-managment";
-import { TokenContents } from "./token";
+import { ResolverContext, verifyUser } from "./context";
+import { IEntry, IQueryResolvers, IUser } from "@utils/resolvers";
+import { Many } from "@utils/types";
 
-export type ResolverContext = Pick<GetServerSidePropsContext, "req" | "res">;
+export const Query: IQueryResolvers<ResolverContext> = {
+  feed: async (_, __, context) => feed(context),
+  entry: async (_, { id }, context) => entry(context, id),
+  preview: async (_, { id }, context) => preview(context, id),
+  settings: async (_, __, context) => settings(context)
+};
 
-export async function verifyUser<T>(
-  context: ResolverContext,
-  cb: (user: TokenContents) => T
-) {
-  const token = getUserToken(context.req);
-
-  if (token) {
-    await dbConnect();
-
-    if (cb) {
-      return cb(token);
-    }
-  } else {
-    throw new AuthenticationError("No valid token in cookie");
-  }
-}
-
-export async function feed(context: ResolverContext) {
+export async function feed(context: ResolverContext): Promise<IEntry[]> {
   return verifyUser(context, async ({ user }) => {
     try {
       const posts = await PostModel.find({ user: { $eq: user } });
@@ -44,7 +28,7 @@ export async function feed(context: ResolverContext) {
   });
 }
 
-export async function entry(context: ResolverContext, id: string) {
+export async function entry(context: ResolverContext, id: string): Promise<IEntry> {
   return verifyUser(context, async ({ user }) => {
     try {
       const post = await PostModel.findOne({
@@ -79,9 +63,16 @@ export async function preview(_: ResolverContext, id: string) {
   return transformMDToPreview(post, user);
 }
 
-export async function settings(context: ResolverContext) {
+export async function settings(context: ResolverContext): Promise<IUser> {
   return verifyUser(context, async ({ user }) => {
-    const details = await UserModel.findById(user, ["username", "email"]).lean();
-    return details;
+    const details: Many<
+      Pick<IUserModel, "username" | "email">
+    > | null = await UserModel.findById(user, ["username", "email"]).lean();
+    if (details !== null) {
+      const user = Array.isArray(details) ? details[0] : details;
+      return { email: user.email!, admin: false, username: user.username! };
+    } else {
+      throw new ApolloError("Could not find user settings");
+    }
   });
 }

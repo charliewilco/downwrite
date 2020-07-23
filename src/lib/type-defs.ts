@@ -34,7 +34,6 @@ export const typeDefs = gql`
     username: String!
     email: String!
     admin: Boolean
-    posts: [Entry]
   }
 
   # Inputs
@@ -56,7 +55,7 @@ export const typeDefs = gql`
     """
     Markdown document
     """
-    entry(id: ID): Entry
+    entry(id: ID!): Entry
     """
     List of Markdown documents
     """
@@ -64,7 +63,7 @@ export const typeDefs = gql`
     """
     Public preview of Markdown document
     """
-    preview(id: ID): Preview
+    preview(id: ID!): Preview
     """
     User Settings
     """
@@ -73,8 +72,13 @@ export const typeDefs = gql`
 
   type Mutation {
     createEntry(content: String, title: String): Entry
-    updateEntry(id: String, content: String, title: String, status: Boolean): Entry
-    deleteEntry(id: ID): Entry
+    updateEntry(
+      id: String!
+      content: String!
+      title: String!
+      status: Boolean!
+    ): Entry
+    deleteEntry(id: ID!): Entry
     createUser(username: String!, email: String!, password: String!): AuthUserPayload
     authenticateUser(username: String!, password: String!): AuthUserPayload
     updateUserSettings(settings: UserSettingsInput!): User

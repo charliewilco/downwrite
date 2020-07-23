@@ -38,10 +38,10 @@ query UserDetails {
 }
 
 mutation UpdateEntry(
-  $id: String
-  $content: String
-  $title: String
-  $status: Boolean
+  $id: String!
+  $content: String!
+  $title: String!
+  $status: Boolean!
 ) {
   updateEntry(id: $id, content: $content, title: $title, status: $status) {
     ...EntryInfo
@@ -55,7 +55,7 @@ mutation CreateEntry($content: String, $title: String) {
   }
 }
 
-mutation RemoveEntry($id: ID) {
+mutation RemoveEntry($id: ID!) {
   deleteEntry(id: $id) {
     title
     id

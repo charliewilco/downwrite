@@ -1,11 +1,22 @@
 import { ApolloError, AuthenticationError } from "apollo-server-micro";
 import { v4 as uuid } from "uuid";
-import { ResolverContext, verifyUser } from "./queries";
-import { PostModel, UserModel, IUserModel } from "./models";
-import { transformPostToEntry } from "./transform";
-import dbConnect from "./db";
-import { getSaltedHash, createToken, isValidPassword } from "./token";
-import { setTokenCookie } from "./cookie-managment";
+import { ResolverContext, verifyUser } from "@lib/context";
+import { PostModel, UserModel, IUserModel } from "@lib/models";
+import { transformPostToEntry } from "@lib/transform";
+import dbConnect from "@lib/db";
+import { getSaltedHash, createToken, isValidPassword } from "@lib/token";
+import { setTokenCookie } from "@lib/cookie-managment";
+import {
+  RequireFields,
+  IEntry,
+  IUser,
+  IMutationResolvers,
+  IMutationCreateEntryArgs,
+  IMutationUpdateEntryArgs,
+  IMutationDeleteEntryArgs,
+  IMutationUpdateUserSettingsArgs
+} from "@utils/resolvers";
+import { __IS_DEV__ } from "@utils/dev";
 
 export interface IMutationCreateEntryVars {
   title: string;
@@ -20,14 +31,27 @@ export interface IMutationUserVars {
   username: string;
 }
 
+export const Mutation: IMutationResolvers<ResolverContext> = {
+  createEntry: async (_, args, context) => createPost(context, args),
+  updateEntry: async (_, args, context) => updatePost(context, args.id, args),
+  deleteEntry: async (_, args, context) => removePost(context, args),
+  createUser: async (_, args: IMutationUserVars, context) =>
+    createUser(context, args.username, args.email!, args.password),
+  authenticateUser: async (_, args: IMutationUserVars, context) =>
+    authenticateUser(context, args.username, args.password),
+  updateUserSettings: async (_, args, context) => updateUserSettings(context, args)
+};
+
 export async function createPost(
   context: ResolverContext,
-  { title, content }: IMutationCreateEntryVars
-) {
+  args: RequireFields<IMutationCreateEntryArgs, never>
+): Promise<IEntry> {
   return verifyUser(context, async ({ user, name }) => {
     try {
       const id = uuid();
       const date = new Date();
+      const title = args.title ?? "Untitled Entry";
+      const content = args.content ?? "";
 
       const entry = {
         title,
@@ -41,7 +65,7 @@ export async function createPost(
       };
 
       const post = await PostModel.create(entry);
-      return post;
+      return transformPostToEntry(post);
     } catch (error) {
       throw new ApolloError(error);
     }
@@ -51,16 +75,16 @@ export async function createPost(
 export async function updatePost(
   context: ResolverContext,
   id: string,
-  body: IMutationCreateEntryVars
+  args: IMutationUpdateEntryArgs
 ) {
   return verifyUser(context, async ({ user }) => {
     try {
       const n = await PostModel.findOneAndUpdate(
         { id, user: { $eq: user } },
         {
-          content: body.content,
-          public: body.status,
-          title: body.title,
+          content: args.content,
+          public: args.status,
+          title: args.title,
           dateModified: new Date()
         },
         {
@@ -107,15 +131,20 @@ export async function verifyCredentials(
   }
 }
 
-export async function removePost(context: ResolverContext, id: string) {
+export async function removePost(
+  context: ResolverContext,
+  { id }: RequireFields<IMutationDeleteEntryArgs, "id">
+): Promise<IEntry> {
   return verifyUser(context, async ({ user }) => {
     try {
       const post = await PostModel.findOneAndRemove({
         id,
         user: { $eq: user }
       });
-      return post;
-    } catch (error) {}
+      return transformPostToEntry(post);
+    } catch (error) {
+      throw new ApolloError(error);
+    }
   });
 }
 
@@ -162,4 +191,24 @@ export async function createUser(
   } catch (error) {
     throw new ApolloError(error);
   }
+}
+
+export async function updateUserSettings(
+  context: ResolverContext,
+  args: RequireFields<IMutationUpdateUserSettingsArgs, "settings">
+): Promise<IUser> {
+  return verifyUser(context, async ({ user }) => {
+    const details = await UserModel.findByIdAndUpdate(
+      {
+        _id: user
+      },
+      { $set: { username: args.settings.username, email: args.settings.email } },
+      { new: true, select: "username email" }
+    );
+    if (details.email && details.username) {
+      return { email: details.email, username: details.username, admin: __IS_DEV__ };
+    } else {
+      throw new ApolloError("Couldn't update user settings");
+    }
+  });
 }

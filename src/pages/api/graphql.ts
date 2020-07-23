@@ -1,6 +1,6 @@
 import { ApolloServer } from "apollo-server-micro";
 import { schema } from "../../lib/schema";
-import { ResolverContext } from "../../lib/queries";
+import { ResolverContext } from "../../lib/context";
 
 const server = new ApolloServer({
   schema,

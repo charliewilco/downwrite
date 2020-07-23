@@ -4,6 +4,7 @@ interface IHexInputProps {
   onChange: (color: string) => void;
   initialValue?: string;
 }
+
 function isValidHex(hex: string): boolean {
   let valid = /^#[0-9A-F]{6}$/i.test(hex);
   return valid;

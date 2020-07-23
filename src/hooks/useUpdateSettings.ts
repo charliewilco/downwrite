@@ -38,11 +38,15 @@ export function useUpdateSettings() {
       actions: FormikHelpers<IUserFormValues>
     ): Promise<void> => {
       if (settings) {
-        await mutationFn({
-          variables: { settings },
-          update: updateSettings
-        }).catch(err => console.log(err));
-        actions.setSubmitting(false);
+        try {
+          await mutationFn({
+            variables: { settings },
+            update: updateSettings
+          });
+          actions.setSubmitting(false);
+        } catch (err) {
+          console.log(err);
+        }
       }
     },
     [mutationFn]

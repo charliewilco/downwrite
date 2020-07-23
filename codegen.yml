@@ -1,4 +1,4 @@
-schema: ./src/lib/schema.graphql
+schema: ./src/lib/type-defs.ts
 documents: ./src/lib/document.graphql
 generates:
   ./src/utils/generated.tsx:
@@ -6,6 +6,13 @@ generates:
       - typescript
       - typescript-operations
       - typescript-react-apollo
+  ./src/utils/resolvers.ts:
+    config:
+      useIndexSignature: true
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-resolvers
 config:
   typesPrefix: I
   avoidOptionals: true

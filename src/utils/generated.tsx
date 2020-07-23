@@ -46,7 +46,6 @@ export type IUser = {
   username: Scalars["String"];
   email: Scalars["String"];
   admin: Maybe<Scalars["Boolean"]>;
-  posts: Maybe<Array<Maybe<IEntry>>>;
 };
 
 export type IUserSettingsInput = {
@@ -72,11 +71,11 @@ export type IQuery = {
 };
 
 export type IQueryEntryArgs = {
-  id: Maybe<Scalars["ID"]>;
+  id: Scalars["ID"];
 };
 
 export type IQueryPreviewArgs = {
-  id: Maybe<Scalars["ID"]>;
+  id: Scalars["ID"];
 };
 
 export type IMutation = {
@@ -95,14 +94,14 @@ export type IMutationCreateEntryArgs = {
 };
 
 export type IMutationUpdateEntryArgs = {
-  id: Maybe<Scalars["String"]>;
-  content: Maybe<Scalars["String"]>;
-  title: Maybe<Scalars["String"]>;
-  status: Maybe<Scalars["Boolean"]>;
+  id: Scalars["String"];
+  content: Scalars["String"];
+  title: Scalars["String"];
+  status: Scalars["Boolean"];
 };
 
 export type IMutationDeleteEntryArgs = {
-  id: Maybe<Scalars["ID"]>;
+  id: Scalars["ID"];
 };
 
 export type IMutationCreateUserArgs = {
@@ -161,10 +160,10 @@ export type IUserDetailsQuery = { __typename?: "Query" } & {
 };
 
 export type IUpdateEntryMutationVariables = Exact<{
-  id: Maybe<Scalars["String"]>;
-  content: Maybe<Scalars["String"]>;
-  title: Maybe<Scalars["String"]>;
-  status: Maybe<Scalars["Boolean"]>;
+  id: Scalars["String"];
+  content: Scalars["String"];
+  title: Scalars["String"];
+  status: Scalars["Boolean"];
 }>;
 
 export type IUpdateEntryMutation = { __typename?: "Mutation" } & {
@@ -183,7 +182,7 @@ export type ICreateEntryMutation = { __typename?: "Mutation" } & {
 };
 
 export type IRemoveEntryMutationVariables = Exact<{
-  id: Maybe<Scalars["ID"]>;
+  id: Scalars["ID"];
 }>;
 
 export type IRemoveEntryMutation = { __typename?: "Mutation" } & {
@@ -448,10 +447,10 @@ export type UserDetailsQueryResult = ApolloReactCommon.QueryResult<
 >;
 export const UpdateEntryDocument = gql`
   mutation UpdateEntry(
-    $id: String
-    $content: String
-    $title: String
-    $status: Boolean
+    $id: String!
+    $content: String!
+    $title: String!
+    $status: Boolean!
   ) {
     updateEntry(id: $id, content: $content, title: $title, status: $status) {
       ...EntryInfo
@@ -559,7 +558,7 @@ export type CreateEntryMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ICreateEntryMutationVariables
 >;
 export const RemoveEntryDocument = gql`
-  mutation RemoveEntry($id: ID) {
+  mutation RemoveEntry($id: ID!) {
     deleteEntry(id: $id) {
       title
       id

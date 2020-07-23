@@ -1,10 +1,12 @@
 import { ApolloError } from "apollo-server-micro";
 import is from "@sindresorhus/is";
 import { IPostModel, IUserModel } from "./models";
-import { IEntry, IPreview } from "../utils/generated";
+import { IEntry, IPreview } from "@utils/resolvers";
 import { createMarkdownServer } from "../utils/markdown-template";
 
-export function transformPostsToFeed(posts: IPostModel[]): Omit<IEntry, "author">[] {
+const DEFAULT_GRADIENT = ["#FEB692", "#EA5455"];
+
+export function transformPostsToFeed(posts: IPostModel[]): IEntry[] {
   const feed = posts.map(post => {
     const md = createMarkdownServer(post.content);
     const user = post.user.toString();
@@ -17,7 +19,7 @@ export function transformPostsToFeed(posts: IPostModel[]): Omit<IEntry, "author"
     return {
       id: post.id,
       title: post.title,
-      author: post.author,
+      author: { username: post.author, gradient: DEFAULT_GRADIENT },
       user,
       dateModified,
       dateAdded,
@@ -30,9 +32,7 @@ export function transformPostsToFeed(posts: IPostModel[]): Omit<IEntry, "author"
   return feed;
 }
 
-export function transformPostToEntry(
-  post: IPostModel | null
-): Omit<IEntry, "author"> {
+export function transformPostToEntry(post: IPostModel | null): IEntry {
   let md = ``;
 
   if (post === null) {
@@ -53,7 +53,7 @@ export function transformPostToEntry(
   const entry = {
     id: post.id,
     title: post.title,
-    author: post.author,
+    author: { username: post.author, gradient: DEFAULT_GRADIENT },
     user: post.user.toString(),
     dateModified,
     dateAdded,
