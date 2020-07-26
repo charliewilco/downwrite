@@ -10,6 +10,23 @@ import { useAllPostsQuery, AllPostsDocument } from "@utils/generated";
 import { initializeApollo } from "@lib/apollo";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
 
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const client = initializeApollo({}, { req, res });
+  await client.query({
+    query: AllPostsDocument,
+    context: { req, res }
+  });
+
+  const initialAppState = getInitialStateFromCookie(req);
+
+  return {
+    props: {
+      initialAppState,
+      initialApolloState: client.cache.extract()
+    }
+  };
+};
+
 const DashboardUI: NextPage = () => {
   const [{ selectedPost, modalOpen }, actions] = useDashboard();
   const { data, loading, error } = useAllPostsQuery();
@@ -62,20 +79,3 @@ const DashboardUI: NextPage = () => {
 };
 
 export default DashboardUI;
-
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const client = initializeApollo({}, { req, res });
-  await client.query({
-    query: AllPostsDocument,
-    context: { req, res }
-  });
-
-  const initialAppState = getInitialStateFromCookie(req);
-
-  return {
-    props: {
-      initialAppState,
-      initialApolloState: client.cache.extract()
-    }
-  };
-};

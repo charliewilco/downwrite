@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useRef } from "react";
@@ -14,7 +14,16 @@ const Upload = dynamic(() => import("@components/upload"));
 
 const EDITOR_COMMAND = "create-new-post";
 
-export default function NewEntryPage() {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const initialAppState = getInitialStateFromCookie(req);
+  return {
+    props: {
+      initialAppState
+    }
+  };
+};
+
+const NewEntryPage: NextPage = () => {
   const initialValues = useRef<INewEditorValues>({
     title: "",
     editorState: EditorState.createEmpty()
@@ -65,13 +74,6 @@ export default function NewEntryPage() {
       </Upload>
     </form>
   );
-}
-
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const initialAppState = getInitialStateFromCookie(req);
-  return {
-    props: {
-      initialAppState
-    }
-  };
 };
+
+export default NewEntryPage;

@@ -1,4 +1,4 @@
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { RawDraftContentState } from "draft-js";
@@ -23,9 +23,45 @@ const Editor = dynamic(() => import("@components/editor"));
 const WordCounter = dynamic(() => import("@components/word-count"));
 const ExportMarkdown = dynamic(() => import("@components/export"));
 
-export default function EditUI(
-  props: InferGetServerSidePropsType<typeof getServerSideProps>
-) {
+interface IEditPageProps {
+  initialAppState: IAppState;
+  initialApolloState: NormalizedCacheObject;
+  rawEditorState: RawDraftContentState;
+  id: string;
+}
+
+type EditPageParams = {
+  id: string;
+};
+
+type EditPageHandler = GetServerSideProps<IEditPageProps, EditPageParams>;
+
+export const getServerSideProps: EditPageHandler = async ({ req, res, params }) => {
+  const client = initializeApollo({}, { req, res });
+  const id = params?.id!;
+
+  const { data } = await client.query<IEditQuery, IEditQueryVariables>({
+    query: EditDocument,
+    variables: { id },
+    context: { req, res }
+  });
+
+  const initialAppState = getInitialStateFromCookie(req);
+  const rawEditorState = markdownToDraft(data?.entry?.content!);
+
+  return {
+    props: {
+      id,
+      rawEditorState,
+      initialAppState,
+      initialApolloState: client.cache.extract()
+    }
+  };
+};
+
+const EditUI: NextPage<InferGetServerSidePropsType<
+  typeof getServerSideProps
+>> = props => {
   const [{ loading, error, state, data, id }, actions] = useEdit(props.id);
 
   if (error) {
@@ -98,40 +134,6 @@ export default function EditUI(
       {!!state.editorState && <WordCounter editorState={state.editorState} />}
     </div>
   );
-}
-
-interface IEditPageProps {
-  initialAppState: IAppState;
-  initialApolloState: NormalizedCacheObject;
-  rawEditorState: RawDraftContentState;
-  id: string;
-}
-
-type EditPageParams = {
-  id: string;
 };
 
-type EditPageHandler = GetServerSideProps<IEditPageProps, EditPageParams>;
-
-export const getServerSideProps: EditPageHandler = async ({ req, res, params }) => {
-  const client = initializeApollo({}, { req, res });
-  const id = params?.id!;
-
-  const { data } = await client.query<IEditQuery, IEditQueryVariables>({
-    query: EditDocument,
-    variables: { id },
-    context: { req, res }
-  });
-
-  const initialAppState = getInitialStateFromCookie(req);
-  const rawEditorState = markdownToDraft(data?.entry?.content!);
-
-  return {
-    props: {
-      id,
-      rawEditorState,
-      initialAppState,
-      initialApolloState: client.cache.extract()
-    }
-  };
-};
+export default EditUI;

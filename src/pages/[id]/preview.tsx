@@ -1,4 +1,9 @@
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import {
+  GetStaticPaths,
+  GetStaticProps,
+  InferGetStaticPropsType,
+  NextPage
+} from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
@@ -51,9 +56,9 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
   };
 };
 
-export default function PreviewEntry(
-  props: InferGetStaticPropsType<typeof getStaticProps>
-) {
+const PreviewEntry: NextPage<InferGetStaticPropsType<
+  typeof getStaticProps
+>> = props => {
   const router = useRouter();
   const [currentUser] = useCurrentUser();
   const { error, loading, data } = usePreviewQuery({
@@ -109,4 +114,6 @@ export default function PreviewEntry(
   }
 
   return <div />;
-}
+};
+
+export default PreviewEntry;

@@ -1,8 +1,9 @@
+import { NextPage } from "next";
 import Head from "next/head";
 import Content from "@components/content-wrapper";
 import Features from "@components/features";
 
-export default function AboutDetails(): JSX.Element {
+const AboutDetails: NextPage = () => {
   return (
     <Content title="About Downwrite">
       <Head>
@@ -63,4 +64,6 @@ export default function AboutDetails(): JSX.Element {
       </div>
     </Content>
   );
-}
+};
+
+export default AboutDetails;

@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { removeTokenCookie } from "@lib/cookie-managment";
 
 export const getServerSideProps: GetServerSideProps<
@@ -17,6 +17,8 @@ export const getServerSideProps: GetServerSideProps<
   };
 };
 
-export default function SignOut() {
+const SignOut: NextPage = () => {
   return <h1>Goodbye!</h1>;
-}
+};
+
+export default SignOut;

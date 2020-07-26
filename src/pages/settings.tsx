@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextPage, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import SettingsUser from "@components/settings-user-form";
 import SettingsPassword from "@components/settings-password";
@@ -8,35 +8,6 @@ import { PageTitle } from "@components/page-title";
 import { initializeApollo } from "@lib/apollo";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
 import { useUserDetailsQuery, UserDetailsDocument } from "@utils/generated";
-
-export default function SettingsPage() {
-  const { error, loading, data } = useUserDetailsQuery();
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (error) {
-    return (
-      <div>
-        <pre>{JSON.stringify(error, null, 2)}</pre>
-      </div>
-    );
-  }
-
-  return (
-    <div className="mx-auto max-w-3xl p-2">
-      <Head>
-        <title>User Settings</title>
-      </Head>
-      <header className="flex justify-between mb-6 items-center">
-        <PageTitle>Settings</PageTitle>
-      </header>
-      <SettingsUser user={data?.settings!} />
-      <SettingsPassword />
-      <SettingsLocal />
-    </div>
-  );
-}
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const client = initializeApollo({}, { req, res });
@@ -55,3 +26,36 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     }
   };
 };
+
+const SettingsPage: NextPage<InferGetServerSidePropsType<
+  typeof getServerSideProps
+>> = () => {
+  const { error, loading, data } = useUserDetailsQuery();
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return (
+      <div>
+        <pre>{JSON.stringify(error, null, 2)}</pre>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-3xl p-2 mx-auto">
+      <Head>
+        <title>User Settings</title>
+      </Head>
+      <header className="flex items-center justify-between mb-6">
+        <PageTitle>Settings</PageTitle>
+      </header>
+      <SettingsUser user={data?.settings!} />
+      <SettingsPassword />
+      <SettingsLocal />
+    </div>
+  );
+};
+
+export default SettingsPage;

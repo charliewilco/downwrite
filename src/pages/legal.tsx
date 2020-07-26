@@ -1,7 +1,8 @@
+import { NextPage } from "next";
 import Head from "next/head";
 import Content from "@components/content-wrapper";
 
-export default function LegalView(): JSX.Element {
+const LegalPage: NextPage = (): JSX.Element => {
   return (
     <Content title="Legal">
       <Head>
@@ -309,4 +310,6 @@ export default function LegalView(): JSX.Element {
       </p>
     </Content>
   );
-}
+};
+
+export default LegalPage;

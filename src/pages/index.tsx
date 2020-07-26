@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NormalizedCacheObject } from "@apollo/client";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
@@ -35,9 +35,9 @@ const isProps = <K extends any>(props: any): props is K => {
   return !!props && props !== {};
 };
 
-export default function IndexPage(
-  props: InferGetServerSidePropsType<typeof getServerSideProps>
-) {
+const IndexPage: NextPage<InferGetServerSidePropsType<
+  typeof getServerSideProps
+>> = props => {
   const router = useRouter();
 
   useEffect(() => {
@@ -49,4 +49,6 @@ export default function IndexPage(
   }, [router, props]);
 
   return null;
-}
+};
+
+export default IndexPage;
