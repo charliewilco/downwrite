@@ -193,16 +193,45 @@ export async function createUser(
   }
 }
 
+type Diffs = "email" | "username";
+
+export function isDifferent(
+  user: IUserModel,
+  email: string,
+  username: string
+): Diffs[] {
+  const differences: Diffs[] = [];
+
+  if (user.email !== email) differences.push("email");
+  if (user.username !== username) differences.push("username");
+
+  return differences;
+}
+
 export async function updateUserSettings(
   context: ResolverContext,
-  args: RequireFields<IMutationUpdateUserSettingsArgs, "settings">
+  {
+    settings: { email, username }
+  }: RequireFields<IMutationUpdateUserSettingsArgs, "settings">
 ): Promise<IUser> {
   return verifyUser(context, async ({ user }) => {
+    const currentUser: IUserModel = await UserModel.findById({ _id: user });
+    const differences = isDifferent(currentUser, email!, username!);
+
+    for (const diff of differences) {
+      if (diff === "username") {
+        console.log(diff);
+      }
+
+      if (diff === "email") {
+        console.log(diff);
+      }
+    }
     const details = await UserModel.findByIdAndUpdate(
       {
         _id: user
       },
-      { $set: { username: args.settings.username, email: args.settings.email } },
+      { $set: { username, email } },
       { new: true, select: "username email" }
     );
     if (details.email && details.username) {

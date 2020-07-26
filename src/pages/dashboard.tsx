@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import DeleteModal from "@components/delete-modal";
 import PostList from "@components/post-list";
@@ -10,7 +10,7 @@ import { useAllPostsQuery, AllPostsDocument } from "@utils/generated";
 import { initializeApollo } from "@lib/apollo";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
 
-export default function DashboardUI() {
+const DashboardUI: NextPage = () => {
   const [{ selectedPost, modalOpen }, actions] = useDashboard();
   const { data, loading, error } = useAllPostsQuery();
   const onConfirmDelete = useRemovePost();
@@ -59,7 +59,9 @@ export default function DashboardUI() {
   }
 
   return null;
-}
+};
+
+export default DashboardUI;
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const client = initializeApollo({}, { req, res });

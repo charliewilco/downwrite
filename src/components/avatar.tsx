@@ -1,10 +1,6 @@
-import classNames from "../utils/classnames";
 import { useMemo } from "react";
-import { Gradient } from "@utils/default-styles";
-
-export type GradientColors = string[];
-
-export const AvatarColors: Gradient = ["#FEB692", "#EA5455"];
+import classNames from "@utils/classnames";
+import { AvatarColors, Gradient } from "@utils/default-styles";
 
 export interface IPointedGradientColors {
   a: string;

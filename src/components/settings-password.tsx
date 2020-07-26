@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useCallback, useReducer, ReducerWithoutAction } from "react";
 import { useFormik, FormikHelpers } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
@@ -33,7 +33,10 @@ const PASSWORD_INPUTS: IInputs[] = [
 ];
 
 export default function SettingsPassword(): JSX.Element {
-  const [isOpen, setOpen] = useState(false);
+  const [isOpen, onToggleOpen] = useReducer<ReducerWithoutAction<boolean>>(
+    (prev: boolean) => !prev,
+    false
+  );
 
   const onSubmit = useCallback(
     (_: IPasswordSettings, actions: FormikHelpers<IPasswordSettings>): void => {
@@ -79,7 +82,7 @@ export default function SettingsPassword(): JSX.Element {
         <SettingsFormActions split>
           <ToggleBox
             label={value => (!value ? "Values hidden" : "Values shown")}
-            onChange={() => setOpen(prevIsOpen => !prevIsOpen)}
+            onChange={onToggleOpen}
             value={isOpen}
           />
           <Button type="submit" disabled={formik.isSubmitting}>

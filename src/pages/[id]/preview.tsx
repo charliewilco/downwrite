@@ -5,7 +5,6 @@ import Head from "next/head";
 import Content from "@components/content";
 import AuthorBlock from "@components/author-block";
 import Loading from "@components/loading";
-import { AvatarColors } from "@components/avatar";
 import NotFound from "@components/not-found";
 import {
   usePreviewQuery,
@@ -17,6 +16,7 @@ import dbConnect from "@lib/db";
 import { PostModel } from "@lib/models";
 import { initializeApollo } from "@lib/apollo";
 import { Routes } from "@utils/routes";
+import { AvatarColors } from "@utils/default-styles";
 import { useCurrentUser } from "@reducers/app";
 
 export const getStaticPaths: GetStaticPaths = async () => {
