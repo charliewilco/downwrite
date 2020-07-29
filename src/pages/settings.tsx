@@ -1,7 +1,6 @@
 import { GetServerSideProps, NextPage, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import SettingsUser from "@components/settings-user-form";
-import SettingsPassword from "@components/settings-password";
 import SettingsLocal from "@components/settings-markdown";
 import Loading from "@components/loading";
 import { PageTitle } from "@components/page-title";
@@ -52,7 +51,6 @@ const SettingsPage: NextPage<InferGetServerSidePropsType<
         <PageTitle>Settings</PageTitle>
       </header>
       <SettingsUser user={data?.settings!} />
-      <SettingsPassword />
       <SettingsLocal />
     </div>
   );

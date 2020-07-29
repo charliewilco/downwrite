@@ -1,10 +1,15 @@
-import { ApolloError, AuthenticationError } from "apollo-server-micro";
+import { ApolloError } from "apollo-server-micro";
 import { v4 as uuid } from "uuid";
-import { ResolverContext, verifyUser } from "@lib/context";
+import {
+  ResolverContext,
+  verifyUser,
+  verifyUniqueUser,
+  verifyCredentials
+} from "@lib/context";
 import { PostModel, UserModel, IUserModel } from "@lib/models";
 import { transformPostToEntry } from "@lib/transform";
 import dbConnect from "@lib/db";
-import { getSaltedHash, createToken, isValidPassword } from "@lib/token";
+import { getSaltedHash, createToken } from "@lib/token";
 import { setTokenCookie } from "@lib/cookie-managment";
 import {
   RequireFields,
@@ -96,39 +101,6 @@ export async function updatePost(
       throw new ApolloError(error, "Could not find post to update");
     }
   });
-}
-
-export async function verifyUniqueUser(username: string, email: string) {
-  const user = await UserModel.findOne({
-    $or: [{ email }, { username }]
-  });
-
-  if (user) {
-    if (user.username === username) {
-      throw new ApolloError("Username taken");
-    }
-    if (user.email === email) {
-      throw new ApolloError("Email taken");
-    }
-  }
-}
-
-export async function verifyCredentials(
-  identifier: string,
-  password: string
-): Promise<IUserModel> {
-  const user = await UserModel.findOne({
-    $or: [{ email: identifier }, { username: identifier }]
-  });
-
-  if (user) {
-    const isValid = await isValidPassword(password, user.password);
-    if (isValid) return user;
-
-    throw new AuthenticationError("Incorrect password");
-  } else {
-    throw new AuthenticationError("Incorrect username or email!");
-  }
 }
 
 export async function removePost(
