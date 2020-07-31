@@ -53,14 +53,16 @@ export function getUserToken(req: IncomingMessage | NextApiRequest) {
   return readToken(token);
 }
 
-export function getInitialStateFromCookie(
+export async function getInitialStateFromCookie(
   req: IncomingMessage | NextApiRequest
-): IAppState | undefined {
-  const { DW_TOKEN } = parseCookies(req);
-
-  if (DW_TOKEN) {
+): Promise<IAppState> {
+  return new Promise((resolve, reject) => {
+    const { DW_TOKEN } = parseCookies(req);
+    if (!DW_TOKEN) {
+      reject("No token available");
+    }
     const d = decode<TokenContents>(DW_TOKEN);
     const state = getInitialState(d);
-    return state;
-  }
+    resolve(state);
+  });
 }

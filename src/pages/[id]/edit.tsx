@@ -46,7 +46,7 @@ export const getServerSideProps: EditPageHandler = async ({ req, res, params }) 
     context: { req, res }
   });
 
-  const initialAppState = getInitialStateFromCookie(req);
+  const initialAppState = await getInitialStateFromCookie(req);
   const rawEditorState = markdownToDraft(data?.entry?.content!);
 
   return {

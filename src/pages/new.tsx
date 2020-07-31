@@ -15,7 +15,7 @@ const Upload = dynamic(() => import("@components/upload"));
 const EDITOR_COMMAND = "create-new-post";
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const initialAppState = getInitialStateFromCookie(req);
+  const initialAppState = await getInitialStateFromCookie(req);
   return {
     props: {
       initialAppState

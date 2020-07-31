@@ -9,15 +9,25 @@ import { useRemovePost, useDashboard } from "../hooks";
 import { useAllPostsQuery, AllPostsDocument } from "@utils/generated";
 import { initializeApollo } from "@lib/apollo";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
+import { IAppState } from "@reducers/app";
+import { NormalizedCacheObject } from "@apollo/client";
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+interface IDashboardProps {
+  initialAppState: IAppState;
+  initialApolloState: NormalizedCacheObject;
+}
+
+export const getServerSideProps: GetServerSideProps<IDashboardProps> = async ({
+  req,
+  res
+}) => {
   const client = initializeApollo({}, { req, res });
   await client.query({
     query: AllPostsDocument,
     context: { req, res }
   });
 
-  const initialAppState = getInitialStateFromCookie(req);
+  const initialAppState = await getInitialStateFromCookie(req);
 
   return {
     props: {

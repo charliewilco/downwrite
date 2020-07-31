@@ -16,7 +16,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     context: { req, res }
   });
 
-  const initialAppState = getInitialStateFromCookie(req);
+  const initialAppState = await getInitialStateFromCookie(req);
 
   return {
     props: {

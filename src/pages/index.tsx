@@ -13,7 +13,7 @@ interface IIndexProps {
 type IndexProps = IIndexProps | {};
 
 export const getServerSideProps: GetServerSideProps<IndexProps> = async context => {
-  const initialAppState = getInitialStateFromCookie(context.req);
+  const initialAppState = await getInitialStateFromCookie(context.req);
 
   if (initialAppState && initialAppState.me.id) {
     return {
