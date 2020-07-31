@@ -55,12 +55,12 @@ export function getUserToken(req: IncomingMessage | NextApiRequest) {
 
 export function getInitialStateFromCookie(
   req: IncomingMessage | NextApiRequest
-): IAppState {
+): IAppState | undefined {
   const { DW_TOKEN } = parseCookies(req);
 
-  const d = decode<TokenContents>(DW_TOKEN);
-
-  const state = getInitialState(d);
-
-  return state;
+  if (DW_TOKEN) {
+    const d = decode<TokenContents>(DW_TOKEN);
+    const state = getInitialState(d);
+    return state;
+  }
 }

@@ -15,7 +15,7 @@ type IndexProps = IIndexProps | {};
 export const getServerSideProps: GetServerSideProps<IndexProps> = async context => {
   const initialAppState = getInitialStateFromCookie(context.req);
 
-  if (initialAppState.me.id) {
+  if (initialAppState && initialAppState.me.id) {
     return {
       props: {
         initialAppState,

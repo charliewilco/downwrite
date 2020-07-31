@@ -21,11 +21,6 @@ export default class CustomDocument extends Document {
             rel="stylesheet"
             href="https://unpkg.com/ganymede-light-duotone-prism"
           />
-          <meta
-            name="viewport"
-            content="initial-scale=1.0, width=device-width"
-            key="viewport"
-          />
           <meta name="theme-color" content="#4FA5C2" />
         </Head>
         <body>
