@@ -59,9 +59,38 @@ module.exports = {
       },
       maxWidth: {
         xxs: "16rem"
+      },
+      animation: {
+        "from-left": "from-left 0.45s ease-in-out"
+      },
+      keyframes: {
+        "from-left": {
+          "0%": {
+            transform: "translate(25%, 0)",
+            opacity: 0
+          },
+          "100%": {
+            transform: "translate(0,0)",
+            opacity: 1
+          }
+        }
       }
     }
   },
   variants: {},
-  plugins: []
+  plugins: [require("@tailwindcss/typography")]
 };
+
+/*
+@keyframes FADE_IN_FROM_LEFT {
+  0% {
+    transform: translate(25%, 0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+*/

@@ -13,7 +13,7 @@ export default function UserBlock(props: IUserBlockProps): JSX.Element {
     <div
       className={classNames(
         "relative py-8 px-2",
-        props.border && "border-b-2 border-onyx-200",
+        props.border && "border-b border-onyx-200",
         "text-center"
       )}>
       <Avatar centered colors={props.colors} />

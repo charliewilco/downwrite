@@ -53,7 +53,7 @@ export default function DropdownUI() {
       <MenuButton className="appearance-none border-0">
         <FiMenu size={16} />
       </MenuButton>
-      <MenuList className="shadow-md bg-onyx-800  ">
+      <MenuList className="shadow-md bg-onyx-800 animate-from-left">
         {currentUser.username && (
           <User border colors={["#FEB692", "#EA5455"]} name={currentUser.username} />
         )}
