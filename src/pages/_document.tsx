@@ -14,7 +14,7 @@ export default class CustomDocument extends Document {
 
   render() {
     return (
-      <Html className="bg-onyx-900 text-white antialiased">
+      <Html className="dark:bg-onyx-900 dark:text-white antialiased">
         <Head>
           <link rel="icon" href="/favicon.ico" />
           <link

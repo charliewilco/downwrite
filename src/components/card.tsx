@@ -20,8 +20,8 @@ export default function Card(props: ICardProps): JSX.Element {
   }, [props.onDelete, props.id, props.title]);
 
   return (
-    <div className="shadow-md bg-onyx-800 p-2" data-testid="CARD">
-      <header className="border-b-2 border-onyx-600 pb-2 mb-12">
+    <div className="shadow-md dark:bg-onyx-800 p-2" data-testid="CARD">
+      <header className="border-b-2 dark:border-onyx-600 pb-2 mb-12">
         <h2 className="text-base leading-none" data-testid="CARD_TITLE">
           <EditLink title={props.title} id={props.id} />
         </h2>

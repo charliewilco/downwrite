@@ -17,7 +17,7 @@ const LegalLink = () => (
 export default function LegalBoilerplate(props: ILegalProps) {
   return (
     <label
-      className="flex items-center font-bold p-2 bg-onyx-900 my-4 text-white"
+      className="flex items-center font-bold p-2 dark:bg-onyx-900 my-4 dark:text-white light:shadow"
       htmlFor={props.name}>
       <Checkbox
         name={props.name}

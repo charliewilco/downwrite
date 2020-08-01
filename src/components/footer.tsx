@@ -35,13 +35,13 @@ export function UIFooter() {
             <li key={i} className="inline-block mr-4">
               {page.external ? (
                 <a
-                  className="text-white leading-none cursor-pointer opacity-50 text-sm"
+                  className="dark:text-white leading-none cursor-pointer opacity-50 text-sm"
                   href={page.href}>
                   {page.name}
                 </a>
               ) : (
                 <Link href={page.href}>
-                  <a className="text-white leading-none cursor-pointer opacity-50 text-sm">
+                  <a className="dark:text-white leading-none cursor-pointer opacity-50 text-sm">
                     {page.name}
                   </a>
                 </Link>

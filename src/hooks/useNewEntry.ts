@@ -48,7 +48,8 @@ export function useNewEntry() {
   const onSubmit = useCallback(
     async (values: INewEditorValues) => {
       const ContentState: ContentState = values.editorState.getCurrentContent();
-      const content = draftToMarkdown(convertToRaw(ContentState));
+      const state = convertToRaw(ContentState);
+      const content = draftToMarkdown(state);
 
       await createEntry({
         variables: {

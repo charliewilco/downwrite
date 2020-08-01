@@ -8,7 +8,7 @@ interface IContentProps extends PropsWithChildren<{}> {
 
 export default function ContentWrapper(props: IContentProps): JSX.Element {
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 xl:max-w-5xl xl:px-0">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 xl:max-w-5xl xl:px-0 mt-12">
       <article className="harticle">
         <header className="space-y-1 pt-6 xl:pb-10 border-b border-onyx-200 mb-2">
           {props.dateAdded && (

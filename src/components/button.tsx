@@ -8,7 +8,7 @@ export function Button(props: IButtonProps): JSX.Element {
     <button
       {...props}
       className={classNames(
-        "bg-pixieblue-600 shadow-md font-sm py-1 px-5 cursor-pointer font-bold rounded box-border hover:bg-pixieblue-900 hover:text-white transition-colors duration-500 ease-in-out",
+        "bg-pixieblue-400 text-white dark:bg-pixieblue-600 shadow-md font-sm py-1 px-5 cursor-pointer font-bold rounded box-border hover:bg-pixieblue-900 hover:text-white transition-colors duration-500 ease-in-out",
         props.className
       )}
     />

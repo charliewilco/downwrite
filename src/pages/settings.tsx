@@ -43,7 +43,7 @@ const SettingsPage: NextPage<InferGetServerSidePropsType<
   }
 
   return (
-    <div className="max-w-3xl p-2 mx-auto">
+    <div className="max-w-3xl p-2 mx-auto mt-12">
       <Head>
         <title>User Settings</title>
       </Head>

@@ -6,7 +6,7 @@ import LoginTabs from "@components/login-tabs";
 
 const LoginPage: NextPage = () => {
   return (
-    <main data-testid="LOGIN_PAGE_CONTAINER" className="my-16">
+    <div data-testid="LOGIN_PAGE_CONTAINER" className="my-16">
       <Head>
         <title>Downwrite</title>
       </Head>
@@ -14,7 +14,7 @@ const LoginPage: NextPage = () => {
         <Features />
       </Landing>
       <LoginTabs />
-    </main>
+    </div>
   );
 };
 

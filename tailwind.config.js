@@ -11,7 +11,9 @@ module.exports = {
     },
     extend: {
       screens: {
-        "2xl": "1536px"
+        "2xl": "1536px",
+        dark: { raw: "(prefers-color-scheme: dark)" },
+        light: { raw: "(prefers-color-scheme: light)" }
       },
       colors: {
         accent: {

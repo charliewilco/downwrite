@@ -21,7 +21,7 @@ interface ISettingsBlockProps extends React.PropsWithChildren<{}> {
 
 export default function SettingsBlock(props: ISettingsBlockProps): JSX.Element {
   return (
-    <section className="flex bg-onyx-800 flex-wrap mb-8 p-4">
+    <section className="flex dark:bg-onyx-800 shadow flex-wrap mb-8 p-4">
       <div className="pt-2 w-1/4 pr-2">
         <h4 className="text-base mb-2 font-bold">{props.title}</h4>
         {props.description && (

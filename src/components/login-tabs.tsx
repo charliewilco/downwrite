@@ -22,7 +22,7 @@ function FormHeader(props: PropsWithChildren<{}>) {
 
 export default function LoginContainer(): JSX.Element {
   return (
-    <Tabs className="bg-blk-800 max-w-lg mx-auto">
+    <Tabs className="dark:bg-onyx-800 max-w-lg mx-auto shadow">
       <TabList className="flex w-full font-bold text-sm text-center">
         <Tab
           className="w-1/2 b-0 py-4 rounded-none border-b-2 border-transparent"
