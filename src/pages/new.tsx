@@ -2,7 +2,7 @@ import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useRef } from "react";
-import { EditorState } from "draft-js";
+import { EditorState, convertFromRaw } from "draft-js";
 import { useFormik } from "formik";
 import { useOffline, useNewEntry, INewEditorValues } from "../hooks";
 import { Input } from "@components/editor-input";
@@ -23,10 +23,24 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   };
 };
 
+const emptyContentState = convertFromRaw({
+  entityMap: {},
+  blocks: [
+    {
+      text: "",
+      depth: 0,
+      key: "foo",
+      type: "unstyled",
+      inlineStyleRanges: [],
+      entityRanges: []
+    }
+  ]
+});
+
 const NewEntryPage: NextPage = () => {
   const initialValues = useRef<INewEditorValues>({
     title: "",
-    editorState: EditorState.createEmpty()
+    editorState: EditorState.createWithContent(emptyContentState)
   });
   const [createNewPost] = useNewEntry();
   const isOffline = useOffline();
@@ -68,7 +82,9 @@ const NewEntryPage: NextPage = () => {
         <Editor
           editorCommand={EDITOR_COMMAND as any}
           editorState={values.editorState}
-          onChange={editorState => setFieldValue("editorState", editorState)}
+          onChange={editorState => {
+            setFieldValue("editorState", editorState);
+          }}
           onSave={handleSubmit}
         />
       </Upload>
