@@ -9,6 +9,8 @@ coverage
 # production
 build
 .next/
+.now/
+.vercel/
 
 # misc
 .DS_Store
@@ -19,3 +21,5 @@ package-lock.json
 dist
 private.key
 api/docs
+
+.vercel
