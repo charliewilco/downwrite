@@ -1,5 +1,5 @@
 {
-  "name": "api",
+  "name": "@downwrite/api",
   "description": "Serverless API for downwrite",
   "version": "0.0.0",
   "main": "src/index.ts",

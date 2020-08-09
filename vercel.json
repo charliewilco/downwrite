@@ -13,7 +13,7 @@
   },
   "builds": [
     { "src": "client/next.config.js", "use": "@now/next" },
-    { "src": "n/*", "use": "@now/node" }
+    { "src": "api/*", "use": "@now/node" }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/n/dist/index.js" },

@@ -13,7 +13,8 @@
     "ws:api": "yarn workspace api",
     "ws:www": "yarn workspace client",
     "api:dev": "yarn workspace api dev",
-    "client:dev": "yarn workspace client dev"
+    "client:dev": "yarn workspace client dev",
+    "build": "yarn workspaces run build"
   },
   "devDependencies": {
     "husky": "^3.0.4",
