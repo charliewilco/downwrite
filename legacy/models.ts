@@ -23,7 +23,7 @@ export interface IPost extends Mongoose.Document {
   user: any;
 }
 
-export const PostModel =
+export const PostModel: Mongoose.Model<IPost> =
   Mongoose.models.Post || Mongoose.model<IPost>("Post", PostSchema);
 
 const UserSchema = new Mongoose.Schema({
@@ -43,5 +43,5 @@ export interface IUser extends Mongoose.Document {
   gradient?: string[];
 }
 
-export const UserModel =
+export const UserModel: Mongoose.Model<IUser> =
   Mongoose.models.User || Mongoose.model<IUser>("User", UserSchema);

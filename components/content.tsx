@@ -1,6 +1,5 @@
 import * as React from "react";
 import format from "date-fns/format";
-import parseISO from "date-fns/parseISO";
 import Markdown from "react-markdown";
 import "prismjs";
 import CodeBlock from "./code-block";
@@ -35,8 +34,8 @@ export default function Content({
             <time
               className="PreviewMeta"
               data-testid="PREVIEW_ENTRTY_META"
-              dateTime={parseISO(dateAdded.toString()).toString()}>
-              {format(parseISO(dateAdded.toString()), "dd MMMM yyyy")}
+              dateTime={new Date(dateAdded).toString()}>
+              {format(new Date(dateAdded), "dd MMMM yyyy")}
             </time>
           )}
         </header>

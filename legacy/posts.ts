@@ -45,21 +45,24 @@ export const getMarkdownPreview = async (id: string) => {
       username: user.username,
       avatar: user.gradient || ["#FEB692", "#EA5455"]
     },
-    content: draftToMarkdown(post.content, {
-      entityItems: {
-        LINK: {
-          open: () => {
-            return "[";
-          },
+    content:
+      typeof post.content === "string"
+        ? post.content
+        : draftToMarkdown(post.content, {
+            entityItems: {
+              LINK: {
+                open: () => {
+                  return "[";
+                },
 
-          close: (entity: any) => {
-            return `](${entity.data.url || entity.data.href})`;
-          }
-        }
-      }
-    }),
+                close: (entity: any) => {
+                  return `](${entity.data.url || entity.data.href})`;
+                }
+              }
+            }
+          }),
     title: post.title,
-    dateAdded: post.dateAdded
+    dateAdded: post.dateAdded.toDateString()
   };
 
   if (!post.public) {
