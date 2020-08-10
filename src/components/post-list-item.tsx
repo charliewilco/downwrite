@@ -23,7 +23,7 @@ export default function PostListItem(props: IListItemProps): JSX.Element {
         data-testid="POST_LIST_ITEM">
         <div>
           <h2 className="text-base font-bold">
-            <Link href={`/edit/${props.id}`} passHref>
+            <Link href="/[id]/edit" as={`/${props.id}/edit`} passHref>
               <a>{props.title}</a>
             </Link>
           </h2>
