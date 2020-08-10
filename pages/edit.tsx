@@ -32,18 +32,29 @@ export const getServerSideProps: GetServerSideProps<
   await dbConnect();
   const { DW_TOKEN: token } = new Cookies(context.req.headers.cookie).getAll();
 
-  const x = jwt.decode(token) as { user: string };
+  const { user } = jwt.decode(token) as { user: string };
   const id = Array.isArray(context.query.id)
     ? context.query.id.join("")
     : context.query.id;
-  const post = await getPost(x.user, id);
+
+  const post = await getPost(user, id).then((p: any) => ({
+    ...p,
+    _id: p._id.toString(),
+    user: p.user.toString(),
+    title: p.title.toString(),
+    content: p.content.toString(),
+    dateAdded: p.dateAdded.toString(),
+    dateModified: p.dateModified ? p.dateModified.toString() : new Date().toString()
+  }));
+
+  console.log("POST", post);
 
   if (token) {
     return {
       props: {
         token,
         id,
-        title: post.title,
+        title: post.title || "",
         post
       }
     };

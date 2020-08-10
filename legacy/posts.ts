@@ -28,7 +28,7 @@ export const getPost = async (user: string, id: string) => {
     const post: IPost = await PostModel.findOne({
       id,
       user: { $eq: user }
-    });
+    }).lean();
     return post;
   } catch (error) {
     throw Boom.badImplementation(error);
