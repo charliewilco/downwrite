@@ -2,8 +2,14 @@ import * as React from "react";
 import * as Draft from "draft-js";
 import Head from "next/head";
 import { Formik, Form } from "formik";
+import { GetServerSideProps } from "next";
+import Cookies from "universal-cookie";
+import * as jwt from "jsonwebtoken";
 
 import * as Dwnxt from "downwrite";
+
+import { getPost } from "../legacy/posts";
+import { dbConnect } from "../legacy/util/db";
 import Autosaving from "../components/autosaving-interval";
 import ExportMarkdown from "../components/export";
 import WordCounter from "../components/word-count";
@@ -17,11 +23,36 @@ import TimeMarker from "../components/time-marker";
 import { superConverter } from "../utils/responseHandler";
 import { __IS_DEV__ } from "../utils/dev";
 import useUpdateEntry, { IFields } from "../hooks/update-entry";
-import * as InitialProps from "../utils/initial-props";
+import { IEditProps } from "../utils/initial-props";
+
+export const getServerSideProps: GetServerSideProps<
+  IEditProps & { id: string },
+  { id: string }
+> = async context => {
+  await dbConnect();
+  const { DW_TOKEN: token } = new Cookies(context.req.headers.cookie).getAll();
+
+  const x = jwt.decode(token) as { user: string };
+  const id = Array.isArray(context.query.id)
+    ? context.query.id.join("")
+    : context.query.id;
+  const post = await getPost(x.user, id);
+
+  if (token) {
+    return {
+      props: {
+        token,
+        id,
+        title: post.title,
+        post
+      }
+    };
+  }
+};
 
 const EDITOR_COMMAND = "myeditor-save";
 
-function EditUI(props: InitialProps.IEditProps) {
+function EditUI(props: IEditProps) {
   const initialEditorState = Draft.EditorState.createWithContent(
     superConverter((props.post as Dwnxt.IPost).content)
   );
@@ -102,7 +133,5 @@ function EditUI(props: InitialProps.IEditProps) {
     </div>
   );
 }
-
-EditUI.getInitialProps = InitialProps.getInitialPost;
 
 export default EditUI;

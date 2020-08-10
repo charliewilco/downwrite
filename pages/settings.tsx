@@ -8,7 +8,7 @@ import { IUserSettingsProps } from "../utils/initial-props";
 
 export const getServerSideProps: GetServerSideProps = async context => {};
 
-function Settings(props: InitialProps.IUserSettingsProps) {
+function Settings(props: IUserSettingsProps) {
   return (
     <div className="Wrapper Wrapper--md" style={{ padding: 8 }}>
       <Head>
