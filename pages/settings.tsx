@@ -6,7 +6,11 @@ import SettingsPassword from "../components/settings-password";
 import SettingsLocal from "../components/settings-markdown";
 import { IUserSettingsProps } from "../utils/initial-props";
 
-export const getServerSideProps: GetServerSideProps = async context => {};
+export const getServerSideProps: GetServerSideProps = async context => {
+  return {
+    props: {}
+  };
+};
 
 function Settings(props: IUserSettingsProps) {
   return (

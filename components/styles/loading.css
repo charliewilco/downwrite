@@ -27,7 +27,7 @@
   position: relative;
   margin: auto;
   color: var(--blue400);
-  transform: translateY(calc(var(--size) / 2px));
+  transform: translateY(calc(var(--size) / 2));
 }
 
 .InnerRing {

@@ -29,11 +29,12 @@
   :root {
     --grid-item-count: 2;
     --grid-spacing: 20px;
+    --inverse-grid-spacing: -20px;
     --grid-width: calc(100% + var(--grid-spacing));
   }
 
   .Grid {
-    margin-left: calc(var(--grid-spacing) * -1);
+    margin-left: var(--inverse-grid-spacing);
     width: var(--grid-width);
   }
 

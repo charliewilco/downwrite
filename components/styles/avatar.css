@@ -1,7 +1,7 @@
 .AvatarCircle {
   border-radius: 50%;
-  height: calc(var(--size) * 1px);
-  width: calc(var(--size) * 1px);
+  height: var(--size);
+  width: var(--size);
   background: linear-gradient(
     135deg,
     var(--color-a, #feb692) 10%,

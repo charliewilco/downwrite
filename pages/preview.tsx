@@ -6,48 +6,37 @@ import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
 import { AuthContext } from "../components/auth";
 import NotFound from "../components/not-found";
-import * as InitialProps from "../utils/initial-props";
+import { IPreviewProps } from "../utils/initial-props";
 
-function PreviewEntry(props: InitialProps.IPreviewProps) {
+const isError = (entry: any): entry is Dwnxt.IPreviewEntryError => {
+  return !isEmpty(entry.message);
+};
+
+function PreviewEntry(props: IPreviewProps) {
   const [{ authed }] = React.useContext(AuthContext);
-  return (
+  return isError(props.entry) ? (
     <>
-      {!isEmpty((props.entry as Dwnxt.IPreviewEntryError).message) ? (
-        <>
-          <Head>
-            <title>
-              {(props.entry as Dwnxt.IPreviewEntryError).error} | Downwrite
-            </title>
-          </Head>
-          <NotFound {...(props.entry as Dwnxt.IPreviewEntryError)} />
-        </>
-      ) : (
-        <>
-          <Head>
-            <title>{(props.entry as Dwnxt.IPreviewEntry).title} | Downwrite</title>
-            <meta
-              name="og:title"
-              content={(props.entry as Dwnxt.IPreviewEntry).title}
-            />
-            <meta
-              name="og:description"
-              content={(props.entry as Dwnxt.IPreviewEntry).content.substr(0, 75)}
-            />
-            <meta name="og:url" content={props.url} />
-            <meta
-              name="description"
-              content={(props.entry as Dwnxt.IPreviewEntry).content.substr(0, 75)}
-            />
-          </Head>
-          <Content {...(props.entry as Dwnxt.IPreviewEntry)}>
-            <AuthorBlock
-              name={(props.entry as Dwnxt.IPreviewEntry).author.username}
-              colors={(props.entry as Dwnxt.IPreviewEntry).author.gradient}
-              authed={authed}
-            />
-          </Content>
-        </>
-      )}
+      <Head>
+        <title>{props.entry.error} | Downwrite</title>
+      </Head>
+      <NotFound {...props.entry} />
+    </>
+  ) : (
+    <>
+      <Head>
+        <title>{props.entry.title} | Downwrite</title>
+        <meta name="og:title" content={props.entry.title} />
+        <meta name="og:description" content={props.entry.content.substr(0, 75)} />
+        <meta name="og:url" content={props.url} />
+        <meta name="description" content={props.entry.content.substr(0, 75)} />
+      </Head>
+      <Content {...props.entry}>
+        <AuthorBlock
+          name={props.entry.author.username}
+          colors={props.entry.author.gradient}
+          authed={authed}
+        />
+      </Content>
     </>
   );
 }
@@ -55,7 +44,5 @@ function PreviewEntry(props: InitialProps.IPreviewProps) {
 PreviewEntry.defaultProps = {
   entry: {}
 };
-
-PreviewEntry.getInitialProps = InitialProps.getInitialPreview;
 
 export default PreviewEntry;
