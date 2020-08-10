@@ -12,7 +12,6 @@ export interface IDashboardProps {
 }
 
 export interface IPreviewProps {
-  authed: boolean;
   url: string;
   entry: Dwnxt.IPreviewEntry | Dwnxt.IPreviewEntryError;
   id: string;

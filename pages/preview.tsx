@@ -1,15 +1,50 @@
 import * as React from "react";
 import Head from "next/head";
+import { GetServerSideProps } from "next";
 import isEmpty from "lodash/isEmpty";
+import Cookies from "universal-cookie";
+
 import * as Dwnxt from "downwrite";
+
+import { getMarkdownPreview } from "../legacy/posts";
+import { dbConnect } from "../legacy/util/db";
 import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
 import { AuthContext } from "../components/auth";
 import NotFound from "../components/not-found";
 import { IPreviewProps } from "../utils/initial-props";
+import { startColors } from "../utils/defaultStyles";
 
 const isError = (entry: any): entry is Dwnxt.IPreviewEntryError => {
   return !isEmpty(entry.message);
+};
+
+export const getServerSideProps: GetServerSideProps<
+  IPreviewProps & { token: string },
+  { id: string }
+> = async context => {
+  await dbConnect();
+  const { DW_TOKEN: token } = new Cookies(context.req.headers.cookie).getAll();
+
+  const id = Array.isArray(context.query.id)
+    ? context.query.id.join("")
+    : context.query.id;
+
+  const markdown = await getMarkdownPreview(id);
+  return {
+    props: {
+      id,
+      url: `https://next.downwrite.us/preview?id=${id}`,
+      entry: {
+        ...markdown,
+        author: {
+          username: markdown.author.username,
+          gradient: markdown.author.avatar || startColors
+        }
+      },
+      token
+    }
+  };
 };
 
 function PreviewEntry(props: IPreviewProps) {
