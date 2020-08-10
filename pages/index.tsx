@@ -7,6 +7,7 @@ import * as jwt from "jsonwebtoken";
 
 import { getPosts } from "../legacy/posts";
 import { dbConnect } from "../legacy/util/db";
+
 import DeleteModal from "../components/delete-modal";
 import PostList from "../components/post-list";
 import Loading from "../components/loading";
@@ -22,12 +23,11 @@ export const getServerSideProps: GetServerSideProps<InitialProps.IDashboardProps
   const x = jwt.decode(token) as { user: string };
   await dbConnect();
   const posts = await getPosts(x.user);
-  console.log("SERVER_SIDE PROPS", x);
-  console.log("POSTS", posts);
+
   return {
     props: {
       entries: [
-        ...posts.map(p => {
+        ...posts.map((p: any) => {
           p._id = p._id.toString();
           p.dateAdded = p.dateAdded.toString();
           p.dateModified = p.dateModified.toString();

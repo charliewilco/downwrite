@@ -1,10 +1,12 @@
 import * as React from "react";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
-import "isomorphic-unfetch";
 import SettingsUser from "../components/settings-user-form";
 import SettingsPassword from "../components/settings-password";
 import SettingsLocal from "../components/settings-markdown";
-import * as InitialProps from "../utils/initial-props";
+import { IUserSettingsProps } from "../utils/initial-props";
+
+export const getServerSideProps: GetServerSideProps = async context => {};
 
 function Settings(props: InitialProps.IUserSettingsProps) {
   return (
@@ -22,7 +24,5 @@ function Settings(props: InitialProps.IUserSettingsProps) {
     </div>
   );
 }
-
-Settings.getInitialProps = InitialProps.getInitialSettings;
 
 export default Settings;

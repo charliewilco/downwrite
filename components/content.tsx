@@ -22,8 +22,6 @@ export default function Content({
   children,
   content
 }: IContentProps) {
-  const date = parseISO(dateAdded.toString());
-
   return (
     <div className="PreviewContainer">
       <article className="harticle">
@@ -37,8 +35,8 @@ export default function Content({
             <time
               className="PreviewMeta"
               data-testid="PREVIEW_ENTRTY_META"
-              dateTime={date.toString()}>
-              {format(date, "dd MMMM yyyy")}
+              dateTime={parseISO(dateAdded.toString()).toString()}>
+              {format(parseISO(dateAdded.toString()), "dd MMMM yyyy")}
             </time>
           )}
         </header>

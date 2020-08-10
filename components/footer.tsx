@@ -1,6 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
-import AltAnchor from "./alt-anchor-link";
+import { AltAnchorLink } from "./alt-anchor-link";
 
 interface IPage {
   name: string;
@@ -24,9 +24,13 @@ export default function UIFooter() {
           </li>
           {PAGES.map((page, i) => (
             <li key={i}>
-              <Link href={page.href} passHref>
-                <AltAnchor>{page.name}</AltAnchor>
-              </Link>
+              {page.href.includes("http") ? (
+                <AltAnchorLink href={page.href}>{page.name}</AltAnchorLink>
+              ) : (
+                <Link href={page.href} passHref>
+                  <AltAnchorLink>{page.name}</AltAnchorLink>
+                </Link>
+              )}
             </li>
           ))}
         </ul>

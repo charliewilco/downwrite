@@ -1,19 +1,17 @@
-import * as Hapi from "@hapi/hapi";
-
-export interface ICredentials extends Hapi.AuthCredentials {
+export interface ICredentials {
   id: string;
   user: string;
 }
 
-export interface IRequestAuth extends Hapi.RequestAuth {
+export interface IRequestAuth {
   credentials: ICredentials;
 }
 
-export interface IRequest extends Hapi.Request {
+export interface IRequest {
   auth: IRequestAuth;
 }
 
-export interface ILoginRequest extends Hapi.Request {
+export interface ILoginRequest {
   auth: IRequestAuth;
   payload: {
     user: string;
@@ -21,7 +19,7 @@ export interface ILoginRequest extends Hapi.Request {
   };
 }
 
-export interface IPasswordResetRequest extends Hapi.Request {
+export interface IPasswordResetRequest {
   auth: IRequestAuth;
   payload: {
     oldPassword: string;
@@ -29,7 +27,7 @@ export interface IPasswordResetRequest extends Hapi.Request {
   };
 }
 
-export interface IRegisterRequest extends Hapi.Request {
+export interface IRegisterRequest {
   auth: IRequestAuth;
   payload: {
     username?: string;

@@ -2,7 +2,6 @@ import { URLEndpoints } from "./urls";
 import * as Dwnxt from "downwrite";
 import { __IS_DEV__, __IS_BROWSER__ } from "./dev";
 
-import "isomorphic-unfetch";
 import "abortcontroller-polyfill/dist/abortcontroller-polyfill-only";
 import { Omit } from "./types";
 
@@ -151,9 +150,10 @@ export async function findPreviewEntry(
 
 export async function getPost(id: string, options: IOptions): Promise<APIResponse> {
   const url = URLEndpoints.create(Endpoints.POST_ENDPOINT, options.host);
-  const post = await fetch(`${url}/${id}`, createHeader("GET", options.token)).then(
-    res => res.json()
-  );
+  const post = await fetch(
+    `${url}/${id}`,
+    createHeader("GET", options.token)
+  ).then(res => res.json());
 
   return post;
 }

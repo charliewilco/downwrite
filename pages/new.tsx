@@ -1,8 +1,9 @@
 import * as React from "react";
 import * as Draft from "draft-js";
 import { Formik, Form, FormikActions } from "formik";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
-import "isomorphic-unfetch";
+import Cookies from "universal-cookie";
 import useCreatePost, { IFields } from "../hooks/create-entry";
 import useOffline from "../hooks/offline";
 import { Input } from "../components/editor-input";
@@ -17,6 +18,16 @@ const EDITOR_SPACING: React.CSSProperties = {
   paddingLeft: 4,
   paddingRight: 4,
   paddingBottom: 0
+};
+
+export const getServerSideProps: GetServerSideProps = async context => {
+  const { DW_TOKEN: token } = new Cookies(context.req.headers.cookie).getAll();
+
+  return {
+    props: {
+      token
+    }
+  };
 };
 
 export default function NewEditor(): JSX.Element {

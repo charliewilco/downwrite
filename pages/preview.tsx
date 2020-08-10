@@ -2,7 +2,6 @@ import * as React from "react";
 import Head from "next/head";
 import isEmpty from "lodash/isEmpty";
 import * as Dwnxt from "downwrite";
-import "isomorphic-unfetch";
 import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
 import { AuthContext } from "../components/auth";

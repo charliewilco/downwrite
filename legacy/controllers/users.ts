@@ -1,8 +1,7 @@
-import * as Hapi from "@hapi/hapi";
 import Boom from "@hapi/boom";
 import uuid from "uuid/v4";
 import * as bcrypt from "bcrypt";
-import { UserModel as User, IUser } from "../models/User";
+import { UserModel, IUser } from "../models";
 import { createToken } from "../util/token";
 
 import { IRequest, IRegisterRequest, ILoginRequest } from "./types";
@@ -13,10 +12,7 @@ export interface ICreateResponse {
   username: string;
 }
 
-export const createUser = async (
-  request: IRegisterRequest,
-  h: Hapi.ResponseToolkit
-) => {
+export const createUser = async (request: IRegisterRequest, h: any) => {
   const { email, username, password } = request.payload;
 
   const salt = await bcrypt.genSalt(10);
@@ -24,7 +20,7 @@ export const createUser = async (
   const id = uuid();
 
   try {
-    let user: IUser = await User.create<any>(
+    let user: IUser = await UserModel.create<any>(
       Object.assign({}, { email, username, id, password: hash, admin: false })
     );
     let token = createToken(user);
@@ -37,7 +33,7 @@ export const createUser = async (
       })
       .code(201);
   } catch (error) {
-    return Boom.badImplementation(error);
+    throw Boom.badImplementation(error);
   }
 };
 
@@ -45,17 +41,14 @@ export interface IAuthUser {
   token: string;
 }
 
-export const authenticateUser = (
-  request: Hapi.Request,
-  h: Hapi.ResponseToolkit
-): Hapi.ResponseObject => {
+export const authenticateUser = (request: any, h: any): any => {
   return h.response({ token: createToken(request.pre.user) }).code(201);
 };
 
 export const getDetails = async (request: IRequest): Promise<any> => {
   const { user } = request.auth.credentials;
 
-  const foundUser = await User.findById(user, ["username", "email"]).lean();
+  const foundUser = await UserModel.findById(user, ["username", "email"]).lean();
 
   return foundUser;
 };
@@ -74,7 +67,7 @@ export const updatePassword = async (request: IUpdatePassword) => {
   const newPasswordHash = await bcrypt.hash(newPassword, salt);
 
   try {
-    const updated = await User.findByIdAndUpdate(
+    const updated = await UserModel.findByIdAndUpdate(
       {
         _id: user
       },
@@ -84,7 +77,7 @@ export const updatePassword = async (request: IUpdatePassword) => {
 
     return updated;
   } catch (err) {
-    return Boom.internal("Internal MongoDB error", err);
+    throw Boom.internal("Internal MongoDB error", err);
   }
 };
 
@@ -96,7 +89,7 @@ export const verifyValidPassword = async (request: IUpdatePassword) => {
 
   // Validates the the old password was actually the user's password
   const isPasswordValid = async (p: string): Promise<boolean> => {
-    const { password } = (await User.findById(user, "password").lean()) as any;
+    const { password } = (await UserModel.findById(user, "password").lean()) as any;
     const result = await bcrypt.compare(p, password as string);
 
     return result;
@@ -105,7 +98,7 @@ export const verifyValidPassword = async (request: IUpdatePassword) => {
   const valid = await isPasswordValid(oldPassword);
 
   if (!valid) {
-    return Boom.badRequest("That wasn't your password");
+    throw Boom.badRequest("That wasn't your password");
   }
 
   return request.payload;
@@ -113,16 +106,16 @@ export const verifyValidPassword = async (request: IUpdatePassword) => {
 
 export const verifyUniqueUser = async (request: IRegisterRequest) => {
   const { username, email } = request.payload;
-  const user: IUser = await User.findOne({
+  const user: IUser = await UserModel.findOne({
     $or: [{ email }, { username }]
   });
 
   if (user) {
     if (user.username === username) {
-      return Boom.badRequest("Username taken");
+      throw Boom.badRequest("Username taken");
     }
     if (user.email === email) {
-      return Boom.badRequest("Email taken");
+      throw Boom.badRequest("Email taken");
     }
   }
 
@@ -138,12 +131,12 @@ interface IUpdateEmailNameRequest extends IRequest {
 
 export const updateNameEmail = async (
   request: IUpdateEmailNameRequest
-): Promise<IUser | Boom<any>> => {
+): Promise<IUser> => {
   const { user } = request.auth.credentials;
   const { username, email } = request.payload;
 
   try {
-    const updated = await User.findByIdAndUpdate(
+    const updated = await UserModel.findByIdAndUpdate(
       {
         _id: user
       },
@@ -153,22 +146,25 @@ export const updateNameEmail = async (
 
     return updated;
   } catch (err) {
-    return Boom.internal("Internal MongoDB error", err);
+    throw Boom.internal("Internal MongoDB error", err);
   }
 };
 
 export const verifyCredentials = async (request: ILoginRequest) => {
   const { password, user: identifier } = request.payload;
 
-  const user = await User.findOne({
+  const user = await UserModel.findOne({
     $or: [{ email: identifier }, { username: identifier }]
   });
 
   if (user) {
     const isValid = await bcrypt.compare(password, user.password);
-
-    return isValid ? user : Boom.badRequest("Incorrect password!");
+    if (isValid) {
+      return user;
+    } else {
+      throw Boom.badRequest("Incorrect password!");
+    }
   } else {
-    return Boom.badRequest("Incorrect username or email!");
+    throw Boom.badRequest("Incorrect username or email!");
   }
 };

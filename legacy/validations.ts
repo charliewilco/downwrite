@@ -1,25 +1,15 @@
-import * as Mongoose from "mongoose";
-import * as Joi from "@hapi/joi";
-import { IPost } from "./Post";
+import * as Joi from "joi";
 
-const UserSchema = new Mongoose.Schema({
-  username: { type: String, required: true, index: { unique: true } },
-  email: { type: String, required: true, index: { unique: true } },
-  password: { type: String, required: true },
-  admin: { type: Boolean, required: true },
-  posts: [{ type: Mongoose.Schema.Types.ObjectId, ref: "Post" }]
+export const validPost = Joi.object({
+  id: Joi.string(),
+  title: Joi.string(),
+  content: Joi.object(),
+  tags: Joi.array(),
+  dateAdded: Joi.date(),
+  dateModified: Joi.date(),
+  user: Joi.string(),
+  public: Joi.boolean()
 });
-
-export default Mongoose.model("User", UserSchema);
-
-export interface IUser extends Mongoose.Document {
-  username: string;
-  email: string;
-  password: string;
-  admin?: boolean;
-  posts: IPost[];
-  gradient?: string[];
-}
 
 // 1. must contain 1 lowercase letter
 // 2. must contain 1 uppercase letter
@@ -31,10 +21,7 @@ const validPassword = Joi.string().regex(
   /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/
 );
 
-export const UserModel =
-  Mongoose.models.User || Mongoose.model<IUser>("User", UserSchema);
-
-export const validUser = {
+export const validUser = Joi.object({
   username: Joi.string()
     .alphanum()
     .min(2)
@@ -44,7 +31,7 @@ export const validUser = {
     .email()
     .required(),
   password: validPassword.required()
-};
+});
 
 export const validPasswordUpdate = Joi.object().keys({
   oldPassword: Joi.string().required(),
