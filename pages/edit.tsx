@@ -42,12 +42,10 @@ export const getServerSideProps: GetServerSideProps<
     _id: p._id.toString(),
     user: p.user.toString(),
     title: p.title.toString(),
-    content: p.content.toString(),
+    content: p.content,
     dateAdded: p.dateAdded.toString(),
     dateModified: p.dateModified ? p.dateModified.toString() : new Date().toString()
   }));
-
-  console.log("POST", post);
 
   if (token) {
     return {

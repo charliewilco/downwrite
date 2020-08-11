@@ -1,9 +1,13 @@
 import * as Dwnxt from "downwrite";
 
+interface IEditPost extends Dwnxt.IPost {
+  content: string;
+}
+
 export interface IEditProps {
   id: string;
   title: string;
-  post: Dwnxt.IPost;
+  post: IEditPost;
   route?: {};
 }
 

@@ -25,10 +25,14 @@ export const createPost = async (user: string, body: any): Promise<IPost> => {
 
 export const getPost = async (user: string, id: string) => {
   try {
-    const post: IPost = await PostModel.findOne({
+    const post = await PostModel.findOne({
       id,
       user: { $eq: user }
     }).lean();
+
+    post!.content = JSON.stringify(post!.content);
+
+    console.log("CONTENT", post!.content);
     return post;
   } catch (error) {
     throw Boom.badImplementation(error);
