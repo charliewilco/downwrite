@@ -12,20 +12,6 @@ interface IUIShell {
 }
 
 export function UIShell(props: IUIShell) {
-  React.useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function() {
-        navigator.serviceWorker
-          .register("/service-worker.js", { scope: "/" })
-          .then(function(registration) {
-            console.log("SW registered: ", registration);
-          })
-          .catch(function(registrationError) {
-            console.log("SW registration failed: ", registrationError);
-          });
-      });
-    }
-  }, []);
   return (
     <LocalUISettingsProvider>
       <Head>
