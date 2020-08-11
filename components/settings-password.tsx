@@ -43,8 +43,7 @@ export default function SettingsPassword(): JSX.Element {
     values: IPasswordSettings,
     actions: FormikActions<IPasswordSettings>
   ): void => {
-    const { host } = document.location;
-    const response = API.updatePassword(values, { token, host });
+    const response = API.updatePassword(values, { token });
 
     if (response) {
       actions.setSubmitting(false);

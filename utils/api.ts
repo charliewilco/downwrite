@@ -5,8 +5,6 @@ import "abortcontroller-polyfill/dist/abortcontroller-polyfill-only";
 
 interface IOptions {
   token?: string;
-  host?: string;
-  port?: string;
 }
 
 interface IUserResponse {
@@ -67,10 +65,7 @@ export interface IAuthUserBody {
   password: string;
 }
 
-export async function authUser(
-  body: IAuthUserBody,
-  options?: IOptions
-): Promise<any> {
+export async function authUser(body: IAuthUserBody): Promise<any> {
   const auth = await fetch(Endpoints.AUTH_ENDPOINT, {
     method: "POST",
     headers: {
@@ -108,10 +103,7 @@ export async function updateSettings(body: SettingsBody, options: IOptions) {
   return settings;
 }
 
-export async function createUser(
-  body: ICreateUserBody,
-  options?: IOptions
-): Promise<IUserResponse> {
+export async function createUser(body: ICreateUserBody): Promise<IUserResponse> {
   const user = await fetch(Endpoints.USER_ENDPOINT, {
     method: "POST",
     headers: {
@@ -133,10 +125,7 @@ export async function updatePassword(body: any, options: IOptions): Promise<any>
   return password;
 }
 
-export async function findPreviewEntry(
-  id: string,
-  options?: IOptions
-): Promise<null> {
+export async function findPreviewEntry(id: string): Promise<null> {
   const entry = await fetch(`${Endpoints.PREVIEW_ENDPOINT}/${id}`, {
     method: "GET",
     mode: "cors"

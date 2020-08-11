@@ -26,8 +26,7 @@ export default function useLoginFns(): IFormHandlers {
   const { notifications, actions } = useUINotifications();
 
   const onLoginSubmit = async (values: ILoginValues): Promise<void> => {
-    const { host } = document.location;
-    const auth = await API.authUser(values, { host });
+    const auth = await API.authUser(values);
 
     if (auth.error) {
       actions.add(auth.message, NotificationType.ERROR);
@@ -45,16 +44,13 @@ export default function useLoginFns(): IFormHandlers {
 
   const onRegisterSubmit = async (values: IRegisterValues): Promise<void> => {
     const { legalChecked, ...body } = values;
-    const { host } = document.location;
     if (legalChecked) {
-      const user = await API.createUser(body, {
-        host
-      });
+      const user = await API.createUser(body);
 
       if (user.userID) {
         signIn(user.id_token !== undefined, user.id_token);
       } else {
-        actions.add(user.message, NotificationType.ERROR);
+        actions.add(user.message!, NotificationType.ERROR);
       }
     }
   };

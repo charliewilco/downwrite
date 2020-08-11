@@ -1,6 +1,6 @@
 import * as Dwnxt from "downwrite";
 
-interface IEditPost extends Dwnxt.IPost {
+interface IEditPost extends Omit<Dwnxt.IPost, "content"> {
   content: string;
 }
 
