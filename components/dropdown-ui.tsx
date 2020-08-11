@@ -1,6 +1,6 @@
 import * as React from "react";
 import Router from "next/router";
-import * as Reach from "@reach/menu-button";
+import { Menu, MenuButton, MenuLink, MenuItem, MenuList } from "@reach/menu-button";
 import { NavIcon } from "./icons";
 import User from "./user";
 import { AuthContext, AuthContextType } from "./auth";
@@ -24,25 +24,25 @@ export default function DropdownUI() {
   const darkMode = React.useContext<INightModeContext>(NightModeContext);
 
   return (
-    <Reach.Menu>
-      <Reach.MenuButton className="DropdownMenuButton">
+    <Menu>
+      <MenuButton className="DropdownMenuButton">
         <NavIcon className="icon" />
-      </Reach.MenuButton>
-      <Reach.MenuList className="Sheet DropdownMenuList">
+      </MenuButton>
+      <MenuList className="Sheet DropdownMenuList">
         <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
-        <Reach.MenuLink onClick={() => Router.push("/")} component="a">
+        <MenuLink onClick={() => Router.push("/")} as="a">
           <MenuEmoji label="Stack of books">📚</MenuEmoji>
           All Entries
-        </Reach.MenuLink>
-        <Reach.MenuLink onClick={() => Router.push("/new")} component="a">
+        </MenuLink>
+        <MenuLink onClick={() => Router.push("/new")} as="a">
           <MenuEmoji label="Writing with a Pen">✍️</MenuEmoji>
           Create New Entry
-        </Reach.MenuLink>
-        <Reach.MenuLink onClick={() => Router.push("/settings")} component="a">
+        </MenuLink>
+        <MenuLink onClick={() => Router.push("/settings")} as="a">
           <MenuEmoji label="Gear">⚙️</MenuEmoji>
           Settings
-        </Reach.MenuLink>
-        <Reach.MenuItem onSelect={darkMode.action.onChange}>
+        </MenuLink>
+        <MenuItem onSelect={darkMode.action.onChange}>
           {darkMode.night ? (
             <>
               <MenuEmoji label="Sun smiling">🌞</MenuEmoji>
@@ -54,12 +54,12 @@ export default function DropdownUI() {
               Switch to Dark Mode
             </>
           )}
-        </Reach.MenuItem>
-        <Reach.MenuItem onSelect={signOut}>
+        </MenuItem>
+        <MenuItem onSelect={signOut}>
           <MenuEmoji label="Fearful face">😨</MenuEmoji>
           Sign Out
-        </Reach.MenuItem>
-      </Reach.MenuList>
-    </Reach.Menu>
+        </MenuItem>
+      </MenuList>
+    </Menu>
   );
 }
