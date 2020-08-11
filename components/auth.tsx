@@ -110,7 +110,9 @@ export function useAuthSideEffects(state: IAuthState): void {
       Router.push({ pathname: "/" });
     }
 
-    if (!state.authed) {
+    const allowList = ["/about", "/legal", "/preview"];
+
+    if (!state.authed && !allowList.includes(Router.route)) {
       Router.push({ pathname: "/login" });
       cookie.remove("DW_TOKEN", cookieOptions);
     }
