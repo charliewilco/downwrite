@@ -1,7 +1,9 @@
+import { NextApiHandler } from "next";
 import Boom from "@hapi/boom";
 import uuid from "uuid/v4";
 import * as bcrypt from "bcrypt";
 import { UserModel, IUser } from "./models";
+import { validUser } from "./validations";
 import { createToken } from "./util/token";
 
 export const createUser = async (body: any) => {
@@ -49,4 +51,49 @@ export const getUserDetails = async (user: string) => {
   const foundUser = await UserModel.findById(user, ["username", "email"]).lean();
 
   return foundUser;
+};
+
+export const verifyCredentials = async (password: string, identifier: string) => {
+  const user = await UserModel.findOne({
+    $or: [{ email: identifier }, { username: identifier }]
+  });
+
+  if (user) {
+    const isValid = await bcrypt.compare(password, user.password);
+    if (isValid) {
+      return user;
+    } else {
+      throw Boom.badRequest("Incorrect password!");
+    }
+  } else {
+    throw Boom.badRequest("Incorrect username or email!");
+  }
+};
+
+export const authenticationHandler: NextApiHandler = async (req, res) => {
+  const { user, password } = req.body;
+
+  try {
+    const foundUser = await verifyCredentials(password, user);
+
+    const token = createToken(foundUser);
+
+    res.status(201).send({ token });
+  } catch (error) {
+    const e = Boom.boomify(error);
+
+    res.status(e.output.statusCode).end(e.output.payload);
+  }
+};
+
+export const createUserHandler: NextApiHandler = async (req, res) => {
+  try {
+    await validUser.validateAsync(req.body);
+    let user = await verifyUniqueUser(req.body);
+    let u = await createUser(user);
+    res.send(u);
+  } catch (error) {
+    const e = Boom.boomify(error);
+    res.status(e.output.statusCode).end(e.output.payload);
+  }
 };

@@ -29,7 +29,6 @@ const Routes = [
       cors
     }
   },
-
   {
     method: "GET",
     path: "/api/users",
@@ -46,23 +45,6 @@ const Routes = [
     config: {
       cors,
       auth
-    }
-  },
-  {
-    method: "POST",
-    path: "/api/users/authenticate",
-    config: {
-      pre: [
-        {
-          method: UserController.verifyCredentials,
-          assign: "user"
-        }
-      ],
-      handler: UserController.authenticateUser,
-      validate: {
-        payload: Validations.validAuthenticatedUser
-      },
-      cors
     }
   }
 ];

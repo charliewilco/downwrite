@@ -1,5 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { withDB } from "../../../legacy/with-db";
+import { authenticationHandler } from "../../../legacy/users";
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
-  res.send("Hello");
-};
+export default withDB(authenticationHandler);

@@ -1,20 +1,12 @@
-import { NextApiResponse, NextApiRequest } from "next";
-import { createUser, verifyUniqueUser } from "../../../legacy/users";
-import { validUser } from "../../../legacy/validations";
-import { dbConnect } from "../../../legacy/util/db";
+import { createUserHandler } from "../../../legacy/users";
+import { withDB } from "../../../legacy/with-db";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  await dbConnect();
-
+export default withDB((req, res) => {
   switch (req.method) {
     case "POST": {
-      await validUser.validateAsync(req.body);
-      let user = await verifyUniqueUser(req.body);
-      let u = await createUser(user);
-      res.send(u);
-      break;
+      return createUserHandler(req, res);
     }
     default:
       break;
   }
-};
+});
