@@ -10,7 +10,7 @@ export default class MyDocument extends Document {
             href="https://unpkg.com/ganymede-light-duotone-prism"
           />
           <meta name="theme-color" content="#4FA5C2" />
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="icon" href="/static/favicon.ico" />
         </Head>
         <body>
           <Main />

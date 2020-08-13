@@ -35,9 +35,8 @@ export default function useManagedDashboard(
     }
   }, []);
 
-  async function getPosts(close?: boolean): Promise<void> {
-    const { host } = document.location;
-    const entries = await API.getPosts({ token, host });
+  async function getPosts(): Promise<void> {
+    const entries = await API.getPosts({ token });
 
     if (Array.isArray(entries)) {
       dispatch({ type: DashboardAction.FETCH_ENTRIES, payload: { entries } });
@@ -50,12 +49,10 @@ export default function useManagedDashboard(
   }
 
   async function onDelete({ id }: SelectedPost): Promise<void> {
-    const { host } = document.location;
-
-    const response = await API.removePost(id, { token, host });
+    const response = await API.removePost(id!, { token });
 
     if (response.ok) {
-      await getPosts(true);
+      await getPosts();
     }
   }
 
@@ -67,7 +64,7 @@ export default function useManagedDashboard(
         type: DashboardAction.SELECT_POST,
         payload: { selectedPost }
       }),
-    onConfirmDelete: () => onDelete(state.selectedPost)
+    onConfirmDelete: () => onDelete(state.selectedPost!)
   };
 
   return [state, ManagedDashboard];

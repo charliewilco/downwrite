@@ -33,16 +33,16 @@ const reducer: React.Reducer<IFetchState, IFetchAction> = (
 ): IFetchState => {
   switch (action.type) {
     case FetchActions.FETCH_COMPLETED: {
-      return { ...state, posts: action.payload.posts, isLoading: false };
+      return { ...state, posts: action.payload!.posts, isLoading: false };
     }
     case FetchActions.FETCH_INIT: {
       return { ...state, isLoading: true };
     }
     case FetchActions.FETCH_ERROR: {
       return {
-        posts: action.payload.posts,
+        posts: action.payload!.posts,
         isLoading: false,
-        error: action.payload.error
+        error: action.payload!.error
       };
     }
     default: {
@@ -65,10 +65,9 @@ export default function CollectionFetch() {
   const [{ token }] = React.useContext<AuthContextType>(AuthContext);
 
   React.useEffect(() => {
-    const { host } = document.location;
     dispatch({ type: FetchActions.FETCH_INIT });
 
-    API.getPosts({ token, host }).then(posts => {
+    API.getPosts({ token }).then(posts => {
       if (Array.isArray(posts)) {
         dispatch({
           type: FetchActions.FETCH_COMPLETED,

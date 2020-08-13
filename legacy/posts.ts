@@ -33,10 +33,13 @@ export const getPostHandler: NextJWTHandler = async (req, res) => {
   const { user } = req.jwt;
   const id = Array.isArray(req.query.id) ? req.query.id.join("") : req.query.id;
   try {
-    const post: IPost = await PostModel.findOne({
+    const post = await PostModel.findOne({
       id,
       user: { $eq: user }
     }).lean();
+    post!.content = JSON.stringify(post!.content);
+    console.log("CONTENT", post!.content);
+
     res.send(post);
   } catch (error) {
     const e = Boom.badImplementation(error);
@@ -44,48 +47,50 @@ export const getPostHandler: NextJWTHandler = async (req, res) => {
   }
 };
 
+export const getMarkdownPreview = async (id: string) => {
+  const post = await PostModel.findOne({ id });
+  const user = await UserModel.findOne({ _id: post.user });
+
+  if (!post.public) {
+    throw Boom.notFound(
+      "This post is either not public or I couldn't even find it. Things are hard sometimes."
+    );
+  }
+
+  const markdown = {
+    id,
+    author: {
+      username: user.username,
+      avatar: user.gradient || ["#FEB692", "#EA5455"]
+    },
+    content:
+      typeof post.content === "string"
+        ? post.content
+        : draftToMarkdown(post.content, {
+            entityItems: {
+              LINK: {
+                open: () => {
+                  return "[";
+                },
+
+                close: (entity: any) => {
+                  return `](${entity.data.url || entity.data.href})`;
+                }
+              }
+            }
+          }),
+    title: post.title,
+    dateAdded: post.dateAdded.toDateString()
+  };
+  return markdown;
+};
+
 export const getPreviewHandler: NextApiHandler = async (req, res) => {
   const id = Array.isArray(req.query.id) ? req.query.id.join("") : req.query.id;
 
   try {
-    const post = await PostModel.findOne({ id });
-    const user = await UserModel.findOne({ _id: post.user });
-
-    const markdown = {
-      id,
-      author: {
-        username: user.username,
-        avatar: user.gradient || ["#FEB692", "#EA5455"]
-      },
-      content:
-        typeof post.content === "string"
-          ? post.content
-          : draftToMarkdown(post.content, {
-              entityItems: {
-                LINK: {
-                  open: () => {
-                    return "[";
-                  },
-
-                  close: (entity: any) => {
-                    return `](${entity.data.url || entity.data.href})`;
-                  }
-                }
-              }
-            }),
-      title: post.title,
-      dateAdded: post.dateAdded.toDateString()
-    };
-
-    if (!post.public) {
-      const e = Boom.notFound(
-        "This post is either not public or I couldn't even find it. Things are hard sometimes."
-      );
-
-      res.status(e.output.statusCode).end(e.output.payload);
-    } else {
-      res.send(markdown);
-    }
+    const markdown = await getMarkdownPreview(id);
+    res.send(markdown);
   } catch (err) {
     const e = Boom.internal("Internal MongoDB error", err);
 

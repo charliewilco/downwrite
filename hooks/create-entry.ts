@@ -31,7 +31,7 @@ export default function useCreateEntry(): CreateEntryHandler {
       public: false
     };
 
-    API.createPost(body, { token, host: document.location.host })
+    API.createPost(body, { token })
       .then(() =>
         Router.push({
           pathname: `/edit`,

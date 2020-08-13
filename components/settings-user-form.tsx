@@ -23,8 +23,7 @@ export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
     values: IUserFormValues,
     actions: FormikActions<IUserFormValues>
   ): Promise<void> => {
-    const { host } = document.location;
-    const settings = await API.updateSettings(values, { token, host });
+    const settings = await API.updateSettings(values, { token });
     if (settings) {
       actions.setSubmitting(false);
     }

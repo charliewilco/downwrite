@@ -1,14 +1,10 @@
-import { URLEndpoints } from "./urls";
 import * as Dwnxt from "downwrite";
 import { __IS_DEV__, __IS_BROWSER__ } from "./dev";
 
 import "abortcontroller-polyfill/dist/abortcontroller-polyfill-only";
-import { Omit } from "./types";
 
 interface IOptions {
   token?: string;
-  host?: string;
-  port?: string;
 }
 
 interface IUserResponse {
@@ -47,12 +43,17 @@ export const createHeader = (
   method: HeaderMethod = "GET",
   token?: string
 ): RequestInit => {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json"
+  };
+
+  if (token) {
+    headers.Authorization = token;
+  }
+
   return {
     method,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token
-    },
+    headers,
     mode: "cors",
     cache: "default",
     signal
@@ -64,12 +65,8 @@ export interface IAuthUserBody {
   password: string;
 }
 
-export async function authUser(
-  body: IAuthUserBody,
-  options?: IOptions
-): Promise<any> {
-  const url = URLEndpoints.create(Endpoints.AUTH_ENDPOINT, options.host);
-  const auth = await fetch(url, {
+export async function authUser(body: IAuthUserBody): Promise<any> {
+  const auth = await fetch(Endpoints.AUTH_ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -81,10 +78,10 @@ export async function authUser(
 }
 
 export async function getUserDetails(options: IOptions): Promise<any> {
-  const url = URLEndpoints.create(Endpoints.USER_ENDPOINT, options.host);
-  const user = await fetch(url, createHeader("GET", options.token)).then(res =>
-    res.json()
-  );
+  const user = await fetch(
+    Endpoints.USER_ENDPOINT,
+    createHeader("GET", options.token)
+  ).then(res => res.json());
 
   return user;
 }
@@ -98,8 +95,7 @@ export interface ICreateUserBody {
 export type SettingsBody = Omit<ICreateUserBody, "password">;
 
 export async function updateSettings(body: SettingsBody, options: IOptions) {
-  const url = URLEndpoints.create(Endpoints.SETTINGS_ENDPOINT, options.host);
-  const settings = await fetch(url, {
+  const settings = await fetch(Endpoints.SETTINGS_ENDPOINT, {
     ...createHeader("POST", options.token),
     body: JSON.stringify(body)
   }).then(res => res.json());
@@ -107,13 +103,8 @@ export async function updateSettings(body: SettingsBody, options: IOptions) {
   return settings;
 }
 
-export async function createUser(
-  body: ICreateUserBody,
-  options?: IOptions
-): Promise<IUserResponse> {
-  const url = URLEndpoints.create(Endpoints.USER_ENDPOINT, options.host);
-
-  const user = await fetch(url, {
+export async function createUser(body: ICreateUserBody): Promise<IUserResponse> {
+  const user = await fetch(Endpoints.USER_ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -126,8 +117,7 @@ export async function createUser(
 
 // TODO: Remove Any
 export async function updatePassword(body: any, options: IOptions): Promise<any> {
-  const url = URLEndpoints.create(Endpoints.PASSWORD_ENDPOINT, options.host);
-  const password = await fetch(url, {
+  const password = await fetch(Endpoints.PASSWORD_ENDPOINT, {
     ...createHeader("POST", options.token),
     body: JSON.stringify(body)
   }).then(res => res.json());
@@ -135,12 +125,8 @@ export async function updatePassword(body: any, options: IOptions): Promise<any>
   return password;
 }
 
-export async function findPreviewEntry(
-  id: string,
-  options?: IOptions
-): Promise<null> {
-  const url = URLEndpoints.create(Endpoints.PREVIEW_ENDPOINT, options.host);
-  const entry = await fetch(`${url}/${id}`, {
+export async function findPreviewEntry(id: string): Promise<null> {
+  const entry = await fetch(`${Endpoints.PREVIEW_ENDPOINT}/${id}`, {
     method: "GET",
     mode: "cors"
   }).then(res => res.json());
@@ -149,9 +135,8 @@ export async function findPreviewEntry(
 }
 
 export async function getPost(id: string, options: IOptions): Promise<APIResponse> {
-  const url = URLEndpoints.create(Endpoints.POST_ENDPOINT, options.host);
   const post = await fetch(
-    `${url}/${id}`,
+    `${Endpoints.POST_ENDPOINT}/${id}`,
     createHeader("GET", options.token)
   ).then(res => res.json());
 
@@ -159,9 +144,8 @@ export async function getPost(id: string, options: IOptions): Promise<APIRespons
 }
 
 export async function removePost(id: string, options: IOptions): Promise<Response> {
-  const url = URLEndpoints.create(Endpoints.POST_ENDPOINT, options.host);
   const response = await fetch(
-    `${url}/${id}`,
+    `${Endpoints.POST_ENDPOINT}/${id}`,
     createHeader("DELETE", options.token)
   );
   return response;
@@ -170,9 +154,8 @@ export async function removePost(id: string, options: IOptions): Promise<Respons
 export async function getPosts(
   options: IOptions
 ): Promise<Dwnxt.IPost[] | Dwnxt.IPostError> {
-  const url = URLEndpoints.create(Endpoints.POST_ENDPOINT, options.host);
   const entries: Dwnxt.IPost[] = await fetch(
-    url,
+    Endpoints.POST_ENDPOINT,
     createHeader("GET", options.token)
   ).then(res => res.json());
 
@@ -183,8 +166,7 @@ export async function createPost(
   body: Dwnxt.IPostCreation,
   options: IOptions
 ): Promise<APIResponse> {
-  const url = URLEndpoints.create(Endpoints.POST_ENDPOINT, options.host);
-  const post = await fetch(url, {
+  const post = await fetch(Endpoints.POST_ENDPOINT, {
     ...createHeader("POST", options.token),
     body: JSON.stringify(body)
   }).then(res => res.json());
@@ -197,8 +179,7 @@ export async function updatePost(
   body: Dwnxt.IPost,
   options: IOptions
 ): Promise<Dwnxt.IPost | Dwnxt.IPostError> {
-  const url = URLEndpoints.create(Endpoints.POST_ENDPOINT, options.host);
-  const entry = await fetch(`${url}/${id}`, {
+  const entry = await fetch(`${Endpoints.POST_ENDPOINT}/${id}`, {
     ...createHeader("PUT", options.token),
     body: JSON.stringify(body)
   }).then(res => res.json());

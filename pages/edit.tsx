@@ -6,8 +6,6 @@ import { GetServerSideProps } from "next";
 import Cookies from "universal-cookie";
 import * as jwt from "jsonwebtoken";
 
-import * as Dwnxt from "downwrite";
-
 import { getPost } from "../legacy/posts";
 import { dbConnect } from "../legacy/util/db";
 import Autosaving from "../components/autosaving-interval";
@@ -25,8 +23,10 @@ import { __IS_DEV__ } from "../utils/dev";
 import useUpdateEntry, { IFields } from "../hooks/update-entry";
 import { IEditProps } from "../utils/initial-props";
 
+type AuthedEditProps = IEditProps & { id: string };
+
 export const getServerSideProps: GetServerSideProps<
-  IEditProps & { id: string },
+  AuthedEditProps | { token?: string },
   { id: string }
 > = async context => {
   await dbConnect();
@@ -42,12 +42,10 @@ export const getServerSideProps: GetServerSideProps<
     _id: p._id.toString(),
     user: p.user.toString(),
     title: p.title.toString(),
-    content: p.content.toString(),
+    content: p.content,
     dateAdded: p.dateAdded.toString(),
     dateModified: p.dateModified ? p.dateModified.toString() : new Date().toString()
   }));
-
-  console.log("POST", post);
 
   if (token) {
     return {
@@ -58,14 +56,18 @@ export const getServerSideProps: GetServerSideProps<
         post
       }
     };
+  } else {
+    return {
+      props: { token: undefined }
+    };
   }
 };
 
 const EDITOR_COMMAND = "myeditor-save";
 
-function EditUI(props: IEditProps) {
+function EditUI(props: AuthedEditProps) {
   const initialEditorState = Draft.EditorState.createWithContent(
-    superConverter((props.post as Dwnxt.IPost).content)
+    superConverter(props.post.content)
   );
 
   const [initialFocus, setIntialFocus] = React.useState<boolean>(false);

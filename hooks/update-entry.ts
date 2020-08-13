@@ -19,7 +19,7 @@ export interface IFields {
 }
 
 export default function useUpdateEntry(
-  post: Dwnxt.IPost,
+  post: any,
   id: string
 ): [boolean, (v: IFields) => void] {
   const loaded = React.useRef<boolean>(!isEmpty(post));
@@ -30,7 +30,6 @@ export default function useUpdateEntry(
   async function updatePostContent(values: IFields): Promise<void> {
     const contentState: Draft.ContentState = values.editorState.getCurrentContent();
     const content = Draft.convertToRaw(contentState);
-    const { host } = document.location;
 
     const body = sanitize<ResponsePost>(post, ["_id", "__v"]) as Dwnxt.IPost;
 
@@ -43,7 +42,7 @@ export default function useUpdateEntry(
         content,
         dateModified: dateRef.current
       },
-      { token, host }
+      { token }
     )
       .then(() => {})
       .catch(err => actions.add(err.message, NotificationType.ERROR));
