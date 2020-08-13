@@ -1,11 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { getMarkdownPreview } from "../../../legacy/posts";
-import { dbConnect } from "../../../legacy/util/db";
+import { getPreviewHandler } from "../../../legacy/posts";
+import { withDB } from "../../../legacy/with-db";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { id } = req.query;
-  await dbConnect();
-
-  const markdown = getMarkdownPreview(Array.isArray(id) ? id.join("") : id);
-  res.send(markdown);
-};
+export default withDB(getPreviewHandler);

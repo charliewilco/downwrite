@@ -1,21 +1,17 @@
-import { withJWT } from "../../../legacy/with-jwt";
+import { withJWT, NextJWTHandler } from "../../../legacy/with-jwt";
 import Config from "../../../legacy/util/config";
-import { getPosts, createPost } from "../../../legacy/posts";
-import { dbConnect } from "../../../legacy/util/db";
+import { getPostsHandler, createPostHandler } from "../../../legacy/posts";
+import { withDB } from "../../../legacy/with-db";
 
-export default withJWT(Config.key)(async (req, res) => {
-  const { user } = req.jwt;
-
-  await dbConnect();
-
+const handler: NextJWTHandler = async (req, res) => {
   switch (req.method) {
     case "GET":
-      const posts = await getPosts(user);
-      return res.send({ posts });
+      return getPostsHandler(req, res);
     case "POST":
-      const post = await createPost(user, req.body);
-      return res.send({ post });
+      return createPostHandler(req, res);
     default:
       break;
   }
-});
+};
+
+export default withDB(withJWT(Config.key)(handler));

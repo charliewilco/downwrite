@@ -1,83 +1,104 @@
+import { NextApiHandler } from "next";
 import Boom from "@hapi/boom";
+import { draftToMarkdown } from "markdown-draft-js";
 import { IPost, PostModel, UserModel } from "./models";
 import * as Validations from "./validations";
-import { draftToMarkdown } from "markdown-draft-js";
+import { NextJWTHandler } from "./with-jwt";
 
-export const getPosts = async (user: string) => {
+export const getPostsHandler: NextJWTHandler = async (req, res) => {
+  const { user } = req.jwt;
   try {
     const posts: IPost[] = await PostModel.find({ user: { $eq: user } }).lean();
-    return posts;
+    res.send({ posts });
   } catch (error) {
-    throw Boom.notFound(error);
+    const e = Boom.notFound(error);
+    res.status(e.output.statusCode).end(e.output.payload);
   }
 };
 
-export const createPost = async (user: string, body: any): Promise<IPost> => {
-  const entry: IPost = Object.assign({}, <IPost>body, { user });
+export const createPostHandler: NextJWTHandler = async (req, res) => {
+  const { user } = req.jwt;
+  const entry: IPost = Object.assign({}, <IPost>req.body, { user });
 
   try {
     const post: IPost = await PostModel.create(entry);
-    return post;
+    res.send(post);
   } catch (error) {
-    throw Boom.boomify(error, { message: "Internal MongoDB error" });
+    const e = Boom.boomify(error, { message: "Internal MongoDB error" });
+    res.status(e.output.statusCode).end(e.output.payload);
   }
 };
 
-export const getPost = async (user: string, id: string) => {
+export const getPostHandler: NextJWTHandler = async (req, res) => {
+  const { user } = req.jwt;
+  const id = Array.isArray(req.query.id) ? req.query.id.join("") : req.query.id;
   try {
     const post: IPost = await PostModel.findOne({
       id,
       user: { $eq: user }
     }).lean();
-    return post;
+    res.send(post);
   } catch (error) {
-    throw Boom.badImplementation(error);
+    const e = Boom.badImplementation(error);
+    res.status(e.output.statusCode).end(e.output.payload);
   }
 };
 
-export const getMarkdownPreview = async (id: string) => {
-  const post = await PostModel.findOne({ id });
-  const user = await UserModel.findOne({ _id: post.user });
+export const getPreviewHandler: NextApiHandler = async (req, res) => {
+  const id = Array.isArray(req.query.id) ? req.query.id.join("") : req.query.id;
 
-  const markdown = {
-    id,
-    author: {
-      username: user.username,
-      avatar: user.gradient || ["#FEB692", "#EA5455"]
-    },
-    content:
-      typeof post.content === "string"
-        ? post.content
-        : draftToMarkdown(post.content, {
-            entityItems: {
-              LINK: {
-                open: () => {
-                  return "[";
-                },
+  try {
+    const post = await PostModel.findOne({ id });
+    const user = await UserModel.findOne({ _id: post.user });
 
-                close: (entity: any) => {
-                  return `](${entity.data.url || entity.data.href})`;
+    const markdown = {
+      id,
+      author: {
+        username: user.username,
+        avatar: user.gradient || ["#FEB692", "#EA5455"]
+      },
+      content:
+        typeof post.content === "string"
+          ? post.content
+          : draftToMarkdown(post.content, {
+              entityItems: {
+                LINK: {
+                  open: () => {
+                    return "[";
+                  },
+
+                  close: (entity: any) => {
+                    return `](${entity.data.url || entity.data.href})`;
+                  }
                 }
               }
-            }
-          }),
-    title: post.title,
-    dateAdded: post.dateAdded.toDateString()
-  };
+            }),
+      title: post.title,
+      dateAdded: post.dateAdded.toDateString()
+    };
 
-  if (!post.public) {
-    throw Boom.notFound(
-      "This post is either not public or I couldn't even find it. Things are hard sometimes."
-    );
-  } else {
-    return markdown;
+    if (!post.public) {
+      const e = Boom.notFound(
+        "This post is either not public or I couldn't even find it. Things are hard sometimes."
+      );
+
+      res.status(e.output.statusCode).end(e.output.payload);
+    } else {
+      res.send(markdown);
+    }
+  } catch (err) {
+    const e = Boom.internal("Internal MongoDB error", err);
+
+    res.status(e.output.statusCode).end(e.output.payload);
   }
 };
 
-export const updatePost = async (user: string, id: string, payload: any) => {
-  await Validations.validPost.validateAsync(payload);
+export const updatePostHandler: NextJWTHandler = async (req, res) => {
+  const { user } = req.jwt;
+  const id = Array.isArray(req.query.id) ? req.query.id.join("") : req.query.id;
+  await Validations.validPost.validateAsync(req.body);
 
-  const entry: IPost = Object.assign({}, { user }, <IPost>payload);
+  const entry: IPost = Object.assign({}, { user }, <IPost>req.body);
   try {
     const post: IPost = await PostModel.findOneAndUpdate(
       { id, user: { $eq: user } },
@@ -87,20 +108,26 @@ export const updatePost = async (user: string, id: string, payload: any) => {
       }
     );
     // NOTE: This is not the updated entry object.
-    return post;
+    res.send(post);
   } catch (err) {
-    throw Boom.internal("Internal MongoDB error", err);
+    const e = Boom.internal("Internal MongoDB error", err);
+
+    res.status(e.output.statusCode).end(e.output.payload);
   }
 };
 
-export const removePost = async (user: string, id: string) => {
+export const removePostHandler: NextJWTHandler = async (req, res) => {
+  const { user } = req.jwt;
+  const id = Array.isArray(req.query.id) ? req.query.id.join("") : req.query.id;
+
   try {
     const post = await PostModel.findOneAndRemove({
       id,
       user: { $eq: user }
     });
-    return `${post.title} was removed`;
+    res.send(`${post.title} was removed`);
   } catch (err) {
-    throw Boom.boomify(err, { message: "Something went wrong" });
+    const e = Boom.boomify(err, { message: "Something went wrong" });
+    res.status(e.output.statusCode).end(e.output.payload);
   }
 };

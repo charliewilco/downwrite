@@ -30,21 +30,34 @@ export const getServerSideProps: GetServerSideProps<
     ? context.query.id.join("")
     : context.query.id;
 
-  const markdown = await getMarkdownPreview(id);
-  return {
-    props: {
-      id,
-      url: `https://next.downwrite.us/preview?id=${id}`,
-      entry: {
-        ...markdown,
-        author: {
-          username: markdown.author.username,
-          gradient: markdown.author.avatar || startColors
-        }
-      },
-      token
-    }
-  };
+  try {
+    const markdown = await getMarkdownPreview(id);
+    return {
+      props: {
+        id,
+        url: `https://next.downwrite.us/preview?id=${id}`,
+        entry: {
+          ...markdown,
+          author: {
+            username: markdown.author.username,
+            gradient: markdown.author.avatar || startColors
+          }
+        },
+        token
+      }
+    };
+  } catch (error) {
+    return {
+      props: {
+        id,
+        url: `https://next.downwrite.us/preview?id=${id}`,
+        entry: {
+          ...error
+        },
+        token
+      }
+    };
+  }
 };
 
 function PreviewEntry(props: IPreviewProps) {

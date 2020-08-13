@@ -1,29 +1,26 @@
-import { withJWT } from "../../../legacy/with-jwt";
+import { withJWT, NextJWTHandler } from "../../../legacy/with-jwt";
 import Config from "../../../legacy/util/config";
-import { getPost, updatePost, removePost } from "../../../legacy/posts";
-import { dbConnect } from "../../../legacy/util/db";
+import {
+  getPostHandler,
+  updatePostHandler,
+  removePostHandler
+} from "../../../legacy/posts";
+import { withDB } from "../../../legacy/with-db";
 
-export default withJWT(Config.key)(async (req, res) => {
-  const { user } = req.jwt;
-  await dbConnect();
-
-  const id = Array.isArray(req.query.id) ? req.query.id.join("") : req.query.id;
-
+const handler: NextJWTHandler = async (req, res) => {
   switch (req.method) {
     case "GET": {
-      let post = await getPost(user, id);
-      return res.send({ post });
+      return getPostHandler(req, res);
     }
     case "PUT": {
-      let post = await updatePost(user, id, req.body);
-      return res.send({ post });
+      return updatePostHandler(req, res);
     }
-
     case "DELETE": {
-      let message = await removePost(user, id);
-      return res.send(message);
+      return removePostHandler(req, res);
     }
     default:
       break;
   }
-});
+};
+
+export default withDB(withJWT(Config.key)(handler));
