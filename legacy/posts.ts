@@ -29,17 +29,21 @@ export const createPostHandler: NextJWTHandler = async (req, res) => {
   }
 };
 
+export const getPost = async (user: string, id: string) => {
+  const post = await PostModel.findOne({
+    id,
+    user: { $eq: user }
+  }).lean();
+  post!.content = JSON.stringify(post!.content);
+  console.log("CONTENT", post!.content);
+  return post;
+};
+
 export const getPostHandler: NextJWTHandler = async (req, res) => {
   const { user } = req.jwt;
   const id = Array.isArray(req.query.id) ? req.query.id.join("") : req.query.id;
   try {
-    const post = await PostModel.findOne({
-      id,
-      user: { $eq: user }
-    }).lean();
-    post!.content = JSON.stringify(post!.content);
-    console.log("CONTENT", post!.content);
-
+    const post = await getPost(user, id);
     res.send(post);
   } catch (error) {
     const e = Boom.badImplementation(error);
