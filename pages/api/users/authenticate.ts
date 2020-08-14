@@ -1,4 +1,9 @@
-import { withDB } from "../../../legacy/with-db";
+import { NextApiRequest, NextApiResponse } from "next";
 import { authenticationHandler } from "../../../legacy/users";
+import { dbConnect } from "../../../legacy/util/db";
 
-export default withDB(authenticationHandler);
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  await dbConnect();
+
+  await authenticationHandler(req, res);
+};

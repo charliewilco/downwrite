@@ -71,9 +71,8 @@ export const verifyCredentials = async (password: string, identifier: string) =>
 };
 
 export const authenticationHandler: NextApiHandler = async (req, res) => {
-  const { user, password } = req.body;
-
   try {
+    const { user, password } = req.body;
     const foundUser = await verifyCredentials(password, user);
 
     const token = createToken(foundUser);
@@ -82,7 +81,7 @@ export const authenticationHandler: NextApiHandler = async (req, res) => {
   } catch (error) {
     const e = Boom.boomify(error);
 
-    res.status(e.output.statusCode).end(e.output.payload);
+    res.status(e.output.statusCode).json(e.output.payload);
   }
 };
 
@@ -94,6 +93,6 @@ export const createUserHandler: NextApiHandler = async (req, res) => {
     res.send(u);
   } catch (error) {
     const e = Boom.boomify(error);
-    res.status(e.output.statusCode).end(e.output.payload);
+    res.status(e.output.statusCode).json(e.output.payload);
   }
 };

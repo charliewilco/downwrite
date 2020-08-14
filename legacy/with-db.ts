@@ -2,9 +2,12 @@ import { NextApiHandler } from "next";
 import { dbConnect } from "./util/db";
 
 export const withDB = async <T>(
-  fn: NextApiHandler<T>
+  handler: NextApiHandler<T>
 ): Promise<NextApiHandler<T>> => {
   await dbConnect();
 
-  return fn;
+  console.log(handler);
+  console.log(typeof withDB);
+
+  return (req, res) => handler(req, res);
 };

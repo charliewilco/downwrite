@@ -5,13 +5,22 @@ import { IPost, PostModel, UserModel } from "./models";
 import * as Validations from "./validations";
 import { NextJWTHandler } from "./with-jwt";
 
+export const getPosts = async (user: string) => {
+  try {
+    const posts: IPost[] = await PostModel.find({ user: { $eq: user } }).lean();
+    return posts;
+  } catch (error) {
+    throw Boom.notFound(error);
+  }
+};
+
 export const getPostsHandler: NextJWTHandler = async (req, res) => {
   const { user } = req.jwt;
   try {
-    const posts: IPost[] = await PostModel.find({ user: { $eq: user } }).lean();
+    const posts = getPosts(user);
     res.send({ posts });
   } catch (error) {
-    const e = Boom.notFound(error);
+    const e = Boom.boomify(error);
     res.status(e.output.statusCode).end(e.output.payload);
   }
 };
