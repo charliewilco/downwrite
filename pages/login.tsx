@@ -4,7 +4,7 @@ import LoginTabs from "../components/login-tabs";
 import Landing from "../components/landing";
 import Features from "../components/landing-features";
 
-export default function LoginPage(): JSX.Element {
+const LoginPage: React.FC = () => {
   return (
     <main className="HomeContainer" data-testid="LOGIN_PAGE_CONTAINER">
       <Head>
@@ -16,4 +16,6 @@ export default function LoginPage(): JSX.Element {
       <LoginTabs />
     </main>
   );
-}
+};
+
+export default LoginPage;

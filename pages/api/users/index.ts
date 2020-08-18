@@ -1,12 +1,16 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import { createUserHandler } from "../../../legacy/users";
-import { withDB } from "../../../legacy/with-db";
+import { dbConnect } from "../../../legacy/util/db";
 
-export default withDB((req, res) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  await dbConnect();
+
   switch (req.method) {
     case "POST": {
-      return createUserHandler(req, res);
+      await createUserHandler(req, res);
+      break;
     }
     default:
       break;
   }
-});
+};

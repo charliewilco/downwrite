@@ -29,7 +29,7 @@
     "@types/jwt-decode": "^2.2.1",
     "@types/lodash": "^4.14.121",
     "@types/micro": "^7.3.3",
-    "@types/mongoose": "^5.3.10",
+    "@types/mongoose": "^5.7.36",
     "@types/node": "^11.13.0",
     "@types/prismjs": "^1.9.1",
     "@types/react": "^16.9.2",
@@ -40,7 +40,7 @@
     "abortcontroller-polyfill": "^1.2.3",
     "autoprefixer": "^9.8.6",
     "aws-sdk": "^2.729.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "date-fns": "^2.2.1",
     "draft-js": "^0.10.5",
     "draft-js-markdown-plugin": "^3.0.5",
@@ -55,8 +55,8 @@
     "lodash": "^4.17.10",
     "markdown-draft-js": "^1.5.0",
     "micro": "^9.3.3",
-    "mongoose": "^5.4.7",
-    "next": "^9.5.1",
+    "mongoose": "5.9.13",
+    "next": "^9.5.2",
     "postcss-preset-env": "^6.7.0",
     "prismjs": "^1.15.0",
     "react": "^16.13.1",
@@ -125,5 +125,8 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "engines": {
+    "node": "12.x"
   }
 }

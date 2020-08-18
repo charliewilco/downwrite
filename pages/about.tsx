@@ -16,7 +16,7 @@ export const getServerSideProps: GetServerSideProps<{
 
   return {
     props: {
-      token
+      token: token || null
     }
   };
 };

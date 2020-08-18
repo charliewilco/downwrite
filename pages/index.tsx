@@ -21,23 +21,27 @@ export const getServerSideProps: GetServerSideProps<InitialProps.IDashboardProps
   const { DW_TOKEN: token } = cookie.getAll();
 
   const x = jwt.decode(token) as { user: string };
+  console.log("Decoded token", x);
+  console.log("Token", token);
   await dbConnect();
   const posts = await getPosts(x.user);
 
-  return {
-    props: {
-      entries: [
-        ...posts.map((p: any) => {
-          p._id = p._id.toString();
-          p.dateAdded = p.dateAdded.toString();
-          p.dateModified = p.dateModified.toString();
-          p.user = p.user.toString();
-          return p;
-        })
-      ],
-      token
-    }
-  };
+  return token
+    ? {
+        props: {
+          entries: [
+            ...posts.map((p: any) => {
+              p._id = p._id.toString();
+              p.dateAdded = p.dateAdded.toString();
+              p.dateModified = p.dateModified.toString();
+              p.user = p.user.toString();
+              return p;
+            })
+          ],
+          token
+        }
+      }
+    : { props: { entries: [], token: null } };
 };
 
 // TODO: refactor to have selected post, deletion to be handled by a lower level component
