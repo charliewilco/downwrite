@@ -29,6 +29,8 @@ export const createPostHandler: NextJWTHandler = async (req, res) => {
   const { user } = req.jwt;
   const entry: IPost = Object.assign({}, <IPost>req.body, { user });
 
+  console.log(req.body);
+
   try {
     const post: IPost = await PostModel.create(entry);
     res.send(post);
@@ -102,7 +104,7 @@ export const getPreviewHandler: NextApiHandler = async (req, res) => {
 
   try {
     const markdown = await getMarkdownPreview(id);
-    res.send(markdown);
+    res.status(200).json(markdown);
   } catch (err) {
     const e = Boom.internal("Internal MongoDB error", err);
 

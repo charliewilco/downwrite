@@ -42,7 +42,7 @@ export const getServerSideProps: GetServerSideProps<
     _id: p._id.toString(),
     user: p.user.toString(),
     title: p.title.toString(),
-    content: p.content,
+    content: JSON.parse(p.content),
     dateAdded: p.dateAdded.toString(),
     dateModified: p.dateModified ? p.dateModified.toString() : new Date().toString()
   }));
@@ -66,6 +66,7 @@ export const getServerSideProps: GetServerSideProps<
 const EDITOR_COMMAND = "myeditor-save";
 
 function EditUI(props: AuthedEditProps) {
+  console.log("EDIT PROPS", props);
   const initialEditorState = Draft.EditorState.createWithContent(
     superConverter(props.post.content)
   );
