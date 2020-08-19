@@ -44,7 +44,6 @@ export const getPost = async (user: string, id: string) => {
     user: { $eq: user }
   }).lean();
   post!.content = JSON.stringify(post!.content);
-  console.log("CONTENT", post!.content);
   return post;
 };
 
@@ -53,10 +52,10 @@ export const getPostHandler: NextJWTHandler = async (req, res) => {
   const id = Array.isArray(req.query.id) ? req.query.id.join("") : req.query.id;
   try {
     const post = await getPost(user, id);
-    res.send(post);
+    res.status(200).send(post);
   } catch (error) {
     const e = Boom.badImplementation(error);
-    res.status(e.output.statusCode).end(e.output.payload);
+    res.status(e.output.statusCode).json(e.output.payload);
   }
 };
 
@@ -107,7 +106,7 @@ export const getPreviewHandler: NextApiHandler = async (req, res) => {
   } catch (err) {
     const e = Boom.internal("Internal MongoDB error", err);
 
-    res.status(e.output.statusCode).end(e.output.payload);
+    res.status(e.output.statusCode).json(e.output.payload);
   }
 };
 
@@ -126,11 +125,11 @@ export const updatePostHandler: NextJWTHandler = async (req, res) => {
       }
     );
     // NOTE: This is not the updated entry object.
-    res.send(post);
+    res.status(200).send(post);
   } catch (err) {
     const e = Boom.internal("Internal MongoDB error", err);
 
-    res.status(e.output.statusCode).end(e.output.payload);
+    res.status(e.output.statusCode).json(e.output.payload);
   }
 };
 
@@ -146,6 +145,6 @@ export const removePostHandler: NextJWTHandler = async (req, res) => {
     res.send(`${post.title} was removed`);
   } catch (err) {
     const e = Boom.boomify(err, { message: "Something went wrong" });
-    res.status(e.output.statusCode).end(e.output.payload);
+    res.status(e.output.statusCode).json(e.output.payload);
   }
 };

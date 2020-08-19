@@ -88,7 +88,6 @@ export const authenticationHandler: NextApiHandler = async (req, res) => {
 export const createUserHandler: NextApiHandler = async (req, res) => {
   try {
     let value = await validUser.validateAsync(req.body);
-    console.log("JOI", value);
     let user = await verifyUniqueUser(value);
     let u = await createUser(user);
     res.send(u);

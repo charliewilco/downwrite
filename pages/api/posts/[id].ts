@@ -5,9 +5,10 @@ import {
   updatePostHandler,
   removePostHandler
 } from "../../../legacy/posts";
-import { withDB } from "../../../legacy/with-db";
+import { dbConnect } from "../../../legacy/util/db";
 
 const handler: NextJWTHandler = async (req, res) => {
+  await dbConnect();
   switch (req.method) {
     case "GET": {
       return getPostHandler(req, res);
@@ -23,4 +24,4 @@ const handler: NextJWTHandler = async (req, res) => {
   }
 };
 
-export default withDB(withJWT(Config.key)(handler));
+export default withJWT(Config.key)(handler);
