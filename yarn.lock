@@ -1371,84 +1371,107 @@
   resolved "https://registry.npmjs.org/@next/react-refresh-utils/-/react-refresh-utils-9.5.2.tgz#5d92d8ad0f2bd79de2290614e74e5a12a0cda02b"
   integrity sha512-ch/16u3OVy/aIXJROwqXZjGw/tFMyG7qy2IGDA2RFjvQMtPyJJrklmwX2EcfH4+4spRI2MZKes2soI+0w2/MDQ==
 
-"@reach/auto-id@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.npmjs.org/@reach/auto-id/-/auto-id-0.2.0.tgz#97f9e48fe736aa5c6f4f32cf73c1f19d005f8550"
-  integrity sha512-lVK/svL2HuQdp7jgvlrLkFsUx50Az9chAhxpiPwBqcS83I2pVWvXp98FOcSCCJCV++l115QmzHhFd+ycw1zLBg==
-
-"@reach/component-component@0.1.3", "@reach/component-component@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.npmjs.org/@reach/component-component/-/component-component-0.1.3.tgz#5d156319572dc38995b246f81878bc2577c517e5"
-  integrity sha512-a1USH7L3bEfDdPN4iNZGvMEFuBfkdG+QNybeyDv8RloVFgZYRoM+KGXyy2KOfEnTUM8QWDRSROwaL3+ts5Angg==
-
-"@reach/dialog@^0.2.3":
-  version "0.2.9"
-  resolved "https://registry.npmjs.org/@reach/dialog/-/dialog-0.2.9.tgz#6375ec4adc1e22838aeede15f57d5eb5ac0e571c"
-  integrity sha512-4plyTRt2X4bB9A5fDFXH0bxb4aipLyAuRVMpOuA1RekFgvkxFn65em2CWYSzRsVf3aTQ2cEnYET4a5H2Qu8a5Q==
+"@reach/auto-id@0.10.5":
+  version "0.10.5"
+  resolved "https://registry.npmjs.org/@reach/auto-id/-/auto-id-0.10.5.tgz#fa78c71ce2f565ebed1ad91a8d9a685176d23c48"
+  integrity sha512-we4/bwjFxJ3F+2eaddQ1HltbKvJ7AB8clkN719El7Zugpn/vOjfPMOVUiBqTmPGLUvkYrq4tpuFwLvk2HyOVHg==
   dependencies:
-    "@reach/component-component" "^0.1.3"
-    "@reach/portal" "^0.2.1"
-    "@reach/utils" "^0.2.3"
-    react-focus-lock "^1.17.7"
-    react-remove-scroll "^1.0.2"
+    "@reach/utils" "0.10.5"
+    tslib "^2.0.0"
 
-"@reach/menu-button@^0.1.12":
-  version "0.1.18"
-  resolved "https://registry.npmjs.org/@reach/menu-button/-/menu-button-0.1.18.tgz#cb9e3bf1c2a2bdb5d618697b87ad353dfbca123e"
-  integrity sha512-MGdN8SWaQ0u0xj6KWUnK9fFc1VBg8NhNnFhEd2sp3D56XJcr08HU5GeVq/MFf5C97mxRnIPIKGnMPPeGAn9OFA==
+"@reach/descendants@0.10.5":
+  version "0.10.5"
+  resolved "https://registry.npmjs.org/@reach/descendants/-/descendants-0.10.5.tgz#2611174e9e9b326dba548356221e2f8c8f5c8612"
+  integrity sha512-8HhN4DwS/HsPQ+Ym/Ft/XJ1spXBYdE8hqpnbYR9UcU7Nx3oDbTIdhjA6JXXt23t5avYIx2jRa8YHCtVKSHuiwA==
   dependencies:
-    "@reach/component-component" "0.1.3"
-    "@reach/portal" "^0.2.1"
-    "@reach/rect" "0.2.1"
-    "@reach/utils" "^0.2.3"
-    "@reach/window-size" "^0.1.4"
-    warning "^4.0.2"
+    "@reach/utils" "0.10.5"
+    tslib "^2.0.0"
 
-"@reach/observe-rect@^1.0.3":
+"@reach/dialog@^0.10.5":
+  version "0.10.5"
+  resolved "https://registry.npmjs.org/@reach/dialog/-/dialog-0.10.5.tgz#70bd832616fc2b0f31ed65aff81ae9e218c4dbc4"
+  integrity sha512-j2+VaHCen/M5zh+q6L/xMXETMeD5yVywdhjjs0kn2uQ3AolYSj32P8Go1xSpxQNAjS1/zChd02Y/4g02eL3afg==
+  dependencies:
+    "@reach/portal" "0.10.5"
+    "@reach/utils" "0.10.5"
+    prop-types "^15.7.2"
+    react-focus-lock "^2.3.1"
+    react-remove-scroll "^2.3.0"
+    tslib "^2.0.0"
+
+"@reach/menu-button@^0.10.5":
+  version "0.10.5"
+  resolved "https://registry.npmjs.org/@reach/menu-button/-/menu-button-0.10.5.tgz#b023044fa199bc256572830740049a50fea1d690"
+  integrity sha512-PQzFzexk9K7Q5qTGmXcg3qYp+F36H0MaeyzybR5t4lB1e56nAh1u/C2bocwpHssIoy25xOR8Nu+LVMVf6k6cUw==
+  dependencies:
+    "@reach/auto-id" "0.10.5"
+    "@reach/descendants" "0.10.5"
+    "@reach/popover" "0.10.5"
+    "@reach/utils" "0.10.5"
+    prop-types "^15.7.2"
+    tslib "^2.0.0"
+
+"@reach/observe-rect@1.2.0":
   version "1.2.0"
   resolved "https://registry.npmjs.org/@reach/observe-rect/-/observe-rect-1.2.0.tgz#d7a6013b8aafcc64c778a0ccb83355a11204d3b2"
   integrity sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==
 
-"@reach/portal@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.npmjs.org/@reach/portal/-/portal-0.2.1.tgz#07720b999e0063a9e179c14dbdc60fd991cfc9fa"
-  integrity sha512-pUQ0EtCcYm4ormEjJmdk4uzZCxOpaRHB8FDKJXy6q6GqRqQwZ4lAT1f2Tvw0DAmULmyZTpe1/heXY27Tdnct+Q==
+"@reach/popover@0.10.5":
+  version "0.10.5"
+  resolved "https://registry.npmjs.org/@reach/popover/-/popover-0.10.5.tgz#ccf89f6540e6477d8d087e78a8294e89295a743d"
+  integrity sha512-S+qWIsjrN1yMpHjgELhjpdGc4Q3q1plJtXBGGQRxUAjmCUA/5OY7t5w5C8iqMNAEBwCvYXKvK/pLcXFxxLykSw==
   dependencies:
-    "@reach/component-component" "^0.1.3"
+    "@reach/portal" "0.10.5"
+    "@reach/rect" "0.10.5"
+    "@reach/utils" "0.10.5"
+    tabbable "^4.0.0"
+    tslib "^2.0.0"
 
-"@reach/rect@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.npmjs.org/@reach/rect/-/rect-0.2.1.tgz#7343020174c90e2290b844d17c03fd9c78e6b601"
-  integrity sha512-aZ9RsNHDMQ3zETonikqu9/85iXxj+LPqZ9Gr9UAncj3AufYmGeWG3XG6b37B+7ORH+mkhVpLU2ZlIWxmOe9Cqg==
+"@reach/portal@0.10.5":
+  version "0.10.5"
+  resolved "https://registry.npmjs.org/@reach/portal/-/portal-0.10.5.tgz#532ce8472fc99d6c556520f6c8d53333d89e49a4"
+  integrity sha512-K5K8gW99yqDPDCWQjEfSNZAbGOQWSx5AN2lpuR1gDVoz4xyWpTJ0k0LbetYJTDVvLP/InEcR7AU42JaDYDCXQw==
   dependencies:
-    "@reach/component-component" "^0.1.3"
-    "@reach/observe-rect" "^1.0.3"
+    "@reach/utils" "0.10.5"
+    tslib "^2.0.0"
 
-"@reach/skip-nav@^0.1.2":
-  version "0.1.3"
-  resolved "https://registry.npmjs.org/@reach/skip-nav/-/skip-nav-0.1.3.tgz#78f565d91a4d6cada8bf71a625a8fc0f6ff1814d"
-  integrity sha512-UOo7Rij++C90DARL6+KKo3Q+dQXWK8JahDd4snNKkCEu2Z3pUxMn+8zL3cKvvO1VuLtXD8xT50u4IysOu34cBw==
-
-"@reach/tabs@^0.1.3":
-  version "0.1.6"
-  resolved "https://registry.npmjs.org/@reach/tabs/-/tabs-0.1.6.tgz#8d54f89a66826e48c97ac7b481199e1752a8a8b5"
-  integrity sha512-8raBs7+d/+4IdstMD4cXjz2HFamA1K14F1134kgiOvVckrA1b13eQJ9+BmxpPTNVah6lxUaFfVm/eKgxlSMQvw==
+"@reach/rect@0.10.5":
+  version "0.10.5"
+  resolved "https://registry.npmjs.org/@reach/rect/-/rect-0.10.5.tgz#ba68722f155b146c6790e7d10a97dca1fd7ab14e"
+  integrity sha512-JBKs2HniYecq5zLO6UFReX28SUBPM3n0aizdNgHuvwZmDcTfNV4jsuJYQLqJ+FbCQsrSHkBxKZqWpfGXY9bUEg==
   dependencies:
-    "@reach/auto-id" "^0.2.0"
-    "@reach/utils" "^0.2.3"
-    warning "^4.0.2"
+    "@reach/observe-rect" "1.2.0"
+    "@reach/utils" "0.10.5"
+    prop-types "^15.7.2"
+    tslib "^2.0.0"
 
-"@reach/utils@^0.2.3":
-  version "0.2.3"
-  resolved "https://registry.npmjs.org/@reach/utils/-/utils-0.2.3.tgz#820f6a6af4301b4c5065cfc04bb89e6a3d1d723f"
-  integrity sha512-zM9rA8jDchr05giMhL95dPeYkK67cBQnIhCVrOKKqgWGsv+2GE/HZqeptvU4zqs0BvIqsThwov+YxVNVh5csTQ==
-
-"@reach/window-size@^0.1.4":
-  version "0.1.4"
-  resolved "https://registry.npmjs.org/@reach/window-size/-/window-size-0.1.4.tgz#3257b646548f61c2708a661a683620fbe0a706cb"
-  integrity sha512-JZshEuGsLvi6fUIJ7Unx12yNeM5SmqWjber2MLr9tfwf1hpNv73EiPBOIJyV0DjW7GXzjcOEvwnqysm59s2s/A==
+"@reach/skip-nav@^0.10.5":
+  version "0.10.5"
+  resolved "https://registry.npmjs.org/@reach/skip-nav/-/skip-nav-0.10.5.tgz#83da28bcfd3ba0af05c7e82b0a5e2d4a0a0c6581"
+  integrity sha512-Cg/nGKmu73jdSf46J53Qs+tUat7UVH6zQfq0VYdBw+Xqg72U1mkN2NyMAvb3N8O0cc3nDGvZoq0MKWrC7+TeqQ==
   dependencies:
-    "@reach/component-component" "^0.1.3"
+    "@reach/utils" "0.10.5"
+    tslib "^2.0.0"
+
+"@reach/tabs@^0.10.5":
+  version "0.10.5"
+  resolved "https://registry.npmjs.org/@reach/tabs/-/tabs-0.10.5.tgz#b7b03605e8a74124f095740e85407ae38ec31f38"
+  integrity sha512-oQJxQ9FwFsXo2HxEzJxFU/wP31bPVh4VU54NlhHW9f49uofyYkIKBbAhdF0Zb3TnaFp4cGKPHX39pXBYGPDkAQ==
+  dependencies:
+    "@reach/auto-id" "0.10.5"
+    "@reach/descendants" "0.10.5"
+    "@reach/utils" "0.10.5"
+    prop-types "^15.7.2"
+    tslib "^2.0.0"
+
+"@reach/utils@0.10.5":
+  version "0.10.5"
+  resolved "https://registry.npmjs.org/@reach/utils/-/utils-0.10.5.tgz#fbac944d29565f6dd7abd0e1b13950e99b1e470b"
+  integrity sha512-5E/xxQnUbmpI/LrufBAOXjunl96DnqX6B4zC2MO2KH/dRzLug5gM5VuOwV26egsp0jvsSPxojwciOhS43px3qw==
+  dependencies:
+    "@types/warning" "^3.0.0"
+    tslib "^2.0.0"
+    warning "^4.0.3"
 
 "@testing-library/dom@^7.17.1":
   version "7.22.2"
@@ -1730,6 +1753,11 @@
   version "3.4.9"
   resolved "https://registry.npmjs.org/@types/uuid/-/uuid-3.4.9.tgz#fcf01997bbc9f7c09ae5f91383af076d466594e1"
   integrity sha512-XDwyIlt/47l2kWLTzw/mtrpLdB+GPSskR2n/PIcPn+VYhVO77rGhRncIR5GPU0KRzXuqkDO+J5qqrG0Y8P6jzQ==
+
+"@types/warning@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/@types/warning/-/warning-3.0.0.tgz#0d2501268ad8f9962b740d387c4654f5f8e23e52"
+  integrity sha1-DSUBJorY+ZYrdA04fEZU9fjiPlI=
 
 "@types/yargs-parser@*":
   version "15.0.0"
@@ -3513,6 +3541,11 @@ detect-newline@^2.1.0:
   resolved "https://registry.npmjs.org/detect-newline/-/detect-newline-2.1.0.tgz#f41f1c10be4b00e87b5f13da680759f2c5bfd3e2"
   integrity sha1-9B8cEL5LAOh7XxPaaAdZ8sW/0+I=
 
+detect-node-es@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/detect-node-es/-/detect-node-es-1.0.0.tgz#c0318b9e539a5256ca780dd9575c9345af05b8ed"
+  integrity sha512-S4AHriUkTX9FoFvL4G8hXDcx6t3gp2HpfCza3Q0v6S78gul2hKWifLQbeW+ZF89+hSm2ZIc/uF3J97ZgytgTRg==
+
 diff-sequences@^24.9.0:
   version "24.9.0"
   resolved "https://registry.npmjs.org/diff-sequences/-/diff-sequences-24.9.0.tgz#5715d6244e2aa65f48bba0bc972db0b0b11e95b5"
@@ -4156,10 +4189,10 @@ fn-name@~2.0.1:
   resolved "https://registry.npmjs.org/fn-name/-/fn-name-2.0.1.tgz#5214d7537a4d06a4a301c0cc262feb84188002e7"
   integrity sha1-UhTXU3pNBqSjAcDMJi/rhBiAAuc=
 
-focus-lock@^0.6.3:
-  version "0.6.8"
-  resolved "https://registry.npmjs.org/focus-lock/-/focus-lock-0.6.8.tgz#61985fadfa92f02f2ee1d90bc738efaf7f3c9f46"
-  integrity sha512-vkHTluRCoq9FcsrldC0ulQHiyBYgVJB2CX53I8r0nTC6KnEij7Of0jpBspjt3/CuNb6fyoj3aOh9J2HgQUM0og==
+focus-lock@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.npmjs.org/focus-lock/-/focus-lock-0.7.0.tgz#b2bfb0ca7beacc8710a1ff74275fe0dc60a1d88a"
+  integrity sha512-LI7v2mH02R55SekHYdv9pRHR9RajVNyIJ2N5IEkWbg7FT5ZmJ9Hw4mWxHeEUcd+dJo0QmzztHvDvWcc7prVFsw==
 
 for-in@^1.0.2:
   version "1.0.2"
@@ -4287,6 +4320,11 @@ get-caller-file@^2.0.1:
   version "2.0.5"
   resolved "https://registry.npmjs.org/get-caller-file/-/get-caller-file-2.0.5.tgz#4f94412a82db32f36e3b0b9741f8a97feb031f7e"
   integrity sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==
+
+get-nonce@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/get-nonce/-/get-nonce-1.0.1.tgz#fdf3f0278073820d2ce9426c18f07481b1e0cdf3"
+  integrity sha512-FJhYRoDaiatfEkUK8HKlicmu/3SGFD51q3itKDGoSTysQJBnfOcxU5GxnhE1E6soB76MbT0MBtnKJuXyAx+96Q==
 
 get-own-enumerable-property-symbols@^3.0.0:
   version "3.0.2"
@@ -7647,7 +7685,7 @@ react-click-outside@^3.0.1:
   dependencies:
     hoist-non-react-statics "^2.1.1"
 
-react-clientside-effect@^1.2.0:
+react-clientside-effect@^1.2.2:
   version "1.2.2"
   resolved "https://registry.npmjs.org/react-clientside-effect/-/react-clientside-effect-1.2.2.tgz#6212fb0e07b204e714581dd51992603d1accc837"
   integrity sha512-nRmoyxeok5PBO6ytPvSjKp9xwXg9xagoTK1mMjwnQxqM9Hd7MNPl+LS1bOSOe+CV2+4fnEquc7H/S8QD3q697A==
@@ -7678,15 +7716,17 @@ react-fast-compare@^2.0.1:
   resolved "https://registry.npmjs.org/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
-react-focus-lock@^1.17.7:
-  version "1.19.1"
-  resolved "https://registry.npmjs.org/react-focus-lock/-/react-focus-lock-1.19.1.tgz#2f3429793edaefe2d077121f973ce5a3c7a0651a"
-  integrity sha512-TPpfiack1/nF4uttySfpxPk4rGZTLXlaZl7ncZg/ELAk24Iq2B1UUaUioID8H8dneUXqznT83JTNDHDj+kwryw==
+react-focus-lock@^2.3.1:
+  version "2.4.1"
+  resolved "https://registry.npmjs.org/react-focus-lock/-/react-focus-lock-2.4.1.tgz#e842cc93da736b5c5d331799012544295cbcee4f"
+  integrity sha512-c5ZP56KSpj9EAxzScTqQO7bQQNPltf/W1ZEBDqNDOV1XOIwvAyHX0O7db9ekiAtxyKgnqZjQlLppVg94fUeL9w==
   dependencies:
     "@babel/runtime" "^7.0.0"
-    focus-lock "^0.6.3"
+    focus-lock "^0.7.0"
     prop-types "^15.6.2"
-    react-clientside-effect "^1.2.0"
+    react-clientside-effect "^1.2.2"
+    use-callback-ref "^1.2.1"
+    use-sidecar "^1.0.1"
 
 react-is@16.13.1, react-is@^16.12.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.8.6:
   version "16.13.1"
@@ -7717,21 +7757,24 @@ react-refresh@0.8.3:
   resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
 
-react-remove-scroll-bar@^1.1.5:
-  version "1.2.0"
-  resolved "https://registry.npmjs.org/react-remove-scroll-bar/-/react-remove-scroll-bar-1.2.0.tgz#07250b2bc581f56315759c454c9b159dd04ba49d"
-  integrity sha512-8xSYR6xgW8QW65k38qB1Sh6ouTRjZ7BEteepR9tACd1rSaRyVYWabFxYLNOr4l1blZlqb81GEmDpUoPm7LsUTA==
+react-remove-scroll-bar@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/react-remove-scroll-bar/-/react-remove-scroll-bar-2.1.0.tgz#edafe9b42a42c0dad9bdd10712772a1f9a39d7b9"
+  integrity sha512-5X5Y5YIPjIPrAoMJxf6Pfa7RLNGCgwZ95TdnVPgPuMftRfO8DaC7F4KP1b5eiO8hHbe7u+wZNDbYN5WUTpv7+g==
   dependencies:
-    react-style-singleton "^1.1.0"
+    react-style-singleton "^2.1.0"
     tslib "^1.0.0"
 
-react-remove-scroll@^1.0.2:
-  version "1.0.8"
-  resolved "https://registry.npmjs.org/react-remove-scroll/-/react-remove-scroll-1.0.8.tgz#a5aadc56368345a51ba524582c842a773849f609"
-  integrity sha512-AS6gFBO6T2CP0TgmDjq3Ip0Fz1HKyv+lzNrQAkJBSWGyOYaMWLMDy77mQJ7qEyy6fK0pI+Cz5x3X81/ux6SBew==
+react-remove-scroll@^2.3.0:
+  version "2.4.0"
+  resolved "https://registry.npmjs.org/react-remove-scroll/-/react-remove-scroll-2.4.0.tgz#190c16eb508c5927595935499e8f5dd9ab0e75cf"
+  integrity sha512-BZIO3GaEs0Or1OhA5C//n1ibUP1HdjJmqUVUsOCMxwoIpaCocbB9TFKwHOkBa/nyYy3slirqXeiPYGwdSDiseA==
   dependencies:
-    react-remove-scroll-bar "^1.1.5"
+    react-remove-scroll-bar "^2.1.0"
+    react-style-singleton "^2.1.0"
     tslib "^1.0.0"
+    use-callback-ref "^1.2.3"
+    use-sidecar "^1.0.1"
 
 react-spring@^8.0.19:
   version "8.0.27"
@@ -7741,11 +7784,12 @@ react-spring@^8.0.19:
     "@babel/runtime" "^7.3.1"
     prop-types "^15.5.8"
 
-react-style-singleton@^1.1.0:
-  version "1.1.1"
-  resolved "https://registry.npmjs.org/react-style-singleton/-/react-style-singleton-1.1.1.tgz#b2b698765519da812b80f55ab3c5fc5d849a2e63"
-  integrity sha512-0JD+XC5veR3oxf7GzIXipr89sM8R3rWnOR/gpzIV0DnoRBrcTvvkqyMu9icDYqM/6CWJhYcH5Jdy6Nim7PmoTQ==
+react-style-singleton@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/react-style-singleton/-/react-style-singleton-2.1.0.tgz#7396885332e9729957f9df51f08cadbfc164e1c4"
+  integrity sha512-DH4ED+YABC1dhvSDYGGreAHmfuTXj6+ezT3CmHoqIEfxNgEYfIMoOtmbRp42JsUst3IPqBTDL+8r4TF7EWhIHw==
   dependencies:
+    get-nonce "^1.0.0"
     invariant "^2.2.4"
     tslib "^1.0.0"
 
@@ -8912,6 +8956,11 @@ synchronous-promise@^2.0.6:
   resolved "https://registry.npmjs.org/synchronous-promise/-/synchronous-promise-2.0.13.tgz#9d8c165ddee69c5a6542862b405bc50095926702"
   integrity sha512-R9N6uDkVsghHePKh1TEqbnLddO2IY25OcsksyFp/qBe7XYd0PVbKEWxhcdMhpLzE1I6skj5l4aEZ3CRxcbArlA==
 
+tabbable@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/tabbable/-/tabbable-4.0.0.tgz#5bff1d1135df1482cf0f0206434f15eadbeb9261"
+  integrity sha512-H1XoH1URcBOa/rZZWxLxHCtOdVUEev+9vo5YdYhC9tCY4wnybX+VQrCYuy9ubkg69fCBxCONJOSLGfw0DWMffQ==
+
 tapable@^1.0.0, tapable@^1.1.3:
   version "1.1.3"
   resolved "https://registry.npmjs.org/tapable/-/tapable-1.1.3.tgz#a1fccc06b58db61fd7a45da2da44f5f3a3e67ba2"
@@ -9116,6 +9165,11 @@ tslib@^1.0.0, tslib@^1.9.0, tslib@^1.9.3:
   version "1.13.0"
   resolved "https://registry.npmjs.org/tslib/-/tslib-1.13.0.tgz#c881e13cc7015894ed914862d276436fa9a47043"
   integrity sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q==
+
+tslib@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/tslib/-/tslib-2.0.1.tgz#410eb0d113e5b6356490eec749603725b021b43e"
+  integrity sha512-SgIkNheinmEBgx1IUNirK0TUD4X9yjjBRTqqjggWCU3pUEqIk3/Uwl3yRixYKT6WjQuGiwDv4NomL3wqRCj+CQ==
 
 tty-browserify@0.0.0:
   version "0.0.0"
@@ -9425,6 +9479,19 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
+use-callback-ref@^1.2.1, use-callback-ref@^1.2.3:
+  version "1.2.4"
+  resolved "https://registry.npmjs.org/use-callback-ref/-/use-callback-ref-1.2.4.tgz#d86d1577bfd0b955b6e04aaf5971025f406bea3c"
+  integrity sha512-rXpsyvOnqdScyied4Uglsp14qzag1JIemLeTWGKbwpotWht57hbP78aNT+Q4wdFKQfQibbUX4fb6Qb4y11aVOQ==
+
+use-sidecar@^1.0.1:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/use-sidecar/-/use-sidecar-1.0.3.tgz#17a4e567d4830c0c0ee100040e85a7fe68611e0f"
+  integrity sha512-ygJwGUBeQfWgDls7uTrlEDzJUUR67L8Rm14v/KfFtYCdHhtjHZx1Krb3DIQl3/Q5dJGfXLEQ02RY8BdNBv87SQ==
+  dependencies:
+    detect-node-es "^1.0.0"
+    tslib "^1.9.3"
+
 use-subscription@1.4.1:
   version "1.4.1"
   resolved "https://registry.npmjs.org/use-subscription/-/use-subscription-1.4.1.tgz#edcbcc220f1adb2dd4fa0b2f61b6cc308e620069"
@@ -9558,7 +9625,7 @@ walker@^1.0.7, walker@~1.0.5:
   dependencies:
     makeerror "1.0.x"
 
-warning@^4.0.2:
+warning@^4.0.3:
   version "4.0.3"
   resolved "https://registry.npmjs.org/warning/-/warning-4.0.3.tgz#16e9e077eb8a86d6af7d64aa1e05fd85b4678ca3"
   integrity sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==

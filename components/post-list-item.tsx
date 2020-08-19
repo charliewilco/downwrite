@@ -2,7 +2,6 @@ import * as React from "react";
 import Link from "next/link";
 import { IPost } from "downwrite";
 import distance from "date-fns/formatDistanceToNow";
-import parseISO from "date-fns/parseISO";
 import { EditLink, PreviewLink } from "./entry-links";
 
 interface IListItemProps {
@@ -19,7 +18,7 @@ export default function PostListItem(props: IListItemProps): JSX.Element {
     props.onDelete({ id: props.id, title: props.title });
   }
 
-  const date = parseISO(props.dateAdded.toString());
+  const date = new Date(props.dateAdded.toString());
 
   return (
     <div className="PostItem" data-testid="POST_LIST_ITEM">
