@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
-  res.send("Hello");
+  console.log(req.body);
+  res.json({ message: "hello" });
 };

@@ -16,12 +16,15 @@ export const getServerSideProps: GetServerSideProps<IUserSettingsProps & {
   await dbConnect();
   const { DW_TOKEN: token } = new Cookies(context.req.headers.cookie).getAll();
   const x = jwt.decode(token) as { user: string };
-  const user = await getUserDetails(x.user);
+  const { username, email } = await getUserDetails(x.user);
 
   return {
     props: {
       token,
-      user
+      user: {
+        username,
+        email
+      }
     }
   };
 };
