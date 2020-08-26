@@ -1,5 +1,5 @@
-import Boom from "@hapi/boom";
 import { updatePasswordHandler } from "../../legacy/users";
+import { methodNotAllowedJWT } from "../../legacy/common";
 import { withJWT, NextJWTHandler } from "../../legacy/with-jwt";
 import Config from "../../legacy/util/config";
 import { dbConnect } from "../../legacy/util/db";
@@ -10,8 +10,7 @@ const handler: NextJWTHandler = async (req, res) => {
     case "POST":
       await updatePasswordHandler(req, res);
     default:
-      const e = Boom.methodNotAllowed();
-      res.status(e.output.statusCode).json(e.output.payload);
+      await methodNotAllowedJWT(req, res);
   }
 };
 

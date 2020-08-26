@@ -1,8 +1,8 @@
-import Boom from "@hapi/boom";
 import { withJWT, NextJWTHandler } from "../../../legacy/with-jwt";
 import Config from "../../../legacy/util/config";
 import { getPostsHandler, createPostHandler } from "../../../legacy/posts";
 import { dbConnect } from "../../../legacy/util/db";
+import { methodNotAllowedJWT } from "../../../legacy/common";
 
 const handler: NextJWTHandler = async (req, res) => {
   switch (req.method) {
@@ -13,8 +13,7 @@ const handler: NextJWTHandler = async (req, res) => {
       await dbConnect();
       await createPostHandler(req, res);
     default:
-      const e = Boom.methodNotAllowed();
-      res.status(e.output.statusCode).json(e.output.payload);
+      await methodNotAllowedJWT(req, res);
   }
 };
 

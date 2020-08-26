@@ -1,16 +1,17 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import Boom from "@hapi/boom";
+import { NextApiHandler } from "next";
+import { methodNotAllowed } from "../../../legacy/common";
 import { createUserHandler } from "../../../legacy/users";
 import { dbConnect } from "../../../legacy/util/db";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
     case "POST": {
       await dbConnect();
       await createUserHandler(req, res);
     }
     default:
-      const e = Boom.methodNotAllowed();
-      res.status(e.output.statusCode).json(e.output.payload);
+      await methodNotAllowed(req, res);
   }
 };
+
+export default handler;

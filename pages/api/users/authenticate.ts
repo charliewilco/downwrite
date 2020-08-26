@@ -1,9 +1,17 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiHandler } from "next";
+import { methodNotAllowed } from "../../../legacy/common";
 import { authenticationHandler } from "../../../legacy/users";
 import { dbConnect } from "../../../legacy/util/db";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  await dbConnect();
-
-  await authenticationHandler(req, res);
+const handler: NextApiHandler = async (req, res) => {
+  switch (req.method) {
+    case "POST": {
+      await dbConnect();
+      await authenticationHandler(req, res);
+    }
+    default:
+      await methodNotAllowed(req, res);
+  }
 };
+
+export default handler;
