@@ -6,10 +6,9 @@ import { ToggleBox } from "../components/toggle-box";
 import { Button } from "./button";
 import { AuthContext, AuthContextType } from "./auth";
 import { UpdatePasswordSchema } from "../utils/validations";
-import * as API from "../utils/api";
-import { StringTMap } from "../utils/types";
+import { updatePassword } from "../utils/api";
 
-interface IPasswordSettings extends StringTMap<string> {
+interface IPasswordSettings extends Record<string, string> {
   oldPassword: string;
   newPassword: string;
   confirmPassword: string;
@@ -43,7 +42,7 @@ export default function SettingsPassword(): JSX.Element {
     values: IPasswordSettings,
     actions: FormikActions<IPasswordSettings>
   ): void => {
-    const response = API.updatePassword(values, { token });
+    const response = updatePassword(values, { token });
 
     if (response) {
       actions.setSubmitting(false);

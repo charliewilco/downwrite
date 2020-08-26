@@ -1,7 +1,7 @@
 import * as React from "react";
 import { AuthContext, AuthContextType } from "../components/auth";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
-import * as API from "../utils/api";
+import { authUser, createUser } from "../utils/api";
 import { StringTMap } from "../utils/types";
 
 export interface IRegisterValues extends StringTMap<string | boolean> {
@@ -26,7 +26,7 @@ export default function useLoginFns(): IFormHandlers {
   const { notifications, actions } = useUINotifications();
 
   const onLoginSubmit = async (values: ILoginValues): Promise<void> => {
-    const auth = await API.authUser(values);
+    const auth = await authUser(values);
 
     if (auth.error) {
       actions.add(auth.message, NotificationType.ERROR);
@@ -45,7 +45,7 @@ export default function useLoginFns(): IFormHandlers {
   const onRegisterSubmit = async (values: IRegisterValues): Promise<void> => {
     const { legalChecked, ...body } = values;
     if (legalChecked) {
-      const user = await API.createUser(body);
+      const user = await createUser(body);
 
       if (user.userID) {
         signIn(user.id_token !== undefined, user.id_token);

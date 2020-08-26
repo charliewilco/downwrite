@@ -8,7 +8,7 @@ import {
   DashboardAction,
   SelectedPost
 } from "../reducers/dashboard";
-import * as API from "../utils/api";
+import { getPosts, removePost } from "../utils/api";
 import * as Dwnxt from "downwrite";
 import isEmpty from "lodash/isEmpty";
 
@@ -31,12 +31,12 @@ export default function useManagedDashboard(
 
   React.useEffect(() => {
     if (isEmpty(state.entries)) {
-      getPosts();
+      getCurrentPosts();
     }
   }, []);
 
-  async function getPosts(): Promise<void> {
-    const entries = await API.getPosts({ token });
+  async function getCurrentPosts(): Promise<void> {
+    const entries = await getPosts({ token });
 
     if (Array.isArray(entries)) {
       dispatch({ type: DashboardAction.FETCH_ENTRIES, payload: { entries } });
@@ -49,10 +49,10 @@ export default function useManagedDashboard(
   }
 
   async function onDelete({ id }: SelectedPost): Promise<void> {
-    const response = await API.removePost(id!, { token });
+    const response = await removePost(id!, { token });
 
     if (response.ok) {
-      await getPosts();
+      await getPosts({ token });
     }
   }
 

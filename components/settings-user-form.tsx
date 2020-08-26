@@ -3,7 +3,7 @@ import { Formik, FormikProps, ErrorMessage, Form, FormikActions } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
-import * as API from "../utils/api";
+import { updateSettings } from "../utils/api";
 import { AuthContext, AuthContextType } from "./auth";
 import { UserSettingsSchema } from "../utils/validations";
 
@@ -23,7 +23,7 @@ export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
     values: IUserFormValues,
     actions: FormikActions<IUserFormValues>
   ): Promise<void> => {
-    const settings = await API.updateSettings(values, { token });
+    const settings = await updateSettings(values, { token });
     if (settings) {
       actions.setSubmitting(false);
     }

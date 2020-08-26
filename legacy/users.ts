@@ -2,9 +2,62 @@ import { NextApiHandler } from "next";
 import Boom from "@hapi/boom";
 import uuid from "uuid/v4";
 import * as bcrypt from "bcrypt";
+import base64 from "base-64";
 import { UserModel, IUser } from "./models";
-import { validUser } from "./validations";
+import { validPasswordUpdate, validUser } from "./validations";
 import { createToken } from "./util/token";
+import { NextJWTHandler } from "./with-jwt";
+
+function decodeBody(body: any) {
+  const n = Object.assign({}, body);
+
+  for (let key in body) {
+    n[key] = base64.decode(body[key]);
+  }
+  return n;
+}
+
+export const updatePasswordHandler: NextJWTHandler = async (req, res) => {
+  try {
+    const { user } = req.jwt;
+    const body = decodeBody(req.body);
+    await validPasswordUpdate.validateAsync(body);
+    await verifyValidPassword(user, body.oldPassword);
+    const salt = await bcrypt.genSalt(10);
+    const newPasswordHash = await bcrypt.hash(body.newPassword, salt);
+    const updated = await UserModel.findByIdAndUpdate(
+      {
+        _id: user
+      },
+      { $set: { password: newPasswordHash } },
+      { new: true, select: "username email" }
+    );
+
+    res.status(201).json(updated);
+  } catch (err) {
+    const e = Boom.isBoom(err) ? err : Boom.internal("Internal MongoDB error", err);
+    res.status(e.output.statusCode).json(e.output.payload);
+  }
+};
+
+export const verifyValidPassword = async (user: any, oldPassword: string) => {
+  // const salt = await bcrypt.genSalt(10);
+  // const newPasswordHash = await bcrypt.hash(newPassword, salt);
+
+  // Validates the the old password was actually the user's password
+  const isPasswordValid = async (p: string): Promise<boolean> => {
+    const { password } = (await UserModel.findById(user, "password").lean()) as any;
+    const result = await bcrypt.compare(p, password as string);
+
+    return result;
+  };
+
+  const valid = await isPasswordValid(oldPassword);
+
+  if (!valid) {
+    throw Boom.badRequest("That wasn't your password");
+  }
+};
 
 export const createUser = async (body: any) => {
   const { email, username, password } = body;

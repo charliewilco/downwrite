@@ -3,7 +3,7 @@ import * as Draft from "draft-js";
 import Router from "next/router";
 import * as Dwnxt from "downwrite";
 import { AuthContext, AuthContextType } from "../components/auth";
-import * as API from "../utils/api";
+import { createPost } from "../utils/api";
 import uuid from "uuid/v4";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
 
@@ -31,7 +31,7 @@ export default function useCreateEntry(): CreateEntryHandler {
       public: false
     };
 
-    API.createPost(body, { token })
+    createPost(body, { token })
       .then(() =>
         Router.push({
           pathname: `/edit`,

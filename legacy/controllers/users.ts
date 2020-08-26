@@ -81,9 +81,7 @@ export const updatePassword = async (request: IUpdatePassword) => {
   }
 };
 
-export const verifyValidPassword = async (request: IUpdatePassword) => {
-  const { user } = request.auth.credentials;
-  const { oldPassword } = request.payload;
+export const verifyValidPassword = async (user: any, oldPassword: string) => {
   // const salt = await bcrypt.genSalt(10);
   // const newPasswordHash = await bcrypt.hash(newPassword, salt);
 
@@ -100,8 +98,6 @@ export const verifyValidPassword = async (request: IUpdatePassword) => {
   if (!valid) {
     throw Boom.badRequest("That wasn't your password");
   }
-
-  return request.payload;
 };
 
 export const verifyUniqueUser = async (request: IRegisterRequest) => {

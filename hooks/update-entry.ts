@@ -1,11 +1,11 @@
 import * as React from "react";
 import * as Draft from "draft-js";
+import isEmpty from "lodash/isEmpty";
 import * as Dwnxt from "downwrite";
-import * as API from "../utils/api";
+import { updatePost } from "../utils/api";
 import { sanitize } from "../utils/sanitize";
 import { AuthContext, AuthContextType } from "../components/auth";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
-import isEmpty from "lodash/isEmpty";
 
 interface ResponsePost extends Dwnxt.IPost {
   _id: string;
@@ -33,7 +33,7 @@ export default function useUpdateEntry(
 
     const body = sanitize<ResponsePost>(post, ["_id", "__v"]) as Dwnxt.IPost;
 
-    await API.updatePost(
+    await updatePost(
       id,
       {
         ...body,

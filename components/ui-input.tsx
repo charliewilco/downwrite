@@ -1,6 +1,4 @@
 import * as React from "react";
-import uuid from "uuid/v4";
-
 import classNames from "../utils/classnames";
 
 interface IUIInputProps {
@@ -43,7 +41,7 @@ interface IInputAction {
   type: InputAction;
 }
 
-function inputReducer(state: IInputState, action: IInputAction): IInputState {
+function inputReducer(_: IInputState, action: IInputAction): IInputState {
   switch (action.type) {
     case InputAction.BLUR:
       return { focused: false };
@@ -55,7 +53,12 @@ function inputReducer(state: IInputState, action: IInputAction): IInputState {
 }
 
 export default function UIInput({ label, ...props }: IUIInputProps) {
-  const id = React.useRef(uuid());
+  const id = React.useRef(
+    label
+      .replace(" ", "-")
+      .toLowerCase()
+      .concat("-ui-input")
+  );
 
   const [state, dispatch] = React.useReducer(inputReducer, {
     focused: false

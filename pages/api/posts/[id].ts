@@ -1,3 +1,4 @@
+import Boom from "@hapi/boom";
 import { withJWT, NextJWTHandler } from "../../../legacy/with-jwt";
 import Config from "../../../legacy/util/config";
 import {
@@ -11,16 +12,17 @@ const handler: NextJWTHandler = async (req, res) => {
   await dbConnect();
   switch (req.method) {
     case "GET": {
-      return getPostHandler(req, res);
+      await getPostHandler(req, res);
     }
     case "PUT": {
-      return updatePostHandler(req, res);
+      await updatePostHandler(req, res);
     }
     case "DELETE": {
-      return removePostHandler(req, res);
+      await removePostHandler(req, res);
     }
     default:
-      break;
+      const e = Boom.methodNotAllowed();
+      res.status(e.output.statusCode).json(e.output.payload);
   }
 };
 

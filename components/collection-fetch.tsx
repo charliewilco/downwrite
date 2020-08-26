@@ -4,7 +4,7 @@ import orderBy from "lodash/orderBy";
 import { AuthContext, AuthContextType } from "./auth";
 import { Button } from "./button";
 import SidebarPosts from "./sidebar-posts";
-import * as API from "../utils/api";
+import { abortFetching, getPosts } from "../utils/api";
 import { IPost } from "downwrite";
 
 enum FetchActions {
@@ -67,7 +67,7 @@ export default function CollectionFetch() {
   React.useEffect(() => {
     dispatch({ type: FetchActions.FETCH_INIT });
 
-    API.getPosts({ token }).then(posts => {
+    getPosts({ token }).then(posts => {
       if (Array.isArray(posts)) {
         dispatch({
           type: FetchActions.FETCH_COMPLETED,
@@ -87,7 +87,7 @@ export default function CollectionFetch() {
     });
 
     return function cleanup() {
-      API.abortFetching();
+      abortFetching();
     };
   }, [token]);
 

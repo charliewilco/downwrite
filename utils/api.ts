@@ -1,5 +1,6 @@
 import * as Dwnxt from "downwrite";
 import { __IS_DEV__, __IS_BROWSER__ } from "./dev";
+import base64 from "base-64";
 
 import "abortcontroller-polyfill/dist/abortcontroller-polyfill-only";
 
@@ -115,11 +116,19 @@ export async function createUser(body: ICreateUserBody): Promise<IUserResponse> 
   return user;
 }
 
+function encryptObject(o: Record<string, any>): Record<string, string> {
+  const n = Object.assign({}, o);
+  for (let key in o) {
+    n[key] = base64.encode(o[key]);
+  }
+  return n;
+}
+
 // TODO: Remove Any
 export async function updatePassword(body: any, options: IOptions): Promise<any> {
   const password = await fetch(Endpoints.PASSWORD_ENDPOINT, {
     ...createHeader("POST", options.token),
-    body: JSON.stringify(body)
+    body: JSON.stringify(encryptObject(body))
   }).then(res => res.json());
 
   return password;
