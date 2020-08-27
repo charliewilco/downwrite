@@ -2,4 +2,8 @@ const withMDX = require("@next/mdx")({
   extension: /\.(md|mdx)$/
 });
 
-module.exports = withMDX();
+module.exports = withMDX({
+  experimental: {
+    jsconfigPaths: true
+  }
+});

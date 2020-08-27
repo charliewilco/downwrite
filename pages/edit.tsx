@@ -6,8 +6,8 @@ import { GetServerSideProps } from "next";
 import Cookies from "universal-cookie";
 import * as jwt from "jsonwebtoken";
 
-import { getPost } from "../legacy/posts";
-import { dbConnect } from "../legacy/util/db";
+import { getPost } from "@legacy/posts";
+import { dbConnect } from "@legacy/util/db";
 import Autosaving from "../components/autosaving-interval";
 import ExportMarkdown from "../components/export";
 import WordCounter from "../components/word-count";

@@ -1,8 +1,8 @@
-import { withJWT, NextJWTHandler } from "../../../legacy/with-jwt";
-import Config from "../../../legacy/util/config";
-import { getPostsHandler, createPostHandler } from "../../../legacy/posts";
-import { dbConnect } from "../../../legacy/util/db";
-import { methodNotAllowedJWT } from "../../../legacy/common";
+import { withJWT, NextJWTHandler } from "@legacy/with-jwt";
+import Config from "@legacy/util/config";
+import { getPostsHandler, createPostHandler } from "@legacy/posts";
+import { dbConnect } from "@legacy/util/db";
+import { methodNotAllowedJWT } from "@legacy/common";
 
 const handler: NextJWTHandler = async (req, res) => {
   switch (req.method) {

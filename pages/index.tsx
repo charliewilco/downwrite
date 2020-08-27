@@ -5,8 +5,8 @@ import Head from "next/head";
 import Cookies from "universal-cookie";
 import * as jwt from "jsonwebtoken";
 
-import { getPosts } from "../legacy/posts";
-import { dbConnect } from "../legacy/util/db";
+import { getPosts } from "@legacy/posts";
+import { dbConnect } from "@legacy/util/db";
 
 import DeleteModal from "../components/delete-modal";
 import PostList from "../components/post-list";

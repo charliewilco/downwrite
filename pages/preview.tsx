@@ -6,8 +6,8 @@ import Cookies from "universal-cookie";
 
 import * as Dwnxt from "downwrite";
 
-import { getMarkdownPreview } from "../legacy/posts";
-import { dbConnect } from "../legacy/util/db";
+import { getMarkdownPreview } from "@legacy/posts";
+import { dbConnect } from "@legacy/util/db";
 import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
 import { AuthContext } from "../components/auth";
