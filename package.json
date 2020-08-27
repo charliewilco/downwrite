@@ -31,7 +31,7 @@
     "@types/mongoose": "^5.7.36",
     "@types/node": "^11.13.0",
     "@types/prismjs": "^1.9.1",
-    "@types/react": "^16.9.2",
+    "@types/react": "^16.9.48",
     "@types/react-dom": "^16.9.0",
     "@types/react-test-renderer": "^16.9.0",
     "@types/uuid": "^3.4.3",
