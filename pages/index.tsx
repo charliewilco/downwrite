@@ -31,7 +31,9 @@ export const getServerSideProps: GetServerSideProps<InitialProps.IDashboardProps
             ? [
                 ...posts.map((p: any) => {
                   p._id = p._id.toString();
-                  p.dateAdded = p.dateAdded.toString();
+                  p.dateAdded = p.dateAdded
+                    ? p.dateAdded.toString()
+                    : new Date().toString();
                   p.dateModified = p.dateModified
                     ? p.dateModified.toString()
                     : p.dateAdded.toString();

@@ -17,10 +17,11 @@ export const withJWT = <T extends unknown>(secret: string) => (
 
   return (req: NextApiRequest, res: NextApiResponse) => {
     const { DW_TOKEN } = req.cookies;
-    const bearerToken = DW_TOKEN;
+    const bearerToken = DW_TOKEN || req.headers.authorization;
+
     if (!bearerToken) {
       res.writeHead(401);
-      res.end("Missing Authorization header");
+      res.end("Missing Authorization, either in the cookie or authorization header");
       return;
     }
 

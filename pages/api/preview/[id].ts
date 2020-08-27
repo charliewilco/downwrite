@@ -8,6 +8,7 @@ const handler: NextApiHandler = async (req, res) => {
     case "GET": {
       await dbConnect();
       await getPreviewHandler(req, res);
+      break;
     }
     default: {
       await methodNotAllowed(req, res);

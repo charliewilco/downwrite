@@ -8,6 +8,7 @@ const handler: NextApiHandler = async (req, res) => {
     case "POST": {
       await dbConnect();
       await createUserHandler(req, res);
+      break;
     }
     default:
       await methodNotAllowed(req, res);

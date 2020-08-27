@@ -9,12 +9,15 @@ const handler: NextJWTHandler = async (req, res) => {
   switch (req.method) {
     case "GET": {
       await getPostHandler(req, res);
+      break;
     }
     case "PUT": {
       await updatePostHandler(req, res);
+      break;
     }
     case "DELETE": {
       await removePostHandler(req, res);
+      break;
     }
     default:
       await methodNotAllowedJWT(req, res);

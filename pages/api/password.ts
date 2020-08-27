@@ -7,8 +7,10 @@ import { dbConnect } from "@legacy/util/db";
 const handler: NextJWTHandler = async (req, res) => {
   await dbConnect();
   switch (req.method) {
-    case "POST":
+    case "POST": {
       await updatePasswordHandler(req, res);
+      break;
+    }
     default:
       await methodNotAllowedJWT(req, res);
   }

@@ -17,7 +17,6 @@ export async function dbConnect() {
 
   /* connecting to our database */
   try {
-    console.log("DB credits", Config.dbCreds);
     const db = await Mongoose.connect(Config.dbCreds, options);
     connection.isConnected = db.connections[0].readyState;
   } catch (error) {

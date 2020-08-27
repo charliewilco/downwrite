@@ -9,9 +9,11 @@ const handler: NextJWTHandler = async (req, res) => {
     case "GET":
       await dbConnect();
       await getPostsHandler(req, res);
+      break;
     case "POST":
       await dbConnect();
       await createPostHandler(req, res);
+      break;
     default:
       await methodNotAllowedJWT(req, res);
   }

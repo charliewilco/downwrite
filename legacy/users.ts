@@ -106,6 +106,18 @@ export const getUserDetails = async (user: string) => {
   return foundUser;
 };
 
+export const getUserSettingsHandler: NextJWTHandler = async (req, res) => {
+  try {
+    const { user } = req.jwt;
+    const details = await getUserDetails(user);
+
+    res.status(201).json(details);
+  } catch (err) {
+    const e = Boom.badRequest(err);
+    res.status(e.output.statusCode).json(e.output.payload);
+  }
+};
+
 export const verifyCredentials = async (password: string, identifier: string) => {
   const user = await UserModel.findOne({
     $or: [{ email: identifier }, { username: identifier }]
@@ -132,8 +144,7 @@ export const authenticationHandler: NextApiHandler = async (req, res) => {
     res.status(201).send({ token });
   } catch (error) {
     const e = Boom.badRequest(error);
-    console.log("Authentication handler: ", error);
-    res.status(e.output.statusCode).end(e.output.payload);
+    res.status(e.output.statusCode).json(e.output.payload);
   }
 };
 
