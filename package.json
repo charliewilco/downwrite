@@ -5,11 +5,13 @@
   "repository": "charlespeters/downwrite",
   "author": "Charles ⚡ <charlespeters42@gmail.com>",
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "dev": "next dev",
-    "build": "next build",
     "start": "next start",
-    "test": "NODE_ENV=test jest"
+    "build": "next build",
+    "build:analyze": "ANALYZE=true yarn build",
+    "dev": "next dev",
+    "test": "jest",
+    "test:ci": "jest --ci --runInBand --no-cache",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@hapi/boom": "^9.1.0",
