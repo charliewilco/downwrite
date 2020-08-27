@@ -132,8 +132,8 @@ export const authenticationHandler: NextApiHandler = async (req, res) => {
     res.status(201).send({ token });
   } catch (error) {
     const e = Boom.badRequest(error);
-
-    res.status(e.output.statusCode).json(e.output.payload);
+    console.log("Authentication handler: ", error);
+    res.status(e.output.statusCode).end(e.output.payload);
   }
 };
 
