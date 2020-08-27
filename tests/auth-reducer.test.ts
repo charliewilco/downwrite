@@ -1,4 +1,4 @@
-import { reducer, AuthActions, IAuthState } from "../reducers/auth";
+import { reducer, AuthActions, IAuthState } from "../src/reducers/auth";
 import uuid from "uuid/v4";
 
 const initialState: IAuthState = {

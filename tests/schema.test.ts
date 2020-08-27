@@ -1,4 +1,4 @@
-import * as Validations from "../utils/validations";
+import * as Validations from "../src/utils/validations";
 
 describe("Validations", () => {
   it("Local Settings", async () => {

@@ -1,4 +1,4 @@
-import { reducer, initialState, DashboardAction } from "../reducers/dashboard";
+import { reducer, initialState, DashboardAction } from "../src/reducers/dashboard";
 
 describe("Dashboard Reducer", () => {
   it("runs without hook", () => {

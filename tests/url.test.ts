@@ -1,5 +1,5 @@
-import { URLEndpoints } from "../utils/urls";
-import { Endpoints } from "../utils/api";
+import { URLEndpoints } from "../src/utils/urls";
+import { Endpoints } from "../src/utils/api";
 
 describe("urls", () => {
   it("updates a url", () => {
