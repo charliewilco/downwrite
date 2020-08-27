@@ -149,3 +149,23 @@ export const createUserHandler: NextApiHandler = async (req, res) => {
     res.status(e.output.statusCode).json(e.output.payload);
   }
 };
+
+export const updateSettings: NextJWTHandler = async (req, res) => {
+  const { user } = req.jwt;
+  const { username, email } = req.body;
+
+  try {
+    const updated = await UserModel.findByIdAndUpdate(
+      {
+        _id: user
+      },
+      { $set: { username, email } },
+      { new: true, select: "username email" }
+    );
+
+    res.status(201).json(updated);
+  } catch (err) {
+    const e = Boom.internal("Internal MongoDB error", err);
+    res.status(e.output.statusCode).json(e.output.payload);
+  }
+};
