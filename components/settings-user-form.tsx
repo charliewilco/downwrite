@@ -36,7 +36,7 @@ export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
       initialValues={initialValues}
       onSubmit={onSubmit}
       validationSchema={UserSettingsSchema}>
-      {({ values, handleChange, isSubmitting }: FormikProps<IUserFormValues>) => (
+      {({ values, handleChange }: FormikProps<IUserFormValues>) => (
         <SettingsBlock title="User Settings" description="Currently disabled ☠️">
           <Form>
             <fieldset disabled style={{ display: "block", border: 0 }}>

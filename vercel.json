@@ -1,6 +1,5 @@
 {
   "version": 2,
   "public": false,
-  "name": "downwrite",
   "alias": ["next.downwrite.us", "beta.downwrite.us", "alpha.downwrite.us"]
 }
