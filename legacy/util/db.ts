@@ -16,7 +16,11 @@ export async function dbConnect() {
   }
 
   /* connecting to our database */
-  const db = await Mongoose.connect(Config.dbCreds, options);
-
-  connection.isConnected = db.connections[0].readyState;
+  try {
+    console.log("DB credits", Config.dbCreds);
+    const db = await Mongoose.connect(Config.dbCreds, options);
+    connection.isConnected = db.connections[0].readyState;
+  } catch (error) {
+    throw new Error(error);
+  }
 }

@@ -6,8 +6,12 @@ import { dbConnect } from "@legacy/util/db";
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
     case "POST": {
-      await dbConnect();
-      await authenticationHandler(req, res);
+      try {
+        await dbConnect();
+        await authenticationHandler(req, res);
+      } catch (err) {
+        console.log(err);
+      }
     }
     default:
       await methodNotAllowed(req, res);
