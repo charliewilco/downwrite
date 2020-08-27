@@ -111,8 +111,11 @@ export const verifyCredentials = async (password: string, identifier: string) =>
     $or: [{ email: identifier }, { username: identifier }]
   });
 
+  console.log("Verify Creditials user: ", user);
+
   if (user) {
     const isValid = await bcrypt.compare(password, user.password);
+    console.log("Verify Credentials isValid: ", isValid);
     if (isValid) {
       return user;
     } else {
@@ -127,11 +130,11 @@ export const authenticationHandler: NextApiHandler = async (req, res) => {
   try {
     const { user, password } = req.body;
     const foundUser = await verifyCredentials(password, user);
-
     const token = createToken(foundUser);
 
     res.status(201).send({ token });
   } catch (error) {
+    console.log("authenticationHandler Error: ", error);
     const e = Boom.boomify(error);
 
     res.status(e.output.statusCode).json(e.output.payload);
