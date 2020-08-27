@@ -1,5 +1,5 @@
 import * as React from "react";
-import classNames from "../utils/classnames";
+import classNames, { toPx } from "../utils/classnames";
 
 export type GradientColors = string[];
 
@@ -38,7 +38,7 @@ export default function Avatar(props: IAvatarProps): JSX.Element {
   const colors = gradientPoints(props.colors);
 
   const style = {
-    "--size": props.size || 48,
+    "--size": toPx(props.size || 48),
     "--colors-a": colors.a,
     "--colors-b": colors.b
   } as React.CSSProperties;

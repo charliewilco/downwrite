@@ -17,3 +17,5 @@ export default function classNames(...args: any[]): string {
 
   return [...ret].join(" ");
 }
+
+export const toPx = (n: number): string => `${n}px`;
