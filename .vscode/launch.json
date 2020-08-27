@@ -13,16 +13,6 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "program": "${workspaceFolder}/node_modules/jest/bin/jest"
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Run API Server",
-      "cwd": "${workspaceFolder}",
-      "console": "integratedTerminal",
-      "runtimeExecutable": "yarn",
-      "port": 4000,
-      "runtimeArgs": ["workspace", "api", "dev"]
     }
   ]
 }

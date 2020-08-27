@@ -16,6 +16,7 @@
     "@mdx-js/loader": "^1.6.16",
     "@mdx-js/mdx": "^1.6.16",
     "@mdx-js/tag": "^0.20.3",
+    "@next/bundle-analyzer": "^9.5.2",
     "@next/mdx": "^9.5.1",
     "@reach/dialog": "^0.10.5",
     "@reach/menu-button": "^0.10.5",
@@ -84,6 +85,11 @@
   "babel": {
     "presets": [
       "next/babel"
+    ]
+  },
+  "postcss": {
+    "plugins": [
+      "postcss-preset-env"
     ]
   },
   "jest": {
