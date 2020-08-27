@@ -1,6 +1,6 @@
 # ![Downwrite](.github/images/header.png)
 
-[![Build Status](https://travis-ci.org/charliewilco/downwrite.svg?branch=master)](https://travis-ci.org/charliewilco/downwrite) [![jest](https://jestjs.io/img/jest-badge.svg)](https://github.com/facebook/jest) [![style: styled-components](https://img.shields.io/badge/style-%F0%9F%92%85%20styled--components-orange.svg?colorB=daa357&colorA=db748e)](https://github.com/styled-components/styled-components)
+![Node CI](https://github.com/charliewilco/downwrite/workflows/Node%20CI/badge.svg)
 
 ## About 🤔🦄🎉
 
@@ -26,124 +26,90 @@ These shortcuts are almost as ubiquitous as `cmd + b` for bold or `cmd + i` for 
 
 This is meant to be a simple writing application with some key features:
 
-- Write wherever you are (even offline) in markdown
+- Write wherever you are in markdown
 - Share what you've written if you want
 - Upload a markdown file from your machine
 - Export to a static markdown file for your blog, etc.
 
 ## Setup 📲⏳⚙️
 
-This project uses [Yarn Workspaces](https://yarnpkg.com/blog/2017/08/02/introducing-workspaces/) and is written mostly with [TypeScript](https://www.typescriptlang.org/).
+This project uses Node (v12.18.x), [TypeScript](https://www.typescriptlang.org/) and Yarn.
 
 ```bash
 brew cask install yarn
 yarn
 ```
 
+Personally use [`fnm`](https://github.com/Schniz/fnm) to manage my node versions.
+
+```bash
+fnm install
+fnm use
+```
+
+### Environment
+
+To get started create an `.env` file in the root of your project with the following
+
+```env
+SECRET_KEY="SECRET SECRETS ARE NO FUN"
+CURRENT_DB_ADDRESS="127.0.0.1:27017/downwrite"
+```
+
 ### Client ⚡️🦊
 
-![Logos for Related Projects](.github/images/Client.png)
+![Logos for Related Projects](.github/images/Client-2020.png)
 
-#### Working on this Project
+#### Setup
 
 Run in your terminal from the root of the project.
 
 ```bash
-yarn workspace client dev
+yarn dev
 ```
 
-Open [`http://localhost:3000`](http://localhost:3000) in your browser.
+Open [`http://localhost:3000`](http://localhost:3000/) in your browser.
 
-#### Info 📝
+#### UI 📝
 
-This is the client-side of the application. It uses Next.js and Express and uses [this example](https://github.com/zeit/next.js/tree/canary/examples/custom-server-express) to handle routing to different views. 👨‍💻🤜🦑🤯
+This is the client-side of the application, it uses Next.js and is a pretty stock implementation of how Next handles routing to different views. 👨‍💻🤜🦑🤯
 
-Downwrite needs to server side rendered to make sharing an entry as easy as possible. Next.js' data-fetching API makes it the perfect candidate. The Express server also proxies the API server `localhost:4000` under the hood. So when the page calls `Component.getInitialProps()` it fetches the data from the API server and for the initial render it has data available instead of a skeleton screen. 🤖☠️💀
+Downwrite needs to server side rendered to make sharing an entry as easy as possible. Next.js' data-fetching API makes it the perfect candidate. So when the page calls `getServerSideProps()` it fetches the data directly from the database (DB creditentials aren't exposed to the client build at all because of the bundling features inside Next 😁) and for the initial render it has data available instead of a skeleton screen. 🤖☠️💀
 
 For the Editor this project uses Draft.js and Draft.js Plugins. Markdown syntax is used inline and autogenerates the related rich text `_hello_` becomes "_hello_" as you type.💻⌨️🔏
 
-For styles I've used ~~Aphrodite~~, ~~JSXStyle~~, ~~glamor~~, and styled-components 💅. Most components are just `styled.div`\`\`; [managing class names hasn't really ever been my thing](https://charlespeters.net/writing/i-just-cant-with-css/). The styling also includes a Night theme that's managed through styled component's `<ThemeProvider>` and `localStorage`. 🌘🌛🌌 So it only ever renders on the client.
+For styles I just used the built-in CSS support in Next.js
 
-This project is a PWA, it uses some basic service worker implementation and `manifest.json` managed by `next.config.js`.
+#### Serverless Functions 🌎✨
+
+To update the data, this project calls endpoints at `/api/....` to enable this we're using Next'js [API Routes](https://nextjs.org/docs/api-routes/introduction). These are serverless functions so we don't need to keep a server or database connectioin running all the time, with serverless functions you're essentially calling the API on-demand.
+
+This project also depends on MongoDB 🍍 for data persistence, you should see this [gist](https://gist.github.com/nrollr/9f523ae17ecdbb50311980503409aeb3) on how to setup MongoDB on your machine.
+
+To authenticate we're using JWT to call the basic CRUD functions. Basically this is using a stateless auth model, more about that [here](https://auth0.com/blog/stateless-auth-for-stateful-minds/). 🔐
 
 #### Related Documentation 📚
 
+- [TypeScript](https://www.typescriptlang.org/)
 - [React](https://reactjs.org/)
 - [Next.js](https://nextjs.org/)
-- [Styled Components](https://www.styled-components.com/)
+- [Formik](https://formik.org/)
 - [Draft.js](https://draftjs.org/)
 - [Draft.js Plugins](https://www.draft-js-plugins.com/)
+- [Reach UI](https://reach.tech/)
 - [MDX](https://mdxjs.com/)
-
-### API 🌎✨
-
-![Logos for Related Projects](.github/images/API.png)
-
-#### Working on this Project
-
-Docker 🐳🐋
-
-```bash
-cd api
-docker-compose up --build -d
-```
-
-or run the server locally 👨‍💻
-
-```bash
-yarn workspace api dev
-```
-
-This project depends on MongoDB 🍍 so if you're not using Docker 🐳🐋 locally, you should see this [gist](https://gist.github.com/nrollr/9f523ae17ecdbb50311980503409aeb3) on how to setup MongoDB on your machine.
-
-#### Info 📝
-
-Using Gapi allows you to organize your endpoints very easiy and all the controllers are async so making database queries are fast and clean. All the routes are kept in `./api/src/routes.ts`. 🛣
-
-This service handles authentication with JWT and basic CRUD functions. 🔐
-
-You can see the documented endpoints at `http://localhost:3000/docs`
-
-Using a serverless model Hapi's API allows us to expose our server as a single function that we can inject the current header, url and method into to return a result to send back. This let's us use Hapi a serverless function gets executed dynamically and on-demand to minimize the cost. It could be ported to be used on the [serverless](https://serverless.com/) framework or AWS Lambda.
-
-```typescript
-export default async (req: http.IncomingMessage, res: http.ServerResponse) => {
-  // This function adds the Routing and Plugins for Hapi and returns that server
-  const server: Hapi.Server = await createServer();
-
-  const injection: Hapi.ServerInjectOptions = {
-    method: req.method,
-    url: req.url,
-    headers: req.headers
-  };
-
-  const response = await server.inject(injection);
-
-  return response;
-};
-```
-
-In development, I've been using [Micro](https://github.com/zeit/micro) to replicate this locally.
-
-#### Related Documentation 📚
-
-- [Hapi.js](https://hapijs.com/)
 - [MongoDB](https://docs.mongodb.com/manual/support/) & [Mongoose.js](http://mongoosejs.com)
-- [Docker](https://docs.docker.com/)
 - [JWT](https://auth0.com/blog/hapijs-authentication-secure-your-api-with-json-web-tokens/)
-- [Micro](https://zeit.co/blog/micro-8)
 
 ### Integration Testing 🌈🦁🐛
 
 ![Logos for Related Projects](.github/images/Integration.png)
 
-#### Working on the Project
-
 ```bash
-yarn workspace integration test
+yarn test
 ```
 
-#### Info 📝
+#### Info 📝🧪
 
 Short hand: `page` is just a representation of whatever the headless browser, _Puppeteer_ has rendered at that given moment.
 
@@ -173,15 +139,13 @@ This approach accomplishes two things:
 
 ### Workflow 👷‍♀️🚧
 
-![Logos for Related Projects](.github/images/Workflow.png)
-
-Working on this project uses Travis to run the tests and deploy the successfully built workspaces to their given endpoints. It uses [`now`](https://zeit.co/now) for deployments for easy rollback and immutable deployments.
+Working on this project it uses GitHub actions to run the tests and deploys using [`vercel`](https://vercel.com) for easy rollback and immutable deployments.
 
 ## License ⚖️💣🛡⚔️
 
 MIT License
 
-Copyright (c) 2018 Charles Peters
+Copyright (c) 2020 Charles Peters
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

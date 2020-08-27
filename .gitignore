@@ -9,13 +9,17 @@ coverage
 # production
 build
 .next/
+.now/
+.vercel/
 
 # misc
 .DS_Store
 .env
-.env.production
+.env.*
 npm-debug.log
 package-lock.json
 dist
 private.key
 api/docs
+
+.vercel
