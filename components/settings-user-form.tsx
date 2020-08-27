@@ -37,33 +37,36 @@ export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
       onSubmit={onSubmit}
       validationSchema={UserSettingsSchema}>
       {({ values, handleChange, isSubmitting }: FormikProps<IUserFormValues>) => (
-        <SettingsBlock title="User Settings">
+        <SettingsBlock title="User Settings" description="Currently disabled ☠️">
           <Form>
-            <UIInputContainer>
-              <UIInput
-                placeholder="user@email.com"
-                label="Username"
-                name="username"
-                autoComplete="username"
-                value={values.username}
-                onChange={handleChange}
-              />
-              <ErrorMessage name="username" component={UIInputError} />
-            </UIInputContainer>
-            <UIInputContainer>
-              <UIInput
-                placeholder="user@email.com"
-                label="Email"
-                autoComplete="email"
-                type="email"
-                name="email"
-                value={values.email}
-                onChange={handleChange}
-              />
-              <ErrorMessage name="email" component={UIInputError} />
-            </UIInputContainer>
+            <fieldset disabled style={{ display: "block", border: 0 }}>
+              <UIInputContainer>
+                <UIInput
+                  placeholder="user@email.com"
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
+                  value={values.username}
+                  onChange={handleChange}
+                />
+                <ErrorMessage name="username" component={UIInputError} />
+              </UIInputContainer>
+              <UIInputContainer>
+                <UIInput
+                  placeholder="user@email.com"
+                  label="Email"
+                  autoComplete="email"
+                  type="email"
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                />
+                <ErrorMessage name="email" component={UIInputError} />
+              </UIInputContainer>
+            </fieldset>
+
             <SettingsFormActions>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="submit" disabled>
                 Save
               </Button>
             </SettingsFormActions>
