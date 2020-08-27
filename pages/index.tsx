@@ -56,7 +56,6 @@ function DashboardUI(props: InitialProps.IDashboardProps) {
     ManagedDashboard
   ] = useManagedDashboard(props.entries);
 
-  console.log(props);
   return (
     <>
       {modalOpen && (

@@ -66,7 +66,6 @@ export const getServerSideProps: GetServerSideProps<
 const EDITOR_COMMAND = "myeditor-save";
 
 function EditUI(props: AuthedEditProps) {
-  console.log("EDIT PROPS", props);
   const initialEditorState = Draft.EditorState.createWithContent(
     superConverter(props.post.content)
   );

@@ -15,7 +15,7 @@ build
 # misc
 .DS_Store
 .env
-.env.production
+.env.*
 npm-debug.log
 package-lock.json
 dist
