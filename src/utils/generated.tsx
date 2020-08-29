@@ -1,8 +1,7 @@
 import { gql } from "@apollo/client";
-import * as ApolloReactCommon from "@apollo/client";
-import * as ApolloReactHooks from "@apollo/client";
+import * as Apollo from "@apollo/client";
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -255,30 +254,24 @@ export const AllPostsDocument = gql`
  * });
  */
 export function useAllPostsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    IAllPostsQuery,
-    IAllPostsQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<IAllPostsQuery, IAllPostsQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<IAllPostsQuery, IAllPostsQueryVariables>(
+  return Apollo.useQuery<IAllPostsQuery, IAllPostsQueryVariables>(
     AllPostsDocument,
     baseOptions
   );
 }
 export function useAllPostsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    IAllPostsQuery,
-    IAllPostsQueryVariables
-  >
+  baseOptions?: Apollo.LazyQueryHookOptions<IAllPostsQuery, IAllPostsQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<IAllPostsQuery, IAllPostsQueryVariables>(
+  return Apollo.useLazyQuery<IAllPostsQuery, IAllPostsQueryVariables>(
     AllPostsDocument,
     baseOptions
   );
 }
 export type AllPostsQueryHookResult = ReturnType<typeof useAllPostsQuery>;
 export type AllPostsLazyQueryHookResult = ReturnType<typeof useAllPostsLazyQuery>;
-export type AllPostsQueryResult = ApolloReactCommon.QueryResult<
+export type AllPostsQueryResult = Apollo.QueryResult<
   IAllPostsQuery,
   IAllPostsQueryVariables
 >;
@@ -309,30 +302,21 @@ export const EditDocument = gql`
  * });
  */
 export function useEditQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<IEditQuery, IEditQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<IEditQuery, IEditQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<IEditQuery, IEditQueryVariables>(
-    EditDocument,
-    baseOptions
-  );
+  return Apollo.useQuery<IEditQuery, IEditQueryVariables>(EditDocument, baseOptions);
 }
 export function useEditLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    IEditQuery,
-    IEditQueryVariables
-  >
+  baseOptions?: Apollo.LazyQueryHookOptions<IEditQuery, IEditQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<IEditQuery, IEditQueryVariables>(
+  return Apollo.useLazyQuery<IEditQuery, IEditQueryVariables>(
     EditDocument,
     baseOptions
   );
 }
 export type EditQueryHookResult = ReturnType<typeof useEditQuery>;
 export type EditLazyQueryHookResult = ReturnType<typeof useEditLazyQuery>;
-export type EditQueryResult = ApolloReactCommon.QueryResult<
-  IEditQuery,
-  IEditQueryVariables
->;
+export type EditQueryResult = Apollo.QueryResult<IEditQuery, IEditQueryVariables>;
 export const PreviewDocument = gql`
   query Preview($id: ID!) {
     preview(id: $id) {
@@ -364,30 +348,24 @@ export const PreviewDocument = gql`
  * });
  */
 export function usePreviewQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    IPreviewQuery,
-    IPreviewQueryVariables
-  >
+  baseOptions?: Apollo.QueryHookOptions<IPreviewQuery, IPreviewQueryVariables>
 ) {
-  return ApolloReactHooks.useQuery<IPreviewQuery, IPreviewQueryVariables>(
+  return Apollo.useQuery<IPreviewQuery, IPreviewQueryVariables>(
     PreviewDocument,
     baseOptions
   );
 }
 export function usePreviewLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    IPreviewQuery,
-    IPreviewQueryVariables
-  >
+  baseOptions?: Apollo.LazyQueryHookOptions<IPreviewQuery, IPreviewQueryVariables>
 ) {
-  return ApolloReactHooks.useLazyQuery<IPreviewQuery, IPreviewQueryVariables>(
+  return Apollo.useLazyQuery<IPreviewQuery, IPreviewQueryVariables>(
     PreviewDocument,
     baseOptions
   );
 }
 export type PreviewQueryHookResult = ReturnType<typeof usePreviewQuery>;
 export type PreviewLazyQueryHookResult = ReturnType<typeof usePreviewLazyQuery>;
-export type PreviewQueryResult = ApolloReactCommon.QueryResult<
+export type PreviewQueryResult = Apollo.QueryResult<
   IPreviewQuery,
   IPreviewQueryVariables
 >;
@@ -416,32 +394,32 @@ export const UserDetailsDocument = gql`
  * });
  */
 export function useUserDetailsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     IUserDetailsQuery,
     IUserDetailsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<IUserDetailsQuery, IUserDetailsQueryVariables>(
+  return Apollo.useQuery<IUserDetailsQuery, IUserDetailsQueryVariables>(
     UserDetailsDocument,
     baseOptions
   );
 }
 export function useUserDetailsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     IUserDetailsQuery,
     IUserDetailsQueryVariables
   >
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    IUserDetailsQuery,
-    IUserDetailsQueryVariables
-  >(UserDetailsDocument, baseOptions);
+  return Apollo.useLazyQuery<IUserDetailsQuery, IUserDetailsQueryVariables>(
+    UserDetailsDocument,
+    baseOptions
+  );
 }
 export type UserDetailsQueryHookResult = ReturnType<typeof useUserDetailsQuery>;
 export type UserDetailsLazyQueryHookResult = ReturnType<
   typeof useUserDetailsLazyQuery
 >;
-export type UserDetailsQueryResult = ApolloReactCommon.QueryResult<
+export type UserDetailsQueryResult = Apollo.QueryResult<
   IUserDetailsQuery,
   IUserDetailsQueryVariables
 >;
@@ -459,7 +437,7 @@ export const UpdateEntryDocument = gql`
   }
   ${EntryInfoFragmentDoc}
 `;
-export type IUpdateEntryMutationFn = ApolloReactCommon.MutationFunction<
+export type IUpdateEntryMutationFn = Apollo.MutationFunction<
   IUpdateEntryMutation,
   IUpdateEntryMutationVariables
 >;
@@ -485,23 +463,21 @@ export type IUpdateEntryMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdateEntryMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     IUpdateEntryMutation,
     IUpdateEntryMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    IUpdateEntryMutation,
-    IUpdateEntryMutationVariables
-  >(UpdateEntryDocument, baseOptions);
+  return Apollo.useMutation<IUpdateEntryMutation, IUpdateEntryMutationVariables>(
+    UpdateEntryDocument,
+    baseOptions
+  );
 }
 export type UpdateEntryMutationHookResult = ReturnType<
   typeof useUpdateEntryMutation
 >;
-export type UpdateEntryMutationResult = ApolloReactCommon.MutationResult<
-  IUpdateEntryMutation
->;
-export type UpdateEntryMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdateEntryMutationResult = Apollo.MutationResult<IUpdateEntryMutation>;
+export type UpdateEntryMutationOptions = Apollo.BaseMutationOptions<
   IUpdateEntryMutation,
   IUpdateEntryMutationVariables
 >;
@@ -513,7 +489,7 @@ export const CreateEntryDocument = gql`
   }
   ${EntryInfoFragmentDoc}
 `;
-export type ICreateEntryMutationFn = ApolloReactCommon.MutationFunction<
+export type ICreateEntryMutationFn = Apollo.MutationFunction<
   ICreateEntryMutation,
   ICreateEntryMutationVariables
 >;
@@ -537,23 +513,21 @@ export type ICreateEntryMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreateEntryMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     ICreateEntryMutation,
     ICreateEntryMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    ICreateEntryMutation,
-    ICreateEntryMutationVariables
-  >(CreateEntryDocument, baseOptions);
+  return Apollo.useMutation<ICreateEntryMutation, ICreateEntryMutationVariables>(
+    CreateEntryDocument,
+    baseOptions
+  );
 }
 export type CreateEntryMutationHookResult = ReturnType<
   typeof useCreateEntryMutation
 >;
-export type CreateEntryMutationResult = ApolloReactCommon.MutationResult<
-  ICreateEntryMutation
->;
-export type CreateEntryMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateEntryMutationResult = Apollo.MutationResult<ICreateEntryMutation>;
+export type CreateEntryMutationOptions = Apollo.BaseMutationOptions<
   ICreateEntryMutation,
   ICreateEntryMutationVariables
 >;
@@ -565,7 +539,7 @@ export const RemoveEntryDocument = gql`
     }
   }
 `;
-export type IRemoveEntryMutationFn = ApolloReactCommon.MutationFunction<
+export type IRemoveEntryMutationFn = Apollo.MutationFunction<
   IRemoveEntryMutation,
   IRemoveEntryMutationVariables
 >;
@@ -588,23 +562,21 @@ export type IRemoveEntryMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useRemoveEntryMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     IRemoveEntryMutation,
     IRemoveEntryMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    IRemoveEntryMutation,
-    IRemoveEntryMutationVariables
-  >(RemoveEntryDocument, baseOptions);
+  return Apollo.useMutation<IRemoveEntryMutation, IRemoveEntryMutationVariables>(
+    RemoveEntryDocument,
+    baseOptions
+  );
 }
 export type RemoveEntryMutationHookResult = ReturnType<
   typeof useRemoveEntryMutation
 >;
-export type RemoveEntryMutationResult = ApolloReactCommon.MutationResult<
-  IRemoveEntryMutation
->;
-export type RemoveEntryMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type RemoveEntryMutationResult = Apollo.MutationResult<IRemoveEntryMutation>;
+export type RemoveEntryMutationOptions = Apollo.BaseMutationOptions<
   IRemoveEntryMutation,
   IRemoveEntryMutationVariables
 >;
@@ -615,7 +587,7 @@ export const LoginUserDocument = gql`
     }
   }
 `;
-export type ILoginUserMutationFn = ApolloReactCommon.MutationFunction<
+export type ILoginUserMutationFn = Apollo.MutationFunction<
   ILoginUserMutation,
   ILoginUserMutationVariables
 >;
@@ -639,21 +611,19 @@ export type ILoginUserMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useLoginUserMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     ILoginUserMutation,
     ILoginUserMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    ILoginUserMutation,
-    ILoginUserMutationVariables
-  >(LoginUserDocument, baseOptions);
+  return Apollo.useMutation<ILoginUserMutation, ILoginUserMutationVariables>(
+    LoginUserDocument,
+    baseOptions
+  );
 }
 export type LoginUserMutationHookResult = ReturnType<typeof useLoginUserMutation>;
-export type LoginUserMutationResult = ApolloReactCommon.MutationResult<
-  ILoginUserMutation
->;
-export type LoginUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type LoginUserMutationResult = Apollo.MutationResult<ILoginUserMutation>;
+export type LoginUserMutationOptions = Apollo.BaseMutationOptions<
   ILoginUserMutation,
   ILoginUserMutationVariables
 >;
@@ -664,7 +634,7 @@ export const CreateUserDocument = gql`
     }
   }
 `;
-export type ICreateUserMutationFn = ApolloReactCommon.MutationFunction<
+export type ICreateUserMutationFn = Apollo.MutationFunction<
   ICreateUserMutation,
   ICreateUserMutationVariables
 >;
@@ -689,21 +659,19 @@ export type ICreateUserMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreateUserMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     ICreateUserMutation,
     ICreateUserMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
-    ICreateUserMutation,
-    ICreateUserMutationVariables
-  >(CreateUserDocument, baseOptions);
+  return Apollo.useMutation<ICreateUserMutation, ICreateUserMutationVariables>(
+    CreateUserDocument,
+    baseOptions
+  );
 }
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
-export type CreateUserMutationResult = ApolloReactCommon.MutationResult<
-  ICreateUserMutation
->;
-export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateUserMutationResult = Apollo.MutationResult<ICreateUserMutation>;
+export type CreateUserMutationOptions = Apollo.BaseMutationOptions<
   ICreateUserMutation,
   ICreateUserMutationVariables
 >;
@@ -715,7 +683,7 @@ export const UpdateUserSettingsDocument = gql`
     }
   }
 `;
-export type IUpdateUserSettingsMutationFn = ApolloReactCommon.MutationFunction<
+export type IUpdateUserSettingsMutationFn = Apollo.MutationFunction<
   IUpdateUserSettingsMutation,
   IUpdateUserSettingsMutationVariables
 >;
@@ -738,12 +706,12 @@ export type IUpdateUserSettingsMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdateUserSettingsMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     IUpdateUserSettingsMutation,
     IUpdateUserSettingsMutationVariables
   >
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     IUpdateUserSettingsMutation,
     IUpdateUserSettingsMutationVariables
   >(UpdateUserSettingsDocument, baseOptions);
@@ -751,10 +719,10 @@ export function useUpdateUserSettingsMutation(
 export type UpdateUserSettingsMutationHookResult = ReturnType<
   typeof useUpdateUserSettingsMutation
 >;
-export type UpdateUserSettingsMutationResult = ApolloReactCommon.MutationResult<
+export type UpdateUserSettingsMutationResult = Apollo.MutationResult<
   IUpdateUserSettingsMutation
 >;
-export type UpdateUserSettingsMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdateUserSettingsMutationOptions = Apollo.BaseMutationOptions<
   IUpdateUserSettingsMutation,
   IUpdateUserSettingsMutationVariables
 >;

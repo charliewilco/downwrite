@@ -14,16 +14,10 @@ generates:
       - typescript-operations
       - typescript-resolvers
 config:
-  reactApolloVersion: 3
   typesPrefix: I
   avoidOptionals: true
   withHooks: true
-  withHOC: false
-  withComponent: false
-  withResultType: true
   gqlImport: "@apollo/client#gql"
-  apolloReactHooksImportFrom: "@apollo/client"
-  apolloReactCommonImportFrom: "@apollo/client"
 
 hooks:
   afterAllFileWrite:
