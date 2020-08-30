@@ -9,7 +9,7 @@ import {
   RichUtils
 } from "draft-js";
 import Prism from "prismjs";
-import createMarkdownPlugin from "draft-js-markdown-plugin";
+import createMarkdownPlugin from "draft-js-markdown-shortcuts-plugin";
 import createPrismPlugin from "draft-js-prism-plugin";
 import { __IS_TEST__ } from "@utils/dev";
 import * as DefaultStyles from "@utils/default-styles";
