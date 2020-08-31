@@ -1,39 +1,28 @@
 import { useRef } from "react";
-import { Editor, EditorState, ContentBlock } from "draft-js";
+import { Editor } from "draft-js";
+import {
+  useDecorators,
+  useEditor,
+  useEditorState,
+  PrismDecorator,
+  imageLinkDecorators
+} from "../editor";
 
-function getBlockStyle(block: ContentBlock) {
-  switch (block.getType()) {
-    case "blockquote":
-      return "RichEditor-blockquote";
-    default:
-      return "";
-  }
-}
+const prism = new PrismDecorator();
 
-// Custom overrides for "code" style.
-const styleMap = {
-  CODE: {
-    backgroundColor: "rgba(0, 0, 0, 0.05)",
-    fontSize: 14,
-    padding: 2
-  }
-};
-
-interface IEditorProps {
-  editorState: EditorState;
-  onChange(state: EditorState): void;
-}
-
-export default function NewEditor(props: IEditorProps) {
+export default function NewEditor() {
+  const decorators = useDecorators([imageLinkDecorators, prism]);
+  const [editorState, setEditorState, getEditorState] = useEditorState({
+    decorators
+  });
+  const editorProps = useEditor({ getEditorState, setEditorState });
   let editorRef = useRef<Editor>(null);
   return (
     <div className="max-w-3xl mx-auto my-5 relative">
       <Editor
         ref={editorRef}
-        blockStyleFn={getBlockStyle}
-        customStyleMap={styleMap}
-        editorState={props.editorState}
-        onChange={props.onChange}
+        {...editorProps}
+        editorState={editorState}
         spellCheck
         placeholder="History will be kind to me for I intend to write it. — Winston Churchill"
       />
