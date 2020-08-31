@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import dynamic from "next/dynamic";
-import { useRef } from "react";
+import { useRef, useCallback } from "react";
 import { EditorState, convertFromRaw } from "draft-js";
 import { useFormik } from "formik";
 import { useOffline, useNewEntry, INewEditorValues } from "../hooks";
@@ -55,8 +55,13 @@ const NewEntryPage: NextPage = () => {
     onSubmit
   });
 
+  const onChange = useCallback(
+    (editorState: EditorState) => setFieldValue("editorState", editorState),
+    [setFieldValue]
+  );
+
   return (
-    <form className="max-w-2xl mx-auto pt-32 px-2 pb-0" onSubmit={handleSubmit}>
+    <form className="max-w-2xl px-2 pt-32 pb-0 mx-auto" onSubmit={handleSubmit}>
       <Head>
         <title>{values.title ? values.title : "New"} | Downwrite</title>
       </Head>
@@ -71,7 +76,7 @@ const NewEntryPage: NextPage = () => {
           name="title"
           placeholder="Untitled Document"
         />
-        <aside className="flex justify-between items-center mt-2 mx-0 mb-4 py-2">
+        <aside className="flex items-center justify-between py-2 mx-0 mt-2 mb-4">
           <div className="flex items-center">
             {isOffline && <span>You're Offline Right Now</span>}
           </div>
@@ -82,9 +87,7 @@ const NewEntryPage: NextPage = () => {
         <Editor
           editorCommand={EDITOR_COMMAND as any}
           editorState={values.editorState}
-          onChange={editorState => {
-            setFieldValue("editorState", editorState);
-          }}
+          onChange={onChange}
           onSave={handleSubmit}
         />
       </Upload>
