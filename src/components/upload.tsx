@@ -5,7 +5,7 @@ import { markdownToDraft } from "markdown-draft-js";
 import { fm } from "@utils/fm";
 import { __IS_BROWSER__ } from "@utils/dev";
 
-interface IMarkdownConversion {
+export interface IMarkdownConversion {
   title: string;
   editorState: EditorState;
 }
