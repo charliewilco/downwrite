@@ -1,6 +1,4 @@
-import { EditorState, convertFromRaw } from "draft-js";
 import produce from "immer";
-import { markdownToDraft } from "markdown-draft-js";
 import { IEntry } from "@utils/generated";
 
 export enum EditActions {
@@ -9,35 +7,29 @@ export enum EditActions {
   TOGGLE_PUBLIC_STATUS = "TOGGLE_PUBLIC_STATUS",
   SET_INITIAL_FOCUS = "SET_INITIAL_FOCUS",
   EDITOR_COMMAND = "myeditor-save",
-  INITIALIZE_EDITOR = "INITIALIZE_EDITOR"
+  INITIALIZE_EDITOR = "INITIALIZE_EDITOR",
 }
 
 export interface IEditorState {
   publicStatus: boolean;
-  editorState: EditorState | null;
   title: string;
   initialFocus: boolean;
 }
 
 const DEFAULT_EDITOR_STATE: IEditorState = {
-  editorState: null,
   title: "",
   publicStatus: false,
-  initialFocus: false
+  initialFocus: false,
 };
 
 export function initializer(initialData?: {
   entry: Pick<IEntry, "title" | "dateAdded" | "content" | "public"> | null;
 }): IEditorState {
   if (!!initialData && initialData.entry !== null) {
-    const draft = markdownToDraft(initialData.entry.content!);
-    const editorState = EditorState.createWithContent(convertFromRaw(draft));
-
     return {
-      editorState,
       title: initialData.entry.title || "",
       publicStatus: !!initialData.entry.public,
-      initialFocus: false
+      initialFocus: false,
     };
   } else {
     return DEFAULT_EDITOR_STATE;
@@ -51,16 +43,14 @@ export type EditorActions =
     }
   | { type: EditActions.TOGGLE_PUBLIC_STATUS }
   | { type: EditActions.SET_INITIAL_FOCUS }
-  | { type: EditActions.UPDATE_EDITOR; payload: EditorState }
   | { type: EditActions.UPDATE_TITLE; payload: string };
 
 export const reducer = produce((draft: IEditorState, action: EditorActions) => {
   switch (action.type) {
     case EditActions.INITIALIZE_EDITOR: {
-      const { title, editorState, publicStatus, initialFocus } = initializer({
-        entry: action.payload
+      const { title, publicStatus, initialFocus } = initializer({
+        entry: action.payload,
       });
-      draft.editorState = editorState;
       draft.title = title;
       draft.publicStatus = publicStatus;
       draft.initialFocus = initialFocus;
@@ -77,10 +67,6 @@ export const reducer = produce((draft: IEditorState, action: EditorActions) => {
     }
     case EditActions.UPDATE_TITLE: {
       draft.title = action.payload;
-      break;
-    }
-    case EditActions.UPDATE_EDITOR: {
-      draft.editorState = action.payload;
       break;
     }
   }
