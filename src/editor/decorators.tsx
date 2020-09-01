@@ -2,9 +2,10 @@ import {
   ContentBlock,
   ContentState,
   CompositeDecorator,
-  DraftDecorator,
+  DraftDecorator
 } from "draft-js";
 import React from "react";
+import { prismHighlightDecorator } from "./prism";
 
 export const createLinkStrategy = () => {
   const findLinkEntities = (
@@ -12,11 +13,10 @@ export const createLinkStrategy = () => {
     callback: (start: number, end: number) => void,
     contentState: ContentState
   ) => {
-    block.findEntityRanges((character) => {
+    block.findEntityRanges(character => {
       const entityKey = character.getEntity();
       return (
-        entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === "LINK"
+        entityKey !== null && contentState.getEntity(entityKey).getType() === "LINK"
       );
     }, callback);
   };
@@ -29,11 +29,10 @@ export const createImageStrategy = () => {
     callback: (start: number, end: number) => void,
     contentState: ContentState
   ) => {
-    block.findEntityRanges((character) => {
+    block.findEntityRanges(character => {
       const entityKey = character.getEntity();
       return (
-        entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === "IMG"
+        entityKey !== null && contentState.getEntity(entityKey).getType() === "IMG"
       );
     }, callback);
   };
@@ -45,7 +44,7 @@ interface IDecoratorProps {
   contentState: ContentState;
 }
 
-const Link: React.FC<IDecoratorProps> = (props) => {
+const Link: React.FC<IDecoratorProps> = props => {
   const { contentState, children, entityKey } = props;
   const { href, title } = contentState.getEntity(entityKey).getData();
   return (
@@ -55,11 +54,7 @@ const Link: React.FC<IDecoratorProps> = (props) => {
   );
 };
 
-const Image: React.FC<IDecoratorProps> = ({
-  entityKey,
-  children,
-  contentState,
-}) => {
+const Image: React.FC<IDecoratorProps> = ({ entityKey, children, contentState }) => {
   const { src, alt, title } = contentState.getEntity(entityKey).getData();
   return (
     <span>
@@ -71,12 +66,14 @@ const Image: React.FC<IDecoratorProps> = ({
 
 const LINK: DraftDecorator = {
   strategy: createLinkStrategy(),
-  component: Link,
+  component: Link
 };
 
 const IMAGE: DraftDecorator = {
   strategy: createImageStrategy(),
-  component: Image,
+  component: Image
 };
 
 export const imageLinkDecorators = new CompositeDecorator([LINK, IMAGE]);
+
+export const defaultDecorators = [imageLinkDecorators, prismHighlightDecorator];

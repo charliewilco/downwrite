@@ -2,12 +2,19 @@ import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useRef, useCallback } from "react";
-import { EditorState, convertFromRaw } from "draft-js";
 import { useFormik } from "formik";
 import { useOffline, useNewEntry, INewEditorValues } from "../hooks";
+import { IMarkdownConversion } from "@components/upload";
 import { Input } from "@components/editor-input";
 import { Button } from "@components/button";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
+import {
+  useEditor,
+  useEditorState,
+  useDecorators,
+  defaultDecorators,
+  emptyContentState
+} from "../editor";
 
 const Editor = dynamic(() => import("@components/editor"));
 const Upload = dynamic(() => import("@components/upload"));
@@ -23,30 +30,25 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   };
 };
 
-const emptyContentState = convertFromRaw({
-  entityMap: {},
-  blocks: [
-    {
-      text: "",
-      depth: 0,
-      key: "foo",
-      type: "unstyled",
-      inlineStyleRanges: [],
-      entityRanges: []
-    }
-  ]
-});
-
 const NewEntryPage: NextPage = () => {
   const initialValues = useRef<INewEditorValues>({
-    title: "",
-    editorState: EditorState.createWithContent(emptyContentState)
+    title: ""
   });
   const [createNewPost] = useNewEntry();
   const isOffline = useOffline();
+  const decorators = useDecorators(defaultDecorators);
+  const [editorState, setEditorState, getEditorState] = useEditorState({
+    contentState: emptyContentState,
+    decorators
+  });
+
+  const editorProps = useEditor({
+    getEditorState,
+    setEditorState
+  });
 
   function onSubmit(values: INewEditorValues): void {
-    createNewPost(values);
+    createNewPost(values.title, editorState);
   }
 
   const { values, setFieldValue, handleSubmit, handleChange } = useFormik({
@@ -55,21 +57,17 @@ const NewEntryPage: NextPage = () => {
     onSubmit
   });
 
-  const onChange = useCallback(
-    (editorState: EditorState) => setFieldValue("editorState", editorState),
-    [setFieldValue]
-  );
+  const onParsed = useCallback((parsed: IMarkdownConversion) => {
+    setFieldValue("title", parsed.title);
+    setEditorState(parsed.editorState);
+  }, []);
 
   return (
     <form className="max-w-2xl px-2 pt-32 pb-0 mx-auto" onSubmit={handleSubmit}>
       <Head>
         <title>{values.title ? values.title : "New"} | Downwrite</title>
       </Head>
-      <Upload
-        onParsed={parsed => {
-          setFieldValue("title", parsed.title);
-          setFieldValue("editorState", parsed.editorState);
-        }}>
+      <Upload onParsed={onParsed}>
         <Input
           value={values.title}
           onChange={handleChange}
@@ -86,9 +84,9 @@ const NewEntryPage: NextPage = () => {
         </aside>
         <Editor
           editorCommand={EDITOR_COMMAND as any}
-          editorState={values.editorState}
-          onChange={onChange}
           onSave={handleSubmit}
+          {...editorProps}
+          editorState={editorState}
         />
       </Upload>
     </form>

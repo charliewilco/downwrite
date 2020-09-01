@@ -7,11 +7,6 @@ function defaultFilter(block: ContentBlock) {
   return block.getType() === "code-block";
 }
 
-/**
-    Return syntax for highlighting a code block
-    @param {Draft.ContentBlock}
-    @return {String}
-*/
 function defaultGetSyntax(block: ContentBlock) {
   const data = block.getData();
   const language = data.get("language") || data.get("syntax");
@@ -21,11 +16,6 @@ function defaultGetSyntax(block: ContentBlock) {
   return null;
 }
 
-/**
-    Default render for token
-    @param {Object} props
-    @return {React.Element}
-*/
 function defaultRender(props: any) {
   return createElement(
     "span",
@@ -128,6 +118,8 @@ export class PrismDecorator implements CompositeDecorator {
     };
   }
 }
+
+export const prismHighlightDecorator = new PrismDecorator();
 
 function occupySlice(
   targetArr: any,

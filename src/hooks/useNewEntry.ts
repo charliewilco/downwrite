@@ -14,7 +14,6 @@ import { useNotifications, NotificationType } from "@reducers/app";
 
 export interface INewEditorValues {
   title: string;
-  editorState: EditorState;
 }
 
 function updateEntries(
@@ -46,14 +45,14 @@ export function useNewEntry() {
   const [createEntry] = useCreateEntryMutation();
 
   const onSubmit = useCallback(
-    async (values: INewEditorValues) => {
-      const ContentState: ContentState = values.editorState.getCurrentContent();
+    async (title: string, editorState: EditorState) => {
+      const ContentState: ContentState = editorState.getCurrentContent();
       const state = convertToRaw(ContentState);
       const content = draftToMarkdown(state);
 
       await createEntry({
         variables: {
-          title: values.title,
+          title,
           content
         },
         update: updateEntries

@@ -4,18 +4,40 @@ import {
   EditorProps,
   RichUtils,
   CompositeDecorator,
+  convertFromRaw,
+  ContentState
 } from "draft-js";
 import { createEditorProps, IPropCreation } from "./create-editor-props";
 import { MultiDecorator } from "./multidecorator";
 
 interface IInitializeEditorState {
-  content?: string;
+  contentState: ContentState;
   decorators?: CompositeDecorator;
 }
 
-export const useEditorState = ({ decorators }: IInitializeEditorState) => {
+export const emptyContentState = convertFromRaw({
+  entityMap: {},
+  blocks: [
+    {
+      text: "",
+      depth: 0,
+      key: "foo",
+      type: "unstyled",
+      inlineStyleRanges: [],
+      entityRanges: []
+    }
+  ]
+});
+
+export const useEditorState = ({
+  contentState,
+  decorators
+}: IInitializeEditorState) => {
   const [editorState, setEditorState] = useState(() => {
-    const state = EditorState.createEmpty(decorators);
+    const state = EditorState.createWithContent(
+      contentState || emptyContentState,
+      decorators
+    );
 
     return state;
   });
@@ -54,15 +76,15 @@ export const useEditor = (
       ...props,
       onTab: (e: React.KeyboardEvent<{}>) =>
         state.setEditorState(RichUtils.onTab(e, state.getEditorState(), 4)),
-      onChange: (editorState) => state.setEditorState(editorState),
-      handleKeyCommand,
+      onChange: editorState => state.setEditorState(editorState),
+      handleKeyCommand
     };
   }, [state]);
 };
 
 export const useInlineStyles = ({
   onChange,
-  editorState,
+  editorState
 }: Pick<EditorProps, "onChange" | "editorState">) => {
   const onBold = useCallback(() => {
     const n = (editorState: EditorState) =>
@@ -78,6 +100,6 @@ export const useInlineStyles = ({
 
   return {
     onBold,
-    onItalic,
+    onItalic
   };
 };
