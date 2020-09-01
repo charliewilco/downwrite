@@ -33,7 +33,7 @@ jobs:
         env:
           CI: TRUE
           NODE_ENV: test
-          DB_ADDRESS: localhost:27017
+          CURRENT_DB_ADDRESS: localhost:27017
           SECRET_KEY: "foo"
       - name: Type Check
         run: yarn typecheck
@@ -42,5 +42,5 @@ jobs:
         env:
           NODE_ENV: test
           CI: TRUE
-          DB_ADDRESS: localhost:27017
+          CURRENT_DB_ADDRESS: localhost:27017
           SECRET_KEY: "foo"
