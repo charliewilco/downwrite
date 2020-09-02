@@ -3,11 +3,13 @@ import { EditActions } from "@reducers/editor";
 import { useEditQuery } from "@utils/generated";
 import { useUpdateEntry, useEditReducer } from "./";
 import {
-  useEditor,
   useEditorState,
   useDecorators,
   imageLinkDecorators,
+  prismHighlightDecorator,
 } from "../editor";
+import { markdownToDraft } from "markdown-draft-js";
+import { convertFromRaw } from "draft-js";
 
 export function useEdit(id: string) {
   const { loading, data, error } = useEditQuery({
@@ -17,7 +19,12 @@ export function useEdit(id: string) {
   });
 
   const [state, dispatch] = useEditReducer(data);
-  const handleSubmit = useUpdateEntry(id, state);
+  const decorators = useDecorators([imageLinkDecorators, prismHighlightDecorator]);
+  const [editorState, editorActions] = useEditorState({
+    decorators,
+    contentState: convertFromRaw(markdownToDraft(data!.entry!.content!)),
+  });
+  const handleSubmit = useUpdateEntry(id, editorActions.getEditorState);
 
   useEffect(() => {
     if (data && data.entry) {
@@ -26,7 +33,7 @@ export function useEdit(id: string) {
   }, [data, dispatch]);
 
   return [
-    { data, loading, error, state, id },
+    { data, loading, error, state, id, editorState, editorActions },
     {
       handleSubmit,
       handleFocus() {

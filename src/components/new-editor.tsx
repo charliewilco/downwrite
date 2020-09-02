@@ -4,18 +4,18 @@ import {
   useDecorators,
   useEditor,
   useEditorState,
-  PrismDecorator,
-  imageLinkDecorators
+  emptyContentState,
+  prismHighlightDecorator,
+  imageLinkDecorators,
 } from "../editor";
 
-const prism = new PrismDecorator();
-
 export default function NewEditor() {
-  const decorators = useDecorators([imageLinkDecorators, prism]);
-  const [editorState, setEditorState, getEditorState] = useEditorState({
-    decorators
+  const decorators = useDecorators([imageLinkDecorators, prismHighlightDecorator]);
+  const [editorState, actions] = useEditorState({
+    decorators,
+    contentState: emptyContentState,
   });
-  const editorProps = useEditor({ getEditorState, setEditorState });
+  const editorProps = useEditor(actions);
   let editorRef = useRef<Editor>(null);
   return (
     <div className="max-w-3xl mx-auto my-5 relative">

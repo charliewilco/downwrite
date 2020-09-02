@@ -10,13 +10,13 @@ import {
   leaveList,
   insertEmptyBlock,
   insertText,
-  replaceText
+  replaceText,
 } from "./modifiers";
 import {
   CHECKABLE_LIST_ITEM,
   CheckableListItemUtils,
   checkboxBlockRenderMap,
-  CheckableListItem
+  CheckableListItem,
 } from "./checklist";
 
 interface IEditorConfig {
@@ -96,16 +96,18 @@ function checkReturnForState(
   return newEditorState;
 }
 
+export type EditorStateGetter = () => EditorState;
+
 export interface IPropCreation {
-  getEditorState(): EditorState;
+  getEditorState: EditorStateGetter;
   setEditorState(state: EditorState): void;
 }
 
 const extendedBlocks = Map({
   "code-block": {
     element: "code",
-    wrapper: <pre spellCheck="false" />
-  }
+    wrapper: <pre spellCheck="false" />,
+  },
 }).merge(checkboxBlockRenderMap);
 
 export type EditorPropKeys =
@@ -152,8 +154,8 @@ export const createEditorProps = (
               setEditorState(
                 CheckableListItemUtils.toggleChecked(getEditorState(), block)
               ),
-            checked: !!block.getData().get("checked")
-          }
+            checked: !!block.getData().get("checked"),
+          },
         };
       }
       default:
@@ -218,5 +220,5 @@ export const createEditorProps = (
       return "handled";
     }
     return "not-handled";
-  }
+  },
 });

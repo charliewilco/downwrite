@@ -17,6 +17,7 @@ import { initializeApollo } from "@lib/apollo";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
 import { EditDocument, IEditQuery, IEditQueryVariables } from "@utils/generated";
 import { IAppState } from "@reducers/app";
+import { useEditor } from "src/editor";
 
 const Autosaving = dynamic(() => import("@components/autosaving-interval"));
 const Editor = dynamic(() => import("@components/editor"));
@@ -43,7 +44,7 @@ export const getServerSideProps: EditPageHandler = async ({ req, res, params }) 
   const { data } = await client.query<IEditQuery, IEditQueryVariables>({
     query: EditDocument,
     variables: { id },
-    context: { req, res }
+    context: { req, res },
   });
 
   const initialAppState = await getInitialStateFromCookie(req);
@@ -54,15 +55,24 @@ export const getServerSideProps: EditPageHandler = async ({ req, res, params }) 
       id,
       rawEditorState,
       initialAppState,
-      initialApolloState: client.cache.extract()
-    }
+      initialApolloState: client.cache.extract(),
+    },
   };
 };
 
-const EditUI: NextPage<InferGetServerSidePropsType<
-  typeof getServerSideProps
->> = props => {
-  const [{ loading, error, state, data, id }, actions] = useEdit(props.id);
+const EditUI: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
+  props
+) => {
+  const [
+    { loading, error, state, data, id, editorState, editorActions },
+    actions,
+  ] = useEdit(props.id);
+
+  const editorProps = useEditor(editorActions);
+
+  const onSubmit = () => {
+    actions.handleSubmit(state.title, state.publicStatus);
+  };
 
   if (error) {
     return (
@@ -73,7 +83,7 @@ const EditUI: NextPage<InferGetServerSidePropsType<
     );
   }
 
-  if (loading || state.editorState === null) {
+  if (loading) {
     return <Loading />;
   }
 
@@ -86,7 +96,7 @@ const EditUI: NextPage<InferGetServerSidePropsType<
         <Autosaving
           title={state.title}
           duration={__IS_DEV__ ? 30000 : 120000}
-          onUpdate={actions.handleSubmit}
+          onUpdate={onSubmit}
         />
       )}
       <div className="px-2">
@@ -99,7 +109,7 @@ const EditUI: NextPage<InferGetServerSidePropsType<
         <aside className="flex items-center justify-between py-2 mx-0 mt-2 mb-4">
           <div className="flex items-center">
             <ToggleBox
-              label={value => (value ? "Public" : "Private")}
+              label={(value) => (value ? "Public" : "Private")}
               name="publicStatus"
               value={state.publicStatus}
               onChange={actions.handleStatusChange}
@@ -109,29 +119,29 @@ const EditUI: NextPage<InferGetServerSidePropsType<
             )}
           </div>
           <div className="flex items-center">
-            {!!state.editorState && (
+            {!!editorState && (
               <ExportMarkdown
-                editorState={state.editorState}
+                editorState={editorState}
                 title={state.title}
                 date={data?.entry?.dateAdded}
               />
             )}
-            <Button type="submit" onClick={actions.handleSubmit}>
+            <Button type="submit" onClick={onSubmit}>
               Save
             </Button>
           </div>
         </aside>
-        {!!state.editorState && (
+        {!!editorState && (
           <Editor
-            editorState={state.editorState}
             editorCommand={EditActions.EDITOR_COMMAND as any}
             onFocus={actions.handleFocus}
-            onSave={actions.handleSubmit}
-            onChange={actions.handleEditorChange}
+            onSave={onSubmit}
+            {...editorProps}
+            editorState={editorState}
           />
         )}
       </div>
-      {!!state.editorState && <WordCounter editorState={state.editorState} />}
+      {!!editorState && <WordCounter editorState={editorState} />}
     </div>
   );
 };

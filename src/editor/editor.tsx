@@ -4,18 +4,18 @@ import {
   useEditor,
   useEditorState,
   useInlineStyles,
+  emptyContentState,
 } from "./hooks";
-import { PrismDecorator } from "./prism";
+import { prismHighlightDecorator } from "./prism";
 import { imageLinkDecorators } from "./decorators";
 
-const prism = new PrismDecorator();
-
 export default function NewEditor() {
-  const decorators = useDecorators([imageLinkDecorators, prism]);
-  const [editorState, setEditorState, getEditorState] = useEditorState({
+  const decorators = useDecorators([imageLinkDecorators, prismHighlightDecorator]);
+  const [editorState, actions] = useEditorState({
     decorators,
+    contentState: emptyContentState,
   });
-  const editorProps = useEditor({ getEditorState, setEditorState });
+  const editorProps = useEditor(actions);
   const { onItalic, onBold } = useInlineStyles({
     onChange: editorProps.onChange,
     editorState,
@@ -26,14 +26,12 @@ export default function NewEditor() {
       <div className="border-b border-gray-200 py-4 mb-4">
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4"
-          onClick={onBold}
-        >
+          onClick={onBold}>
           Bold
         </button>
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={onItalic}
-        >
+          onClick={onItalic}>
           Italic
         </button>
       </div>

@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import dynamic from "next/dynamic";
-import { useRef, useCallback } from "react";
+import { useCallback } from "react";
 import { useFormik } from "formik";
 import { useOffline, useNewEntry, INewEditorValues } from "../hooks";
 import { IMarkdownConversion } from "@components/upload";
@@ -13,7 +13,7 @@ import {
   useEditorState,
   useDecorators,
   defaultDecorators,
-  emptyContentState
+  emptyContentState,
 } from "../editor";
 
 const Editor = dynamic(() => import("@components/editor"));
@@ -25,27 +25,21 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const initialAppState = await getInitialStateFromCookie(req);
   return {
     props: {
-      initialAppState
-    }
+      initialAppState,
+    },
   };
 };
 
 const NewEntryPage: NextPage = () => {
-  const initialValues = useRef<INewEditorValues>({
-    title: ""
-  });
   const [createNewPost] = useNewEntry();
   const isOffline = useOffline();
   const decorators = useDecorators(defaultDecorators);
-  const [editorState, setEditorState, getEditorState] = useEditorState({
+  const [editorState, editorActions] = useEditorState({
     contentState: emptyContentState,
-    decorators
+    decorators,
   });
 
-  const editorProps = useEditor({
-    getEditorState,
-    setEditorState
-  });
+  const editorProps = useEditor(editorActions);
 
   function onSubmit(values: INewEditorValues): void {
     createNewPost(values.title, editorState);
@@ -53,13 +47,15 @@ const NewEntryPage: NextPage = () => {
 
   const { values, setFieldValue, handleSubmit, handleChange } = useFormik({
     enableReinitialize: true,
-    initialValues: initialValues.current,
-    onSubmit
+    initialValues: {
+      title: "",
+    },
+    onSubmit,
   });
 
   const onParsed = useCallback((parsed: IMarkdownConversion) => {
     setFieldValue("title", parsed.title);
-    setEditorState(parsed.editorState);
+    editorActions.setEditorState(parsed.editorState);
   }, []);
 
   return (
