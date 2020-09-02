@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import { convertToRaw, RawDraftContentState } from "draft-js";
-import { INewEditorValues } from "./";
+import { useState, useEffect, useCallback, useReducer } from "react";
+import { convertToRaw, RawDraftContentState, EditorState } from "draft-js";
 import { v4 as uuid } from "uuid";
+import produce from "immer";
 
 export interface ILocalDraft {
   title: string;
@@ -9,37 +9,37 @@ export interface ILocalDraft {
   content: RawDraftContentState;
 }
 
-type LocalDraft = [
-  () => ILocalDraft[],
-  (post: INewEditorValues) => ILocalDraft,
-  (id: string) => void
-];
+export const LOCAL_PREFIX = "DOWNWRITE_DRAFT";
 
-export function useLocalDraftUtils(): LocalDraft {
-  const PREFIX = "DOWNWRITE_DRAFT";
+export function useLocalDraftUtils(prefix = LOCAL_PREFIX) {
+  const removeFromStorage = useCallback(
+    (id: string) => {
+      const key = [prefix, id].join(" ");
 
-  function removeDraft(id: string): void {
-    const key = [PREFIX, id].join(" ");
+      localStorage.removeItem(key);
+    },
+    [prefix]
+  );
 
-    localStorage.removeItem(key);
-  }
+  const writeToStorage = useCallback(
+    (title: string, editorState: EditorState) => {
+      const id = uuid();
+      const content: RawDraftContentState = convertToRaw(
+        editorState.getCurrentContent()
+      );
+      const localDraft = { title, content, id };
 
-  function writeToStorage({ title, editorState }: INewEditorValues): ILocalDraft {
-    const id = uuid();
-    const content: RawDraftContentState = convertToRaw(
-      editorState.getCurrentContent()
-    );
-    const localDraft = { title, content, id };
+      localStorage.setItem([prefix, id].join(" "), JSON.stringify(localDraft));
 
-    localStorage.setItem([PREFIX, id].join(" "), JSON.stringify(localDraft));
+      return localDraft;
+    },
+    [prefix]
+  );
 
-    return localDraft;
-  }
-
-  function getAllDrafts(): ILocalDraft[] {
+  const getAllDrafts = useCallback((): ILocalDraft[] => {
     const drafts: ILocalDraft[] = Object.keys(localStorage)
       .filter(function(key) {
-        return key.includes(PREFIX);
+        return key.includes(prefix);
       })
       .map(function(key) {
         // can assume this isn't null because it passes the filter
@@ -48,51 +48,67 @@ export function useLocalDraftUtils(): LocalDraft {
       });
 
     return drafts;
-  }
+  }, [prefix]);
 
-  return [getAllDrafts, writeToStorage, removeDraft];
+  return { getAllDrafts, writeToStorage, removeFromStorage } as const;
 }
 
 // TODO: Migrate to useReducer()
-
-interface ILocalDraftActions {
-  addDraft(draft: INewEditorValues): void;
-  removeDraft(draft: ILocalDraft): void;
+enum LocalDraftActionTypes {
+  REMOVE_LOCAL_DRAFT,
+  ADD_LOCAL_DRAFT,
 }
+type LocalDraftActions =
+  | { type: LocalDraftActionTypes.REMOVE_LOCAL_DRAFT; id: string }
+  | {
+      type: LocalDraftActionTypes.ADD_LOCAL_DRAFT;
+      item: ILocalDraft;
+    };
 
-// function pushDraftToEditor({ title, content }: ILocalDraft) {
-//   const editorState = Draft.EditorState.createWithContent(
-//     Draft.convertFromRaw(content)
-//   );
-//   setInitialValues({ title, editorState });
-// }
+const localDraftReducer: React.Reducer<ILocalDraft[], LocalDraftActions> = produce(
+  (draft: ILocalDraft[], action: LocalDraftActions) => {
+    switch (action.type) {
+      case LocalDraftActionTypes.ADD_LOCAL_DRAFT:
+        draft.push(action.item);
+        break;
+      case LocalDraftActionTypes.REMOVE_LOCAL_DRAFT:
+        break;
+      default:
+        throw new Error("Must specify action type");
+    }
+  }
+);
 
-export function useLocalDrafts(): [ILocalDraft[], ILocalDraftActions] {
+export function useLocalDrafts() {
   const [drafts, setDrafts] = useState<ILocalDraft[]>([]);
-  const [getAllDrafts, writeToStorage, removeFromStorage] = useLocalDraftUtils();
+  const [state, dispatch] = useReducer(localDraftReducer, []);
+  const { getAllDrafts, writeToStorage, removeFromStorage } = useLocalDraftUtils();
 
-  useEffect(
-    function() {
-      setDrafts(getAllDrafts());
+  useEffect(() => {
+    setDrafts(getAllDrafts());
+  }, [setDrafts, getAllDrafts]);
+
+  const addDraft = useCallback(
+    (title: string, editorState: EditorState): void => {
+      const localDraft = writeToStorage(title, editorState);
+      setDrafts((prev) => [...prev, localDraft]);
     },
-    [getAllDrafts]
+    [setDrafts, writeToStorage]
   );
 
-  function addDraft(draft: INewEditorValues): void {
-    const localDraft = writeToStorage(draft);
-    setDrafts(prev => [...prev, localDraft]);
-  }
-
-  function removeDraft(draft: ILocalDraft): void {
-    removeFromStorage(draft.id);
-    setDrafts(getAllDrafts());
-  }
+  const removeDraft = useCallback(
+    (draft: ILocalDraft): void => {
+      removeFromStorage(draft.id);
+      setDrafts(getAllDrafts());
+    },
+    [removeFromStorage, setDrafts, getAllDrafts]
+  );
 
   return [
     drafts,
     {
       addDraft,
-      removeDraft
-    }
+      removeDraft,
+    },
   ];
 }
