@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { ILocalDraft } from "../hooks";
+import { ILocalDraft } from "@reducers/local";
 
 interface IDraftListProps {
   drafts: ILocalDraft[];
