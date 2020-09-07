@@ -1,7 +1,7 @@
 import { useRef, useCallback, MutableRefObject } from "react";
 import { EditorState, convertFromRaw } from "draft-js";
 import { useDropzone } from "react-dropzone";
-import { markdownToDraft } from "markdown-draft-js";
+import { markdownToDraft } from "../editor";
 import { fm } from "@utils/fm";
 import { __IS_BROWSER__ } from "@utils/dev";
 

@@ -1,20 +1,6 @@
 import format from "date-fns/format";
-import { draftToMarkdown, DraftToMarkdownOptions } from "markdown-draft-js";
+import { draftToMarkdown } from "../editor";
 import is from "@sindresorhus/is";
-
-const options: DraftToMarkdownOptions = {
-  entityItems: {
-    LINK: {
-      open: () => {
-        return "[";
-      },
-
-      close: (entity: any) => {
-        return `](${entity.data.url || entity.data.href})`;
-      }
-    }
-  }
-};
 
 export function createMarkdownServer(
   content: Draft.RawDraftContentState | string
@@ -26,7 +12,20 @@ export function createMarkdownServer(
   if (content === undefined) {
     return "";
   }
-  return draftToMarkdown(content, options);
+  return draftToMarkdown(content, {
+    preserveNewlines: true,
+    entityItems: {
+      LINK: {
+        open: () => {
+          return "[";
+        },
+
+        close: (entity: any) => {
+          return `](${entity.data.url || entity.data.href})`;
+        }
+      }
+    }
+  });
 }
 
 export const createMarkdown = (

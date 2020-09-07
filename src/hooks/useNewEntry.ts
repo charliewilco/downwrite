@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { ApolloCache, FetchResult } from "@apollo/client";
 import { useRouter } from "next/router";
 import { ContentState, EditorState, convertToRaw } from "draft-js";
-import { draftToMarkdown } from "markdown-draft-js";
+import { draftToMarkdown } from "../editor";
 import {
   useCreateEntryMutation,
   AllPostsDocument,

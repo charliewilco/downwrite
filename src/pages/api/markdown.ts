@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { markdownToDraft, draftToMarkdown } from "markdown-draft-js";
+import { markdownToDraft, draftToMarkdown } from "../../editor";
 
 export default async function markdown(
   { body, query }: NextApiRequest,
@@ -16,7 +16,7 @@ export default async function markdown(
   } else {
     const { rawEditorState } = body;
 
-    const md = draftToMarkdown(rawEditorState);
+    const md = draftToMarkdown(rawEditorState, { preserveNewlines: true });
     res.json({ markdown: md });
   }
 }

@@ -7,22 +7,22 @@ import {
   useDecorators,
   imageLinkDecorators,
   prismHighlightDecorator,
+  markdownToDraft
 } from "../editor";
-import { markdownToDraft } from "markdown-draft-js";
 import { convertFromRaw } from "draft-js";
 
 export function useEdit(id: string) {
   const { loading, data, error } = useEditQuery({
     variables: {
-      id,
-    },
+      id
+    }
   });
 
   const [state, dispatch] = useEditReducer(data);
   const decorators = useDecorators([imageLinkDecorators, prismHighlightDecorator]);
   const [editorState, editorActions] = useEditorState({
     decorators,
-    contentState: convertFromRaw(markdownToDraft(data!.entry!.content!)),
+    contentState: convertFromRaw(markdownToDraft(data!.entry!.content!))
   });
   const handleSubmit = useUpdateEntry(id, editorActions.getEditorState);
 
@@ -44,7 +44,7 @@ export function useEdit(id: string) {
       },
       handleStatusChange() {
         dispatch({ type: EditActions.TOGGLE_PUBLIC_STATUS });
-      },
-    },
+      }
+    }
   ] as const;
 }

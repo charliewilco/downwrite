@@ -2,7 +2,6 @@ import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next"
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { RawDraftContentState } from "draft-js";
-import { markdownToDraft } from "markdown-draft-js";
 import { NormalizedCacheObject } from "@apollo/client";
 import { Button } from "@components/button";
 import Loading from "@components/loading";
@@ -17,7 +16,7 @@ import { initializeApollo } from "@lib/apollo";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
 import { EditDocument, IEditQuery, IEditQueryVariables } from "@utils/generated";
 import { IAppState } from "@reducers/app";
-import { useEditor } from "src/editor";
+import { useEditor, markdownToDraft } from "../../editor";
 
 const Autosaving = dynamic(() => import("@components/autosaving-interval"));
 const Editor = dynamic(() => import("@components/editor"));
@@ -44,7 +43,7 @@ export const getServerSideProps: EditPageHandler = async ({ req, res, params }) 
   const { data } = await client.query<IEditQuery, IEditQueryVariables>({
     query: EditDocument,
     variables: { id },
-    context: { req, res },
+    context: { req, res }
   });
 
   const initialAppState = await getInitialStateFromCookie(req);
@@ -55,17 +54,17 @@ export const getServerSideProps: EditPageHandler = async ({ req, res, params }) 
       id,
       rawEditorState,
       initialAppState,
-      initialApolloState: client.cache.extract(),
-    },
+      initialApolloState: client.cache.extract()
+    }
   };
 };
 
-const EditUI: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
-  props
-) => {
+const EditUI: NextPage<InferGetServerSidePropsType<
+  typeof getServerSideProps
+>> = props => {
   const [
     { loading, error, state, data, id, editorState, editorActions },
-    actions,
+    actions
   ] = useEdit(props.id);
 
   const editorProps = useEditor(editorActions);
@@ -109,7 +108,7 @@ const EditUI: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> =
         <aside className="flex items-center justify-between py-2 mx-0 mt-2 mb-4">
           <div className="flex items-center">
             <ToggleBox
-              label={(value) => (value ? "Public" : "Private")}
+              label={value => (value ? "Public" : "Private")}
               name="publicStatus"
               value={state.publicStatus}
               onChange={actions.handleStatusChange}
