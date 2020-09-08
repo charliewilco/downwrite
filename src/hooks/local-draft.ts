@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Draft from "draft-js";
 import { IFields } from "./create-entry";
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 
 export interface ILocalDraft {
   title: string;

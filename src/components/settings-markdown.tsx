@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Formik, FormikProps, ErrorMessage, Form, FormikActions } from "formik";
+import { Formik, FormikProps, ErrorMessage, Form, FormikHelpers } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
@@ -38,7 +38,7 @@ export default function SettingsLocalMarkdown(): JSX.Element {
 
   function onSubmit(
     { fileExtension, fontFamily }: ILocalSettings,
-    actions: FormikActions<ILocalSettings>
+    helpers: FormikHelpers<ILocalSettings>
   ): void {
     localStorage.setItem(LocalSettings.EXTENSION, fileExtension);
     localStorage.setItem(LocalSettings.FONT, fontFamily);
@@ -49,7 +49,7 @@ export default function SettingsLocalMarkdown(): JSX.Element {
       localStorage.getItem(LocalSettings.EXTENSION) === fileExtension &&
       localStorage.getItem(LocalSettings.FONT) === fontFamily
     ) {
-      actions.setSubmitting(false);
+      helpers.setSubmitting(false);
     }
   }
 

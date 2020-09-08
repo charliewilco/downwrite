@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Formik, FormikProps, ErrorMessage, Form, FormikActions } from "formik";
+import { Formik, FormikProps, ErrorMessage, Form, FormikHelpers } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { ToggleBox } from "../components/toggle-box";
@@ -40,12 +40,12 @@ export default function SettingsPassword(): JSX.Element {
 
   const onSubmit = (
     values: IPasswordSettings,
-    actions: FormikActions<IPasswordSettings>
+    helpers: FormikHelpers<IPasswordSettings>
   ): void => {
     const response = updatePassword(values, { token });
 
     if (response) {
-      actions.setSubmitting(false);
+      helpers.setSubmitting(false);
     }
   };
 

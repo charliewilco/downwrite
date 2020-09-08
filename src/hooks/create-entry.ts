@@ -4,7 +4,7 @@ import Router from "next/router";
 import * as Dwnxt from "downwrite";
 import { AuthContext, AuthContextType } from "../components/auth";
 import { createPost } from "../utils/api";
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import { useUINotifications, NotificationType } from "../reducers/notifications";
 
 export interface IFields {
