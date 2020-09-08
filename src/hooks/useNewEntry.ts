@@ -48,7 +48,7 @@ export function useNewEntry() {
     async (title: string, editorState: EditorState) => {
       const ContentState: ContentState = editorState.getCurrentContent();
       const state = convertToRaw(ContentState);
-      const content = draftToMarkdown(state);
+      const content = draftToMarkdown(state, { preserveNewlines: true });
 
       await createEntry({
         variables: {

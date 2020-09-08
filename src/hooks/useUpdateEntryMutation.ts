@@ -60,7 +60,7 @@ export function useUpdateEntry(id: string, getEditorState: EditorStateGetter) {
         await mutationFn({
           variables: {
             id,
-            content: draftToMarkdown(content),
+            content: draftToMarkdown(content, { preserveNewlines: true }),
             title: title,
             status: publicStatus
           }

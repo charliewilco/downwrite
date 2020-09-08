@@ -1,4 +1,4 @@
-import Remarkable from "remarkable";
+import { Remarkable } from "remarkable";
 import {
   RawDraftContentBlock,
   RawDraftContentState,
