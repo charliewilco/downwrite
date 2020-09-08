@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Formik, FormikProps, ErrorMessage, Form, FormikActions } from "formik";
+import { Formik, FormikProps, ErrorMessage, Form, FormikHelpers } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
@@ -21,11 +21,11 @@ export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
 
   const onSubmit = async (
     values: IUserFormValues,
-    actions: FormikActions<IUserFormValues>
+    helpers: FormikHelpers<IUserFormValues>
   ): Promise<void> => {
     const settings = await updateSettings(values, { token });
     if (settings) {
-      actions.setSubmitting(false);
+      helpers.setSubmitting(false);
     }
   };
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Draft from "draft-js";
-import { Formik, Form, FormikActions } from "formik";
+import { Formik, Form } from "formik";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Cookies from "universal-cookie";
@@ -38,7 +38,7 @@ export default function NewEditor(): JSX.Element {
   const createNewPost = useCreatePost();
   const isOffline = useOffline();
 
-  function onSubmit(values: IFields, actions: FormikActions<IFields>): void {
+  function onSubmit(values: IFields): void {
     return createNewPost(values);
   }
 
