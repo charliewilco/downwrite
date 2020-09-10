@@ -12,11 +12,11 @@ import Markdown from "../markdown/markdown.md";
 export const getServerSideProps: GetServerSideProps<{
   token: string;
 }> = async context => {
-  const { DW_TOKEN: token } = new Cookies(context.req.headers.cookie).getAll();
+  const { DW_TOKEN } = new Cookies(context.req.headers.cookie).getAll();
 
   return {
     props: {
-      token: token || null
+      token: DW_TOKEN || null
     }
   };
 };

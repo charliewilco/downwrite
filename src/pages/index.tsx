@@ -18,11 +18,12 @@ import * as InitialProps from "../utils/initial-props";
 
 export const getServerSideProps: GetServerSideProps<InitialProps.IDashboardProps> = async context => {
   const cookie = new Cookies(context.req.headers.cookie);
-  const { DW_TOKEN: token } = cookie.getAll();
+  const { DW_TOKEN } = cookie.getAll();
+  console.log("TOKEN", DW_TOKEN, !!cookie.getAll().DW_TOKEN);
 
-  if (token) {
+  if (!!DW_TOKEN) {
     await dbConnect();
-    const x = jwt.decode(token) as { user: string };
+    const x = jwt.decode(DW_TOKEN) as { user: string };
     const posts = await getPosts(x.user);
     return {
       props: {
@@ -42,7 +43,7 @@ export const getServerSideProps: GetServerSideProps<InitialProps.IDashboardProps
                 })
               ]
             : [],
-        token
+        token: DW_TOKEN
       }
     };
   }

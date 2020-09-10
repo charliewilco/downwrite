@@ -7,6 +7,9 @@ import "../components/styles/base.css";
 
 const App = ({ Component, pageProps }: AppProps) => {
   const authed = !isEmpty(pageProps.token);
+
+  console.log(pageProps, !isEmpty(pageProps.token));
+
   return (
     <AuthProvider token={pageProps.token} authed={authed}>
       <UIShell>

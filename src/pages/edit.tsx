@@ -30,9 +30,10 @@ export const getServerSideProps: GetServerSideProps<
   { id: string }
 > = async context => {
   await dbConnect();
-  const { DW_TOKEN: token } = new Cookies(context.req.headers.cookie).getAll();
+  const cookie = new Cookies(context.req.headers.cookie);
+  const { DW_TOKEN } = cookie.getAll();
 
-  const { user } = jwt.decode(token) as { user: string };
+  const { user } = jwt.decode(DW_TOKEN) as { user: string };
   const id = Array.isArray(context.query.id)
     ? context.query.id.join("")
     : context.query.id;
@@ -47,10 +48,10 @@ export const getServerSideProps: GetServerSideProps<
     dateModified: p.dateModified ? p.dateModified.toString() : new Date().toString()
   }));
 
-  if (token) {
+  if (!!DW_TOKEN) {
     return {
       props: {
-        token,
+        token: DW_TOKEN,
         id,
         title: post.title || "",
         post
@@ -58,7 +59,7 @@ export const getServerSideProps: GetServerSideProps<
     };
   } else {
     return {
-      props: { token: undefined }
+      props: { token: null }
     };
   }
 };

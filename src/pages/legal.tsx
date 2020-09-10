@@ -6,11 +6,12 @@ import Content from "../components/content";
 import Legal from "../markdown/legal.md";
 
 export const getServerSideProps: GetServerSideProps = async context => {
-  const { DW_TOKEN: token } = new Cookies(context.req.headers.cookie).getAll();
+  const cookies = new Cookies(context.req.headers.cookie);
+  const { DW_TOKEN } = cookies.getAll();
 
   return {
     props: {
-      token
+      token: DW_TOKEN || null
     }
   };
 };

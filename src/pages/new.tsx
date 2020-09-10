@@ -21,11 +21,12 @@ const EDITOR_SPACING: React.CSSProperties = {
 };
 
 export const getServerSideProps: GetServerSideProps = async context => {
-  const { DW_TOKEN: token } = new Cookies(context.req.headers.cookie).getAll();
+  const cookie = new Cookies(context.req.headers.cookie);
+  const { DW_TOKEN } = cookie.getAll();
 
   return {
     props: {
-      token
+      token: DW_TOKEN || null
     }
   };
 };
