@@ -81,7 +81,7 @@
     "prettier": "^1.17.0",
     "prop-types": "^15.7.2",
     "react-test-renderer": "^16.9.0",
-    "ts-jest": "^26.3.0",
+    "ts-jest": "^26.4.4",
     "typescript": "^3.6.2"
   },
   "babel": {
