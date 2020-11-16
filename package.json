@@ -55,7 +55,7 @@
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.10",
     "markdown-draft-js": "^1.5.0",
-    "mongoose": "5.9.13",
+    "mongoose": "5.10.14",
     "next": "^9.5.4",
     "postcss-preset-env": "^6.7.0",
     "prismjs": "^1.15.0",
