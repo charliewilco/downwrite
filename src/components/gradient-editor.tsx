@@ -1,7 +1,7 @@
 import * as React from "react";
 import Avatar from "./avatar";
 import ColorPicker from "./color-picker";
-import * as DefaultStyles from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/default-styles";
 
 interface IColors {
   a: string;

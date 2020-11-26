@@ -1,0 +1,24 @@
+schema: ./src/lib/type-defs.ts
+documents: ./src/lib/document.graphql
+generates:
+  ./src/utils/generated.tsx:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+  ./src/utils/resolver-types.ts:
+    config:
+      useIndexSignature: true
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-resolvers
+config:
+  typesPrefix: I
+  avoidOptionals: true
+  withHooks: true
+  gqlImport: "@apollo/client#gql"
+
+hooks:
+  afterAllFileWrite:
+    - prettier --write

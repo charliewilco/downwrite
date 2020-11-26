@@ -13,7 +13,7 @@ import AuthorBlock from "../components/author-block";
 import { AuthContext } from "../components/auth";
 import NotFound from "../components/not-found";
 import { IPreviewProps } from "../utils/initial-props";
-import { startColors } from "../utils/defaultStyles";
+import { startColors } from "../utils/default-styles";
 
 const isError = (entry: any): entry is Dwnxt.IPreviewEntryError => {
   return !isEmpty(entry.message);

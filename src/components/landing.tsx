@@ -1,6 +1,6 @@
 import * as React from "react";
 import { LocalUISettings } from "./local-ui-settings";
-import * as DefaultStyles from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/default-styles";
 
 interface ILandingPageProps {
   children: React.ReactNode;

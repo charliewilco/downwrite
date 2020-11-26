@@ -7,7 +7,7 @@ import createPrismPlugin from "draft-js-prism-plugin";
 import { LocalUISettings, ILocalUISettings } from "./local-ui-settings";
 import { __IS_TEST__ } from "../utils/dev";
 
-import * as DefaultStyles from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/default-styles";
 
 type Handler = "handled" | "not-handled";
 

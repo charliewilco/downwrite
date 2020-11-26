@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as DefaultStyles from "../utils/defaultStyles";
+import * as DefaultStyles from "../utils/default-styles";
 
 export interface ILocalUISettings {
   monospace: string;
