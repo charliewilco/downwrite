@@ -5,6 +5,10 @@ import {
 } from "graphql";
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]: Maybe<T[SubKey]> };
 export type RequireFields<T, K extends keyof T> = {
   [X in Exclude<keyof T, K>]?: T[X];
 } &
@@ -322,8 +326,9 @@ export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}> = (
+export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
   obj: T,
+  context: TContext,
   info: GraphQLResolveInfo
 ) => boolean | Promise<boolean>;
 
@@ -392,7 +397,7 @@ export type IEntryResolvers<
   dateModified: Resolver<Maybe<IResolversTypes["Date"]>, ParentType, ContextType>;
   excerpt: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
   user: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type IAuthorResolvers<
@@ -405,7 +410,7 @@ export type IAuthorResolvers<
     ParentType,
     ContextType
   >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type IPreviewResolvers<
@@ -417,7 +422,7 @@ export type IPreviewResolvers<
   content: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
   author: Resolver<Maybe<IResolversTypes["Author"]>, ParentType, ContextType>;
   dateAdded: Resolver<Maybe<IResolversTypes["Date"]>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type IUserResolvers<
@@ -427,7 +432,7 @@ export type IUserResolvers<
   username: Resolver<IResolversTypes["String"], ParentType, ContextType>;
   email: Resolver<IResolversTypes["String"], ParentType, ContextType>;
   admin: Resolver<Maybe<IResolversTypes["Boolean"]>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type IAuthUserPayloadResolvers<
@@ -435,7 +440,7 @@ export type IAuthUserPayloadResolvers<
   ParentType extends IResolversParentTypes["AuthUserPayload"] = IResolversParentTypes["AuthUserPayload"]
 > = ResolversObject<{
   token: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type IQueryResolvers<

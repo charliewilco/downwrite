@@ -2,6 +2,10 @@ import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -302,7 +306,7 @@ export const EditDocument = gql`
  * });
  */
 export function useEditQuery(
-  baseOptions?: Apollo.QueryHookOptions<IEditQuery, IEditQueryVariables>
+  baseOptions: Apollo.QueryHookOptions<IEditQuery, IEditQueryVariables>
 ) {
   return Apollo.useQuery<IEditQuery, IEditQueryVariables>(EditDocument, baseOptions);
 }
@@ -348,7 +352,7 @@ export const PreviewDocument = gql`
  * });
  */
 export function usePreviewQuery(
-  baseOptions?: Apollo.QueryHookOptions<IPreviewQuery, IPreviewQueryVariables>
+  baseOptions: Apollo.QueryHookOptions<IPreviewQuery, IPreviewQueryVariables>
 ) {
   return Apollo.useQuery<IPreviewQuery, IPreviewQueryVariables>(
     PreviewDocument,

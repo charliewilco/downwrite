@@ -1,4 +1,9 @@
-import { EditorProps, EditorState, DefaultDraftBlockRenderMap } from "draft-js";
+import {
+  EditorProps,
+  EditorState,
+  DefaultDraftBlockRenderMap,
+  DraftHandleValue
+} from "draft-js";
 import { Map } from "immutable";
 import {
   changeCurrentBlockType,
@@ -10,13 +15,13 @@ import {
   leaveList,
   insertEmptyBlock,
   insertText,
-  replaceText,
+  replaceText
 } from "./modifiers";
 import {
   CHECKABLE_LIST_ITEM,
   CheckableListItemUtils,
   checkboxBlockRenderMap,
-  CheckableListItem,
+  CheckableListItem
 } from "./checklist";
 
 interface IEditorConfig {
@@ -45,7 +50,7 @@ function checkCharacterForState(editorState: EditorState, character: string) {
 function checkReturnForState(
   editorState: EditorState,
   config: IEditorConfig,
-  ev?: React.KeyboardEvent<{}>
+  ev?: React.KeyboardEvent
 ) {
   let newEditorState = editorState;
   const contentState = editorState.getCurrentContent();
@@ -106,8 +111,8 @@ export interface IPropCreation {
 const extendedBlocks = Map({
   "code-block": {
     element: "code",
-    wrapper: <pre spellCheck="false" />,
-  },
+    wrapper: <pre spellCheck="false" />
+  }
 }).merge(checkboxBlockRenderMap);
 
 export type EditorPropKeys =
@@ -154,15 +159,15 @@ export const createEditorProps = (
               setEditorState(
                 CheckableListItemUtils.toggleChecked(getEditorState(), block)
               ),
-            checked: !!block.getData().get("checked"),
-          },
+            checked: !!block.getData().get("checked")
+          }
         };
       }
       default:
         return null;
     }
   },
-  handleReturn(ev, editorState) {
+  handleReturn(ev: React.KeyboardEvent, editorState: EditorState): DraftHandleValue {
     const newEditorState = checkReturnForState(editorState, config, ev);
     if (editorState !== newEditorState) {
       setEditorState(newEditorState);
@@ -170,7 +175,7 @@ export const createEditorProps = (
     }
     return "not-handled";
   },
-  handleBeforeInput(character, editorState) {
+  handleBeforeInput(character: string, editorState: EditorState): DraftHandleValue {
     if (character.match(/[A-z0-9_*~`]/)) {
       return "not-handled";
     }
@@ -181,7 +186,11 @@ export const createEditorProps = (
     }
     return "not-handled";
   },
-  handlePastedText(text, html, editorState) {
+  handlePastedText(
+    text: string,
+    html: string,
+    editorState: EditorState
+  ): DraftHandleValue {
     if (html) {
       return "not-handled";
     }
@@ -220,5 +229,5 @@ export const createEditorProps = (
       return "handled";
     }
     return "not-handled";
-  },
+  }
 });
