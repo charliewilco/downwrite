@@ -1,19 +1,20 @@
-import * as React from "react";
 import { AppProps } from "next/app";
-import isEmpty from "lodash/isEmpty";
-import { UIShell } from "../components/ui-shell";
-import { AuthProvider } from "../components/auth";
-import "../components/styles/base.css";
+import { ApolloProvider } from "@apollo/client";
+import { UIShell } from "@components/ui-shell";
+import { useApollo } from "@lib/apollo";
+import { AppProvider } from "@reducers/app";
+import "../styles.css";
 
-const App = ({ Component, pageProps }: AppProps) => {
-  const authed = !isEmpty(pageProps.token);
+export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
+  const client = useApollo(pageProps.initialApolloState);
+
   return (
-    <AuthProvider token={pageProps.token} authed={authed}>
-      <UIShell>
-        <Component {...pageProps} />
-      </UIShell>
-    </AuthProvider>
+    <ApolloProvider client={client}>
+      <AppProvider initial={pageProps.initialAppState}>
+        <UIShell>
+          <Component {...pageProps} />
+        </UIShell>
+      </AppProvider>
+    </ApolloProvider>
   );
-};
-
-export default App;
+}

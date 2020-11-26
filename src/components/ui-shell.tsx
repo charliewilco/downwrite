@@ -1,6 +1,6 @@
 import * as React from "react";
 import Head from "next/head";
-import Header from "./header";
+import { UIHeader } from "./header";
 import Footer from "./footer";
 import NightModeProvider from "./night-mode";
 import { LocalUISettingsProvider } from "./local-ui-settings";
@@ -26,7 +26,7 @@ export function UIShell(props: IUIShell) {
           <div className="clearfix">
             <div style={{ minHeight: "100%" }}>
               <NightModeProvider>
-                <Header />
+                <UIHeader />
               </NightModeProvider>
               {props.children}
               <Footer />

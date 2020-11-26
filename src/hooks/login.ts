@@ -1,68 +1,97 @@
-import * as React from "react";
-import { AuthContext, AuthContextType } from "../components/auth";
-import { useUINotifications, NotificationType } from "../reducers/notifications";
-import { authUser, createUser } from "../utils/api";
-import { StringTMap } from "../utils/types";
+import { useCallback } from "react";
+import { useRouter } from "next/router";
+import decode from "jwt-decode";
+import { TokenContents } from "@lib/token";
+import { useLoginUserMutation, useCreateUserMutation } from "@utils/generated";
+import { useNotifications, NotificationType, useCurrentUser } from "@reducers/app";
 
-export interface IRegisterValues extends StringTMap<string | boolean> {
+export interface IRegisterValues extends Record<string, string | boolean> {
   username: string;
   password: string;
   legalChecked: boolean;
   email: string;
 }
 
-export interface ILoginValues extends StringTMap<string> {
+export interface ILoginValues extends Record<string, string> {
   user: string;
   password: string;
 }
 
 interface IFormHandlers {
-  onLoginSubmit: (values: ILoginValues) => void;
-  onRegisterSubmit: (values: IRegisterValues) => void;
+  onLoginSubmit(values: ILoginValues): void;
+  onRegisterSubmit(values: IRegisterValues): void;
 }
 
-export default function useLoginFns(): IFormHandlers {
-  const [, { signIn }] = React.useContext<AuthContextType>(AuthContext);
-  const { notifications, actions } = useUINotifications();
+export function useLoginFns(): IFormHandlers {
+  const router = useRouter();
+  const [
+    notifications,
+    { addNotification, removeNotification }
+  ] = useNotifications();
+  const [createUser] = useCreateUserMutation();
+  const [, { onCurrentUserLogin }] = useCurrentUser();
 
-  const onLoginSubmit = async (values: ILoginValues): Promise<void> => {
-    const auth = await authUser(values);
+  const [authenticateUser] = useLoginUserMutation();
 
-    if (auth.error) {
-      actions.add(auth.message, NotificationType.ERROR);
+  const onSuccess = useCallback((token: string) => {
+    const d = decode<TokenContents>(token);
+    onCurrentUserLogin(d.name, d.user);
+
+    router.push("/dashboard");
+
+    if (notifications.length > 0) {
+      notifications.forEach(n => {
+        removeNotification(n);
+      });
     }
+  }, []);
 
-    if (auth.token) {
-      signIn(auth.token !== undefined, auth.token);
-      if (notifications.length > 0) {
-        notifications.forEach(n => {
-          actions.remove(n);
+  const onLoginSubmit = useCallback(
+    async (values: ILoginValues): Promise<void> => {
+      await authenticateUser({
+        variables: {
+          username: values.user,
+          password: values.password
+        }
+      })
+        .then(value => {
+          if (value?.data?.authenticateUser?.token) {
+            const token = value.data.authenticateUser.token;
+            onSuccess(token);
+          }
+        })
+        .catch(error => {
+          addNotification(error.message, NotificationType.ERROR);
         });
-      }
-    }
-  };
+    },
+    [addNotification, authenticateUser, onSuccess]
+  );
 
-  const onRegisterSubmit = async (values: IRegisterValues): Promise<void> => {
-    const { legalChecked, ...body } = values;
-    if (legalChecked) {
-      const user = await createUser(body);
+  const onRegisterSubmit = useCallback(
+    async ({ legalChecked, ...values }: IRegisterValues): Promise<void> => {
+      if (legalChecked) {
+        await createUser({
+          variables: {
+            ...values
+          }
+        })
+          .then(value => {
+            if (value?.data?.createUser?.token) {
+              const token = value.data.createUser.token;
 
-      if (user.userID) {
-        signIn(user.id_token !== undefined, user.id_token);
-      } else {
-        actions.add(user.message!, NotificationType.ERROR);
+              onSuccess(token);
+            }
+          })
+          .catch(error => {
+            addNotification(error.message, NotificationType.ERROR);
+          });
       }
-    }
-  };
+    },
+    [createUser, addNotification, onSuccess]
+  );
 
   return {
-    onLoginSubmit(values) {
-      onLoginSubmit(values);
-    },
-    onRegisterSubmit(values) {
-      if (values.legalChecked) {
-        onRegisterSubmit(values);
-      }
-    }
+    onLoginSubmit,
+    onRegisterSubmit
   };
 }

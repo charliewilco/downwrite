@@ -2,7 +2,7 @@ import * as React from "react";
 import { Formik, Form, FormikProps, ErrorMessage } from "formik";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
-import useLoginFns, { ILoginValues } from "../hooks/login";
+import { useLoginFns, ILoginValues } from "../hooks/login";
 import { LoginFormSchema } from "../utils/validations";
 
 export default function Login(): JSX.Element {

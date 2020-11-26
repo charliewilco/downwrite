@@ -1,7 +1,5 @@
-import * as React from "react";
 import Head from "next/head";
-import NotFound from "../components/not-found";
-import { NextPageContext } from "next";
+import NotFound from "@components/not-found";
 
 interface IErrorViewProps {
   statusCode: number;
@@ -11,50 +9,26 @@ interface ICustomError extends Error {
   statusCode: number;
 }
 
-interface IErrorPageContext extends NextPageContext {
-  err: ICustomError;
-}
-
 function StatusCode(props: Partial<ICustomError>) {
-  return (
-    <p>
-      {props.statusCode
-        ? "An error " + props.statusCode + "occurred on server"
-        : "An error occurred on client"}
-    </p>
-  );
+  const message = props.statusCode
+    ? "An error " + props.statusCode + " occurred on server"
+    : "An error occurred on client";
+  return <p>{message}</p>;
 }
 
-function ErrorPage(props: IErrorViewProps) {
+export default function ErrorPage(props: IErrorViewProps) {
+  const message = props.statusCode
+    ? "An error " + props.statusCode + " occurred on server"
+    : "An error occurred on client";
+
   return (
-    <section
-      className="Wrapper u-center"
-      style={{
-        paddingTop: 128,
-        paddingBottom: 128,
-        paddingLeft: 16,
-        paddingRight: 16
-      }}>
+    <section className="py-128 px-4 text-center">
       <Head>
         <title>Not Found | Downwrite</title>
       </Head>
       <h2 className="SuperErrorMessage">404</h2>
       <StatusCode statusCode={props.statusCode} />
-      <NotFound
-        error={null}
-        message={
-          props.statusCode
-            ? "An error " + props.statusCode + "occurred on server"
-            : "An error occurred on client"
-        }
-      />
+      <NotFound message={message} />
     </section>
   );
 }
-
-ErrorPage.getInitialProps = function({ res, err }: IErrorPageContext) {
-  const statusCode = res ? res.statusCode : err ? err.statusCode : null;
-  return { statusCode };
-};
-
-export default ErrorPage;

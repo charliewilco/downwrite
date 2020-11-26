@@ -10,10 +10,10 @@ import { getMarkdownPreview } from "@legacy/posts";
 import { dbConnect } from "@legacy/util/db";
 import Content from "../components/content";
 import AuthorBlock from "../components/author-block";
-import { AuthContext } from "../components/auth";
 import NotFound from "../components/not-found";
 import { IPreviewProps } from "../utils/initial-props";
 import { startColors } from "../utils/default-styles";
+import { useCurrentUser } from "@reducers/app";
 
 const isError = (entry: any): entry is Dwnxt.IPreviewEntryError => {
   return !isEmpty(entry.message);
@@ -61,7 +61,7 @@ export const getServerSideProps: GetServerSideProps<
 };
 
 function PreviewEntry(props: IPreviewProps) {
-  const [{ authed }] = React.useContext(AuthContext);
+  const [{ authed }] = useCurrentUser();
   return isError(props.entry) ? (
     <>
       <Head>

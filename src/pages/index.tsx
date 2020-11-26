@@ -1,94 +1,106 @@
-import * as React from "react";
-import * as Dwnxt from "downwrite";
-import { GetServerSideProps } from "next";
+import { useCallback } from "react";
+import { NextPage, GetServerSideProps } from "next";
 import Head from "next/head";
-import Cookies from "universal-cookie";
-import * as jwt from "jsonwebtoken";
-
-import { getPosts } from "@legacy/posts";
-import { dbConnect } from "@legacy/util/db";
 
 import DeleteModal from "../components/delete-modal";
 import PostList from "../components/post-list";
 import Loading from "../components/loading";
 import EmptyPosts from "../components/empty-posts";
 import InvalidToken from "../components/invalid-token";
-import useManagedDashboard from "../hooks/manage-dashboard";
-import * as InitialProps from "../utils/initial-props";
+import { IAppState } from "@reducers/app";
+import { NormalizedCacheObject, ApolloError } from "@apollo/client";
+import { useAllPostsQuery, AllPostsDocument } from "@utils/generated";
+import { initializeApollo } from "@lib/apollo";
+import { getInitialStateFromCookie } from "@lib/cookie-managment";
+import { useDashboard } from "@hooks/useDashboard";
+import { useRemovePost } from "@hooks/useRemovePost";
 
-export const getServerSideProps: GetServerSideProps<InitialProps.IDashboardProps> = async context => {
-  const cookie = new Cookies(context.req.headers.cookie);
-  const { DW_TOKEN: token } = cookie.getAll();
+interface IErrorDashboard {
+  error: ApolloError;
+}
 
-  if (token) {
-    await dbConnect();
-    const x = jwt.decode(token) as { user: string };
-    const posts = await getPosts(x.user);
-    return {
-      props: {
-        entries:
-          posts.length > 0
-            ? [
-                ...posts.map((p: any) => {
-                  p._id = p._id.toString();
-                  p.dateAdded = p.dateAdded
-                    ? p.dateAdded.toString()
-                    : new Date().toString();
-                  p.dateModified = p.dateModified
-                    ? p.dateModified.toString()
-                    : p.dateAdded.toString();
-                  p.user = p.user.toString();
-                  return p;
-                })
-              ]
-            : [],
-        token
-      }
-    };
-  }
+export const ErrorDashboard = (props: IErrorDashboard) => {
+  return (
+    <>
+      <Head>
+        <title>Error | Downwrite</title>
+      </Head>
+      <InvalidToken error={props.error.message} />
+    </>
+  );
+};
 
-  return { props: { entries: [], token: null } };
+interface IDashboardProps {
+  initialAppState: IAppState;
+  initialApolloState: NormalizedCacheObject;
+}
+
+export const getServerSideProps: GetServerSideProps<IDashboardProps> = async ({
+  req,
+  res
+}) => {
+  const client = initializeApollo({}, { req, res });
+  await client.query({
+    query: AllPostsDocument,
+    context: { req, res }
+  });
+
+  const initialAppState = await getInitialStateFromCookie(req);
+
+  return {
+    props: {
+      initialAppState,
+      initialApolloState: client.cache.extract()
+    }
+  };
 };
 
 // TODO: refactor to have selected post, deletion to be handled by a lower level component
 // should be opened at this level and be handed a token and post to delete
-function DashboardUI(props: InitialProps.IDashboardProps) {
-  const [
-    { entries, selectedPost, modalOpen, loaded, error },
-    ManagedDashboard
-  ] = useManagedDashboard(props.entries);
+const DashboardUI: NextPage = () => {
+  const [{ selectedPost, modalOpen }, actions] = useDashboard();
+  const { data, loading, error } = useAllPostsQuery();
+  const onConfirmDelete = useRemovePost();
+  const onDelete = useCallback(() => {
+    onConfirmDelete(selectedPost!.id);
+    actions.onCloseModal();
+  }, [selectedPost, onConfirmDelete, actions]);
+
+  if (loading || (data === undefined && error === undefined)) {
+    return <Loading size={100} />;
+  }
+
+  if (error) {
+    return <ErrorDashboard error={error} />;
+  }
 
   return (
     <>
       {modalOpen && (
         <DeleteModal
           title={selectedPost.title}
-          onDelete={ManagedDashboard.onConfirmDelete}
-          onCancelDelete={ManagedDashboard.onCancel}
-          closeModal={ManagedDashboard.onCloseModal}
+          onDelete={onDelete}
+          onCancelDelete={actions.onCancel}
+          closeModal={actions.onCloseModal}
         />
       )}
       <Head>
-        <title>{Array.isArray(entries) && entries.length} Entries | Downwrite</title>
+        <title>
+          {data.feed.length > 0
+            ? data.feed.length.toString().concat(" Entries ")
+            : "No Entries "}
+          | Downwrite
+        </title>
       </Head>
       <section className="PostContainer">
-        {loaded ? (
-          Array.isArray(entries) && entries.length > 0 ? (
-            <PostList
-              onSelect={ManagedDashboard.onSelect}
-              posts={entries as Dwnxt.IPost[]}
-            />
-          ) : !!error ? (
-            <InvalidToken error={error} />
-          ) : (
-            <EmptyPosts />
-          )
+        {data.feed.length > 0 ? (
+          <PostList onSelect={actions.onSelect} posts={[]} />
         ) : (
-          <Loading size={100} />
+          <EmptyPosts />
         )}
       </section>
     </>
   );
-}
+};
 
 export default DashboardUI;

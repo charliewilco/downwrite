@@ -3,7 +3,7 @@ import { Formik, Form, FormikProps, ErrorMessage } from "formik";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
 import LegalBoilerplate from "./legal-boilerplate";
-import useLoginFns, { IRegisterValues } from "../hooks/login";
+import { useLoginFns, IRegisterValues } from "../hooks/login";
 import { RegisterFormSchema } from "../utils/validations";
 import { StringTMap } from "../utils/types";
 

@@ -4,12 +4,12 @@ import { Formik, Form } from "formik";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Cookies from "universal-cookie";
-import useCreatePost, { IFields } from "../hooks/create-entry";
 import useOffline from "../hooks/offline";
 import { Input } from "../components/editor-input";
 import { Button } from "../components/button";
 import Upload from "../components/upload";
 import Editor from "../components/editor";
+import { useNewEntry } from "@hooks/useNewEntry";
 
 const EDITOR_COMMAND: string = "create-new-post";
 
@@ -31,23 +31,20 @@ export const getServerSideProps: GetServerSideProps = async context => {
 };
 
 export default function NewEditor(): JSX.Element {
-  const [initialValues] = React.useState<IFields>({
+  const [initialValues] = React.useState({
     title: "",
     editorState: Draft.EditorState.createEmpty()
   });
-  const createNewPost = useCreatePost();
+  const [createNewPost] = useNewEntry();
   const isOffline = useOffline();
 
-  function onSubmit(values: IFields): void {
-    return createNewPost(values);
+  function onSubmit(values: any): void {
+    createNewPost(values.title, initialValues.editorState);
   }
 
   return (
     <React.Fragment>
-      <Formik<IFields>
-        initialValues={initialValues}
-        onSubmit={onSubmit}
-        enableReinitialize>
+      <Formik initialValues={initialValues} onSubmit={onSubmit} enableReinitialize>
         {({ values, setFieldValue, handleSubmit, handleChange }) => (
           <Form className="Wrapper Wrapper--md" style={EDITOR_SPACING}>
             <Head>
