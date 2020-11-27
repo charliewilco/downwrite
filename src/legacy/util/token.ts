@@ -1,9 +1,6 @@
 import * as jwt from "jsonwebtoken";
 import Config from "./config";
 
-// const fs = require('fs')
-// let key = fs.readFileSync('private.key')
-
 interface ITokenUser {
   username: string;
   _id: string;
