@@ -7,14 +7,10 @@ export class MultiDecorator implements CompositeDecorator {
   public decorators: Immutable.List<CompositeDecorator>;
   constructor(decorators: CompositeDecorator[]) {
     this.decorators = Immutable.List(decorators);
-
-    console.log(this);
   }
 
   public getDecorations(block: ContentBlock, contentState: ContentState) {
     var decorations = Array(block.getText().length).fill(null);
-
-    console.log("DECORATIONS", decorations);
 
     this.decorators.forEach((decorator?: CompositeDecorator, i?: number) => {
       if (!decorator) {

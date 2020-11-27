@@ -1,6 +1,10 @@
-import * as React from "react";
-import * as Draft from "draft-js";
-import { draftToMarkdown } from "markdown-draft-js";
+import {
+  RawDraftContentState,
+  ContentState,
+  EditorState,
+  convertToRaw
+} from "draft-js";
+import { draftToMarkdown } from "../editor";
 import FileSaver from "file-saver";
 import Markdown from "./export-markdown-button";
 import { createMarkdown } from "../utils/markdown-template";
@@ -11,33 +15,21 @@ interface IExportProps {
   title: string;
   className?: string;
   date: Date;
-  editorState: Draft.EditorState;
+  editorState: EditorState;
 }
 
 interface IExportCallback {
   title: string;
-  content: Draft.RawDraftContentState;
+  content: RawDraftContentState;
   date: Date;
 }
 
 // TODO: use `React.useMemo()` to run export
 export default function UIMarkdownExport(props: IExportProps) {
-  const className = classNames("Export", props.className);
-
-  const exportMarkdown = (): void => {
-    const { title, date, editorState } = props;
-    const cx: Draft.ContentState = editorState.getCurrentContent();
-    const content: Draft.RawDraftContentState = Draft.convertToRaw(cx);
-
-    return toMarkdown({
-      title,
-      content,
-      date
-    });
-  };
-
-  const customDraft = (content: Draft.RawDraftContentState): string =>
+  const className = classNames("block mx-4 my-0", props.className);
+  const customDraft = (content: RawDraftContentState): string =>
     draftToMarkdown(content, {
+      preserveNewlines: true,
       entityItems: {
         LINK: {
           open: () => {
@@ -52,11 +44,11 @@ export default function UIMarkdownExport(props: IExportProps) {
     });
 
   const toMarkdown = ({ title, content, date }: IExportCallback): void => {
-    let localFileExtension = localStorage.getItem(LocalSettings.EXTENSION);
+    let localFileExtension = localStorage.getItem(LocalSettings.EXTENSION) || "";
     let extension = localFileExtension.replace(/\./g, "") || "md";
 
     try {
-      let isFileSaverSupported: boolean = !!new Blob();
+      let isFileSaverSupported = !!new Blob();
 
       if (isFileSaverSupported) {
         let md = createMarkdown(title, customDraft(content), date);
@@ -69,6 +61,18 @@ export default function UIMarkdownExport(props: IExportProps) {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const exportMarkdown = (): void => {
+    const { title, date, editorState } = props;
+    const cx: ContentState = editorState.getCurrentContent();
+    const content: RawDraftContentState = convertToRaw(cx);
+
+    return toMarkdown({
+      title,
+      content,
+      date
+    });
   };
 
   return (

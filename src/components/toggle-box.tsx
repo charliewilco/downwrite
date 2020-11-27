@@ -1,4 +1,3 @@
-import * as React from "react";
 import Check from "./checkbox";
 
 interface ICheckboxToggle {
@@ -11,10 +10,12 @@ interface ICheckboxToggle {
 export function ToggleBox(props: ICheckboxToggle) {
   const text = props.label(props.value);
   return (
-    <div className="ToggleBox">
-      <label className="ToggleBoxInner">
+    <div className="mr-4">
+      <label className="text-xs flex items-center">
         <Check name={props.name} checked={props.value} onChange={props.onChange} />
-        <span className="ToggleBoxLabel">{text}</span>
+        <span className="flex-1 ml-2 align-middle inline-block leading-tight">
+          {text}
+        </span>
       </label>
     </div>
   );

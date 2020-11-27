@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
 import LegalBoilerplate from "./legal-boilerplate";
-import { useLoginFns, IRegisterValues } from "../hooks/login";
+import { useLoginFns, IRegisterValues } from "../hooks";
 import { RegisterFormSchema as validationSchema } from "../utils/validations";
 
 interface IInput {

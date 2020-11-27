@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
-import { useLoginFns, ILoginValues } from "../hooks/login";
+import { useLoginFns, ILoginValues } from "../hooks";
 import { LoginFormSchema } from "../utils/validations";
 
 /**

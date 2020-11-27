@@ -1,116 +1,78 @@
-import * as React from "react";
+import { useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  useTransition,
-  animated,
-  UseTransitionResult,
-  UseTransitionProps,
-  SpringConfig
-} from "react-spring";
-import {
+  useNotifications,
   UINotificationMessage,
-  NotificationType,
-  useUINotifications
-} from "../reducers/notifications";
-import useTimeout from "../hooks/timeout";
-
-type Merge<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] } & B;
-
-function getTypeClassName(
-  notification: UINotificationMessage,
-  defaultName: string = ""
-): string {
-  const type: string =
-    notification.type && notification.type === NotificationType.WARNING
-      ? "warning"
-      : notification.type === NotificationType.ERROR
-      ? "error"
-      : "default";
-
-  return [defaultName, type].join(" ");
-}
+  NotificationType
+} from "@reducers/app";
+import { useTimeout } from "../hooks/useTimeout";
+import classNames from "@utils/classnames";
 
 interface IUIMessageProps {
   notification: UINotificationMessage;
   onDismiss(m: UINotificationMessage): void;
 }
 
-export function UIMessage(props: IUIMessageProps): JSX.Element {
-  const className = getTypeClassName(props.notification, "UINotification");
+export default function UIMessage(props: IUIMessageProps): JSX.Element {
+  const onRemove = useCallback(() => {
+    props.onDismiss(props.notification);
+  }, [props]);
 
-  const onRemove = () => props.onDismiss(props.notification);
-
-  if (props.notification.dismissable) {
-    useTimeout(15000, onRemove);
-  }
+  useTimeout(15000, props.notification.dismissable ? onRemove : undefined);
 
   return (
-    <div className={className}>
-      <div className="UINotification__content">
-        <p>
-          {props.notification.type !== NotificationType.DEFAULT && (
-            <b>{props.notification.type} </b>
-          )}
-          {props.notification.text}
-        </p>
+    <motion.div
+      aria-live="polite"
+      className="mb-2"
+      initial={{ opacity: 0, y: 50, scale: 0.3 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}>
+      <div
+        className={classNames(
+          "flex items center justify-between w-full h-full bg-white py-2 pr-4 pl-2 mt-2 text-onyx-900 rounded",
+          props.notification.type === NotificationType.WARNING && "bg-goldar-500",
+          props.notification.type === NotificationType.ERROR && "bg-red-500"
+        )}>
+        <div className="m-0 text-sm opacity-75">
+          <p className="m-0">
+            {props.notification.type !== NotificationType.DEFAULT && (
+              <b>{props.notification.type} </b>
+            )}
+            {props.notification.text}
+          </p>
+        </div>
+        {!props.notification.dismissable && (
+          <button
+            className="ml-4 p-0 border-0 appearance-none font-bold text-xs"
+            onClick={onRemove}>
+            Dismiss
+          </button>
+        )}
       </div>
-      {!props.notification.dismissable && (
-        <button onClick={onRemove}>Dismiss</button>
-      )}
-    </div>
+    </motion.div>
   );
-}
-
-const config: SpringConfig = { tension: 125, friction: 20, precision: 0.1 };
-const altConfig: SpringConfig = Object.assign({}, config, { duration: 350 });
-// [altConfig, config, config]
-
-interface ITransition {
-  opacity: number;
-  transform: string;
-  height: number;
-  life?: string;
 }
 
 export function MessageList() {
-  const { notifications, actions } = useUINotifications();
-  const transitions: ReadonlyArray<UseTransitionResult<
-    UINotificationMessage,
-    ITransition
-  >> = useTransition<UINotificationMessage, ITransition>(
-    notifications,
-    item => item.id,
-    {
-      from: {
-        opacity: 0,
-        transform: "translate3d(0, -100%, 0) scale(1)",
-        height: 56
-      },
-      enter: {
-        opacity: 1,
-        transform: "translate3d(0, 0, 0) scale(1)",
-        height: 56
-      },
-      leave: {
-        opacity: 0,
-        transform: "translate3d(0, -100%, 0) scale(0)",
-        height: 0
-      },
-      config: (item: UINotificationMessage, state: string) =>
-        state === "leave" ? [altConfig, config, config] : config
-    } as Merge<
-      ITransition & React.CSSProperties,
-      UseTransitionProps<UINotificationMessage, ITransition>
-    >
+  const [notifications, { removeNotification }] = useNotifications();
+
+  const innerClassName = classNames(
+    "relative max-w-sm",
+    notifications.length === 0 && "w-0 h-0 max-w-0"
   );
 
   return (
-    <div className="UINotificationContainer">
-      <div className="UINotificationContainerInner">
-        {transitions.map(({ item, props: { life, ...style } }) => (
-          <animated.div style={{ ...style, marginBottom: 8 }} key={item.id}>
-            <UIMessage notification={item} onDismiss={actions.remove} />
-          </animated.div>
-        ))}
+    <div className="fixed p-4 w-full max-w-sm flex flex-col justify-end bottom-0 right-0">
+      <div className={innerClassName}>
+        <AnimatePresence initial={false}>
+          {notifications.map((notification, i) => (
+            <UIMessage
+              key={i}
+              notification={notification}
+              onDismiss={removeNotification}
+            />
+          ))}
+        </AnimatePresence>
       </div>
     </div>
   );

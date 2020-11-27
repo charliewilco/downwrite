@@ -44,7 +44,6 @@ export class PrismDecorator implements CompositeDecorator {
   private highlighted: any = {};
 
   public getDecorations(block: ContentBlock) {
-    console.log("GET DECORATIIONS");
     var tokens,
       token,
       tokenId,
@@ -76,7 +75,6 @@ export class PrismDecorator implements CompositeDecorator {
     tokens = Prism.tokenize(blockText, grammar);
 
     function processToken(decorations: any, token: any, offset: number) {
-      console.log("process token");
       if (typeof token === "string") {
         return;
       }
