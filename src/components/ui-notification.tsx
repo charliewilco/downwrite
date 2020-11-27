@@ -1,10 +1,6 @@
 import { useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  useNotifications,
-  UINotificationMessage,
-  NotificationType
-} from "@reducers/app";
+import { motion } from "framer-motion";
+import { UINotificationMessage, NotificationType } from "@reducers/app";
 import { useTimeout } from "../hooks/useTimeout";
 import classNames from "@utils/classnames";
 
@@ -50,30 +46,5 @@ export default function UIMessage(props: IUIMessageProps): JSX.Element {
         )}
       </div>
     </motion.div>
-  );
-}
-
-export function MessageList() {
-  const [notifications, { removeNotification }] = useNotifications();
-
-  const innerClassName = classNames(
-    "relative max-w-sm",
-    notifications.length === 0 && "w-0 h-0 max-w-0"
-  );
-
-  return (
-    <div className="fixed p-4 w-full max-w-sm flex flex-col justify-end bottom-0 right-0">
-      <div className={innerClassName}>
-        <AnimatePresence initial={false}>
-          {notifications.map((notification, i) => (
-            <UIMessage
-              key={i}
-              notification={notification}
-              onDismiss={removeNotification}
-            />
-          ))}
-        </AnimatePresence>
-      </div>
-    </div>
   );
 }

@@ -1,19 +1,17 @@
-import * as React from "react";
 import Head from "next/head";
+import dynamic from "next/dynamic";
+import { FiAlertTriangle } from "react-icons/fi";
 import { UIHeader } from "./header";
 import { UIFooter } from "./footer";
-import NightModeProvider from "./night-mode";
-import { LocalUISettingsProvider } from "./local-ui-settings";
-import { NotificationProvider } from "../reducers/notifications";
-import { MessageList } from "./ui-notification";
+import { Banner } from "./banner";
 
-interface IUIShell {
-  children: React.ReactNode;
-}
+interface IUIShell extends React.PropsWithChildren<{}> {}
 
-export function UIShell(props: IUIShell) {
+const MessageList = dynamic(() => import("@components/notification-list"));
+
+export function UIShell(props: IUIShell): JSX.Element {
   return (
-    <LocalUISettingsProvider>
+    <div className="flex flex-col">
       <Head>
         <meta
           name="viewport"
@@ -21,20 +19,20 @@ export function UIShell(props: IUIShell) {
           key="viewport"
         />
       </Head>
-      <div className="UIContainer">
-        <NotificationProvider>
-          <div className="clearfix">
-            <div style={{ minHeight: "100%" }}>
-              <NightModeProvider>
-                <UIHeader />
-              </NightModeProvider>
-              {props.children}
-              <UIFooter />
-            </div>
+      <div className="clearfix min-h-full">
+        <UIHeader />
+        <Banner>
+          <div className="flex items-center">
+            <FiAlertTriangle className="mr-4 " />
+            <span className="text-sm font-bold">
+              This app is currently in a major major alpha. Swim at your own risk.
+            </span>
           </div>
-          <MessageList />
-        </NotificationProvider>
+        </Banner>
+        <main>{props.children}</main>
+        <UIFooter />
       </div>
-    </LocalUISettingsProvider>
+      <MessageList />
+    </div>
   );
 }

@@ -1,4 +1,3 @@
-import * as React from "react";
 import format from "date-fns/format";
 
 interface ITimeMarkProps {
@@ -6,16 +5,14 @@ interface ITimeMarkProps {
 }
 
 function Time(props: ITimeMarkProps) {
-  const date = props.dateAdded.toString();
+  const date = new Date(props.dateAdded.toString());
 
-  return (
-    <time dateTime={date.toString()}>{format(new Date(date), "dd MMMM yyyy")}</time>
-  );
+  return <time dateTime={date.toString()}>{format(date, "dd MMMM yyyy")}</time>;
 }
 
 export default function TimeMarker(props: ITimeMarkProps) {
   return (
-    <div className="TimeMarker">
+    <div className="opacity-50 text-xs mb-2">
       Added on <Time dateAdded={props.dateAdded} />
     </div>
   );
