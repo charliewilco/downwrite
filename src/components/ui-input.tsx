@@ -1,4 +1,5 @@
-import * as React from "react";
+import { useRef, useReducer } from "react";
+import { inputReducer, InputAction } from "../reducers/input";
 import classNames from "../utils/classnames";
 
 interface IUIInputProps {
@@ -10,12 +11,13 @@ interface IUIInputProps {
   placeholder?: string;
   autoComplete?: string;
   className?: string;
+  testID?: string;
 }
 
 export function UIInputContainer({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>): JSX.Element {
-  const className = classNames("UIInputContainer", props.className);
+  const className = classNames("relative", props.className);
   return <div {...props} className={className} />;
 }
 
@@ -23,61 +25,40 @@ export function UIInputError({
   style,
   ...props
 }: React.HTMLAttributes<HTMLSpanElement>): JSX.Element {
-  const className = classNames("UIInputError", props.className);
-
-  return <span {...props} className={className} />;
-}
-
-enum InputAction {
-  BLUR = "BLUR",
-  FOCUS = "FOCUS"
-}
-
-interface IInputState {
-  focused: boolean;
-}
-
-interface IInputAction {
-  type: InputAction;
-}
-
-function inputReducer(_: IInputState, action: IInputAction): IInputState {
-  switch (action.type) {
-    case InputAction.BLUR:
-      return { focused: false };
-    case InputAction.FOCUS:
-      return { focused: false };
-    default:
-      throw new Error("Must specify action type");
-  }
-}
-
-export default function UIInput({ label, ...props }: IUIInputProps) {
-  const id = React.useRef(
-    label
-      .replace(" ", "-")
-      .toLowerCase()
-      .concat("-ui-input")
+  return (
+    <span
+      {...props}
+      className={classNames(
+        "block text-sm uppercase tracking-wider",
+        props.className
+      )}
+    />
   );
+}
 
-  const [state, dispatch] = React.useReducer(inputReducer, {
+export default function UIInput({ testID, label, ...props }: IUIInputProps) {
+  const id = useRef("UI_TEXT_INPUT".concat(label));
+
+  const [state, dispatch] = useReducer(inputReducer, {
     focused: false
   });
 
-  const className = classNames("UIInputElement", props.className);
-
   return (
-    <label className="UIInputContainer" htmlFor={id.current}>
+    <label className="relative" htmlFor={id.current}>
       <input
+        data-testid={testID}
         type="text"
         onFocus={() => dispatch({ type: InputAction.FOCUS })}
         onBlur={() => dispatch({ type: InputAction.BLUR })}
         id={id.current}
         {...props}
-        className={className}
+        className={classNames(
+          "font-mono text-sm font-normal py-2 px-0 appearance-none block w-full border-0 border-b-2 border-onyx-400 bg-transparent",
+          props.className
+        )}
       />
       <small
-        className="UIInputLabel"
+        className="font-bold"
         style={{ color: state.focused ? "var(--yellow700)" : "#b4b4b4" }}>
         {label}
       </small>

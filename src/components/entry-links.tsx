@@ -1,11 +1,8 @@
-import * as React from "react";
 import Link from "next/link";
-import { UrlObject } from "url";
 
 interface ICardLinks {
   id: string;
   title?: string;
-  style?: React.CSSProperties;
   className?: string;
 }
 
@@ -13,28 +10,24 @@ interface IInitialCardLinkProps {
   pathname: string;
 }
 
-function CardLink(props: ICardLinks & IInitialCardLinkProps): JSX.Element {
-  const href: UrlObject = { pathname: props.pathname, query: { id: props.id } };
-
+function DefaultLink({
+  pathname,
+  id,
+  ...props
+}: ICardLinks & IInitialCardLinkProps): JSX.Element {
+  const href = `/[id]/${pathname}`;
+  const as = `/${id}/${pathname}`;
   return (
-    <Link href={href} passHref={true}>
-      <a className={props.className} style={props.style}>
-        {props.title}
-      </a>
+    <Link href={href} as={as}>
+      <a className={props.className}>{props.title}</a>
     </Link>
   );
 }
 
 export function EditLink(props: ICardLinks): JSX.Element {
-  return React.createElement(
-    CardLink,
-    Object.assign({}, { pathname: "/edit", title: "Edit" }, props)
-  );
+  return <DefaultLink title="Edit" {...props} pathname="edit" />;
 }
 
 export function PreviewLink(props: ICardLinks): JSX.Element {
-  return React.createElement(
-    CardLink,
-    Object.assign({}, { pathname: "/preview", title: "Preview" }, props)
-  );
+  return <DefaultLink title="Preview" {...props} pathname="preview" />;
 }

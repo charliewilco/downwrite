@@ -1,25 +1,27 @@
-import * as React from "react";
-import { LocalUISettings } from "./local-ui-settings";
-import * as DefaultStyles from "../utils/default-styles";
-
-interface ILandingPageProps {
-  children: React.ReactNode;
-}
+interface ILandingPageProps extends React.PropsWithChildren<{}> {}
 
 export default function LandingPage(props: ILandingPageProps): JSX.Element {
-  const { monospace } = React.useContext(LocalUISettings);
   return (
-    <article
-      className="LandingContainer Wrapper Wrapper--sm u-center"
-      style={{ fontFamily: monospace || DefaultStyles.Fonts.monospace }}>
-      <img className="BannerImage" src="/static/landing.png" />
-      <header className="IntroContents">
-        <h1 className="IntroTitle" data-testid="Login Page Container">
+    <article className="font-mono text-center max-w-lg mx-auto mb-24">
+      <img
+        alt="Downwrite Logo"
+        className="mx-auto max-w-xxs w-full h-auto block mb-12"
+        style={{
+          filter: "grayscale(50%)"
+        }}
+        src="/static/landing.png"
+      />
+      <header className="mb-12">
+        <h1
+          className="text-3xl font-sans font-black"
+          data-testid="Login Page Container">
           Downwrite
         </h1>
-        <span className="Tagline">A place to write</span>
+        <span className="text-sm uppercase tracking-widest opacity-50">
+          A place to write
+        </span>
       </header>
-      {props.children}
+      <section className="text-left">{props.children}</section>
     </article>
   );
 }

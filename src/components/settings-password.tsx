@@ -1,12 +1,10 @@
-import * as React from "react";
-import { Formik, FormikProps, ErrorMessage, Form, FormikHelpers } from "formik";
+import { useCallback, useReducer, ReducerWithoutAction } from "react";
+import { useFormik, FormikHelpers } from "formik";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { ToggleBox } from "../components/toggle-box";
 import { Button } from "./button";
-import { AuthContext, AuthContextType } from "./auth";
 import { UpdatePasswordSchema } from "../utils/validations";
-import { updatePassword } from "../utils/api";
 
 interface IPasswordSettings extends Record<string, string> {
   oldPassword: string;
@@ -35,19 +33,21 @@ const PASSWORD_INPUTS: IInputs[] = [
 ];
 
 export default function SettingsPassword(): JSX.Element {
-  const [{ token }] = React.useContext<AuthContextType>(AuthContext);
-  const [isOpen, setOpen] = React.useState(false);
+  const [isOpen, onToggleOpen] = useReducer<ReducerWithoutAction<boolean>>(
+    (prev: boolean) => !prev,
+    false
+  );
 
-  const onSubmit = (
-    values: IPasswordSettings,
-    helpers: FormikHelpers<IPasswordSettings>
-  ): void => {
-    const response = updatePassword(values, { token });
+  const onSubmit = useCallback(
+    (_: IPasswordSettings, actions: FormikHelpers<IPasswordSettings>): void => {
+      const response = false;
 
-    if (response) {
-      helpers.setSubmitting(false);
-    }
-  };
+      if (response) {
+        actions.setSubmitting(false);
+      }
+    },
+    []
+  );
 
   const initialValues: IPasswordSettings = {
     oldPassword: "",
@@ -55,40 +55,41 @@ export default function SettingsPassword(): JSX.Element {
     confirmPassword: ""
   };
 
+  const formik = useFormik<IPasswordSettings>({
+    initialValues,
+    onSubmit,
+    validationSchema: UpdatePasswordSchema
+  });
+
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={UpdatePasswordSchema}
-      onSubmit={onSubmit}>
-      {({ values, handleChange, isSubmitting }: FormikProps<IPasswordSettings>) => (
-        <SettingsBlock title="Password">
-          <Form>
-            {PASSWORD_INPUTS.map(({ name, label }: IInputs, idx) => (
-              <UIInputContainer key={idx}>
-                <UIInput
-                  label={label}
-                  name={name}
-                  type={!isOpen ? "password" : "text"}
-                  placeholder="*********"
-                  value={values[name]}
-                  onChange={handleChange}
-                />
-                <ErrorMessage name={name} component={UIInputError} />
-              </UIInputContainer>
-            ))}
-            <SettingsFormActions split>
-              <ToggleBox
-                label={value => (!value ? "Values hidden" : "Values shown")}
-                onChange={() => setOpen(!isOpen)}
-                value={isOpen}
-              />
-              <Button type="submit" disabled={isSubmitting}>
-                Save
-              </Button>
-            </SettingsFormActions>
-          </Form>
-        </SettingsBlock>
-      )}
-    </Formik>
+    <SettingsBlock title="Password">
+      <form onSubmit={formik.handleSubmit}>
+        {PASSWORD_INPUTS.map(({ name, label }: IInputs, idx) => (
+          <UIInputContainer key={idx} className="mb-4">
+            <UIInput
+              label={label}
+              name={name}
+              type={!isOpen ? "password" : "text"}
+              placeholder="*********"
+              value={formik.values[name]}
+              onChange={formik.handleChange}
+            />
+            {formik.errors[name] && (
+              <UIInputError>{formik.errors[name]}</UIInputError>
+            )}
+          </UIInputContainer>
+        ))}
+        <SettingsFormActions split>
+          <ToggleBox
+            label={value => (!value ? "Values hidden" : "Values shown")}
+            onChange={onToggleOpen}
+            value={isOpen}
+          />
+          <Button type="submit" disabled={formik.isSubmitting}>
+            Save
+          </Button>
+        </SettingsFormActions>
+      </form>
+    </SettingsBlock>
   );
 }

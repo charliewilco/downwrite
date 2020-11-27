@@ -1,19 +1,18 @@
-import { useCallback, createElement } from "react";
-import fm from "front-matter";
-import * as Draft from "draft-js";
+import { useRef, useCallback, MutableRefObject } from "react";
+import { EditorState, convertFromRaw } from "draft-js";
 import { useDropzone } from "react-dropzone";
-import { markdownToDraft } from "markdown-draft-js";
-import { __IS_BROWSER__ } from "../utils/dev";
+import { markdownToDraft } from "../editor";
+import { fm } from "@utils/fm";
+import { __IS_BROWSER__ } from "@utils/dev";
 
-interface IMarkdownConversion {
+export interface IMarkdownConversion {
   title: string;
-  editorState: Draft.EditorState;
+  editorState: EditorState;
 }
 
-interface IUploadProps {
+interface IUploadProps extends React.PropsWithChildren<{}> {
   onParsed: (o: IMarkdownConversion) => void;
   disabled?: boolean;
-  children: React.ReactNode;
 }
 
 interface IMarkdown {
@@ -23,31 +22,36 @@ interface IMarkdown {
   };
 }
 
+function useFileReader(): MutableRefObject<FileReader | null> {
+  return useRef<FileReader>(__IS_BROWSER__ ? new FileReader() : null);
+}
+
+type DropCallback = (files: File[]) => void;
+
 export default function Uploader(props: IUploadProps): JSX.Element {
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    // NOTE: Maybe use useRef for this?
-    const reader: FileReader = __IS_BROWSER__ && new FileReader();
+  const reader = useFileReader();
+  const onDrop = useCallback<DropCallback>(
+    (acceptedFiles: File[]) => {
+      function extractMarkdown(files: File[]): void {
+        if (reader.current !== null) {
+          reader.current.onload = () => {
+            const md: IMarkdown = fm(reader.current!.result as string);
+            const markdown = markdownToDraft(md.body);
 
-    // tslint:disable-next-line: no-shadowed-variable
-    function extractMarkdown(files: File[]): void {
-      reader.onload = () => {
-        let md: IMarkdown = fm(reader.result as string);
+            return props.onParsed({
+              title: md.attributes.title || "",
+              editorState: EditorState.createWithContent(convertFromRaw(markdown))
+            });
+          };
 
-        let markdown = markdownToDraft(md.body, { preserveNewlines: true });
+          reader.current.readAsText(files[0]);
+        }
+      }
 
-        return props.onParsed({
-          title: md.attributes.title || "",
-          editorState: Draft.EditorState.createWithContent(
-            Draft.convertFromRaw(markdown)
-          )
-        });
-      };
-
-      reader.readAsText(files[0]);
-    }
-
-    extractMarkdown(acceptedFiles);
-  }, []);
+      extractMarkdown(acceptedFiles);
+    },
+    [props, reader]
+  );
 
   const { getRootProps } = useDropzone({
     onDrop,
@@ -56,12 +60,9 @@ export default function Uploader(props: IUploadProps): JSX.Element {
     accept: ["text/markdown", "text/x-markdown", "text/plain"]
   });
 
-  return createElement(
-    "div",
-    {
-      ...getRootProps(),
-      style: { border: 0, width: "100%" }
-    },
-    props.children
+  return (
+    <div {...getRootProps()} className="border-0 w-full">
+      {props.children}
+    </div>
   );
 }

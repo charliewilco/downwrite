@@ -1,7 +1,7 @@
 import * as React from "react";
 import Head from "next/head";
 import { UIHeader } from "./header";
-import Footer from "./footer";
+import { UIFooter } from "./footer";
 import NightModeProvider from "./night-mode";
 import { LocalUISettingsProvider } from "./local-ui-settings";
 import { NotificationProvider } from "../reducers/notifications";
@@ -29,7 +29,7 @@ export function UIShell(props: IUIShell) {
                 <UIHeader />
               </NightModeProvider>
               {props.children}
-              <Footer />
+              <UIFooter />
             </div>
           </div>
           <MessageList />

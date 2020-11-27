@@ -3,6 +3,7 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx}",
     "./src/pages/**/*.{js,ts,jsx,tsx}"
   ],
+  darkMode: "media", // 'media' or 'class'
   theme: {
     fontFamily: {
       sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
@@ -11,9 +12,7 @@ module.exports = {
     },
     extend: {
       screens: {
-        "2xl": "1536px",
-        dark: { raw: "(prefers-color-scheme: dark)" },
-        light: { raw: "(prefers-color-scheme: light)" }
+        "2xl": "1536px"
       },
       colors: {
         accent: {

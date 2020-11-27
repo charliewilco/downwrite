@@ -1,34 +1,49 @@
-import * as React from "react";
 import Link from "next/link";
-import { AltAnchorLink } from "./alt-anchor-link";
+import { Routes } from "../utils/routes";
 
 interface IPage {
   name: string;
+  external?: boolean;
   href: string;
 }
 
 const PAGES: IPage[] = [
-  { name: "About", href: "/about" },
-  { name: "Legal", href: "/legal" },
-  { name: "Source Code", href: "https://github.com/charliewilco/downwrite" },
-  { name: "@charlespeters", href: "https://twitter.com/charlespeters" }
+  { name: "About", href: Routes.ABOUT },
+  { name: "Legal", href: Routes.LEGAL },
+  {
+    name: "Source Code",
+    href: "https://github.com/charliewilco/downwrite",
+    external: true
+  },
+  {
+    name: "@charlespeters",
+    href: "https://twitter.com/charlespeters",
+    external: true
+  }
 ];
 
-export default function UIFooter() {
+export function UIFooter() {
+  const date = new Date(Date.now());
   return (
-    <footer className="AppFooter Wrapper Wrapper--md">
-      <nav className="AppFooterNav">
-        <ul className="u-center">
-          <li>
-            <span>&copy; 2019 Charles Peters</span>
+    <footer className="max-w-2xl py-8 px-4 mx-auto">
+      <nav>
+        <ul className="text-center p-0 m-0 text-sm">
+          <li className="inline-block mr-4">
+            <span>&copy; {date.getFullYear()} Charles Peters</span>
           </li>
           {PAGES.map((page, i) => (
-            <li key={i}>
-              {page.href.includes("http") ? (
-                <AltAnchorLink href={page.href}>{page.name}</AltAnchorLink>
+            <li key={i} className="inline-block mr-4">
+              {page.external ? (
+                <a
+                  className="dark:text-white leading-none cursor-pointer opacity-50 text-sm"
+                  href={page.href}>
+                  {page.name}
+                </a>
               ) : (
-                <Link href={page.href} passHref>
-                  <AltAnchorLink>{page.name}</AltAnchorLink>
+                <Link href={page.href}>
+                  <a className="dark:text-white leading-none cursor-pointer opacity-50 text-sm">
+                    {page.name}
+                  </a>
                 </Link>
               )}
             </li>

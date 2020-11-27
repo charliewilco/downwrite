@@ -67,7 +67,7 @@ const DashboardUI: NextPage = () => {
   }, [selectedPost, onConfirmDelete, actions]);
 
   if (loading || (data === undefined && error === undefined)) {
-    return <Loading size={100} />;
+    return <Loading />;
   }
 
   if (error) {
@@ -94,7 +94,9 @@ const DashboardUI: NextPage = () => {
       </Head>
       <section className="PostContainer">
         {data.feed.length > 0 ? (
-          <PostList onSelect={actions.onSelect} posts={[]} />
+          <>
+            <PostList onSelect={actions.onSelect} posts={data.feed} />
+          </>
         ) : (
           <EmptyPosts />
         )}

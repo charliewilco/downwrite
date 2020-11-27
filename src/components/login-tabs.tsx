@@ -1,51 +1,52 @@
-import * as React from "react";
-import * as Reach from "@reach/tabs";
+import { PropsWithChildren } from "react";
+import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
+import LoginForm from "./login-form";
 import Register from "./register";
-import Login from "./login-form";
 
-interface IFormHeaderProps {
-  children: React.ReactNode;
-}
-
-function FormHeader(props: IFormHeaderProps) {
+function FormHeader(props: PropsWithChildren<{}>) {
   return (
-    <header className="LoginFormHeader u-center">
-      <h2 className="FormGreeting" data-testid="LOGIN_TITLE">
+    <header className="p-4 text-center">
+      <h2 className="text-xl mb-6" data-testid="LOGIN_TITLE">
         {props.children}
       </h2>
     </header>
   );
 }
 
+/// Reference:
+// ---
+//
+// https://developers.google.com/web/fundamentals/accessibility/focus/using-tabindex
+// http://simplyaccessible.com/article/danger-aria-tabs/
+// https://inclusive-components.design/tabbed-interfaces/
+
 export default function LoginContainer(): JSX.Element {
   return (
-    <>
-      <Reach.Tabs className="Sheet FormWrapper Wrapper Wrapper--sm">
-        <Reach.TabList className="TabsList u-center">
-          <Reach.Tab
-            className="ListItem"
-            data-testid="LOGIN_REGISTER_BUTTON"
-            id="Register">
-            Register
-          </Reach.Tab>
-          <Reach.Tab
-            className="ListItem"
-            data-testid="LOGIN_LOGIN_BUTTON"
-            id="Login">
-            Login
-          </Reach.Tab>
-        </Reach.TabList>
-        <Reach.TabPanels className="LoginForm">
-          <Reach.TabPanel>
-            <FormHeader>Sign Up as a New User</FormHeader>
-            <Register />
-          </Reach.TabPanel>
-          <Reach.TabPanel>
-            <FormHeader>Welcome Back!</FormHeader>
-            <Login />
-          </Reach.TabPanel>
-        </Reach.TabPanels>
-      </Reach.Tabs>
-    </>
+    <Tabs className="dark:bg-onyx-800 max-w-lg mx-auto shadow">
+      <TabList className="flex w-full font-bold text-sm text-center">
+        <Tab
+          className="w-1/2 b-0 py-4 rounded-none border-b-2 border-transparent"
+          data-testid="LOGIN_REGISTER_BUTTON"
+          id="Register">
+          Register
+        </Tab>
+        <Tab
+          className="w-1/2 b-0 py-4 rounded-none border-b-2 border-transparent"
+          data-testid="LOGIN_LOGIN_BUTTON"
+          id="Login">
+          Login
+        </Tab>
+      </TabList>
+      <TabPanels className="p-4">
+        <TabPanel>
+          <FormHeader>Sign Up as a New User</FormHeader>
+          <Register />
+        </TabPanel>
+        <TabPanel>
+          <FormHeader>Welcome Back!</FormHeader>
+          <LoginForm />
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
   );
 }

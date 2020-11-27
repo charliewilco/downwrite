@@ -1,43 +1,44 @@
-import * as React from "react";
-import * as Draft from "draft-js";
+import React, { useCallback } from "react";
 import distance from "date-fns/formatDistanceToNow";
-
-import { IPost } from "downwrite";
 import { EditLink, PreviewLink } from "./entry-links";
+import { IPartialFeedItem } from "@reducers/dashboard";
 
 export interface ICardProps {
   title: string;
-  content: Draft.RawDraftContentState;
   excerpt?: string;
   id: string;
   dateAdded: Date | string;
-  onDelete?: ({ id }: Partial<IPost>) => void;
+  onDelete: ({ id, title }: IPartialFeedItem) => void;
   public: boolean;
 }
 
 export default function Card(props: ICardProps): JSX.Element {
-  function onDelete() {
-    props.onDelete({ id: props.id, title: props.title });
-  }
-
-  const date = new Date(props.dateAdded);
+  const onDelete = useCallback(() => {
+    if (props.onDelete) {
+      props.onDelete({ id: props.id, title: props.title });
+    }
+  }, [props.onDelete, props.id, props.title]);
 
   return (
-    <div className="Sheet Card" data-testid="CARD">
-      <header className="CardHeader">
-        <h2 className="CardTitle" data-testid="CARD_TITLE">
+    <div className="shadow-md dark:bg-onyx-800 p-2" data-testid="CARD">
+      <header className="border-b-2 dark:border-onyx-600 pb-2 mb-12">
+        <h2 className="text-base leading-none" data-testid="CARD_TITLE">
           <EditLink title={props.title} id={props.id} />
         </h2>
-        <small className="CardMeta">added {distance(date)} ago</small>
+        {props.dateAdded && (
+          <small className="opacity-50 text-xs">
+            added {distance(new Date(props.dateAdded))} ago
+          </small>
+        )}
       </header>
-      <footer className="CardTray">
-        <div className="links" data-testid="CARD_EXCERPT">
-          <EditLink style={{ marginRight: 8 }} id={props.id} />
-          {props.public && <PreviewLink style={{ marginRight: 8 }} id={props.id} />}
+      <footer className="text-xs flex font-bold justify-between">
+        <div data-testid="CARD_EXCERPT">
+          <EditLink className="mr-2" id={props.id} />
+          {props.public && <PreviewLink className="mr-2" id={props.id} />}
         </div>
         {props.onDelete && (
           <button
-            className="CardDeleteButton"
+            className="text-xs font-bold"
             data-testid="CARD_DELETE_BUTTON"
             onClick={onDelete}>
             Delete
