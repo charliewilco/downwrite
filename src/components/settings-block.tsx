@@ -1,37 +1,34 @@
-import * as React from "react";
 import classNames from "../utils/classnames";
 
-interface ISettingsFormActionsProps {
+interface ISettingsFormActionsProps extends React.PropsWithChildren<{}> {
   split?: boolean;
-  children: React.ReactNode;
   className?: string;
 }
 
 export function SettingsFormActions(props: ISettingsFormActionsProps): JSX.Element {
   const className = classNames(
-    "ActionsContainer",
-    props.split && "ActionsContainer--split",
+    "mt-4 flex justify-end",
+    props.split && "justify-between",
     props.className
   );
   return <div className={className}>{props.children}</div>;
 }
 
-interface ISettingsBlockProps {
+interface ISettingsBlockProps extends React.PropsWithChildren<{}> {
   title: string;
   description?: string;
-  children: React.ReactNode;
 }
 
 export default function SettingsBlock(props: ISettingsBlockProps): JSX.Element {
   return (
-    <section className="Sheet SettingsBlock">
-      <div className="SettingsBlockTitleContainer">
-        <h4 className="SettingsBlockTitle">{props.title}</h4>
+    <section className="flex dark:bg-onyx-800 shadow flex-wrap mb-8 p-4">
+      <div className="pt-2 w-1/4 pr-2">
+        <h4 className="text-base mb-2 font-bold">{props.title}</h4>
         {props.description && (
-          <p className="SettingsBlockDescription">{props.description}</p>
+          <p className="opacity-75 text-xs font-light italic">{props.description}</p>
         )}
       </div>
-      <div className="SettingsBlockContents">{props.children}</div>
+      <div className="p-2 w-3/4">{props.children}</div>
     </section>
   );
 }

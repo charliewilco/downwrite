@@ -1,10 +1,11 @@
+import * as React from "react";
 import { Editor } from "draft-js";
 import {
   useDecorators,
   useEditor,
   useEditorState,
   useInlineStyles,
-  emptyContentState,
+  emptyContentState
 } from "./hooks";
 import { prismHighlightDecorator } from "./prism";
 import { imageLinkDecorators } from "./decorators";
@@ -13,12 +14,12 @@ export default function NewEditor() {
   const decorators = useDecorators([imageLinkDecorators, prismHighlightDecorator]);
   const [editorState, actions] = useEditorState({
     decorators,
-    contentState: emptyContentState,
+    contentState: emptyContentState
   });
   const editorProps = useEditor(actions);
   const { onItalic, onBold } = useInlineStyles({
     onChange: editorProps.onChange,
-    editorState,
+    editorState
   });
 
   return (
