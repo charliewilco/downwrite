@@ -67,7 +67,7 @@ export async function settings(context: ResolverContext): Promise<IUser> {
   return verifyUser(context, async ({ user }) => {
     const details: Many<
       Pick<IUserModel, "username" | "email">
-    > | null = await UserModel.findById(user, ["username", "email"]).lean();
+    > | null = await UserModel.findById(user, "username email").exec();
     if (details !== null) {
       const user = Array.isArray(details) ? details[0] : details;
       return { email: user.email!, admin: false, username: user.username! };

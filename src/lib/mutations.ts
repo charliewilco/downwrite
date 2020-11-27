@@ -139,6 +139,14 @@ export async function authenticateUser(
   }
 }
 
+interface ICreateUserParams {
+  email: string;
+  username: string;
+  id: string;
+  password: string;
+  admin: boolean;
+}
+
 export async function createUser(
   context: ResolverContext,
   username: string,
@@ -152,9 +160,11 @@ export async function createUser(
   try {
     const id = uuid();
     const hash = await getSaltedHash(password);
-    let user = await UserModel.create(
-      Object.assign({}, { email, username, id, password: hash, admin: false })
+    const m = Object.assign(
+      {},
+      { email, username, id, password: hash, admin: false }
     );
+    let user = await UserModel.create<ICreateUserParams>(m);
     let token = createToken(user);
 
     setTokenCookie(context.res, token);

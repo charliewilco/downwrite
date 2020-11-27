@@ -40,7 +40,7 @@ const userSchema = new Mongoose.Schema({
   posts: [{ type: Mongoose.Schema.Types.ObjectId, ref: "Post" }]
 });
 
-export const UserModel =
+export const UserModel: Mongoose.Model<IUserModel> =
   Mongoose.models.User || Mongoose.model<IUserModel>("User", userSchema);
 export const PostModel: Mongoose.Model<IPostModel> =
   Mongoose.models.Post || Mongoose.model<IPostModel>("Post", postSchema);
