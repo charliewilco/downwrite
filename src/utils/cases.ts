@@ -20,7 +20,7 @@ export function cases<T extends Config>(
     normalized = testCases;
   } else {
     const safeRef = testCases;
-    normalized = Object.keys(testCases).map(name => {
+    normalized = Object.keys(testCases).map((name) => {
       return Object.assign({}, { name }, safeRef[name]);
     });
   }

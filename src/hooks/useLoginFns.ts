@@ -40,7 +40,7 @@ export function useLoginFns(): IFormHandlers {
     router.push("/dashboard");
 
     if (notifications.length > 0) {
-      notifications.forEach(n => {
+      notifications.forEach((n) => {
         removeNotification(n);
       });
     }
@@ -54,13 +54,13 @@ export function useLoginFns(): IFormHandlers {
           password: values.password
         }
       })
-        .then(value => {
+        .then((value) => {
           if (value?.data?.authenticateUser?.token) {
             const token = value.data.authenticateUser.token;
             onSuccess(token);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           addNotification(error.message, NotificationType.ERROR);
         });
     },
@@ -75,14 +75,14 @@ export function useLoginFns(): IFormHandlers {
             ...values
           }
         })
-          .then(value => {
+          .then((value) => {
             if (value?.data?.createUser?.token) {
               const token = value.data.createUser.token;
 
               onSuccess(token);
             }
           })
-          .catch(error => {
+          .catch((error) => {
             addNotification(error.message, NotificationType.ERROR);
           });
       }

@@ -7,7 +7,7 @@ import { createMarkdownServer } from "@utils/markdown-template";
 const DEFAULT_GRADIENT = ["#FEB692", "#EA5455"];
 
 export function transformPostsToFeed(posts: IPostModel[]): IEntry[] {
-  const feed = posts.map(post => {
+  const feed = posts.map((post) => {
     const md = createMarkdownServer(post.content);
     const user = post.user.toString();
     const dateAdded = is.undefined(post.dateAdded)

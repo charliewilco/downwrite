@@ -9,7 +9,7 @@ import Features from "../components/features";
 
 export const getServerSideProps: GetServerSideProps<{
   token: string;
-}> = async context => {
+}> = async (context) => {
   const { DW_TOKEN: token } = new Cookies(context.req.headers.cookie).getAll();
 
   return {

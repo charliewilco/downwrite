@@ -73,7 +73,7 @@ function computeAttributes(yaml: string) {
   const splitter = ": ";
   const lines = yaml.split(/(\r?\n)/);
   let attributes = {};
-  lines.forEach(line => {
+  lines.forEach((line) => {
     if (!line.includes(splitter)) {
       return;
     }

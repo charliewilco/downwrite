@@ -28,7 +28,7 @@ export default function PostList(props: IPostListProps): JSX.Element {
         <PageTitle>Entries</PageTitle>
         <LayoutControl
           layout={state.isGridView}
-          layoutChange={payload => dispatch({ type: ListActions.SET, payload })}
+          layoutChange={(payload) => dispatch({ type: ListActions.SET, payload })}
         />
       </header>
 

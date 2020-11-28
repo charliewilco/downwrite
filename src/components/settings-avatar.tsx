@@ -15,7 +15,7 @@ export default function SettingsAvatar(): JSX.Element {
       <form onSubmit={handleSubmit}>
         <GradientEditor
           colors={values.colors}
-          onColorChange={colors => setFieldValue("colors", colors)}
+          onColorChange={(colors) => setFieldValue("colors", colors)}
         />
       </form>
     </SettingsBlock>

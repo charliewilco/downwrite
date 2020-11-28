@@ -62,7 +62,9 @@ export function useNewEntry() {
             router.push(`/${data.createEntry?.id}/edit`);
           }
         })
-        .catch(err => actions.addNotification(err.message, NotificationType.ERROR));
+        .catch((err) =>
+          actions.addNotification(err.message, NotificationType.ERROR)
+        );
     },
     [actions, createEntry]
   );

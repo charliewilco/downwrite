@@ -22,7 +22,7 @@ export default function Card(props: ICardProps): JSX.Element {
   return (
     <div className="shadow-md dark:bg-onyx-800 p-2" data-testid="CARD">
       <header className="border-b-2 dark:border-onyx-600 pb-2 mb-12">
-        <h2 className="text-base leading-none" data-testid="CARD_TITLE">
+        <h2 className="font-bold text-base leading-none" data-testid="CARD_TITLE">
           <EditLink title={props.title} id={props.id} />
         </h2>
         {props.dateAdded && (

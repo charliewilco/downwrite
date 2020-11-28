@@ -6,14 +6,14 @@ import {
   useEditorState,
   emptyContentState,
   prismHighlightDecorator,
-  imageLinkDecorators,
+  imageLinkDecorators
 } from "../editor";
 
 export default function NewEditor() {
   const decorators = useDecorators([imageLinkDecorators, prismHighlightDecorator]);
   const [editorState, actions] = useEditorState({
     decorators,
-    contentState: emptyContentState,
+    contentState: emptyContentState
   });
   const editorProps = useEditor(actions);
   let editorRef = useRef<Editor>(null);

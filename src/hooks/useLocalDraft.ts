@@ -36,10 +36,10 @@ export function useLocalDraftUtils(prefix = LOCAL_PREFIX) {
 
   const getAllDrafts = useCallback((): ILocalDraft[] => {
     const drafts: ILocalDraft[] = Object.keys(localStorage)
-      .filter(function(key) {
+      .filter(function (key) {
         return key.includes(prefix);
       })
-      .map(function(key) {
+      .map(function (key) {
         // can assume this isn't null because it passes the filter
         const draft = localStorage.getItem(key)!;
         return JSON.parse(draft);

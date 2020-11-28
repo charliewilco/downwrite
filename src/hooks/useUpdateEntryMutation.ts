@@ -27,11 +27,11 @@ function updateEntry(
       query: AllPostsDocument
     });
 
-    if (data && editQuery?.entry) {
+    if (data && editQuery?.entry && allPosts.feed) {
       cache.writeQuery<IAllPostsQuery>({
         query: AllPostsDocument,
         data: {
-          feed: allPosts!.feed.map(item =>
+          feed: allPosts.feed.map((item) =>
             item.id !== data.updateEntry!.id ? item : data.updateEntry!
           )
         }
@@ -64,7 +64,7 @@ export function useUpdateEntry(id: string, getEditorState: EditorStateGetter) {
             title: title,
             status: publicStatus
           }
-        }).catch(err => addNotification(err.message, NotificationType.ERROR));
+        }).catch((err) => addNotification(err.message, NotificationType.ERROR));
       }
     },
     [id, mutationFn, addNotification, getEditorState]

@@ -126,7 +126,7 @@ const reducer: React.Reducer<IAppState, ReducerActions> = produce<
       break;
     }
     case AppActions.REMOVE_NOTIFICATION: {
-      const i = draft.notifications.findIndex(n => n.id === action.payload.id);
+      const i = draft.notifications.findIndex((n) => n.id === action.payload.id);
       draft.notifications.splice(i, 1);
       break;
     }

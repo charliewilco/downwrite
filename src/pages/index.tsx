@@ -12,7 +12,9 @@ interface IIndexProps {
 
 type IndexProps = IIndexProps | {};
 
-export const getServerSideProps: GetServerSideProps<IndexProps> = async context => {
+export const getServerSideProps: GetServerSideProps<IndexProps> = async (
+  context
+) => {
   const initialAppState = await getInitialStateFromCookie(context.req);
 
   if (initialAppState && initialAppState.me.id) {
@@ -35,9 +37,9 @@ const isProps = <K extends any>(props: any): props is K => {
   return !!props && props !== {};
 };
 
-const IndexPage: NextPage<InferGetServerSidePropsType<
-  typeof getServerSideProps
->> = props => {
+const IndexPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
+  props
+) => {
   const router = useRouter();
 
   useEffect(() => {

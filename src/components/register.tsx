@@ -57,7 +57,7 @@ export default function RegisterForm(): JSX.Element {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        {REGISTER_INPUTS.map(input => (
+        {REGISTER_INPUTS.map((input) => (
           <UIInputContainer key={input.name}>
             <UIInput
               type={input.type}

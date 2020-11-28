@@ -4,7 +4,7 @@ import {
   ContentBlock,
   EditorState,
   ContentState,
-  SelectionState,
+  SelectionState
 } from "draft-js";
 import { Map, Iterable } from "immutable";
 
@@ -33,7 +33,7 @@ function adjustBlockDepthForContentState(
   return contentState.merge({
     blockMap,
     selectionBefore: selectionState,
-    selectionAfter: selectionState,
+    selectionAfter: selectionState
   }) as ContentState;
 }
 
@@ -58,9 +58,7 @@ const mergeBlockDataByKey = (
   data: { [id: string]: any }
 ): EditorState => {
   const contentState = editorState.getCurrentContent();
-  const updatedBlock = contentState
-    .getBlockForKey(blockKey)
-    .mergeIn(["data"], data);
+  const updatedBlock = contentState.getBlockForKey(blockKey).mergeIn(["data"], data);
   const blockMap = contentState
     .getBlockMap()
     .merge({ [blockKey]: updatedBlock } as any);
@@ -76,12 +74,9 @@ export const UNORDERED_LIST_ITEM = "unordered-list-item";
 export const ORDERED_LIST_ITEM = "ordered-list-item";
 
 export class CheckableListItemUtils {
-  static toggleChecked(
-    editorState: EditorState,
-    block: ContentBlock
-  ): EditorState {
+  static toggleChecked(editorState: EditorState, block: ContentBlock): EditorState {
     return mergeBlockDataByKey(editorState, block.getKey(), {
-      checked: !block.getData().get("checked"),
+      checked: !block.getData().get("checked")
     });
   }
 
@@ -141,16 +136,16 @@ const WRAPPER = <ul className="public-DraftStyleDefault-ul" />;
 export const checkboxBlockRenderMap = Map({
   [CHECKABLE_LIST_ITEM]: {
     element: "li",
-    wrapper: WRAPPER,
-  },
+    wrapper: WRAPPER
+  }
 });
 
 export const blockRenderMapForSameWrapperAsUnorderedListItem = checkboxBlockRenderMap.merge(
   Map({
     [UNORDERED_LIST_ITEM]: {
       element: "li",
-      wrapper: WRAPPER,
-    },
+      wrapper: WRAPPER
+    }
   })
 );
 
@@ -167,18 +162,16 @@ interface ICheckableListItemProps {
 export const CheckableListItem: React.FC<ICheckableListItemProps> = (props) => {
   const {
     offsetKey,
-    blockProps: { onChangeChecked, checked },
+    blockProps: { onChangeChecked, checked }
   } = props;
   return (
     <div
       className={`checkable-list-item-block${checked ? " is-checked" : ""}`}
-      data-offset-key={offsetKey}
-    >
+      data-offset-key={offsetKey}>
       <div
         className="checkable-list-item-block__checkbox"
         contentEditable={false}
-        suppressContentEditableWarning
-      >
+        suppressContentEditableWarning>
         <input type="checkbox" checked={checked} onChange={onChangeChecked} />
       </div>
       <div className="checkable-list-item-block__text">

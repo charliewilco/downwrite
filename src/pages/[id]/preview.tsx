@@ -28,7 +28,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   await dbConnect();
 
   const publicPosts = await PostModel.find({ public: { $eq: true } });
-  const paths = publicPosts.map(p => ({ params: { id: p.id } }));
+  const paths = publicPosts.map((p) => ({ params: { id: p.id } }));
 
   return {
     paths,
@@ -56,9 +56,9 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
   };
 };
 
-const PreviewEntry: NextPage<InferGetStaticPropsType<
-  typeof getStaticProps
->> = props => {
+const PreviewEntry: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (
+  props
+) => {
   const router = useRouter();
   const [currentUser] = useCurrentUser();
   const { error, loading, data } = usePreviewQuery({

@@ -17,7 +17,7 @@ export function useToggle(defaultValue?: boolean): [boolean, IToggleDispatches] 
   const [open, setOpen] = useState<boolean>(defaultValue || false);
 
   const onToggle = (): void => {
-    setOpen(prev => !prev);
+    setOpen((prev) => !prev);
   };
 
   const setInstance = (value: boolean): void => {

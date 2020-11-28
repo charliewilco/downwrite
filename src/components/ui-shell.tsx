@@ -23,9 +23,11 @@ export function UIShell(props: IUIShell): JSX.Element {
         <UIHeader />
         <Banner>
           <div className="flex items-center">
-            <FiAlertTriangle className="mr-4 " />
-            <span className="text-sm font-bold">
-              This app is currently in a major major alpha. Swim at your own risk.
+            <FiAlertTriangle className="mr-4 lg:h-5 lg:w-5" />
+            <span className="text-xs lg:text-sm">
+              This app is currently in a major major alpha.
+              <br />
+              Swim at your own risk.
             </span>
           </div>
         </Banner>

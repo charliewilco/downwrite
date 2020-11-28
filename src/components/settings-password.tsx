@@ -81,7 +81,7 @@ export default function SettingsPassword(): JSX.Element {
         ))}
         <SettingsFormActions split>
           <ToggleBox
-            label={value => (!value ? "Values hidden" : "Values shown")}
+            label={(value) => (!value ? "Values hidden" : "Values shown")}
             onChange={onToggleOpen}
             value={isOpen}
           />

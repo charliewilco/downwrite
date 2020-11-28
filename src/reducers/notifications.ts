@@ -59,7 +59,7 @@ function removeNotifications(
   state: INotificationState,
   selected: UINotificationMessage
 ): INotificationState {
-  const notifications = state.notifications.filter(t => t.id !== selected.id && t);
+  const notifications = state.notifications.filter((t) => t.id !== selected.id && t);
   return {
     notifications
   };

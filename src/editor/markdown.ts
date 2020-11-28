@@ -53,142 +53,142 @@ var previousOrderedListDepth: number = 0;
 const StyleItems: Record<string, IInlineStyleStringify> = {
   // BLOCK LEVEL
   "unordered-list-item": {
-    open: function() {
+    open: function () {
       return "- ";
     },
 
-    close: function() {
+    close: function () {
       return "";
     }
   },
 
   "ordered-list-item": {
-    open: function(_: RawDraftContentBlock, number: number = 1) {
+    open: function (_: RawDraftContentBlock, number: number = 1) {
       return `${number}. `;
     },
 
-    close: function() {
+    close: function () {
       return "";
     }
   },
 
   blockquote: {
-    open: function() {
+    open: function () {
       return "> ";
     },
 
-    close: function() {
+    close: function () {
       return "";
     }
   },
 
   "header-one": {
-    open: function() {
+    open: function () {
       return "# ";
     },
 
-    close: function() {
+    close: function () {
       return "";
     }
   },
 
   "header-two": {
-    open: function() {
+    open: function () {
       return "## ";
     },
 
-    close: function() {
+    close: function () {
       return "";
     }
   },
 
   "header-three": {
-    open: function() {
+    open: function () {
       return "### ";
     },
 
-    close: function() {
+    close: function () {
       return "";
     }
   },
 
   "header-four": {
-    open: function() {
+    open: function () {
       return "#### ";
     },
 
-    close: function() {
+    close: function () {
       return "";
     }
   },
 
   "header-five": {
-    open: function() {
+    open: function () {
       return "##### ";
     },
 
-    close: function() {
+    close: function () {
       return "";
     }
   },
 
   "header-six": {
-    open: function() {
+    open: function () {
       return "###### ";
     },
 
-    close: function() {
+    close: function () {
       return "";
     }
   },
 
   "code-block": {
-    open: function(block: RawDraftContentBlock) {
+    open: function (block: RawDraftContentBlock) {
       return "```" + (block.data?.language || "") + "\n";
     },
 
-    close: function() {
+    close: function () {
       return "\n```";
     }
   },
 
   // INLINE LEVEL
   BOLD: {
-    open: function() {
+    open: function () {
       return "**";
     },
 
-    close: function() {
+    close: function () {
       return "**";
     }
   },
 
   ITALIC: {
-    open: function() {
+    open: function () {
       return "_";
     },
 
-    close: function() {
+    close: function () {
       return "_";
     }
   },
 
   STRIKETHROUGH: {
-    open: function() {
+    open: function () {
       return "~~";
     },
 
-    close: function() {
+    close: function () {
       return "~~";
     }
   },
 
   CODE: {
-    open: function() {
+    open: function () {
       return "`";
     },
 
-    close: function() {
+    close: function () {
       return "`";
     }
   }
@@ -202,11 +202,11 @@ const StyleItems: Record<string, IInlineStyleStringify> = {
 // They should always return a string.
 const EntityItems: Record<string, IEntityItemStringify> = {
   LINK: {
-    open: function(_entity: RawDraftEntity) {
+    open: function (_entity: RawDraftEntity) {
       return "[";
     },
 
-    close: function(_entity: RawDraftEntity) {
+    close: function (_entity: RawDraftEntity) {
       return `](${_entity.data.url || _entity.data.href})`;
     }
   }
@@ -388,9 +388,9 @@ function renderBlock(
   const reverseIterate = <T>(array: T[]) => array.concat().reverse();
 
   // Render text within content, along with any inline styles/entities
-  Array.from(block.text).some(function(character: string, characterIndex: number) {
+  Array.from(block.text).some(function (character: string, characterIndex: number) {
     // Close any tags that need closing, starting from top of the stack
-    reverseIterate(openTags).forEach(function(tag) {
+    reverseIterate(openTags).forEach(function (tag) {
       if (tag.offset + tag.length === characterIndex) {
         // Take all tags stacked on top of the current one, meaning they opened after it.
         // Since they have not been popped, they'll close only later. So we need to split them.
@@ -403,16 +403,16 @@ function renderBlock(
         closeTag(tag);
 
         // Reopen split tags, ordered so that tags that close last open first
-        tagsToSplit.sort(compareTagsLastCloseFirst).forEach(tag => openTag(tag));
+        tagsToSplit.sort(compareTagsLastCloseFirst).forEach((tag) => openTag(tag));
       }
     });
 
     // Open any tags that need opening, using the correct nesting order.
     var inlineTagsToOpen = block.inlineStyleRanges.filter(
-      tag => tag.offset === characterIndex
+      (tag) => tag.offset === characterIndex
     );
     var entityTagsToOpen = block.entityRanges.filter(
-      tag => tag.offset === characterIndex
+      (tag) => tag.offset === characterIndex
     );
 
     ranges
@@ -426,7 +426,7 @@ function renderBlock(
     // character before adding the markdown, since markdown doesn’t play nice with leading whitespace (eg '** bold**' is no  good, whereas ' **bold**' is good.)
     if (character !== " " && markdownToAdd.length) {
       markdownString += markdownToAdd
-        .map(function(item) {
+        .map(function (item) {
           return item.value;
         })
         .join("");
@@ -436,7 +436,7 @@ function renderBlock(
 
     if (block.type !== "code-block" && escapeMarkdownCharacters) {
       let insideInlineCodeStyle = openTags.find(
-        style => isInlineStyleRange(style) && style.style === "CODE"
+        (style) => isInlineStyleRange(style) && style.style === "CODE"
       );
 
       if (insideInlineCodeStyle) {
@@ -466,7 +466,7 @@ function renderBlock(
         // so this code now tries to be smart and keeps track of potential “opening” characters as well as potential “closing”
         // characters, and only escapes if both opening and closing exist, and they have the correct whitepace-before-open, whitespace-or-end-of-string-after-close pattern
         if (MARKDOWN_STYLE_CHARACTERS.includes(character)) {
-          let openingStyle = markdownStyleCharactersToEscape.find(function(item) {
+          let openingStyle = markdownStyleCharactersToEscape.find(function (item) {
             return item.character === character;
           });
 

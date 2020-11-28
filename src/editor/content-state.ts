@@ -29,7 +29,7 @@ function strlen(str?: string) {
 // Why a function? Because in some cases (headers) we need additional information
 // before we can determine the exact key to return. And blocks may also return data
 const DefaultBlockTypes = {
-  paragraph_open: function(
+  paragraph_open: function (
     _item?: Remarkable.ParagraphOpenToken
   ): RawDraftContentBlock {
     return {
@@ -42,21 +42,21 @@ const DefaultBlockTypes = {
     };
   },
 
-  blockquote_open: function(_item?: Remarkable.BlockquoteToken) {
+  blockquote_open: function (_item?: Remarkable.BlockquoteToken) {
     return {
       type: "blockquote",
       text: ""
     };
   },
 
-  ordered_list_item_open: function(_item?: Remarkable.OrderedListOpenToken) {
+  ordered_list_item_open: function (_item?: Remarkable.OrderedListOpenToken) {
     return {
       type: "ordered-list-item",
       text: ""
     };
   },
 
-  unordered_list_item_open: function(
+  unordered_list_item_open: function (
     _item?: Remarkable.BulletListOpenToken
   ): RawDraftContentBlock {
     return {
@@ -69,7 +69,7 @@ const DefaultBlockTypes = {
     };
   },
 
-  fence: function(_item?: Remarkable.FenceToken): RawDraftContentBlock {
+  fence: function (_item?: Remarkable.FenceToken): RawDraftContentBlock {
     return {
       type: "code-block",
       data: {
@@ -83,7 +83,9 @@ const DefaultBlockTypes = {
     };
   },
 
-  heading_open: function(_item?: Remarkable.HeadingOpenToken): RawDraftContentBlock {
+  heading_open: function (
+    _item?: Remarkable.HeadingOpenToken
+  ): RawDraftContentBlock {
     const levels: Record<Remarkable.HeadingValue, string> = {
       1: "one",
       2: "two",
@@ -113,7 +115,7 @@ const DefaultBlockTypes = {
 // again. In this case, key is remarkable key, value is
 // meethod that returns the draftjs key + any data needed.
 const DefaultBlockEntities: BlockEntities = {
-  link_open: function(item) {
+  link_open: function (item) {
     return {
       type: "LINK",
       mutability: "MUTABLE",
@@ -164,7 +166,7 @@ function parseInline(
     blockEntities: Record<number, RawDraftEntity> = {},
     blockEntityRanges: RawDraftEntityRange[] = [],
     blockInlineStyleRanges: RawDraftInlineStyleRange[] = [];
-  inlineItem.children!.forEach(function(child: Remarkable.Token) {
+  inlineItem.children!.forEach(function (child: Remarkable.Token) {
     if (child.type === "text") {
       content += (child as Remarkable.ContentToken).content;
     } else if (child.type === "softbreak") {
@@ -207,7 +209,7 @@ function parseInline(
       BlockStyles[child.type.replace("_close", "_open")]
     ) {
       var type = BlockStyles[child.type.replace("_close", "_open")];
-      blockInlineStyleRanges = blockInlineStyleRanges.map(style => {
+      blockInlineStyleRanges = blockInlineStyleRanges.map((style) => {
         if (style.length === 0 && style.style === type) {
           style.length = strlen(content) - style.offset;
         }
@@ -289,7 +291,7 @@ export function markdownToDraft(
 
   // If users want to define custom remarkable plugins for custom markdown, they can be added here
   if (options.remarkablePlugins) {
-    options.remarkablePlugins.forEach(function(plugin) {
+    options.remarkablePlugins.forEach(function (plugin) {
       md.use(plugin, {});
     });
   }
@@ -317,7 +319,7 @@ export function markdownToDraft(
     options.blockStyles || {}
   );
 
-  parsedData.forEach(function(item: Remarkable.Token) {
+  parsedData.forEach(function (item: Remarkable.Token) {
     // Because of how remarkable's data is formatted, we need to cache what kind of list we're currently dealing with
     if (item.type === "bullet_list_open") {
       currentListType = "unordered_list_item_open";

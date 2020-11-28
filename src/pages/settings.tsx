@@ -26,9 +26,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   };
 };
 
-const SettingsPage: NextPage<InferGetServerSidePropsType<
-  typeof getServerSideProps
->> = () => {
+const SettingsPage: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = () => {
   const { error, loading, data } = useUserDetailsQuery();
   if (loading) {
     return <Loading />;

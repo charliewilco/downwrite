@@ -49,10 +49,7 @@ export default function DownwriteEditor({
     "px-0 py-4 w-full h-full RichEditor-editor",
     props.className,
     !contentState.hasText() &&
-      contentState
-        .getBlockMap()
-        .first()
-        .getType() !== "unstyled" &&
+      contentState.getBlockMap().first().getType() !== "unstyled" &&
       "RichEditor-hidePlaceholder"
   );
 

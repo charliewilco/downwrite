@@ -33,7 +33,7 @@ export const localDraftReducer: React.Reducer<
       draft.push(action.item);
       break;
     case LocalDraftActionTypes.REMOVE_LOCAL_DRAFT:
-      const index = draft.findIndex(v => v.id === action.id);
+      const index = draft.findIndex((v) => v.id === action.id);
       draft.splice(index, 1);
       break;
     case LocalDraftActionTypes.LOAD_LOCAL_DRAFTS:

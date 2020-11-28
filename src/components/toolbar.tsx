@@ -22,7 +22,7 @@ const INLINE_STYLES = [
 export function FullToolBar(props: any): JSX.Element {
   return (
     <div className="ToolbarWrapper">
-      {BLOCK_TYPES.map(type => (
+      {BLOCK_TYPES.map((type) => (
         <ToolbarButton
           key={type.label}
           active={type.style === props.blockType}
@@ -31,7 +31,7 @@ export function FullToolBar(props: any): JSX.Element {
           style={type.style}
         />
       ))}
-      {INLINE_STYLES.map(type => (
+      {INLINE_STYLES.map((type) => (
         <ToolbarButton
           key={type.label}
           active={props.currentStyle.has(type.style)}
@@ -48,7 +48,7 @@ export function SelectionToolBar(props: any): JSX.Element {
   return (
     <div className="ToolbarWrapper">
       {props.selectedText.length > 0
-        ? INLINE_STYLES.map(type => (
+        ? INLINE_STYLES.map((type) => (
             <ToolbarButton
               key={type.label}
               active={props.currentStyle.has(type.style)}
@@ -57,7 +57,7 @@ export function SelectionToolBar(props: any): JSX.Element {
               style={type.style}
             />
           ))
-        : BLOCK_TYPES.map(type => (
+        : BLOCK_TYPES.map((type) => (
             <ToolbarButton
               key={type.label}
               active={type.style === props.blockType}

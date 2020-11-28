@@ -9,7 +9,7 @@ import {
   ContentBlock,
   DraftInlineStyle,
   DraftBlockType,
-  EditorChangeType,
+  EditorChangeType
 } from "draft-js";
 import { List, Map } from "immutable";
 import { CHECKABLE_LIST_ITEM } from "./checklist";
@@ -51,15 +51,15 @@ export const changeCurrentBlockType = (
   const newBlock: ContentBlock = block?.merge({
     type: t,
     data,
-    text: text || "",
+    text: text || ""
   }) as any;
   const newSelection = selection.merge({
     anchorOffset: 0,
-    focusOffset: 0,
+    focusOffset: 0
   });
   const newContentState = currentContent.merge({
     blockMap: blockMap.set(key, newBlock),
-    selectionAfter: newSelection,
+    selectionAfter: newSelection
   }) as ContentState;
   return EditorState.push(editorState, newContentState, "change-block-type");
 };
@@ -81,7 +81,7 @@ export const changeCurrentInlineStyle = (
   const focusOffset = index + matchArr[0].length;
   const wordSelection = SelectionState.createEmpty(key).merge({
     anchorOffset: index + matchArr[0].indexOf(matchArr[1]),
-    focusOffset,
+    focusOffset
   });
   let newContentState = Modifier.replaceText(
     currentContent,
@@ -139,20 +139,15 @@ const blockTypes: DraftBlockType[] = [
   "header-four",
   "header-five",
   "header-six",
-  "blockquote",
+  "blockquote"
 ];
 
-export const handleBlockType = (
-  editorState: EditorState,
-  character: string
-) => {
+export const handleBlockType = (editorState: EditorState, character: string) => {
   const currentSelection = editorState.getSelection();
   const key = currentSelection.getStartKey();
   const text = editorState.getCurrentContent().getBlockForKey(key).getText();
   const position = currentSelection.getAnchorOffset();
-  const line = [text.slice(0, position), character, text.slice(position)].join(
-    ""
-  );
+  const line = [text.slice(0, position), character, text.slice(position)].join("");
   const blockType = RichUtils.getCurrentBlockType(editorState);
   for (let i = 1; i <= 6; i += 1) {
     if (line.indexOf(`${sharps(i)} `) === 0 && blockType !== "code-block") {
@@ -165,19 +160,11 @@ export const handleBlockType = (
   }
   let matchArr = line.match(/^[*-] (.*)$/);
   if (matchArr) {
-    return changeCurrentBlockType(
-      editorState,
-      "unordered-list-item",
-      matchArr[1]
-    );
+    return changeCurrentBlockType(editorState, "unordered-list-item", matchArr[1]);
   }
   matchArr = line.match(/^[\d]\. (.*)$/);
   if (matchArr) {
-    return changeCurrentBlockType(
-      editorState,
-      "ordered-list-item",
-      matchArr[1]
-    );
+    return changeCurrentBlockType(editorState, "ordered-list-item", matchArr[1]);
   }
   matchArr = line.match(/^> (.*)$/);
   if (matchArr) {
@@ -185,12 +172,9 @@ export const handleBlockType = (
   }
   matchArr = line.match(/^\[([x ])] (.*)$/i);
   if (matchArr && blockType === "unordered-list-item") {
-    return changeCurrentBlockType(
-      editorState,
-      CHECKABLE_LIST_ITEM,
-      matchArr[2],
-      { checked: matchArr[1] !== " " }
-    );
+    return changeCurrentBlockType(editorState, CHECKABLE_LIST_ITEM, matchArr[2], {
+      checked: matchArr[1] !== " "
+    });
   }
   return editorState;
 };
@@ -222,13 +206,10 @@ const inlineMatchers: Matchers = {
   BOLD: /(?:^|\s|\n|[^A-z0-9_*~`])(\*{2}|_{2})((?!\1).*?)(\1)($|\s|\n|[^A-z0-9_*~`])/g,
   ITALIC: /(?:^|\s|\n|[^A-z0-9_*~`])(\*{1}|_{1})((?!\1).*?)(\1)($|\s|\n|[^A-z0-9_*~`])/g,
   CODE: /(?:^|\s|\n|[^A-z0-9_*~`])(`)((?!\1).*?)(\1)($|\s|\n|[^A-z0-9_*~`])/g,
-  STRIKETHROUGH: /(?:^|\s|\n|[^A-z0-9_*~`])(~{2})((?!\1).*?)(\1)($|\s|\n|[^A-z0-9_*~`])/g,
+  STRIKETHROUGH: /(?:^|\s|\n|[^A-z0-9_*~`])(~{2})((?!\1).*?)(\1)($|\s|\n|[^A-z0-9_*~`])/g
 };
 
-export const handleInlineStyle = (
-  editorState: EditorState,
-  character: string
-) => {
+export const handleInlineStyle = (editorState: EditorState, character: string) => {
   const key = editorState.getSelection().getStartKey();
   const text = editorState.getCurrentContent().getBlockForKey(key).getText();
   const line = `${text}${character}`;
@@ -263,23 +244,19 @@ export const insertEmptyBlock = (
     key: emptyBlockKey,
     text: "",
     type: blockType,
-    data: Map().merge(data),
+    data: Map().merge(data)
   });
   const blockMap = contentState.getBlockMap();
-  const blocksBefore = blockMap
-    .toSeq()
-    .takeUntil((value) => value === currentBlock);
+  const blocksBefore = blockMap.toSeq().takeUntil((value) => value === currentBlock);
   const blocksAfter = blockMap
     .toSeq()
     .skipUntil((value) => value === currentBlock)
     .rest();
   const augmentedBlocks = [
     [currentBlock.getKey(), currentBlock],
-    [emptyBlockKey, emptyBlock],
+    [emptyBlockKey, emptyBlock]
   ];
-  const newBlocks = blocksBefore
-    .concat(augmentedBlocks, blocksAfter)
-    .toOrderedMap();
+  const newBlocks = blocksBefore.concat(augmentedBlocks, blocksAfter).toOrderedMap();
   const focusKey = emptyBlockKey;
   const newContentState: ContentState = contentState.merge({
     blockMap: newBlocks,
@@ -289,8 +266,8 @@ export const insertEmptyBlock = (
       anchorOffset: 0,
       focusKey,
       focusOffset: 0,
-      isBackward: false,
-    }),
+      isBackward: false
+    })
   }) as ContentState;
   return EditorState.push(editorState, newContentState, "split-block");
 };
@@ -304,12 +281,12 @@ export const insertImage = (editorState: EditorState, matchArr: any) => {
   const focusOffset = index + matchText.length;
   const wordSelection = SelectionState.createEmpty(key).merge({
     anchorOffset: index,
-    focusOffset,
+    focusOffset
   });
   const nextContent = currentContent.createEntity("IMG", "IMMUTABLE", {
     alt,
     src,
-    title,
+    title
   });
   const entityKey = nextContent.getLastCreatedEntityKey();
   let newContentState = Modifier.replaceText(
@@ -325,18 +302,14 @@ export const insertImage = (editorState: EditorState, matchArr: any) => {
     " "
   );
   const newWordSelection = wordSelection.merge({
-    focusOffset: index + 1,
+    focusOffset: index + 1
   });
   let newEditorState = EditorState.push(
     editorState,
     newContentState,
     "insert-image" as EditorChangeType
   );
-  newEditorState = RichUtils.toggleLink(
-    newEditorState,
-    newWordSelection,
-    entityKey
-  );
+  newEditorState = RichUtils.toggleLink(newEditorState, newWordSelection, entityKey);
   return EditorState.forceSelection(
     newEditorState,
     newContentState.getSelectionAfter()
@@ -352,11 +325,11 @@ export const insertLink = (editorState: EditorState, matchArr: any) => {
   const focusOffset = index + matchText.length;
   const wordSelection = SelectionState.createEmpty(key).merge({
     anchorOffset: index,
-    focusOffset,
+    focusOffset
   });
   const nextContent = currentContent.createEntity("LINK", "MUTABLE", {
     href,
-    title,
+    title
   });
   const entityKey = nextContent.getLastCreatedEntityKey();
   let newContentState = Modifier.replaceText(
@@ -372,18 +345,14 @@ export const insertLink = (editorState: EditorState, matchArr: any) => {
     " "
   );
   const newWordSelection = wordSelection.merge({
-    focusOffset: index + text.length,
+    focusOffset: index + text.length
   });
   let newEditorState = EditorState.push(
     editorState,
     newContentState,
     "insert-link" as EditorChangeType
   );
-  newEditorState = RichUtils.toggleLink(
-    newEditorState,
-    newWordSelection,
-    entityKey
-  );
+  newEditorState = RichUtils.toggleLink(newEditorState, newWordSelection, entityKey);
   return EditorState.forceSelection(
     newEditorState,
     newContentState.getSelectionAfter()

@@ -13,7 +13,7 @@ export const createLinkStrategy = () => {
     callback: (start: number, end: number) => void,
     contentState: ContentState
   ) => {
-    block.findEntityRanges(character => {
+    block.findEntityRanges((character) => {
       const entityKey = character.getEntity();
       return (
         entityKey !== null && contentState.getEntity(entityKey).getType() === "LINK"
@@ -29,7 +29,7 @@ export const createImageStrategy = () => {
     callback: (start: number, end: number) => void,
     contentState: ContentState
   ) => {
-    block.findEntityRanges(character => {
+    block.findEntityRanges((character) => {
       const entityKey = character.getEntity();
       return (
         entityKey !== null && contentState.getEntity(entityKey).getType() === "IMG"
@@ -44,7 +44,7 @@ interface IDecoratorProps {
   contentState: ContentState;
 }
 
-const Link: React.FC<IDecoratorProps> = props => {
+const Link: React.FC<IDecoratorProps> = (props) => {
   const { contentState, children, entityKey } = props;
   const { href, title } = contentState.getEntity(entityKey).getData();
   return (

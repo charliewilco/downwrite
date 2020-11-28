@@ -21,16 +21,12 @@ export const RegisterFormSchema = Yup.object().shape({
       /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/
     )
     .required(validPasswordMessage),
-  email: Yup.string()
-    .email()
-    .required("Email is required")
+  email: Yup.string().email().required("Email is required")
 });
 
 export const UserSettingsSchema = Yup.object().shape({
   username: Yup.string().required("You need a user name"),
-  email: Yup.string()
-    .email()
-    .required("Email is required")
+  email: Yup.string().email().required("Email is required")
 });
 
 export const UpdatePasswordSchema = Yup.object().shape({

@@ -23,5 +23,5 @@ export function useLocalStorage(
     updateLocalState("");
   }
 
-  return [localState, updatedValue => writeStorage(updatedValue), deleteStorage];
+  return [localState, (updatedValue) => writeStorage(updatedValue), deleteStorage];
 }

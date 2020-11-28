@@ -723,9 +723,7 @@ export function useUpdateUserSettingsMutation(
 export type UpdateUserSettingsMutationHookResult = ReturnType<
   typeof useUpdateUserSettingsMutation
 >;
-export type UpdateUserSettingsMutationResult = Apollo.MutationResult<
-  IUpdateUserSettingsMutation
->;
+export type UpdateUserSettingsMutationResult = Apollo.MutationResult<IUpdateUserSettingsMutation>;
 export type UpdateUserSettingsMutationOptions = Apollo.BaseMutationOptions<
   IUpdateUserSettingsMutation,
   IUpdateUserSettingsMutationVariables

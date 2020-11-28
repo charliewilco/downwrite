@@ -59,9 +59,9 @@ export const getServerSideProps: EditPageHandler = async ({ req, res, params }) 
   };
 };
 
-const EditUI: NextPage<InferGetServerSidePropsType<
-  typeof getServerSideProps
->> = props => {
+const EditUI: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
+  props
+) => {
   const [
     { loading, error, state, data, id, editorState, editorActions },
     actions
@@ -108,7 +108,7 @@ const EditUI: NextPage<InferGetServerSidePropsType<
         <aside className="flex items-center justify-between py-2 mx-0 mt-2 mb-4">
           <div className="flex items-center">
             <ToggleBox
-              label={value => (value ? "Public" : "Private")}
+              label={(value) => (value ? "Public" : "Private")}
               name="publicStatus"
               value={state.publicStatus}
               onChange={actions.handleStatusChange}
