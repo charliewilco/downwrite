@@ -8,7 +8,7 @@ import {
   FiSettings,
   FiSun,
   FiMoon,
-  FiMenu
+  FiMoreHorizontal
 } from "react-icons/fi";
 import { Routes } from "@utils/routes";
 import User from "./user";
@@ -51,7 +51,7 @@ export default function DropdownUI() {
   return (
     <Menu>
       <MenuButton className="appearance-none border-0">
-        <FiMenu size={16} />
+        <FiMoreHorizontal size={16} />
       </MenuButton>
       <MenuList className="shadow-md dark:bg-onyx-800 animate-from-left">
         {currentUser.username && (
