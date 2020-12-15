@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { __IS_PROD__ } from "@utils/dev";
 
 function getAddress() {
-  return `mongodb://${process.env.CURRENT_DB_ADDRESS!}`;
+  return process.env.ATLAS_DB_ADDRESS;
 }
 
 const connection: {
