@@ -4,7 +4,6 @@ import { TokenContents, isValidPassword } from "@lib/token";
 import { UserModel, IUserModel } from "@lib/models";
 import { getUserToken, TOKEN_NAME } from "@lib/cookie-managment";
 import dbConnect from "@lib/db";
-import { passwordStringSchema } from "@utils/validations";
 
 export type ResolverContext = Pick<GetServerSidePropsContext, "req" | "res">;
 
