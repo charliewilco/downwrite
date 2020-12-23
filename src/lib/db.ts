@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
-import { __IS_PROD__ } from "@utils/dev";
+import { __IS_DEV__, __IS_PROD__, __IS_TEST__ } from "@utils/dev";
+
+const developDBAddrress = "mongodb://127.0.0.1:27017/downwrite";
 
 function getAddress() {
-  return process.env.ATLAS_DB_ADDRESS;
+  return process.env.ATLAS_DB_ADDRESS || developDBAddrress;
 }
 
 const connection: {
@@ -17,12 +19,21 @@ export default async function dbConnect() {
 
   const address = getAddress();
 
-  /* connecting to our database */
-  const db = await mongoose.connect(address, {
+  let options: mongoose.ConnectionOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false
-  });
+  };
+
+  if (__IS_DEV__ || __IS_TEST__) {
+    options = Object.assign(options, {
+      autoReconnect: true,
+      poolSize: 10
+    });
+  }
+
+  /* connecting to our database */
+  const db = await mongoose.connect(address, options);
   db.connection.on("error", () => {
     console.error("connection error");
   });
@@ -33,3 +44,19 @@ export default async function dbConnect() {
 
   connection.isConnected = db.connections[0].readyState;
 }
+
+export const clearDB = async () => {
+  if (connection.isConnected) {
+    console.log("DB Connection", connection);
+  }
+
+  console.log("Clearing the database and it's dangerous");
+  const db = await mongoose.connect(developDBAddrress);
+
+  await db.connection.dropDatabase();
+  await db.connection.close();
+};
+
+export const stopDB = async () => {
+  await mongoose.connection.close();
+};

@@ -22,6 +22,7 @@ import {
   IMutationUpdateUserSettingsArgs
 } from "@utils/resolver-types";
 import { __IS_DEV__ } from "@utils/dev";
+import { createUserValidation } from "@lib/input";
 
 export interface IMutationCreateEntryVars {
   title: string;
@@ -155,9 +156,14 @@ export async function createUser(
 ) {
   await dbConnect();
 
-  await verifyUniqueUser(username, email);
-
   try {
+    await verifyUniqueUser(username, email);
+    await createUserValidation.validate({
+      username,
+      email,
+      password
+    });
+
     const id = uuid();
     const hash = await getSaltedHash(password);
     const m = Object.assign(
