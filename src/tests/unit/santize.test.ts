@@ -1,4 +1,4 @@
-import { sanitize } from "../utils/sanitize";
+import { sanitize } from "@utils/sanitize";
 
 describe("Clean and retain object", () => {
   const myObject = {

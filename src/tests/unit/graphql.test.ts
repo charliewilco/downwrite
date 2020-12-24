@@ -143,4 +143,7 @@ describe("GraphQL API", () => {
     expect(data.feed).toHaveLength(1);
     expect(errors).toBeUndefined();
   });
+
+  xit("can remove post");
+  xit("can reauthenticates");
 });
