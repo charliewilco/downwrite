@@ -1,12 +1,11 @@
 module.exports = {
   server: {
     command: "NO_HTTPS=true yarn start",
-    port: 3000,
-    launchTimeout: 45000,
-    debug: false
+    port: 3000
   },
   launch: {
-    headless: true,
-    slowMo: 0
+    timeout: 0,
+    headless: !!process.env.CI,
+    slowMo: process.env.CI ? 0 : 150
   }
 };

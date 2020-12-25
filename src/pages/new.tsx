@@ -1,4 +1,4 @@
-import { GetServerSideProps, NextPage } from "next";
+import { NextPage } from "next";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useCallback } from "react";
@@ -8,7 +8,7 @@ import { useOffline } from "@hooks/useOffline";
 import { IMarkdownConversion } from "@components/upload";
 import { Input } from "@components/editor-input";
 import { Button } from "@components/button";
-import { getInitialStateFromCookie } from "@lib/cookie-managment";
+// import { getInitialStateFromCookie } from "@lib/cookie-managment";
 import {
   useEditor,
   useEditorState,
@@ -22,14 +22,14 @@ const Upload = dynamic(() => import("@components/upload"));
 
 const EDITOR_COMMAND = "create-new-post";
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const initialAppState = await getInitialStateFromCookie(req);
-  return {
-    props: {
-      initialAppState
-    }
-  };
-};
+// export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+//   const initialAppState = await getInitialStateFromCookie(req);
+//   return {
+//     props: {
+//       initialAppState
+//     }
+//   };
+// };
 
 const NewEntryPage: NextPage = () => {
   const [createNewPost] = useNewEntry();

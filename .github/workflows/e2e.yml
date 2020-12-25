@@ -4,14 +4,19 @@ on: [pull_request]
 jobs:
   e2e:
     runs-on: ubuntu-latest
-
+    env:
+      CI: true
+      NO_HTTPS: true
+      NODE_ENV: test
+      SECRET_KEY: "foo"
+      NEXT_TELEMETRY_DISABLED: 1
     strategy:
       matrix:
         node-version: [12.x]
 
     services:
       mongodb:
-        image: mongo:3.4.23
+        image: mongo:4.4
         ports:
           - 27017:27017
 
@@ -20,23 +25,14 @@ jobs:
         with:
           path: ${{ github.workspace }}/.next/cache
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install deps and build package
+      - name: Install deps
         run: yarn install --frozen-lockfile
       - name: Build Project for Testing
         run: yarn build
-        env:
-          CI: TRUE
-          NO_HTTPS: TRUE
-          NODE_ENV: test
-          SECRET_KEY: "foo"
       - name: Run Puppeteer
         run: yarn test:e2e
-        env:
-          NODE_ENV: test
-          CI: TRUE
-          SECRET_KEY: "foo"

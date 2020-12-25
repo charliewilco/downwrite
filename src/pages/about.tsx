@@ -1,23 +1,8 @@
-import * as React from "react";
 import { NextPage } from "next";
 import Head from "next/head";
-import { GetServerSideProps } from "next";
-import Cookies from "universal-cookie";
 
 import Content from "../components/content";
 import Features from "../components/features";
-
-export const getServerSideProps: GetServerSideProps<{
-  token: string;
-}> = async (context) => {
-  const { DW_TOKEN: token } = new Cookies(context.req.headers.cookie).getAll();
-
-  return {
-    props: {
-      token: token || null
-    }
-  };
-};
 
 const AboutDetails: NextPage = () => {
   return (
@@ -25,11 +10,10 @@ const AboutDetails: NextPage = () => {
       <Head>
         <title>About Downwrite</title>
       </Head>
-      <aside>
-        <h2>Hello</h2>
-      </aside>
+      <aside />
+
       <div className="xl:pb-0 xl:col-span-3 xl:row-span-2">
-        <div className="font-serif __content py-8">
+        <div data-testid="ABOUT_PAGE" className="font-serif __content py-8">
           <p>
             So the idea here was simple build a simple markdown writing application.
             Markdown is a huge deal and all the cool tools kept getting shut down and

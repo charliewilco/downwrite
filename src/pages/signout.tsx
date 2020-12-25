@@ -1,14 +1,14 @@
+import { useEffect } from "react";
 import { GetServerSideProps, NextPage } from "next";
+import { useRouter } from "next/router";
+import { useApolloClient } from "@apollo/client";
 import { removeTokenCookie } from "@lib/cookie-managment";
+import { Routes } from "@utils/routes";
 
 export const getServerSideProps: GetServerSideProps<{ token: "" }, any> = async (
   context
 ) => {
   removeTokenCookie(context.res);
-  context.res.setHeader("location", "/login");
-  context.res.statusCode = 302;
-  context.res.end();
-
   return {
     props: {
       token: ""
@@ -17,7 +17,16 @@ export const getServerSideProps: GetServerSideProps<{ token: "" }, any> = async 
 };
 
 const SignOut: NextPage = () => {
-  return <h1>Goodbye!</h1>;
+  const client = useApolloClient();
+  const router = useRouter();
+
+  useEffect(() => {
+    client.resetStore().then(() => {
+      router.push(Routes.LOGIN);
+    });
+  }, [router, client]);
+
+  return <h1>Signing out...</h1>;
 };
 
 export default SignOut;

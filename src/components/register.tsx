@@ -79,7 +79,10 @@ export default function RegisterForm(): JSX.Element {
       />
       <div className="text-right">
         <UIInputContainer className="text-right">
-          <Button disabled={!values.legalChecked} type="submit">
+          <Button
+            disabled={!values.legalChecked}
+            type="submit"
+            data-testid="REGISTER_BUTTON">
             Register
           </Button>
         </UIInputContainer>

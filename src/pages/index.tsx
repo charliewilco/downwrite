@@ -1,52 +1,9 @@
-import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
-import { NormalizedCacheObject } from "@apollo/client";
-import { getInitialStateFromCookie } from "@lib/cookie-managment";
+import { NextPage } from "next";
 import Link from "next/link";
 import Head from "next/head";
+import { Routes } from "@utils/routes";
 
-interface IIndexProps {
-  token: string;
-  initialApolloState: NormalizedCacheObject;
-  redirect?: string;
-}
-
-type IndexProps = IIndexProps | {};
-
-export const getServerSideProps: GetServerSideProps<IndexProps> = async (
-  context
-) => {
-  try {
-    const initialAppState = await getInitialStateFromCookie(context.req);
-    if (initialAppState && initialAppState.me.id) {
-      return {
-        props: {
-          initialAppState,
-          initialApolloState: {}
-        }
-      };
-    }
-  } catch (error) {
-    return { props: {} };
-  }
-};
-
-// const isProps = <K extends any>(props: any): props is K => {
-//   return !!props && props !== {};
-// };
-
-const IndexPage: NextPage<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = () => {
-  // const router = useRouter();
-
-  // useEffect(() => {
-  //   if (isProps<IIndexProps>(props)) {
-  //     if (props.redirect) {
-  //       router.replace(props.redirect);
-  //     }
-  //   }
-  // }, [router, props]);
-
+const IndexPage: NextPage = () => {
   return (
     <main className="mt-16 mx-auto max-w-7xl px-4 sm:mt-24">
       <div className="text-center">
@@ -63,9 +20,9 @@ const IndexPage: NextPage<
         </p>
         <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8 font-sans">
           <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
-            <Link href="/login" passHref>
+            <Link href={Routes.LOGIN} passHref>
               <a
-                id="HOME_LOGIN_FAKE_BUTTON"
+                data-testid="HOME_LOGIN_FAKE_BUTTON"
                 className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-bold rounded-md text-pixieblue-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10">
                 Login or Sign up
               </a>
