@@ -1,20 +1,11 @@
 /// <reference types="@types/jest-environment-puppeteer" />
-import mongoose from "mongoose";
+
 import "expect-puppeteer";
 
 import { user } from "../fixtures/user.json";
 
-export const clearDB = async () => {
-  console.log("Clearing the database and it's dangerous");
-  const db = await mongoose.connect("mongodb://127.0.0.1:27017/downwrite");
-
-  await db.connection.dropDatabase();
-  await db.connection.close();
-};
-
 describe("Downwrite E2E", () => {
   beforeAll(async () => {
-    await clearDB();
     await page.goto("http://localhost:3000/");
   });
 
