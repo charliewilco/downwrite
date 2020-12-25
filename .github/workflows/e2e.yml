@@ -3,8 +3,13 @@ on: [pull_request]
 
 jobs:
   e2e:
-    runs-on: ubuntu-latest
-
+    runs-on: macos-latest
+    env:
+      CI: TRUE
+      NO_HTTPS: TRUE
+      NODE_ENV: test
+      SECRET_KEY: "foo"
+      NEXT_TELEMETRY_DISABLED: 1
     strategy:
       matrix:
         node-version: [12.x]
@@ -29,16 +34,5 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build Project for Testing
         run: yarn build
-        env:
-          CI: TRUE
-          NO_HTTPS: TRUE
-          NODE_ENV: test
-          SECRET_KEY: "foo"
       - name: Run Puppeteer
-        uses: ianwalter/puppeteer-container@v4.0.0
-        with:
-          args: yarn test:e2e
-        env:
-          NODE_ENV: test
-          CI: TRUE
-          SECRET_KEY: "foo"
+        run: yarn test:e2e

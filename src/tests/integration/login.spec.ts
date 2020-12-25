@@ -4,6 +4,8 @@ import "expect-puppeteer";
 
 import { user } from "../fixtures/user.json";
 
+jest.setTimeout(30000);
+
 describe("Downwrite E2E", () => {
   beforeAll(async () => {
     await page.goto("http://localhost:3000/");
