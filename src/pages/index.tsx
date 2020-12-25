@@ -1,6 +1,4 @@
-import {} from "react";
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
-import { useRouter } from "next/router";
 import { NormalizedCacheObject } from "@apollo/client";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
 import Link from "next/link";
@@ -32,14 +30,14 @@ export const getServerSideProps: GetServerSideProps<IndexProps> = async (
   }
 };
 
-const isProps = <K extends any>(props: any): props is K => {
-  return !!props && props !== {};
-};
+// const isProps = <K extends any>(props: any): props is K => {
+//   return !!props && props !== {};
+// };
 
-const IndexPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
-  props
-) => {
-  const router = useRouter();
+const IndexPage: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = () => {
+  // const router = useRouter();
 
   // useEffect(() => {
   //   if (isProps<IIndexProps>(props)) {

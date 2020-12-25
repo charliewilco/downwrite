@@ -10,7 +10,7 @@ export default function EmptyPosts(): JSX.Element {
     "cursor-pointer inline-block"
   );
   return (
-    <section className="mx-auto max-w-lg" data-testid="NO_ENTRIES_PROMPT">
+    <section className="mx-auto max-w-lg" id="NO_ENTRIES_PROMPT">
       <div className="py-8 flex items-center flex-col">
         <div className="w-full max-w-xxs mb-8">
           <Nib />

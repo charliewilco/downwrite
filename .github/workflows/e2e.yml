@@ -1,0 +1,45 @@
+on: [pull_request]
+
+name: E2E Testing
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    services:
+      mongodb:
+        image: mongo:3.4.23
+        ports:
+          - 27017:27017
+
+    steps:
+      - uses: actions/cache@v1
+        with:
+          path: ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install deps and build package
+        run: yarn install --frozen-lockfile
+      - name: Build
+        run: yarn build
+        env:
+          CI: TRUE
+          NO_HTTPS: TRUE
+          NODE_ENV: test
+          SECRET_KEY: "foo"
+      - name: Type Check
+        run: yarn typecheck
+      - name: Test
+        run: yarn test:e2e
+        env:
+          NODE_ENV: test
+          CI: TRUE
+          SECRET_KEY: "foo"
