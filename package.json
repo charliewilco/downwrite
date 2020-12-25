@@ -17,7 +17,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@apollo/client": "^3.2.9",
+    "@apollo/client": "^3.3.6",
     "@next/bundle-analyzer": "^10.0.3",
     "@reach/checkbox": "^0.12.1",
     "@reach/combobox": "^0.12.1",
@@ -68,11 +68,11 @@
     "yup": "^0.31.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^1.19.3",
-    "@graphql-codegen/typescript": "^1.18.1",
-    "@graphql-codegen/typescript-operations": "^1.17.12",
+    "@graphql-codegen/cli": "^1.20.0",
+    "@graphql-codegen/typescript": "^1.19.0",
+    "@graphql-codegen/typescript-operations": "^1.17.13",
     "@graphql-codegen/typescript-react-apollo": "^2.2.1",
-    "@graphql-codegen/typescript-resolvers": "^1.17.12",
+    "@graphql-codegen/typescript-resolvers": "^1.18.1",
     "@tailwindcss/custom-forms": "^0.2.1",
     "@tailwindcss/typography": "^0.3.1",
     "@types/jest": "^26.0.15",
@@ -81,9 +81,9 @@
     "autoprefixer": "^10.0.3",
     "husky": "^4.3.0",
     "jest": "^26.6.3",
-    "lint-staged": "^10.5.2",
     "postcss": "^8.1.10",
     "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.0",
     "prop-types": "^15.7.2",
     "react-test-renderer": "^17.0.1",
     "tailwindcss": "^2.0.1",
@@ -120,19 +120,9 @@
     "jsxBracketSameLine": true,
     "trailingComma": "none"
   },
-  "lint-staged": {
-    "*.{js,json,ts,tsx}": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.css": [
-      "prettier --parser postcss --write",
-      "git add"
-    ]
-  },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "pretty-quick --staged"
     }
   },
   "engines": {

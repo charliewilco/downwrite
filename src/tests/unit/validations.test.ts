@@ -3,11 +3,12 @@ import * as Inputs from "@lib/input";
 
 describe("Validations", () => {
   it("Local Settings", async () => {
-    const result = await Validations.LocalSettingsSchema.isValid({
-      fontFamily: "Fira Code",
-      fileExtension: "doc"
-    });
-    expect(result).toBeFalsy();
+    await expect(
+      Validations.LocalSettingsSchema.isValid({
+        fontFamily: "Fira Code",
+        fileExtension: "doc"
+      })
+    ).resolves.toBeFalsy();
   });
 
   it("Register", async () => {
@@ -31,23 +32,24 @@ describe("Validations", () => {
   });
 
   it("User Settings", async () => {
-    const result = await Validations.UserSettingsSchema.isValid({
-      email: "red.com",
-      user: "somehello"
-    });
-
-    expect(result).toBeFalsy();
+    await expect(
+      Validations.UserSettingsSchema.isValid({
+        email: "red.com",
+        user: "somehello"
+      })
+    ).resolves.toBeFalsy();
   });
 
   it("Login", async () => {
-    const result = await Validations.LoginFormSchema.isValid(
-      {
-        user: "hello",
-        password: "not hello"
-      },
-      { strict: true }
-    );
-    expect(result).toBeTruthy();
+    expect(
+      Validations.LoginFormSchema.isValid(
+        {
+          user: "hello",
+          password: "not hello"
+        },
+        { strict: true }
+      )
+    ).resolves.toBeTruthy();
   });
 
   it("passwords", async () => {

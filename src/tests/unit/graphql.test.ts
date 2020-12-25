@@ -4,23 +4,7 @@ import { schema } from "@lib/schema";
 import { clearDB, stopDB } from "@lib/db";
 import { MockContext } from "@lib/context";
 import { validPasswordMessage } from "@utils/constants";
-import {
-  AllPostsDocument,
-  IAllPostsQuery,
-  IAllPostsQueryVariables,
-  CreateUserDocument,
-  ICreateUserMutationVariables,
-  ICreateUserMutation,
-  ICreateEntryMutation,
-  ICreateEntryMutationVariables,
-  CreateEntryDocument,
-  EditDocument,
-  IEditQuery,
-  IEditQueryVariables,
-  UpdateEntryDocument,
-  IUpdateEntryMutation,
-  IUpdateEntryMutationVariables
-} from "@utils/generated";
+import * as GQL from "@utils/generated";
 
 const serverContext = new MockContext();
 const testServer = new ApolloServer({
@@ -45,10 +29,10 @@ describe("GraphQL API", () => {
     const name = "charliex";
 
     const failed = await client.mutate<
-      ICreateUserMutation,
-      ICreateUserMutationVariables
+      GQL.ICreateUserMutation,
+      GQL.ICreateUserMutationVariables
     >({
-      mutation: CreateUserDocument,
+      mutation: GQL.CreateUserDocument,
       variables: {
         username: name,
         email: "test@charlieisamazing.com",
@@ -57,10 +41,10 @@ describe("GraphQL API", () => {
     });
 
     const working = await client.mutate<
-      ICreateUserMutation,
-      ICreateUserMutationVariables
+      GQL.ICreateUserMutation,
+      GQL.ICreateUserMutationVariables
     >({
-      mutation: CreateUserDocument,
+      mutation: GQL.CreateUserDocument,
       variables: {
         username: name,
         email: "test@charlieisamazing.com",
@@ -79,26 +63,29 @@ describe("GraphQL API", () => {
   });
 
   it("can add entry", async () => {
-    const feedQuery = await client.query<IAllPostsQuery, IAllPostsQueryVariables>({
-      query: AllPostsDocument
+    const feedQuery = await client.query<
+      GQL.IAllPostsQuery,
+      GQL.IAllPostsQueryVariables
+    >({
+      query: GQL.AllPostsDocument
     });
 
     expect(feedQuery.data.feed).toEqual([]);
     expect(feedQuery.errors).toBeUndefined();
 
     const { data } = await client.mutate<
-      ICreateEntryMutation,
-      ICreateEntryMutationVariables
+      GQL.ICreateEntryMutation,
+      GQL.ICreateEntryMutationVariables
     >({
-      mutation: CreateEntryDocument,
+      mutation: GQL.CreateEntryDocument,
       variables: {
         content: "> Hello!",
         title: "Something"
       }
     });
 
-    const postQuery = await client.query<IEditQuery, IEditQueryVariables>({
-      query: EditDocument,
+    const postQuery = await client.query<GQL.IEditQuery, GQL.IEditQueryVariables>({
+      query: GQL.EditDocument,
       variables: {
         id: data.createEntry.id
       }
@@ -109,17 +96,20 @@ describe("GraphQL API", () => {
   });
 
   it("can edit entry", async () => {
-    const feedQuery = await client.query<IAllPostsQuery, IAllPostsQueryVariables>({
-      query: AllPostsDocument
+    const feedQuery = await client.query<
+      GQL.IAllPostsQuery,
+      GQL.IAllPostsQueryVariables
+    >({
+      query: GQL.AllPostsDocument
     });
 
     const entry = feedQuery.data.feed[0];
 
     const { data } = await client.mutate<
-      IUpdateEntryMutation,
-      IUpdateEntryMutationVariables
+      GQL.IUpdateEntryMutation,
+      GQL.IUpdateEntryMutationVariables
     >({
-      mutation: UpdateEntryDocument,
+      mutation: GQL.UpdateEntryDocument,
       variables: {
         id: entry.id,
         title: "Updated Entry",
@@ -134,16 +124,16 @@ describe("GraphQL API", () => {
 
   it("can query feed", async () => {
     const { errors, data } = await client.query<
-      IAllPostsQuery,
-      IAllPostsQueryVariables
+      GQL.IAllPostsQuery,
+      GQL.IAllPostsQueryVariables
     >({
-      query: AllPostsDocument
+      query: GQL.AllPostsDocument
     });
 
     expect(data.feed).toHaveLength(1);
     expect(errors).toBeUndefined();
   });
 
-  xit("can remove post");
-  xit("can reauthenticates");
+  it.todo("can remove post");
+  it.todo("can reauthenticates");
 });
