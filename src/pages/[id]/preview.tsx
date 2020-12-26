@@ -1,9 +1,4 @@
-import {
-  GetStaticPaths,
-  GetStaticProps,
-  InferGetStaticPropsType,
-  NextPage
-} from "next";
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
@@ -17,48 +12,40 @@ import {
   IPreviewQuery,
   IPreviewQueryVariables
 } from "@utils/generated";
-import dbConnect from "@lib/db";
-import { PostModel } from "@lib/models";
 import { initializeApollo } from "@lib/apollo";
 import { Routes } from "@utils/routes";
 import { AvatarColors } from "@utils/default-styles";
 import { useCurrentUser } from "@reducers/app";
+import { getInitialStateFromCookie } from "@lib/cookie-managment";
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  await dbConnect();
-
-  const publicPosts = await PostModel.find({ public: { $eq: true } });
-  const paths = publicPosts.map((p) => ({ params: { id: p.id } }));
-
-  return {
-    paths,
-    fallback: true
-  };
-};
-
-export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
-  params
-}) => {
+export const getServerSideProps: GetServerSideProps<
+  { id: string },
+  { id: string }
+> = async ({ req, res, params }) => {
+  const id = params!.id;
+  const initialAppState = await getInitialStateFromCookie(req);
   const client = initializeApollo({});
 
   await client.query<IPreviewQuery, IPreviewQueryVariables>({
     query: PreviewDocument,
     variables: {
       id: params!.id
-    }
+    },
+    context: { req, res }
   });
 
   return {
     props: {
+      initialAppState,
       initialApolloState: client.cache.extract(),
-      id: params!.id
+      id
     }
   };
 };
 
-const PreviewEntry: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (
-  props
-) => {
+const PreviewEntry: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = (props) => {
   const router = useRouter();
   const [currentUser] = useCurrentUser();
   const { error, loading, data } = usePreviewQuery({

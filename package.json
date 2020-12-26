@@ -8,12 +8,13 @@
     "start": "next start",
     "build": "next build",
     "build:analyze": "ANALYZE=true yarn build",
-    "dev": "next",
+    "dev": "next dev",
     "prebuild": "yarn generate",
     "predev": "yarn generate",
     "generate": "graphql-codegen",
     "test": "jest",
     "test:ci": "jest --ci --runInBand --no-cache",
+    "test:e2e": "jest --ci --runInBand --config jest.e2e.config.js",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -68,23 +69,29 @@
     "yup": "^0.31.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^1.19.4",
+    "@graphql-codegen/cli": "^1.20.0",
     "@graphql-codegen/typescript": "^1.19.0",
-    "@graphql-codegen/typescript-operations": "^1.17.12",
+    "@graphql-codegen/typescript-operations": "^1.17.13",
     "@graphql-codegen/typescript-react-apollo": "^2.2.1",
-    "@graphql-codegen/typescript-resolvers": "^1.18.0",
+    "@graphql-codegen/typescript-resolvers": "^1.18.1",
     "@tailwindcss/custom-forms": "^0.2.1",
     "@tailwindcss/typography": "^0.3.1",
+    "@types/expect-puppeteer": "^4.4.5",
     "@types/jest": "^26.0.15",
+    "@types/jest-environment-puppeteer": "^4.4.1",
+    "@types/puppeteer": "^5.4.2",
     "@types/react-test-renderer": "^17.0.0",
     "apollo-server-testing": "^2.19.0",
     "autoprefixer": "^10.0.3",
     "husky": "^4.3.0",
     "jest": "^26.6.3",
-    "lint-staged": "^10.5.2",
+    "jest-puppeteer": "^4.4.0",
+    "merge": "^2.1.0",
     "postcss": "^8.1.10",
     "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.0",
     "prop-types": "^15.7.2",
+    "puppeteer": "^5.5.0",
     "react-test-renderer": "^17.0.1",
     "tailwindcss": "^2.0.1",
     "ts-jest": "^26.4.4",
@@ -93,6 +100,7 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
+    "testRegex": "(/__tests__/.*|(\\.|/)(test))\\.[jt]sx?$",
     "moduleNameMapper": {
       "^@utils/(.*)$": "<rootDir>/src/utils/$1",
       "^@lib/(.*)$": "<rootDir>/src/lib/$1",
@@ -120,19 +128,9 @@
     "jsxBracketSameLine": true,
     "trailingComma": "none"
   },
-  "lint-staged": {
-    "*.{js,json,ts,tsx}": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.css": [
-      "prettier --parser postcss --write",
-      "git add"
-    ]
-  },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "pretty-quick --staged"
     }
   },
   "engines": {

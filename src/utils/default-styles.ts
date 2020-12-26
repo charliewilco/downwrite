@@ -84,9 +84,10 @@ export enum Fonts {
 
 export const fonts = {};
 
+const hexRegex = new RegExp(/^#[0-9A-F]{6}$/i);
+
 export function isValidHex(hex: string): boolean {
-  let valid = /^#[0-9A-F]{6}$/i.test(hex);
-  return valid;
+  return hexRegex.test(hex);
 }
 
 export type Gradient = Readonly<[string, string]>;

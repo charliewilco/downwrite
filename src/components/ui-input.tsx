@@ -37,7 +37,7 @@ export function UIInputError({
 }
 
 export default function UIInput({ testID, label, ...props }: IUIInputProps) {
-  const id = useRef("UI_TEXT_INPUT".concat(label));
+  const id = useRef("UI_TEXT_INPUT_".concat(label.replace(" ", "")));
 
   const [state, dispatch] = useReducer(inputReducer, {
     focused: false

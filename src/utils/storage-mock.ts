@@ -1,9 +1,5 @@
-interface StringTMap<T> {
-  [key: string]: T;
-}
-
 export function storageMock() {
-  let storage: StringTMap<string> = {};
+  let storage: Record<string, string> = {};
 
   return {
     setItem(key: string, value: any) {

@@ -4,6 +4,7 @@ import { ServerResponse, IncomingMessage } from "http";
 import decode from "jwt-decode";
 import { readToken, getInitialState, TokenContents } from "./token";
 import { IAppState } from "@reducers/app";
+import { __IS_PROD__ } from "@utils/dev";
 
 export const TOKEN_NAME = "DW_TOKEN";
 
@@ -12,7 +13,7 @@ export const MAX_AGE = 60 * 60 * 8; // 8 hours
 export function setTokenCookie(res: ServerResponse, token: string) {
   const cookie = serialize(TOKEN_NAME, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: !Boolean(process.env.NO_HTTPS),
     path: "/",
     sameSite: "lax"
   });

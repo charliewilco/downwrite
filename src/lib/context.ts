@@ -1,8 +1,8 @@
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next";
 import { ApolloError, AuthenticationError } from "apollo-server-micro";
 import { TokenContents, isValidPassword } from "@lib/token";
 import { UserModel, IUserModel } from "@lib/models";
-import { getUserToken } from "@lib/cookie-managment";
+import { getUserToken, TOKEN_NAME } from "@lib/cookie-managment";
 import dbConnect from "@lib/db";
 
 export type ResolverContext = Pick<GetServerSidePropsContext, "req" | "res">;
@@ -59,4 +59,26 @@ export async function isUniqueUser(username: string): Promise<boolean> {
   console.log(username);
 
   return false;
+}
+
+export class MockContext {
+  public req: Pick<NextApiRequest, "cookies">;
+  public res: Pick<NextApiResponse, "setHeader">;
+  constructor() {
+    this.req = {
+      cookies: {
+        [TOKEN_NAME]: ""
+      }
+    };
+
+    this.res = {
+      setHeader: (_name: string, value: any) => {
+        console.log(_name, value);
+      }
+    };
+  }
+
+  setCookie(token: string) {
+    this.req.cookies[TOKEN_NAME] = token;
+  }
 }
