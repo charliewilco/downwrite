@@ -50,7 +50,7 @@ export default function Login(): JSX.Element {
       </UIInputContainer>
       <div>
         <UIInputContainer className="flex justify-end">
-          <Button type="submit" data-testid="LOGIN_BUTTON">
+          <Button type="submit" id="RELOGIN_BUTTON" data-testid="RELOGIN_BUTTON">
             Login
           </Button>
         </UIInputContainer>
