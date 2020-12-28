@@ -9,13 +9,12 @@
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash"
   },
-  "forwardPorts": ["27017"],
 
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": ["mongodb.mongodb-vscode"],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  // "forwardPorts": [3000, 27017],
+  "forwardPorts": [3000, 27017],
 
   // Use 'postCreateCommand' to run commands after the container is created.
   // "postCreateCommand": "yarn install",
