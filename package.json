@@ -42,7 +42,7 @@
     "abortcontroller-polyfill": "^1.2.3",
     "base-64": "^0.1.0",
     "bcrypt": "^5.0.0",
-    "date-fns": "^2.2.1",
+    "date-fns": "^2.16.1",
     "draft-js": "^0.10.5",
     "draft-js-markdown-plugin": "^3.0.5",
     "draft-js-plugins-editor": "^2.1.1",
