@@ -1,6 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import Nib from "./nib";
-import { Routes } from "../utils/routes";
+import { Routes } from "@utils/routes";
 import classNames from "@utils/classnames";
 
 export default function EmptyPosts(): JSX.Element {
@@ -12,11 +12,18 @@ export default function EmptyPosts(): JSX.Element {
   return (
     <section className="mx-auto max-w-lg" id="NO_ENTRIES_PROMPT">
       <div className="py-8 flex items-center flex-col">
-        <div className="w-full max-w-xxs mb-8">
-          <Nib />
+        <div className="w-full max-w-xxs mb-8 flex justify-center">
+          <Image
+            width={96}
+            height={96}
+            className="object-contain block"
+            src="/static/nib.svg"
+          />
         </div>
         <div className="text-center flex-1">
-          <h4 className="text-xl mb-16">Looks like you don't have any entries</h4>
+          <h4 className="text-xl font-mono mb-16">
+            Looks like you don't have any entries
+          </h4>
           <Link href={Routes.NEW}>
             <a className={buttonLinkClass}>Get Started &rarr; </a>
           </Link>
