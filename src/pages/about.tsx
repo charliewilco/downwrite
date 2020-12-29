@@ -1,18 +1,15 @@
 import { NextPage } from "next";
 import Head from "next/head";
 
-import Content from "../components/content";
-import Features from "../components/features";
+import { ContentWrapper } from "../components/content";
 
 const AboutDetails: NextPage = () => {
   return (
-    <Content title="About Downwrite">
+    <ContentWrapper title="About Downwrite">
       <Head>
         <title>About Downwrite</title>
       </Head>
-      <aside />
-
-      <div className="xl:pb-0 xl:col-span-3 xl:row-span-2">
+      <div className="xl:pb-0 xl:col-span-3">
         <div data-testid="ABOUT_PAGE" className="font-serif __content py-8">
           <p>
             So the idea here was simple build a simple markdown writing application.
@@ -29,7 +26,17 @@ const AboutDetails: NextPage = () => {
             learning languages and frameworks in the abstract, I decided to take up
             Downwrite as an excuse to build those microservice.
           </p>
-          <Features />
+          <p>
+            Writing should be easy. But as each tool, each static site builder comes
+            and falls out of popularity or gets shut down,
+            <strong>**markdown**</strong> remains the central and portbale format.
+          </p>
+
+          <p>
+            The goal of building Downwrite was to create a place to write and share
+            content with that universal format; to be able to import and export in
+            markdown, to write in markdown and share your work.
+          </p>
           <h2>Features</h2>
           <h3>All Markdown</h3>
           <p>
@@ -62,7 +69,7 @@ const AboutDetails: NextPage = () => {
           </p>
         </div>
       </div>
-    </Content>
+    </ContentWrapper>
   );
 };
 

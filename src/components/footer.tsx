@@ -29,7 +29,7 @@ export function UIFooter() {
       <nav>
         <ul className="text-center p-0 m-0 text-sm">
           <li className="inline-block mr-4">
-            <span>&copy; {date.getFullYear()} Charles Peters</span>
+            <span>&copy; {date.getFullYear()} Charlie Peters</span>
           </li>
           {PAGES.map((page, i) => (
             <li key={i} className="inline-block mr-4">

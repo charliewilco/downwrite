@@ -1,7 +1,7 @@
 import { motion, AnimatePresence, Transition } from "framer-motion";
 
 function getTransition(duration: number, delay: number): Transition {
-  return { type: "tween", duration, delay, loop: Infinity };
+  return { type: "tween", duration, delay, repeat: Infinity };
 }
 export default function Loading(): JSX.Element {
   const animation = {
@@ -13,7 +13,7 @@ export default function Loading(): JSX.Element {
     <AnimatePresence>
       <motion.div
         role="img"
-        className="relative flex flex-col justify-center w-20 h-20 mx-auto my-4 my-auto">
+        className="relative flex flex-col justify-center w-20 h-20 mx-auto my-auto">
         <motion.div
           animate={animation}
           transition={getTransition(1.5, 1)}

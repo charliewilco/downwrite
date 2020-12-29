@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import Logo from "./logo";
 import DropdownUI from "./dropdown-ui";
 import { Routes } from "@utils/routes";
@@ -7,12 +6,10 @@ import { useCurrentUser } from "@reducers/app";
 
 export function UIHeader(): JSX.Element {
   const [currentUser] = useCurrentUser();
-  const router = useRouter();
 
-  const isLogin: boolean = router.pathname === "/login";
   const homeLink: string = currentUser.authed ? Routes.DASHBOARD : Routes.LOGIN;
 
-  return !isLogin ? (
+  return (
     <header
       className="flex items-center justify-between px-2 py-4"
       data-testid="APP_HEADER">
@@ -45,7 +42,5 @@ export function UIHeader(): JSX.Element {
         </nav>
       )}
     </header>
-  ) : (
-    <div />
   );
 }

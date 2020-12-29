@@ -1,11 +1,22 @@
 import { PropsWithChildren } from "react";
 
-export function Banner(props: PropsWithChildren<{}>) {
+export function Banner(props: PropsWithChildren<{ icon: JSX.Element }>) {
   return (
-    <div
-      role="banner"
-      className="p-2 lg:p-4 font-mono border  border-pixieblue-400 bg-pixieblue-600 text-white rounded sm:max-w-xl mx-2 sm:mx-auto">
-      {props.children}
+    <div className="inset-x-0 pb-2 sm:pb-5" role="banner">
+      <div className="max-w-4xl mx-auto px-2 sm:px-6 lg:px-8">
+        <div className="p-2 rounded-lg bg-pixieblue-600 shadow-lg sm:p-3">
+          <div className="flex items-center justify-between flex-wrap">
+            <div className="w-0 flex-1 flex items-center">
+              <span className="flex p-2 rounded-lg bg-pixieblue-800">
+                {props.icon}
+              </span>
+              <p className="ml-3 font-medium text-white truncate">
+                {props.children}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
