@@ -20,8 +20,6 @@ import {
 const Editor = dynamic(() => import("@components/editor"));
 const Upload = dynamic(() => import("@components/upload"));
 
-const EDITOR_COMMAND = "create-new-post";
-
 // export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 //   const initialAppState = await getInitialStateFromCookie(req);
 //   return {
@@ -43,6 +41,7 @@ const NewEntryPage: NextPage = () => {
   const editorProps = useEditor(editorActions);
 
   function onSubmit(values: INewEditorValues): void {
+    console.log("hello");
     createNewPost(values.title, editorState);
   }
 
@@ -80,7 +79,6 @@ const NewEntryPage: NextPage = () => {
           </div>
         </aside>
         <Editor
-          editorCommand={EDITOR_COMMAND as any}
           onSave={() => handleSubmit()}
           {...editorProps}
           editorState={editorState}
