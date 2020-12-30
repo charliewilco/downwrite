@@ -29,9 +29,9 @@ describe("Downwrite E2E: Create New Entry", () => {
     await page.type("[data-testid='NEW_ENTRY_TITLE_ENTRY']", "Hello From 2nd Entry");
     await page.type("div[contentEditable=true]", "_Hello_ from Down Below");
 
-    await page.keyboard.down("Meta");
+    await page.keyboard.down("Ctrl");
     await page.keyboard.press("KeyS");
-    await page.keyboard.up("Meta");
+    await page.keyboard.up("Ctrl");
 
     await page.waitForSelector("[data-testid='EDIT_ENTRY_CONTAINER']");
     await page.waitForSelector("[data-testid='EDIT_ENTRY_TITLE_ENTRY']");
