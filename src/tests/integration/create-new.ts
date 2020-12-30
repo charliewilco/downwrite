@@ -19,7 +19,9 @@ describe("Downwrite E2E: Create New Entry", () => {
     await page.keyboard.up("Meta");
 
     console.log(page.url());
-
+    await browser
+      .pages()
+      .then((pages) => console.log("Number of tabs: ", pages.length));
     await page.waitForSelector("[data-testid='EDIT_ENTRY_CONTAINER']");
     await page.waitForSelector("[data-testid='EDIT_ENTRY_TITLE_ENTRY']");
   });
