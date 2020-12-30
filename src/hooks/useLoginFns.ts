@@ -1,9 +1,10 @@
 import { useCallback } from "react";
 import { useRouter } from "next/router";
 import decode from "jwt-decode";
+import { useNotifications, NotificationType, useCurrentUser } from "@reducers/app";
 import { TokenContents } from "@lib/token";
 import { useLoginUserMutation, useCreateUserMutation } from "@utils/generated";
-import { useNotifications, NotificationType, useCurrentUser } from "@reducers/app";
+import { Routes } from "@utils/routes";
 
 export interface IRegisterValues extends Record<string, string | boolean> {
   username: string;
@@ -37,7 +38,7 @@ export function useLoginFns(): IFormHandlers {
     const d = decode<TokenContents>(token);
     onCurrentUserLogin(d.name, d.user);
 
-    router.push("/dashboard");
+    router.push(Routes.DASHBOARD);
 
     if (notifications.length > 0) {
       notifications.forEach((n) => {

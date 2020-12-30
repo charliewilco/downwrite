@@ -84,6 +84,7 @@ export async function updatePost(
   args: IMutationUpdateEntryArgs
 ) {
   return verifyUser(context, async ({ user }) => {
+    console.log("UPDATING POST");
     try {
       const n = await PostModel.findOneAndUpdate(
         { id, user: { $eq: user } },
