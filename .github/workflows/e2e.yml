@@ -5,10 +5,6 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     env:
-      CI: true
-      NO_HTTPS: true
-      NODE_ENV: test
-      SECRET_KEY: "foo"
       NEXT_TELEMETRY_DISABLED: 1
     strategy:
       matrix:
@@ -34,5 +30,7 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build Project for Testing
         run: yarn build
+        env:
+          NO_HTTPS: true
       - name: Run Puppeteer
         run: yarn test:e2e
