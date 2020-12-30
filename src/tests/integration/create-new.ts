@@ -25,6 +25,17 @@ describe("Downwrite E2E: Create New Entry", () => {
     await page.click("[data-testid='CREATE_NEW_ENTRY_BUTTON']");
     await page.waitForSelector("[data-testid='NEW_EDITOR_FORM']");
   });
+  it("Keyboard shortcut", async () => {
+    await page.type("[data-testid='NEW_ENTRY_TITLE_ENTRY']", "Hello From 2nd Entry");
+    await page.type("div[contentEditable=true]", "_Hello_ from Down Below");
+
+    await page.keyboard.down("Meta");
+    await page.keyboard.press("KeyS");
+    await page.keyboard.up("Meta");
+
+    await page.waitForSelector("[data-testid='EDIT_ENTRY_CONTAINER']");
+    await page.waitForSelector("[data-testid='EDIT_ENTRY_TITLE_ENTRY']");
+  });
+
   it.todo("Drag and drop markdown file");
-  it.todo("Keyboard shortcut");
 });
