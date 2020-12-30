@@ -20,6 +20,7 @@ export default function LegalBoilerplate(props: ILegalProps) {
       className="flex items-center font-bold p-2 dark:bg-onyx-900 my-4 dark:text-white light:shadow"
       htmlFor={props.name}>
       <Checkbox
+        data-testid="LEGAL_CHECK"
         name={props.name}
         id={props.name}
         checked={props.checked}

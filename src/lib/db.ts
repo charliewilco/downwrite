@@ -22,25 +22,18 @@ export default async function dbConnect() {
   let options: mongoose.ConnectionOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
+    useFindAndModify: false,
+    useCreateIndex: true
   };
 
   if (__IS_DEV__ || __IS_TEST__) {
     options = Object.assign(options, {
-      autoReconnect: true,
       poolSize: 10
     });
   }
 
   /* connecting to our database */
   const db = await mongoose.connect(address, options);
-  db.connection.on("error", () => {
-    console.error("connection error");
-  });
-  db.connection.once("open", () => {
-    console.log(`Connection with database succeeded.`);
-    console.log("--- DOWNWRITE API ---");
-  });
 
   connection.isConnected = db.connections[0].readyState;
 }
@@ -51,7 +44,13 @@ export const clearDB = async () => {
   }
 
   console.log("Clearing the database and it's dangerous");
-  const db = await mongoose.connect(developDBAddrress);
+  const db = await mongoose.connect(developDBAddrress, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+    poolSize: 10
+  });
 
   await db.connection.dropDatabase();
   await db.connection.close();

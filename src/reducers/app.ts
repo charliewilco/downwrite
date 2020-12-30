@@ -29,6 +29,7 @@ export class UINotificationMessage {
     this.dismissable = dismissable || false;
   }
 }
+
 export type Notifications = UINotificationMessage[];
 
 export interface ISettings {

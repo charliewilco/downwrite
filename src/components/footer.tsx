@@ -1,26 +1,15 @@
 import Link from "next/link";
-import { Routes } from "../utils/routes";
+import { Routes } from "@utils/routes";
 
-interface IPage {
-  name: string;
-  external?: boolean;
-  href: string;
-}
+const GITHUB = "https://github.com/charliewilco/downwrite";
+const TWITTER = "https://twitter.com/charlespeters";
 
-const PAGES: IPage[] = [
+const PAGES = [
   { name: "About", href: Routes.ABOUT },
   { name: "Legal", href: Routes.LEGAL },
-  {
-    name: "Source Code",
-    href: "https://github.com/charliewilco/downwrite",
-    external: true
-  },
-  {
-    name: "@charlespeters",
-    href: "https://twitter.com/charlespeters",
-    external: true
-  }
-];
+  { name: "GitHub", href: GITHUB },
+  { name: "@charlespeters", href: TWITTER }
+] as const;
 
 export function UIFooter() {
   const date = new Date(Date.now());
@@ -29,23 +18,15 @@ export function UIFooter() {
       <nav>
         <ul className="text-center p-0 m-0 text-sm">
           <li className="inline-block mr-4">
-            <span>&copy; {date.getFullYear()} Charles Peters</span>
+            <span>&copy; {date.getFullYear()} Charlie Peters</span>
           </li>
-          {PAGES.map((page, i) => (
+          {PAGES.map(({ href, name }, i) => (
             <li key={i} className="inline-block mr-4">
-              {page.external ? (
-                <a
-                  className="dark:text-white leading-none cursor-pointer opacity-50 text-sm"
-                  href={page.href}>
-                  {page.name}
+              <Link href={href} passHref>
+                <a className="dark:text-white leading-none cursor-pointer opacity-50 text-sm">
+                  {name}
                 </a>
-              ) : (
-                <Link href={page.href}>
-                  <a className="dark:text-white leading-none cursor-pointer opacity-50 text-sm">
-                    {page.name}
-                  </a>
-                </Link>
-              )}
+              </Link>
             </li>
           ))}
         </ul>

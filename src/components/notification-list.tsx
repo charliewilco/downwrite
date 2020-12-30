@@ -13,8 +13,13 @@ export default function MessageList() {
     notifications.length === 0 && "w-0 h-0 max-w-0"
   );
 
+  const outerClassName = classNames(
+    "fixed p-4 flex flex-col justify-end bottom-0 right-0",
+    notifications.length > 0 ? "w-full max-w-sm h-auto" : "w-0 h-0"
+  );
+
   return (
-    <div className="fixed p-4 w-full max-w-sm flex flex-col justify-end bottom-0 right-0">
+    <div className={outerClassName}>
       <div className={innerClassName}>
         <AnimatePresence initial={false}>
           {notifications.map((notification, i) => (

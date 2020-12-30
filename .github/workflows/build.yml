@@ -5,10 +5,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      CI: TRUE
-      NODE_ENV: test
-      CURRENT_DB_ADDRESS: localhost:27017
-      SECRET_KEY: "foo"
+      NEXT_TELEMETRY_DISABLED: 1
     strategy:
       matrix:
         node-version: [12.x]

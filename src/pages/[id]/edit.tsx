@@ -10,7 +10,6 @@ import { ToggleBox } from "@components/toggle-box";
 import { PreviewLink } from "@components/entry-links";
 import TimeMarker from "@components/time-marker";
 import { __IS_DEV__ } from "@utils/dev";
-import { EditActions } from "@reducers/editor";
 import { useEdit } from "@hooks/useEdit";
 import { initializeApollo } from "@lib/apollo";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
@@ -132,7 +131,6 @@ const EditUI: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> =
         </aside>
         {!!editorState && (
           <Editor
-            editorCommand={EditActions.EDITOR_COMMAND as any}
             onFocus={() => actions.handleFocus()}
             onSave={onSubmit}
             {...editorProps}

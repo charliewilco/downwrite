@@ -26,13 +26,13 @@ export default function LoginContainer(): JSX.Element {
       <TabList className="flex w-full font-bold text-sm text-center">
         <Tab
           className="w-1/2 b-0 py-4 rounded-none border-b-2 border-transparent"
-          data-testid="LOGIN_REGISTER_BUTTON"
+          data-testid="LOGIN_REGISTER_TABBUTTON"
           id="Register">
           Register
         </Tab>
         <Tab
           className="w-1/2 b-0 py-4 rounded-none border-b-2 border-transparent"
-          data-testid="LOGIN_LOGIN_BUTTON"
+          data-testid="LOGIN_LOGIN_TABBUTTON"
           id="Login">
           Login
         </Tab>

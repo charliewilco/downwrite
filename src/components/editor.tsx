@@ -14,7 +14,6 @@ import { useSettings } from "@reducers/app";
 
 type OmittedEditorProps =
   | "ref"
-  | "handleKeyCommand"
   | "keyBindingFn"
   | "customStyleMap"
   | "placeholder"
@@ -22,7 +21,6 @@ type OmittedEditorProps =
 
 interface IEditorProps extends Omit<EditorProps, OmittedEditorProps> {
   className?: string;
-  editorCommand: DraftEditorCommand;
   onSave: () => void;
 }
 
@@ -36,9 +34,21 @@ const styleMap = {
   }
 };
 
+const SAVE_COMMAND = "save_command";
+
+const saveKeyListener = (
+  e: React.KeyboardEvent
+): DraftEditorCommand | typeof SAVE_COMMAND | null => {
+  if (e.keyCode === 83 && KeyBindingUtil.hasCommandModifier(e)) {
+    return SAVE_COMMAND;
+  }
+
+  return getDefaultKeyBinding(e);
+};
+
 export default function DownwriteEditor({
   onSave,
-  editorCommand,
+  handleKeyCommand,
   ...props
 }: IEditorProps) {
   let editorRef = useRef<Editor>(null);
@@ -57,19 +67,12 @@ export default function DownwriteEditor({
     editorRef.current!.focus();
   }
 
-  const saveKeyListener = useCallback(
-    (e: React.KeyboardEvent): DraftEditorCommand | null => {
-      if (e.keyCode === 83 && KeyBindingUtil.hasCommandModifier(e)) {
-        return editorCommand;
-      }
-
-      return getDefaultKeyBinding(e);
-    },
-    [editorCommand]
-  );
-
-  const handleKeyCommand = useCallback(
-    (command: string, state: Draft.EditorState): DraftHandleValue => {
+  const customHandleKeyCommand = useCallback(
+    (
+      command: string,
+      state: Draft.EditorState,
+      eventTimeStamp: number
+    ): DraftHandleValue => {
       const newState = RichUtils.handleKeyCommand(state, command);
 
       if (newState) {
@@ -77,15 +80,17 @@ export default function DownwriteEditor({
         return "handled";
       }
 
-      if (command === editorCommand) {
+      if (command === SAVE_COMMAND) {
         onSave();
         return "handled";
       }
 
+      handleKeyCommand(command, state, eventTimeStamp);
+
       return "not-handled";
     },
 
-    [onSave, editorCommand]
+    [onSave]
   );
 
   return (
@@ -93,7 +98,7 @@ export default function DownwriteEditor({
       <div className={className} onClick={onFocus}>
         <Editor
           ref={editorRef}
-          handleKeyCommand={handleKeyCommand}
+          handleKeyCommand={customHandleKeyCommand}
           keyBindingFn={saveKeyListener}
           customStyleMap={styleMap}
           placeholder="History will be kind to me for I intend to write it. — Winston Churchill"

@@ -21,15 +21,8 @@ export function UIShell(props: IUIShell): JSX.Element {
       </Head>
       <div className="clearfix min-h-full">
         <UIHeader />
-        <Banner>
-          <div className="flex items-center">
-            <FiAlertTriangle className="mr-4 lg:h-5 lg:w-5" />
-            <span className="text-xs lg:text-sm">
-              This app is currently in a major major alpha.
-              <br />
-              Swim at your own risk.
-            </span>
-          </div>
+        <Banner icon={<FiAlertTriangle className="w-2 h-2 lg:h-4 lg:w-4" />}>
+          This app is currently in a major major alpha. Swim at your own risk.
         </Banner>
         <main>{props.children}</main>
         <UIFooter />

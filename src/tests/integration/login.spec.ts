@@ -1,33 +1,39 @@
 /// <reference types="@types/jest-environment-puppeteer" />
 
-import "expect-puppeteer";
+import { jest, it, describe, beforeAll } from "@jest/globals";
 
-import { user } from "../fixtures/user.json";
+import { user } from "../../fixtures/user.json";
+
+jest.setTimeout(100000);
 
 jest.setTimeout(50000);
 
 describe("Downwrite E2E", () => {
   beforeAll(async () => {
     await page.goto("http://localhost:3000/");
-  });
-
-  beforeEach(async () => {
     await page.setViewport({ width: 1440, height: 766 });
   });
 
-  it("Successful register to Dashboard", async () => {
-    await page.waitForSelector(".mt-16 #HOME_LOGIN_FAKE_BUTTON");
-    await page.click(".mt-16 #HOME_LOGIN_FAKE_BUTTON");
+  it("About page", async () => {
+    await page.goto("http://localhost:3000/about");
+    await page.waitForSelector("[data-testid='ABOUT_PAGE']");
+    await page.goto("http://localhost:3000/");
+    await page.waitForSelector("[data-testid='HOME_LOGIN_FAKE_BUTTON']");
+  });
 
-    await page.waitForSelector("form #UI_TEXT_INPUT_Username");
+  it("Successful register to Dashboard", async () => {
+    await page.waitForSelector("[data-testid='HOME_LOGIN_FAKE_BUTTON']");
+    await page.click("[data-testid='HOME_LOGIN_FAKE_BUTTON']");
+
+    await page.waitForSelector("form");
 
     await page.type("form #UI_TEXT_INPUT_Username", user.username);
 
     await page.type("form #UI_TEXT_INPUT_Email", user.email);
     await page.type("form #UI_TEXT_INPUT_Password", user.password);
 
-    await page.waitForSelector(".p-4 > #tabs--1--panel--0 #legalChecked");
-    await page.click(".p-4 > #tabs--1--panel--0 #legalChecked");
+    await page.waitForSelector("[data-testid='LEGAL_CHECK']");
+    await page.click("[data-testid='LEGAL_CHECK']");
 
     await page.waitForSelector("[data-testid='REGISTER_BUTTON']");
     await page.click("[data-testid='REGISTER_BUTTON']");
@@ -42,8 +48,8 @@ describe("Downwrite E2E", () => {
     await page.waitForSelector('[data-valuetext="Sign Out"]');
     await page.click('[data-valuetext="Sign Out"]');
 
-    await page.waitForSelector("main #tabs--1--tab--1");
-    await page.click("main #tabs--1--tab--1");
+    await page.waitForSelector("[data-testid='LOGIN_LOGIN_TABBUTTON']");
+    await page.click("[data-testid='LOGIN_LOGIN_TABBUTTON']");
 
     await page.waitForSelector("[data-testid='LOGIN_USERNAME']");
     await page.waitForSelector("button#RELOGIN_BUTTON");

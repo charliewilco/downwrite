@@ -9,6 +9,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.grayscale-50 {
+  filter: grayscale(50%);
+}
+
 :root {
   --reach-menu-button: 1;
 }

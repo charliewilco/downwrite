@@ -1,19 +1,6 @@
-import * as React from "react";
-import { GetServerSideProps } from "next";
 import { NextPage } from "next";
 import Head from "next/head";
-import Cookies from "universal-cookie";
 import ContentWrapper from "../components/content";
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { DW_TOKEN: token } = new Cookies(context.req.headers.cookie).getAll();
-
-  return {
-    props: {
-      token
-    }
-  };
-};
 
 const LegalPage: NextPage = (): JSX.Element => {
   return (

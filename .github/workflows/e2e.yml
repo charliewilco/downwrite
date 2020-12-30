@@ -5,10 +5,6 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     env:
-      CI: TRUE
-      NO_HTTPS: TRUE
-      NODE_ENV: test
-      SECRET_KEY: "foo"
       NEXT_TELEMETRY_DISABLED: 1
     strategy:
       matrix:
@@ -16,7 +12,7 @@ jobs:
 
     services:
       mongodb:
-        image: mongo:3.4.23
+        image: mongo:4.4
         ports:
           - 27017:27017
 
@@ -34,5 +30,7 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build Project for Testing
         run: yarn build
+        env:
+          NO_HTTPS: true
       - name: Run Puppeteer
         run: yarn test:e2e

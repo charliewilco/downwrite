@@ -7,6 +7,7 @@ export default class CustomDocument extends Document {
         <Head>
           <link rel="icon" href="/favicon.ico" />
           <link
+            type="text/css"
             rel="stylesheet"
             href="https://unpkg.com/ganymede-light-duotone-prism"
           />
