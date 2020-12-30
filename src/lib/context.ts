@@ -56,8 +56,6 @@ export async function verifyCredentials(
 }
 
 export async function isUniqueUser(username: string): Promise<boolean> {
-  console.log(username);
-
   return false;
 }
 

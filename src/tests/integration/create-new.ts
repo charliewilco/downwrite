@@ -13,25 +13,18 @@ describe("Downwrite E2E: Create New Entry", () => {
     await page.waitForSelector("[data-testid='NEW_EDITOR_FORM']");
     await page.type("[data-testid='NEW_ENTRY_TITLE_ENTRY']", "Hello From New Entry");
     await page.type("div[contentEditable=true]", "_Hello_ from Down Below");
-    console.log(page.url());
-    await page.keyboard.down("Meta");
-    await page.keyboard.press("s");
-    console.log(page.url());
 
-    await Promise.all([
-      page.waitForNavigation({ timeout: 0, waitUntil: "domcontentloaded" }),
-      page.keyboard.up("Meta")
-    ]);
+    await page.click("[data-testid='NEW_ENTRY_SUBMIT_BUTTON']");
 
-    console.log(page.url());
     await page.waitForSelector("[data-testid='EDIT_ENTRY_CONTAINER']");
     await page.waitForSelector("[data-testid='EDIT_ENTRY_TITLE_ENTRY']");
   });
 
-  it("tap the new button up to to navigate to new page", async () => {
+  it("tap the new button up to navigate to new page", async () => {
     await page.waitForSelector("[data-testid='CREATE_NEW_ENTRY_BUTTON']");
     await page.click("[data-testid='CREATE_NEW_ENTRY_BUTTON']");
     await page.waitForSelector("[data-testid='NEW_EDITOR_FORM']");
   });
   it.todo("Drag and drop markdown file");
+  it.todo("Keyboard shortcut");
 });

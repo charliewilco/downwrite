@@ -41,7 +41,6 @@ const NewEntryPage: NextPage = () => {
   const editorProps = useEditor(editorActions);
 
   function onSubmit(values: INewEditorValues): void {
-    console.log("hello");
     createNewPost(values.title, editorState);
   }
 
@@ -79,7 +78,9 @@ const NewEntryPage: NextPage = () => {
             {isOffline && <span>You're Offline Right Now</span>}
           </div>
           <div className="flex items-center">
-            <Button type="submit">Add New</Button>
+            <Button type="submit" data-testid="NEW_ENTRY_SUBMIT_BUTTON">
+              Add New
+            </Button>
           </div>
         </aside>
         <Editor

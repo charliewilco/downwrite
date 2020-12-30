@@ -53,7 +53,6 @@ export async function createPost(
   args: RequireFields<IMutationCreateEntryArgs, never>
 ): Promise<IEntry> {
   return verifyUser(context, async ({ user, name }) => {
-    console.log("hello i'm creating a thing");
     try {
       const id = uuid();
       const date = new Date();

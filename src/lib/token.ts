@@ -1,7 +1,6 @@
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
 import { IAppState, initialState } from "@reducers/app";
-import { SECRET_KEY } from "@utils/urls";
 
 type ITokenUser = {
   username: string;
@@ -20,6 +19,9 @@ export async function getSaltedHash(password: string) {
 
   return hash;
 }
+
+export const SECRET_KEY =
+  process.env.SECRET_KEY || "1a9876c4-6642-4b83-838a-9e84ee00646a";
 
 export function createToken(user: ITokenUser): string {
   const jwtConfig: jwt.SignOptions = {
