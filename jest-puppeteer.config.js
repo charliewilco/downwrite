@@ -6,6 +6,8 @@ module.exports = {
   launch: {
     timeout: 0,
     headless: !!process.env.CI,
-    slowMo: process.env.CI ? 0 : 150
+    slowMo: process.env.CI ? 0 : 150,
+    defaultViewport: { width: 1440, height: 766 },
+    args: ["--start-maximized", "--window-size=1440,766"]
   }
 };
