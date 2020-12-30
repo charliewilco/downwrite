@@ -1,15 +1,13 @@
 /// <reference types="@types/jest-environment-puppeteer" />
 
-import { jest, it, describe, beforeAll } from "@jest/globals";
+import { jest, it, describe } from "@jest/globals";
 
 import { user } from "../../fixtures/user.json";
 
-jest.setTimeout(100000);
-
 jest.setTimeout(50000);
 
-describe("Downwrite E2E", () => {
-  beforeAll(async () => {
+describe("Downwrite E2E: Create User and Login", () => {
+  it("starts", async () => {
     await page.goto("http://localhost:3000/");
     await page.setViewport({ width: 1440, height: 766 });
   });

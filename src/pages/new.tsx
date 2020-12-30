@@ -59,13 +59,17 @@ const NewEntryPage: NextPage = () => {
   }, []);
 
   return (
-    <form className="max-w-2xl px-2 pt-32 pb-0 mx-auto" onSubmit={handleSubmit}>
+    <form
+      className="max-w-2xl px-2 pt-32 pb-0 mx-auto"
+      onSubmit={handleSubmit}
+      data-testid="NEW_EDITOR_FORM">
       <Head>
-        <title>{values.title ? values.title : "New"} | Downwrite</title>
+        <title>{values.title ?? "New"} | Downwrite</title>
       </Head>
       <Upload onParsed={onParsed}>
         <Input
           value={values.title}
+          data-testid="NEW_ENTRY_TITLE_ENTRY"
           onChange={handleChange}
           name="title"
           placeholder="Untitled Document"

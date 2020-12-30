@@ -4,14 +4,16 @@ import { useRouter } from "next/router";
 import { useApolloClient } from "@apollo/client";
 import { removeTokenCookie } from "@lib/cookie-managment";
 import { Routes } from "@utils/routes";
+import { IAppState, initialState, useCurrentUser } from "@reducers/app";
 
-export const getServerSideProps: GetServerSideProps<{ token: "" }, any> = async (
-  context
-) => {
+export const getServerSideProps: GetServerSideProps<
+  { initialAppState: IAppState },
+  any
+> = async (context) => {
   removeTokenCookie(context.res);
   return {
     props: {
-      token: ""
+      initialAppState: initialState
     }
   };
 };
@@ -19,8 +21,10 @@ export const getServerSideProps: GetServerSideProps<{ token: "" }, any> = async 
 const SignOut: NextPage = () => {
   const client = useApolloClient();
   const router = useRouter();
+  const [, { onCurrentUserLogout }] = useCurrentUser();
 
   useEffect(() => {
+    onCurrentUserLogout();
     client.resetStore().then(() => {
       router.push(Routes.LOGIN);
     });

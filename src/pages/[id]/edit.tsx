@@ -102,6 +102,7 @@ const EditUI: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> =
         <Input
           value={state.title}
           name="title"
+          data-testid="EDIT_ENTRY_TITLE_ENTRY"
           onChange={actions.handleTitleChange}
         />
         <aside className="flex items-center justify-between py-2 mx-0 mt-2 mb-4">

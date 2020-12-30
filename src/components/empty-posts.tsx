@@ -25,7 +25,9 @@ export default function EmptyPosts(): JSX.Element {
             Looks like you don't have any entries
           </h4>
           <Link href={Routes.NEW}>
-            <a className={buttonLinkClass}>Get Started &rarr; </a>
+            <a data-testid="GET_STARTED_LINK" className={buttonLinkClass}>
+              Get Started &rarr;{" "}
+            </a>
           </Link>
         </div>
       </div>
