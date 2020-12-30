@@ -6,8 +6,6 @@ import { jest, it, describe } from "@jest/globals";
 
 jest.setTimeout(50000);
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 describe("Downwrite E2E: Create New Entry", () => {
   it("New Page", async () => {
     await page.waitForSelector("[data-testid='GET_STARTED_LINK']");
@@ -18,11 +16,13 @@ describe("Downwrite E2E: Create New Entry", () => {
     console.log(page.url());
     await page.keyboard.down("Meta");
     await page.keyboard.press("s");
-    await page.keyboard.up("Meta");
     console.log(page.url());
 
-    await page.waitForNavigation();
-    await sleep(2000);
+    await Promise.all([
+      page.waitForNavigation({ timeout: 0, waitUntil: "domcontentloaded" }),
+      page.keyboard.up("Meta")
+    ]);
+
     console.log(page.url());
     await page.waitForSelector("[data-testid='EDIT_ENTRY_CONTAINER']");
     await page.waitForSelector("[data-testid='EDIT_ENTRY_TITLE_ENTRY']");
