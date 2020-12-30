@@ -2,7 +2,7 @@
 
 import { jest, it, describe, beforeAll } from "@jest/globals";
 
-import { user } from "../fixtures/user.json";
+import { user } from "../../fixtures/user.json";
 
 jest.setTimeout(100000);
 

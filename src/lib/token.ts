@@ -14,17 +14,6 @@ export type TokenContents = {
   name: string;
 };
 
-type HashingCallback = (err: Error, hash: string) => void;
-
-export function hashPassword(password: string, cb: HashingCallback) {
-  // Generate a salt at level 10 strength
-  bcrypt.genSalt(10, (_, salt) => {
-    bcrypt.hash(password, salt, (err, hash) => {
-      return cb(err, hash);
-    });
-  });
-}
-
 export async function getSaltedHash(password: string) {
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);

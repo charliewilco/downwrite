@@ -44,7 +44,13 @@ export const clearDB = async () => {
   }
 
   console.log("Clearing the database and it's dangerous");
-  const db = await mongoose.connect(developDBAddrress);
+  const db = await mongoose.connect(developDBAddrress, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+    poolSize: 10
+  });
 
   await db.connection.dropDatabase();
   await db.connection.close();
