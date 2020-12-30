@@ -13,9 +13,14 @@ describe("Downwrite E2E: Create New Entry", () => {
     await page.waitForSelector("[data-testid='NEW_EDITOR_FORM']");
     await page.type("[data-testid='NEW_ENTRY_TITLE_ENTRY']", "Hello From New Entry");
     await page.type("div[contentEditable=true]", "_Hello_ from Down Below");
+    console.log(page.url());
     await page.keyboard.down("Meta");
     await page.keyboard.press("s");
     await page.keyboard.up("Meta");
+
+    console.log(page.url());
+
+    await page.waitForSelector("[data-testid='EDIT_ENTRY_CONTAINER']");
     await page.waitForSelector("[data-testid='EDIT_ENTRY_TITLE_ENTRY']");
   });
 

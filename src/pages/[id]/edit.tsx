@@ -86,7 +86,7 @@ const EditUI: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> =
   }
 
   return (
-    <div className="max-w-4xl mt-16 mx-auto">
+    <div className="max-w-4xl mt-16 mx-auto" data-testid="EDIT_ENTRY_CONTAINER">
       <Head>
         <title>{state.title} | Downwrite</title>
       </Head>
