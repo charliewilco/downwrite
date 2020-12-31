@@ -3,6 +3,7 @@
 import { jest, it, describe } from "@jest/globals";
 
 import { user } from "../../fixtures/user.json";
+import { getByTestId } from "./utils";
 
 jest.setTimeout(50000);
 
@@ -14,9 +15,9 @@ describe("Downwrite E2E: Create User and Login", () => {
 
   it("About page", async () => {
     await page.goto("http://localhost:3000/about");
-    await page.waitForSelector("[data-testid='ABOUT_PAGE']");
+    await page.waitForSelector(getByTestId("ABOUT_PAGE"));
     await page.goto("http://localhost:3000/");
-    await page.waitForSelector("[data-testid='HOME_LOGIN_FAKE_BUTTON']");
+    await page.waitForSelector(getByTestId("HOME_LOGIN_FAKE_BUTTON"));
   });
 
   it("Successful register to Dashboard", async () => {

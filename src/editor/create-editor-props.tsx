@@ -127,7 +127,7 @@ export type EditorPropKeys =
 export type CreatedEditorProps = Pick<EditorProps, EditorPropKeys>;
 
 export const createEditorProps = (
-  { getEditorState, setEditorState }: IPropCreation,
+  props: IPropCreation,
   config: IEditorConfig = { insertEmptyBlockOnReturnWithModifierKey: true }
 ): CreatedEditorProps => ({
   blockRenderMap: DefaultDraftBlockRenderMap.merge(extendedBlocks),
@@ -157,8 +157,8 @@ export const createEditorProps = (
           component: CheckableListItem,
           props: {
             onChangeChecked: () =>
-              setEditorState(
-                CheckableListItemUtils.toggleChecked(getEditorState(), block)
+              props.setEditorState(
+                CheckableListItemUtils.toggleChecked(props.getEditorState(), block)
               ),
             checked: !!block.getData().get("checked")
           }
@@ -171,7 +171,7 @@ export const createEditorProps = (
   handleReturn(ev: React.KeyboardEvent, editorState: EditorState): DraftHandleValue {
     const newEditorState = checkReturnForState(editorState, config, ev);
     if (editorState !== newEditorState) {
-      setEditorState(newEditorState);
+      props.setEditorState(newEditorState);
       return "handled";
     }
     return "not-handled";
@@ -182,7 +182,7 @@ export const createEditorProps = (
     }
     const newEditorState = checkCharacterForState(editorState, character);
     if (editorState !== newEditorState) {
-      setEditorState(newEditorState);
+      props.setEditorState(newEditorState);
       return "handled";
     }
     return "not-handled";
@@ -226,7 +226,7 @@ export const createEditorProps = (
     }
 
     if (editorState !== newEditorState) {
-      setEditorState(newEditorState);
+      props.setEditorState(newEditorState);
       return "handled";
     }
     return "not-handled";

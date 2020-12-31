@@ -17,7 +17,7 @@ export interface IUserModel extends Mongoose.Document {
   email: string;
   password: string;
   admin?: boolean;
-  posts: IPostModel[];
+  posts?: IPostModel[];
   gradient?: string[];
 }
 

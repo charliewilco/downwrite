@@ -12,7 +12,7 @@ import {
 import { useNotifications, NotificationType } from "@reducers/app";
 import { EditorStateGetter, draftToMarkdown } from "../editor";
 
-function updateEntry(
+export function updateEntryCache(
   cache: ApolloCache<IUpdateEntryMutation>,
   { data }: FetchResult<IUpdateEntryMutation>
 ) {
@@ -49,18 +49,19 @@ function updateEntry(
 export function useUpdateEntry(id: string, getEditorState: EditorStateGetter) {
   const [, { addNotification }] = useNotifications();
   const [mutationFn] = useUpdateEntryMutation({
-    update: updateEntry
+    update: updateEntryCache
   });
 
   const handleSubmit = useCallback(
     async (title: string, publicStatus: boolean) => {
       const editorState = getEditorState();
       if (editorState !== null) {
-        const content = convertToRaw(editorState.getCurrentContent());
+        const raw = convertToRaw(editorState.getCurrentContent());
+        const content = draftToMarkdown(raw, { preserveNewlines: true });
         await mutationFn({
           variables: {
             id,
-            content: draftToMarkdown(content, { preserveNewlines: true }),
+            content,
             title: title,
             status: publicStatus
           }

@@ -1,7 +1,7 @@
 import { createTestClient, ApolloServerTestClient } from "apollo-server-testing";
 import { ApolloServer } from "apollo-server-micro";
 import { schema } from "@lib/schema";
-import { clearDB, stopDB } from "@lib/db";
+import { stopDB } from "@lib/db";
 import { MockContext } from "@lib/context";
 import { validPasswordMessage } from "@utils/constants";
 import * as GQL from "@utils/generated";
@@ -16,9 +16,7 @@ const testServer = new ApolloServer({
 
 const client: ApolloServerTestClient = createTestClient(testServer);
 
-beforeAll(async () => {
-  await clearDB();
-});
+beforeAll(async () => {});
 
 afterAll(async () => {
   await stopDB();

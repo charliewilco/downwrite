@@ -1,12 +1,7 @@
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
 import { IAppState, initialState } from "@reducers/app";
-
-type ITokenUser = {
-  username: string;
-  _id: string;
-  admin?: boolean;
-};
+import { IUserModel } from "./models";
 
 export type TokenContents = {
   user: string;
@@ -23,14 +18,14 @@ export async function getSaltedHash(password: string) {
 export const SECRET_KEY =
   process.env.SECRET_KEY || "1a9876c4-6642-4b83-838a-9e84ee00646a";
 
-export function createToken(user: ITokenUser): string {
+export function createToken(user: IUserModel): string {
   const jwtConfig: jwt.SignOptions = {
     algorithm: "HS256",
     expiresIn: "180 days"
   };
 
   const data = {
-    user: user._id,
+    user: user._id!,
     name: user.username,
     scope: user.admin && "admin"
   };

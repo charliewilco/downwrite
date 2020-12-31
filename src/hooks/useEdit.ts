@@ -7,12 +7,11 @@ import {
   useEditorState,
   useDecorators,
   imageLinkDecorators,
-  prismHighlightDecorator,
-  markdownToDraft
+  prismHighlightDecorator
 } from "../editor";
-import { convertFromRaw } from "draft-js";
+import { convertFromRaw, RawDraftContentState } from "draft-js";
 
-export function useEdit(id: string) {
+export function useEdit(id: string, raw: RawDraftContentState) {
   const { loading, data, error } = useEditQuery({
     variables: {
       id
@@ -23,8 +22,9 @@ export function useEdit(id: string) {
   const decorators = useDecorators([imageLinkDecorators, prismHighlightDecorator]);
   const [editorState, editorActions] = useEditorState({
     decorators,
-    contentState: convertFromRaw(markdownToDraft(data!.entry!.content!))
+    contentState: convertFromRaw(raw)
   });
+
   const handleSubmit = useUpdateEntry(id, editorActions.getEditorState);
 
   useEffect(() => {

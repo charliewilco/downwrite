@@ -84,7 +84,6 @@ export async function updatePost(
   args: IMutationUpdateEntryArgs
 ) {
   return verifyUser(context, async ({ user }) => {
-    console.log("UPDATING POST");
     try {
       const n = await PostModel.findOneAndUpdate(
         { id, user: { $eq: user } },
@@ -141,14 +140,6 @@ export async function authenticateUser(
   }
 }
 
-interface ICreateUserParams {
-  email: string;
-  username: string;
-  id: string;
-  password: string;
-  admin: boolean;
-}
-
 export async function createUser(
   context: ResolverContext,
   username: string,
@@ -171,7 +162,7 @@ export async function createUser(
       {},
       { email, username, id, password: hash, admin: false }
     );
-    let user = await UserModel.create<ICreateUserParams>(m);
+    let user = await UserModel.create(m);
     let token = createToken(user);
 
     setTokenCookie(context.res, token);
@@ -221,7 +212,7 @@ export async function updateUserSettings(
         _id: user
       },
       { $set: { username, email } },
-      { new: true, select: "username email" }
+      { new: true }
     );
     if (details.email && details.username) {
       return { email: details.email, username: details.username, admin: __IS_DEV__ };

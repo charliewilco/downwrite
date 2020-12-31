@@ -11,7 +11,7 @@ import { createEditorProps, IPropCreation } from "./create-editor-props";
 import { MultiDecorator } from "./multidecorator";
 
 interface IInitializeEditorState {
-  contentState: ContentState;
+  contentState?: ContentState;
   decorators?: CompositeDecorator;
 }
 
@@ -35,7 +35,7 @@ export const useEditorState = ({
 }: IInitializeEditorState) => {
   const [editorState, setEditorState] = useState(() => {
     const state = EditorState.createWithContent(
-      contentState || emptyContentState,
+      contentState ?? emptyContentState,
       decorators
     );
 
@@ -74,8 +74,8 @@ export const useEditor = (
     const props = createEditorProps(state);
     return {
       ...props,
-      onTab: (e: React.KeyboardEvent<{}>) =>
-        state.setEditorState(RichUtils.onTab(e, state.getEditorState(), 4)),
+      // onTab: (e: React.KeyboardEvent<{}>) =>
+      //   state.setEditorState(RichUtils.onTab(e, state.getEditorState(), 4)),
       onChange: (editorState) => state.setEditorState(editorState),
       handleKeyCommand
     };
