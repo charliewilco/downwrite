@@ -20,7 +20,7 @@
     "@mdx-js/tag": "^0.20.3",
     "@next/bundle-analyzer": "^9.5.3",
     "@next/mdx": "^9.5.3",
-    "@reach/dialog": "^0.11.2",
+    "@reach/dialog": "^0.12.1",
     "@reach/menu-button": "^0.11.2",
     "@reach/skip-nav": "^0.11.2",
     "@reach/tabs": "^0.11.2",
