@@ -29,7 +29,7 @@
     "@types/draft-js": "^0.10.28",
     "@types/file-saver": "^2.0.0",
     "@types/jsonwebtoken": "^8.3.0",
-    "@types/jwt-decode": "^2.2.1",
+    "@types/jwt-decode": "^3.1.0",
     "@types/lodash": "^4.14.121",
     "@types/mongoose": "^5.7.36",
     "@types/node": "^14.6.2",
