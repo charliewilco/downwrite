@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@hapi/boom": "^9.1.0",
-    "@mdx-js/loader": "^1.6.16",
+    "@mdx-js/loader": "^1.6.22",
     "@mdx-js/mdx": "^1.6.16",
     "@mdx-js/tag": "^0.20.3",
     "@next/bundle-analyzer": "^9.5.3",
