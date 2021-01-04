@@ -61,7 +61,7 @@
     "prismjs": "^1.15.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-dropzone": "^10.1.4",
+    "react-dropzone": "^11.2.4",
     "react-markdown": "^4.0.6",
     "react-prism": "^4.3.1",
     "react-spring": "^8.0.19",
