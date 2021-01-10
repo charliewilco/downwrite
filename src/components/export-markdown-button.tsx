@@ -9,7 +9,7 @@ export default function ExportMarkdownButton(
   return (
     <button className="flex" onClick={props.onClick}>
       <FiDownload />
-      <small className="ml-2">Export</small>
+      <small className="ml-2 inline-block font-bold">Export</small>
     </button>
   );
 }

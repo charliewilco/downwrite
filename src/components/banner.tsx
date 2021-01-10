@@ -7,12 +7,10 @@ export function Banner(props: PropsWithChildren<{ icon: JSX.Element }>) {
         <div className="p-2 rounded-lg bg-pixieblue-600 shadow-lg sm:p-3">
           <div className="flex items-center justify-between flex-wrap">
             <div className="w-0 flex-1 flex items-center">
-              <span className="flex p-2 rounded-lg bg-pixieblue-800">
+              <span className="flex p-3 rounded-lg bg-pixieblue-800">
                 {props.icon}
               </span>
-              <p className="ml-3 font-medium text-white truncate">
-                {props.children}
-              </p>
+              <p className="ml-3 font-bold text-sm text-white">{props.children}</p>
             </div>
           </div>
         </div>

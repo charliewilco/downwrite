@@ -9,6 +9,8 @@ interface IUIShell extends React.PropsWithChildren<{}> {}
 
 const MessageList = dynamic(() => import("@components/notification-list"));
 
+const icon = <FiAlertTriangle className="w-4 h-4" />;
+
 export function UIShell(props: IUIShell): JSX.Element {
   return (
     <div className="flex flex-col">
@@ -21,7 +23,7 @@ export function UIShell(props: IUIShell): JSX.Element {
       </Head>
       <div className="clearfix min-h-full">
         <UIHeader />
-        <Banner icon={<FiAlertTriangle className="w-2 h-2 lg:h-4 lg:w-4" />}>
+        <Banner icon={icon}>
           This app is currently in a major major alpha. Swim at your own risk.
         </Banner>
         <main>{props.children}</main>

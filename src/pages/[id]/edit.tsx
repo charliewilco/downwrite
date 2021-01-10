@@ -2,18 +2,19 @@ import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next"
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useState, useEffect, useCallback } from "react";
+import { NormalizedCacheObject } from "@apollo/client";
 import {
   RawDraftContentState,
   convertFromRaw,
   convertToRaw,
   EditorState
 } from "draft-js";
-import { NormalizedCacheObject } from "@apollo/client";
+import { MixedCheckbox } from "@reach/checkbox";
+
 import { mdToDraftjs, draftjsToMd } from "draftjs-md-converter";
 import { Button } from "@components/button";
 import Loading from "@components/loading";
 import { Input } from "@components/editor-input";
-import { ToggleBox } from "@components/toggle-box";
 import { PreviewLink } from "@components/entry-links";
 import TimeMarker from "@components/time-marker";
 import { __IS_DEV__ } from "@utils/dev";
@@ -189,14 +190,25 @@ const EditUI: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> =
         />
         <aside className="flex items-center justify-between py-2 mx-0 mt-2 mb-4">
           <div className="flex items-center">
-            <ToggleBox
-              label={(value) => (value ? "Public" : "Private")}
-              name="publicStatus"
-              value={state.publicStatus}
-              onChange={() => dispatch({ type: EditActions.TOGGLE_PUBLIC_STATUS })}
-            />
+            <div className="mr-4">
+              <label className="text-xs flex items-center">
+                <MixedCheckbox
+                  name="publicStatus"
+                  checked={state.publicStatus}
+                  onChange={() =>
+                    dispatch({ type: EditActions.TOGGLE_PUBLIC_STATUS })
+                  }
+                />
+                <span className="flex-1 ml-2 align-middle inline-block leading-none font-bold">
+                  {state.publicStatus ? "Public" : "Private"}
+                </span>
+              </label>
+            </div>
             {!!state.publicStatus && (
-              <PreviewLink className="block text-xs leading-none" id={props.id} />
+              <PreviewLink
+                className="inline-block text-xs leading-none font-bold"
+                id={props.id}
+              />
             )}
           </div>
           <div className="flex items-center">

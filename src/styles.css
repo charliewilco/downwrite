@@ -4,6 +4,7 @@
 @import "~@reach/tabs/styles.css";
 @import "~@reach/menu-button/styles.css";
 @import "~@reach/dialog/styles.css";
+@import "~@reach/checkbox/styles.css";
 
 @tailwind base;
 @tailwind components;
@@ -216,7 +217,7 @@ body,
 }
 
 .__content blockquote {
-  @apply bg-pixieblue-100 mb-6 italic;
+  @apply bg-pixieblue-100 mb-6 italic dark:text-gray-800;
 }
 
 .__content blockquote p {

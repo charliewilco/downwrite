@@ -24,7 +24,7 @@ export function ContentWrapper(props: IContentWrapperProps): JSX.Element {
           )}
           <h1
             data-testid="PREVIEW_ENTRTY_TITLE"
-            className="text-3xl leading-9 font-extrabold tracking-tight sm:text-4xl sm:leading-10 md:text-5xl md:leading-14">
+            className="text-3xl leading-9 font-serif font-bold tracking-tight sm:text-4xl sm:leading-10 md:text-5xl md:leading-14">
             {props.title}
           </h1>
         </header>

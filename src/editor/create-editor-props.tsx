@@ -142,7 +142,7 @@ export const createEditorProps = (
       case "header-three":
         return "text-xl font-bold mb-4";
       case "blockquote":
-        return "border-l-4 text-lg bg-blue-100 border-blue-400 p-4 italic font-serif";
+        return "border-l-4 text-lg bg-blue-100 border-blue-400 p-4 italic font-serif dark:text-gray-800";
       case CHECKABLE_LIST_ITEM:
         return CHECKABLE_LIST_ITEM;
       default:

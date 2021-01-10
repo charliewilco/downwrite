@@ -1,4 +1,4 @@
-import Check from "./checkbox";
+import { MixedCheckbox } from "@reach/checkbox";
 
 interface ICheckboxToggle {
   value: boolean;
@@ -12,8 +12,12 @@ export function ToggleBox(props: ICheckboxToggle) {
   return (
     <div className="mr-4">
       <label className="text-xs flex items-center">
-        <Check name={props.name} checked={props.value} onChange={props.onChange} />
-        <span className="flex-1 ml-2 align-middle inline-block leading-tight">
+        <MixedCheckbox
+          name={props.name}
+          checked={props.value}
+          onChange={props.onChange}
+        />
+        <span className="flex-1 ml-2 align-middle inline-block leading-none bg-green-300 font-bold">
           {text}
         </span>
       </label>
