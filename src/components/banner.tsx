@@ -1,8 +1,10 @@
-import { PropsWithChildren } from "react";
+interface IBannerProps {
+  icon: JSX.Element;
+}
 
-export function Banner(props: PropsWithChildren<{ icon: JSX.Element }>) {
+export const Banner: React.FC<IBannerProps> = (props) => {
   return (
-    <div className="inset-x-0 pb-2 sm:pb-5" role="banner">
+    <div className="inset-x-0 pb-1 sm:pb-3" role="banner">
       <div className="max-w-4xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="p-2 rounded-lg bg-pixieblue-600 shadow-lg sm:p-3">
           <div className="flex items-center justify-between flex-wrap">
@@ -17,4 +19,4 @@ export function Banner(props: PropsWithChildren<{ icon: JSX.Element }>) {
       </div>
     </div>
   );
-}
+};

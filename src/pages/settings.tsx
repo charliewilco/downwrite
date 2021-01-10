@@ -43,7 +43,7 @@ const SettingsPage: NextPage<
   }
 
   return (
-    <div className="max-w-3xl p-2 mx-auto mt-12">
+    <div className="max-w-4xl p-2 mx-auto mt-12" data-testid="SETTINGS_CONTAINER">
       <Head>
         <title>User Settings</title>
       </Head>

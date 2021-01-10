@@ -74,7 +74,7 @@ const DashboardUI: NextPage = () => {
             | Downwrite
           </title>
         </Head>
-        <section className="py-4 px-2">
+        <section className="py-4 px-2 min-h-screen">
           {data.feed.length > 0 ? (
             <PostList onSelect={actions.onSelect} posts={data.feed} />
           ) : (

@@ -29,7 +29,7 @@ export function UIInputError({
     <span
       {...props}
       className={classNames(
-        "block text-sm uppercase tracking-wider",
+        "block text-sm text-red-500 dark:text-red-300",
         props.className
       )}
     />

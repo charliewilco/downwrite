@@ -1,36 +1,16 @@
 import { useCallback, useReducer, ReducerWithoutAction } from "react";
 import { useFormik, FormikHelpers } from "formik";
+import { MixedCheckbox } from "@reach/checkbox";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
-import { ToggleBox } from "../components/toggle-box";
 import { Button } from "./button";
 import { UpdatePasswordSchema } from "../utils/validations";
 
-interface IPasswordSettings extends Record<string, string> {
+interface IPasswordSettings {
   oldPassword: string;
   newPassword: string;
   confirmPassword: string;
 }
-
-interface IInputs {
-  name: string;
-  label: string;
-}
-
-const PASSWORD_INPUTS: IInputs[] = [
-  {
-    label: "Current Password",
-    name: "oldPassword"
-  },
-  {
-    label: "New Password",
-    name: "newPassword"
-  },
-  {
-    label: "Confirm Your New Password",
-    name: "confirmPassword"
-  }
-];
 
 export default function SettingsPassword(): JSX.Element {
   const [isOpen, onToggleOpen] = useReducer<ReducerWithoutAction<boolean>>(
@@ -64,27 +44,60 @@ export default function SettingsPassword(): JSX.Element {
   return (
     <SettingsBlock title="Password">
       <form onSubmit={formik.handleSubmit}>
-        {PASSWORD_INPUTS.map(({ name, label }: IInputs, idx) => (
-          <UIInputContainer key={idx} className="mb-4">
-            <UIInput
-              label={label}
-              name={name}
-              type={!isOpen ? "password" : "text"}
-              placeholder="*********"
-              value={formik.values[name]}
-              onChange={formik.handleChange}
-            />
-            {formik.errors[name] && (
-              <UIInputError>{formik.errors[name]}</UIInputError>
-            )}
-          </UIInputContainer>
-        ))}
-        <SettingsFormActions split>
-          <ToggleBox
-            label={(value) => (!value ? "Values hidden" : "Values shown")}
-            onChange={onToggleOpen}
-            value={isOpen}
+        <UIInputContainer className="mb-4">
+          <UIInput
+            label="New Password"
+            name="oldPassword"
+            type={!isOpen ? "password" : "text"}
+            placeholder="*********"
+            value={formik.values.oldPassword}
+            onChange={formik.handleChange}
           />
+          {formik.errors.oldPassword && (
+            <UIInputError>{formik.errors.oldPassword}</UIInputError>
+          )}
+        </UIInputContainer>
+        <UIInputContainer className="mb-4">
+          <UIInput
+            label="New Password"
+            name="newPassword"
+            type={!isOpen ? "password" : "text"}
+            placeholder="*********"
+            value={formik.values.newPassword}
+            onChange={formik.handleChange}
+          />
+          {formik.errors.newPassword && (
+            <UIInputError>{formik.errors.newPassword}</UIInputError>
+          )}
+        </UIInputContainer>
+
+        <UIInputContainer className="mb-4">
+          <UIInput
+            label="Confirm Your New Password"
+            name="confirmPassword"
+            type={!isOpen ? "password" : "text"}
+            placeholder="*********"
+            value={formik.values.confirmPassword}
+            onChange={formik.handleChange}
+          />
+          {formik.errors.confirmPassword && (
+            <UIInputError>{formik.errors.confirmPassword}</UIInputError>
+          )}
+        </UIInputContainer>
+
+        <SettingsFormActions split>
+          <div className="mr-4">
+            <label className="text-xs flex items-center">
+              <MixedCheckbox
+                name="Password Hidden"
+                checked={isOpen}
+                onChange={onToggleOpen}
+              />
+              <span className="flex-1 ml-2 align-middle inline-block leading-none font-bold">
+                {!isOpen ? "Values hidden" : "Values shown"}
+              </span>
+            </label>
+          </div>
           <Button type="submit" disabled={formik.isSubmitting}>
             Save
           </Button>

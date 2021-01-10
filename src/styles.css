@@ -10,6 +10,20 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  height: 100%;
+}
+
+#__next {
+  @apply relative;
+}
+
+html,
+body,
+#__next {
+  @apply min-h-full !important;
+}
+
 .grayscale-50 {
   filter: grayscale(50%);
 }
@@ -41,15 +55,6 @@
   font: inherit;
   text-decoration: initial;
   padding: 8px;
-}
-
-body,
-#__next {
-  @apply w-full h-full;
-}
-
-#__next {
-  @apply relative flex flex-col flex-1;
 }
 
 :root {
