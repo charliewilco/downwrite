@@ -16,6 +16,8 @@ import { ToggleBox } from "@components/toggle-box";
 import { PreviewLink } from "@components/entry-links";
 import TimeMarker from "@components/time-marker";
 import { __IS_DEV__ } from "@utils/dev";
+import { updateEntryCache } from "@utils/cache";
+
 import { initializeApollo } from "@lib/apollo";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
 import {
@@ -25,7 +27,6 @@ import {
   useEditQuery,
   useUpdateEntryMutation
 } from "@utils/generated";
-import { updateEntryCache } from "@hooks/useUpdateEntryMutation";
 import { useEditReducer } from "@hooks/useEditReducer";
 import { IAppState, useNotifications, NotificationType } from "@reducers/app";
 import { EditActions } from "@reducers/editor";

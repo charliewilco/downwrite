@@ -1,4 +1,5 @@
 import * as jwt from "jsonwebtoken";
+import is from "@sindresorhus/is";
 import * as bcrypt from "bcrypt";
 import { IAppState, initialState } from "@reducers/app";
 import { IUserModel } from "./models";
@@ -37,8 +38,15 @@ export async function isValidPassword(password: string, hashPassword: string) {
   return bcrypt.compare(password, hashPassword);
 }
 
-export function readToken(token: string): TokenContents | null {
-  return jwt.verify(token, SECRET_KEY, { complete: false }) as TokenContents | null;
+export interface IReadResults extends TokenContents {
+  token: string;
+}
+
+export function readToken(token: string): IReadResults | null {
+  const contents: TokenContents = jwt.verify(token, SECRET_KEY, {
+    complete: false
+  }) as TokenContents;
+  return is.object(contents) ? { ...contents, token } : null;
 }
 
 export function getInitialState(t?: TokenContents): IAppState {

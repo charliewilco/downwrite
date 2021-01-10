@@ -68,6 +68,13 @@ export type IAuthUserPayload = {
   token: Maybe<Scalars["String"]>;
 };
 
+export type IMe = {
+  __typename?: "Me";
+  details: Maybe<IUser>;
+  token: Maybe<Scalars["String"]>;
+  entryCount: Scalars["Int"];
+};
+
 export type IQuery = {
   __typename?: "Query";
   /** Markdown document */
@@ -78,6 +85,7 @@ export type IQuery = {
   preview: Maybe<IPreview>;
   /** User Settings */
   settings: Maybe<IUser>;
+  me: Maybe<IMe>;
 };
 
 export type IQueryEntryArgs = {
@@ -232,6 +240,12 @@ export type IUpdateUserSettingsMutation = { __typename?: "Mutation" } & {
   >;
 };
 
+export type IIsMeQueryVariables = Exact<{ [key: string]: never }>;
+
+export type IIsMeQuery = { __typename?: "Query" } & {
+  me: Maybe<{ __typename?: "Me" } & Pick<IMe, "token" | "entryCount">>;
+};
+
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
@@ -359,6 +373,8 @@ export type IResolversTypes = ResolversObject<{
   User: ResolverTypeWrapper<IUser>;
   UserSettingsInput: IUserSettingsInput;
   AuthUserPayload: ResolverTypeWrapper<IAuthUserPayload>;
+  Me: ResolverTypeWrapper<IMe>;
+  Int: ResolverTypeWrapper<Scalars["Int"]>;
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
 }>;
@@ -375,6 +391,8 @@ export type IResolversParentTypes = ResolversObject<{
   User: IUser;
   UserSettingsInput: IUserSettingsInput;
   AuthUserPayload: IAuthUserPayload;
+  Me: IMe;
+  Int: Scalars["Int"];
   Query: {};
   Mutation: {};
 }>;
@@ -443,6 +461,16 @@ export type IAuthUserPayloadResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type IMeResolvers<
+  ContextType = any,
+  ParentType extends IResolversParentTypes["Me"] = IResolversParentTypes["Me"]
+> = ResolversObject<{
+  details: Resolver<Maybe<IResolversTypes["User"]>, ParentType, ContextType>;
+  token: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
+  entryCount: Resolver<IResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type IQueryResolvers<
   ContextType = any,
   ParentType extends IResolversParentTypes["Query"] = IResolversParentTypes["Query"]
@@ -461,6 +489,7 @@ export type IQueryResolvers<
     RequireFields<IQueryPreviewArgs, "id">
   >;
   settings: Resolver<Maybe<IResolversTypes["User"]>, ParentType, ContextType>;
+  me: Resolver<Maybe<IResolversTypes["Me"]>, ParentType, ContextType>;
 }>;
 
 export type IMutationResolvers<
@@ -512,6 +541,7 @@ export type IResolvers<ContextType = any> = ResolversObject<{
   Preview: IPreviewResolvers<ContextType>;
   User: IUserResolvers<ContextType>;
   AuthUserPayload: IAuthUserPayloadResolvers<ContextType>;
+  Me: IMeResolvers<ContextType>;
   Query: IQueryResolvers<ContextType>;
   Mutation: IMutationResolvers<ContextType>;
 }>;

@@ -10,6 +10,4 @@ export * from "./useTimeout";
 export * from "./useDashboard";
 export * from "./useToggle";
 export * from "./useNewEntry";
-export * from "./useEdit";
 export * from "./useEditReducer";
-export * from "./useUpdateEntryMutation";

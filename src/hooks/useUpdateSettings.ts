@@ -1,33 +1,11 @@
 import { useCallback } from "react";
-import { ApolloCache, FetchResult } from "@apollo/client";
 import { FormikHelpers } from "formik";
-import {
-  useUpdateUserSettingsMutation,
-  UserDetailsDocument,
-  IUserDetailsQuery,
-  IUpdateUserSettingsMutation
-} from "@utils/generated";
+import { useUpdateUserSettingsMutation } from "@utils/generated";
+import { updateSettingsCache } from "@utils/cache";
 
 export interface IUserFormValues {
   username: string;
   email: string;
-}
-
-function updateSettings(
-  cache: ApolloCache<IUpdateUserSettingsMutation>,
-  result: FetchResult<IUpdateUserSettingsMutation>
-) {
-  if (result.data) {
-    cache.writeQuery<IUserDetailsQuery>({
-      query: UserDetailsDocument,
-      data: {
-        settings: {
-          username: result.data.updateUserSettings?.username!,
-          email: result.data.updateUserSettings?.email!
-        }
-      }
-    });
-  }
 }
 
 export function useUpdateSettings() {
@@ -41,7 +19,7 @@ export function useUpdateSettings() {
         try {
           await mutationFn({
             variables: { settings },
-            update: updateSettings
+            update: updateSettingsCache
           });
           actions.setSubmitting(false);
         } catch (err) {

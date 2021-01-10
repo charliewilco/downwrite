@@ -49,6 +49,12 @@ export const typeDefs = gql`
     token: String
   }
 
+  type Me {
+    details: User
+    token: String
+    entryCount: Int!
+  }
+
   # Root
 
   type Query {
@@ -68,6 +74,7 @@ export const typeDefs = gql`
     User Settings
     """
     settings: User
+    me: Me
   }
 
   type Mutation {

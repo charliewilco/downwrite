@@ -9,7 +9,7 @@ export type ResolverContext = Pick<GetServerSidePropsContext, "req" | "res">;
 
 export async function verifyUser<T>(
   context: ResolverContext,
-  cb: (user: TokenContents) => T
+  cb: (user: TokenContents & { token: string }) => T
 ) {
   const token = getUserToken(context.req);
 

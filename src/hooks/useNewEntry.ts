@@ -1,42 +1,13 @@
 import { useCallback } from "react";
-import { ApolloCache, FetchResult } from "@apollo/client";
 import { useRouter } from "next/router";
 import { ContentState, EditorState, convertToRaw } from "draft-js";
 import { draftToMarkdown } from "../editor";
-import {
-  useCreateEntryMutation,
-  AllPostsDocument,
-  IAllPostsQuery,
-  ICreateEntryMutation,
-  IEntry
-} from "@utils/generated";
+import { useCreateEntryMutation } from "@utils/generated";
+import { updateCreateEntryCache } from "@utils/cache";
 import { useNotifications, NotificationType } from "@reducers/app";
 
 export interface INewEditorValues {
   title: string;
-}
-
-function updateEntries(
-  cache: ApolloCache<ICreateEntryMutation>,
-  { data }: FetchResult<ICreateEntryMutation>
-) {
-  const result = cache.readQuery<IAllPostsQuery>({
-    query: AllPostsDocument
-  });
-
-  if (result !== null && !!data) {
-    const updatedFeed: Pick<IEntry, "title" | "dateAdded" | "id" | "public">[] = [
-      ...result.feed,
-      data.createEntry!
-    ];
-
-    cache.writeQuery<IAllPostsQuery>({
-      query: AllPostsDocument,
-      data: {
-        feed: updatedFeed
-      }
-    });
-  }
 }
 
 export function useNewEntry() {
@@ -55,7 +26,7 @@ export function useNewEntry() {
           title,
           content
         },
-        update: updateEntries
+        update: updateCreateEntryCache
       })
         .then(({ data }) => {
           if (!!data) {

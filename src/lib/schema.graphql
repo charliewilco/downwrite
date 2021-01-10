@@ -46,6 +46,12 @@ type AuthUserPayload {
   token: String
 }
 
+type Me {
+  details: User
+  token: String
+  entryCount: Int!
+}
+
 # Root
 
 type Query {
@@ -65,6 +71,7 @@ type Query {
   User Settings
   """
   settings: User
+  me: Me
 }
 
 type Mutation {

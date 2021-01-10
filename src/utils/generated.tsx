@@ -61,6 +61,13 @@ export type IAuthUserPayload = {
   token: Maybe<Scalars["String"]>;
 };
 
+export type IMe = {
+  __typename?: "Me";
+  details: Maybe<IUser>;
+  token: Maybe<Scalars["String"]>;
+  entryCount: Scalars["Int"];
+};
+
 export type IQuery = {
   __typename?: "Query";
   /** Markdown document */
@@ -71,6 +78,7 @@ export type IQuery = {
   preview: Maybe<IPreview>;
   /** User Settings */
   settings: Maybe<IUser>;
+  me: Maybe<IMe>;
 };
 
 export type IQueryEntryArgs = {
@@ -223,6 +231,12 @@ export type IUpdateUserSettingsMutation = { __typename?: "Mutation" } & {
   updateUserSettings: Maybe<
     { __typename?: "User" } & Pick<IUser, "username" | "email">
   >;
+};
+
+export type IIsMeQueryVariables = Exact<{ [key: string]: never }>;
+
+export type IIsMeQuery = { __typename?: "Query" } & {
+  me: Maybe<{ __typename?: "Me" } & Pick<IMe, "token" | "entryCount">>;
 };
 
 export const EntryInfoFragmentDoc = gql`
@@ -728,3 +742,43 @@ export type UpdateUserSettingsMutationOptions = Apollo.BaseMutationOptions<
   IUpdateUserSettingsMutation,
   IUpdateUserSettingsMutationVariables
 >;
+export const IsMeDocument = gql`
+  query IsMe {
+    me {
+      token
+      entryCount
+    }
+  }
+`;
+
+/**
+ * __useIsMeQuery__
+ *
+ * To run a query within a React component, call `useIsMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIsMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIsMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useIsMeQuery(
+  baseOptions?: Apollo.QueryHookOptions<IIsMeQuery, IIsMeQueryVariables>
+) {
+  return Apollo.useQuery<IIsMeQuery, IIsMeQueryVariables>(IsMeDocument, baseOptions);
+}
+export function useIsMeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<IIsMeQuery, IIsMeQueryVariables>
+) {
+  return Apollo.useLazyQuery<IIsMeQuery, IIsMeQueryVariables>(
+    IsMeDocument,
+    baseOptions
+  );
+}
+export type IsMeQueryHookResult = ReturnType<typeof useIsMeQuery>;
+export type IsMeLazyQueryHookResult = ReturnType<typeof useIsMeLazyQuery>;
+export type IsMeQueryResult = Apollo.QueryResult<IIsMeQuery, IIsMeQueryVariables>;

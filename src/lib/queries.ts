@@ -9,13 +9,32 @@ import {
 import { ResolverContext, verifyUser } from "@lib/context";
 import { IEntry, IQueryResolvers, IUser } from "@utils/resolver-types";
 import { Many } from "@utils/types";
+import { __IS_DEV__ } from "@utils/dev";
 
 export const Query: IQueryResolvers<ResolverContext> = {
   feed: async (_, __, context) => feed(context),
   entry: async (_, { id }, context) => entry(context, id),
   preview: async (_, { id }, context) => preview(context, id),
-  settings: async (_, __, context) => settings(context)
+  settings: async (_, __, context) => settings(context),
+  me: async (_, __, context) => me(context)
 };
+
+export async function me(context: ResolverContext) {
+  return verifyUser(context, async ({ user, name, token }) => {
+    const entryCount = await PostModel.count({ user: { $eq: user } });
+    const { email } = await UserModel.findById(user, "username email").exec();
+    return {
+      token,
+      entryCount,
+      details: {
+        email,
+        username: name,
+        id: user,
+        admin: __IS_DEV__
+      }
+    };
+  });
+}
 
 export async function feed(context: ResolverContext): Promise<IEntry[]> {
   return verifyUser(context, async ({ user }) => {

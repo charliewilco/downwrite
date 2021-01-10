@@ -80,3 +80,10 @@ mutation UpdateUserSettings($settings: UserSettingsInput!) {
     email
   }
 }
+
+query IsMe {
+  me {
+    token
+    entryCount
+  }
+}
