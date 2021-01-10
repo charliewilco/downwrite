@@ -56,28 +56,13 @@ export const useDecorators = (
 export const useEditor = (
   state: IPropCreation
 ): Omit<EditorProps, "editorState"> => {
-  const handleKeyCommand = useCallback(
-    (command, editorState) => {
-      const newState = RichUtils.handleKeyCommand(editorState, command);
-
-      if (newState) {
-        state.setEditorState(newState);
-        return "handled";
-      }
-
-      return "not-handled";
-    },
-    [state]
-  );
-
   return useMemo<Omit<EditorProps, "editorState">>(() => {
     const props = createEditorProps(state);
     return {
       ...props,
       // onTab: (e: React.KeyboardEvent<{}>) =>
       //   state.setEditorState(RichUtils.onTab(e, state.getEditorState(), 4)),
-      onChange: (editorState) => state.setEditorState(editorState),
-      handleKeyCommand
+      onChange: (editorState) => state.setEditorState(editorState)
     };
   }, [state]);
 };

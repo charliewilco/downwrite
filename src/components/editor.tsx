@@ -46,11 +46,7 @@ const saveKeyListener = (
   return getDefaultKeyBinding(e);
 };
 
-export default function DownwriteEditor({
-  onSave,
-  handleKeyCommand,
-  ...props
-}: IEditorProps) {
+export default function DownwriteEditor({ onSave, ...props }: IEditorProps) {
   let editorRef = useRef<Editor>(null);
   const [{ editorFont }] = useSettings();
 
@@ -68,11 +64,7 @@ export default function DownwriteEditor({
   }
 
   const customHandleKeyCommand = useCallback(
-    (
-      command: string,
-      state: Draft.EditorState,
-      eventTimeStamp: number
-    ): DraftHandleValue => {
+    (command: string, state: Draft.EditorState): DraftHandleValue => {
       const newState = RichUtils.handleKeyCommand(state, command);
 
       if (newState) {
@@ -85,7 +77,7 @@ export default function DownwriteEditor({
         return "handled";
       }
 
-      handleKeyCommand(command, state, eventTimeStamp);
+      // handleKeyCommand(command, state, eventTimeStamp);
 
       return "not-handled";
     },

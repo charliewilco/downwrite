@@ -1,7 +1,7 @@
 import { useRef, useCallback, MutableRefObject } from "react";
 import { EditorState, convertFromRaw } from "draft-js";
 import { useDropzone } from "react-dropzone";
-import { markdownToDraft } from "../editor";
+import { mdToDraftjs } from "draftjs-md-converter";
 import { fm } from "@utils/fm";
 import { __IS_BROWSER__ } from "@utils/dev";
 
@@ -36,7 +36,7 @@ export default function Uploader(props: IUploadProps): JSX.Element {
         if (reader.current !== null) {
           reader.current.onload = () => {
             const md: IMarkdown = fm(reader.current!.result as string);
-            const markdown = markdownToDraft(md.body);
+            const markdown = mdToDraftjs(md.body);
 
             return props.onParsed({
               title: md.attributes.title || "",

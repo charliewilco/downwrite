@@ -1,5 +1,7 @@
 import format from "date-fns/format";
-import { draftToMarkdown } from "../editor";
+import { draftjsToMd } from "draftjs-md-converter";
+
+// import { draftToMarkdown } from "../editor";
 import is from "@sindresorhus/is";
 
 export function createMarkdownServer(
@@ -12,20 +14,7 @@ export function createMarkdownServer(
   if (content === undefined) {
     return "";
   }
-  return draftToMarkdown(content, {
-    preserveNewlines: true,
-    entityItems: {
-      LINK: {
-        open: () => {
-          return "[";
-        },
-
-        close: (entity: any) => {
-          return `](${entity.data.url || entity.data.href})`;
-        }
-      }
-    }
-  });
+  return draftjsToMd(content);
 }
 
 export const createMarkdown = (

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useRouter } from "next/router";
 import { ContentState, EditorState, convertToRaw } from "draft-js";
-import { draftToMarkdown } from "../editor";
+import { draftjsToMd } from "draftjs-md-converter";
 import { useCreateEntryMutation } from "@utils/generated";
 import { updateCreateEntryCache } from "@utils/cache";
 import { useNotifications, NotificationType } from "@reducers/app";
@@ -19,7 +19,7 @@ export function useNewEntry() {
     async (title: string, editorState: EditorState) => {
       const ContentState: ContentState = editorState.getCurrentContent();
       const state = convertToRaw(ContentState);
-      const content = draftToMarkdown(state, { preserveNewlines: true });
+      const content = draftjsToMd(state);
 
       await createEntry({
         variables: {

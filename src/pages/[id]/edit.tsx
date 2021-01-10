@@ -9,6 +9,7 @@ import {
   EditorState
 } from "draft-js";
 import { NormalizedCacheObject } from "@apollo/client";
+import { mdToDraftjs, draftjsToMd } from "draftjs-md-converter";
 import { Button } from "@components/button";
 import Loading from "@components/loading";
 import { Input } from "@components/editor-input";
@@ -32,12 +33,12 @@ import { IAppState, useNotifications, NotificationType } from "@reducers/app";
 import { EditActions } from "@reducers/editor";
 import {
   useEditor,
-  markdownToDraft,
-  draftToMarkdown,
+  // markdownToDraft,
+  // draftToMarkdown,
   imageLinkDecorators,
   prismHighlightDecorator,
-  MultiDecorator,
-  fixRawContentState
+  MultiDecorator
+  // fixRawContentState
 } from "../../editor";
 
 const Autosaving = dynamic(() => import("@components/autosaving-interval"));
@@ -69,7 +70,7 @@ export const getServerSideProps: EditPageHandler = async ({ req, res, params }) 
   });
 
   const initialAppState = await getInitialStateFromCookie(req);
-  const rawEditorState = fixRawContentState(markdownToDraft(data?.entry?.content!));
+  const rawEditorState = mdToDraftjs(data?.entry?.content!);
 
   return {
     props: {
@@ -120,7 +121,7 @@ const EditUI: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> =
     ) => {
       if (editorState !== null) {
         const raw = convertToRaw(editorState.getCurrentContent());
-        const content = draftToMarkdown(raw, { preserveNewlines: true });
+        const content = draftjsToMd(raw);
         await mutationFn({
           variables: {
             id,
