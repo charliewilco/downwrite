@@ -4,7 +4,7 @@ import { schema } from "@lib/schema";
 import { stopDB } from "@lib/db";
 import { MockContext } from "@lib/context";
 import { validPasswordMessage } from "@utils/constants";
-import * as GQL from "@utils/generated";
+import * as GQL from "../../__generated__/client";
 
 const serverContext = new MockContext();
 const testServer = new ApolloServer({

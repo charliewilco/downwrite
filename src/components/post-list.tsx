@@ -3,7 +3,7 @@ import Card from "./card";
 import LayoutControl from "./layout-control";
 import PostListItem from "./post-list-item";
 import classNames from "../utils/classnames";
-import { IEntry } from "../utils/generated";
+import { IEntry } from "../__generated__/client";
 import { listReducer, ListActions } from "@reducers/list";
 import { IPartialFeedItem } from "../reducers/dashboard";
 import { PageTitle } from "./page-title";

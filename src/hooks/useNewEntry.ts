@@ -2,9 +2,9 @@ import { useCallback } from "react";
 import { useRouter } from "next/router";
 import { ContentState, EditorState, convertToRaw } from "draft-js";
 import { draftjsToMd } from "draftjs-md-converter";
-import { useCreateEntryMutation } from "@utils/generated";
 import { updateCreateEntryCache } from "@utils/cache";
 import { useNotifications, NotificationType } from "@reducers/app";
+import { useCreateEntryMutation } from "../__generated__/client";
 
 export interface INewEditorValues {
   title: string;

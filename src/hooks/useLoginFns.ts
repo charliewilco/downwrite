@@ -3,8 +3,11 @@ import { useRouter } from "next/router";
 import decode from "jwt-decode";
 import { useNotifications, NotificationType, useCurrentUser } from "@reducers/app";
 import { TokenContents } from "@lib/token";
-import { useLoginUserMutation, useCreateUserMutation } from "@utils/generated";
 import { Routes } from "@utils/routes";
+import {
+  useLoginUserMutation,
+  useCreateUserMutation
+} from "../__generated__/client";
 
 export interface IRegisterValues extends Record<string, string | boolean> {
   username: string;

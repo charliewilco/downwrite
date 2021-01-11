@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { FormikHelpers } from "formik";
-import { useUpdateUserSettingsMutation } from "@utils/generated";
 import { updateSettingsCache } from "@utils/cache";
+import { useUpdateUserSettingsMutation } from "../__generated__/client";
 
 export interface IUserFormValues {
   username: string;

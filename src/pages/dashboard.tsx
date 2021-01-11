@@ -1,16 +1,16 @@
 import { useCallback } from "react";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
+import { NormalizedCacheObject } from "@apollo/client";
 import DeleteModal from "@components/delete-modal";
 import PostList from "@components/post-list";
 import EmptyPosts from "@components/empty-posts";
 import { LoadingDashboard, ErrorDashboard } from "@components/dashboard-helpers";
 import { useRemovePost, useDashboard } from "../hooks";
-import { useAllPostsQuery, AllPostsDocument } from "@utils/generated";
 import { initializeApollo } from "@lib/apollo";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
 import { IAppState } from "@reducers/app";
-import { NormalizedCacheObject } from "@apollo/client";
+import { useAllPostsQuery, AllPostsDocument } from "../__generated__/client";
 
 interface IDashboardProps {
   initialAppState: IAppState;

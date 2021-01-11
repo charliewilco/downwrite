@@ -11,7 +11,7 @@ import {
   PreviewDocument,
   IPreviewQuery,
   IPreviewQueryVariables
-} from "@utils/generated";
+} from "../../__generated__/client";
 import { initializeApollo } from "@lib/apollo";
 import { Routes } from "@utils/routes";
 import { AvatarColors } from "@utils/default-styles";

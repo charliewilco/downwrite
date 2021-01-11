@@ -1,5 +1,5 @@
 import produce from "immer";
-import { IEntry } from "@utils/generated";
+import { IEntry } from "../__generated__/client";
 
 export enum EditActions {
   UPDATE_TITLE = "UPDATE_TITLE",

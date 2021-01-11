@@ -1,11 +1,11 @@
 import { useReducer } from "react";
-import { IEditQuery } from "../utils/generated";
 import {
   IEditorState,
   EditorActions,
   reducer,
   initializer
 } from "../reducers/editor";
+import { IEditQuery } from "../__generated__/client";
 
 export function useEditReducer(data?: IEditQuery) {
   return useReducer<

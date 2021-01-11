@@ -22,25 +22,23 @@ import { updateEntryCache } from "@utils/cache";
 
 import { initializeApollo } from "@lib/apollo";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
+import { useEditReducer } from "@hooks/useEditReducer";
+import { IAppState, useNotifications, NotificationType } from "@reducers/app";
+import { EditActions } from "@reducers/editor";
+import {
+  useEditor,
+  imageLinkDecorators,
+  prismHighlightDecorator,
+  MultiDecorator
+} from "../../editor";
+
 import {
   EditDocument,
   IEditQuery,
   IEditQueryVariables,
   useEditQuery,
   useUpdateEntryMutation
-} from "@utils/generated";
-import { useEditReducer } from "@hooks/useEditReducer";
-import { IAppState, useNotifications, NotificationType } from "@reducers/app";
-import { EditActions } from "@reducers/editor";
-import {
-  useEditor,
-  // markdownToDraft,
-  // draftToMarkdown,
-  imageLinkDecorators,
-  prismHighlightDecorator,
-  MultiDecorator
-  // fixRawContentState
-} from "../../editor";
+} from "../../__generated__/client";
 
 const Autosaving = dynamic(() => import("@components/autosaving-interval"));
 const Editor = dynamic(() => import("@components/editor"));

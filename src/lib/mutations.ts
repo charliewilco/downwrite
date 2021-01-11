@@ -20,7 +20,7 @@ import {
   IMutationUpdateEntryArgs,
   IMutationDeleteEntryArgs,
   IMutationUpdateUserSettingsArgs
-} from "@utils/resolver-types";
+} from "../__generated__/server";
 import { __IS_DEV__ } from "@utils/dev";
 import { createUserValidation } from "@lib/input";
 

@@ -11,7 +11,7 @@ import {
   IUpdateUserSettingsMutation,
   IUserDetailsQuery,
   UserDetailsDocument
-} from "@utils/generated";
+} from "../__generated__/client";
 
 export function updateEntryCache(
   cache: ApolloCache<IUpdateEntryMutation>,

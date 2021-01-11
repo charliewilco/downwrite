@@ -1,12 +1,12 @@
 schema: ./src/lib/type-defs.ts
 documents: ./src/lib/document.graphql
 generates:
-  ./src/utils/generated.tsx:
+  ./src/__generated__/client.tsx:
     plugins:
       - typescript
       - typescript-operations
       - typescript-react-apollo
-  ./src/utils/resolver-types.ts:
+  ./src/__generated__/server.ts:
     config:
       useIndexSignature: true
     plugins:

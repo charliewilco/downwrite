@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { useRemoveEntryMutation } from "@utils/generated";
 import { updateFeedCache } from "@utils/cache";
+import { useRemoveEntryMutation } from "../__generated__/client";
 
 type RemoveFn = (id: string) => Promise<void>;
 

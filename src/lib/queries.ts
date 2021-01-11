@@ -7,9 +7,9 @@ import {
   transformMDToPreview
 } from "@lib/transform";
 import { ResolverContext, verifyUser } from "@lib/context";
-import { IEntry, IQueryResolvers, IUser } from "@utils/resolver-types";
 import { Many } from "@utils/types";
 import { __IS_DEV__ } from "@utils/dev";
+import { IEntry, IQueryResolvers, IUser } from "../__generated__/server";
 
 export const Query: IQueryResolvers<ResolverContext> = {
   feed: async (_, __, context) => feed(context),
