@@ -71,7 +71,7 @@
     "typeface-inter": "^3.15.0",
     "typeface-jetbrains-mono": "^2.0.0",
     "universal-cookie": "^4.0.2",
-    "uuid": "^8.3.0",
+    "uuid": "^8.3.2",
     "yup": "^0.32.8"
   },
   "devDependencies": {
