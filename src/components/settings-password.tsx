@@ -16,7 +16,11 @@ interface IPasswordSettings {
   confirmPassword: string;
 }
 
-export default function SettingsPassword(): JSX.Element {
+interface IPasswordFormProps {
+  username: string;
+}
+
+export default function SettingsPassword(props: IPasswordFormProps): JSX.Element {
   const [isOpen, onToggleOpen] = useReducer<ReducerWithoutAction<boolean>>(
     (prev: boolean) => !prev,
     false
@@ -58,6 +62,7 @@ export default function SettingsPassword(): JSX.Element {
   return (
     <SettingsBlock title="Password">
       <form onSubmit={formik.handleSubmit}>
+        <input type="hidden" name="username" value={props.username} />
         <UIInputContainer className="mb-4">
           <UIInput
             label="Old Password"
@@ -66,6 +71,7 @@ export default function SettingsPassword(): JSX.Element {
             placeholder="*********"
             value={formik.values.oldPassword}
             onChange={formik.handleChange}
+            autoComplete="current-password"
           />
           {formik.errors.oldPassword && (
             <UIInputError>{formik.errors.oldPassword}</UIInputError>
@@ -79,6 +85,7 @@ export default function SettingsPassword(): JSX.Element {
             placeholder="*********"
             value={formik.values.newPassword}
             onChange={formik.handleChange}
+            autoComplete="new-password"
           />
           {formik.errors.newPassword && (
             <UIInputError>{formik.errors.newPassword}</UIInputError>
@@ -93,6 +100,7 @@ export default function SettingsPassword(): JSX.Element {
             placeholder="*********"
             value={formik.values.confirmPassword}
             onChange={formik.handleChange}
+            autoComplete="new-password"
           />
           {formik.errors.confirmPassword && (
             <UIInputError>{formik.errors.confirmPassword}</UIInputError>

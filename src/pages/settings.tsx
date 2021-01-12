@@ -51,8 +51,8 @@ const SettingsPage: NextPage<
       <header className="flex items-center justify-between mb-6">
         <PageTitle>Settings</PageTitle>
       </header>
-      <SettingsUser user={data?.settings!} />
-      <SettingsPassword />
+      <SettingsUser user={data?.settings} />
+      <SettingsPassword username={data?.settings.username} />
       <SettingsLocal />
     </div>
   );

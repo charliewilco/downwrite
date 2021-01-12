@@ -19,7 +19,7 @@ const REGISTER_INPUTS: IInput[] = [
     label: "Username",
     placeholder: "Try for something unique",
     type: "text",
-    autoComplete: "email"
+    autoComplete: "username"
   },
   {
     name: "email",
