@@ -4,7 +4,7 @@ import {
   EditorState,
   convertToRaw
 } from "draft-js";
-import { draftToMarkdown } from "../editor";
+import { draftjsToMd } from "draftjs-md-converter";
 import FileSaver from "file-saver";
 import Markdown from "./export-markdown-button";
 import { createMarkdown } from "../utils/markdown-template";
@@ -28,20 +28,7 @@ interface IExportCallback {
 export default function UIMarkdownExport(props: IExportProps) {
   const className = classNames("block mx-4 my-0", props.className);
   const customDraft = (content: RawDraftContentState): string =>
-    draftToMarkdown(content, {
-      preserveNewlines: true,
-      entityItems: {
-        LINK: {
-          open: () => {
-            return "[";
-          },
-
-          close: (entity: any) => {
-            return `](${entity.data.url || entity.data.href})`;
-          }
-        }
-      }
-    });
+    draftjsToMd(content);
 
   const toMarkdown = ({ title, content, date }: IExportCallback): void => {
     let localFileExtension = localStorage.getItem(LocalSettings.EXTENSION) || "";

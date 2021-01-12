@@ -1,5 +1,6 @@
 import { createTestClient, ApolloServerTestClient } from "apollo-server-testing";
 import { ApolloServer } from "apollo-server-micro";
+import base64 from "base-64";
 import { schema } from "@lib/schema";
 import { stopDB } from "@lib/db";
 import { MockContext } from "@lib/context";
@@ -34,7 +35,7 @@ describe("GraphQL API", () => {
       variables: {
         username: name,
         email: "test@charlieisamazing.com",
-        password: "password"
+        password: base64.encode("password")
       }
     });
 
@@ -46,13 +47,14 @@ describe("GraphQL API", () => {
       variables: {
         username: name,
         email: "test@charlieisamazing.com",
-        password: "P@ssw0rd"
+        password: base64.encode("P@ssw0rd")
       }
     });
     expect(failed.errors[0].message).toContain(validPasswordMessage);
     if (working.data.createUser) {
       serverContext.setCookie(working.data.createUser.token);
     }
+    console.log(working.data);
 
     expect(working.data.createUser).not.toBeNull();
     expect(working.data.createUser.token).toEqual(
