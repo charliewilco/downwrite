@@ -1,4 +1,4 @@
-schema: ./src/lib/type-defs.ts
+schema: ./src/lib/schema.graphql
 documents: ./src/lib/document.graphql
 generates:
   ./src/__generated__/client.tsx:
