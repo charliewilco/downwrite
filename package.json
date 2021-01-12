@@ -60,7 +60,7 @@
     "jwt-decode": "^3.1.2",
     "mongoose": "^5.10.16",
     "next": "^10.0.5",
-    "prismjs": "^1.15.0",
+    "prismjs": "^1.23.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-dropzone": "^11.2.4",
