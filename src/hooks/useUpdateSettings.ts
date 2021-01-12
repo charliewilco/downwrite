@@ -18,7 +18,12 @@ export function useUpdateSettings() {
       if (settings) {
         try {
           await mutationFn({
-            variables: { settings },
+            variables: {
+              settings: {
+                username: settings.username,
+                email: settings.email
+              }
+            },
             update: updateSettingsCache
           });
           actions.setSubmitting(false);
