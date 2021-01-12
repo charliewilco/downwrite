@@ -6,7 +6,9 @@ import {
   transformPostToEntry,
   transformMDToPreview
 } from "@lib/transform";
-import { ResolverContext, verifyUser } from "@lib/context";
+import { ResolverContext } from "@lib/context";
+import { verifyUser } from "@lib/resolver-auth";
+
 import { Many } from "@utils/types";
 import { __IS_DEV__ } from "@utils/dev";
 import { IEntry, IQueryResolvers, IUser } from "../__generated__/server";

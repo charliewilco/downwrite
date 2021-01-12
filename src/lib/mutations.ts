@@ -3,12 +3,7 @@ import * as bcrypt from "bcrypt";
 import base64 from "base-64";
 
 import { v4 as uuid } from "uuid";
-import {
-  ResolverContext,
-  verifyUser,
-  verifyUniqueUser,
-  verifyCredentials
-} from "@lib/context";
+import { ResolverContext } from "@lib/context";
 import { PostModel, UserModel, IUserModel } from "@lib/models";
 import { transformPostToEntry } from "@lib/transform";
 import dbConnect from "@lib/db";
@@ -28,6 +23,8 @@ import {
 } from "../__generated__/server";
 import { __IS_DEV__ } from "@utils/dev";
 import { createUserValidation } from "@lib/input";
+import { getUniqueChecks, verifyUniqueUser } from "@lib/uniques";
+import { verifyCredentials, verifyUser } from "@lib/resolver-auth";
 
 export interface IMutationCreateEntryVars {
   title: string;
@@ -181,21 +178,6 @@ export async function createUser(
   }
 }
 
-type Diffs = "email" | "username";
-
-export function isDifferent(
-  user: IUserModel,
-  email: string,
-  username: string
-): Diffs[] {
-  const differences: Diffs[] = [];
-
-  if (user.email !== email) differences.push("email");
-  if (user.username !== username) differences.push("username");
-
-  return differences;
-}
-
 export async function updateUserSettings(
   context: ResolverContext,
   {
@@ -204,17 +186,10 @@ export async function updateUserSettings(
 ): Promise<IUser> {
   return verifyUser(context, async ({ user }) => {
     const currentUser: IUserModel = await UserModel.findById({ _id: user });
-    const differences = isDifferent(currentUser, email!, username!);
 
-    for (const diff of differences) {
-      if (diff === "username") {
-        console.log(diff);
-      }
+    const uniqueChecks = getUniqueChecks(currentUser, email!, username!);
 
-      if (diff === "email") {
-        console.log(diff);
-      }
-    }
+    await Promise.all(uniqueChecks);
     const details = await UserModel.findByIdAndUpdate(
       {
         _id: user
@@ -223,6 +198,9 @@ export async function updateUserSettings(
       { new: true }
     );
     if (details.email && details.username) {
+      const token = createToken(details);
+
+      setTokenCookie(context.res, token);
       return { email: details.email, username: details.username, admin: __IS_DEV__ };
     } else {
       throw new ApolloError("Couldn't update user settings");
