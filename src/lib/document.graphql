@@ -81,6 +81,12 @@ mutation UpdateUserSettings($settings: UserSettingsInput!) {
   }
 }
 
+mutation UpdatePassword($current: String!, $newPassword: String!) {
+  updatePassword(currentPassword: $current, newPassword: $newPassword) {
+    token
+  }
+}
+
 query IsMe {
   me {
     token

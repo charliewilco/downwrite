@@ -1,4 +1,7 @@
 import { ApolloError } from "apollo-server-micro";
+import * as bcrypt from "bcrypt";
+import base64 from "base-64";
+
 import { v4 as uuid } from "uuid";
 import {
   ResolverContext,
@@ -19,7 +22,9 @@ import {
   IMutationCreateEntryArgs,
   IMutationUpdateEntryArgs,
   IMutationDeleteEntryArgs,
-  IMutationUpdateUserSettingsArgs
+  IMutationUpdateUserSettingsArgs,
+  IAuthUserPayload,
+  IMutationUpdatePasswordArgs
 } from "../__generated__/server";
 import { __IS_DEV__ } from "@utils/dev";
 import { createUserValidation } from "@lib/input";
@@ -45,7 +50,8 @@ export const Mutation: IMutationResolvers<ResolverContext> = {
     createUser(context, args.username, args.email!, args.password),
   authenticateUser: async (_, args: IMutationUserVars, context) =>
     authenticateUser(context, args.username, args.password),
-  updateUserSettings: async (_, args, context) => updateUserSettings(context, args)
+  updateUserSettings: async (_, args, context) => updateUserSettings(context, args),
+  updatePassword: async (_, args, context) => updatePassword(context, args)
 };
 
 export async function createPost(
@@ -125,11 +131,12 @@ export async function authenticateUser(
   context: ResolverContext,
   username: string,
   password: string
-) {
+): Promise<IAuthUserPayload> {
   await dbConnect();
 
+  const decoded = base64.decode(password);
   try {
-    const user = await verifyCredentials(username, password);
+    const user = await verifyCredentials(username, decoded);
     const token = createToken(user);
 
     setTokenCookie(context.res, token);
@@ -147,17 +154,18 @@ export async function createUser(
   password: string
 ) {
   await dbConnect();
+  const decoded = base64.decode(password);
 
   try {
     await verifyUniqueUser(username, email);
     await createUserValidation.validate({
       username,
       email,
-      password
+      password: decoded
     });
 
     const id = uuid();
-    const hash = await getSaltedHash(password);
+    const hash = await getSaltedHash(decoded);
     const m = Object.assign(
       {},
       { email, username, id, password: hash, admin: false }
@@ -219,5 +227,35 @@ export async function updateUserSettings(
     } else {
       throw new ApolloError("Couldn't update user settings");
     }
+  });
+}
+
+export async function updatePassword(
+  context: ResolverContext,
+  { currentPassword, newPassword }: IMutationUpdatePasswordArgs
+): Promise<IAuthUserPayload> {
+  return verifyUser(context, async (tokenContents) => {
+    const decodedNew = base64.decode(newPassword);
+    const decodedCurrent = base64.decode(currentPassword);
+    const user = await verifyCredentials(tokenContents.name, decodedCurrent);
+    const salt = await bcrypt.genSalt(10);
+
+    const newPasswordHash = await bcrypt.hash(decodedNew, salt);
+
+    const updated = await UserModel.findByIdAndUpdate(
+      {
+        _id: user._id
+      },
+      { $set: { password: newPasswordHash } },
+      { new: true, select: "username email" }
+    );
+
+    const token = createToken(updated);
+
+    setTokenCookie(context.res, token);
+
+    return {
+      token
+    };
   });
 }

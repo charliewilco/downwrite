@@ -7,6 +7,7 @@ import { PageTitle } from "@components/page-title";
 import { initializeApollo } from "@lib/apollo";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
 import { useUserDetailsQuery, UserDetailsDocument } from "../__generated__/client";
+import SettingsPassword from "@components/settings-password";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const client = initializeApollo({}, { req, res });
@@ -51,6 +52,7 @@ const SettingsPage: NextPage<
         <PageTitle>Settings</PageTitle>
       </header>
       <SettingsUser user={data?.settings!} />
+      <SettingsPassword />
       <SettingsLocal />
     </div>
   );

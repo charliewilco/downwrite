@@ -23,7 +23,7 @@ export default function SettingsBlock(props: ISettingsBlockProps): JSX.Element {
   return (
     <section className="grid grid-cols-12 gap-4 dark:bg-onyx-800 shadow flex-wrap mb-8 p-4">
       <div className="col-span-12 lg:col-span-3">
-        <h4 className="text-base mb-2 font-bold">{props.title}</h4>
+        <h4 className="text-lg mb-2 font-bold">{props.title}</h4>
         {props.description && (
           <p className="opacity-75 text-xs font-light italic">{props.description}</p>
         )}

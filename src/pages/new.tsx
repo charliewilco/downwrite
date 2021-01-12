@@ -63,7 +63,7 @@ const NewEntryPage: NextPage = () => {
       onSubmit={handleSubmit}
       data-testid="NEW_EDITOR_FORM">
       <Head>
-        <title>{values.title ?? "New"} | Downwrite</title>
+        <title>{values.title || "New"} | Downwrite</title>
       </Head>
       <Upload onParsed={onParsed}>
         <Input

@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useRouter } from "next/router";
 import decode from "jwt-decode";
+import base64 from "base-64";
 import { useNotifications, NotificationType, useCurrentUser } from "@reducers/app";
 import { TokenContents } from "@lib/token";
 import { Routes } from "@utils/routes";
@@ -55,7 +56,7 @@ export function useLoginFns(): IFormHandlers {
       await authenticateUser({
         variables: {
           username: values.user,
-          password: values.password
+          password: base64.encode(values.password)
         }
       })
         .then((value) => {
@@ -76,7 +77,8 @@ export function useLoginFns(): IFormHandlers {
       if (legalChecked) {
         await createUser({
           variables: {
-            ...values
+            ...values,
+            password: base64.encode(values.password)
           }
         })
           .then((value) => {

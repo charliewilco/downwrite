@@ -104,6 +104,7 @@ export type IMutation = {
   createUser: Maybe<IAuthUserPayload>;
   authenticateUser: Maybe<IAuthUserPayload>;
   updateUserSettings: Maybe<IUser>;
+  updatePassword: Maybe<IAuthUserPayload>;
 };
 
 export type IMutationCreateEntryArgs = {
@@ -135,6 +136,11 @@ export type IMutationAuthenticateUserArgs = {
 
 export type IMutationUpdateUserSettingsArgs = {
   settings: IUserSettingsInput;
+};
+
+export type IMutationUpdatePasswordArgs = {
+  currentPassword: Scalars["String"];
+  newPassword: Scalars["String"];
 };
 
 export type IEntryInfoFragment = { __typename?: "Entry" } & Pick<
@@ -237,6 +243,17 @@ export type IUpdateUserSettingsMutationVariables = Exact<{
 export type IUpdateUserSettingsMutation = { __typename?: "Mutation" } & {
   updateUserSettings: Maybe<
     { __typename?: "User" } & Pick<IUser, "username" | "email">
+  >;
+};
+
+export type IUpdatePasswordMutationVariables = Exact<{
+  current: Scalars["String"];
+  newPassword: Scalars["String"];
+}>;
+
+export type IUpdatePasswordMutation = { __typename?: "Mutation" } & {
+  updatePassword: Maybe<
+    { __typename?: "AuthUserPayload" } & Pick<IAuthUserPayload, "token">
   >;
 };
 
@@ -531,6 +548,12 @@ export type IMutationResolvers<
     ParentType,
     ContextType,
     RequireFields<IMutationUpdateUserSettingsArgs, "settings">
+  >;
+  updatePassword: Resolver<
+    Maybe<IResolversTypes["AuthUserPayload"]>,
+    ParentType,
+    ContextType,
+    RequireFields<IMutationUpdatePasswordArgs, "currentPassword" | "newPassword">
   >;
 }>;
 
