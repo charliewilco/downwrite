@@ -2954,7 +2954,7 @@ arg@^4.1.0:
   resolved "https://registry.npmjs.org/arg/-/arg-4.1.3.tgz#269fc7ad5b8e42cb63c896d5666017261c144089"
   integrity sha512-58S9QDqG0Xx27YwPSt9fJxivjYl432YCwfDMfZ+71RAqUrZef7LrKQZ3LHLOwCS4FLNBplP533Zx895SeOCHvA==
 
-argparse@^1.0.10, argparse@^1.0.7:
+argparse@^1.0.7:
   version "1.0.10"
   resolved "https://registry.npmjs.org/argparse/-/argparse-1.0.10.tgz#bcd6791ea5ae09725e17e5ad988134cd40b3d911"
   integrity sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==
@@ -3102,13 +3102,6 @@ auto-bind@~4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/auto-bind/-/auto-bind-4.0.0.tgz#e3589fc6c2da8f7ca43ba9f84fa52a744fc997fb"
   integrity sha512-Hdw8qdNiqdJ8LqT0iK0sVzkFbzg6fhnQqqfWhBDxcHZvU75+B+ayzTy8x+k5Ix0Y92XOhOUlx74ps+bA6BeYMQ==
-
-autolinker@^3.11.0:
-  version "3.14.2"
-  resolved "https://registry.npmjs.org/autolinker/-/autolinker-3.14.2.tgz#71856274eb768fb7149039e24d3a2be2f5c55a63"
-  integrity sha512-VO66nXUCZFxTq7fVHAaiAkZNXRQ1l3IFi6D5P7DLoyIEAn2E8g7TWbyEgLlz1uW74LfWmu1A17IPWuPQyGuNVg==
-  dependencies:
-    tslib "^1.9.3"
 
 autoprefixer@^10.0.3:
   version "10.0.3"
@@ -5262,6 +5255,11 @@ fastq@^1.6.0:
   integrity sha512-i7FVWL8HhVY+CTkwFxkN2mk3h+787ixS5S63eb78diVRc1MCssarHq3W5cj0av7YDSwmaV928RNag+U1etRQ7w==
   dependencies:
     reusify "^1.0.4"
+
+fathom-client@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/fathom-client/-/fathom-client-3.0.0.tgz#409c047cf1e2fea45b148e28d50fcd635e992893"
+  integrity sha512-d0oH2SHWCMIVLbbegB7nBIjSvbqbHrZBZxIOWSVAxlJL/roL0Ah9NNb6rTIcKMlA4gov9AjWQGEcZRzlnGc3XQ==
 
 fault@^1.0.1:
   version "1.0.4"
@@ -9673,14 +9671,6 @@ remark-parse@^9.0.0:
   integrity sha512-geKatMwSzEXKHuzBNU1z676sGcDcFoChMK38TgdHJNAYfFtsfHDQG7MoJAjs6sgYMqyLduCYWDIWZIxiPeafEw==
   dependencies:
     mdast-util-from-markdown "^0.8.0"
-
-remarkable@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.npmjs.org/remarkable/-/remarkable-2.0.1.tgz#280ae6627384dfb13d98ee3995627ca550a12f31"
-  integrity sha512-YJyMcOH5lrR+kZdmB0aJJ4+93bEojRZ1HGDn9Eagu6ibg7aVZhc3OWbbShRid+Q5eAfsEqWxpe+g5W5nYNfNiA==
-  dependencies:
-    argparse "^1.0.10"
-    autolinker "^3.11.0"
 
 remedial@^1.0.7:
   version "1.0.8"
