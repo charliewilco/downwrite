@@ -1,78 +1,59 @@
-import * as React from "react";
-import { Formik, FormikProps, ErrorMessage, Form, FormikHelpers } from "formik";
+import { useFormik } from "formik";
+import { useUpdateSettings, IUserFormValues } from "@hooks/useUpdateSettings";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
-import { updateSettings } from "../utils/api";
-import { AuthContext, AuthContextType } from "./auth";
-import { UserSettingsSchema } from "../utils/validations";
-
-interface IUserFormValues {
-  username: string;
-  email: string;
-}
+import { UserSettingsSchema as validationSchema } from "@utils/validations";
 
 interface ISettingsUserForm {
   user: IUserFormValues;
 }
 
 export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
-  const [{ token }] = React.useContext<AuthContextType>(AuthContext);
+  const onSubmit = useUpdateSettings();
 
-  const onSubmit = async (
-    values: IUserFormValues,
-    helpers: FormikHelpers<IUserFormValues>
-  ): Promise<void> => {
-    const settings = await updateSettings(values, { token });
-    if (settings) {
-      helpers.setSubmitting(false);
-    }
-  };
-
-  const initialValues = { username: props.user.username, email: props.user.email };
+  const formik = useFormik<IUserFormValues>({
+    initialValues: { ...props.user },
+    onSubmit,
+    validationSchema
+  });
 
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-      validationSchema={UserSettingsSchema}>
-      {({ values, handleChange }: FormikProps<IUserFormValues>) => (
-        <SettingsBlock title="User Settings" description="Currently disabled ☠️">
-          <Form>
-            <fieldset disabled style={{ display: "block", border: 0 }}>
-              <UIInputContainer>
-                <UIInput
-                  placeholder="user@email.com"
-                  label="Username"
-                  name="username"
-                  autoComplete="username"
-                  value={values.username}
-                  onChange={handleChange}
-                />
-                <ErrorMessage name="username" component={UIInputError} />
-              </UIInputContainer>
-              <UIInputContainer>
-                <UIInput
-                  placeholder="user@email.com"
-                  label="Email"
-                  autoComplete="email"
-                  type="email"
-                  name="email"
-                  value={values.email}
-                  onChange={handleChange}
-                />
-                <ErrorMessage name="email" component={UIInputError} />
-              </UIInputContainer>
-            </fieldset>
-
-            <SettingsFormActions>
-              <Button type="submit" disabled>
-                Save
-              </Button>
-            </SettingsFormActions>
-          </Form>
-        </SettingsBlock>
-      )}
-    </Formik>
+    <SettingsBlock title="User Settings">
+      <form onSubmit={formik.handleSubmit}>
+        <UIInputContainer className="mb-4">
+          <UIInput
+            testID="SETTINGS_USERNAME_INPUT"
+            placeholder="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
+            value={formik.values.username}
+            onChange={formik.handleChange}
+          />
+          {formik.errors.username && (
+            <UIInputError>{formik.errors.username}</UIInputError>
+          )}
+        </UIInputContainer>
+        <UIInputContainer className="mb-4">
+          <UIInput
+            testID="SETTINGS_EMAIL_INPUT"
+            placeholder="user@email.com"
+            label="Email"
+            autoComplete="email"
+            type="email"
+            name="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+          />
+          {formik.errors.email && <UIInputError>{formik.errors.email}</UIInputError>}
+        </UIInputContainer>
+        <SettingsFormActions>
+          <Button type="submit" disabled={formik.isSubmitting}>
+            Save
+          </Button>
+        </SettingsFormActions>
+      </form>
+    </SettingsBlock>
   );
 }

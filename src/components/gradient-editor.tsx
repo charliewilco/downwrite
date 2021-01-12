@@ -1,7 +1,7 @@
-import * as React from "react";
+import { useMemo } from "react";
 import Avatar from "./avatar";
 import ColorPicker from "./color-picker";
-import * as DefaultStyles from "../utils/defaultStyles";
+import { startColors, endColors, Gradient } from "@utils/default-styles";
 
 interface IColors {
   a: string;
@@ -19,27 +19,25 @@ export default function GradientEditor(props: IGradientEditorProps): JSX.Element
     props.onColorChange(value, name);
   }
 
-  const colorsToArray = ({ a, b }: IColors): string[] => {
-    return [a, b];
-  };
-
-  const colors = colorsToArray(props.colors);
+  const colors = useMemo<Gradient>(() => [props.colors.a, props.colors.b], [
+    props.colors
+  ]);
 
   return (
-    <div className="Wrapper Wrapper--sm GradientEditorContainer">
-      <Avatar className="GEAvatar" centered size={64} colors={colors} />
-      <div className="Flexxy">
+    <div className="my-64">
+      <Avatar className="mb-32" centered size={64} colors={colors} />
+      <div className="flex items-center flex-wrap justify-between">
         <ColorPicker
           title="Start Color"
           name="a"
           onPress={handleColorChange}
-          colors={DefaultStyles.startColors}
+          colors={startColors}
         />
         <ColorPicker
           title="End Color"
           name="b"
           onPress={handleColorChange}
-          colors={DefaultStyles.endColors}
+          colors={endColors}
         />
       </div>
     </div>

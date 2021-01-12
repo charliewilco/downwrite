@@ -1,32 +1,27 @@
-import PluginsEditor from "draft-js-plugins-editor";
-import * as React from "react";
-import * as Draft from "draft-js";
-import Prism from "prismjs";
-import createMarkdownPlugin from "draft-js-markdown-plugin";
-import createPrismPlugin from "draft-js-prism-plugin";
-import { LocalUISettings, ILocalUISettings } from "./local-ui-settings";
-import { __IS_TEST__ } from "../utils/dev";
+import { useRef, useCallback } from "react";
+import {
+  Editor,
+  DraftHandleValue,
+  DraftEditorCommand,
+  getDefaultKeyBinding,
+  KeyBindingUtil,
+  RichUtils,
+  EditorProps
+} from "draft-js";
+import classNames from "@utils/classnames";
+import * as DefaultStyles from "@utils/default-styles";
+import { useSettings } from "@reducers/app";
 
-import * as DefaultStyles from "../utils/defaultStyles";
+type OmittedEditorProps =
+  | "ref"
+  | "keyBindingFn"
+  | "customStyleMap"
+  | "placeholder"
+  | "spellCheck";
 
-type Handler = "handled" | "not-handled";
-
-interface IEditorProps {
-  editorCommand: string;
-  editorState: Draft.EditorState;
-  onChange: (e: Draft.EditorState) => void;
+interface IEditorProps extends Omit<EditorProps, OmittedEditorProps> {
+  className?: string;
   onSave: () => void;
-  onFocus?: () => void;
-  toolbar?: boolean;
-}
-
-function getBlockStyle(block: Draft.ContentBlock) {
-  switch (block.getType()) {
-    case "blockquote":
-      return "RichEditor-blockquote";
-    default:
-      return null;
-  }
 }
 
 // Custom overrides for "code" style.
@@ -39,77 +34,68 @@ const styleMap = {
   }
 };
 
-export default function DownwriteEditor(props: IEditorProps) {
-  let editorRef = React.useRef<PluginsEditor>(null);
-  const { monospace } = React.useContext<ILocalUISettings>(LocalUISettings);
+const SAVE_COMMAND = "save_command";
 
-  const plugins = __IS_TEST__
-    ? []
-    : [createPrismPlugin({ prism: Prism }), createMarkdownPlugin()];
+const saveKeyListener = (
+  e: React.KeyboardEvent
+): DraftEditorCommand | typeof SAVE_COMMAND | null => {
+  if (e.keyCode === 83 && KeyBindingUtil.hasCommandModifier(e)) {
+    return SAVE_COMMAND;
+  }
 
-  let className: string = "EditorWrapper RichEditor-editor";
+  return getDefaultKeyBinding(e);
+};
+
+export default function DownwriteEditor({ onSave, ...props }: IEditorProps) {
+  let editorRef = useRef<Editor>(null);
+  const [{ editorFont }] = useSettings();
 
   let contentState: Draft.ContentState = props.editorState.getCurrentContent();
-  if (!contentState.hasText()) {
-    if (
-      contentState
-        .getBlockMap()
-        .first()
-        .getType() !== "unstyled"
-    ) {
-      className += " RichEditor-hidePlaceholder";
-    }
-  }
+  let className = classNames(
+    "px-0 py-4 w-full h-full RichEditor-editor",
+    props.className,
+    !contentState.hasText() &&
+      contentState.getBlockMap().first().getType() !== "unstyled" &&
+      "RichEditor-hidePlaceholder"
+  );
 
   function onFocus(): void {
-    editorRef.current.focus();
+    editorRef.current!.focus();
   }
 
-  function onTab(e: React.KeyboardEvent<{}>): void {
-    const maxDepth = 4;
-    props.onChange(Draft.RichUtils.onTab(e, props.editorState, maxDepth));
-  }
+  const customHandleKeyCommand = useCallback(
+    (command: string, state: Draft.EditorState): DraftHandleValue => {
+      const newState = RichUtils.handleKeyCommand(state, command);
 
-  function saveKeyListener(e: React.KeyboardEvent): string {
-    if (e.keyCode === 83 && Draft.KeyBindingUtil.hasCommandModifier(e)) {
-      return props.editorCommand;
-    }
+      if (newState) {
+        props.onChange(newState);
+        return "handled";
+      }
 
-    return Draft.getDefaultKeyBinding(e);
-  }
+      if (command === SAVE_COMMAND) {
+        onSave();
+        return "handled";
+      }
 
-  function handleKeyCommand(command: string, state: Draft.EditorState): Handler {
-    const newState = Draft.RichUtils.handleKeyCommand(state, command);
+      // handleKeyCommand(command, state, eventTimeStamp);
 
-    if (newState) {
-      props.onChange(newState);
-      return "handled";
-    }
+      return "not-handled";
+    },
 
-    if (command === props.editorCommand) {
-      props.onSave();
-      return "handled";
-    }
-
-    return "not-handled";
-  }
+    [onSave]
+  );
 
   return (
-    <div className="EditorShell" style={{ fontFamily: monospace }}>
+    <div className="relative pt-6 pb-64 mb-64" style={{ fontFamily: editorFont }}>
       <div className={className} onClick={onFocus}>
-        <PluginsEditor
-          onFocus={props.onFocus}
-          handleKeyCommand={handleKeyCommand}
-          keyBindingFn={saveKeyListener}
-          blockStyleFn={getBlockStyle}
-          customStyleMap={styleMap}
-          editorState={props.editorState}
-          onChange={props.onChange}
-          onTab={onTab}
-          placeholder="History will be kind to me for I intend to write it. — Winston Churchill"
+        <Editor
           ref={editorRef}
+          handleKeyCommand={customHandleKeyCommand}
+          keyBindingFn={saveKeyListener}
+          customStyleMap={styleMap}
+          placeholder="History will be kind to me for I intend to write it. — Winston Churchill"
           spellCheck
-          plugins={plugins}
+          {...props}
         />
       </div>
     </div>

@@ -1,19 +1,38 @@
-import * as React from "react";
 import { AppProps } from "next/app";
-import isEmpty from "lodash/isEmpty";
-import { UIShell } from "../components/ui-shell";
-import { AuthProvider } from "../components/auth";
-import "../components/styles/base.css";
+import Router from "next/router";
+import { ApolloProvider } from "@apollo/client";
+import * as Analytics from "fathom-client";
+import { UIShell } from "@components/ui-shell";
+import { useApollo } from "@lib/apollo";
+import { AppProvider } from "@reducers/app";
+import "../styles.css";
+import { useEffect } from "react";
 
-const App = ({ Component, pageProps }: AppProps) => {
-  const authed = !isEmpty(pageProps.token);
+Router.events.on("routeChangeComplete", () => {
+  Analytics.trackPageview();
+});
+
+export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
+  const client = useApollo(pageProps.initialApolloState);
+
+  useEffect(() => {
+    Analytics.load("FENETBXC", {
+      includedDomains: [
+        "downwrite.us",
+        "alpha.downwrite.us",
+        "beta.downwrite.us",
+        "next.downwrite.us"
+      ]
+    });
+  }, []);
+
   return (
-    <AuthProvider token={pageProps.token} authed={authed}>
-      <UIShell>
-        <Component {...pageProps} />
-      </UIShell>
-    </AuthProvider>
+    <ApolloProvider client={client}>
+      <AppProvider initial={pageProps.initialAppState}>
+        <UIShell>
+          <Component {...pageProps} />
+        </UIShell>
+      </AppProvider>
+    </ApolloProvider>
   );
-};
-
-export default App;
+}

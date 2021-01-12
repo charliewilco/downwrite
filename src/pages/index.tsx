@@ -1,94 +1,58 @@
-import * as React from "react";
-import * as Dwnxt from "downwrite";
-import { GetServerSideProps } from "next";
+import { NextPage } from "next";
+import Link from "next/link";
 import Head from "next/head";
-import Cookies from "universal-cookie";
-import * as jwt from "jsonwebtoken";
+import { Routes } from "@utils/routes";
 
-import { getPosts } from "@legacy/posts";
-import { dbConnect } from "@legacy/util/db";
+const IndexPage: NextPage = () => {
+  return (
+    <article className="mx-auto max-w-2xl px-4 my-32 text-left">
+      <Head>
+        <title>Downwrite</title>
+      </Head>
+      <header>
+        <h1 className="tracking-tight font-black text-3xl md:text-4xl font-serif mb-4">
+          <span className="block mb-2">Editing &amp; Sharing Shouldn't Be Hard</span>
+          <span className="block text-pixieblue-500">Writing Should Be</span>
+        </h1>
+        <p className="text-xl font-bold italic opacity-50 font-serif">
+          A place to write
+        </p>
+      </header>
+      <section className="mt-3 text-base font-mono text-gray-500 sm:text-md md:mt-5 mb-16">
+        <p className="mb-4">
+          Between every word processor ever and every other way to write, we need a
+          minimal solution that uses a central set of syntax: Markdown.
+        </p>
+        <h2 className="font-bold font-sans text-xl mb-4">Focus on Markdown</h2>
 
-import DeleteModal from "../components/delete-modal";
-import PostList from "../components/post-list";
-import Loading from "../components/loading";
-import EmptyPosts from "../components/empty-posts";
-import InvalidToken from "../components/invalid-token";
-import useManagedDashboard from "../hooks/manage-dashboard";
-import * as InitialProps from "../utils/initial-props";
+        <p className="mb-4">
+          Writing should be easy. But as each tool, each static site builder comes
+          and falls out of popularity or gets shut down,
+          <strong>**markdown**</strong> remains the central and portbale format.
+        </p>
 
-export const getServerSideProps: GetServerSideProps<InitialProps.IDashboardProps> = async context => {
-  const cookie = new Cookies(context.req.headers.cookie);
-  const { DW_TOKEN: token } = cookie.getAll();
-
-  if (token) {
-    await dbConnect();
-    const x = jwt.decode(token) as { user: string };
-    const posts = await getPosts(x.user);
-    return {
-      props: {
-        entries:
-          posts.length > 0
-            ? [
-                ...posts.map((p: any) => {
-                  p._id = p._id.toString();
-                  p.dateAdded = p.dateAdded
-                    ? p.dateAdded.toString()
-                    : new Date().toString();
-                  p.dateModified = p.dateModified
-                    ? p.dateModified.toString()
-                    : p.dateAdded.toString();
-                  p.user = p.user.toString();
-                  return p;
-                })
-              ]
-            : [],
-        token
-      }
-    };
-  }
-
-  return { props: { entries: [], token: null } };
+        <p className="mb-4">
+          The goal of building Downwrite was to create a place to write and share
+          content with that universal format; to be able to import and export in
+          markdown, to write in markdown and share your work.
+        </p>
+        <p className="mb-4">
+          Sign up for early access to simply your writing workflow.
+        </p>
+      </section>
+      <aside className="font-sans">
+        <div className="text-center">
+          <Link href={Routes.LOGIN} passHref>
+            <a
+              data-testid="HOME_LOGIN_FAKE_BUTTON"
+              className="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110 inline-block shadow py-3 border border-transparent text-lg font-bold rounded-md text-pixieblue-600 bg-white hover:bg-gray-50 md:py-4 md:px-12">
+              Login or Sign up
+            </a>
+          </Link>
+        </div>
+      </aside>
+    </article>
+  );
 };
 
-// TODO: refactor to have selected post, deletion to be handled by a lower level component
-// should be opened at this level and be handed a token and post to delete
-function DashboardUI(props: InitialProps.IDashboardProps) {
-  const [
-    { entries, selectedPost, modalOpen, loaded, error },
-    ManagedDashboard
-  ] = useManagedDashboard(props.entries);
-
-  return (
-    <>
-      {modalOpen && (
-        <DeleteModal
-          title={selectedPost.title}
-          onDelete={ManagedDashboard.onConfirmDelete}
-          onCancelDelete={ManagedDashboard.onCancel}
-          closeModal={ManagedDashboard.onCloseModal}
-        />
-      )}
-      <Head>
-        <title>{Array.isArray(entries) && entries.length} Entries | Downwrite</title>
-      </Head>
-      <section className="PostContainer">
-        {loaded ? (
-          Array.isArray(entries) && entries.length > 0 ? (
-            <PostList
-              onSelect={ManagedDashboard.onSelect}
-              posts={entries as Dwnxt.IPost[]}
-            />
-          ) : !!error ? (
-            <InvalidToken error={error} />
-          ) : (
-            <EmptyPosts />
-          )
-        ) : (
-          <Loading size={100} />
-        )}
-      </section>
-    </>
-  );
-}
-
-export default DashboardUI;
+export default IndexPage;

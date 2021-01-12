@@ -1,53 +1,51 @@
-import * as React from "react";
-import { Formik, FormikProps, ErrorMessage, Form, FormikHelpers } from "formik";
+import { useCallback, useReducer, ReducerWithoutAction } from "react";
+import { useFormik, FormikHelpers } from "formik";
+import base64 from "base-64";
+import { MixedCheckbox } from "@reach/checkbox";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
-import { ToggleBox } from "../components/toggle-box";
 import { Button } from "./button";
-import { AuthContext, AuthContextType } from "./auth";
-import { UpdatePasswordSchema } from "../utils/validations";
-import { updatePassword } from "../utils/api";
+import { UpdatePasswordSchema } from "@utils/validations";
+import { NotificationType, useNotifications } from "@reducers/app";
 
-interface IPasswordSettings extends Record<string, string> {
+import { useUpdatePasswordMutation } from "../__generated__/client";
+
+interface IPasswordSettings {
   oldPassword: string;
   newPassword: string;
   confirmPassword: string;
 }
 
-interface IInputs {
-  name: string;
-  label: string;
+interface IPasswordFormProps {
+  username: string;
 }
 
-const PASSWORD_INPUTS: IInputs[] = [
-  {
-    label: "Current Password",
-    name: "oldPassword"
-  },
-  {
-    label: "New Password",
-    name: "newPassword"
-  },
-  {
-    label: "Confirm Your New Password",
-    name: "confirmPassword"
-  }
-];
-
-export default function SettingsPassword(): JSX.Element {
-  const [{ token }] = React.useContext<AuthContextType>(AuthContext);
-  const [isOpen, setOpen] = React.useState(false);
-
-  const onSubmit = (
-    values: IPasswordSettings,
-    helpers: FormikHelpers<IPasswordSettings>
-  ): void => {
-    const response = updatePassword(values, { token });
-
-    if (response) {
-      helpers.setSubmitting(false);
-    }
-  };
+export default function SettingsPassword(props: IPasswordFormProps): JSX.Element {
+  const [isOpen, onToggleOpen] = useReducer<ReducerWithoutAction<boolean>>(
+    (prev: boolean) => !prev,
+    false
+  );
+  const [mutationFn] = useUpdatePasswordMutation();
+  const [, { addNotification }] = useNotifications();
+  const onSubmit = useCallback(
+    async (
+      _: IPasswordSettings,
+      actions: FormikHelpers<IPasswordSettings>
+    ): Promise<void> => {
+      try {
+        await actions.validateForm();
+        await mutationFn({
+          variables: {
+            current: base64.encode(_.oldPassword),
+            newPassword: base64.encode(_.newPassword)
+          }
+        });
+      } catch (err) {
+        addNotification(err.message, NotificationType.ERROR, true);
+      }
+    },
+    [addNotification, mutationFn]
+  );
 
   const initialValues: IPasswordSettings = {
     oldPassword: "",
@@ -55,40 +53,78 @@ export default function SettingsPassword(): JSX.Element {
     confirmPassword: ""
   };
 
+  const formik = useFormik<IPasswordSettings>({
+    initialValues,
+    onSubmit,
+    validationSchema: UpdatePasswordSchema
+  });
+
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={UpdatePasswordSchema}
-      onSubmit={onSubmit}>
-      {({ values, handleChange, isSubmitting }: FormikProps<IPasswordSettings>) => (
-        <SettingsBlock title="Password">
-          <Form>
-            {PASSWORD_INPUTS.map(({ name, label }: IInputs, idx) => (
-              <UIInputContainer key={idx}>
-                <UIInput
-                  label={label}
-                  name={name}
-                  type={!isOpen ? "password" : "text"}
-                  placeholder="*********"
-                  value={values[name]}
-                  onChange={handleChange}
-                />
-                <ErrorMessage name={name} component={UIInputError} />
-              </UIInputContainer>
-            ))}
-            <SettingsFormActions split>
-              <ToggleBox
-                label={value => (!value ? "Values hidden" : "Values shown")}
-                onChange={() => setOpen(!isOpen)}
-                value={isOpen}
+    <SettingsBlock title="Password">
+      <form onSubmit={formik.handleSubmit}>
+        <input type="hidden" name="username" value={props.username} />
+        <UIInputContainer className="mb-4">
+          <UIInput
+            label="Old Password"
+            name="oldPassword"
+            type={!isOpen ? "password" : "text"}
+            placeholder="*********"
+            value={formik.values.oldPassword}
+            onChange={formik.handleChange}
+            autoComplete="current-password"
+          />
+          {formik.errors.oldPassword && (
+            <UIInputError>{formik.errors.oldPassword}</UIInputError>
+          )}
+        </UIInputContainer>
+        <UIInputContainer className="mb-4">
+          <UIInput
+            label="New Password"
+            name="newPassword"
+            type={!isOpen ? "password" : "text"}
+            placeholder="*********"
+            value={formik.values.newPassword}
+            onChange={formik.handleChange}
+            autoComplete="new-password"
+          />
+          {formik.errors.newPassword && (
+            <UIInputError>{formik.errors.newPassword}</UIInputError>
+          )}
+        </UIInputContainer>
+
+        <UIInputContainer className="mb-4">
+          <UIInput
+            label="Confirm Your New Password"
+            name="confirmPassword"
+            type={!isOpen ? "password" : "text"}
+            placeholder="*********"
+            value={formik.values.confirmPassword}
+            onChange={formik.handleChange}
+            autoComplete="new-password"
+          />
+          {formik.errors.confirmPassword && (
+            <UIInputError>{formik.errors.confirmPassword}</UIInputError>
+          )}
+        </UIInputContainer>
+
+        <SettingsFormActions split>
+          <div className="mr-4">
+            <label className="text-xs flex items-center">
+              <MixedCheckbox
+                name="Password Hidden"
+                checked={isOpen}
+                onChange={onToggleOpen}
               />
-              <Button type="submit" disabled={isSubmitting}>
-                Save
-              </Button>
-            </SettingsFormActions>
-          </Form>
-        </SettingsBlock>
-      )}
-    </Formik>
+              <span className="flex-1 ml-2 align-middle inline-block leading-none font-bold">
+                {!isOpen ? "Values hidden" : "Values shown"}
+              </span>
+            </label>
+          </div>
+          <Button type="submit" disabled={formik.isSubmitting}>
+            Save
+          </Button>
+        </SettingsFormActions>
+      </form>
+    </SettingsBlock>
   );
 }

@@ -1,6 +1,7 @@
 # ![Downwrite](.github/images/header.png)
 
 ![Node CI](https://github.com/charliewilco/downwrite/workflows/Node%20CI/badge.svg)
+![E2E Testing](https://github.com/charliewilco/downwrite/workflows/E2E%20Testing/badge.svg)
 
 ## About 🤔🦄🎉
 

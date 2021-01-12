@@ -1,5 +1,5 @@
-import * as React from "react";
-import { ILocalDraft } from "../hooks/local-draft";
+import { useMemo } from "react";
+import { ILocalDraft } from "@reducers/local";
 
 interface IDraftListProps {
   drafts: ILocalDraft[];
@@ -8,9 +8,7 @@ interface IDraftListProps {
 }
 
 export default function DraftList(props: IDraftListProps): JSX.Element {
-  const hasLength = React.useMemo<boolean>(() => props.drafts.length > 0, [
-    props.drafts
-  ]);
+  const hasLength = useMemo<boolean>(() => props.drafts.length > 0, [props.drafts]);
 
   return (
     <details>
@@ -27,7 +25,7 @@ export default function DraftList(props: IDraftListProps): JSX.Element {
                 <button
                   type="button"
                   onClick={() => props.onEdit(draft)}
-                  style={{ marginRight: 16 }}>
+                  className="mr-4">
                   Edit
                 </button>
                 <button type="button" onClick={() => props.onRemove(draft)}>

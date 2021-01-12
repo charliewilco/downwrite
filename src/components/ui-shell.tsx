@@ -1,40 +1,35 @@
-import * as React from "react";
 import Head from "next/head";
-import Header from "./header";
-import Footer from "./footer";
-import NightModeProvider from "./night-mode";
-import { LocalUISettingsProvider } from "./local-ui-settings";
-import { NotificationProvider } from "../reducers/notifications";
-import { MessageList } from "./ui-notification";
+import dynamic from "next/dynamic";
+import { FiAlertTriangle } from "react-icons/fi";
+import { UIHeader } from "./header";
+import { UIFooter } from "./footer";
+import { Banner } from "./banner";
 
-interface IUIShell {
-  children: React.ReactNode;
-}
+interface IShellProps {}
 
-export function UIShell(props: IUIShell) {
+const MessageList = dynamic(() => import("@components/notification-list"));
+
+const icon = <FiAlertTriangle className="w-4 h-4" />;
+
+export const UIShell: React.FC<IShellProps> = (props) => {
   return (
-    <LocalUISettingsProvider>
-      <Head>
-        <meta
-          name="viewport"
-          content="initial-scale=1.0, width=device-width"
-          key="viewport"
-        />
-      </Head>
-      <div className="UIContainer">
-        <NotificationProvider>
-          <div className="clearfix">
-            <div style={{ minHeight: "100%" }}>
-              <NightModeProvider>
-                <Header />
-              </NightModeProvider>
-              {props.children}
-              <Footer />
-            </div>
-          </div>
-          <MessageList />
-        </NotificationProvider>
+    <>
+      <div className="clearfix min-h-full">
+        <Head>
+          <meta
+            name="viewport"
+            content="initial-scale=1.0, width=device-width"
+            key="viewport"
+          />
+        </Head>
+        <UIHeader />
+        <Banner icon={icon}>
+          This app is currently in a major major alpha. Swim at your own risk.
+        </Banner>
+        <main className="min-h-full">{props.children}</main>
+        <UIFooter />
       </div>
-    </LocalUISettingsProvider>
+      <MessageList />
+    </>
   );
-}
+};

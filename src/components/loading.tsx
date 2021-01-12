@@ -1,47 +1,35 @@
-import * as React from "react";
+import { motion, AnimatePresence, Transition } from "framer-motion";
 
-interface ILoadingProps {
-  size: number;
+function getTransition(duration: number, delay: number): Transition {
+  return { type: "tween", duration, delay, repeat: Infinity };
 }
+export default function Loading(): JSX.Element {
+  const animation = {
+    scale: [0.1, 1, 0],
+    opacity: [1, 0.7, 0]
+  };
 
-interface ISpinnerProps {
-  size: number;
-  color?: string;
-  delay?: string;
-}
-
-export function Spinner(props: ISpinnerProps): JSX.Element {
   return (
-    <div role="image">
-      <div
-        className="InnerRing"
-        style={
-          { "--size": props.size, animationDelay: "-0.6s" } as React.CSSProperties
-        }
-      />
-      <div
-        className="InnerRing"
-        style={
-          { "--size": props.size, animationDelay: "-0.4s" } as React.CSSProperties
-        }
-      />
-      <div
-        className="InnerRing"
-        style={
-          { "--size": props.size, animationDelay: "-0.2s" } as React.CSSProperties
-        }
-      />
-    </div>
-  );
-}
-
-export default function Loading(props: ILoadingProps): JSX.Element {
-  return (
-    <div
-      className="Loading"
-      style={{ "--size": props.size || 75 } as React.CSSProperties}
-      data-testid="LOADING_SPINNER">
-      <Spinner size={props.size || 75} />
-    </div>
+    <AnimatePresence>
+      <motion.div
+        role="img"
+        className="relative flex flex-col justify-center w-20 h-20 mx-auto my-auto">
+        <motion.div
+          animate={animation}
+          transition={getTransition(1.5, 1)}
+          className="absolute left-0 right-0 w-8 h-8 m-auto border-2 rounded-full border-current"
+        />
+        <motion.div
+          animate={animation}
+          transition={getTransition(1.5, 0.75)}
+          className="absolute left-0 right-0 w-12 h-12 m-auto border-2 rounded-full border-current"
+        />
+        <motion.div
+          animate={animation}
+          transition={getTransition(1.5, 0.5)}
+          className="absolute left-0 right-0 w-16 h-16 m-auto border-2 rounded-full border-current"
+        />
+      </motion.div>
+    </AnimatePresence>
   );
 }

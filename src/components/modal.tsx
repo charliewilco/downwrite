@@ -1,23 +1,23 @@
-import * as React from "react";
-import * as Reach from "@reach/dialog";
-import { CloseIcon } from "./icons";
+import { DialogContent, DialogOverlay } from "@reach/dialog";
+import { FiX } from "react-icons/fi";
 
-interface IModalProps {
+interface IModalProps extends React.PropsWithChildren<{}> {
   closeUIModal: () => void;
-  children: React.ReactNode;
 }
 
 export default function UIModal(props: IModalProps) {
   return (
-    <Reach.DialogOverlay className="Overlay">
-      <Reach.DialogContent className="ModalContainer Wrapper Wrapper--sm">
-        <button className="ModalCloseButton" onClick={props.closeUIModal}>
-          <CloseIcon className="Modal__close" />
+    <DialogOverlay className="overflow-auto fixed z-50 top-0 bottom-0 flex justify-center flex-col items-center w-full p-2 ">
+      <DialogContent className="w-full m-auto bg-white h-auto flex relative">
+        <button
+          className="absolute m-0 appearance-none p-2 right-0 top-0"
+          onClick={props.closeUIModal}>
+          <FiX className="" />
         </button>
-        <div className="ModalBody">
-          <div className="ModalContainerInner">{props.children}</div>
+        <div className="flex flex-col justify-center flex-1">
+          <div className="m-0">{props.children}</div>
         </div>
-      </Reach.DialogContent>
-    </Reach.DialogOverlay>
+      </DialogContent>
+    </DialogOverlay>
   );
 }

@@ -1,30 +1,32 @@
-import * as React from "react";
 import Link from "next/link";
 import Checkbox from "./checkbox";
+import { Routes } from "../utils/routes";
 
 interface ILegalProps {
   name: string;
   checked: boolean;
-  onChange: (x: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange(x: React.ChangeEvent<HTMLInputElement>): void;
 }
 
 const LegalLink = () => (
-  <Link href="/legal">
+  <Link href={Routes.LOGIN} passHref>
     <a>legal stuff</a>
   </Link>
 );
 
 export default function LegalBoilerplate(props: ILegalProps) {
   return (
-    <label className="LegalConfirm" htmlFor={props.name}>
+    <label
+      className="flex items-center font-bold p-2 dark:bg-onyx-900 my-4 dark:text-white light:shadow"
+      htmlFor={props.name}>
       <Checkbox
-        className="LegalCheck"
+        data-testid="LEGAL_CHECK"
         name={props.name}
         id={props.name}
         checked={props.checked}
         onChange={props.onChange}
       />
-      <small className="LegalDisclaimer">
+      <small className="ml-4 block leading-tight flex-1">
         I'm agreeing to abide in all the <LegalLink />.
       </small>
     </label>

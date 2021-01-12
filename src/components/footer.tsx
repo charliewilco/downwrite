@@ -1,36 +1,32 @@
-import * as React from "react";
 import Link from "next/link";
-import { AltAnchorLink } from "./alt-anchor-link";
+import { Routes } from "@utils/routes";
 
-interface IPage {
-  name: string;
-  href: string;
-}
+const GITHUB = "https://github.com/charliewilco/downwrite";
+const TWITTER = "https://twitter.com/charlespeters";
 
-const PAGES: IPage[] = [
-  { name: "About", href: "/about" },
-  { name: "Legal", href: "/legal" },
-  { name: "Source Code", href: "https://github.com/charliewilco/downwrite" },
-  { name: "@charlespeters", href: "https://twitter.com/charlespeters" }
-];
+const PAGES = [
+  { name: "About", href: Routes.ABOUT },
+  { name: "Legal", href: Routes.LEGAL },
+  { name: "GitHub", href: GITHUB },
+  { name: "@charlespeters", href: TWITTER }
+] as const;
 
-export default function UIFooter() {
+export function UIFooter() {
+  const date = new Date(Date.now());
   return (
-    <footer className="AppFooter Wrapper Wrapper--md">
-      <nav className="AppFooterNav">
-        <ul className="u-center">
-          <li>
-            <span>&copy; 2019 Charles Peters</span>
+    <footer className="max-w-2xl py-8 px-4 mx-auto">
+      <nav>
+        <ul className="text-center p-0 m-0 text-sm">
+          <li className="inline-block mr-4">
+            <span>&copy; {date.getFullYear()} Charlie Peters</span>
           </li>
-          {PAGES.map((page, i) => (
-            <li key={i}>
-              {page.href.includes("http") ? (
-                <AltAnchorLink href={page.href}>{page.name}</AltAnchorLink>
-              ) : (
-                <Link href={page.href} passHref>
-                  <AltAnchorLink>{page.name}</AltAnchorLink>
-                </Link>
-              )}
+          {PAGES.map(({ href, name }, i) => (
+            <li key={i} className="inline-block mr-4">
+              <Link href={href} passHref>
+                <a className="dark:text-white leading-none cursor-pointer opacity-50 text-sm">
+                  {name}
+                </a>
+              </Link>
             </li>
           ))}
         </ul>

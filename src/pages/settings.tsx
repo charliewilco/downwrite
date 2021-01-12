@@ -1,49 +1,61 @@
-import * as React from "react";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextPage, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
-import * as jwt from "jsonwebtoken";
-import Cookies from "universal-cookie";
-import { dbConnect } from "@legacy/util/db";
-import { getUserDetails } from "@legacy/users";
-import SettingsUser from "../components/settings-user-form";
-import SettingsPassword from "../components/settings-password";
-import SettingsLocal from "../components/settings-markdown";
-import { IUserSettingsProps } from "../utils/initial-props";
+import SettingsUser from "@components/settings-user-form";
+import SettingsLocal from "@components/settings-markdown";
+import Loading from "@components/loading";
+import { PageTitle } from "@components/page-title";
+import { initializeApollo } from "@lib/apollo";
+import { getInitialStateFromCookie } from "@lib/cookie-managment";
+import { useUserDetailsQuery, UserDetailsDocument } from "../__generated__/client";
+import SettingsPassword from "@components/settings-password";
 
-export const getServerSideProps: GetServerSideProps<IUserSettingsProps & {
-  token: string;
-}> = async context => {
-  await dbConnect();
-  const { DW_TOKEN: token } = new Cookies(context.req.headers.cookie).getAll();
-  const x = jwt.decode(token) as { user: string };
-  const { username, email } = await getUserDetails(x.user);
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const client = initializeApollo({}, { req, res });
+
+  await client.query({
+    query: UserDetailsDocument,
+    context: { req, res }
+  });
+
+  const initialAppState = await getInitialStateFromCookie(req);
 
   return {
     props: {
-      token,
-      user: {
-        username,
-        email
-      }
+      initialAppState,
+      initialApolloState: client.cache.extract()
     }
   };
 };
 
-function Settings(props: IUserSettingsProps) {
+const SettingsPage: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = () => {
+  const { error, loading, data } = useUserDetailsQuery();
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return (
+      <div>
+        <pre>{JSON.stringify(error, null, 2)}</pre>
+      </div>
+    );
+  }
+
   return (
-    <div className="Wrapper Wrapper--md" style={{ padding: 8 }}>
+    <div className="max-w-4xl p-2 mx-auto mt-12" data-testid="SETTINGS_CONTAINER">
       <Head>
         <title>User Settings</title>
       </Head>
-
-      <h1 className="ContainerTitle" style={{ marginBottom: 16 }}>
-        Settings
-      </h1>
-      <SettingsUser user={props.user} />
-      <SettingsPassword />
+      <header className="flex items-center justify-between mb-6">
+        <PageTitle>Settings</PageTitle>
+      </header>
+      <SettingsUser user={data?.settings} />
+      <SettingsPassword username={data?.settings.username} />
       <SettingsLocal />
     </div>
   );
-}
+};
 
-export default Settings;
+export default SettingsPage;

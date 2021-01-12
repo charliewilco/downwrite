@@ -93,7 +93,7 @@ export function ListItem({
         isDisabled ? "disabled" : isActive ? "active" : ""
       }`}
       onClick={isDisabled ? null : onSelect}
-      onKeyPress={event => {
+      onKeyPress={(event) => {
         if (event.key === "Enter") {
           return isDisabled ? null : onSelect();
         }

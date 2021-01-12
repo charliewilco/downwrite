@@ -1,64 +1,99 @@
-import * as React from "react";
-import Router from "next/router";
+import { forwardRef } from "react";
+import Link from "next/link";
 import { Menu, MenuButton, MenuLink, MenuItem, MenuList } from "@reach/menu-button";
-import { NavIcon } from "./icons";
+import {
+  FiLogOut,
+  FiBook,
+  FiEdit3,
+  FiSettings,
+  FiSun,
+  FiMoon,
+  FiMoreHorizontal
+} from "react-icons/fi";
+import { Routes } from "@utils/routes";
 import User from "./user";
-import { AuthContext, AuthContextType } from "./auth";
-import { NightModeContext, INightModeContext } from "./night-mode";
+import { useSettings, useCurrentUser } from "@reducers/app";
 
-interface IMenuEmojiProps {
-  label: string;
-  children: React.ReactNode;
-}
-
-function MenuEmoji(props: IMenuEmojiProps) {
+const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) => {
   return (
-    <span role="img" aria-label={props.label}>
-      {props.children}{" "}
-    </span>
+    <Link href={to}>
+      <a ref={ref} {...props} />
+    </Link>
+  );
+});
+
+export function DropdownDarkMode() {
+  const [settings, { toggleDarkMode }] = useSettings();
+  return (
+    <MenuItem onSelect={() => toggleDarkMode()} className="flex items-center w-full">
+      {settings.isDarkMode ? (
+        <>
+          <span role="img" aria-label="Sun smiling">
+            <FiSun size={16} className="mr-2" />
+          </span>
+          Switch to Light Mode
+        </>
+      ) : (
+        <>
+          <span role="img" aria-label="Moon">
+            <FiMoon size={16} className="mr-2" />
+          </span>
+          Switch to Dark Mode
+        </>
+      )}
+    </MenuItem>
   );
 }
 
 export default function DropdownUI() {
-  const [auth, { signOut }] = React.useContext<AuthContextType>(AuthContext);
-  const darkMode = React.useContext<INightModeContext>(NightModeContext);
+  const [currentUser] = useCurrentUser();
 
   return (
     <Menu>
-      <MenuButton className="DropdownMenuButton">
-        <NavIcon className="icon" />
+      <MenuButton className="appearance-none border-0">
+        <FiMoreHorizontal size={16} />
       </MenuButton>
-      <MenuList className="Sheet DropdownMenuList">
-        <User border colors={["#FEB692", "#EA5455"]} name={auth.name} />
-        <MenuLink onClick={() => Router.push("/")} as="a">
-          <MenuEmoji label="Stack of books">📚</MenuEmoji>
+      <MenuList className="shadow-md dark:bg-onyx-800 animate-from-left">
+        {currentUser.username && (
+          <User border colors={["#FEB692", "#EA5455"]} name={currentUser.username} />
+        )}
+        <MenuLink
+          to={Routes.DASHBOARD}
+          as={NextMenuLink}
+          className="flex items-center w-full">
+          <span role="img" aria-label="Stack of books">
+            <FiBook size={16} className="mr-2" />
+          </span>
           All Entries
         </MenuLink>
-        <MenuLink onClick={() => Router.push("/new")} as="a">
-          <MenuEmoji label="Writing with a Pen">✍️</MenuEmoji>
+        <MenuLink
+          to={Routes.NEW}
+          as={NextMenuLink}
+          className="flex items-center w-full">
+          <span role="img" aria-label="Writing with a Pen">
+            <FiEdit3 size={16} className="mr-2" />
+          </span>
           Create New Entry
         </MenuLink>
-        <MenuLink onClick={() => Router.push("/settings")} as="a">
-          <MenuEmoji label="Gear">⚙️</MenuEmoji>
+        <MenuLink
+          to={Routes.SETTINGS}
+          as={NextMenuLink}
+          className="flex items-center w-full">
+          <span role="img" aria-label="Gear">
+            <FiSettings size={16} className="mr-2" />
+          </span>
           Settings
         </MenuLink>
-        <MenuItem onSelect={darkMode.action.onChange}>
-          {darkMode.night ? (
-            <>
-              <MenuEmoji label="Sun smiling">🌞</MenuEmoji>
-              Switch to Light Mode
-            </>
-          ) : (
-            <>
-              <MenuEmoji label="Moon">🌙</MenuEmoji>
-              Switch to Dark Mode
-            </>
-          )}
-        </MenuItem>
-        <MenuItem onSelect={signOut}>
-          <MenuEmoji label="Fearful face">😨</MenuEmoji>
+
+        <MenuLink
+          to={Routes.SIGN_OUT}
+          as={NextMenuLink}
+          className="flex items-center w-full">
+          <span role="img" aria-label="Fearful face">
+            <FiLogOut size={16} className="mr-2" />
+          </span>
           Sign Out
-        </MenuItem>
+        </MenuLink>
       </MenuList>
     </Menu>
   );

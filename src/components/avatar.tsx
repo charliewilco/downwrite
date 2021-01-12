@@ -1,16 +1,13 @@
-import * as React from "react";
-import classNames, { toPx } from "../utils/classnames";
-
-export type GradientColors = string[];
-
-export const AvatarColors: GradientColors = ["#FEB692", "#EA5455"];
+import { useMemo } from "react";
+import classNames from "@utils/classnames";
+import { AvatarColors, Gradient } from "@utils/default-styles";
 
 export interface IPointedGradientColors {
   a: string;
   b: string;
 }
 
-export const gradientPoints = (colors: GradientColors = AvatarColors) => ({
+export const gradientPoints = (colors: Gradient = AvatarColors) => ({
   a: colors[0],
   b: colors[1]
 });
@@ -22,31 +19,30 @@ export interface IAvatarCircleProps {
 }
 
 interface IAvatarProps {
-  colors: GradientColors;
+  colors: Gradient;
   size?: number;
   centered?: boolean;
   className?: string;
 }
 
 export default function Avatar(props: IAvatarProps): JSX.Element {
-  const className: string = classNames(
-    "AvatarCircle",
-    props.className,
-    props.centered && "AvatarCircle--centered"
+  const style = useMemo<React.CSSProperties>(() => {
+    const colors = gradientPoints(props.colors);
+    return {
+      background: `linear-gradient(135deg, ${colors.a} 10%, ${colors.b} 100%)`
+    };
+  }, [props.colors]);
+
+  return (
+    <div
+      className={classNames(
+        "rounded-full w-12 h-12",
+        props.className,
+        props.centered && "mt-0 mx-auto mb-4"
+      )}
+      style={style}
+      role="img"
+      aria-label="Gradient in a circle to represent a user"
+    />
   );
-
-  const colors = gradientPoints(props.colors);
-
-  const style = {
-    "--size": toPx(props.size || 48),
-    "--colors-a": colors.a,
-    "--colors-b": colors.b
-  } as React.CSSProperties;
-
-  return React.createElement("div", {
-    role: "img",
-    "aria-label": "Gradient in a circle to represent a user",
-    style,
-    className
-  });
 }
