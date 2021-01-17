@@ -46,10 +46,16 @@ type AuthUserPayload {
   token: String
 }
 
+type UsageDetails {
+  entryCount: Int!
+  privateEntries: Int!
+  publicEntries: Int!
+}
+
 type Me {
   details: User
   token: String
-  entryCount: Int!
+  usage: UsageDetails!
 }
 
 # Root

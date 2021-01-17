@@ -68,11 +68,18 @@ export type IAuthUserPayload = {
   token: Maybe<Scalars["String"]>;
 };
 
+export type IUsageDetails = {
+  __typename?: "UsageDetails";
+  entryCount: Scalars["Int"];
+  privateEntries: Scalars["Int"];
+  publicEntries: Scalars["Int"];
+};
+
 export type IMe = {
   __typename?: "Me";
   details: Maybe<IUser>;
   token: Maybe<Scalars["String"]>;
-  entryCount: Scalars["Int"];
+  usage: IUsageDetails;
 };
 
 export type IQuery = {
@@ -181,6 +188,14 @@ export type IUserDetailsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type IUserDetailsQuery = { __typename?: "Query" } & {
   settings: Maybe<{ __typename?: "User" } & Pick<IUser, "username" | "email">>;
+  me: Maybe<
+    { __typename?: "Me" } & {
+      usage: { __typename?: "UsageDetails" } & Pick<
+        IUsageDetails,
+        "entryCount" | "publicEntries" | "privateEntries"
+      >;
+    }
+  >;
 };
 
 export type IUpdateEntryMutationVariables = Exact<{
@@ -260,7 +275,7 @@ export type IUpdatePasswordMutation = { __typename?: "Mutation" } & {
 export type IIsMeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type IIsMeQuery = { __typename?: "Query" } & {
-  me: Maybe<{ __typename?: "Me" } & Pick<IMe, "token" | "entryCount">>;
+  me: Maybe<{ __typename?: "Me" } & Pick<IMe, "token">>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -390,8 +405,9 @@ export type IResolversTypes = ResolversObject<{
   User: ResolverTypeWrapper<IUser>;
   UserSettingsInput: IUserSettingsInput;
   AuthUserPayload: ResolverTypeWrapper<IAuthUserPayload>;
-  Me: ResolverTypeWrapper<IMe>;
+  UsageDetails: ResolverTypeWrapper<IUsageDetails>;
   Int: ResolverTypeWrapper<Scalars["Int"]>;
+  Me: ResolverTypeWrapper<IMe>;
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
 }>;
@@ -408,8 +424,9 @@ export type IResolversParentTypes = ResolversObject<{
   User: IUser;
   UserSettingsInput: IUserSettingsInput;
   AuthUserPayload: IAuthUserPayload;
-  Me: IMe;
+  UsageDetails: IUsageDetails;
   Int: Scalars["Int"];
+  Me: IMe;
   Query: {};
   Mutation: {};
 }>;
@@ -478,13 +495,23 @@ export type IAuthUserPayloadResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type IUsageDetailsResolvers<
+  ContextType = any,
+  ParentType extends IResolversParentTypes["UsageDetails"] = IResolversParentTypes["UsageDetails"]
+> = ResolversObject<{
+  entryCount: Resolver<IResolversTypes["Int"], ParentType, ContextType>;
+  privateEntries: Resolver<IResolversTypes["Int"], ParentType, ContextType>;
+  publicEntries: Resolver<IResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type IMeResolvers<
   ContextType = any,
   ParentType extends IResolversParentTypes["Me"] = IResolversParentTypes["Me"]
 > = ResolversObject<{
   details: Resolver<Maybe<IResolversTypes["User"]>, ParentType, ContextType>;
   token: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
-  entryCount: Resolver<IResolversTypes["Int"], ParentType, ContextType>;
+  usage: Resolver<IResolversTypes["UsageDetails"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -564,6 +591,7 @@ export type IResolvers<ContextType = any> = ResolversObject<{
   Preview: IPreviewResolvers<ContextType>;
   User: IUserResolvers<ContextType>;
   AuthUserPayload: IAuthUserPayloadResolvers<ContextType>;
+  UsageDetails: IUsageDetailsResolvers<ContextType>;
   Me: IMeResolvers<ContextType>;
   Query: IQueryResolvers<ContextType>;
   Mutation: IMutationResolvers<ContextType>;
