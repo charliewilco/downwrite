@@ -93,12 +93,18 @@ export function updateSettingsCache(
   result: FetchResult<IUpdateUserSettingsMutation>
 ) {
   if (result.data) {
+    const detailsQuery = cache.readQuery<IUserDetailsQuery>({
+      query: UserDetailsDocument
+    });
     cache.writeQuery<IUserDetailsQuery>({
       query: UserDetailsDocument,
       data: {
         settings: {
           username: result.data.updateUserSettings?.username!,
           email: result.data.updateUserSettings?.email!
+        },
+        me: {
+          ...detailsQuery.me
         }
       }
     });
