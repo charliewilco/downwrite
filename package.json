@@ -128,11 +128,7 @@
       }
     }
   },
-  "browserslist": [
-    ">0.25%",
-    "not ie 11",
-    "not op_mini all"
-  ],
+  "browserslist": [">0.25%", "not ie 11", "not op_mini all"],
   "prettier": {
     "printWidth": 85,
     "singleQuote": false,
@@ -144,7 +140,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "pretty-quick --staged",
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
     }
   },
   "engines": {
