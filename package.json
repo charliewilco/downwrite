@@ -89,7 +89,7 @@
     "@types/puppeteer": "^5.4.2",
     "@types/react-test-renderer": "^17.0.0",
     "apollo-server-testing": "^2.19.2",
-    "autoprefixer": "^10.2.1",
+    "autoprefixer": "^10.2.3",
     "commitizen": "^4.2.3",
     "cz-conventional-changelog": "3.3.0",
     "husky": "^4.3.8",
