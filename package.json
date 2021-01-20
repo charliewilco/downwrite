@@ -59,7 +59,7 @@
     "immutable": "~3.8.2",
     "jsonwebtoken": "^8.3.0",
     "jwt-decode": "^3.1.2",
-    "mongoose": "^5.10.16",
+    "mongoose": "^5.11.12",
     "next": "^10.0.5",
     "prismjs": "^1.23.0",
     "react": "^17.0.1",
