@@ -8,6 +8,7 @@
     "start": "next start",
     "build": "next build",
     "build:analyze": "ANALYZE=true yarn build",
+    "commit": "cz",
     "db:mock": "node scripts/fill",
     "db:clear": "node scripts/prep-db",
     "dev": "next dev",
@@ -37,7 +38,7 @@
     "@types/file-saver": "^2.0.0",
     "@types/jsonwebtoken": "^8.3.0",
     "@types/mongoose": "^5.10.3",
-    "@types/node": "^14.14.21",
+    "@types/node": "^14.14.22",
     "@types/prismjs": "^1.16.2",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
@@ -54,7 +55,7 @@
     "formik": "^2.2.6",
     "framer-motion": "^3.1.1",
     "graphql": "^15.3.0",
-    "immer": "^8.0.0",
+    "immer": "^8.0.1",
     "immutable": "~3.8.2",
     "jsonwebtoken": "^8.3.0",
     "jwt-decode": "^3.1.2",
@@ -81,15 +82,17 @@
     "@graphql-codegen/typescript-react-apollo": "^2.2.1",
     "@graphql-codegen/typescript-resolvers": "^1.18.1",
     "@tailwindcss/custom-forms": "^0.2.1",
-    "@tailwindcss/typography": "^0.3.1",
+    "@tailwindcss/typography": "^0.4.0",
     "@types/expect-puppeteer": "^4.4.5",
     "@types/jest": "^26.0.20",
     "@types/jest-environment-puppeteer": "^4.4.1",
     "@types/puppeteer": "^5.4.2",
     "@types/react-test-renderer": "^17.0.0",
     "apollo-server-testing": "^2.19.2",
-    "autoprefixer": "^10.2.1",
-    "husky": "^4.3.0",
+    "autoprefixer": "^10.2.3",
+    "commitizen": "^4.2.3",
+    "cz-conventional-changelog": "3.3.0",
+    "husky": "^4.3.8",
     "jest": "^26.6.3",
     "jest-puppeteer": "^4.4.0",
     "jest-transform-graphql": "^2.1.0",
@@ -141,10 +144,16 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "pretty-quick --staged",
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
     }
   },
   "engines": {
     "node": "12.x"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
