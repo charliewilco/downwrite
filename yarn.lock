@@ -1732,6 +1732,14 @@
     "@reach/utils" "0.12.1"
     tslib "^2.0.0"
 
+"@reach/descendants@0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@reach/descendants/-/descendants-0.13.0.tgz#e4034aecfe529a6ef27be464932846636861fe5b"
+  integrity sha512-PYblNDc+oNu9weJqtB91DWS0g6xLeD4dpcxD/mJTI4Zzi4t6qRyepYmkKKs8fmUhm4jJNXSRH8TAFsA7T55OUA==
+  dependencies:
+    "@reach/utils" "0.13.0"
+    tslib "^2.0.0"
+
 "@reach/dialog@^0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@reach/dialog/-/dialog-0.13.0.tgz#2110725c3b8a3c64685834cdc9f3ce5c15617809"
@@ -1753,15 +1761,15 @@
     "@xstate/fsm" "1.4.0"
     tslib "^2.0.0"
 
-"@reach/menu-button@^0.12.1":
-  version "0.12.1"
-  resolved "https://registry.npmjs.org/@reach/menu-button/-/menu-button-0.12.1.tgz#73976bd101431c67351a811f2fbf76ddefbecf53"
-  integrity sha512-hsq3TGBLutU7u+Gwhff6KJeanbabdODtfSTi947DaoJ/HHZVOjYUldNEBNeO3DeBE/bOv2TjYe3D4rw11m25Tg==
+"@reach/menu-button@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@reach/menu-button/-/menu-button-0.13.0.tgz#7e2cae631ecf1743e00e5c58827ae6c3a44475df"
+  integrity sha512-5A0ZNZgvuQnn+BWr69QGQuYFvGvYYbCbK0zHWWi3JZthlc7j6shLfb7y9NDQrkhrTYg6hzZJxm4g9Y2YLbwLwg==
   dependencies:
-    "@reach/auto-id" "0.12.1"
-    "@reach/descendants" "0.12.1"
-    "@reach/popover" "0.12.1"
-    "@reach/utils" "0.12.1"
+    "@reach/auto-id" "0.13.0"
+    "@reach/descendants" "0.13.0"
+    "@reach/popover" "0.13.0"
+    "@reach/utils" "0.13.0"
     prop-types "^15.7.2"
     tslib "^2.0.0"
 
@@ -1778,6 +1786,17 @@
     "@reach/portal" "0.12.1"
     "@reach/rect" "0.12.1"
     "@reach/utils" "0.12.1"
+    tabbable "^4.0.0"
+    tslib "^2.0.0"
+
+"@reach/popover@0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@reach/popover/-/popover-0.13.0.tgz#c3cfe34a85ca10f934646c5d906b349775c4695c"
+  integrity sha512-xvIynGdf4tnNwCm5os40VPlZjWjAL1zuea0hlvs672c2HWqnkd/xAKMrKLU5m8XWCi1dSI3fOVIMsrODHau3ng==
+  dependencies:
+    "@reach/portal" "0.13.0"
+    "@reach/rect" "0.13.0"
+    "@reach/utils" "0.13.0"
     tabbable "^4.0.0"
     tslib "^2.0.0"
 
@@ -1804,6 +1823,16 @@
   dependencies:
     "@reach/observe-rect" "1.2.0"
     "@reach/utils" "0.12.1"
+    prop-types "^15.7.2"
+    tslib "^2.0.0"
+
+"@reach/rect@0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@reach/rect/-/rect-0.13.0.tgz#4d1b0f53d3714c850c430f1ec6a79e70803b37f8"
+  integrity sha512-lAA/w/ut6O2t9gFaI0VvP4oGfIHlWp6B9J7h9KyL5LT5ek3YXOteFgJoojZz6ij3KXakDZXI+FBr2GjNbnH3Fw==
+  dependencies:
+    "@reach/observe-rect" "1.2.0"
+    "@reach/utils" "0.13.0"
     prop-types "^15.7.2"
     tslib "^2.0.0"
 
