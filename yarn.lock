@@ -1692,14 +1692,22 @@
     "@reach/utils" "0.12.1"
     tslib "^2.0.0"
 
-"@reach/checkbox@^0.12.1":
-  version "0.12.1"
-  resolved "https://registry.npmjs.org/@reach/checkbox/-/checkbox-0.12.1.tgz#a882860193b873fc66c877e74d46477b08000303"
-  integrity sha512-paaTS+LM3RF2BJIlzNPNiiPTABMKNDEyKg0/bBJ1LVrimOTygK7CYAD2EK7wpUu7sxET2wIhb2EQbO5E6EOWjg==
+"@reach/auto-id@0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.13.0.tgz#0dfa4c1af46d1ad68d8282c786c03362ae35e335"
+  integrity sha512-yU0Mp+xvbq8hmNz8UfvbJEmy6cHnPJ8SwlXg6WuPsJA9sOJdlCyMfkbwqyz1KFVs2ISCR+wVVLT3j/TuuvS60w==
   dependencies:
-    "@reach/auto-id" "0.12.1"
-    "@reach/machine" "0.12.1"
-    "@reach/utils" "0.12.1"
+    "@reach/utils" "0.13.0"
+    tslib "^2.0.0"
+
+"@reach/checkbox@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@reach/checkbox/-/checkbox-0.13.0.tgz#38028ba9ff4e1794e672dff52bc96addc2184dc5"
+  integrity sha512-j2LdVsTnyuNw51TZwNFkqETF4e/6sUI6DYPOr8YrYUHY5uEaD6Sdpfgle8mT+/EULWidKIw9+o0SACsLwdBJkA==
+  dependencies:
+    "@reach/auto-id" "0.13.0"
+    "@reach/machine" "0.13.0"
+    "@reach/utils" "0.13.0"
     tslib "^2.0.0"
 
 "@reach/combobox@^0.12.1":
@@ -1736,12 +1744,12 @@
     react-remove-scroll "^2.3.0"
     tslib "^2.0.0"
 
-"@reach/machine@0.12.1":
-  version "0.12.1"
-  resolved "https://registry.npmjs.org/@reach/machine/-/machine-0.12.1.tgz#244ef35cf3b049ff39bc82deed542f94d75007eb"
-  integrity sha512-GWxTOYwZK1c9mGz3LPXmgKHtczFTBCRnrGlrmdzu7ooFbBdXo5fDRsJYExShFs6iGBp9+WBL4M/WQxuKoEwIJg==
+"@reach/machine@0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@reach/machine/-/machine-0.13.0.tgz#4736f110760247a3658317271f69766352bb3b30"
+  integrity sha512-VtXoallRZ/0H96cRGIpAzpD3mydGY26gGD5Y69860npAOs01glJ1Zqa+Ucc51BarsC1kq2/Y2SSoFdq03/fsng==
   dependencies:
-    "@reach/utils" "0.12.1"
+    "@reach/utils" "0.13.0"
     "@xstate/fsm" "1.4.0"
     tslib "^2.0.0"
 
