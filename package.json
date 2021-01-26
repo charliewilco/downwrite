@@ -26,7 +26,7 @@
     "@next/bundle-analyzer": "^10.0.5",
     "@reach/checkbox": "^0.13.0",
     "@reach/combobox": "^0.12.1",
-    "@reach/dialog": "^0.12.1",
+    "@reach/dialog": "^0.13.0",
     "@reach/menu-button": "^0.12.1",
     "@reach/skip-nav": "^0.13.0",
     "@reach/tabs": "^0.12.1",
