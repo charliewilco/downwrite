@@ -1732,6 +1732,14 @@
     "@reach/utils" "0.12.1"
     tslib "^2.0.0"
 
+"@reach/descendants@0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@reach/descendants/-/descendants-0.13.0.tgz#e4034aecfe529a6ef27be464932846636861fe5b"
+  integrity sha512-PYblNDc+oNu9weJqtB91DWS0g6xLeD4dpcxD/mJTI4Zzi4t6qRyepYmkKKs8fmUhm4jJNXSRH8TAFsA7T55OUA==
+  dependencies:
+    "@reach/utils" "0.13.0"
+    tslib "^2.0.0"
+
 "@reach/dialog@^0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@reach/dialog/-/dialog-0.13.0.tgz#2110725c3b8a3c64685834cdc9f3ce5c15617809"
@@ -1815,14 +1823,14 @@
     "@reach/utils" "0.13.0"
     tslib "^2.0.0"
 
-"@reach/tabs@^0.12.1":
-  version "0.12.1"
-  resolved "https://registry.npmjs.org/@reach/tabs/-/tabs-0.12.1.tgz#d0e1cfe19c0a866b35d686d51bbc50552df74e29"
-  integrity sha512-k9piLoajPhIpM6BlHDSTMaBK9dGYDB9Ri+Ic+o+BqLzO1Lm0mC3ghXeYJcwyTzGA47dOYklI65TW/RxYqtT38g==
+"@reach/tabs@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@reach/tabs/-/tabs-0.13.0.tgz#858deebe6dc1c9b112a253d3537dfb1692fabefc"
+  integrity sha512-fRMcUypoKAsEAvkv6UdgVHQgkJtpKRvX6PduOb0yhU18p0JX0Y1hKyCX5mZh8HB+uTH8XI5WLamzsSoaxeEF2g==
   dependencies:
-    "@reach/auto-id" "0.12.1"
-    "@reach/descendants" "0.12.1"
-    "@reach/utils" "0.12.1"
+    "@reach/auto-id" "0.13.0"
+    "@reach/descendants" "0.13.0"
+    "@reach/utils" "0.13.0"
     prop-types "^15.7.2"
     tslib "^2.0.0"
 
