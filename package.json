@@ -25,7 +25,7 @@
     "@apollo/client": "^3.3.7",
     "@next/bundle-analyzer": "^10.0.5",
     "@reach/checkbox": "^0.13.0",
-    "@reach/combobox": "^0.12.1",
+    "@reach/combobox": "^0.13.0",
     "@reach/dialog": "^0.13.0",
     "@reach/menu-button": "^0.12.1",
     "@reach/skip-nav": "^0.13.0",
