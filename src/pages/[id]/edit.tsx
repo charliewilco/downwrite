@@ -41,7 +41,9 @@ import {
 } from "../../__generated__/client";
 
 const Autosaving = dynamic(() => import("@components/autosaving-interval"));
-const Editor = dynamic(() => import("@components/editor"));
+const Editor = dynamic(() => import("@components/editor"), {
+  loading: () => <p>Loading the Editor</p>
+});
 const WordCounter = dynamic(() => import("@components/word-count"));
 const ExportMarkdown = dynamic(() => import("@components/export"));
 

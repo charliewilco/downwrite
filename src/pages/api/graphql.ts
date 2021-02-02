@@ -11,7 +11,8 @@ const server = new ApolloServer({
     settings: {
       "editor.fontFamily": "Operator Mono, monospace"
     }
-  }
+  },
+  introspection: true
 });
 
 export const config = {

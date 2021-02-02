@@ -152,7 +152,6 @@ export async function createUser(
 ) {
   await dbConnect();
   const decoded = base64.decode(password);
-  console.log(decoded);
   try {
     await verifyUniqueUser(username, email);
     await createUserValidation.validate({
