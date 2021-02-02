@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "orta.vscode-jest",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "knisterpeter.vscode-commitizen",
+    "graphql.vscode-graphql"
+  ]
+}

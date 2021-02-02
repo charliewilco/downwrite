@@ -31,3 +31,7 @@ export function EditLink(props: ICardLinks): JSX.Element {
 export function PreviewLink(props: ICardLinks): JSX.Element {
   return <DefaultLink title="Preview" {...props} pathname="preview" />;
 }
+
+export function Stats(props: ICardLinks): JSX.Element {
+  return <DefaultLink title="Preview" {...props} pathname="stats" />;
+}

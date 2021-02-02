@@ -24,10 +24,18 @@ export const Query: IQueryResolvers<ResolverContext> = {
 export async function me(context: ResolverContext) {
   return verifyUser(context, async ({ user, name, token }) => {
     const entryCount = await PostModel.count({ user: { $eq: user } });
+    const publicEntries = await PostModel.count({
+      public: true,
+      user: { $eq: user }
+    });
     const { email } = await UserModel.findById(user, "username email").exec();
     return {
       token,
-      entryCount,
+      usage: {
+        entryCount,
+        publicEntries,
+        privateEntries: entryCount - publicEntries
+      },
       details: {
         email,
         username: name,

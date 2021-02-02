@@ -61,11 +61,18 @@ export type IAuthUserPayload = {
   token: Maybe<Scalars["String"]>;
 };
 
+export type IUsageDetails = {
+  __typename?: "UsageDetails";
+  entryCount: Scalars["Int"];
+  privateEntries: Scalars["Int"];
+  publicEntries: Scalars["Int"];
+};
+
 export type IMe = {
   __typename?: "Me";
   details: Maybe<IUser>;
   token: Maybe<Scalars["String"]>;
-  entryCount: Scalars["Int"];
+  usage: IUsageDetails;
 };
 
 export type IQuery = {
@@ -174,6 +181,14 @@ export type IUserDetailsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type IUserDetailsQuery = { __typename?: "Query" } & {
   settings: Maybe<{ __typename?: "User" } & Pick<IUser, "username" | "email">>;
+  me: Maybe<
+    { __typename?: "Me" } & {
+      usage: { __typename?: "UsageDetails" } & Pick<
+        IUsageDetails,
+        "entryCount" | "publicEntries" | "privateEntries"
+      >;
+    }
+  >;
 };
 
 export type IUpdateEntryMutationVariables = Exact<{
@@ -253,7 +268,7 @@ export type IUpdatePasswordMutation = { __typename?: "Mutation" } & {
 export type IIsMeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type IIsMeQuery = { __typename?: "Query" } & {
-  me: Maybe<{ __typename?: "Me" } & Pick<IMe, "token" | "entryCount">>;
+  me: Maybe<{ __typename?: "Me" } & Pick<IMe, "token">>;
 };
 
 export const EntryInfoFragmentDoc = gql`
@@ -409,6 +424,13 @@ export const UserDetailsDocument = gql`
     settings {
       username
       email
+    }
+    me {
+      usage {
+        entryCount
+        publicEntries
+        privateEntries
+      }
     }
   }
 `;
@@ -812,7 +834,6 @@ export const IsMeDocument = gql`
   query IsMe {
     me {
       token
-      entryCount
     }
   }
 `;

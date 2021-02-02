@@ -35,6 +35,14 @@ query UserDetails {
     username
     email
   }
+
+  me {
+    usage {
+      entryCount
+      publicEntries
+      privateEntries
+    }
+  }
 }
 
 mutation UpdateEntry(
@@ -90,6 +98,5 @@ mutation UpdatePassword($current: String!, $newPassword: String!) {
 query IsMe {
   me {
     token
-    entryCount
   }
 }
