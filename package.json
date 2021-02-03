@@ -60,7 +60,7 @@
     "immutable": "~3.8.2",
     "jsonwebtoken": "^8.3.0",
     "jwt-decode": "^3.1.2",
-    "mongoose": "^5.10.16",
+    "mongoose": "^5.11.14",
     "next": "^10.0.6",
     "pos-tagger.js": "^1.0.8",
     "prismjs": "^1.23.0",
