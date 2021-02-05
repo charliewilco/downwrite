@@ -2,7 +2,7 @@ import { NextApiRequest } from "next";
 import { serialize, parse } from "cookie";
 import { ServerResponse, IncomingMessage } from "http";
 import decode from "jwt-decode";
-import { readToken, getInitialState, TokenContents } from "./token";
+import { readToken, getInitialState, TokenContents, IReadResults } from "./token";
 import { IAppState } from "@reducers/app";
 import { __IS_PROD__ } from "@utils/dev";
 
@@ -10,27 +10,29 @@ export const TOKEN_NAME = "DW_TOKEN";
 
 export const MAX_AGE = 60 * 60 * 8; // 8 hours
 
-export function setTokenCookie(res: ServerResponse, token: string) {
-  const cookie = serialize(TOKEN_NAME, token, {
-    httpOnly: true,
-    secure: !Boolean(process.env.NO_HTTPS),
-    path: "/",
-    sameSite: "lax"
-  });
+export type __NextRequest = IncomingMessage | NextApiRequest;
 
-  res.setHeader("Set-Cookie", cookie);
-}
+export const setTokenCookie = (res: ServerResponse, token: string) =>
+  res.setHeader(
+    "Set-Cookie",
+    serialize(TOKEN_NAME, token, {
+      httpOnly: true,
+      secure: !Boolean(process.env.NO_HTTPS),
+      path: "/",
+      sameSite: "lax"
+    })
+  );
 
-export function removeTokenCookie(res: ServerResponse) {
-  const cookie = serialize(TOKEN_NAME, "", {
-    maxAge: -1,
-    path: "/"
-  });
+export const removeTokenCookie = (res: ServerResponse) =>
+  res.setHeader(
+    "Set-Cookie",
+    serialize(TOKEN_NAME, "", {
+      maxAge: -1,
+      path: "/"
+    })
+  );
 
-  res.setHeader("Set-Cookie", cookie);
-}
-
-export function parseCookies(req: IncomingMessage | NextApiRequest) {
+export const parseCookies = (req: __NextRequest) => {
   // For API Routes we don't need to parse the cookies.
   if ((req as NextApiRequest).cookies) {
     return (req as NextApiRequest).cookies;
@@ -39,25 +41,25 @@ export function parseCookies(req: IncomingMessage | NextApiRequest) {
   // For pages we do need to parse the cookies.
   const cookie = req.headers!.cookie;
   return parse(cookie || "");
-}
+};
 
-export function getTokenCookie(req: IncomingMessage | NextApiRequest) {
+export const getTokenCookie = (req: __NextRequest): string => {
   const cookies = parseCookies(req);
-  return cookies[TOKEN_NAME];
-}
+  return cookies[TOKEN_NAME] || req.headers.authorization;
+};
 
-export function getUserToken(req: IncomingMessage | NextApiRequest) {
+export const getUserToken = (req: __NextRequest): IReadResults => {
   const token = getTokenCookie(req);
 
   if (!token) return;
 
   return readToken(token);
-}
+};
 
-export async function getInitialStateFromCookie(
-  req: IncomingMessage | NextApiRequest
-): Promise<IAppState> {
-  return new Promise((resolve, reject) => {
+export const getInitialStateFromCookie = async (
+  req: __NextRequest
+): Promise<IAppState> =>
+  new Promise((resolve, reject) => {
     const { DW_TOKEN } = parseCookies(req);
     if (!DW_TOKEN) {
       reject("No token available");
@@ -66,4 +68,3 @@ export async function getInitialStateFromCookie(
     const state = getInitialState(d);
     resolve(state);
   });
-}
