@@ -48,7 +48,7 @@ export const getTokenFromHeader = (req: __NextRequest): string => {
   return cookies[TOKEN_NAME] || req.headers.authorization;
 };
 
-export const getUserToken = (req: __NextRequest): IReadResults => {
+export const getUserTokenContents = (req: __NextRequest): IReadResults => {
   const token = getTokenFromHeader(req);
 
   if (!token) return;
@@ -60,11 +60,11 @@ export const getInitialStateFromCookie = async (
   req: __NextRequest
 ): Promise<IAppState> =>
   new Promise((resolve, reject) => {
-    const { DW_TOKEN } = parseCookies(req);
-    if (!DW_TOKEN) {
+    const token = getTokenFromHeader(req);
+    if (!token) {
       reject("No token available");
     }
-    const d = decode<TokenContents>(DW_TOKEN);
+    const d = decode<TokenContents>(token);
     const state = getInitialState(d);
     resolve(state);
   });
