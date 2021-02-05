@@ -2,14 +2,14 @@ import { AuthenticationError } from "apollo-server-micro";
 import { UserModel, IUserModel } from "@lib/models";
 import { TokenContents, isValidPassword } from "@lib/token";
 import { ResolverContext } from "@lib/context";
-import { getUserToken } from "@lib/cookie-managment";
+import { getUserTokenContents } from "@lib/cookie-managment";
 import dbConnect from "@lib/db";
 
 export async function verifyUser<T>(
   context: ResolverContext,
   cb: (user: TokenContents & { token: string }) => T
 ) {
-  const token = getUserToken(context.req);
+  const token = getUserTokenContents(context.req);
 
   if (token) {
     await dbConnect();
