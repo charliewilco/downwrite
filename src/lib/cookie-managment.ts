@@ -43,13 +43,13 @@ export const parseCookies = (req: __NextRequest) => {
   return parse(cookie || "");
 };
 
-export const getTokenCookie = (req: __NextRequest): string => {
+export const getTokenFromHeader = (req: __NextRequest): string => {
   const cookies = parseCookies(req);
   return cookies[TOKEN_NAME] || req.headers.authorization;
 };
 
 export const getUserToken = (req: __NextRequest): IReadResults => {
-  const token = getTokenCookie(req);
+  const token = getTokenFromHeader(req);
 
   if (!token) return;
 
