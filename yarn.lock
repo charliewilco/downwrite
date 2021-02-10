@@ -2593,7 +2593,7 @@ apollo-server-caching@^0.5.3:
   dependencies:
     lru-cache "^6.0.0"
 
-apollo-server-core@^2.19.2, apollo-server-core@^2.20.0:
+apollo-server-core@^2.20.0:
   version "2.20.0"
   resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-2.20.0.tgz#cba1de38c37ab64361b1870a763be21421fd2d1b"
   integrity sha512-tteFTl6y9c3MtuhePOs9IbCccaKVXELttLvefMzd7EfR3CPgIfIbxpy2ZEcDys8NteYXoJ+4LiM8Eh9kLgkKmQ==
@@ -10369,10 +10369,10 @@ typeface-jetbrains-mono@^2.0.0:
   resolved "https://registry.npmjs.org/typeface-jetbrains-mono/-/typeface-jetbrains-mono-2.0.0.tgz#f522311d18ae5681efce1699a99225b525b82e29"
   integrity sha512-QrIlq+Jtn5ghF0RUSa6WubXro+DmtBOC9M+YQeODd1fW31jPzvY1qRM0qiarIelLgoj4ytWrj6iXCPxcbDWavw==
 
-typescript@^4.1.2:
-  version "4.1.2"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-4.1.2.tgz#6369ef22516fe5e10304aae5a5c4862db55380e9"
-  integrity sha512-thGloWsGH3SOxv1SoY7QojKi0tc+8FnOmiarEGMbd/lar7QOEd3hvlx3Fp5y6FlDUGl9L+pd4n2e+oToGMmhRQ==
+typescript@^4.1.4:
+  version "4.1.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.4.tgz#f058636e2f4f83f94ddaae07b20fd5e14598432f"
+  integrity sha512-+Uru0t8qIRgjuCpiSPpfGuhHecMllk5Zsazj5LZvVsEStEjmIRRBZe+jHjGQvsgS7M1wONy2PQXd67EMyV6acg==
 
 ua-parser-js@^0.7.18:
   version "0.7.21"
