@@ -82,7 +82,7 @@
     "@graphql-codegen/typescript": "^1.19.0",
     "@graphql-codegen/typescript-operations": "^1.17.14",
     "@graphql-codegen/typescript-react-apollo": "^2.2.1",
-    "@graphql-codegen/typescript-resolvers": "^1.18.1",
+    "@graphql-codegen/typescript-resolvers": "^1.18.2",
     "@tailwindcss/custom-forms": "^0.2.1",
     "@tailwindcss/typography": "^0.4.0",
     "@types/expect-puppeteer": "^4.4.5",
