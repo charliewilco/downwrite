@@ -2596,7 +2596,7 @@ apollo-server-caching@^0.5.3:
   dependencies:
     lru-cache "^6.0.0"
 
-apollo-server-core@^2.20.0, apollo-server-core@^2.21.0:
+apollo-server-core@^2.21.0:
   version "2.21.0"
   resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-2.21.0.tgz#12ee11aee61fa124f11b1d73cae2e068112a3a53"
   integrity sha512-GtIiq2F0dVDLzzIuO5+dK/pGq/sGxYlKCqAuQQqzYg0fvZ7fukyluXtcTe0tMI+FJZjU0j0WnKgiLsboCoAlPQ==
@@ -4445,10 +4445,10 @@ draft-js@^0.11.7:
     immutable "~3.7.4"
     object-assign "^4.1.1"
 
-draftjs-md-converter@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/draftjs-md-converter/-/draftjs-md-converter-1.4.2.tgz#a3a8721b0a07df436e1fa6f2fb2f6c6494103ab7"
-  integrity sha512-eN8ts2yUhQVwcRAsNFGTb5wl3KPZONxDKSlvo35qE8wDy+9nLmStQzahfHGsGQraLMeRW8BddnWXY64OhkNRZw==
+draftjs-md-converter@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/draftjs-md-converter/-/draftjs-md-converter-1.5.1.tgz#551108e4a7838132e7973ca213895f8fc9ad6223"
+  integrity sha512-wzSvLLrOWoYtsR2nQTqIM4p7OsAdZEDREd3IrbYkhem1JlQNjFQoz5ImfyCwZpotzX9oojOo1/gyFe/83plr/Q==
   dependencies:
     "@textlint/markdown-to-ast" "6.1.6"
 
