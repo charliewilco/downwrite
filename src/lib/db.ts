@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { __IS_DEV__, __IS_PROD__, __IS_TEST__ } from "@utils/dev";
 
-const developDBAddrress = "mongodb://127.0.0.1:27017/downwrite";
+const developDBAddrress = "mongodb://localhost:27017/downwrite";
 
 function getAddress() {
   return process.env.ATLAS_DB_ADDRESS || developDBAddrress;
