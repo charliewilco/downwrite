@@ -75,7 +75,7 @@
     "typeface-jetbrains-mono": "^2.0.0",
     "universal-cookie": "^4.0.2",
     "uuid": "^8.3.0",
-    "yup": "^0.32.8"
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.20.1",
