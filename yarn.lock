@@ -1643,17 +1643,17 @@
     "@reach/utils" "0.13.2"
     tslib "^2.1.0"
 
-"@reach/dialog@^0.13.0":
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/@reach/dialog/-/dialog-0.13.0.tgz#2110725c3b8a3c64685834cdc9f3ce5c15617809"
-  integrity sha512-/vWv9g+jv32OGvBbN2UJJOyUfFnx/cvfTSxZiEpi6TJd9EEcfCeqtV+wbSnH9RkkLubtwHXnYZbgmE0NSMX6Ag==
+"@reach/dialog@^0.13.2":
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/@reach/dialog/-/dialog-0.13.2.tgz#edbb8800f20e795c70b455b34999c6355b61c154"
+  integrity sha512-DOl7REyfrC3v6ugZtuiZs3pNr4ctRFBPU53AXph1kS5qH+3HxW2/Nq231Wg3ck+FQsZI+Ch4DeT0af52nbIaCg==
   dependencies:
-    "@reach/portal" "0.13.0"
-    "@reach/utils" "0.13.0"
+    "@reach/portal" "0.13.2"
+    "@reach/utils" "0.13.2"
     prop-types "^15.7.2"
     react-focus-lock "^2.5.0"
     react-remove-scroll "^2.4.1"
-    tslib "^2.0.0"
+    tslib "^2.1.0"
 
 "@reach/machine@0.13.0":
   version "0.13.0"
@@ -1691,14 +1691,6 @@
     "@reach/utils" "0.13.2"
     tabbable "^4.0.0"
     tslib "^2.1.0"
-
-"@reach/portal@0.13.0":
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/@reach/portal/-/portal-0.13.0.tgz#bed220d41097deb1454a7928b22529ba10d3ea2b"
-  integrity sha512-mGbZtox66KR6FJWfvLEJIK2dfBiqkTpGJqQa4jHR+yHu/uSDWHi7DQ173z/BuZPc+9J9sryU53+wqfmhHvU5NA==
-  dependencies:
-    "@reach/utils" "0.13.0"
-    tslib "^2.0.0"
 
 "@reach/portal@0.13.2":
   version "0.13.2"
