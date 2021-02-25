@@ -9,7 +9,7 @@ interface IShellProps {}
 
 const MessageList = dynamic(() => import("@components/notification-list"));
 
-const icon = <FiAlertTriangle className="w-4 h-4" />;
+const icon = <FiAlertTriangle className="text-white w-4 h-4" />;
 
 export const UIShell: React.FC<IShellProps> = (props) => {
   return (
