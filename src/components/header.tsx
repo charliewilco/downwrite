@@ -19,7 +19,9 @@ export function UIHeader(): JSX.Element {
           className="text-base xl:text-xl font-sans leading-none font-bold"
           data-testid="APP_HEADER_TITLE">
           <Link href={homeLink} passHref>
-            <a className="ml-3 block cursor-pointer">Downwrite</a>
+            <a className="ml-3 uppercase text-sm tracking-widest block cursor-pointer">
+              Downwrite
+            </a>
           </Link>
         </h1>
       </nav>
