@@ -47,7 +47,7 @@
     "@types/yup": "^0.29.11",
     "apollo-server-micro": "^2.21.0",
     "base-64": "^1.0.0",
-    "bcrypt": "^5.0.0",
+    "bcrypt": "^5.0.1",
     "date-fns": "^2.17.0",
     "draft-js": "^0.11.7",
     "draftjs-md-converter": "^1.5.1",
