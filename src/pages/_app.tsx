@@ -2,6 +2,7 @@ import { AppProps } from "next/app";
 import Router from "next/router";
 import { ApolloProvider } from "@apollo/client";
 import * as Analytics from "fathom-client";
+import { ThemeProvider } from "next-themes";
 import { UIShell } from "@components/ui-shell";
 import { useApollo } from "@lib/apollo";
 import { AppProvider } from "@reducers/app";
@@ -29,9 +30,11 @@ export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
       <AppProvider initial={pageProps.initialAppState}>
-        <UIShell>
-          <Component {...pageProps} />
-        </UIShell>
+        <ThemeProvider defaultTheme="light" attribute="class">
+          <UIShell>
+            <Component {...pageProps} />
+          </UIShell>
+        </ThemeProvider>
       </AppProvider>
     </ApolloProvider>
   );

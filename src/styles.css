@@ -1,6 +1,6 @@
-@import "~typeface-inter";
-@import "~typeface-jetbrains-mono";
-@import "~source-serif-pro/source-serif-pro.css";
+@import "~@fontsource/inter";
+@import "~@fontsource/jetbrains-mono";
+@import "~@fontsource/source-serif-pro";
 @import "~@reach/tabs/styles.css";
 @import "~@reach/menu-button/styles.css";
 @import "~@reach/dialog/styles.css";

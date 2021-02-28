@@ -3,7 +3,7 @@ import { serialize, parse } from "cookie";
 import { ServerResponse, IncomingMessage } from "http";
 import decode from "jwt-decode";
 import { readToken, getInitialState, TokenContents, IReadResults } from "./token";
-import { IAppState } from "@reducers/app";
+import { IAppState, initialState } from "@reducers/app";
 import { __IS_PROD__ } from "@utils/dev";
 
 export const TOKEN_NAME = "DW_TOKEN";
@@ -62,7 +62,7 @@ export const getInitialStateFromCookie = async (
   new Promise((resolve, reject) => {
     const token = getTokenFromHeader(req);
     if (!token) {
-      reject("No token available");
+      resolve(initialState);
     }
     const d = decode<TokenContents>(token);
     const state = getInitialState(d);

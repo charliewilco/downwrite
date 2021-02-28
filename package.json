@@ -24,6 +24,9 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.11",
+    "@fontsource/inter": "^4.2.1",
+    "@fontsource/jetbrains-mono": "^4.2.1",
+    "@fontsource/source-serif-pro": "^4.2.1",
     "@next/bundle-analyzer": "^10.0.7",
     "@reach/checkbox": "^0.13.2",
     "@reach/combobox": "^0.13.2",
@@ -62,6 +65,7 @@
     "jwt-decode": "^3.1.2",
     "mongoose": "^5.10.16",
     "next": "^10.0.7",
+    "next-themes": "^0.0.12",
     "pos-tagger.js": "^1.0.8",
     "prismjs": "^1.23.0",
     "react": "^17.0.1",
@@ -70,9 +74,6 @@
     "react-icons": "^4.2.0",
     "react-markdown": "^5.0.3",
     "react-prism": "^4.3.1",
-    "source-serif-pro": "^3.1.0",
-    "typeface-inter": "^3.15.0",
-    "typeface-jetbrains-mono": "^2.0.0",
     "universal-cookie": "^4.0.2",
     "uuid": "^8.3.0",
     "yup": "^0.32.9"
