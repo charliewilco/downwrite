@@ -54,7 +54,7 @@
     "fathom-client": "^3.0.0",
     "file-saver": "^2.0.0",
     "formik": "^2.2.6",
-    "framer-motion": "^3.10.2",
+    "framer-motion": "^3.10.3",
     "graphql": "^15.5.0",
     "immer": "^8.0.1",
     "immutable": "~3.8.2",
