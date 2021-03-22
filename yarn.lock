@@ -1927,10 +1927,10 @@
     "@types/keygrip" "*"
     "@types/node" "*"
 
-"@types/draft-js@^0.10.45":
-  version "0.10.45"
-  resolved "https://registry.yarnpkg.com/@types/draft-js/-/draft-js-0.10.45.tgz#4ab5b0785fcacdea7d5a836d0024158fa8108e70"
-  integrity sha512-ozmVQEI088kGQfY2XPB0b+YRNbkv1mxdxcLieBLCc2F4IkVWMs6mnIaEbBRExmM3H/Amm9CvhlmIYmDL4CjBvA==
+"@types/draft-js@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@types/draft-js/-/draft-js-0.11.0.tgz#d45590a3228fb2152e882bc8efc012983ccf6ae2"
+  integrity sha512-TcDToMfH1fvBW09xNc1uOq1lU+nFaJGeKPRbUbtFXgcJpusUFMLv3wLfJ4M+9ytsd4YRPKriCfuXVmN704CZMA==
   dependencies:
     "@types/react" "*"
     immutable "~3.7.4"
@@ -2112,10 +2112,10 @@
     "@types/bson" "*"
     "@types/node" "*"
 
-"@types/mongoose@^5.10.3":
-  version "5.10.3"
-  resolved "https://registry.yarnpkg.com/@types/mongoose/-/mongoose-5.10.3.tgz#3bc6787245aa8ebbff4ed61da18f4775e0ec52cd"
-  integrity sha512-VfdnaFImXEJZZiuL2ID/ysZs4inOIjxwrAnUgkr5eum2O2BLhFkiSI0i87AwignVva1qWTJ3H3DyM0Rf4USJ4A==
+"@types/mongoose@^5.10.4":
+  version "5.10.4"
+  resolved "https://registry.yarnpkg.com/@types/mongoose/-/mongoose-5.10.4.tgz#183918f7c6150a05c2081b29de2cf2e839b3206b"
+  integrity sha512-U7fNDcTcdaSGzQ3+mlSBeebiYr6eaacJi330LTLOEh8Sm6mXfuec70ag/UXkL+alFm7pfAjFqfc7jEaJEJvAHQ==
   dependencies:
     "@types/mongodb" "*"
     "@types/node" "*"
@@ -5687,10 +5687,10 @@ ignore@^5.1.4:
   resolved "https://registry.npmjs.org/ignore/-/ignore-5.1.8.tgz#f150a8b50a34289b33e22f5889abd4d8016f0e57"
   integrity sha512-BMpfD7PpiETpBl/A6S498BaIJ6Y/ABT93ETbby2fP00v4EbvPBXWEoaR1UBPKs3iR53pJY7EtZk5KACI57i1Uw==
 
-immer@^8.0.3:
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-8.0.3.tgz#26b360596e091eb26370d15db86bad3d5eb73972"
-  integrity sha512-UqLcFkrCZPmb0Lgs+TcaSa/mCAWrL7EcGB+7dHq7RzLkVQCevaRPL9+DZZ/bInuRAkamBoNKkG/OMIW91QFxOQ==
+immer@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.1.tgz#1116368e051f9a0fd188c5136b6efb74ed69c57f"
+  integrity sha512-7CCw1DSgr8kKYXTYOI1qMM/f5qxT5vIVMeGLDCDX8CSxsggr1Sjdoha4OhsP0AZ1UvWbyZlILHvLjaynuu02Mg==
 
 immutable@~3.7.4, immutable@~3.7.6:
   version "3.7.6"
