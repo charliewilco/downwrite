@@ -2158,10 +2158,10 @@
   resolved "https://registry.npmjs.org/@types/prettier/-/prettier-2.1.0.tgz#5f96562c1075ee715a5b138f0b7f591c1f40f6b8"
   integrity sha512-hiYA88aHiEIgDmeKlsyVsuQdcFn3Z2VuFd/Xm/HCnGnPD8UFU5BM128uzzRVVGEzKDKYUrRsRH9S2o+NUy/3IA==
 
-"@types/prismjs@^1.16.3":
-  version "1.16.3"
-  resolved "https://registry.yarnpkg.com/@types/prismjs/-/prismjs-1.16.3.tgz#73ae78b3e339777a1a1b7a8df89dcd6b8fe750c5"
-  integrity sha512-7lbX0Odbg9rnzXRdYdgPQZFkjd38QHpD6tvWxbLi6VXGQbXr054doixIS+TwftHP6afffA1zxCZrIcJRS/MkYQ==
+"@types/prismjs@^1.16.4":
+  version "1.16.4"
+  resolved "https://registry.yarnpkg.com/@types/prismjs/-/prismjs-1.16.4.tgz#2e61e9ade543a6091b9aa70f740197a754ab43e0"
+  integrity sha512-9B+DlSSelvKZMKkAgm1SjBV19XbPIL113GIKl18XgJV+06QvnbykeqeizZrr14b4TWf1deWLu9XZivPD8zMoHA==
 
 "@types/prop-types@*":
   version "15.7.3"
