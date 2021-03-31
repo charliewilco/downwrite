@@ -1474,10 +1474,10 @@
     semver "^7.3.4"
     tar "^6.1.0"
 
-"@next/bundle-analyzer@^10.0.8":
-  version "10.0.8"
-  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-10.0.8.tgz#38c752c3efadde51a29cca20d6b6a62d0568ef20"
-  integrity sha512-FXm7FnkUzn8d67SNVBnp5kcX7H2jlxYfl6PJl8jw13kDXKSnYLDC699sxw3kAPilj/A6qG8kYeoJKcSr3D7sGw==
+"@next/bundle-analyzer@^10.1.1":
+  version "10.1.1"
+  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-10.1.1.tgz#073aea2ec798f78aa214e64d7b9bebfeba57b18a"
+  integrity sha512-slb62/Z6CrYPj8PyqJRWOHaasC7WDPCUBai14S+16PFAig8ZfLZQtnVSjjHrZgUnXmLOovdtA9sBuyJGbX6Dsg==
   dependencies:
     webpack-bundle-analyzer "4.3.0"
 
@@ -1794,10 +1794,10 @@
     tslib "^2.1.0"
     warning "^4.0.3"
 
-"@reach/visually-hidden@^0.13.2":
-  version "0.13.2"
-  resolved "https://registry.yarnpkg.com/@reach/visually-hidden/-/visually-hidden-0.13.2.tgz#ee21de376a7e57e60dc92d95a671073796caa17e"
-  integrity sha512-sPZwNS0/duOuG0mYwE5DmgEAzW9VhgU3aIt1+mrfT/xiT9Cdncqke+kRBQgU708q/Ttm9tWsoHni03nn/SuPTQ==
+"@reach/visually-hidden@^0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@reach/visually-hidden/-/visually-hidden-0.14.0.tgz#04df6dff0da1180ab85b8548c9a2113a7f01ebd0"
+  integrity sha512-vyZNj8p1piBY6FR280dHRQxjZGyFVRXYQY7yxvEIe251EZib6C0jc66YlcA/+om4gEhVcJ17/O/bHnKV7GRIig==
   dependencies:
     prop-types "^15.7.2"
     tslib "^2.1.0"
@@ -2599,10 +2599,10 @@ apollo-server-caching@^0.6.0:
   dependencies:
     lru-cache "^6.0.0"
 
-apollo-server-core@^2.21.2, apollo-server-core@^2.22.1:
-  version "2.22.1"
-  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-2.22.1.tgz#5ca27ab5e8ed815bab7e1e753c64e13301484527"
-  integrity sha512-US5MyrTYHwPQb8fTPn8a+CyupB5VHltC7X/yaT0zQkfI7GLLux1LI2Q1mNaRXqf03b89BGFnH4ghWQvVsNEbyw==
+apollo-server-core@^2.22.1, apollo-server-core@^2.22.2:
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-2.22.2.tgz#daee67a17aa4f1bf0df3e448e237a37324906b5d"
+  integrity sha512-YPrhfN+I5vUerc4c0I6pd89fdqP5UNYCt/+MGv4bDA/a0kOCLvzylkQ3NlEepK1fewtqf4QO+S1LscC8vMmYdg==
   dependencies:
     "@apollographql/apollo-tools" "^0.4.3"
     "@apollographql/graphql-playground-html" "1.6.27"
@@ -2662,12 +2662,12 @@ apollo-server-plugin-base@^0.11.0:
   dependencies:
     apollo-server-types "^0.7.0"
 
-apollo-server-testing@^2.21.2:
-  version "2.21.2"
-  resolved "https://registry.yarnpkg.com/apollo-server-testing/-/apollo-server-testing-2.21.2.tgz#f4ad3e17edfe9f2a1c95ab2cb27529b164d65ee9"
-  integrity sha512-C3WNPdL1rSW3OZPilrd+asij5Vg7fPWylvGB6NBfh/tJPp9AXH2AuZIM8C4LxmGJEWHV8/JRXHzXLFQCYJs4Mw==
+apollo-server-testing@^2.22.2:
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/apollo-server-testing/-/apollo-server-testing-2.22.2.tgz#aec9d8ac7bef058cdc4f1cac1ffd52f601e0c47b"
+  integrity sha512-kSdpBdWL6KOiOPa0y5fqiZOBZb/w+/s5oaI+Z9sIakck78bBnHZDBJIrgqpluO8PxrieV10aarN7hxP8DEA7cw==
   dependencies:
-    apollo-server-core "^2.21.2"
+    apollo-server-core "^2.22.2"
 
 apollo-server-types@^0.7.0:
   version "0.7.0"
