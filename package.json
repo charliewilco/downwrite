@@ -31,7 +31,7 @@
     "@reach/menu-button": "^0.14.0",
     "@reach/skip-nav": "^0.13.2",
     "@reach/tabs": "^0.13.2",
-    "@reach/visually-hidden": "^0.13.2",
+    "@reach/visually-hidden": "^0.14.0",
     "@sindresorhus/is": "^4.0.0",
     "@types/base-64": "^0.1.3",
     "@types/bcrypt": "^3.0.0",
