@@ -1661,13 +1661,13 @@
     "@reach/utils" "0.14.0"
     tslib "^2.1.0"
 
-"@reach/dialog@^0.13.2":
-  version "0.13.2"
-  resolved "https://registry.yarnpkg.com/@reach/dialog/-/dialog-0.13.2.tgz#edbb8800f20e795c70b455b34999c6355b61c154"
-  integrity sha512-DOl7REyfrC3v6ugZtuiZs3pNr4ctRFBPU53AXph1kS5qH+3HxW2/Nq231Wg3ck+FQsZI+Ch4DeT0af52nbIaCg==
+"@reach/dialog@^0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@reach/dialog/-/dialog-0.14.0.tgz#a8099261fa37ee91e0c587c369e8d095cc24a3a8"
+  integrity sha512-Pc9EKxh15vOfeKn2aSZqm7dFJPSgx4kDA1GOANZJ831QCLEBTY8PkWU3KmwbQ/sEU4jOnrd8f8bndv1ixwgCLQ==
   dependencies:
-    "@reach/portal" "0.13.2"
-    "@reach/utils" "0.13.2"
+    "@reach/portal" "0.14.0"
+    "@reach/utils" "0.14.0"
     prop-types "^15.7.2"
     react-focus-lock "^2.5.0"
     react-remove-scroll "^2.4.1"
@@ -1794,10 +1794,10 @@
     tslib "^2.1.0"
     warning "^4.0.3"
 
-"@reach/visually-hidden@^0.13.2":
-  version "0.13.2"
-  resolved "https://registry.yarnpkg.com/@reach/visually-hidden/-/visually-hidden-0.13.2.tgz#ee21de376a7e57e60dc92d95a671073796caa17e"
-  integrity sha512-sPZwNS0/duOuG0mYwE5DmgEAzW9VhgU3aIt1+mrfT/xiT9Cdncqke+kRBQgU708q/Ttm9tWsoHni03nn/SuPTQ==
+"@reach/visually-hidden@^0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@reach/visually-hidden/-/visually-hidden-0.14.0.tgz#04df6dff0da1180ab85b8548c9a2113a7f01ebd0"
+  integrity sha512-vyZNj8p1piBY6FR280dHRQxjZGyFVRXYQY7yxvEIe251EZib6C0jc66YlcA/+om4gEhVcJ17/O/bHnKV7GRIig==
   dependencies:
     prop-types "^15.7.2"
     tslib "^2.1.0"
@@ -5707,10 +5707,10 @@ human-signals@^1.1.1:
   resolved "https://registry.npmjs.org/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
   integrity sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
 
-husky@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-5.2.0.tgz#fc5e1c2300d34855d47de4753607d00943fc0802"
-  integrity sha512-AM8T/auHXRBxlrfPVLKP6jt49GCM2Zz47m8G3FOMsLmTv8Dj/fKVWE0Rh2d4Qrvmy131xEsdQnb3OXRib67PGg==
+husky@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-6.0.0.tgz#810f11869adf51604c32ea577edbc377d7f9319e"
+  integrity sha512-SQS2gDTB7tBN486QSoKPKQItZw97BMOd+Kdb6ghfpBc0yXyzrddI0oDV5MkDAbuB4X2mO3/nj60TRMcYxwzZeQ==
 
 iconv-lite@0.4.19:
   version "0.4.19"
