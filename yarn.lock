@@ -1765,14 +1765,14 @@
     "@reach/utils" "0.13.2"
     tslib "^2.1.0"
 
-"@reach/tabs@^0.13.2":
-  version "0.13.2"
-  resolved "https://registry.yarnpkg.com/@reach/tabs/-/tabs-0.13.2.tgz#850d36bda20af81259ee4013f4db6e909ba18eeb"
-  integrity sha512-TorAKUQrYVATzXfxZB0Kf23LYcuHeqILwxXzR1EQPKntXDupL/0eO0K1u0nVmC1bwrz5qZJ8sxpQx/4TXSelFA==
+"@reach/tabs@^0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@reach/tabs/-/tabs-0.14.0.tgz#92ff7206c10ee57d9c21bc8c54fb110dd0cbe02d"
+  integrity sha512-UqMCPvXsEXMXy01DHQRH0Xibgq31hOVSc7gvqLMQBGSutGgEGdX7+0GfVkhZvRCjv8vhXp2FDeRT3L5mO5ebcA==
   dependencies:
-    "@reach/auto-id" "0.13.2"
-    "@reach/descendants" "0.13.2"
-    "@reach/utils" "0.13.2"
+    "@reach/auto-id" "0.14.0"
+    "@reach/descendants" "0.14.0"
+    "@reach/utils" "0.14.0"
     prop-types "^15.7.2"
     tslib "^2.1.0"
 
