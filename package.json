@@ -29,7 +29,7 @@
     "@reach/combobox": "^0.13.2",
     "@reach/dialog": "^0.14.0",
     "@reach/menu-button": "^0.14.0",
-    "@reach/skip-nav": "^0.13.2",
+    "@reach/skip-nav": "^0.14.0",
     "@reach/tabs": "^0.13.2",
     "@reach/visually-hidden": "^0.14.0",
     "@sindresorhus/is": "^4.0.0",
