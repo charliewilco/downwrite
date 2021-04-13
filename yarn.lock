@@ -1766,12 +1766,12 @@
     prop-types "^15.7.2"
     tslib "^2.1.0"
 
-"@reach/skip-nav@^0.13.2":
-  version "0.13.2"
-  resolved "https://registry.yarnpkg.com/@reach/skip-nav/-/skip-nav-0.13.2.tgz#b9eec80c9b0e9f0116e24fa9e4da7b7d492405e4"
-  integrity sha512-ol4u79aAHgcXxxzoSBDQ2bMUF4c7jMIlHls4tb28ZGcZMx/RZSrOTA9AOUVVEC//xIN+2vxisSOa0rxqmGaUBw==
+"@reach/skip-nav@^0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@reach/skip-nav/-/skip-nav-0.15.0.tgz#cc5fb94d37ab8d0bc624fb06f806c7b6459806aa"
+  integrity sha512-9qc0Q7pYY3p6s7BtPn7ii8p+LO+TcqN4wj2E7ZSLfKzgBBk5mQxjNOZN24dqQSVdcNyHz99mNevDS5zT3ZwLWg==
   dependencies:
-    "@reach/utils" "0.13.2"
+    "@reach/utils" "0.15.0"
     tslib "^2.1.0"
 
 "@reach/tabs@^0.13.2":
