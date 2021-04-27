@@ -1592,14 +1592,6 @@
     "@reach/utils" "0.13.2"
     tslib "^2.1.0"
 
-"@reach/auto-id@0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.14.0.tgz#1edfdeddb8fad656ec894a934c78f20c3b341416"
-  integrity sha512-Ym8PBXubuXP7m8CFReqHIH8iXOTcZ3PuAjtHHGuc2EToCwhbbFSf1OouWMUdr6S6vZmu0pOnhOgIE1QGw+dEpw==
-  dependencies:
-    "@reach/utils" "0.14.0"
-    tslib "^2.1.0"
-
 "@reach/auto-id@0.15.0":
   version "0.15.0"
   resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.15.0.tgz#f46afebfc140b2099b95c7aec1f049d167d3833d"
@@ -1642,14 +1634,6 @@
     "@reach/utils" "0.13.2"
     tslib "^2.1.0"
 
-"@reach/descendants@0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@reach/descendants/-/descendants-0.14.0.tgz#33f7678e850ba39922817890def4996e61b7d82e"
-  integrity sha512-gbaZZWJzTt2clXGUSS2j5jSJqiPUntVl7QcH+FVP5flAPcddpdShtztNcp2wR5QPKJoRXALs7yQIytwW15siHA==
-  dependencies:
-    "@reach/utils" "0.14.0"
-    tslib "^2.1.0"
-
 "@reach/descendants@0.15.0":
   version "0.15.0"
   resolved "https://registry.yarnpkg.com/@reach/descendants/-/descendants-0.15.0.tgz#be55a9420a075bc130f3be6da6e7e47733e5b8a0"
@@ -1679,33 +1663,23 @@
     "@xstate/fsm" "1.4.0"
     tslib "^2.1.0"
 
-"@reach/menu-button@^0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@reach/menu-button/-/menu-button-0.14.0.tgz#1ac689071194a443e721474dff5a30edeaaca669"
-  integrity sha512-BWWstAW5IL+qGEPX+KfkKJkvHbJN2kLmKxYqJTsyTeexX+5SLNtBh2r9tQz4x2uRZbQYkQYpoFwZjMLVfTj9hQ==
+"@reach/menu-button@^0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@reach/menu-button/-/menu-button-0.15.1.tgz#500223d45db33ebc80e441a1458fba08c5432bfe"
+  integrity sha512-oBV+XWBCen2uDUeg2ZODaZ65oyoLNVLrdUfVOGmeVjWLvfGyHwwgTpeJdrPoCCR7edZsuZ1T6D7YQzl81p3/dA==
   dependencies:
-    "@reach/auto-id" "0.14.0"
-    "@reach/descendants" "0.14.0"
-    "@reach/popover" "0.14.0"
-    "@reach/utils" "0.14.0"
+    "@reach/auto-id" "0.15.0"
+    "@reach/descendants" "0.15.0"
+    "@reach/popover" "0.15.0"
+    "@reach/utils" "0.15.0"
     prop-types "^15.7.2"
+    tiny-warning "^1.0.3"
     tslib "^2.1.0"
 
 "@reach/observe-rect@1.2.0":
   version "1.2.0"
   resolved "https://registry.npmjs.org/@reach/observe-rect/-/observe-rect-1.2.0.tgz#d7a6013b8aafcc64c778a0ccb83355a11204d3b2"
   integrity sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==
-
-"@reach/popover@0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@reach/popover/-/popover-0.14.0.tgz#c3b5db782c744f595669a4d3641392b60b05a0f4"
-  integrity sha512-BvwODRLmmfxLNvsLxINpbCFysgPcCnwBJQdWUixyp9isFaeTc9c8l+KEUgY72Lhxem5G3ryo7qITWg1oMjEL3Q==
-  dependencies:
-    "@reach/portal" "0.14.0"
-    "@reach/rect" "0.14.0"
-    "@reach/utils" "0.14.0"
-    tabbable "^4.0.0"
-    tslib "^2.1.0"
 
 "@reach/popover@0.15.0":
   version "0.15.0"
@@ -1732,16 +1706,6 @@
   integrity sha512-Aulqjk/PIRu+R7yhINYAAYfYh++ZdC30qwHDWDtGk2cmTEJT7m9AlvBX+W7T+Q3Ux6Wy5f37eV+TTGid1CcjFw==
   dependencies:
     "@reach/utils" "0.15.0"
-    tslib "^2.1.0"
-
-"@reach/rect@0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@reach/rect/-/rect-0.14.0.tgz#ac0cb48814c2fbf8cff5a53edf3556c01fe33dc6"
-  integrity sha512-mXunIyFUCbzWlUVwMuI/nL3tLDsPWwe+5knXHQQG5cOqE9tosLt9PqVYQW5iMHdpl9pGqbx7yVXMZKp2hookJg==
-  dependencies:
-    "@reach/observe-rect" "1.2.0"
-    "@reach/utils" "0.14.0"
-    prop-types "^15.7.2"
     tslib "^2.1.0"
 
 "@reach/rect@0.15.0":
@@ -4180,10 +4144,10 @@ date-fns@^1.27.2:
   resolved "https://registry.npmjs.org/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
   integrity sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==
 
-date-fns@^2.19.0:
-  version "2.19.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.19.0.tgz#65193348635a28d5d916c43ec7ce6fbd145059e1"
-  integrity sha512-X3bf2iTPgCAQp9wvjOQytnf5vO5rESYRXlPIVcgSbtT5OTScPcsf9eZU+B/YIkKAtYr5WeCii58BgATrNitlWg==
+date-fns@^2.21.1:
+  version "2.21.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.21.1.tgz#679a4ccaa584c0706ea70b3fa92262ac3009d2b0"
+  integrity sha512-m1WR0xGiC6j6jNFAyW4Nvh4WxAi4JF4w9jRJwSI8nBmNcyZXPcP9VUQG+6gHQXAmqaGEKDKhOqAtENDC941UkA==
 
 de-indent@^1.0.2:
   version "1.0.2"
