@@ -1800,10 +1800,10 @@
     tiny-warning "^1.0.3"
     tslib "^2.1.0"
 
-"@reach/visually-hidden@^0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@reach/visually-hidden/-/visually-hidden-0.14.0.tgz#04df6dff0da1180ab85b8548c9a2113a7f01ebd0"
-  integrity sha512-vyZNj8p1piBY6FR280dHRQxjZGyFVRXYQY7yxvEIe251EZib6C0jc66YlcA/+om4gEhVcJ17/O/bHnKV7GRIig==
+"@reach/visually-hidden@^0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@reach/visually-hidden/-/visually-hidden-0.15.0.tgz#70ae561c33af709769df05a796ddb998c3a1ee20"
+  integrity sha512-ZRRBOaRrvSM6iCk+R2/8txFfXLY2DsnZQuaHNqOuSvz8vN2+syUnni1T+hpC93rvBRXtqD36kqdTsu5qihGnFw==
   dependencies:
     prop-types "^15.7.2"
     tslib "^2.1.0"
