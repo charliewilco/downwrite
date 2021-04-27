@@ -1600,10 +1600,10 @@
     "@reach/utils" "0.15.0"
     tslib "^2.1.0"
 
-"@reach/checkbox@^0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@reach/checkbox/-/checkbox-0.15.0.tgz#e83e82aa7960992e16c959d2608628106d7c599c"
-  integrity sha512-C5j/At+18SWW3OWuL3ynv5mV8WZ6XoyG/YdskKU72ohZDbSUR9Db91uzu/aV5oKjBKGSD/xGhPTpIkj76BIASw==
+"@reach/checkbox@^0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@reach/checkbox/-/checkbox-0.15.1.tgz#02da7d51cf92f315680b76ef461dcf1e2b567fb3"
+  integrity sha512-9TnHe1tFcaBpiCBJ5occKgt+aj0Pwbe9wAj3sT2tIKcjbjBjPLx7aAQ3taT3m8dQIL7+PnKnskjts7m6+3MhHg==
   dependencies:
     "@reach/auto-id" "0.15.0"
     "@reach/machine" "0.15.0"
