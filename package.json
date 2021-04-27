@@ -28,7 +28,7 @@
     "@reach/checkbox": "^0.15.0",
     "@reach/combobox": "^0.15.0",
     "@reach/dialog": "^0.14.0",
-    "@reach/menu-button": "^0.14.0",
+    "@reach/menu-button": "^0.15.1",
     "@reach/skip-nav": "^0.15.0",
     "@reach/tabs": "^0.13.2",
     "@reach/visually-hidden": "^0.15.0",
