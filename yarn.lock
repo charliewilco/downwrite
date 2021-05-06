@@ -10520,10 +10520,10 @@ typeface-jetbrains-mono@^2.0.0:
   resolved "https://registry.npmjs.org/typeface-jetbrains-mono/-/typeface-jetbrains-mono-2.0.0.tgz#f522311d18ae5681efce1699a99225b525b82e29"
   integrity sha512-QrIlq+Jtn5ghF0RUSa6WubXro+DmtBOC9M+YQeODd1fW31jPzvY1qRM0qiarIelLgoj4ytWrj6iXCPxcbDWavw==
 
-typescript@^4.2.3:
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.3.tgz#39062d8019912d43726298f09493d598048c1ce3"
-  integrity sha512-qOcYwxaByStAWrBf4x0fibwZvMRG+r4cQoTjbPtUlrWjBHbmCAww1i448U0GJ+3cNNEtebDteo/cHOR3xJ4wEw==
+typescript@^4.2.4:
+  version "4.2.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.4.tgz#8610b59747de028fda898a8aef0e103f156d0961"
+  integrity sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg==
 
 ua-parser-js@^0.7.18:
   version "0.7.28"
