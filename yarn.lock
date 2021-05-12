@@ -1612,17 +1612,16 @@
     tiny-warning "^1.0.3"
     tslib "^2.1.0"
 
-"@reach/combobox@^0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@reach/combobox/-/combobox-0.15.0.tgz#2d0e3dc879405a59455723e7daba89d5baa13427"
-  integrity sha512-f29iYpQS5mDA4mmc6mWyHKPDRKV5ZnYSyCqSQCvxSF21Dpl2UDj5W+BsV8IKabA07D/qaJBoZOXfV+W95pzGMw==
+"@reach/combobox@^0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@reach/combobox/-/combobox-0.15.1.tgz#267e50fc526bc9b9c20d30361277685e69e074f9"
+  integrity sha512-4WvxqHYEX2aW2FqNqwJtYYYaTOgyMaZ5OYVWP/iyTunrcbyHWZsoCt3CBR6/AfMsiJ7I7yCxX2tLShjFOGAA+A==
   dependencies:
     "@reach/auto-id" "0.15.0"
     "@reach/descendants" "0.15.0"
     "@reach/popover" "0.15.0"
     "@reach/portal" "0.15.0"
     "@reach/utils" "0.15.0"
-    highlight-words-core "1.2.2"
     prop-types "^15.7.2"
     tslib "^2.1.0"
 
@@ -5683,11 +5682,6 @@ hey-listen@^1.0.8:
   version "1.0.8"
   resolved "https://registry.npmjs.org/hey-listen/-/hey-listen-1.0.8.tgz#8e59561ff724908de1aa924ed6ecc84a56a9aa68"
   integrity sha512-COpmrF2NOg4TBWUJ5UVyaCU2A88wEMkUPK4hNqyCkqHbxT92BbvfjoSozkAIIm6XhicGlJHhFdullInrdhwU8Q==
-
-highlight-words-core@1.2.2:
-  version "1.2.2"
-  resolved "https://registry.npmjs.org/highlight-words-core/-/highlight-words-core-1.2.2.tgz#1eff6d7d9f0a22f155042a00791237791b1eeaaa"
-  integrity sha512-BXUKIkUuh6cmmxzi5OIbUJxrG8OAk2MqoL1DtO3Wo9D2faJg2ph5ntyuQeLqaHJmzER6H5tllCDA9ZnNe9BVGg==
 
 hmac-drbg@^1.0.0:
   version "1.0.1"
