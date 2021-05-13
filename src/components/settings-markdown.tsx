@@ -36,7 +36,7 @@ export default function SettingsLocalMarkdown(): JSX.Element {
   const initialValues = useRef(() => {
     return {
       fileExtension: fileExtension || ".md",
-      fontFamily: editorFont || "SF Mono"
+      fontFamily: editorFont || "DM Mono"
     };
   });
 

@@ -9,7 +9,7 @@ import {
   EditorProps
 } from "draft-js";
 import classNames from "@utils/classnames";
-import * as DefaultStyles from "@utils/default-styles";
+import { Fonts } from "@utils/default-styles";
 import { useSettings } from "@reducers/app";
 
 type OmittedEditorProps =
@@ -28,7 +28,7 @@ interface IEditorProps extends Omit<EditorProps, OmittedEditorProps> {
 const styleMap = {
   CODE: {
     backgroundColor: "rgba(0, 0, 0, 0.05)",
-    fontFamily: DefaultStyles.Fonts.monospace,
+    fontFamily: Fonts.monospace,
     fontSize: 14,
     padding: 2
   }

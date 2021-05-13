@@ -3,6 +3,7 @@ import Markdown from "react-markdown";
 import "prismjs";
 import CodeBlock from "./code-block";
 import { PropsWithChildren } from "react";
+import { CodeComponent } from "react-markdown/src/ast-to-react";
 
 interface IContentWrapperProps extends PropsWithChildren<{}> {
   title?: string;
@@ -48,8 +49,13 @@ interface IContentProps {
   content?: string;
 }
 
+const code: CodeComponent = (props) => {
+  console.log(props);
+  return <CodeBlock value={props.children} language={props.className} />;
+};
+
 const MARKDOWN_RENDERS = {
-  code: CodeBlock
+  code
 };
 
 export default function Content(props: IContentProps): JSX.Element {
@@ -59,7 +65,7 @@ export default function Content(props: IContentProps): JSX.Element {
       {props.content && (
         <div className="xl:pb-0 xl:col-span-3 xl:row-span-2">
           <div className="font-serif __content py-8">
-            <Markdown source={props.content} renderers={MARKDOWN_RENDERS} />
+            <Markdown components={MARKDOWN_RENDERS}>{props.content}</Markdown>
           </div>
         </div>
       )}

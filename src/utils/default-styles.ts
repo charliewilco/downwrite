@@ -1,7 +1,7 @@
 export enum Fonts {
-  monospace = "SF Mono, Input Mono Condensed, Roboto Mono, Menlo, monospace",
+  monospace = "DM Mono, SF Mono, Input Mono Condensed, Roboto Mono, Menlo, monospace",
   sans = "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
-  code = "'SF Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace"
+  code = "DM Mono, 'SF Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace"
 }
 
 const hexRegex = new RegExp(/^#[0-9A-F]{6}$/i);
