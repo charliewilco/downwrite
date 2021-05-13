@@ -1,5 +1,5 @@
 @import "~typeface-inter";
-@import "~typeface-jetbrains-mono";
+@import "~typeface-dm-mono";
 @import "~source-serif-pro/source-serif-pro.css";
 @import "~@reach/tabs/styles.css";
 @import "~@reach/menu-button/styles.css";
@@ -66,7 +66,7 @@ body,
 }
 
 [data-reach-dialog-content] {
-  @apply mx-auto max-w-lg;
+  @apply max-w-lg mx-auto;
   margin-top: auto;
   margin-bottom: auto;
   outline: none;
@@ -188,11 +188,11 @@ body,
 }
 
 .__content h2 {
-  @apply text-3xl mb-6 font-extrabold;
+  @apply mb-6 text-3xl font-extrabold;
 }
 
 .__content h3 {
-  @apply text-2xl font-bold mb-4;
+  @apply mb-4 text-2xl font-bold;
 }
 
 .__content li > ul,
@@ -222,9 +222,9 @@ body,
 }
 
 .__content blockquote {
-  @apply bg-pixieblue-100 mb-6 italic dark:text-gray-800;
+  @apply mb-6 italic bg-pixieblue-100 dark:text-gray-800;
 }
 
 .__content blockquote p {
-  @apply text-base p-4;
+  @apply p-4 text-base;
 }
