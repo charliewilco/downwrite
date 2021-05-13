@@ -788,7 +788,8 @@ export function useUpdateUserSettingsMutation(
 export type UpdateUserSettingsMutationHookResult = ReturnType<
   typeof useUpdateUserSettingsMutation
 >;
-export type UpdateUserSettingsMutationResult = Apollo.MutationResult<IUpdateUserSettingsMutation>;
+export type UpdateUserSettingsMutationResult =
+  Apollo.MutationResult<IUpdateUserSettingsMutation>;
 export type UpdateUserSettingsMutationOptions = Apollo.BaseMutationOptions<
   IUpdateUserSettingsMutation,
   IUpdateUserSettingsMutationVariables
@@ -838,7 +839,8 @@ export function useUpdatePasswordMutation(
 export type UpdatePasswordMutationHookResult = ReturnType<
   typeof useUpdatePasswordMutation
 >;
-export type UpdatePasswordMutationResult = Apollo.MutationResult<IUpdatePasswordMutation>;
+export type UpdatePasswordMutationResult =
+  Apollo.MutationResult<IUpdatePasswordMutation>;
 export type UpdatePasswordMutationOptions = Apollo.BaseMutationOptions<
   IUpdatePasswordMutation,
   IUpdatePasswordMutationVariables
