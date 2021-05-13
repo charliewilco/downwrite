@@ -8,7 +8,7 @@
     "start": "next start",
     "build": "next build",
     "build:analyze": "ANALYZE=true yarn build",
-    "commit": "cz",
+    "_commit": "cz",
     "db:mock": "node scripts/fill",
     "db:clear": "node scripts/prep-db",
     "dev": "next dev",
