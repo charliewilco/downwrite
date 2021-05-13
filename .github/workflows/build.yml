@@ -33,11 +33,11 @@ jobs:
       NEXT_TELEMETRY_DISABLED: 1
     strategy:
       matrix:
-        node-version: [12.x, 14.x]
+        node-version: [14.x]
 
     services:
       mongodb:
-        image: mongo:3.4.23
+        image: mongo:4.4
         ports:
           - 27017:27017
     steps:
