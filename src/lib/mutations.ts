@@ -225,7 +225,7 @@ export async function updatePassword(
         _id: user._id
       },
       { $set: { password: newPasswordHash } },
-      { new: true, select: "username email" }
+      { new: true }
     );
 
     const token = createToken(updated);

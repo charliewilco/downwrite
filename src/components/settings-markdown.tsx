@@ -28,15 +28,13 @@ export enum LocalSettings {
 }
 
 export default function SettingsLocalMarkdown(): JSX.Element {
-  const [
-    { fileExtension, editorFont },
-    { updateFileExtension, updateEditorFont }
-  ] = useSettings();
+  const [{ fileExtension, editorFont }, { updateFileExtension, updateEditorFont }] =
+    useSettings();
 
   const initialValues = useRef(() => {
     return {
       fileExtension: fileExtension || ".md",
-      fontFamily: editorFont || "SF Mono"
+      fontFamily: editorFont || "DM Mono"
     };
   });
 

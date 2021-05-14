@@ -6,6 +6,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
   { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
   { [SubKey in K]: Maybe<T[SubKey]> };
+const defaultOptions = {};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -306,17 +307,19 @@ export const AllPostsDocument = gql`
 export function useAllPostsQuery(
   baseOptions?: Apollo.QueryHookOptions<IAllPostsQuery, IAllPostsQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<IAllPostsQuery, IAllPostsQueryVariables>(
     AllPostsDocument,
-    baseOptions
+    options
   );
 }
 export function useAllPostsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<IAllPostsQuery, IAllPostsQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<IAllPostsQuery, IAllPostsQueryVariables>(
     AllPostsDocument,
-    baseOptions
+    options
   );
 }
 export type AllPostsQueryHookResult = ReturnType<typeof useAllPostsQuery>;
@@ -354,15 +357,14 @@ export const EditDocument = gql`
 export function useEditQuery(
   baseOptions: Apollo.QueryHookOptions<IEditQuery, IEditQueryVariables>
 ) {
-  return Apollo.useQuery<IEditQuery, IEditQueryVariables>(EditDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<IEditQuery, IEditQueryVariables>(EditDocument, options);
 }
 export function useEditLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<IEditQuery, IEditQueryVariables>
 ) {
-  return Apollo.useLazyQuery<IEditQuery, IEditQueryVariables>(
-    EditDocument,
-    baseOptions
-  );
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<IEditQuery, IEditQueryVariables>(EditDocument, options);
 }
 export type EditQueryHookResult = ReturnType<typeof useEditQuery>;
 export type EditLazyQueryHookResult = ReturnType<typeof useEditLazyQuery>;
@@ -400,17 +402,19 @@ export const PreviewDocument = gql`
 export function usePreviewQuery(
   baseOptions: Apollo.QueryHookOptions<IPreviewQuery, IPreviewQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<IPreviewQuery, IPreviewQueryVariables>(
     PreviewDocument,
-    baseOptions
+    options
   );
 }
 export function usePreviewLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<IPreviewQuery, IPreviewQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<IPreviewQuery, IPreviewQueryVariables>(
     PreviewDocument,
-    baseOptions
+    options
   );
 }
 export type PreviewQueryHookResult = ReturnType<typeof usePreviewQuery>;
@@ -456,9 +460,10 @@ export function useUserDetailsQuery(
     IUserDetailsQueryVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<IUserDetailsQuery, IUserDetailsQueryVariables>(
     UserDetailsDocument,
-    baseOptions
+    options
   );
 }
 export function useUserDetailsLazyQuery(
@@ -467,9 +472,10 @@ export function useUserDetailsLazyQuery(
     IUserDetailsQueryVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<IUserDetailsQuery, IUserDetailsQueryVariables>(
     UserDetailsDocument,
-    baseOptions
+    options
   );
 }
 export type UserDetailsQueryHookResult = ReturnType<typeof useUserDetailsQuery>;
@@ -525,9 +531,10 @@ export function useUpdateEntryMutation(
     IUpdateEntryMutationVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<IUpdateEntryMutation, IUpdateEntryMutationVariables>(
     UpdateEntryDocument,
-    baseOptions
+    options
   );
 }
 export type UpdateEntryMutationHookResult = ReturnType<
@@ -575,9 +582,10 @@ export function useCreateEntryMutation(
     ICreateEntryMutationVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<ICreateEntryMutation, ICreateEntryMutationVariables>(
     CreateEntryDocument,
-    baseOptions
+    options
   );
 }
 export type CreateEntryMutationHookResult = ReturnType<
@@ -624,9 +632,10 @@ export function useRemoveEntryMutation(
     IRemoveEntryMutationVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<IRemoveEntryMutation, IRemoveEntryMutationVariables>(
     RemoveEntryDocument,
-    baseOptions
+    options
   );
 }
 export type RemoveEntryMutationHookResult = ReturnType<
@@ -673,9 +682,10 @@ export function useLoginUserMutation(
     ILoginUserMutationVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<ILoginUserMutation, ILoginUserMutationVariables>(
     LoginUserDocument,
-    baseOptions
+    options
   );
 }
 export type LoginUserMutationHookResult = ReturnType<typeof useLoginUserMutation>;
@@ -721,9 +731,10 @@ export function useCreateUserMutation(
     ICreateUserMutationVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<ICreateUserMutation, ICreateUserMutationVariables>(
     CreateUserDocument,
-    baseOptions
+    options
   );
 }
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
@@ -768,15 +779,17 @@ export function useUpdateUserSettingsMutation(
     IUpdateUserSettingsMutationVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
     IUpdateUserSettingsMutation,
     IUpdateUserSettingsMutationVariables
-  >(UpdateUserSettingsDocument, baseOptions);
+  >(UpdateUserSettingsDocument, options);
 }
 export type UpdateUserSettingsMutationHookResult = ReturnType<
   typeof useUpdateUserSettingsMutation
 >;
-export type UpdateUserSettingsMutationResult = Apollo.MutationResult<IUpdateUserSettingsMutation>;
+export type UpdateUserSettingsMutationResult =
+  Apollo.MutationResult<IUpdateUserSettingsMutation>;
 export type UpdateUserSettingsMutationOptions = Apollo.BaseMutationOptions<
   IUpdateUserSettingsMutation,
   IUpdateUserSettingsMutationVariables
@@ -817,15 +830,17 @@ export function useUpdatePasswordMutation(
     IUpdatePasswordMutationVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
     IUpdatePasswordMutation,
     IUpdatePasswordMutationVariables
-  >(UpdatePasswordDocument, baseOptions);
+  >(UpdatePasswordDocument, options);
 }
 export type UpdatePasswordMutationHookResult = ReturnType<
   typeof useUpdatePasswordMutation
 >;
-export type UpdatePasswordMutationResult = Apollo.MutationResult<IUpdatePasswordMutation>;
+export type UpdatePasswordMutationResult =
+  Apollo.MutationResult<IUpdatePasswordMutation>;
 export type UpdatePasswordMutationOptions = Apollo.BaseMutationOptions<
   IUpdatePasswordMutation,
   IUpdatePasswordMutationVariables
@@ -856,15 +871,14 @@ export const IsMeDocument = gql`
 export function useIsMeQuery(
   baseOptions?: Apollo.QueryHookOptions<IIsMeQuery, IIsMeQueryVariables>
 ) {
-  return Apollo.useQuery<IIsMeQuery, IIsMeQueryVariables>(IsMeDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<IIsMeQuery, IIsMeQueryVariables>(IsMeDocument, options);
 }
 export function useIsMeLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<IIsMeQuery, IIsMeQueryVariables>
 ) {
-  return Apollo.useLazyQuery<IIsMeQuery, IIsMeQueryVariables>(
-    IsMeDocument,
-    baseOptions
-  );
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<IIsMeQuery, IIsMeQueryVariables>(IsMeDocument, options);
 }
 export type IsMeQueryHookResult = ReturnType<typeof useIsMeQuery>;
 export type IsMeLazyQueryHookResult = ReturnType<typeof useIsMeLazyQuery>;

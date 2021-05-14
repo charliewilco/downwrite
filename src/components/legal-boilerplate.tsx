@@ -9,20 +9,17 @@ interface ILegalProps {
 }
 
 const LegalLink = () => (
-  <Link href={Routes.LOGIN} passHref>
-    <a>legal stuff</a>
+  <Link href={Routes.LEGAL} passHref>
+    <a className="text-pixieblue-500 hover:text-pixieblue-200">legal stuff</a>
   </Link>
 );
 
 export default function LegalBoilerplate(props: ILegalProps) {
   return (
-    <label
-      className="flex items-center font-bold p-2 dark:bg-onyx-900 my-4 dark:text-white light:shadow"
-      htmlFor={props.name}>
+    <label className="flex items-center font-bold p-2 dark:bg-onyx-900 my-4 dark:text-white light:shadow">
       <Checkbox
         data-testid="LEGAL_CHECK"
         name={props.name}
-        id={props.name}
         checked={props.checked}
         onChange={props.onChange}
       />

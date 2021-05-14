@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     fontFamily: {
       sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
-      mono: ["Jetbrains Mono", "monospace"],
+      mono: ["DM Mono", "monospace"],
       serif: ["Source Serif Pro", "Charter", "Georgia", "serif"]
     },
     extend: {
@@ -79,7 +79,11 @@ module.exports = {
     }
   },
   variants: {},
-  plugins: [require("@tailwindcss/typography"), require("@tailwindcss/custom-forms")]
+  plugins: [
+    require("@tailwindcss/forms"),
+    require("@tailwindcss/typography"),
+    require("@tailwindcss/aspect-ratio")
+  ]
 };
 
 /*
