@@ -3,8 +3,7 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx}",
     "./src/pages/**/*.{js,ts,jsx,tsx}"
   ],
-  mode: "jit",
-  darkMode: "media",
+  darkMode: "class", // 'media' or 'class'
   theme: {
     fontFamily: {
       sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],

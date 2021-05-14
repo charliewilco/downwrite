@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 import Link from "next/link";
 import { Menu, MenuButton, MenuLink, MenuItem, MenuList } from "@reach/menu-button";
+import { useTheme } from "next-themes";
 import {
   FiLogOut,
   FiBook,
@@ -12,7 +13,7 @@ import {
 } from "react-icons/fi";
 import { Routes } from "@utils/routes";
 import User from "./user";
-import { useSettings, useCurrentUser } from "@reducers/app";
+import { useCurrentUser } from "@reducers/app";
 
 const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) => {
   return (
@@ -22,11 +23,27 @@ const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) 
   );
 });
 
-export function DropdownDarkMode() {
-  const [settings, { toggleDarkMode }] = useSettings();
+export function DashboardLink() {
   return (
-    <MenuItem onSelect={() => toggleDarkMode()} className="flex items-center w-full">
-      {settings.isDarkMode ? (
+    <MenuLink
+      to={Routes.DASHBOARD}
+      as={NextMenuLink}
+      className="flex items-center w-full">
+      <span role="img" aria-label="Stack of books">
+        <FiBook size={16} className="mr-2" />
+      </span>
+      All Entries
+    </MenuLink>
+  );
+}
+
+export function DropdownDarkMode() {
+  const { theme, setTheme } = useTheme();
+  return (
+    <MenuItem
+      onSelect={() => setTheme(theme === "light" ? "dark" : "light")}
+      className="flex items-center w-full">
+      {theme !== "light" ? (
         <>
           <span role="img" aria-label="Sun smiling">
             <FiSun size={16} className="mr-2" />
@@ -45,6 +62,45 @@ export function DropdownDarkMode() {
   );
 }
 
+export function CreateNewEntry() {
+  return (
+    <MenuLink to={Routes.NEW} as={NextMenuLink} className="flex items-center w-full">
+      <span role="img" aria-label="Writing with a Pen">
+        <FiEdit3 size={16} className="mr-2" />
+      </span>
+      Create New Entry
+    </MenuLink>
+  );
+}
+
+export function SettingsLink() {
+  return (
+    <MenuLink
+      to={Routes.SETTINGS}
+      as={NextMenuLink}
+      className="flex items-center w-full">
+      <span role="img" aria-label="Gear">
+        <FiSettings size={16} className="mr-2" />
+      </span>
+      Settings
+    </MenuLink>
+  );
+}
+
+export function SignoutLink() {
+  return (
+    <MenuLink
+      to={Routes.SIGN_OUT}
+      as={NextMenuLink}
+      className="flex items-center w-full">
+      <span role="img" aria-label="Fearful face">
+        <FiLogOut size={16} className="mr-2" />
+      </span>
+      Sign Out
+    </MenuLink>
+  );
+}
+
 export default function DropdownUI() {
   const [currentUser] = useCurrentUser();
 
@@ -57,43 +113,11 @@ export default function DropdownUI() {
         {currentUser.username && (
           <User border colors={["#FEB692", "#EA5455"]} name={currentUser.username} />
         )}
-        <MenuLink
-          to={Routes.DASHBOARD}
-          as={NextMenuLink}
-          className="flex items-center w-full">
-          <span role="img" aria-label="Stack of books">
-            <FiBook size={16} className="mr-2" />
-          </span>
-          All Entries
-        </MenuLink>
-        <MenuLink
-          to={Routes.NEW}
-          as={NextMenuLink}
-          className="flex items-center w-full">
-          <span role="img" aria-label="Writing with a Pen">
-            <FiEdit3 size={16} className="mr-2" />
-          </span>
-          Create New Entry
-        </MenuLink>
-        <MenuLink
-          to={Routes.SETTINGS}
-          as={NextMenuLink}
-          className="flex items-center w-full">
-          <span role="img" aria-label="Gear">
-            <FiSettings size={16} className="mr-2" />
-          </span>
-          Settings
-        </MenuLink>
-
-        <MenuLink
-          to={Routes.SIGN_OUT}
-          as={NextMenuLink}
-          className="flex items-center w-full">
-          <span role="img" aria-label="Fearful face">
-            <FiLogOut size={16} className="mr-2" />
-          </span>
-          Sign Out
-        </MenuLink>
+        <DashboardLink />
+        <CreateNewEntry />
+        <DropdownDarkMode />
+        <SettingsLink />
+        <SignoutLink />
       </MenuList>
     </Menu>
   );

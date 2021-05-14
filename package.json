@@ -24,6 +24,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@fontsource/inter": "^4.2.1",
+    "@fontsource/jetbrains-mono": "^4.2.1",
+    "@fontsource/source-serif-pro": "^4.2.1",
     "@apollo/client": "^3.3.17",
     "@next/bundle-analyzer": "^10.2.0",
     "@reach/checkbox": "^0.15.1",
@@ -49,6 +52,7 @@
     "immutable": "~3.8.2",
     "jsonwebtoken": "^8.3.0",
     "jwt-decode": "^3.1.2",
+    "next-themes": "^0.0.12",
     "mongoose": "^5.12.8",
     "next": "^10.2.0",
     "pos-tagger.js": "^1.0.8",
@@ -57,6 +61,7 @@
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.3.2",
     "react-icons": "^4.2.0",
+    "react-prism": "^4.3.1",
     "react-markdown": "^6.0.2",
     "source-serif-pro": "^3.1.0",
     "typeface-dm-mono": "^1.1.13",

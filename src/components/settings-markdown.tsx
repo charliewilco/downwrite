@@ -28,10 +28,8 @@ export enum LocalSettings {
 }
 
 export default function SettingsLocalMarkdown(): JSX.Element {
-  const [
-    { fileExtension, editorFont },
-    { updateFileExtension, updateEditorFont }
-  ] = useSettings();
+  const [{ fileExtension, editorFont }, { updateFileExtension, updateEditorFont }] =
+    useSettings();
 
   const initialValues = useRef(() => {
     return {

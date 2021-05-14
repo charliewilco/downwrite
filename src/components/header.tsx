@@ -30,16 +30,16 @@ export function UIHeader(): JSX.Element {
           <Link href={Routes.NEW} passHref>
             <a
               data-testid="CREATE_NEW_ENTRY_BUTTON"
-              className="text-white leading-none cursor-pointer opacity-50 text-sm mr-8">
+              className="text-onyx-600 dark:text-white leading-none cursor-pointer opacity-50 text-sm mr-8">
               New
             </a>
           </Link>
           <DropdownUI />
         </nav>
       ) : (
-        <nav className="flex items-center">
+        <nav className="flex items-end">
           <Link href={Routes.LOGIN} passHref>
-            <a className="text-white leading-none cursor-pointer opacity-50 text-sm mr-8">
+            <a className="text-onyx-600 dark:text-white leading-none cursor-pointer opacity-50 text-sm">
               Login or Sign Up
             </a>
           </Link>

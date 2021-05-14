@@ -36,7 +36,7 @@ export const getServerSideProps: GetServerSideProps<
 
   return {
     props: {
-      initialAppState,
+      initialAppState: initialAppState,
       initialApolloState: client.cache.extract(),
       id
     }
@@ -45,11 +45,11 @@ export const getServerSideProps: GetServerSideProps<
 
 const PreviewEntry: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = (props) => {
+> = ({ id }) => {
   const router = useRouter();
   const [currentUser] = useCurrentUser();
   const { error, loading, data } = usePreviewQuery({
-    variables: { id: props.id }
+    variables: { id }
   });
 
   if (error) {

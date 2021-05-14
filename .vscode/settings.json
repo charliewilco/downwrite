@@ -3,4 +3,8 @@
   "jest.showCoverageOnLoad": true,
   "jest.autoEnable": false,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "css.validate": false,
+  "editor.quickSuggestions": {
+    "strings": true
+  }
 }

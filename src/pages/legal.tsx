@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import ContentWrapper from "../components/content";
+import { ContentWrapper } from "../components/content";
 
 const LegalPage: NextPage = (): JSX.Element => {
   return (
@@ -8,10 +8,8 @@ const LegalPage: NextPage = (): JSX.Element => {
       <Head>
         <title>Legal Nonsense</title>
       </Head>
-      <aside>
-        <h2>Hello</h2>
-      </aside>
-      <div className="xl:pb-0 xl:col-span-3 xl:row-span-2">
+
+      <div className="xl:pb-0 xl:col-span-3 xl:row-span-2 xl:col-start-2">
         <div className="font-serif __content py-8">
           <h2>Terms of Service</h2>
 
@@ -40,17 +38,12 @@ const LegalPage: NextPage = (): JSX.Element => {
 
           <ol>
             <li>
-              <p>
-                Permission is granted to temporarily download one copy of the
-                materials (information or software) on Downwrite&#39;s website for
-                personal, non-commercial transitory viewing only. This is the grant
-                of a license, not a transfer of title, and under this license you may
-                not:
-              </p>
+              Permission is granted to temporarily download one copy of the materials
+              (information or software) on Downwrite&#39;s website for personal,
+              non-commercial transitory viewing only. This is the grant of a license,
+              not a transfer of title, and under this license you may not:
             </li>
-            <li>
-              <p>modify or copy the materials;</p>
-            </li>
+            <li>modify or copy the materials;</li>
             <li>
               use the materials for any commercial purpose, or for any public display
               (commercial or non-commercial);
@@ -64,19 +57,15 @@ const LegalPage: NextPage = (): JSX.Element => {
               or
             </li>
             <li>
-              <p>
-                transfer the materials to another person or &quot;mirror&quot; the
-                materials on any other server.
-              </p>
+              transfer the materials to another person or &quot;mirror&quot; the
+              materials on any other server.
             </li>
             <li>
-              <p>
-                This license shall automatically terminate if you violate any of
-                these restrictions and may be terminated by Downwrite at any time.
-                Upon terminating your viewing of these materials or upon the
-                termination of this license, you must destroy any downloaded
-                materials in your possession whether in electronic or printed format.
-              </p>
+              This license shall automatically terminate if you violate any of these
+              restrictions and may be terminated by Downwrite at any time. Upon
+              terminating your viewing of these materials or upon the termination of
+              this license, you must destroy any downloaded materials in your
+              possession whether in electronic or printed format.
             </li>
           </ol>
 
