@@ -10481,10 +10481,10 @@ typeface-dm-mono@^1.1.13:
   resolved "https://registry.npmjs.org/typeface-dm-mono/-/typeface-dm-mono-1.1.13.tgz#ca62a8c0ad56fcd612016c18646b6b159fc57696"
   integrity sha512-0Crt/fdTPYQMIQoEsMGFM1pJdeu5xqDnSVfa02e+Tjm8yvrp0mb7nkRQA+tVSD73aeHmBUYmgKJhIgqcvh/wrg==
 
-typeface-inter@^3.15.0:
-  version "3.15.0"
-  resolved "https://registry.npmjs.org/typeface-inter/-/typeface-inter-3.15.0.tgz#7ac09c0bcc5fdd5c5b85727df6478ee287f56deb"
-  integrity sha512-kWLJsvqSJTBKilu1HsBYHwi3usFg8JQ9I9u+bcU2kOkIi48fOZy8sYacbFmlJ9EHRVNqqvM4zeI73WCSKNMOuQ==
+typeface-inter@^3.18.0:
+  version "3.18.0"
+  resolved "https://registry.yarnpkg.com/typeface-inter/-/typeface-inter-3.18.0.tgz#5db35f05b9700bc692f8fd4c5a3d694150f2d595"
+  integrity sha512-8lJm0+cddQ7OXGF1QJjNTN/B+utAa/5h81VgDMJi0HgWCWFl79BHzG6TgZK882ZiyXXsyRQDwTnP9smHYWNcLQ==
 
 typescript@^4.2.4:
   version "4.2.4"
