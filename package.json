@@ -50,7 +50,7 @@
     "jsonwebtoken": "^8.3.0",
     "jwt-decode": "^3.1.2",
     "mongoose": "^5.12.10",
-    "next": "^10.2.0",
+    "next": "^10.2.2",
     "pos-tagger.js": "^1.0.8",
     "prismjs": "^1.23.0",
     "react": "^17.0.2",
