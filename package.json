@@ -42,7 +42,7 @@
     "draftjs-md-converter": "^1.5.1",
     "fathom-client": "^3.0.0",
     "file-saver": "^2.0.5",
-    "formik": "^2.2.6",
+    "formik": "^2.2.7",
     "framer-motion": "^4.1.17",
     "graphql": "^15.5.0",
     "immer": "^9.0.2",
