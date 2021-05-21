@@ -100,7 +100,7 @@
     "jest-puppeteer": "^5.0.3",
     "jest-transform-graphql": "^2.1.0",
     "merge": "^2.1.1",
-    "postcss": "^8.2.15",
+    "postcss": "^8.3.0",
     "prettier": "^2.3.0",
     "pretty-quick": "^3.1.0",
     "prop-types": "^15.7.2",
