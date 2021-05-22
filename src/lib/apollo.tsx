@@ -1,26 +1,44 @@
 import { useMemo } from "react";
-import { ApolloClient, InMemoryCache, NormalizedCacheObject } from "@apollo/client";
+import {
+  ApolloClient,
+  HttpLink,
+  InMemoryCache,
+  NormalizedCacheObject
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+import Cookies from "universal-cookie";
+import { TOKEN_NAME } from "./constants";
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
-function createIsomorphLink(context?: any) {
-  if (typeof window === "undefined") {
-    const { SchemaLink } = require("@apollo/client/link/schema");
-    const { schema } = require("./schema");
-    return new SchemaLink({ schema, context });
-  } else {
-    const { HttpLink } = require("@apollo/client");
-    return new HttpLink({
-      uri: "/api/graphql",
-      credentials: "same-origin"
-    });
-  }
-}
+const cookies = new Cookies();
+function createApolloClient(token?: string) {
+  const authLink = setContext((_, { headers }) => {
+    if (typeof window !== "undefined") {
+      return {
+        headers: {
+          ...headers,
+          authorization: cookies.get(TOKEN_NAME)
+        }
+      };
+    }
 
-function createApolloClient(context?: any) {
+    return {
+      headers: {
+        ...headers,
+        authorization: token ?? ""
+      }
+    };
+  });
+
+  const httpLink = new HttpLink({
+    uri: "http://localhost:4000/graphql"
+
+    // credentials: "same-origin"
+  });
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
-    link: createIsomorphLink(context),
+    link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
     connectToDevTools: true
   });
@@ -28,9 +46,9 @@ function createApolloClient(context?: any) {
 
 export function initializeApollo(
   initialState: NormalizedCacheObject | null = null,
-  context?: any
+  token?: string
 ) {
-  const _apolloClient = apolloClient ?? createApolloClient(context);
+  const _apolloClient = apolloClient ?? createApolloClient(token);
 
   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
   // get hydrated here
@@ -45,12 +63,6 @@ export function initializeApollo(
   return _apolloClient;
 }
 
-export function useApollo(
-  initialState: NormalizedCacheObject | null,
-  context?: any
-) {
-  const store = useMemo(() => initializeApollo(initialState, context), [
-    initialState
-  ]);
-  return store;
+export function useApollo(initialState: NormalizedCacheObject | null) {
+  return useMemo(() => initializeApollo(initialState), [initialState]);
 }

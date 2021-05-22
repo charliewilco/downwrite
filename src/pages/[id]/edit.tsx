@@ -21,7 +21,7 @@ import { __IS_DEV__ } from "@utils/dev";
 import { updateEntryCache } from "@utils/cache";
 
 import { initializeApollo } from "@lib/apollo";
-import { getInitialStateFromCookie } from "@lib/cookie-managment";
+import { getInitialStateFromCookie, TOKEN_NAME } from "@lib/cookie-managment";
 import { useEditReducer } from "@hooks/useEditReducer";
 import { IAppState, useNotifications, NotificationType } from "@reducers/app";
 import { EditActions } from "@reducers/editor";
@@ -61,13 +61,12 @@ type EditPageParams = {
 type EditPageHandler = GetServerSideProps<IEditPageProps, EditPageParams>;
 
 export const getServerSideProps: EditPageHandler = async ({ req, res, params }) => {
-  const client = initializeApollo({}, { req, res });
+  const client = initializeApollo({}, req.cookies[TOKEN_NAME]);
   const id = params?.id!;
 
   const { data } = await client.query<IEditQuery, IEditQueryVariables>({
     query: EditDocument,
-    variables: { id },
-    context: { req, res }
+    variables: { id }
   });
 
   const initialAppState = await getInitialStateFromCookie(req);

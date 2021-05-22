@@ -85,8 +85,14 @@ export var tagMap: Record<PosTag, string[]> = {
 
 export type FlatOutputTree = Record<PosTag, string[]>;
 
+const flat = <T>(arr: T[]) => {
+  return arr.reduce(function (flat, toFlatten) {
+    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+  }, []);
+};
+
 export const flatten = (tree: Output[][]): FlatOutputTree => {
-  return tree.flat().reduce<FlatOutputTree>((acc, current) => {
+  return flat(tree).reduce<FlatOutputTree>((acc, current) => {
     acc[current.tag as PosTag].push(current.word);
     return acc;
   }, tagMap);

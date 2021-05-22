@@ -7,15 +7,14 @@ import SettingsPassword from "@components/settings-password";
 import Loading from "@components/loading";
 import { PageTitle } from "@components/page-title";
 import { initializeApollo } from "@lib/apollo";
-import { getInitialStateFromCookie } from "@lib/cookie-managment";
+import { getInitialStateFromCookie, TOKEN_NAME } from "@lib/cookie-managment";
 import { useUserDetailsQuery, UserDetailsDocument } from "../__generated__/client";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const client = initializeApollo({}, { req, res });
+  const client = initializeApollo({}, req.cookies[TOKEN_NAME]);
 
   await client.query({
-    query: UserDetailsDocument,
-    context: { req, res }
+    query: UserDetailsDocument
   });
 
   const initialAppState = await getInitialStateFromCookie(req);

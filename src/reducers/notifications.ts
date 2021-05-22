@@ -1,4 +1,11 @@
-import * as React from "react";
+import {
+  useCallback,
+  useReducer,
+  createContext,
+  createElement,
+  Reducer
+} from "react";
+import produce from "immer";
 import { v4 as uuid } from "uuid";
 
 export enum NotificationType {
@@ -36,61 +43,45 @@ export interface INoticationAction {
   };
 }
 
+type NoticationAction =
+  | {
+      type: NotificationActions.REMOVE_NOTIFICATION;
+      selected: UINotificationMessage;
+    }
+  | {
+      type: NotificationActions.ADD_NOTIFICATION;
+      text: string;
+      variant: NotificationType;
+      dismissable: boolean;
+    };
+
 export interface INotificationState {
   notifications: UINotificationMessage[];
 }
 
-function addNotification(
-  state: INotificationState,
-  text: string,
-  type?: NotificationType,
-  dismissable?: boolean
-): INotificationState {
-  const notifications = [
-    new UINotificationMessage(text, type, dismissable),
-    ...state.notifications
-  ].sort();
-  return {
-    notifications
-  };
-}
+export const notificationReducer = produce(
+  (state: INotificationState, action: NoticationAction) => {
+    switch (action.type) {
+      case NotificationActions.ADD_NOTIFICATION:
+        state.notifications.unshift(
+          new UINotificationMessage(action.text, action.variant, action.dismissable)
+        );
 
-function removeNotifications(
-  state: INotificationState,
-  selected: UINotificationMessage
-): INotificationState {
-  const notifications = state.notifications.filter((t) => t.id !== selected.id && t);
-  return {
-    notifications
-  };
-}
+        break;
+      case NotificationActions.REMOVE_NOTIFICATION:
+        const i = state.notifications.findIndex(
+          ({ id }) => action.selected.id === id
+        );
 
-export function reducer(
-  state: INotificationState,
-  action: INoticationAction
-): INotificationState {
-  switch (action.type) {
-    case NotificationActions.ADD_NOTIFICATION:
-      return addNotification(
-        state,
-        action.payload.text,
-        action.payload.type,
-        action.payload.dismissable
-      );
-    case NotificationActions.REMOVE_NOTIFICATION:
-      return removeNotifications(state, action.payload.selected);
-    default:
-      throw new Error();
+        if (i > -1) {
+          state.notifications.splice(i, 1);
+        }
+        break;
+      default:
+        throw new Error();
+    }
   }
-}
-
-export function init(
-  notifications: UINotificationMessage[] | []
-): INotificationState {
-  return {
-    notifications
-  };
-}
+);
 
 interface INotificationActions {
   add: (m: string, t?: NotificationType, d?: boolean) => void;
@@ -101,61 +92,48 @@ export interface INotificationContext extends INotificationState {
   actions: INotificationActions;
 }
 
-export const NotificationContext = React.createContext<INotificationContext>(
+export const NotificationContext = createContext<INotificationContext>(
   {} as INotificationContext
 );
-
-export function useUINotificationsProvider(): INotificationContext {
-  const [state, dispatch] = React.useReducer<
-    React.Reducer<INotificationState, INoticationAction>
-  >(reducer, {
-    notifications: []
-  });
-
-  function add(text: string, type?: NotificationType, dismissable?: boolean): void {
-    dispatch({
-      type: NotificationActions.ADD_NOTIFICATION,
-      payload: {
-        text,
-        type,
-        dismissable
-      }
-    });
-  }
-
-  function remove(selected: UINotificationMessage): void {
-    dispatch({
-      type: NotificationActions.REMOVE_NOTIFICATION,
-      payload: {
-        selected
-      }
-    });
-  }
-
-  return {
-    notifications: state.notifications,
-    actions: {
-      add,
-      remove
-    }
-  };
-}
-
-export function useUINotifications(): INotificationContext {
-  const notifications = React.useContext<INotificationContext>(NotificationContext);
-
-  return notifications;
-}
 
 interface INotificationProps {
   children: React.ReactNode;
 }
 
-export function NotificationProvider(props: INotificationProps): JSX.Element {
-  const value = useUINotificationsProvider();
-  return React.createElement(
+export function NotificationProvider({ children }: INotificationProps): JSX.Element {
+  const [{ notifications }, dispatch] = useReducer<
+    Reducer<INotificationState, NoticationAction>
+  >(notificationReducer, {
+    notifications: []
+  });
+
+  const remove = useCallback(
+    (selected: UINotificationMessage) =>
+      dispatch({
+        type: NotificationActions.REMOVE_NOTIFICATION,
+
+        selected
+      }),
+    [dispatch]
+  );
+
+  const add = useCallback(
+    (text: string, variant?: NotificationType, dismissable?: boolean): void => {
+      dispatch({
+        type: NotificationActions.ADD_NOTIFICATION,
+        text,
+        variant,
+        dismissable
+      });
+    },
+    [dispatch]
+  );
+
+  return createElement(
     NotificationContext.Provider,
-    { value },
-    props.children
+    {
+      value: { notifications, actions: { add, remove } }
+    },
+    children
   );
 }

@@ -18,10 +18,9 @@ import { AvatarColors } from "@utils/default-styles";
 import { useCurrentUser } from "@reducers/app";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
 
-export const getServerSideProps: GetServerSideProps<
-  { id: string },
-  { id: string }
-> = async ({ req, res, params }) => {
+type PreviewPageHandler = GetServerSideProps<{ id: string }, { id: string }>;
+
+export const getServerSideProps: PreviewPageHandler = async ({ req, params }) => {
   const id = params!.id;
   const initialAppState = await getInitialStateFromCookie(req);
   const client = initializeApollo({});
@@ -30,8 +29,7 @@ export const getServerSideProps: GetServerSideProps<
     query: PreviewDocument,
     variables: {
       id: params!.id
-    },
-    context: { req, res }
+    }
   });
 
   return {

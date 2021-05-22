@@ -8,7 +8,7 @@ import EmptyPosts from "@components/empty-posts";
 import { LoadingDashboard, ErrorDashboard } from "@components/dashboard-helpers";
 import { useRemovePost, useDashboard } from "../hooks";
 import { initializeApollo } from "@lib/apollo";
-import { getInitialStateFromCookie } from "@lib/cookie-managment";
+import { getInitialStateFromCookie, TOKEN_NAME } from "@lib/cookie-managment";
 import { IAppState } from "@reducers/app";
 import { useAllPostsQuery, AllPostsDocument } from "../__generated__/client";
 
@@ -18,13 +18,12 @@ interface IDashboardProps {
 }
 
 export const getServerSideProps: GetServerSideProps<IDashboardProps> = async ({
-  req,
-  res
+  req
 }) => {
-  const client = initializeApollo({}, { req, res });
+  console.log(req.cookies);
+  const client = initializeApollo({}, req.cookies[TOKEN_NAME]);
   await client.query({
-    query: AllPostsDocument,
-    context: { req, res }
+    query: AllPostsDocument
   });
 
   const initialAppState = await getInitialStateFromCookie(req);

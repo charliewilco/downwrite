@@ -2,7 +2,9 @@ import { useCallback } from "react";
 import { useRouter } from "next/router";
 import decode from "jwt-decode";
 import base64 from "base-64";
+import Cookies from "universal-cookie";
 import { useNotifications, NotificationType, useCurrentUser } from "@reducers/app";
+import { TOKEN_NAME } from "@lib/constants";
 import { TokenContents } from "@lib/token";
 import { Routes } from "@utils/routes";
 import {
@@ -26,13 +28,12 @@ interface IFormHandlers {
   onLoginSubmit(values: ILoginValues): void;
   onRegisterSubmit(values: IRegisterValues): void;
 }
+const cookies = new Cookies();
 
 export function useLoginFns(): IFormHandlers {
   const router = useRouter();
-  const [
-    notifications,
-    { addNotification, removeNotification }
-  ] = useNotifications();
+  const [notifications, { addNotification, removeNotification }] =
+    useNotifications();
   const [createUser] = useCreateUserMutation();
   const [, { onCurrentUserLogin }] = useCurrentUser();
 
@@ -40,6 +41,7 @@ export function useLoginFns(): IFormHandlers {
 
   const onSuccess = useCallback((token: string) => {
     const d = decode<TokenContents>(token);
+    cookies.set(TOKEN_NAME, token);
     onCurrentUserLogin(d.name, d.user);
 
     router.push(Routes.DASHBOARD);

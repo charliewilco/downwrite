@@ -1,4 +1,4 @@
-schema: ./src/lib/schema.graphql
+schema: https://downwrite-graphql-api.herokuapp.com/graphql
 documents: ./src/lib/document.graphql
 generates:
   ./src/__generated__/client.tsx:
@@ -6,13 +6,6 @@ generates:
       - typescript
       - typescript-operations
       - typescript-react-apollo
-  ./src/__generated__/server.ts:
-    config:
-      useIndexSignature: true
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-resolvers
 config:
   typesPrefix: I
   avoidOptionals: true
