@@ -34,7 +34,7 @@
     "@reach/tabs": "^0.15.0",
     "@reach/visually-hidden": "^0.15.0",
     "@sindresorhus/is": "^4.0.1",
-    "apollo-server-micro": "^2.24.1",
+    "apollo-server-micro": "^2.25.0",
     "base-64": "^1.0.0",
     "bcrypt": "^5.0.1",
     "date-fns": "^2.22.1",
