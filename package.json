@@ -72,7 +72,7 @@
     "@graphql-codegen/typescript-react-apollo": "^2.2.4",
     "@graphql-codegen/typescript-resolvers": "^1.19.2",
     "@tailwindcss/aspect-ratio": "^0.2.1",
-    "@tailwindcss/forms": "^0.3.2",
+    "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/typography": "^0.4.1",
     "@types/base-64": "^1.0.0",
     "@types/bcrypt": "^5.0.0",
