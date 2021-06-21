@@ -957,16 +957,16 @@
     auto-bind "~4.0.0"
     tslib "~2.2.0"
 
-"@graphql-codegen/typescript-react-apollo@^2.2.4":
-  version "2.2.4"
-  resolved "https://registry.npmjs.org/@graphql-codegen/typescript-react-apollo/-/typescript-react-apollo-2.2.4.tgz#149b8e4f2b684295a2e6be8b9e88285a0f8be0f6"
-  integrity sha512-2db+KrujuBjQ8GraamEPGEp74Bxcw6Vd2AubhqenoTmHjK/Jw3HLpO8ndetcoND08e3EZCb/CNyKkLcxwYD0eg==
+"@graphql-codegen/typescript-react-apollo@^2.2.6":
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-react-apollo/-/typescript-react-apollo-2.2.6.tgz#3b9f8f05c527d7d68ee0468e7bce2236d24234fc"
+  integrity sha512-aG/0CJPu4YjprC6QTOeaOxKCGg8c0m8Ja+WI5por8/hOqpndieSUYBxLZJ1ZxbXdgLpCkmUIGS9QZsVr7xtVQw==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^1.18.5"
-    "@graphql-codegen/visitor-plugin-common" "^1.20.0"
+    "@graphql-codegen/plugin-helpers" "^1.18.7"
+    "@graphql-codegen/visitor-plugin-common" "1.21.1"
     auto-bind "~4.0.0"
     change-case-all "1.0.14"
-    tslib "~2.2.0"
+    tslib "~2.3.0"
 
 "@graphql-codegen/typescript-resolvers@^1.19.2":
   version "1.19.2"
@@ -1006,7 +1006,7 @@
     parse-filepath "^1.0.2"
     tslib "~2.2.0"
 
-"@graphql-codegen/visitor-plugin-common@1.21.1", "@graphql-codegen/visitor-plugin-common@^1.20.0":
+"@graphql-codegen/visitor-plugin-common@1.21.1":
   version "1.21.1"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-1.21.1.tgz#d080265e42c2a8867520b29baf283b1e1012bbb8"
   integrity sha512-f6GakFkn6TEtuU//BrZfmdL5eyzlisE8x6LmNJvjPQig8pVBVt8ncJeWV42XV9iJpaCmrQaT4MtXPkjlCe0egA==
