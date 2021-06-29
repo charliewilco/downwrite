@@ -1638,14 +1638,6 @@
   resolved "https://registry.npmjs.org/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
-"@reach/auto-id@0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.15.0.tgz#f46afebfc140b2099b95c7aec1f049d167d3833d"
-  integrity sha512-iACaCcZeqAhDf4OOwJpmHHS/LaRj9z3Ip8JmlhpCrFWV2YOIiiZk42amlBZX6CKH66Md+eriYZQk3TyAjk6Oxg==
-  dependencies:
-    "@reach/utils" "0.15.0"
-    tslib "^2.1.0"
-
 "@reach/auto-id@0.15.2":
   version "0.15.2"
   resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.15.2.tgz#289640b47545a32f3621469ba497ba5c040b349c"
@@ -1654,17 +1646,17 @@
     "@reach/utils" "0.15.2"
     tslib "^2.3.0"
 
-"@reach/checkbox@^0.15.1":
-  version "0.15.1"
-  resolved "https://registry.yarnpkg.com/@reach/checkbox/-/checkbox-0.15.1.tgz#02da7d51cf92f315680b76ef461dcf1e2b567fb3"
-  integrity sha512-9TnHe1tFcaBpiCBJ5occKgt+aj0Pwbe9wAj3sT2tIKcjbjBjPLx7aAQ3taT3m8dQIL7+PnKnskjts7m6+3MhHg==
+"@reach/checkbox@^0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/checkbox/-/checkbox-0.15.2.tgz#21648b1fc1ab72cccf7c53580d04e2720bc63d02"
+  integrity sha512-HDcp9UdUWzYnoQxWY9nqAbsY+YOey5C/xHZo2oX07SMc4K2zzxpYOXEmPa9KxCWQlmeG/FRPOrpW3KVUrsx9ZQ==
   dependencies:
-    "@reach/auto-id" "0.15.0"
-    "@reach/machine" "0.15.0"
-    "@reach/utils" "0.15.0"
+    "@reach/auto-id" "0.15.2"
+    "@reach/machine" "0.15.2"
+    "@reach/utils" "0.15.2"
     prop-types "^15.7.2"
     tiny-warning "^1.0.3"
-    tslib "^2.1.0"
+    tslib "^2.3.0"
 
 "@reach/combobox@^0.15.2":
   version "0.15.2"
@@ -1678,14 +1670,6 @@
     "@reach/utils" "0.15.2"
     prop-types "^15.7.2"
     tslib "^2.3.0"
-
-"@reach/descendants@0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@reach/descendants/-/descendants-0.15.0.tgz#be55a9420a075bc130f3be6da6e7e47733e5b8a0"
-  integrity sha512-MGs+7sGjx07sm29Wc2d/Ya72qwatNVHofnYwwHMT6LImv99kE5TQMCgkMSDeRwqQxHURmcjb4I7Tab+ahvCGiw==
-  dependencies:
-    "@reach/utils" "0.15.0"
-    tslib "^2.1.0"
 
 "@reach/descendants@0.15.2":
   version "0.15.2"
@@ -1707,14 +1691,14 @@
     react-remove-scroll "^2.4.1"
     tslib "^2.1.0"
 
-"@reach/machine@0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@reach/machine/-/machine-0.15.0.tgz#dee9b1504117df1469485b7115ca910ef3ab9c2a"
-  integrity sha512-o3vvqsTQyj7apxpbSuIn4xKYlqNagcjhlMnroJ2uqgJfFwy1tLrsQo4Sr8GnZu4hitPbNAfqGExYjV8ZV8SHpA==
+"@reach/machine@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/machine/-/machine-0.15.2.tgz#f1558e63a6b304e6cc12feefb0d0dd315b32c962"
+  integrity sha512-op8Duhp6rNCReZgdVScbIzoXMPFYP4nje6dvg4g2GKo8hUkyQpebsUFnUNNNv6NWdbmhIRiKHFlTgSl2gIlh5Q==
   dependencies:
-    "@reach/utils" "0.15.0"
+    "@reach/utils" "0.15.2"
     "@xstate/fsm" "1.4.0"
-    tslib "^2.1.0"
+    tslib "^2.3.0"
 
 "@reach/menu-button@^0.15.2":
   version "0.15.2"
@@ -1733,17 +1717,6 @@
   version "1.2.0"
   resolved "https://registry.npmjs.org/@reach/observe-rect/-/observe-rect-1.2.0.tgz#d7a6013b8aafcc64c778a0ccb83355a11204d3b2"
   integrity sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==
-
-"@reach/popover@0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@reach/popover/-/popover-0.15.0.tgz#541de5c970509fbedbecd981759fa1ab926774fd"
-  integrity sha512-nBR6ZlULF7ZZIqkN47QEWmdqUX2Zd6FSeYJku1il9OkiMnWzI3aTOyu1B+IJfYeIqg28D/aeF4ff0oVu1VUrqQ==
-  dependencies:
-    "@reach/portal" "0.15.0"
-    "@reach/rect" "0.15.0"
-    "@reach/utils" "0.15.0"
-    tabbable "^4.0.0"
-    tslib "^2.1.0"
 
 "@reach/popover@0.15.2":
   version "0.15.2"
@@ -1771,17 +1744,6 @@
   dependencies:
     "@reach/utils" "0.15.2"
     tslib "^2.3.0"
-
-"@reach/rect@0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@reach/rect/-/rect-0.15.0.tgz#c374b2971d250d7eeea6846fb4d64733b799f94e"
-  integrity sha512-Nu0zG4Xq8Z0C3Yr3wbjtj7fvII1q2KopHDStNtmL26oWPzlaZJ9A1K6rZSPIqxKkx1hvl6AUTeom7eHTIKhHjA==
-  dependencies:
-    "@reach/observe-rect" "1.2.0"
-    "@reach/utils" "0.15.0"
-    prop-types "^15.7.2"
-    tiny-warning "^1.0.3"
-    tslib "^2.1.0"
 
 "@reach/rect@0.15.2":
   version "0.15.2"
