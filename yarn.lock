@@ -1716,18 +1716,18 @@
     "@xstate/fsm" "1.4.0"
     tslib "^2.1.0"
 
-"@reach/menu-button@^0.15.1":
-  version "0.15.1"
-  resolved "https://registry.yarnpkg.com/@reach/menu-button/-/menu-button-0.15.1.tgz#500223d45db33ebc80e441a1458fba08c5432bfe"
-  integrity sha512-oBV+XWBCen2uDUeg2ZODaZ65oyoLNVLrdUfVOGmeVjWLvfGyHwwgTpeJdrPoCCR7edZsuZ1T6D7YQzl81p3/dA==
+"@reach/menu-button@^0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/menu-button/-/menu-button-0.15.2.tgz#00f91402be3ff23d3b4cfe377529f4f9e82a78fe"
+  integrity sha512-slEji1AnfnH134YDZSTwst4nZHYNrfyg9GF+A8p1+kGc8N3JsPysHc7uIUZ/IsK+PdaOCB+r9kuL1QWBgNO+jw==
   dependencies:
-    "@reach/auto-id" "0.15.0"
-    "@reach/descendants" "0.15.0"
-    "@reach/popover" "0.15.0"
-    "@reach/utils" "0.15.0"
+    "@reach/auto-id" "0.15.2"
+    "@reach/descendants" "0.15.2"
+    "@reach/popover" "0.15.2"
+    "@reach/utils" "0.15.2"
     prop-types "^15.7.2"
     tiny-warning "^1.0.3"
-    tslib "^2.1.0"
+    tslib "^2.3.0"
 
 "@reach/observe-rect@1.2.0":
   version "1.2.0"

@@ -29,7 +29,7 @@
     "@reach/checkbox": "^0.15.1",
     "@reach/combobox": "^0.15.2",
     "@reach/dialog": "^0.15.0",
-    "@reach/menu-button": "^0.15.1",
+    "@reach/menu-button": "^0.15.2",
     "@reach/skip-nav": "^0.15.0",
     "@reach/tabs": "^0.15.0",
     "@reach/visually-hidden": "^0.15.0",
