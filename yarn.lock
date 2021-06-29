@@ -1646,6 +1646,14 @@
     "@reach/utils" "0.15.0"
     tslib "^2.1.0"
 
+"@reach/auto-id@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.15.2.tgz#289640b47545a32f3621469ba497ba5c040b349c"
+  integrity sha512-K7d5qhYBlBHIjy+IpSEAyMeB5VTZ9m0tZdr7xyNd5Fr6oeefHEvJiJGuQpubP5bDoe7ShC3y0VQGFmT0g7KcZg==
+  dependencies:
+    "@reach/utils" "0.15.2"
+    tslib "^2.3.0"
+
 "@reach/checkbox@^0.15.1":
   version "0.15.1"
   resolved "https://registry.yarnpkg.com/@reach/checkbox/-/checkbox-0.15.1.tgz#02da7d51cf92f315680b76ef461dcf1e2b567fb3"
@@ -1658,18 +1666,18 @@
     tiny-warning "^1.0.3"
     tslib "^2.1.0"
 
-"@reach/combobox@^0.15.1":
-  version "0.15.1"
-  resolved "https://registry.npmjs.org/@reach/combobox/-/combobox-0.15.1.tgz#267e50fc526bc9b9c20d30361277685e69e074f9"
-  integrity sha512-4WvxqHYEX2aW2FqNqwJtYYYaTOgyMaZ5OYVWP/iyTunrcbyHWZsoCt3CBR6/AfMsiJ7I7yCxX2tLShjFOGAA+A==
+"@reach/combobox@^0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/combobox/-/combobox-0.15.2.tgz#a85bd6269477b882bf98dda8973512271083fdfd"
+  integrity sha512-FjF1Tm7rvAI14joBD+2kco9Hlrmsum2ps0Atd4+UJpKAhQFZ2zmxi4oK1WeFavm4LQwuzAV2MFL+7Oe0TgrsUQ==
   dependencies:
-    "@reach/auto-id" "0.15.0"
-    "@reach/descendants" "0.15.0"
-    "@reach/popover" "0.15.0"
-    "@reach/portal" "0.15.0"
-    "@reach/utils" "0.15.0"
+    "@reach/auto-id" "0.15.2"
+    "@reach/descendants" "0.15.2"
+    "@reach/popover" "0.15.2"
+    "@reach/portal" "0.15.2"
+    "@reach/utils" "0.15.2"
     prop-types "^15.7.2"
-    tslib "^2.1.0"
+    tslib "^2.3.0"
 
 "@reach/descendants@0.15.0":
   version "0.15.0"
@@ -1678,6 +1686,14 @@
   dependencies:
     "@reach/utils" "0.15.0"
     tslib "^2.1.0"
+
+"@reach/descendants@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/descendants/-/descendants-0.15.2.tgz#b0641f0bc864d91271364678dea51cf86b2e5c66"
+  integrity sha512-GdQXWVpscss89MOhWh+sL4TnIn0qX1y+Te3wE72aKQrz/QCR69JFEW4wftovmF7rFm4/kDZcp14lMy512U6VlA==
+  dependencies:
+    "@reach/utils" "0.15.2"
+    tslib "^2.3.0"
 
 "@reach/dialog@^0.15.0":
   version "0.15.0"
@@ -1729,6 +1745,17 @@
     tabbable "^4.0.0"
     tslib "^2.1.0"
 
+"@reach/popover@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/popover/-/popover-0.15.2.tgz#e310e2afe82afa35929354f1fd1a747cdebb7654"
+  integrity sha512-92Ov7VPXjn4ciOVupeekki03lSMz9NAmw2BjWYE9mVvYWKyDx5jx2srtbkIqUaSCkAVV3KEsFUia8aMm60FDZg==
+  dependencies:
+    "@reach/portal" "0.15.2"
+    "@reach/rect" "0.15.2"
+    "@reach/utils" "0.15.2"
+    tabbable "^4.0.0"
+    tslib "^2.3.0"
+
 "@reach/portal@0.15.0":
   version "0.15.0"
   resolved "https://registry.yarnpkg.com/@reach/portal/-/portal-0.15.0.tgz#b137582a1ecc4e04c60ce9a9c672dd2d23a2f1cc"
@@ -1736,6 +1763,14 @@
   dependencies:
     "@reach/utils" "0.15.0"
     tslib "^2.1.0"
+
+"@reach/portal@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/portal/-/portal-0.15.2.tgz#fe7aa3d9a475ec07686c39bab3a0d85093fa91fb"
+  integrity sha512-5x+dchGr4btRnLazwmyCYbSPVJAIrw0eXwhz7Vj9uT/EIp43WzOtTcODdLOoH6Ol2QLjX1Yt/fBjdK9+UAKxSA==
+  dependencies:
+    "@reach/utils" "0.15.2"
+    tslib "^2.3.0"
 
 "@reach/rect@0.15.0":
   version "0.15.0"
@@ -1747,6 +1782,17 @@
     prop-types "^15.7.2"
     tiny-warning "^1.0.3"
     tslib "^2.1.0"
+
+"@reach/rect@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/rect/-/rect-0.15.2.tgz#734e3f17a499d6e22bd2ea95856c801c41ed66fd"
+  integrity sha512-S2lzvvfclUHdvgcfW/eoz0i729HJvG5f6ayVaXcKz+X6LKF9i9Jdhfwsz7b3UmnSCihKNs0cX5tyWfWr1E1JFw==
+  dependencies:
+    "@reach/observe-rect" "1.2.0"
+    "@reach/utils" "0.15.2"
+    prop-types "^15.7.2"
+    tiny-warning "^1.0.3"
+    tslib "^2.3.0"
 
 "@reach/skip-nav@^0.15.0":
   version "0.15.0"
@@ -1774,6 +1820,14 @@
   dependencies:
     tiny-warning "^1.0.3"
     tslib "^2.1.0"
+
+"@reach/utils@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.15.2.tgz#a63a761eb36266bf33d65cb91520dd85a04ae116"
+  integrity sha512-Lr1SJ5X4hEjD/M0TAonURM8wytM/JuPSuIP7t+e5cil34pThyLsBvTGeNfmpSgaLJ5vlsv0x9u6g4SRAEr84Og==
+  dependencies:
+    tiny-warning "^1.0.3"
+    tslib "^2.3.0"
 
 "@reach/visually-hidden@^0.15.0":
   version "0.15.0"
@@ -10503,7 +10557,7 @@ tslib@^1.0.0, tslib@^1.10.0, tslib@^1.14.1, tslib@^1.9.0, tslib@^1.9.3:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2, tslib@^2.0.0, tslib@^2.0.3, tslib@^2.1.0, tslib@~2.3.0:
+tslib@^2, tslib@^2.0.0, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.0, tslib@~2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
   integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==
