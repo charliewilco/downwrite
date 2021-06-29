@@ -1646,6 +1646,14 @@
     "@reach/utils" "0.15.0"
     tslib "^2.1.0"
 
+"@reach/auto-id@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.15.2.tgz#289640b47545a32f3621469ba497ba5c040b349c"
+  integrity sha512-K7d5qhYBlBHIjy+IpSEAyMeB5VTZ9m0tZdr7xyNd5Fr6oeefHEvJiJGuQpubP5bDoe7ShC3y0VQGFmT0g7KcZg==
+  dependencies:
+    "@reach/utils" "0.15.2"
+    tslib "^2.3.0"
+
 "@reach/checkbox@^0.15.1":
   version "0.15.1"
   resolved "https://registry.yarnpkg.com/@reach/checkbox/-/checkbox-0.15.1.tgz#02da7d51cf92f315680b76ef461dcf1e2b567fb3"
@@ -1678,6 +1686,14 @@
   dependencies:
     "@reach/utils" "0.15.0"
     tslib "^2.1.0"
+
+"@reach/descendants@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/descendants/-/descendants-0.15.2.tgz#b0641f0bc864d91271364678dea51cf86b2e5c66"
+  integrity sha512-GdQXWVpscss89MOhWh+sL4TnIn0qX1y+Te3wE72aKQrz/QCR69JFEW4wftovmF7rFm4/kDZcp14lMy512U6VlA==
+  dependencies:
+    "@reach/utils" "0.15.2"
+    tslib "^2.3.0"
 
 "@reach/dialog@^0.15.0":
   version "0.15.0"
@@ -1756,16 +1772,16 @@
     "@reach/utils" "0.15.0"
     tslib "^2.1.0"
 
-"@reach/tabs@^0.15.0":
-  version "0.15.0"
-  resolved "https://registry.npmjs.org/@reach/tabs/-/tabs-0.15.0.tgz#cb94ee9bdadf6d818e8bee43b8d8fea8e708b727"
-  integrity sha512-W3FZw0DMGChwIRDBZYCw66NdiGkyapYs6xjOqQV2Ph7DMaMQ0lYck5bn40EtVi3O5x+8cAKmV+ubbHVUh+WSig==
+"@reach/tabs@^0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/tabs/-/tabs-0.15.2.tgz#0c2983cab6bf0df8f3360df2b0642ef3b9975bf8"
+  integrity sha512-q7dmKw/IylljtDM2rhwXbAm7clHVS7SHNZhFOVQ9xcaElnCfVQXgrABAe8owKx1Js3oXsFxhOj/ZIN7OtEqN+g==
   dependencies:
-    "@reach/auto-id" "0.15.0"
-    "@reach/descendants" "0.15.0"
-    "@reach/utils" "0.15.0"
+    "@reach/auto-id" "0.15.2"
+    "@reach/descendants" "0.15.2"
+    "@reach/utils" "0.15.2"
     prop-types "^15.7.2"
-    tslib "^2.1.0"
+    tslib "^2.3.0"
 
 "@reach/utils@0.15.0":
   version "0.15.0"
@@ -1774,6 +1790,14 @@
   dependencies:
     tiny-warning "^1.0.3"
     tslib "^2.1.0"
+
+"@reach/utils@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.15.2.tgz#a63a761eb36266bf33d65cb91520dd85a04ae116"
+  integrity sha512-Lr1SJ5X4hEjD/M0TAonURM8wytM/JuPSuIP7t+e5cil34pThyLsBvTGeNfmpSgaLJ5vlsv0x9u6g4SRAEr84Og==
+  dependencies:
+    tiny-warning "^1.0.3"
+    tslib "^2.3.0"
 
 "@reach/visually-hidden@^0.15.0":
   version "0.15.0"
@@ -10503,7 +10527,7 @@ tslib@^1.0.0, tslib@^1.10.0, tslib@^1.14.1, tslib@^1.9.0, tslib@^1.9.3:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2, tslib@^2.0.0, tslib@^2.0.3, tslib@^2.1.0, tslib@~2.3.0:
+tslib@^2, tslib@^2.0.0, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.0, tslib@~2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
   integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==

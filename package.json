@@ -31,7 +31,7 @@
     "@reach/dialog": "^0.15.0",
     "@reach/menu-button": "^0.15.1",
     "@reach/skip-nav": "^0.15.0",
-    "@reach/tabs": "^0.15.0",
+    "@reach/tabs": "^0.15.2",
     "@reach/visually-hidden": "^0.15.0",
     "@sindresorhus/is": "^4.0.1",
     "apollo-server-micro": "^2.25.1",
