@@ -1922,13 +1922,13 @@
     tiny-warning "^1.0.3"
     tslib "^2.3.0"
 
-"@reach/skip-nav@^0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@reach/skip-nav/-/skip-nav-0.15.0.tgz#cc5fb94d37ab8d0bc624fb06f806c7b6459806aa"
-  integrity sha512-9qc0Q7pYY3p6s7BtPn7ii8p+LO+TcqN4wj2E7ZSLfKzgBBk5mQxjNOZN24dqQSVdcNyHz99mNevDS5zT3ZwLWg==
+"@reach/skip-nav@^0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/skip-nav/-/skip-nav-0.15.2.tgz#80bed258697356f5499a745f8e62b17a752e4bc8"
+  integrity sha512-RjhyxRWLq8SLECr5nccFZRZQ6GSAuANDd7qhdTxyxeYE9rrtAfoKQSKMY7J4G5P5iEy75p1hKESs9gJIgmRUsg==
   dependencies:
-    "@reach/utils" "0.15.0"
-    tslib "^2.1.0"
+    "@reach/utils" "0.15.2"
+    tslib "^2.3.0"
 
 "@reach/tabs@^0.15.2":
   version "0.15.2"
