@@ -1071,25 +1071,25 @@
     change-case-all "1.0.14"
     tslib "~2.3.0"
 
-"@graphql-codegen/typescript-resolvers@^1.19.4":
-  version "1.19.4"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-resolvers/-/typescript-resolvers-1.19.4.tgz#19d910e97b4c05a304512b3b7d88dd212c1ba6e7"
-  integrity sha512-gt1eskdyxw/WYLUYFiZqSmV2Gq9xB/bW+qY/D+8EJoBz8Nb8WEVRWZaGVIctjlikWhwUlWgfjO98/ZtHYU6wxg==
+"@graphql-codegen/typescript-resolvers@^1.19.5":
+  version "1.19.5"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-resolvers/-/typescript-resolvers-1.19.5.tgz#ef116bcbddf33959740c95fad908558bca4b6b2a"
+  integrity sha512-FRRuoCnRM+TeMlf09ynU20htD2rLx0soCbgVPb3lUDcr/bo2S+bSR8VSuHcT/EwDKK2ZavXRA+k7G5BAhAitXA==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^1.18.7"
-    "@graphql-codegen/typescript" "^1.22.3"
-    "@graphql-codegen/visitor-plugin-common" "1.21.2"
+    "@graphql-codegen/typescript" "^1.22.4"
+    "@graphql-codegen/visitor-plugin-common" "1.21.3"
     "@graphql-tools/utils" "^7.9.1"
     auto-bind "~4.0.0"
     tslib "~2.3.0"
 
-"@graphql-codegen/typescript@^1.22.2", "@graphql-codegen/typescript@^1.22.3":
-  version "1.22.3"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-1.22.3.tgz#aaa85246974d74a9f544a950ae1611facabea7e6"
-  integrity sha512-qLSnVN2g/UxxzhRWHZcHw/Xkvx5wZh0RDzmg9MjAlPnDwAI89jg/ljKDwtTOfN+F6M8W4gQ9mjkWd6NxBQRgXw==
+"@graphql-codegen/typescript@^1.22.2", "@graphql-codegen/typescript@^1.22.3", "@graphql-codegen/typescript@^1.22.4":
+  version "1.22.4"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-1.22.4.tgz#a580e40074925f72cc183e00d13580a9efadcf2b"
+  integrity sha512-39g71++31Ki9AufBRPz4iHAZ3nboD6m+UJonYk/l3LrQEWcVxtNZXvUaoCyHSvKIysOv3IppqonrQf9eJACOdA==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^1.18.7"
-    "@graphql-codegen/visitor-plugin-common" "1.21.2"
+    "@graphql-codegen/visitor-plugin-common" "1.21.3"
     auto-bind "~4.0.0"
     tslib "~2.3.0"
 
@@ -2326,10 +2326,10 @@
   resolved "https://registry.npmjs.org/@types/json-stable-stringify/-/json-stable-stringify-1.0.32.tgz#121f6917c4389db3923640b2e68de5fa64dda88e"
   integrity sha512-q9Q6+eUEGwQkv4Sbst3J4PNgDOvpuVuKj79Hl/qnmBMEIPzB5QoFRUtjcgcg2xNUZyYUGXBk5wYIBKHt0A+Mxw==
 
-"@types/jsonwebtoken@^8.5.0", "@types/jsonwebtoken@^8.5.2":
-  version "8.5.2"
-  resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-8.5.2.tgz#eb71c717b3b8681bb85fbd2950c9c4c5d4506748"
-  integrity sha512-X8BOCkp+WJVNYCYIBugREtVZa4Y09Or9HDx6xqRZem5F8jJV8FuJgNessXyMuv9+U8pjnvdezASwU28uw+1scw==
+"@types/jsonwebtoken@^8.5.0", "@types/jsonwebtoken@^8.5.3":
+  version "8.5.3"
+  resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-8.5.3.tgz#de78585ee352593ca627c6ee4afa772bbe020fb7"
+  integrity sha512-uhZGbMfpIC/sI7ujnNdsPFMzqCYMwTBUvVsbJ6yJ+FakM7uTJKyiKaG2HXwOgy7gL+fRqnqxV82bLGmSWDxxGg==
   dependencies:
     "@types/node" "*"
 
@@ -6021,10 +6021,10 @@ ignore@^5.1.4:
   resolved "https://registry.npmjs.org/ignore/-/ignore-5.1.8.tgz#f150a8b50a34289b33e22f5889abd4d8016f0e57"
   integrity sha512-BMpfD7PpiETpBl/A6S498BaIJ6Y/ABT93ETbby2fP00v4EbvPBXWEoaR1UBPKs3iR53pJY7EtZk5KACI57i1Uw==
 
-immer@^9.0.3:
-  version "9.0.3"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.3.tgz#146e2ba8b84d4b1b15378143c2345559915097f4"
-  integrity sha512-mONgeNSMuyjIe0lkQPa9YhdmTv8P19IeHV0biYhcXhbd5dhdB9HSK93zBpyKjp6wersSUgT5QyU0skmejUVP2A==
+immer@^9.0.4:
+  version "9.0.4"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.4.tgz#eafd471bbf64503bc3e9e746aef22887b753d634"
+  integrity sha512-zgDMuqedAZswaKN3iFm/9CfhDz7hRdhvte7Ql9EuU/yMStnZJkQMtpCxNTfW9pw0UmxhECMmm2edrqZHwAHHNA==
 
 immutable@~3.7.4, immutable@~3.7.6:
   version "3.7.6"
