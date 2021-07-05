@@ -70,7 +70,7 @@
     "@graphql-codegen/typescript": "^1.22.2",
     "@graphql-codegen/typescript-operations": "^1.18.2",
     "@graphql-codegen/typescript-react-apollo": "^2.3.0",
-    "@graphql-codegen/typescript-resolvers": "^1.19.4",
+    "@graphql-codegen/typescript-resolvers": "^1.19.5",
     "@tailwindcss/aspect-ratio": "^0.2.1",
     "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/typography": "^0.4.1",
