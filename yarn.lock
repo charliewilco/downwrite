@@ -1964,14 +1964,6 @@
     prop-types "^15.7.2"
     tslib "^2.3.0"
 
-"@reach/utils@0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.15.0.tgz#5b183d668f9bb900b2dec7a33c028a2a828d27b2"
-  integrity sha512-JHHN7T5ucFiuQbqkgv8ECbRWKfRiJxrO/xHR3fHf+f2C7mVs/KkJHhYtovS1iEapR4silygX9PY0+QUmHPOTYw==
-  dependencies:
-    tiny-warning "^1.0.3"
-    tslib "^2.1.0"
-
 "@reach/utils@0.15.2":
   version "0.15.2"
   resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.15.2.tgz#a63a761eb36266bf33d65cb91520dd85a04ae116"
@@ -1988,13 +1980,13 @@
     tiny-warning "^1.0.3"
     tslib "^2.3.0"
 
-"@reach/visually-hidden@^0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@reach/visually-hidden/-/visually-hidden-0.15.0.tgz#70ae561c33af709769df05a796ddb998c3a1ee20"
-  integrity sha512-ZRRBOaRrvSM6iCk+R2/8txFfXLY2DsnZQuaHNqOuSvz8vN2+syUnni1T+hpC93rvBRXtqD36kqdTsu5qihGnFw==
+"@reach/visually-hidden@^0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@reach/visually-hidden/-/visually-hidden-0.15.2.tgz#07794cb53f4bd23a9452d53a0ad7778711ee323f"
+  integrity sha512-suDSCuKKuqiEB4UDgwWHbrPRxNwrusZ3ImXr85kfsQXGmKptMogaq22xoaHn32NC++lzZXxdWtAJriieszzFXw==
   dependencies:
     prop-types "^15.7.2"
-    tslib "^2.1.0"
+    tslib "^2.3.0"
 
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.1"
