@@ -2026,13 +2026,13 @@
     tiny-warning "^1.0.3"
     tslib "^2.3.0"
 
-"@reach/visually-hidden@^0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@reach/visually-hidden/-/visually-hidden-0.15.0.tgz#70ae561c33af709769df05a796ddb998c3a1ee20"
-  integrity sha512-ZRRBOaRrvSM6iCk+R2/8txFfXLY2DsnZQuaHNqOuSvz8vN2+syUnni1T+hpC93rvBRXtqD36kqdTsu5qihGnFw==
+"@reach/visually-hidden@^0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@reach/visually-hidden/-/visually-hidden-0.16.0.tgz#2a5e834af9e93c554065ff8cbb0907fbeb26ad02"
+  integrity sha512-IIayZ3jzJtI5KfcfRVtOMFkw2ef/1dMT8D9BUuFcU2ORZAWLNvnzj1oXNoIfABKl5wtsLjY6SGmkYQ+tMPN8TA==
   dependencies:
     prop-types "^15.7.2"
-    tslib "^2.1.0"
+    tslib "^2.3.0"
 
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.1"
