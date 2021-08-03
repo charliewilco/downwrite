@@ -85,7 +85,7 @@
     "@types/mongoose": "^5.11.97",
     "@types/node": "^15.3.1",
     "@types/prismjs": "^1.16.6",
-    "@types/puppeteer": "^5.4.3",
+    "@types/puppeteer": "^5.4.4",
     "@types/react": "^17.0.15",
     "@types/react-dom": "^17.0.9",
     "@types/react-test-renderer": "^17.0.1",
