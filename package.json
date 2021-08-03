@@ -52,7 +52,7 @@
     "mongoose": "^5.13.5",
     "next": "^10.2.2",
     "pos-tagger.js": "^1.0.8",
-    "prismjs": "^1.24.0",
+    "prismjs": "^1.24.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.3.4",
