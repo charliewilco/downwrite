@@ -1070,13 +1070,13 @@
     auto-bind "~4.0.0"
     tslib "~2.3.0"
 
-"@graphql-codegen/typescript-react-apollo@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-react-apollo/-/typescript-react-apollo-2.3.0.tgz#db49c221d011ce08e687f6740b9f1a07d474b7a3"
-  integrity sha512-x3QlANKIg1aVMHu+lz9aZJJWB2wVUDBrRZ+7NhTNR8Pm1XEOcrU+JyACPAwUuHZ1/lV2nJg1u0+AMrFCsLeL8A==
+"@graphql-codegen/typescript-react-apollo@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-react-apollo/-/typescript-react-apollo-3.0.0.tgz#8ec6e65a1a6cf177418b38c681d1376f81095093"
+  integrity sha512-acg2GArcdHYusLragNCqrDjLLbE3M2I9cUuckIoo8KiDtB3/PzQ9eCg3WRjgPYA5zaFpLaFS6QQlRJhD/j0Wgw==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^1.18.7"
-    "@graphql-codegen/visitor-plugin-common" "1.21.3"
+    "@graphql-codegen/plugin-helpers" "^2.0.0"
+    "@graphql-codegen/visitor-plugin-common" "2.0.0"
     auto-bind "~4.0.0"
     change-case-all "1.0.14"
     tslib "~2.3.0"
@@ -1111,22 +1111,6 @@
     "@graphql-codegen/plugin-helpers" "^2.0.0"
     "@graphql-codegen/visitor-plugin-common" "2.0.0"
     auto-bind "~4.0.0"
-    tslib "~2.3.0"
-
-"@graphql-codegen/visitor-plugin-common@1.21.3":
-  version "1.21.3"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-1.21.3.tgz#23fbe1d2bf7a7ce6fd43bf6661fcee8655dedd55"
-  integrity sha512-GBQ9eHoaMjXGXJpAPJ/6b/pDAlO9r+6TDVibJVGn7qI+B6ScR4kO4AyZKuAgSL0TaJitpb93LCVoMX+ibRJwxg==
-  dependencies:
-    "@graphql-codegen/plugin-helpers" "^1.18.7"
-    "@graphql-tools/optimize" "^1.0.1"
-    "@graphql-tools/relay-operation-optimizer" "^6.3.0"
-    array.prototype.flatmap "^1.2.4"
-    auto-bind "~4.0.0"
-    change-case-all "1.0.14"
-    dependency-graph "^0.11.0"
-    graphql-tag "^2.11.0"
-    parse-filepath "^1.0.2"
     tslib "~2.3.0"
 
 "@graphql-codegen/visitor-plugin-common@1.22.0":
@@ -1872,14 +1856,6 @@
     "@reach/utils" "0.15.2"
     tslib "^2.3.0"
 
-"@reach/auto-id@0.15.3":
-  version "0.15.3"
-  resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.15.3.tgz#23b6ae8de3bf7520044c95a85c992ae46cdcef9c"
-  integrity sha512-lbLUI9mrn74qVis141ib0Rsyhgk+gzUMtpplRmjy06cUWDFZyiBATNWMUxN5T+0fU4tpfgcjkAuPeTCCGThKtQ==
-  dependencies:
-    "@reach/utils" "0.15.3"
-    tslib "^2.3.0"
-
 "@reach/auto-id@0.16.0":
   version "0.16.0"
   resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.16.0.tgz#dfabc3227844e8c04f8e6e45203a8e14a8edbaed"
@@ -1900,16 +1876,16 @@
     tiny-warning "^1.0.3"
     tslib "^2.3.0"
 
-"@reach/combobox@^0.15.3":
-  version "0.15.3"
-  resolved "https://registry.yarnpkg.com/@reach/combobox/-/combobox-0.15.3.tgz#a331330640124beacd093305d2a0ebfe4d20c375"
-  integrity sha512-wzms8wl5Tpvgz9cgUWSOzoLemOU+QCsmAkJchi4kajZ/b2HWFU68SHSqs4zsXKUJRTW76F5ClX57vGbRCjN5Iw==
+"@reach/combobox@^0.16.1":
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/@reach/combobox/-/combobox-0.16.1.tgz#5ab90db398fc30cc44fc83f6ab2dc18376884941"
+  integrity sha512-48eUtftpe2wY9sKJddkUSZQu9OcEx3P1LdsOKj6BL+InAX4DRe6i8tBKSqhChz4QaaHCo6bPXr2eeE1f++OBAw==
   dependencies:
-    "@reach/auto-id" "0.15.3"
-    "@reach/descendants" "0.15.3"
-    "@reach/popover" "0.15.3"
-    "@reach/portal" "0.15.3"
-    "@reach/utils" "0.15.3"
+    "@reach/auto-id" "0.16.0"
+    "@reach/descendants" "0.16.1"
+    "@reach/popover" "0.16.0"
+    "@reach/portal" "0.16.0"
+    "@reach/utils" "0.16.0"
     prop-types "^15.7.2"
     tslib "^2.3.0"
 
@@ -1919,14 +1895,6 @@
   integrity sha512-GdQXWVpscss89MOhWh+sL4TnIn0qX1y+Te3wE72aKQrz/QCR69JFEW4wftovmF7rFm4/kDZcp14lMy512U6VlA==
   dependencies:
     "@reach/utils" "0.15.2"
-    tslib "^2.3.0"
-
-"@reach/descendants@0.15.3":
-  version "0.15.3"
-  resolved "https://registry.yarnpkg.com/@reach/descendants/-/descendants-0.15.3.tgz#818522e54a66e3e577970e25aa7226645e22aabc"
-  integrity sha512-vuCBG7Uru6IEJ2wvTd7L2xumbYzv2UYBduZ0E1FEABqyUo78eTIZbRcwIN73IxMcivjWipBPlcLLkpFtJKMPew==
-  dependencies:
-    "@reach/utils" "0.15.3"
     tslib "^2.3.0"
 
 "@reach/descendants@0.16.1":
@@ -1987,14 +1955,14 @@
     tabbable "^4.0.0"
     tslib "^2.3.0"
 
-"@reach/popover@0.15.3":
-  version "0.15.3"
-  resolved "https://registry.yarnpkg.com/@reach/popover/-/popover-0.15.3.tgz#62367efc81e1a86c670860e3975cc41d02489f59"
-  integrity sha512-T5A1gZGXfl4vDqK6kb7tyxgKWur4QsoKwHJ0LcJZ9JDYtiUDbdBDw+yRHwvuExx48Glc8BYcdy6X6BF2n21FuA==
+"@reach/popover@0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@reach/popover/-/popover-0.16.0.tgz#82c5ab96a88c49e2451a9c04b2d4392a9055f623"
+  integrity sha512-xmgiSyQwfshMkMNu6URbGrjjDTD3dnAITojvgEqfEtV1chDYqktKdDbIPrq+UGI54ey/IxbRpVzKcIjXiKoMmA==
   dependencies:
-    "@reach/portal" "0.15.3"
-    "@reach/rect" "0.15.3"
-    "@reach/utils" "0.15.3"
+    "@reach/portal" "0.16.0"
+    "@reach/rect" "0.16.0"
+    "@reach/utils" "0.16.0"
     tabbable "^4.0.0"
     tslib "^2.3.0"
 
@@ -2004,14 +1972,6 @@
   integrity sha512-5x+dchGr4btRnLazwmyCYbSPVJAIrw0eXwhz7Vj9uT/EIp43WzOtTcODdLOoH6Ol2QLjX1Yt/fBjdK9+UAKxSA==
   dependencies:
     "@reach/utils" "0.15.2"
-    tslib "^2.3.0"
-
-"@reach/portal@0.15.3":
-  version "0.15.3"
-  resolved "https://registry.yarnpkg.com/@reach/portal/-/portal-0.15.3.tgz#56fe4f6575ff07fc7d1a151481713171c7e37c88"
-  integrity sha512-9VkVEQIF9gK73uK1f9MYhrJivd0dpxhkBEb2zwVCIEGvKVxadmRNmCjgcWexGjA0UeCjIhEjQQehs/IZHNLPdw==
-  dependencies:
-    "@reach/utils" "0.15.3"
     tslib "^2.3.0"
 
 "@reach/portal@0.16.0":
@@ -2033,13 +1993,13 @@
     tiny-warning "^1.0.3"
     tslib "^2.3.0"
 
-"@reach/rect@0.15.3":
-  version "0.15.3"
-  resolved "https://registry.yarnpkg.com/@reach/rect/-/rect-0.15.3.tgz#5cb37d0a5d3bd630920b34e2259a0197ee23d521"
-  integrity sha512-ZKakUC14DoCbccc7ymARXCzfpaRMTvbaAibBw64/sg/Vm7W+bi+P3mu5QMQkGNxFKXaKu/szx+r9RzM4ld/IfQ==
+"@reach/rect@0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@reach/rect/-/rect-0.16.0.tgz#78cf6acefe2e83d3957fa84f938f6e1fc5700f16"
+  integrity sha512-/qO9jQDzpOCdrSxVPR6l674mRHNTqfEjkaxZHluwJ/2qGUtYsA0GSZiF/+wX/yOWeBif1ycxJDa6HusAMJZC5Q==
   dependencies:
     "@reach/observe-rect" "1.2.0"
-    "@reach/utils" "0.15.3"
+    "@reach/utils" "0.16.0"
     prop-types "^15.7.2"
     tiny-warning "^1.0.3"
     tslib "^2.3.0"
@@ -2067,14 +2027,6 @@
   version "0.15.2"
   resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.15.2.tgz#a63a761eb36266bf33d65cb91520dd85a04ae116"
   integrity sha512-Lr1SJ5X4hEjD/M0TAonURM8wytM/JuPSuIP7t+e5cil34pThyLsBvTGeNfmpSgaLJ5vlsv0x9u6g4SRAEr84Og==
-  dependencies:
-    tiny-warning "^1.0.3"
-    tslib "^2.3.0"
-
-"@reach/utils@0.15.3":
-  version "0.15.3"
-  resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.15.3.tgz#200f42adba9d1463b1c6a75ee2aaf9f0cba84f9d"
-  integrity sha512-HFyjw8LZ4/RRk5bcMpDAeEc3aOeLR/vWRDsljlE3cHI5GfFlZcG3DDLSW8C2ba74RCFp/4X3Nz0nOrd4JdkZ1w==
   dependencies:
     tiny-warning "^1.0.3"
     tslib "^2.3.0"
@@ -8827,10 +8779,10 @@ popmotion@9.3.6:
     style-value-types "4.1.4"
     tslib "^2.1.0"
 
-pos-tagger.js@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.npmjs.org/pos-tagger.js/-/pos-tagger.js-1.0.8.tgz#e9a9b0352406fe6a6fc66323e884181c0e8cac3a"
-  integrity sha512-ReutNHtpP3MQ0atBUVZN1wt/ccXbXvkwsJIuPURpYdLTP1ZkftqQDXN7G9ZhHfztN9Dv5IWkASVQZakKRGfPTg==
+pos-tagger.js@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/pos-tagger.js/-/pos-tagger.js-1.0.9.tgz#c7533b530959ff83f297634cb5f22283c9d78586"
+  integrity sha512-f5Cp0QnGv4vELPLjaOFWWaDe04d1NYBtOG5btvOQxi+55WKnTubacdyqRvJTh5fKhWpSZNrlEebL7so1TVZAgw==
 
 posix-character-classes@^0.1.0:
   version "0.1.1"
