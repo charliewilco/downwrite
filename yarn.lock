@@ -2028,12 +2028,12 @@
     tiny-warning "^1.0.3"
     tslib "^2.3.0"
 
-"@reach/skip-nav@^0.15.3":
-  version "0.15.3"
-  resolved "https://registry.yarnpkg.com/@reach/skip-nav/-/skip-nav-0.15.3.tgz#27f78c93744b1c9bc26e5a0a9248bb5912211857"
-  integrity sha512-6TM8JPzo6m5F8Qmcl88LZzYbeaWI3l30RXZX4r0+D2U3dWz9hyAqDLuxPKreZVfeJT3fLAX8LEf5+7BZkUioQw==
+"@reach/skip-nav@^0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@reach/skip-nav/-/skip-nav-0.16.0.tgz#dec34f3a40a1e804e05647646aacab0ffd73b24d"
+  integrity sha512-SY4PdNx+hQHbeOr/+qLc+QXdRt9NTVlt0r737bOqY1WURGBIEN9sGgsmIsHluP1/bQuAe0JKdOJ/tXiwQ3Z3ug==
   dependencies:
-    "@reach/utils" "0.15.3"
+    "@reach/utils" "0.16.0"
     tslib "^2.3.0"
 
 "@reach/tabs@^0.15.2":
@@ -2059,6 +2059,14 @@
   version "0.15.3"
   resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.15.3.tgz#200f42adba9d1463b1c6a75ee2aaf9f0cba84f9d"
   integrity sha512-HFyjw8LZ4/RRk5bcMpDAeEc3aOeLR/vWRDsljlE3cHI5GfFlZcG3DDLSW8C2ba74RCFp/4X3Nz0nOrd4JdkZ1w==
+  dependencies:
+    tiny-warning "^1.0.3"
+    tslib "^2.3.0"
+
+"@reach/utils@0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.16.0.tgz#5b0777cf16a7cab1ddd4728d5d02762df0ba84ce"
+  integrity sha512-PCggBet3qaQmwFNcmQ/GqHSefadAFyNCUekq9RrWoaU9hh/S4iaFgf2MBMdM47eQj5i/Bk0Mm07cP/XPFlkN+Q==
   dependencies:
     tiny-warning "^1.0.3"
     tslib "^2.3.0"
