@@ -24,7 +24,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.5",
+    "@apollo/client": "^3.4.7",
     "@next/bundle-analyzer": "^11.0.1",
     "@reach/checkbox": "^0.16.0",
     "@reach/combobox": "^0.16.1",
