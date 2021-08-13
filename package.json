@@ -76,7 +76,7 @@
     "@tailwindcss/typography": "^0.4.1",
     "@types/base-64": "^1.0.0",
     "@types/bcrypt": "^5.0.0",
-    "@types/draft-js": "^0.11.3",
+    "@types/draft-js": "^0.11.4",
     "@types/expect-puppeteer": "^4.4.6",
     "@types/file-saver": "^2.0.3",
     "@types/jest": "^27.0.1",
