@@ -83,7 +83,7 @@
     "@types/jest-environment-puppeteer": "^4.4.1",
     "@types/jsonwebtoken": "^8.5.4",
     "@types/mongoose": "^5.11.97",
-    "@types/node": "^15.3.1",
+    "@types/node": "^16.6.1",
     "@types/prismjs": "^1.16.6",
     "@types/puppeteer": "^5.4.4",
     "@types/react": "^17.0.18",
