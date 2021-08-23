@@ -1071,13 +1071,13 @@
     auto-bind "~4.0.0"
     tslib "~2.3.0"
 
-"@graphql-codegen/typescript-react-apollo@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-react-apollo/-/typescript-react-apollo-3.1.0.tgz#89884b79536d69d4379da165993da38e0fbde760"
-  integrity sha512-oBh9P6fqmMTacDQWySwzVNZ8LNgedtxpzxWOPuywo+r/g2uZwnNA9Y15Sg3yYqZq2QNJQ4l0yXMUWacuQxtCSw==
+"@graphql-codegen/typescript-react-apollo@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-react-apollo/-/typescript-react-apollo-3.1.1.tgz#3ef2e45ed5e907ec0ae0ec476f43d6e78043afd6"
+  integrity sha512-VZLqdy3QDIAPHjCx74ryZYBwE45j/nKenQaNYCEecuXHzxIaSWNWeqe8KnmiaSbsALSgIddPDaCjtXc1eOBBBA==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^2.1.0"
-    "@graphql-codegen/visitor-plugin-common" "2.1.0"
+    "@graphql-codegen/visitor-plugin-common" "2.1.1"
     auto-bind "~4.0.0"
     change-case-all "1.0.14"
     tslib "~2.3.0"
@@ -8827,10 +8827,10 @@ popmotion@9.3.6:
     style-value-types "4.1.4"
     tslib "^2.1.0"
 
-pos-tagger.js@^1.0.9:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/pos-tagger.js/-/pos-tagger.js-1.0.9.tgz#c7533b530959ff83f297634cb5f22283c9d78586"
-  integrity sha512-f5Cp0QnGv4vELPLjaOFWWaDe04d1NYBtOG5btvOQxi+55WKnTubacdyqRvJTh5fKhWpSZNrlEebL7so1TVZAgw==
+pos-tagger.js@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/pos-tagger.js/-/pos-tagger.js-1.0.10.tgz#f541ca45616d36139cc09a6b2e399c415d18f8f1"
+  integrity sha512-PeMaWPjCaa5FtjUfvKRczBmjn37QIV0f7ryIgxu3qY125Osu2I/FHIZV9Nq/gbolYCuvAIxAV/+gn5jBy94hqQ==
 
 posix-character-classes@^0.1.0:
   version "0.1.1"
