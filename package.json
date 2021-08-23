@@ -68,8 +68,8 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^1.21.8",
     "@graphql-codegen/typescript": "^1.23.0",
-    "@graphql-codegen/typescript-operations": "^2.1.0",
-    "@graphql-codegen/typescript-react-apollo": "^3.1.0",
+    "@graphql-codegen/typescript-operations": "^2.1.1",
+    "@graphql-codegen/typescript-react-apollo": "^3.1.1",
     "@graphql-codegen/typescript-resolvers": "^2.1.1",
     "@tailwindcss/aspect-ratio": "^0.2.1",
     "@tailwindcss/forms": "^0.3.3",
