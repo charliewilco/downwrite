@@ -8827,10 +8827,10 @@ popmotion@9.3.6:
     style-value-types "4.1.4"
     tslib "^2.1.0"
 
-pos-tagger.js@^1.0.9:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/pos-tagger.js/-/pos-tagger.js-1.0.9.tgz#c7533b530959ff83f297634cb5f22283c9d78586"
-  integrity sha512-f5Cp0QnGv4vELPLjaOFWWaDe04d1NYBtOG5btvOQxi+55WKnTubacdyqRvJTh5fKhWpSZNrlEebL7so1TVZAgw==
+pos-tagger.js@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/pos-tagger.js/-/pos-tagger.js-1.0.10.tgz#f541ca45616d36139cc09a6b2e399c415d18f8f1"
+  integrity sha512-PeMaWPjCaa5FtjUfvKRczBmjn37QIV0f7ryIgxu3qY125Osu2I/FHIZV9Nq/gbolYCuvAIxAV/+gn5jBy94hqQ==
 
 posix-character-classes@^0.1.0:
   version "0.1.1"
