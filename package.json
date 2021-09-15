@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.4.10",
-    "@next/bundle-analyzer": "^11.1.0",
+    "@next/bundle-analyzer": "^11.1.2",
     "@reach/checkbox": "^0.16.0",
     "@reach/combobox": "^0.16.1",
     "@reach/dialog": "^0.16.0",
