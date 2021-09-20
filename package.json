@@ -33,7 +33,7 @@
     "@reach/skip-nav": "^0.16.0",
     "@reach/tabs": "^0.16.1",
     "@reach/visually-hidden": "^0.16.0",
-    "@sindresorhus/is": "^4.0.1",
+    "@sindresorhus/is": "^4.2.0",
     "apollo-server-micro": "^2.25.1",
     "base-64": "^1.0.0",
     "bcrypt": "^5.0.1",
