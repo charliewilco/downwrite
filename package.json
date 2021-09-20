@@ -44,7 +44,7 @@
     "file-saver": "^2.0.5",
     "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
-    "graphql": "^15.5.3",
+    "graphql": "^15.6.0",
     "immer": "^9.0.6",
     "immutable": "~3.8.2",
     "jsonwebtoken": "^8.3.0",
