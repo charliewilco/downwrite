@@ -24,7 +24,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.12",
+    "@apollo/client": "^3.4.13",
     "@next/bundle-analyzer": "^11.1.2",
     "@reach/checkbox": "^0.16.0",
     "@reach/combobox": "^0.16.1",
@@ -37,7 +37,7 @@
     "apollo-server-micro": "^2.25.1",
     "base-64": "^1.0.0",
     "bcrypt": "^5.0.1",
-    "date-fns": "^2.23.0",
+    "date-fns": "^2.24.0",
     "draft-js": "^0.11.7",
     "draftjs-md-converter": "^1.5.1",
     "fathom-client": "^3.2.0",
