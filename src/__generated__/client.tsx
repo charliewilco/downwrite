@@ -2,10 +2,12 @@ import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
 const defaultOptions = {};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -17,56 +19,28 @@ export type Scalars = {
   Date: any;
 };
 
-export type IEntry = {
-  __typename?: "Entry";
-  id: Maybe<Scalars["ID"]>;
-  title: Maybe<Scalars["String"]>;
-  author: Maybe<IAuthor>;
-  content: Maybe<Scalars["String"]>;
-  public: Maybe<Scalars["Boolean"]>;
-  dateAdded: Maybe<Scalars["Date"]>;
-  dateModified: Maybe<Scalars["Date"]>;
-  excerpt: Maybe<Scalars["String"]>;
-  user: Maybe<Scalars["String"]>;
-};
-
-export type IAuthor = {
-  __typename?: "Author";
-  username: Maybe<Scalars["String"]>;
-  gradient: Maybe<Array<Maybe<Scalars["String"]>>>;
-};
-
-export type IPreview = {
-  __typename?: "Preview";
-  title: Maybe<Scalars["String"]>;
-  id: Maybe<Scalars["ID"]>;
-  content: Maybe<Scalars["String"]>;
-  author: Maybe<IAuthor>;
-  dateAdded: Maybe<Scalars["Date"]>;
-};
-
-export type IUser = {
-  __typename?: "User";
-  username: Scalars["String"];
-  email: Scalars["String"];
-  admin: Maybe<Scalars["Boolean"]>;
-};
-
-export type IUserSettingsInput = {
-  username: Maybe<Scalars["String"]>;
-  email: Maybe<Scalars["String"]>;
-};
-
 export type IAuthUserPayload = {
   __typename?: "AuthUserPayload";
   token: Maybe<Scalars["String"]>;
 };
 
-export type IUsageDetails = {
-  __typename?: "UsageDetails";
-  entryCount: Scalars["Int"];
-  privateEntries: Scalars["Int"];
-  publicEntries: Scalars["Int"];
+export type IAuthor = {
+  __typename?: "Author";
+  gradient: Maybe<Array<Maybe<Scalars["String"]>>>;
+  username: Maybe<Scalars["String"]>;
+};
+
+export type IEntry = {
+  __typename?: "Entry";
+  author: Maybe<IAuthor>;
+  content: Maybe<Scalars["String"]>;
+  dateAdded: Maybe<Scalars["Date"]>;
+  dateModified: Maybe<Scalars["Date"]>;
+  excerpt: Maybe<Scalars["String"]>;
+  id: Maybe<Scalars["ID"]>;
+  public: Maybe<Scalars["Boolean"]>;
+  title: Maybe<Scalars["String"]>;
+  user: Maybe<Scalars["String"]>;
 };
 
 export type IMe = {
@@ -76,17 +50,73 @@ export type IMe = {
   usage: IUsageDetails;
 };
 
+export type IMutation = {
+  __typename?: "Mutation";
+  authenticateUser: Maybe<IAuthUserPayload>;
+  createEntry: Maybe<IEntry>;
+  createUser: Maybe<IAuthUserPayload>;
+  deleteEntry: Maybe<IEntry>;
+  updateEntry: Maybe<IEntry>;
+  updatePassword: Maybe<IAuthUserPayload>;
+  updateUserSettings: Maybe<IUser>;
+};
+
+export type IMutationAuthenticateUserArgs = {
+  password: Scalars["String"];
+  username: Scalars["String"];
+};
+
+export type IMutationCreateEntryArgs = {
+  content: Maybe<Scalars["String"]>;
+  title: Maybe<Scalars["String"]>;
+};
+
+export type IMutationCreateUserArgs = {
+  email: Scalars["String"];
+  password: Scalars["String"];
+  username: Scalars["String"];
+};
+
+export type IMutationDeleteEntryArgs = {
+  id: Scalars["ID"];
+};
+
+export type IMutationUpdateEntryArgs = {
+  content: Scalars["String"];
+  id: Scalars["String"];
+  status: Scalars["Boolean"];
+  title: Scalars["String"];
+};
+
+export type IMutationUpdatePasswordArgs = {
+  currentPassword: Scalars["String"];
+  newPassword: Scalars["String"];
+};
+
+export type IMutationUpdateUserSettingsArgs = {
+  settings: IUserSettingsInput;
+};
+
+export type IPreview = {
+  __typename?: "Preview";
+  author: Maybe<IAuthor>;
+  content: Maybe<Scalars["String"]>;
+  dateAdded: Maybe<Scalars["Date"]>;
+  id: Maybe<Scalars["ID"]>;
+  title: Maybe<Scalars["String"]>;
+};
+
 export type IQuery = {
   __typename?: "Query";
   /** Markdown document */
   entry: Maybe<IEntry>;
   /** List of Markdown documents */
   feed: Array<IEntry>;
+  me: Maybe<IMe>;
   /** Public preview of Markdown document */
   preview: Maybe<IPreview>;
   /** User Settings */
   settings: Maybe<IUser>;
-  me: Maybe<IMe>;
 };
 
 export type IQueryEntryArgs = {
@@ -97,99 +127,92 @@ export type IQueryPreviewArgs = {
   id: Scalars["ID"];
 };
 
-export type IMutation = {
-  __typename?: "Mutation";
-  createEntry: Maybe<IEntry>;
-  updateEntry: Maybe<IEntry>;
-  deleteEntry: Maybe<IEntry>;
-  createUser: Maybe<IAuthUserPayload>;
-  authenticateUser: Maybe<IAuthUserPayload>;
-  updateUserSettings: Maybe<IUser>;
-  updatePassword: Maybe<IAuthUserPayload>;
+export type IUsageDetails = {
+  __typename?: "UsageDetails";
+  entryCount: Scalars["Int"];
+  privateEntries: Scalars["Int"];
+  publicEntries: Scalars["Int"];
 };
 
-export type IMutationCreateEntryArgs = {
-  content: Maybe<Scalars["String"]>;
-  title: Maybe<Scalars["String"]>;
-};
-
-export type IMutationUpdateEntryArgs = {
-  id: Scalars["String"];
-  content: Scalars["String"];
-  title: Scalars["String"];
-  status: Scalars["Boolean"];
-};
-
-export type IMutationDeleteEntryArgs = {
-  id: Scalars["ID"];
-};
-
-export type IMutationCreateUserArgs = {
-  username: Scalars["String"];
+export type IUser = {
+  __typename?: "User";
+  admin: Maybe<Scalars["Boolean"]>;
   email: Scalars["String"];
-  password: Scalars["String"];
-};
-
-export type IMutationAuthenticateUserArgs = {
   username: Scalars["String"];
-  password: Scalars["String"];
 };
 
-export type IMutationUpdateUserSettingsArgs = {
-  settings: IUserSettingsInput;
+export type IUserSettingsInput = {
+  email: Maybe<Scalars["String"]>;
+  username: Maybe<Scalars["String"]>;
 };
 
-export type IMutationUpdatePasswordArgs = {
-  currentPassword: Scalars["String"];
-  newPassword: Scalars["String"];
+export type IEntryInfoFragment = {
+  __typename?: "Entry";
+  title: Maybe<string>;
+  dateAdded: Maybe<any>;
+  id: Maybe<string>;
+  public: Maybe<boolean>;
 };
-
-export type IEntryInfoFragment = { __typename?: "Entry" } & Pick<
-  IEntry,
-  "title" | "dateAdded" | "id" | "public"
->;
 
 export type IAllPostsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type IAllPostsQuery = { __typename?: "Query" } & {
-  feed: Array<{ __typename?: "Entry" } & IEntryInfoFragment>;
+export type IAllPostsQuery = {
+  __typename?: "Query";
+  feed: Array<{
+    __typename?: "Entry";
+    title: Maybe<string>;
+    dateAdded: Maybe<any>;
+    id: Maybe<string>;
+    public: Maybe<boolean>;
+  }>;
 };
 
 export type IEditQueryVariables = Exact<{
   id: Scalars["ID"];
 }>;
 
-export type IEditQuery = { __typename?: "Query" } & {
-  entry: Maybe<
-    { __typename?: "Entry" } & Pick<IEntry, "content"> & IEntryInfoFragment
-  >;
+export type IEditQuery = {
+  __typename?: "Query";
+  entry: Maybe<{
+    __typename?: "Entry";
+    content: Maybe<string>;
+    title: Maybe<string>;
+    dateAdded: Maybe<any>;
+    id: Maybe<string>;
+    public: Maybe<boolean>;
+  }>;
 };
 
 export type IPreviewQueryVariables = Exact<{
   id: Scalars["ID"];
 }>;
 
-export type IPreviewQuery = { __typename?: "Query" } & {
-  preview: Maybe<
-    { __typename?: "Preview" } & Pick<
-      IPreview,
-      "title" | "dateAdded" | "id" | "content"
-    > & { author: Maybe<{ __typename?: "Author" } & Pick<IAuthor, "username">> }
-  >;
+export type IPreviewQuery = {
+  __typename?: "Query";
+  preview: Maybe<{
+    __typename?: "Preview";
+    title: Maybe<string>;
+    dateAdded: Maybe<any>;
+    id: Maybe<string>;
+    content: Maybe<string>;
+    author: Maybe<{ __typename?: "Author"; username: Maybe<string> }>;
+  }>;
 };
 
 export type IUserDetailsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type IUserDetailsQuery = { __typename?: "Query" } & {
-  settings: Maybe<{ __typename?: "User" } & Pick<IUser, "username" | "email">>;
-  me: Maybe<
-    { __typename?: "Me" } & {
-      usage: { __typename?: "UsageDetails" } & Pick<
-        IUsageDetails,
-        "entryCount" | "publicEntries" | "privateEntries"
-      >;
-    }
-  >;
+export type IUserDetailsQuery = {
+  __typename?: "Query";
+  settings: Maybe<{ __typename?: "User"; username: string; email: string }>;
+  me: Maybe<{
+    __typename?: "Me";
+    usage: {
+      __typename?: "UsageDetails";
+      entryCount: number;
+      publicEntries: number;
+      privateEntries: number;
+    };
+  }>;
 };
 
 export type IUpdateEntryMutationVariables = Exact<{
@@ -199,10 +222,16 @@ export type IUpdateEntryMutationVariables = Exact<{
   status: Scalars["Boolean"];
 }>;
 
-export type IUpdateEntryMutation = { __typename?: "Mutation" } & {
-  updateEntry: Maybe<
-    { __typename?: "Entry" } & Pick<IEntry, "content"> & IEntryInfoFragment
-  >;
+export type IUpdateEntryMutation = {
+  __typename?: "Mutation";
+  updateEntry: Maybe<{
+    __typename?: "Entry";
+    content: Maybe<string>;
+    title: Maybe<string>;
+    dateAdded: Maybe<any>;
+    id: Maybe<string>;
+    public: Maybe<boolean>;
+  }>;
 };
 
 export type ICreateEntryMutationVariables = Exact<{
@@ -210,16 +239,28 @@ export type ICreateEntryMutationVariables = Exact<{
   title: Maybe<Scalars["String"]>;
 }>;
 
-export type ICreateEntryMutation = { __typename?: "Mutation" } & {
-  createEntry: Maybe<{ __typename?: "Entry" } & IEntryInfoFragment>;
+export type ICreateEntryMutation = {
+  __typename?: "Mutation";
+  createEntry: Maybe<{
+    __typename?: "Entry";
+    title: Maybe<string>;
+    dateAdded: Maybe<any>;
+    id: Maybe<string>;
+    public: Maybe<boolean>;
+  }>;
 };
 
 export type IRemoveEntryMutationVariables = Exact<{
   id: Scalars["ID"];
 }>;
 
-export type IRemoveEntryMutation = { __typename?: "Mutation" } & {
-  deleteEntry: Maybe<{ __typename?: "Entry" } & Pick<IEntry, "title" | "id">>;
+export type IRemoveEntryMutation = {
+  __typename?: "Mutation";
+  deleteEntry: Maybe<{
+    __typename?: "Entry";
+    title: Maybe<string>;
+    id: Maybe<string>;
+  }>;
 };
 
 export type ILoginUserMutationVariables = Exact<{
@@ -227,10 +268,9 @@ export type ILoginUserMutationVariables = Exact<{
   password: Scalars["String"];
 }>;
 
-export type ILoginUserMutation = { __typename?: "Mutation" } & {
-  authenticateUser: Maybe<
-    { __typename?: "AuthUserPayload" } & Pick<IAuthUserPayload, "token">
-  >;
+export type ILoginUserMutation = {
+  __typename?: "Mutation";
+  authenticateUser: Maybe<{ __typename?: "AuthUserPayload"; token: Maybe<string> }>;
 };
 
 export type ICreateUserMutationVariables = Exact<{
@@ -239,20 +279,22 @@ export type ICreateUserMutationVariables = Exact<{
   password: Scalars["String"];
 }>;
 
-export type ICreateUserMutation = { __typename?: "Mutation" } & {
-  createUser: Maybe<
-    { __typename?: "AuthUserPayload" } & Pick<IAuthUserPayload, "token">
-  >;
+export type ICreateUserMutation = {
+  __typename?: "Mutation";
+  createUser: Maybe<{ __typename?: "AuthUserPayload"; token: Maybe<string> }>;
 };
 
 export type IUpdateUserSettingsMutationVariables = Exact<{
   settings: IUserSettingsInput;
 }>;
 
-export type IUpdateUserSettingsMutation = { __typename?: "Mutation" } & {
-  updateUserSettings: Maybe<
-    { __typename?: "User" } & Pick<IUser, "username" | "email">
-  >;
+export type IUpdateUserSettingsMutation = {
+  __typename?: "Mutation";
+  updateUserSettings: Maybe<{
+    __typename?: "User";
+    username: string;
+    email: string;
+  }>;
 };
 
 export type IUpdatePasswordMutationVariables = Exact<{
@@ -260,16 +302,16 @@ export type IUpdatePasswordMutationVariables = Exact<{
   newPassword: Scalars["String"];
 }>;
 
-export type IUpdatePasswordMutation = { __typename?: "Mutation" } & {
-  updatePassword: Maybe<
-    { __typename?: "AuthUserPayload" } & Pick<IAuthUserPayload, "token">
-  >;
+export type IUpdatePasswordMutation = {
+  __typename?: "Mutation";
+  updatePassword: Maybe<{ __typename?: "AuthUserPayload"; token: Maybe<string> }>;
 };
 
 export type IIsMeQueryVariables = Exact<{ [key: string]: never }>;
 
-export type IIsMeQuery = { __typename?: "Query" } & {
-  me: Maybe<{ __typename?: "Me" } & Pick<IMe, "token">>;
+export type IIsMeQuery = {
+  __typename?: "Query";
+  me: Maybe<{ __typename?: "Me"; token: Maybe<string> }>;
 };
 
 export const EntryInfoFragmentDoc = gql`
