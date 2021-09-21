@@ -50,7 +50,6 @@ interface IContentProps {
 }
 
 const code: CodeComponent = (props) => {
-  console.log(props);
   return <CodeBlock value={props.children} language={props.className} />;
 };
 

@@ -20,7 +20,6 @@ interface IDashboardProps {
 export const getServerSideProps: GetServerSideProps<IDashboardProps> = async ({
   req
 }) => {
-  console.log(req.cookies);
   const client = initializeApollo({}, req.cookies[TOKEN_NAME]);
   await client.query({
     query: AllPostsDocument
