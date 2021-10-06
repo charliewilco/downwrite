@@ -24,7 +24,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.15",
+    "@apollo/client": "^3.4.16",
     "@next/bundle-analyzer": "^11.1.2",
     "@reach/checkbox": "^0.16.0",
     "@reach/combobox": "^0.16.1",
@@ -44,7 +44,7 @@
     "file-saver": "^2.0.5",
     "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
-    "graphql": "^15.6.0",
+    "graphql": "^15.6.1",
     "immer": "^9.0.6",
     "immutable": "~3.8.2",
     "jsonwebtoken": "^8.3.0",
@@ -100,7 +100,7 @@
     "jest-puppeteer": "^6.0.0",
     "jest-transform-graphql": "^2.1.0",
     "merge": "^2.1.1",
-    "postcss": "^8.3.8",
+    "postcss": "^8.3.9",
     "prettier": "^2.4.1",
     "pretty-quick": "^3.1.1",
     "prop-types": "^15.7.2",
