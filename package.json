@@ -37,7 +37,7 @@
     "apollo-server-micro": "^2.25.2",
     "base-64": "^1.0.0",
     "bcrypt": "^5.0.1",
-    "date-fns": "^2.24.0",
+    "date-fns": "^2.25.0",
     "draft-js": "^0.11.7",
     "draftjs-md-converter": "^1.5.1",
     "fathom-client": "^3.2.0",
