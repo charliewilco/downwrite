@@ -1064,13 +1064,13 @@
     auto-bind "~4.0.0"
     tslib "~2.3.0"
 
-"@graphql-codegen/typescript-react-apollo@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-react-apollo/-/typescript-react-apollo-3.1.1.tgz#3ef2e45ed5e907ec0ae0ec476f43d6e78043afd6"
-  integrity sha512-VZLqdy3QDIAPHjCx74ryZYBwE45j/nKenQaNYCEecuXHzxIaSWNWeqe8KnmiaSbsALSgIddPDaCjtXc1eOBBBA==
+"@graphql-codegen/typescript-react-apollo@^3.1.4":
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-react-apollo/-/typescript-react-apollo-3.1.4.tgz#be198c36ef3caa8f30d5e2a609ccb8950fcec946"
+  integrity sha512-XuQ5owAyqaewUU0Je2ye8NWWCcKEo/C/ruEqYHQaFyswCE4KGNbCcfxrl0+dW788qk/NI5dVrConwbH2ze5YnQ==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^2.1.0"
-    "@graphql-codegen/visitor-plugin-common" "2.1.1"
+    "@graphql-codegen/plugin-helpers" "^2.1.1"
+    "@graphql-codegen/visitor-plugin-common" "2.2.1"
     auto-bind "~4.0.0"
     change-case-all "1.0.14"
     tslib "~2.3.0"
@@ -1115,22 +1115,6 @@
     "@graphql-codegen/plugin-helpers" "^1.18.8"
     "@graphql-tools/optimize" "^1.0.1"
     "@graphql-tools/relay-operation-optimizer" "^6.3.0"
-    array.prototype.flatmap "^1.2.4"
-    auto-bind "~4.0.0"
-    change-case-all "1.0.14"
-    dependency-graph "^0.11.0"
-    graphql-tag "^2.11.0"
-    parse-filepath "^1.0.2"
-    tslib "~2.3.0"
-
-"@graphql-codegen/visitor-plugin-common@2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-2.1.1.tgz#9181f8b1a87332db604e0e3aada3cf91bc458fb4"
-  integrity sha512-FO8kMDL+Y1yw8DirhIsY97RjVKfmxxhK179njA46Vu85Rg4zCuLpGMyB0mkhl95QGfdfuJjbB1lz34U27Ce9Wg==
-  dependencies:
-    "@graphql-codegen/plugin-helpers" "^2.1.0"
-    "@graphql-tools/optimize" "^1.0.1"
-    "@graphql-tools/relay-operation-optimizer" "^6.3.7"
     array.prototype.flatmap "^1.2.4"
     auto-bind "~4.0.0"
     change-case-all "1.0.14"
