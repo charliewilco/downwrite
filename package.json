@@ -46,7 +46,7 @@
     "framer-motion": "^4.1.17",
     "graphql": "^15.6.1",
     "immer": "^9.0.6",
-    "immutable": "~3.8.2",
+    "immutable": "~4.0.0",
     "jsonwebtoken": "^8.3.0",
     "jwt-decode": "^3.1.2",
     "mongoose": "^5.13.7",
