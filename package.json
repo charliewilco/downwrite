@@ -63,7 +63,7 @@
     "typeface-inter": "^3.18.1",
     "universal-cookie": "^4.0.4",
     "uuid": "^8.3.0",
-    "yup": "^0.32.10"
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.2.0",
