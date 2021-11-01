@@ -974,13 +974,13 @@
     ts-node "^9"
     tslib "^2"
 
-"@graphql-codegen/cli@^2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/cli/-/cli-2.2.1.tgz#0bfe7bc64c1d6aa84d679fb2139f5d76337459cc"
-  integrity sha512-pFb/41kUpUhC40O/ZgdhqsUaGO2NPYBxQNLNR5frRhIIpXkjk8Uj2BstUlAmK0Nz2bkSiC4k5Q6aGW7OBkxcaA==
+"@graphql-codegen/cli@^2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/cli/-/cli-2.2.2.tgz#f079af082ade06b7639b73a7fc12754c704dada7"
+  integrity sha512-QTijlvgmzBkSQ/7+VTxQbkcEoSfX/qpX2yg6xXQPISU71Q+6k2dGvYfRrjchwGu7/cNeSaYfgh8S/MhkmNg7Uw==
   dependencies:
-    "@graphql-codegen/core" "2.2.0"
-    "@graphql-codegen/plugin-helpers" "^2.2.0"
+    "@graphql-codegen/core" "2.3.0"
+    "@graphql-codegen/plugin-helpers" "^2.3.0"
     "@graphql-tools/apollo-engine-loader" "^7.0.5"
     "@graphql-tools/code-file-loader" "^7.0.6"
     "@graphql-tools/git-loader" "^7.0.5"
@@ -1020,12 +1020,12 @@
     yaml "^1.10.0"
     yargs "^17.0.0"
 
-"@graphql-codegen/core@2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/core/-/core-2.2.0.tgz#218512dfd383ac8182c2cee7f9c336a597c633d4"
-  integrity sha512-xy0t0riVM6Lrv7wAL9vCvX+iJIQyEry/Up83JMtcSPhKWXbWOWGKQp2G0pJ1tZNvNdz4jO59/f8AiBsThwUEGg==
+"@graphql-codegen/core@2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/core/-/core-2.3.0.tgz#0903b315e90a1b7575b5684401c8d0c26256ff4f"
+  integrity sha512-dGBd5DEOB1hJ3Ddd6l+3U4cbDZ91e0BIJQGTyZPLRYyffqJP+Y7IEYm4lMaBNY9m6qVXeGq+fgCS2SXlXEzJoA==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^2.2.0"
+    "@graphql-codegen/plugin-helpers" "^2.3.0"
     "@graphql-tools/schema" "^8.1.2"
     "@graphql-tools/utils" "^8.1.1"
     tslib "~2.3.0"
@@ -1041,10 +1041,10 @@
     lodash "~4.17.0"
     tslib "~2.3.0"
 
-"@graphql-codegen/plugin-helpers@^2.1.0", "@graphql-codegen/plugin-helpers@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-2.2.0.tgz#f74bbba009cd3685db33187880e980d609065420"
-  integrity sha512-7t3LFd6DHUWPh0f7qY7wde2r4KCsU8WDcTxQ0QuHuokTqZYnRk+UH3xNDUiyb+1LGTBUqIaKxLwQXh8EDyZK7A==
+"@graphql-codegen/plugin-helpers@^2.1.0", "@graphql-codegen/plugin-helpers@^2.2.0", "@graphql-codegen/plugin-helpers@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-2.3.0.tgz#e2d6538438e3eff1a68e59059dc9f5ab2eb52d43"
+  integrity sha512-IdIEtAFkAZrTgVbhMzYudIzcsFHkP2pUpZjg3X+x1XJfZ+asEVHf1SCwL9gOIM/BuG+fsHRZMenedfWHSyF/AQ==
   dependencies:
     "@graphql-tools/utils" "^8.1.1"
     change-case-all "1.0.14"
@@ -1724,10 +1724,10 @@
   resolved "https://registry.yarnpkg.com/@n1ru4l/graphql-live-query/-/graphql-live-query-0.7.1.tgz#c020d017c3ed6bcfdde49a7106ba035e4d0774f5"
   integrity sha512-5kJPe2FkPNsCGu9tocKIzUSNO986qAqdnbk8hIFqWlpVPBAmEAOYb1mr6PA18FYAlu7ojWm9Hm13k29aj2GGlQ==
 
-"@next/bundle-analyzer@^12.0.1":
-  version "12.0.1"
-  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-12.0.1.tgz#e76aa43615cdd63364b65dece6737787387e04ff"
-  integrity sha512-/DSLq15gtxNRVZRzwofqHlJLHSW7GmXfFHjEX+Q2+lMkLQ5/V+tAwa6i2CbJvSdZYJXNA2vE+35Fph7odSfoHA==
+"@next/bundle-analyzer@^12.0.2":
+  version "12.0.2"
+  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-12.0.2.tgz#1fbee47f8bf9907012cca2f9b05a341ba3fcbd38"
+  integrity sha512-oNgmrS6Mebw8BjPe/aUcQnoZ5WOGOl7fp15cLIe00Z8ZAZb7LkjjRviUPx46rsCUCbgAl7UOnsL8U2yymm6NgA==
   dependencies:
     webpack-bundle-analyzer "4.3.0"
 
@@ -5421,23 +5421,23 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
-framer-motion@^4.1.17:
-  version "4.1.17"
-  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-4.1.17.tgz#4029469252a62ea599902e5a92b537120cc89721"
-  integrity sha512-thx1wvKzblzbs0XaK2X0G1JuwIdARcoNOW7VVwjO8BUltzXPyONGAElLu6CiCScsOQRI7FIk/45YTFtJw5Yozw==
+framer-motion@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-5.0.1.tgz#e63c504b175780ba658d7f944007ec36d9ef61c9"
+  integrity sha512-Bye1pAXTfp7uh9Ih2H4vyInbS7uXclPvy18G+h8y8DauQx1vtkblPyGSlaoDNGlrfmw6SCVsjSYWDF2SzI68YA==
   dependencies:
-    framesync "5.3.0"
+    framesync "6.0.1"
     hey-listen "^1.0.8"
-    popmotion "9.3.6"
-    style-value-types "4.1.4"
+    popmotion "10.0.2"
+    style-value-types "5.0.0"
     tslib "^2.1.0"
   optionalDependencies:
     "@emotion/is-prop-valid" "^0.8.2"
 
-framesync@5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/framesync/-/framesync-5.3.0.tgz#0ecfc955e8f5a6ddc8fdb0cc024070947e1a0d9b"
-  integrity sha512-oc5m68HDO/tuK2blj7ZcdEBRx3p1PjrgHazL8GYEpvULhrtGIFbQArN6cQS2QhW8mitffaB+VYzMjDqBxxQeoA==
+framesync@6.0.1, framesync@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/framesync/-/framesync-6.0.1.tgz#5e32fc01f1c42b39c654c35b16440e07a25d6f20"
+  integrity sha512-fUY88kXvGiIItgNC7wcTOl0SNRCVXMKSWW2Yzfmn7EKNc+MpCzcz9DhdHcdjbrtN3c6R4H5dTY2jiCpPdysEjA==
   dependencies:
     tslib "^2.1.0"
 
@@ -8813,14 +8813,14 @@ pnp-webpack-plugin@1.6.4:
   dependencies:
     ts-pnp "^1.1.6"
 
-popmotion@9.3.6:
-  version "9.3.6"
-  resolved "https://registry.yarnpkg.com/popmotion/-/popmotion-9.3.6.tgz#b5236fa28f242aff3871b9e23721f093133248d1"
-  integrity sha512-ZTbXiu6zIggXzIliMi8LGxXBF5ST+wkpXGEjeTUDUOCdSQ356hij/xjeUdv0F8zCQNeqB1+PR5/BB+gC+QLAPw==
+popmotion@10.0.2:
+  version "10.0.2"
+  resolved "https://registry.yarnpkg.com/popmotion/-/popmotion-10.0.2.tgz#edb87efb2ba39505d07f79d3ca8cc4b1cbe101bf"
+  integrity sha512-8vgx02LL7Odk/kwSGigAnlPRLJK+Dfked571ZAHGzkxPNWThkU5mQX0xPmibIMAULZehWBV7hGN7LSCpaV3cfw==
   dependencies:
-    framesync "5.3.0"
+    framesync "^6.0.1"
     hey-listen "^1.0.8"
-    style-value-types "4.1.4"
+    style-value-types "5.0.0"
     tslib "^2.1.0"
 
 pos-tagger.js@^1.0.10:
@@ -10367,10 +10367,10 @@ style-to-object@^0.3.0:
   dependencies:
     inline-style-parser "0.1.1"
 
-style-value-types@4.1.4:
-  version "4.1.4"
-  resolved "https://registry.yarnpkg.com/style-value-types/-/style-value-types-4.1.4.tgz#80f37cb4fb024d6394087403dfb275e8bb627e75"
-  integrity sha512-LCJL6tB+vPSUoxgUBt9juXIlNJHtBMy8jkXzUJSBzeHWdBu6lhzHqCvLVkXFGsFIlNa2ln1sQHya/gzaFmB2Lg==
+style-value-types@5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/style-value-types/-/style-value-types-5.0.0.tgz#76c35f0e579843d523187989da866729411fc8ad"
+  integrity sha512-08yq36Ikn4kx4YU6RD7jWEv27v4V+PUsOGa4n/as8Et3CuODMJQ00ENeAVXAeydX4Z2j1XHZF1K2sX4mGl18fA==
   dependencies:
     hey-listen "^1.0.8"
     tslib "^2.1.0"
