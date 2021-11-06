@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { FormikHelpers } from "formik";
-import { updateSettingsCache } from "@utils/cache";
-import { useUpdateUserSettingsMutation } from "../__generated__/client";
+import { dwClient } from "@lib/client";
 
 export interface IUserFormValues {
   username: string;
@@ -9,7 +8,6 @@ export interface IUserFormValues {
 }
 
 export function useUpdateSettings() {
-  const [mutationFn] = useUpdateUserSettingsMutation();
   const onSubmit = useCallback(
     async (
       settings: IUserFormValues,
@@ -17,14 +15,11 @@ export function useUpdateSettings() {
     ): Promise<void> => {
       if (settings) {
         try {
-          await mutationFn({
-            variables: {
-              settings: {
-                username: settings.username,
-                email: settings.email
-              }
-            },
-            update: updateSettingsCache
+          await dwClient.UpdateUserSettings({
+            settings: {
+              username: settings.username,
+              email: settings.email
+            }
           });
           actions.setSubmitting(false);
         } catch (err) {
@@ -32,7 +27,7 @@ export function useUpdateSettings() {
         }
       }
     },
-    [mutationFn]
+    []
   );
 
   return onSubmit;

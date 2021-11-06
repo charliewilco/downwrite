@@ -1,16 +1,22 @@
-schema: https://downwrite-graphql-api.herokuapp.com/graphql
+schema: ./src/lib/schema.ts
 documents: ./src/lib/document.graphql
 generates:
-  ./src/__generated__/client.tsx:
+  ./src/__generated__/client.ts:
     plugins:
       - typescript
       - typescript-operations
-      - typescript-react-apollo
+      - typescript-graphql-request
+  ./src/__generated__/server.ts:
+    config:
+      useIndexSignature: true
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-resolvers
 config:
   typesPrefix: I
   avoidOptionals: true
   withHooks: true
-  gqlImport: "@apollo/client#gql"
 
 hooks:
   afterAllFileWrite:

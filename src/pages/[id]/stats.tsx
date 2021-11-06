@@ -3,16 +3,13 @@ import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next"
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { FiAlertTriangle } from "react-icons/fi";
-import { initializeApollo } from "@lib/apollo";
-import { getInitialStateFromCookie, TOKEN_NAME } from "@lib/cookie-managment";
+import { getInitialStateFromCookie } from "@lib/cookie-managment";
+import { server } from "@lib/server";
+
 import { parser, StringifiedOutput } from "@utils/parser";
 
 import { __IS_PROD__ } from "@utils/dev";
-import {
-  IEditQueryVariables,
-  IEditQuery,
-  EditDocument
-} from "../../__generated__/client";
+import { EditDocument } from "../../__generated__/client";
 
 interface IStatsPageProps {
   id: string;
@@ -25,25 +22,26 @@ export const getServerSideProps: GetServerSideProps<
   { id: string }
 > = async ({ req, res, params }) => {
   const id = params!.id;
-  const client = initializeApollo({}, req.cookies[TOKEN_NAME]);
 
   const initialAppState = await getInitialStateFromCookie(req);
 
-  const { data } = await client.query<IEditQuery, IEditQueryVariables>({
-    query: EditDocument,
-    variables: {
-      id: params!.id
+  const response = await server.executeOperation(
+    {
+      query: EditDocument,
+      variables: {
+        id
+      }
     },
-    context: { req, res }
-  });
-  const { stringified } = parser(data.entry.content);
+    { req, res }
+  );
+
+  const { stringified } = parser(response.data.entry.content);
 
   return {
     props: {
       initialAppState,
-      initialApolloState: client.cache.extract(),
       id,
-      title: data.entry.title,
+      title: response.data.entry.title,
       output: stringified
     }
   };
@@ -52,6 +50,7 @@ export const getServerSideProps: GetServerSideProps<
 const StatsEntry: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> =
   (props) => {
     const router = useRouter();
+
     useEffect(() => {
       if (__IS_PROD__) {
         router.push("/dashboard");

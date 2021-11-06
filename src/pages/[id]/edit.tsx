@@ -2,7 +2,8 @@ import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next"
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useState, useEffect, useCallback } from "react";
-import { NormalizedCacheObject } from "@apollo/client";
+import useSWR from "swr";
+
 import {
   RawDraftContentState,
   convertFromRaw,
@@ -18,10 +19,9 @@ import { Input } from "@components/editor-input";
 import { PreviewLink } from "@components/entry-links";
 import TimeMarker from "@components/time-marker";
 import { __IS_DEV__ } from "@utils/dev";
-import { updateEntryCache } from "@utils/cache";
 
-import { initializeApollo } from "@lib/apollo";
-import { getInitialStateFromCookie, TOKEN_NAME } from "@lib/cookie-managment";
+import { dwClient } from "@lib/client";
+import { getInitialStateFromCookie } from "@lib/cookie-managment";
 import { useEditReducer } from "@hooks/useEditReducer";
 import { IAppState, useNotifications, NotificationType } from "@reducers/app";
 import { EditActions } from "@reducers/editor";
@@ -32,13 +32,8 @@ import {
   MultiDecorator
 } from "../../editor";
 
-import {
-  EditDocument,
-  IEditQuery,
-  IEditQueryVariables,
-  useEditQuery,
-  useUpdateEntryMutation
-} from "../../__generated__/client";
+import { EditDocument } from "../../__generated__/client";
+import { server } from "@lib/server";
 
 const Autosaving = dynamic(() => import("@components/autosaving-interval"));
 const Editor = dynamic(() => import("@components/editor"), {
@@ -49,7 +44,6 @@ const ExportMarkdown = dynamic(() => import("@components/export"));
 
 interface IEditPageProps {
   initialAppState: IAppState;
-  initialApolloState: NormalizedCacheObject;
   rawEditorState: RawDraftContentState;
   id: string;
 }
@@ -61,23 +55,22 @@ type EditPageParams = {
 type EditPageHandler = GetServerSideProps<IEditPageProps, EditPageParams>;
 
 export const getServerSideProps: EditPageHandler = async ({ req, res, params }) => {
-  const client = initializeApollo({}, req.cookies[TOKEN_NAME]);
+  const response = await server.executeOperation(
+    {
+      query: EditDocument
+    },
+    { req, res }
+  );
   const id = params?.id!;
 
-  const { data } = await client.query<IEditQuery, IEditQueryVariables>({
-    query: EditDocument,
-    variables: { id }
-  });
-
   const initialAppState = await getInitialStateFromCookie(req);
-  const rawEditorState = mdToDraftjs(data?.entry?.content!);
+  const rawEditorState = mdToDraftjs(response.data?.entry?.content!);
 
   return {
     props: {
       id,
       rawEditorState,
-      initialAppState,
-      initialApolloState: client.cache.extract()
+      initialAppState
     }
   };
 };
@@ -90,6 +83,11 @@ const decorators = new MultiDecorator([
 const EditUI: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   props
 ) => {
+  const { data, error, mutate } = useSWR(props.id, (id) =>
+    dwClient.Edit({
+      id
+    })
+  );
   const [editorState, setEditorState] = useState(() =>
     EditorState.createWithContent(
       convertFromRaw({
@@ -100,17 +98,11 @@ const EditUI: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> =
     )
   );
 
+  const loading = !data;
+
   const getEditorState = () => editorState;
-  const { loading, data, error } = useEditQuery({
-    variables: {
-      id: props.id
-    }
-  });
 
   const [, { addNotification }] = useNotifications();
-  const [mutationFn] = useUpdateEntryMutation({
-    update: updateEntryCache
-  });
 
   const handleSubmit = useCallback(
     async (
@@ -122,17 +114,25 @@ const EditUI: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> =
       if (editorState !== null) {
         const raw = convertToRaw(editorState.getCurrentContent());
         const content = draftjsToMd(raw);
-        await mutationFn({
-          variables: {
+        await dwClient
+          .UpdateEntry({
             id,
             content,
             title: title,
             status: publicStatus
-          }
-        }).catch((err) => addNotification(err.message, NotificationType.ERROR));
+          })
+          .then((value) => {
+            mutate(
+              {
+                entry: value.updateEntry
+              },
+              false
+            );
+          })
+          .catch((err) => addNotification(err.message, NotificationType.ERROR));
       }
     },
-    [mutationFn, addNotification]
+    [addNotification]
   );
 
   const [state, dispatch] = useEditReducer(data);

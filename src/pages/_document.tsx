@@ -3,7 +3,7 @@ import Document, { Html, Head, Main, NextScript } from "next/document";
 export default class CustomDocument extends Document {
   render() {
     return (
-      <Html className="dark:bg-onyx-900 dark:text-white antialiased">
+      <Html lang="en">
         <Head>
           <link rel="icon" href="/favicon.ico" />
           <link

@@ -2,40 +2,26 @@ import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next"
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
+import useSWR from "swr";
 import Content from "@components/content";
 import AuthorBlock from "@components/author-block";
 import Loading from "@components/loading";
 import NotFound from "@components/not-found";
-import {
-  usePreviewQuery,
-  PreviewDocument,
-  IPreviewQuery,
-  IPreviewQueryVariables
-} from "../../__generated__/client";
-import { initializeApollo } from "@lib/apollo";
 import { Routes } from "@utils/routes";
 import { AvatarColors } from "@utils/default-styles";
 import { useCurrentUser } from "@reducers/app";
 import { getInitialStateFromCookie } from "@lib/cookie-managment";
+import { dwClient } from "@lib/client";
 
 type PreviewPageHandler = GetServerSideProps<{ id: string }, { id: string }>;
 
 export const getServerSideProps: PreviewPageHandler = async ({ req, params }) => {
   const id = params!.id;
   const initialAppState = await getInitialStateFromCookie(req);
-  const client = initializeApollo({});
-
-  await client.query<IPreviewQuery, IPreviewQueryVariables>({
-    query: PreviewDocument,
-    variables: {
-      id: params!.id
-    }
-  });
 
   return {
     props: {
       initialAppState,
-      initialApolloState: client.cache.extract(),
       id
     }
   };
@@ -46,9 +32,10 @@ const PreviewEntry: NextPage<
 > = (props) => {
   const router = useRouter();
   const [currentUser] = useCurrentUser();
-  const { error, loading, data } = usePreviewQuery({
-    variables: { id: props.id }
-  });
+
+  const { error, data } = useSWR(props.id, (id) => dwClient.Preview({ id }));
+
+  const loading = !data;
 
   if (error) {
     return (
@@ -68,7 +55,7 @@ const PreviewEntry: NextPage<
   if (!!data) {
     return (
       <Content
-        title={data?.preview?.title!}
+        title={data.preview?.title!}
         content={data.preview?.content!}
         dateAdded={data.preview?.dateAdded!}>
         <Head>

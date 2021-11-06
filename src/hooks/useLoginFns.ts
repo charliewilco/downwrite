@@ -7,10 +7,7 @@ import { useNotifications, NotificationType, useCurrentUser } from "@reducers/ap
 import { TOKEN_NAME } from "@lib/constants";
 import { TokenContents } from "@lib/token";
 import { Routes } from "@utils/routes";
-import {
-  useLoginUserMutation,
-  useCreateUserMutation
-} from "../__generated__/client";
+import { dwClient } from "@lib/client";
 
 export interface IRegisterValues extends Record<string, string | boolean> {
   username: string;
@@ -34,10 +31,7 @@ export function useLoginFns(): IFormHandlers {
   const router = useRouter();
   const [notifications, { addNotification, removeNotification }] =
     useNotifications();
-  const [createUser] = useCreateUserMutation();
   const [, { onCurrentUserLogin }] = useCurrentUser();
-
-  const [authenticateUser] = useLoginUserMutation();
 
   const onSuccess = useCallback((token: string) => {
     const d = decode<TokenContents>(token);
@@ -55,15 +49,14 @@ export function useLoginFns(): IFormHandlers {
 
   const onLoginSubmit = useCallback(
     async (values: ILoginValues): Promise<void> => {
-      await authenticateUser({
-        variables: {
+      await dwClient
+        .LoginUser({
           username: values.user,
           password: base64.encode(values.password)
-        }
-      })
+        })
         .then((value) => {
-          if (value?.data?.authenticateUser?.token) {
-            const token = value.data.authenticateUser.token;
+          if (value?.authenticateUser?.token) {
+            const token = value.authenticateUser.token;
             onSuccess(token);
           }
         })
@@ -71,21 +64,20 @@ export function useLoginFns(): IFormHandlers {
           addNotification(error.message, NotificationType.ERROR);
         });
     },
-    [addNotification, authenticateUser, onSuccess]
+    [addNotification, onSuccess]
   );
 
   const onRegisterSubmit = useCallback(
     async ({ legalChecked, ...values }: IRegisterValues): Promise<void> => {
       if (legalChecked) {
-        await createUser({
-          variables: {
+        await dwClient
+          .CreateUser({
             ...values,
             password: base64.encode(values.password)
-          }
-        })
+          })
           .then((value) => {
-            if (value?.data?.createUser?.token) {
-              const token = value.data.createUser.token;
+            if (value?.createUser?.token) {
+              const token = value.createUser.token;
 
               onSuccess(token);
             }
@@ -95,7 +87,7 @@ export function useLoginFns(): IFormHandlers {
           });
       }
     },
-    [createUser, addNotification, onSuccess]
+    [addNotification, onSuccess]
   );
 
   return {

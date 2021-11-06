@@ -1,44 +1,38 @@
 import { useCallback } from "react";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import { NormalizedCacheObject } from "@apollo/client";
 import DeleteModal from "@components/delete-modal";
 import PostList from "@components/post-list";
 import EmptyPosts from "@components/empty-posts";
 import { LoadingDashboard, ErrorDashboard } from "@components/dashboard-helpers";
 import { useRemovePost, useDashboard } from "../hooks";
-import { initializeApollo } from "@lib/apollo";
-import { getInitialStateFromCookie, TOKEN_NAME } from "@lib/cookie-managment";
+import { getInitialStateFromCookie } from "@lib/cookie-managment";
 import { IAppState } from "@reducers/app";
-import { useAllPostsQuery, AllPostsDocument } from "../__generated__/client";
+import useSWR from "swr";
+import { dwClient } from "@lib/client";
 
 interface IDashboardProps {
   initialAppState: IAppState;
-  initialApolloState: NormalizedCacheObject;
 }
 
 export const getServerSideProps: GetServerSideProps<IDashboardProps> = async ({
   req
 }) => {
-  const client = initializeApollo({}, req.cookies[TOKEN_NAME]);
-  await client.query({
-    query: AllPostsDocument
-  });
-
   const initialAppState = await getInitialStateFromCookie(req);
 
   return {
     props: {
-      initialAppState,
-      initialApolloState: client.cache.extract()
+      initialAppState
     }
   };
 };
 
 const DashboardUI: NextPage = () => {
   const [{ selectedPost, modalOpen }, actions] = useDashboard();
-  const { data, loading, error } = useAllPostsQuery();
+  const { data, error } = useSWR(["dashboard"], () => dwClient.AllPosts());
   const onConfirmDelete = useRemovePost();
+
+  const loading = !data;
 
   const onDelete = useCallback(() => {
     onConfirmDelete(selectedPost!.id);
@@ -54,6 +48,10 @@ const DashboardUI: NextPage = () => {
   }
 
   if (data) {
+    const titlePrefix =
+      data.feed.length > 0
+        ? data.feed.length.toString().concat(" Entries ")
+        : "No Entries ";
     return (
       <>
         {modalOpen && selectedPost !== null && (
@@ -65,12 +63,7 @@ const DashboardUI: NextPage = () => {
           />
         )}
         <Head>
-          <title>
-            {data.feed.length > 0
-              ? data.feed.length.toString().concat(" Entries ")
-              : "No Entries "}
-            | Downwrite
-          </title>
+          <title>{titlePrefix}| Downwrite</title>
         </Head>
         <section className="py-4 px-2 min-h-screen">
           {data.feed.length > 0 ? (

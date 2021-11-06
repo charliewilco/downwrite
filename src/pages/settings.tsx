@@ -1,28 +1,22 @@
 import { GetServerSideProps, NextPage, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
+import useSWR from "swr";
+
 import UsageDetails from "@components/usage-details";
 import SettingsUser from "@components/settings-user-form";
 import SettingsLocal from "@components/settings-markdown";
 import SettingsPassword from "@components/settings-password";
 import Loading from "@components/loading";
 import { PageTitle } from "@components/page-title";
-import { initializeApollo } from "@lib/apollo";
-import { getInitialStateFromCookie, TOKEN_NAME } from "@lib/cookie-managment";
-import { useUserDetailsQuery, UserDetailsDocument } from "../__generated__/client";
+import { getInitialStateFromCookie } from "@lib/cookie-managment";
+import { dwClient } from "@lib/client";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const client = initializeApollo({}, req.cookies[TOKEN_NAME]);
-
-  await client.query({
-    query: UserDetailsDocument
-  });
-
   const initialAppState = await getInitialStateFromCookie(req);
 
   return {
     props: {
-      initialAppState,
-      initialApolloState: client.cache.extract()
+      initialAppState
     }
   };
 };
@@ -30,7 +24,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 const SettingsPage: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = () => {
-  const { error, loading, data } = useUserDetailsQuery();
+  const { error, data } = useSWR([], () => dwClient.UserDetails());
+  const loading = !data;
   if (loading) {
     return <Loading />;
   }

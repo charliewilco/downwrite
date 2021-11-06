@@ -8,7 +8,7 @@ import { Button } from "./button";
 import { UpdatePasswordSchema } from "@utils/validations";
 import { NotificationType, useNotifications } from "@reducers/app";
 
-import { useUpdatePasswordMutation } from "../__generated__/client";
+import { dwClient } from "@lib/client";
 
 interface IPasswordSettings {
   oldPassword: string;
@@ -25,7 +25,6 @@ export default function SettingsPassword(props: IPasswordFormProps): JSX.Element
     (prev: boolean) => !prev,
     false
   );
-  const [mutationFn] = useUpdatePasswordMutation();
   const [, { addNotification }] = useNotifications();
   const onSubmit = useCallback(
     async (
@@ -34,17 +33,15 @@ export default function SettingsPassword(props: IPasswordFormProps): JSX.Element
     ): Promise<void> => {
       try {
         await actions.validateForm();
-        await mutationFn({
-          variables: {
-            current: base64.encode(_.oldPassword),
-            newPassword: base64.encode(_.newPassword)
-          }
+        await dwClient.UpdatePassword({
+          current: base64.encode(_.oldPassword),
+          newPassword: base64.encode(_.newPassword)
         });
       } catch (err) {
         addNotification(err.message, NotificationType.ERROR, true);
       }
     },
-    [addNotification, mutationFn]
+    [addNotification]
   );
 
   const initialValues: IPasswordSettings = {

@@ -3,7 +3,7 @@ import Markdown from "react-markdown";
 import "prismjs";
 import CodeBlock from "./code-block";
 import { PropsWithChildren } from "react";
-import { CodeComponent } from "react-markdown/src/ast-to-react";
+import { CodeComponent } from "react-markdown/lib/ast-to-react";
 
 interface IContentWrapperProps extends PropsWithChildren<{}> {
   title?: string;

@@ -9,8 +9,8 @@ const AboutDetails: NextPage = () => {
       <Head>
         <title>About Downwrite</title>
       </Head>
-      <div className="xl:pb-0 xl:col-span-3">
-        <div data-testid="ABOUT_PAGE" className="font-serif __content py-8">
+      <div>
+        <div data-testid="ABOUT_PAGE">
           <p>
             So the idea here was simple build a simple markdown writing application.
             Markdown is a huge deal and all the cool tools kept getting shut down and

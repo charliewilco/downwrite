@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { ApolloError } from "@apollo/client";
 
 import Loading from "./loading";
 import InvalidToken from "./invalid-token";
@@ -16,7 +15,7 @@ export const LoadingDashboard = () => {
 };
 
 interface IErrorDashboard {
-  error: ApolloError;
+  error: Error;
 }
 
 export const ErrorDashboard = (props: IErrorDashboard) => {
