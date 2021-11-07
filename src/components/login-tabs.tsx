@@ -1,17 +1,16 @@
-import { PropsWithChildren } from "react";
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 import LoginForm from "./login-form";
 import Register from "./register";
 
-function FormHeader(props: PropsWithChildren<{}>) {
+const FormHeader: React.FC = ({ children }) => {
   return (
     <header className="p-4 text-center">
       <h2 className="text-xl mb-6" data-testid="LOGIN_TITLE">
-        {props.children}
+        {children}
       </h2>
     </header>
   );
-}
+};
 
 interface ILoginContainer {
   onSuccess(): void;

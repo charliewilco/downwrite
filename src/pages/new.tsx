@@ -8,7 +8,7 @@ import { Input } from "@components/editor-input";
 import { Button } from "@components/button";
 
 import { useEditor } from "../editor";
-import { useStore } from "@reducers/app";
+import { useStore } from "@store/provider";
 import { useRouter } from "next/router";
 
 const Editor = dynamic(() => import("@components/editor"));

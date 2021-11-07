@@ -3,7 +3,7 @@ import decode from "jwt-decode";
 import base64 from "base-64";
 import { TokenContents } from "@lib/token";
 import { IIsMeQuery } from "../__generated__/client";
-import { DownwriteClient } from "@reducers/client";
+import { DownwriteClient } from "@store/client";
 import { IAppState } from "./store";
 
 export interface ICurrentUserState {

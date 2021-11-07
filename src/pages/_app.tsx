@@ -3,7 +3,7 @@ import Router from "next/router";
 import { useEffect } from "react";
 import * as Analytics from "fathom-client";
 import { UIShell } from "@components/ui-shell";
-import { AppProvider } from "@reducers/app";
+import { StoreConnector } from "@store/provider";
 import "@reach/tabs/styles.css";
 import "@reach/menu-button/styles.css";
 import "@reach/dialog/styles.css";
@@ -26,10 +26,10 @@ export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <AppProvider>
+    <StoreConnector>
       <UIShell>
         <Component {...pageProps} />
       </UIShell>
-    </AppProvider>
+    </StoreConnector>
   );
 }

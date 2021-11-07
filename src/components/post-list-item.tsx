@@ -1,7 +1,7 @@
 import Link from "next/link";
 import distance from "date-fns/formatDistanceToNow";
 import { EditLink, PreviewLink } from "./entry-links";
-import { IPartialFeedItem } from "@reducers/dashboard";
+import { IPartialFeedItem } from "@store/dashboard";
 
 interface IListItemProps {
   title: string;

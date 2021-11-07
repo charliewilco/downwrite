@@ -1,7 +1,7 @@
 import { EditorState } from "draft-js";
 import { makeAutoObservable } from "mobx";
-import { DraftParser } from "@reducers/parser";
-import { DownwriteClient } from "@reducers/client";
+import { DraftParser } from "@store/parser";
+import { DownwriteClient } from "@store/client";
 import { IAppState } from "./store";
 
 import { IEntry } from "../__generated__/client";
@@ -17,7 +17,7 @@ export class EditorAction implements IEditorState {
   publicStatus = false;
   initialFocus = false;
   editorState: EditorState | null = null;
-  parser = new DraftParser();
+  #parser = new DraftParser();
   #client: DownwriteClient;
   #store: IAppState;
   constructor(_graphql: DownwriteClient, store: IAppState) {
@@ -66,7 +66,7 @@ export class EditorAction implements IEditorState {
 
   async submit(id: string) {
     if (this.editorState !== null) {
-      const content = this.parser.fromEditorState(this.editorState);
+      const content = this.#parser.fromEditorState(this.editorState);
       try {
         const value = await this.#client.updateEntry({
           id,
@@ -82,7 +82,7 @@ export class EditorAction implements IEditorState {
   }
 
   load(entry: Pick<IEntry, "title" | "dateAdded" | "content" | "public">) {
-    this.editorState = this.parser.fromMarkdown(entry.content);
+    this.editorState = this.#parser.fromMarkdown(entry.content);
   }
 
   async getEntry(id: string) {

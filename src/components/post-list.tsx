@@ -3,8 +3,8 @@ import LayoutControl from "./layout-control";
 import PostListItem from "./post-list-item";
 import classNames from "../utils/classnames";
 import { IEntry } from "../__generated__/client";
-import { PostGrid } from "@reducers/list";
-import { IPartialFeedItem } from "../reducers/dashboard";
+import { PostGrid } from "@store/list";
+import { IPartialFeedItem } from "../store/dashboard";
 import { PageTitle } from "./page-title";
 import { useLocalObservable } from "mobx-react";
 

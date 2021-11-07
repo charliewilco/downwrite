@@ -7,8 +7,8 @@ import DeleteModal from "@components/delete-modal";
 import PostList from "@components/post-list";
 import EmptyPosts from "@components/empty-posts";
 import { LoadingDashboard, ErrorDashboard } from "@components/dashboard-helpers";
-import { useStore } from "@reducers/app";
-import { IPartialFeedItem } from "@reducers/dashboard";
+import { useStore } from "@store/provider";
+import { IPartialFeedItem } from "@store/dashboard";
 
 const DashboardUI: NextPage = () => {
   const store = useStore();
@@ -21,19 +21,9 @@ const DashboardUI: NextPage = () => {
       store.dashboard.remove(selected.id).then((value) => {
         store.dashboard.cancel();
 
-        const index = data.feed.findIndex(({ id }) => value.deleteEntry.id === id);
-        if (index > -1) {
-          data.feed.splice(index, 1);
-          mutate(
-            {
-              ...data,
-              feed: {
-                ...data.feed
-              }
-            },
-            false
-          );
-        }
+        const mutated = store.dashboard.mutateFeedList(data, value.deleteEntry.id);
+
+        mutate(mutated, false);
       });
     }
   }, []);

@@ -2,15 +2,14 @@ import format from "date-fns/format";
 import Markdown from "react-markdown";
 import "prismjs";
 import CodeBlock from "./code-block";
-import { PropsWithChildren } from "react";
 import { CodeComponent } from "react-markdown/lib/ast-to-react";
 
-interface IContentWrapperProps extends PropsWithChildren<{}> {
+interface IContentWrapperProps {
   title?: string;
   dateAdded?: Date;
 }
 
-export function ContentWrapper(props: IContentWrapperProps): JSX.Element {
+export const ContentWrapper: React.FC<IContentWrapperProps> = (props) => {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 xl:max-w-5xl xl:px-0 mt-12">
       <article className="harticle">
@@ -40,12 +39,11 @@ export function ContentWrapper(props: IContentWrapperProps): JSX.Element {
       </article>
     </div>
   );
-}
+};
 
 interface IContentProps {
   title?: string;
   dateAdded?: Date;
-  children?: React.ReactNode;
   content?: string;
 }
 
@@ -57,7 +55,7 @@ const MARKDOWN_RENDERS = {
   code
 };
 
-export default function Content(props: IContentProps): JSX.Element {
+const Content: React.FC<IContentProps> = (props) => {
   return (
     <ContentWrapper title={props.title} dateAdded={props.dateAdded}>
       <aside className="divide-y space-y-8 py-8">{props.children}</aside>
@@ -70,4 +68,6 @@ export default function Content(props: IContentProps): JSX.Element {
       )}
     </ContentWrapper>
   );
-}
+};
+
+export default Content;

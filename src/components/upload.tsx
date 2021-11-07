@@ -1,4 +1,4 @@
-import { useRef, useCallback, MutableRefObject } from "react";
+import { useRef, useCallback } from "react";
 import { EditorState, convertFromRaw } from "draft-js";
 import { useDropzone } from "react-dropzone";
 import { mdToDraftjs } from "draftjs-md-converter";
@@ -10,7 +10,7 @@ export interface IMarkdownConversion {
   editorState: EditorState;
 }
 
-interface IUploadProps extends React.PropsWithChildren<{}> {
+interface IUploadProps {
   onParsed: (o: IMarkdownConversion) => void;
   disabled?: boolean;
 }
@@ -22,13 +22,13 @@ interface IMarkdown {
   };
 }
 
-function useFileReader(): MutableRefObject<FileReader | null> {
+function useFileReader() {
   return useRef<FileReader>(__IS_BROWSER__ ? new FileReader() : null);
 }
 
 type DropCallback = (files: File[]) => void;
 
-export default function Uploader(props: IUploadProps): JSX.Element {
+const Uploader: React.FC<IUploadProps> = (props) => {
   const reader = useFileReader();
   const onDrop = useCallback<DropCallback>(
     (acceptedFiles: File[]) => {
@@ -65,4 +65,6 @@ export default function Uploader(props: IUploadProps): JSX.Element {
       {props.children}
     </div>
   );
-}
+};
+
+export default Uploader;

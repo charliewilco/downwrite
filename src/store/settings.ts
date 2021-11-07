@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { DownwriteClient } from "@reducers/client";
+import { DownwriteClient } from "@store/client";
 import { IAppState } from "./store";
 import { Fonts } from "@utils/default-styles";
 import base64 from "base-64";

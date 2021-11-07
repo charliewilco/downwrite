@@ -2,7 +2,7 @@ import Link from "next/link";
 import Logo from "./logo";
 import DropdownUI from "./dropdown-ui";
 import { Routes } from "@utils/routes";
-import { useStore } from "@reducers/app";
+import { useStore } from "@store/provider";
 
 export function UIHeader(): JSX.Element {
   const store = useStore();

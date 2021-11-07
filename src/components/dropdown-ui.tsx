@@ -12,7 +12,7 @@ import {
 } from "react-icons/fi";
 import { Routes } from "@utils/routes";
 import User from "./user";
-import { useStore } from "@reducers/app";
+import { useStore } from "@store/provider";
 
 const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) => {
   return (

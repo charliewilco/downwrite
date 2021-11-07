@@ -3,8 +3,8 @@ import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
 import { UserSettingsSchema as validationSchema } from "@utils/validations";
-import { useStore } from "@reducers/app";
-import { IUserFormValues } from "@reducers/settings";
+import { useStore } from "@store/provider";
+import { IUserFormValues } from "@store/settings";
 
 interface ISettingsUserForm {
   user: IUserFormValues;

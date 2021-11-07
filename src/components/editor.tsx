@@ -10,7 +10,7 @@ import {
 } from "draft-js";
 import classNames from "@utils/classnames";
 import { Fonts } from "@utils/default-styles";
-import { useStore } from "@reducers/app";
+import { useStore } from "@store/provider";
 
 type OmittedEditorProps =
   | "ref"

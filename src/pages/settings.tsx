@@ -7,7 +7,7 @@ import SettingsLocal from "@components/settings-markdown";
 import SettingsPassword from "@components/settings-password";
 import Loading from "@components/loading";
 import { PageTitle } from "@components/page-title";
-import { useStore } from "@reducers/app";
+import { useStore } from "@store/provider";
 
 const SettingsPage = () => {
   const store = useStore();

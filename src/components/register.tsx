@@ -3,8 +3,8 @@ import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
 import LegalBoilerplate from "./legal-boilerplate";
 import { RegisterFormSchema as validationSchema } from "../utils/validations";
-import { useStore } from "@reducers/app";
-import { IRegisterValues } from "@reducers/me";
+import { useStore } from "@store/provider";
+import { IRegisterValues } from "@store/me";
 
 const REGISTER_INPUTS = [
   {

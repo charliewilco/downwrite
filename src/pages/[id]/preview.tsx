@@ -1,44 +1,69 @@
-import { GetStaticProps, NextPage } from "next";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
 import useSWR from "swr";
+import { useStore } from "@store/provider";
+import dbConnect from "@lib/db";
+import { getAllPreviewEntries, getPreviewEntry } from "@lib/preview";
 import Content from "@components/content";
 import AuthorBlock from "@components/author-block";
 import Loading from "@components/loading";
 import NotFound from "@components/not-found";
 import { Routes } from "@utils/routes";
 import { AvatarColors } from "@utils/default-styles";
-import { useStore } from "@reducers/app";
 
-type PreviewPageHandler = GetStaticProps<{ id: string }, { id: string }>;
+import { IPreview } from "../../__generated__/server";
+
+type PreviewPageHandler = GetStaticProps<
+  { id: string; preview: IPreview },
+  { id: string }
+>;
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  await dbConnect();
+  const previews = await getAllPreviewEntries();
+
+  return {
+    paths: previews.map((entry) => {
+      return {
+        params: {
+          id: entry.id
+        }
+      };
+    }),
+    fallback: true
+  };
+};
 
 export const getStaticProps: PreviewPageHandler = async ({ params }) => {
   const id = params!.id;
+  const preview = await getPreviewEntry(id);
 
   return {
     props: {
-      id
+      id,
+      preview
     }
   };
 };
 
 const PreviewEntry: NextPage<{ id: string }> = (props) => {
-  const router = useRouter();
   const store = useStore();
 
+  const router = useRouter();
   const { error, data } = useSWR(props.id, (id) => store.graphql.preview(id));
 
   const loading = !data;
 
   if (error) {
     return (
-      <>
+      <div>
         <Head>
           <title>{error.name} | Downwrite</title>
         </Head>
         <NotFound error={error.name} message={error.message} />
-      </>
+      </div>
     );
   }
 

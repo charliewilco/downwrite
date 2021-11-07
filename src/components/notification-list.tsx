@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { AnimatePresence } from "framer-motion";
-import { useStore } from "@reducers/app";
+import { useStore } from "@store/provider";
 import classNames from "@utils/classnames";
 
 const UIMessage = dynamic(() => import("@components/ui-notification"));

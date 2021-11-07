@@ -4,7 +4,7 @@ import { Settings } from "./settings";
 import { Me } from "./me";
 import { Notifications } from "./notifications";
 import { EditorAction } from "./editor";
-import { DownwriteClient } from "@reducers/client";
+import { DownwriteClient } from "@store/client";
 import { DashboardState } from "./dashboard";
 import { CreateEntry } from "./create";
 import { __IS_BROWSER__ } from "@utils/dev";

@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import { motion } from "framer-motion";
-import { useStore } from "@reducers/app";
+import { useStore } from "@store/provider";
 import { useTimeout } from "../hooks/useTimeout";
 import classNames from "@utils/classnames";
-import { NotificationType, UINotificationMessage } from "@reducers/notifications";
+import { NotificationType, UINotificationMessage } from "@store/notifications";
 
 interface IUIMessageProps {
   notification: UINotificationMessage;

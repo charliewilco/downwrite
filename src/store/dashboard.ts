@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
-import { DownwriteClient } from "@reducers/client";
+import { DownwriteClient } from "@store/client";
 import { IAppState } from "./store";
+import { IAllPostsQuery } from "../__generated__/client";
 
 export interface IPartialFeedItem {
   id: string;
@@ -36,5 +37,16 @@ export class DashboardState {
     } catch (error) {
       this.#store.notifications.error(error.message, true);
     }
+  }
+
+  mutateFeedList(data: IAllPostsQuery, selectedId: string): IAllPostsQuery {
+    const index = data.feed.findIndex(({ id }) => selectedId === id);
+
+    if (index > -1) {
+      data.feed.splice(index, 1);
+    }
+    return {
+      ...data
+    };
   }
 }

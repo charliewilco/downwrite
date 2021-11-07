@@ -13,7 +13,7 @@ import { PreviewLink } from "@components/entry-links";
 import TimeMarker from "@components/time-marker";
 import { __IS_DEV__ } from "@utils/dev";
 
-import { useStore } from "@reducers/app";
+import { useStore } from "@store/provider";
 import { useEditor } from "../../editor";
 
 const Autosaving = dynamic(() => import("@components/autosaving-interval"));

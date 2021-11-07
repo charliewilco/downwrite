@@ -1,5 +1,5 @@
 import { useRef, useReducer } from "react";
-import { inputReducer, InputAction } from "../reducers/input";
+import { inputReducer, InputAction } from "../store/input";
 import classNames from "../utils/classnames";
 
 interface IUIInputProps {

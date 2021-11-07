@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { ContentState, EditorState, convertToRaw } from "draft-js";
 import { draftjsToMd } from "draftjs-md-converter";
-import { DownwriteClient } from "@reducers/client";
+import { DownwriteClient } from "@store/client";
 import { IAppState } from "./store";
 import {
   emptyContentState,

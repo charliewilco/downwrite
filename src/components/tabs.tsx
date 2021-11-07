@@ -114,10 +114,9 @@ export function ListItem({
 
 interface ITabsPanels extends ITabsModifier {
   isActive?: boolean;
-  children: React.ReactNode;
 }
 
-export function Panels({ children, className }: ITabsPanels): JSX.Element {
+export const Panels: React.FC<ITabsPanels> = ({ children, className }) => {
   const context = useContext<ITabsContext>(TabContext);
   const cloned = Children.map(children, (child: React.ReactElement<any>, index) => {
     return cloneElement(child, {
@@ -126,15 +125,14 @@ export function Panels({ children, className }: ITabsPanels): JSX.Element {
     });
   });
   return <div className={className}>{cloned}</div>;
-}
+};
 
 interface ITabsPanelProps extends ITabsModifier {
   isActive?: boolean;
   label: string;
-  children: React.ReactNode;
 }
 
-export function Panel(props: ITabsPanelProps) {
+export const Panel: React.FC<ITabsPanelProps> = (props) => {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -161,4 +159,4 @@ export function Panel(props: ITabsPanelProps) {
       {props.children}
     </div>
   );
-}
+};

@@ -2,8 +2,8 @@ import { useFormik } from "formik";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
 import { LoginFormSchema } from "../utils/validations";
-import { useStore } from "@reducers/app";
-import { ILoginValues } from "@reducers/me";
+import { useStore } from "@store/provider";
+import { ILoginValues } from "@store/me";
 
 interface ILoginContainer {
   onSuccess(): void;

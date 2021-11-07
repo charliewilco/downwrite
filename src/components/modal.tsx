@@ -1,11 +1,11 @@
 import { DialogContent, DialogOverlay } from "@reach/dialog";
 import { FiX } from "react-icons/fi";
 
-interface IModalProps extends React.PropsWithChildren<{}> {
+interface IModalProps {
   closeUIModal: () => void;
 }
 
-export default function UIModal(props: IModalProps) {
+const UIModal: React.FC<IModalProps> = (props) => {
   return (
     <DialogOverlay className="overflow-auto fixed z-50 top-0 bottom-0 flex justify-center flex-col items-center w-full p-2 ">
       <DialogContent className="w-full m-auto bg-white h-auto flex relative">
@@ -20,4 +20,6 @@ export default function UIModal(props: IModalProps) {
       </DialogContent>
     </DialogOverlay>
   );
-}
+};
+
+export default UIModal;

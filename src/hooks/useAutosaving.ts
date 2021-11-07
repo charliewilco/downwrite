@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { useStore } from "@reducers/app";
+import { useStore } from "@store/provider";
 
 export function useAutosaving(
   duration: number = 5000,

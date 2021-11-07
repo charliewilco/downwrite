@@ -1,11 +1,11 @@
-import { useCallback, useReducer, ReducerWithoutAction } from "react";
+import { useCallback, useReducer } from "react";
 import { useFormik, FormikHelpers } from "formik";
 import { MixedCheckbox } from "@reach/checkbox";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
 import { UpdatePasswordSchema } from "@utils/validations";
-import { useStore } from "@reducers/app";
+import { useStore } from "@store/provider";
 
 interface IPasswordSettings {
   oldPassword: string;
@@ -19,10 +19,7 @@ interface IPasswordFormProps {
 
 export default function SettingsPassword(props: IPasswordFormProps): JSX.Element {
   const store = useStore();
-  const [isOpen, onToggleOpen] = useReducer<ReducerWithoutAction<boolean>>(
-    (prev: boolean) => !prev,
-    false
-  );
+  const [isOpen, onToggleOpen] = useReducer((prev: boolean) => !prev, false);
   const onSubmit = useCallback(
     async (
       _: IPasswordSettings,

@@ -4,7 +4,7 @@ import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
 import { LocalSettingsSchema } from "../utils/validations";
-import { useStore } from "@reducers/app";
+import { useStore } from "@store/provider";
 import { Fonts } from "@utils/default-styles";
 
 interface ILocalSettings extends Record<string, string> {
