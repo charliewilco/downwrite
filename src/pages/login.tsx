@@ -2,8 +2,8 @@ import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-import Landing from "@components/landing";
-import LoginTabs from "@components/login-tabs";
+import { LandingPageImage } from "@components/landing";
+import { LoginContainer } from "@components/login-tabs";
 import { Routes } from "@utils/routes";
 
 const LoginPage: NextPage = () => {
@@ -15,7 +15,7 @@ const LoginPage: NextPage = () => {
       </Head>
       <article className="max-w-lg mx-auto mb-24">
         <header className="text-center mb-24">
-          <Landing />
+          <LandingPageImage />
 
           <h1
             className="text-3xl font-sans font-black mb-8"
@@ -24,7 +24,7 @@ const LoginPage: NextPage = () => {
           </h1>
         </header>
 
-        <LoginTabs onSuccess={() => router.push(Routes.DASHBOARD)} />
+        <LoginContainer onSuccess={() => router.push(Routes.DASHBOARD)} />
       </article>
     </div>
   );

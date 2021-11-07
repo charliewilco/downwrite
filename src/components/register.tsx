@@ -1,9 +1,9 @@
 import { useFormik } from "formik";
-import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
+import { UIInput, UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
-import LegalBoilerplate from "./legal-boilerplate";
-import { RegisterFormSchema as validationSchema } from "../utils/validations";
-import { useDataSource } from "@store/provider";
+import { LegalBoilerplate } from "./legal-boilerplate";
+import { RegisterFormSchema as validationSchema } from "@utils/validations";
+import { useDataSource } from "@hooks/useDataSource";
 import { IRegisterValues } from "@store/me";
 
 const REGISTER_INPUTS = [
@@ -41,7 +41,7 @@ interface ILoginContainer {
   onSuccess(): void;
 }
 
-export default function RegisterForm(props: ILoginContainer): JSX.Element {
+export function RegisterForm(props: ILoginContainer): JSX.Element {
   const store = useDataSource();
 
   const formik = useFormik<IRegisterValues>({

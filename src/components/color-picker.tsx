@@ -1,4 +1,4 @@
-import HexInput from "./hex-input";
+import { FunHexInput } from "./hex-input";
 import { Gradient, startColors } from "@utils/default-styles";
 
 interface IColorPickerProps {
@@ -8,7 +8,7 @@ interface IColorPickerProps {
   name: string;
 }
 
-function ColorPicker(
+export function ColorPicker(
   props: IColorPickerProps = {
     colors: startColors,
     onPress: (color: string, name: string) => ({ color, name }),
@@ -28,9 +28,7 @@ function ColorPicker(
           />
         ))}
       </div>
-      <HexInput onChange={(color) => props.onPress(color, props.name)} />
+      <FunHexInput onChange={(color) => props.onPress(color, props.name)} />
     </div>
   );
 }
-
-export default ColorPicker;

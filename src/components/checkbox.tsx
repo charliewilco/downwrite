@@ -1,6 +1,6 @@
-import classNames from "../utils/classnames";
+import classNames from "@utils/classnames";
 
-export default function CheckboxInput(
+export function CheckboxInput(
   props: React.InputHTMLAttributes<HTMLInputElement>
 ): JSX.Element {
   return (

@@ -11,8 +11,8 @@ import {
   FiMoreHorizontal
 } from "react-icons/fi";
 import { Routes } from "@utils/routes";
-import User from "./user";
-import { useDataSource } from "@store/provider";
+import { UserBlock } from "./user";
+import { useSubjectEffect, useDataSource } from "@hooks/index";
 
 const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) => {
   return (
@@ -47,8 +47,9 @@ export function DropdownDarkMode() {
   );
 }
 
-export default function DropdownUI() {
+export function DropdownUI() {
   const store = useDataSource();
+  const me = useSubjectEffect(store.me.state);
 
   return (
     <Menu>
@@ -56,8 +57,8 @@ export default function DropdownUI() {
         <FiMoreHorizontal size={16} />
       </MenuButton>
       <MenuList className="shadow-md dark:bg-onyx-800 animate-from-left">
-        {store.me.username && (
-          <User border colors={["#FEB692", "#EA5455"]} name={store.me.username} />
+        {me.username && (
+          <UserBlock border colors={["#FEB692", "#EA5455"]} name={me.username} />
         )}
         <MenuLink
           to={Routes.DASHBOARD}

@@ -1,19 +1,17 @@
 import Head from "next/head";
-import dynamic from "next/dynamic";
 import { FiAlertTriangle } from "react-icons/fi";
 import { UIHeader } from "./header";
 import { UIFooter } from "./footer";
 import { Banner } from "./banner";
+import { MessageList } from "./notification-list";
 
 interface IShellProps {}
-
-const MessageList = dynamic(() => import("@components/notification-list"));
 
 const icon = <FiAlertTriangle className="text-white w-4 h-4" />;
 
 export const UIShell: React.FC<IShellProps> = (props) => {
   return (
-    <>
+    <div>
       <div className="clearfix min-h-full">
         <Head>
           <meta
@@ -30,6 +28,6 @@ export const UIShell: React.FC<IShellProps> = (props) => {
         <UIFooter />
       </div>
       <MessageList />
-    </>
+    </div>
   );
 };

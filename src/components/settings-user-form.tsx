@@ -1,16 +1,16 @@
 import { useFormik } from "formik";
-import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
-import SettingsBlock, { SettingsFormActions } from "./settings-block";
+import { UIInput, UIInputContainer, UIInputError } from "./ui-input";
+import { SettingsBlock, SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
 import { UserSettingsSchema as validationSchema } from "@utils/validations";
-import { useDataSource } from "@store/provider";
+import { useDataSource } from "@hooks/useDataSource";
 import { IUserFormValues } from "@store/settings";
 
 interface ISettingsUserForm {
   user: IUserFormValues;
 }
 
-export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
+export function SettingsUser(props: ISettingsUserForm): JSX.Element {
   const store = useDataSource();
 
   const formik = useFormik<IUserFormValues>({

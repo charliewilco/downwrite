@@ -1,5 +1,5 @@
 import { useRef, useReducer } from "react";
-import classNames from "../utils/classnames";
+import classNames from "@utils/classnames";
 
 interface IUIInputProps {
   onChange(e: React.ChangeEvent<any>): void;
@@ -35,7 +35,7 @@ export function UIInputError({
   );
 }
 
-export default function UIInput({ testID, label, ...props }: IUIInputProps) {
+export function UIInput({ testID, label, ...props }: IUIInputProps) {
   const id = useRef("UI_TEXT_INPUT_".concat(label.replace(" ", "")));
 
   const [isFocused, dispatch] = useReducer(

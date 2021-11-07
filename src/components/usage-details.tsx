@@ -15,7 +15,7 @@ const UsageDetail: React.FC<{ title: string; stat: number | string }> = (props) 
   </div>
 );
 
-export default function UsageDetails(props: IUsageDetailsProps) {
+export function UsageDetails(props: IUsageDetailsProps) {
   return (
     <div>
       <h4 className="text-lg mb-2 font-bold">Usage</h4>

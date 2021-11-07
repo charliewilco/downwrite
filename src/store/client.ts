@@ -1,6 +1,6 @@
 import { GraphQLClient } from "graphql-request";
 import Cookie from "universal-cookie";
-import { TOKEN_NAME } from "@lib/constants";
+import { TOKEN_NAME } from "@utils/constants";
 
 import {
   getSdk,

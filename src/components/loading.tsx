@@ -1,4 +1,4 @@
-export default function Loading(): JSX.Element {
+export function Loading(): JSX.Element {
   return (
     <div role="img">
       <div className="ring" />

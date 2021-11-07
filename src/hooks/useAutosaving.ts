@@ -1,5 +1,4 @@
-import { useDataSource } from "@store/provider";
-import { useInterval } from ".";
+import { useInterval, useDataSource } from ".";
 
 export function useAutosaving(
   duration: number = 5000,

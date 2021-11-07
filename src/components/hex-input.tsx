@@ -10,7 +10,7 @@ function isValidHex(hex: string): boolean {
   return valid;
 }
 
-export default function FunHexInput(props: IHexInputProps): JSX.Element {
+export function FunHexInput(props: IHexInputProps): JSX.Element {
   const [hex, setHexColor] = useState<string>(props.initialValue || "");
 
   function handleChange({

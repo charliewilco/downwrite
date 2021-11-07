@@ -3,17 +3,17 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
 import useSWR from "swr";
-import { useDataSource } from "@store/provider";
 import dbConnect from "@lib/db";
 import { getAllPreviewEntries, getPreviewEntry } from "@lib/preview";
-import Content from "@components/content";
-import AuthorBlock from "@components/author-block";
-import Loading from "@components/loading";
-import NotFound from "@components/not-found";
+import { Content } from "@components/content";
+import { AuthorBlock } from "@components/author-block";
+import { Loading } from "@components/loading";
+import { NotFound } from "@components/not-found";
 import { Routes } from "@utils/routes";
 import { AvatarColors } from "@utils/default-styles";
 
 import { IPreview } from "../../__generated__/server";
+import { useSubjectEffect, useDataSource } from "@hooks/index";
 
 type PreviewPageHandler = GetStaticProps<
   { id: string; preview: IPreview },
@@ -54,6 +54,8 @@ const PreviewEntry: NextPage<{ id: string }> = (props) => {
   const router = useRouter();
   const { error, data } = useSWR(props.id, (id) => store.graphql.preview(id));
 
+  const me = useSubjectEffect(store.me.state);
+
   const loading = !data;
 
   if (error) {
@@ -88,7 +90,7 @@ const PreviewEntry: NextPage<{ id: string }> = (props) => {
           <meta name="description" content={data.preview?.content!.substr(0, 75)} />
         </Head>
         <AuthorBlock name={data.preview?.author?.username!} colors={AvatarColors} />
-        {!store.authed && (
+        {!me.authed && (
           <div className="space-y-8 py-8">
             <p className="text-sm italic mb-0">
               <span>

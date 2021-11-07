@@ -1,7 +1,7 @@
 import Head from "next/head";
 
-import Loading from "./loading";
-import InvalidToken from "./invalid-token";
+import { Loading } from "./loading";
+import { InvalidToken } from "./invalid-token";
 
 export const LoadingDashboard = () => {
   return (

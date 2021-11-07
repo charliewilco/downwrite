@@ -5,12 +5,13 @@ import { useRouter } from "next/router";
 import { useCallback } from "react";
 import { useFormik } from "formik";
 import { EditorState } from "draft-js";
-import { IMarkdownConversion } from "@components/upload";
+import { Uploader, IMarkdownConversion } from "@components/upload";
 import { Input } from "@components/editor-input";
+import {} from "@components/editor";
 import { Button } from "@components/button";
 
-import { useDataSource } from "@store/provider";
 import {
+  useDataSource,
   useEnhancedReducer,
   useEditor,
   useDecorators,
@@ -19,7 +20,6 @@ import {
 import { imageLinkDecorators, prismHighlightDecorator } from "../editor";
 
 const Editor = dynamic(() => import("@components/editor"));
-const Upload = dynamic(() => import("@components/upload"));
 
 const NewEntryPage: NextPage = () => {
   const router = useRouter();
@@ -67,7 +67,7 @@ const NewEntryPage: NextPage = () => {
       <Head>
         <title>{values.title || "New"} | Downwrite</title>
       </Head>
-      <Upload onParsed={handleParsed}>
+      <Uploader onParsed={handleParsed}>
         <Input
           value={values.title}
           data-testid="NEW_ENTRY_TITLE_ENTRY"
@@ -90,7 +90,7 @@ const NewEntryPage: NextPage = () => {
           {...editorProps}
           editorState={state.editorState}
         />
-      </Upload>
+      </Uploader>
     </form>
   );
 };

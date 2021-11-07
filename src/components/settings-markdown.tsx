@@ -1,10 +1,10 @@
 import { useRef } from "react";
 import { useFormik } from "formik";
-import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
-import SettingsBlock, { SettingsFormActions } from "./settings-block";
+import { UIInput, UIInputContainer, UIInputError } from "./ui-input";
+import { SettingsBlock, SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
-import { LocalSettingsSchema } from "../utils/validations";
-import { useDataSource } from "@store/provider";
+import { useDataSource } from "@hooks/useDataSource";
+import { LocalSettingsSchema } from "@utils/validations";
 import { Fonts } from "@utils/default-styles";
 
 interface ILocalSettings extends Record<string, string> {
@@ -28,7 +28,7 @@ export enum LocalSettings {
   FONT = "DW_EDITOR_FONT"
 }
 
-export default function SettingsLocalMarkdown(): JSX.Element {
+export function SettingsLocalMarkdown(): JSX.Element {
   const store = useDataSource();
 
   const initialValues = useRef<() => ILocalSettings>(() => {

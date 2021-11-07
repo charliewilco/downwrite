@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Routes } from "@utils/routes";
 import classNames from "@utils/classnames";
 
-export default function EmptyPosts(): JSX.Element {
+export function EmptyPosts(): JSX.Element {
   const buttonLinkClass = classNames(
     "transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110",
     "bg-pixieblue-400 hover:bg-pixieblue-900 text-white font-bold py-2 px-4 rounded",

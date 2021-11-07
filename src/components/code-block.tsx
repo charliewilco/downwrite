@@ -20,10 +20,7 @@ const PrismCode: React.FC<{ className: string }> = ({ children, className }) => 
   );
 };
 
-export default function CodeBlock({
-  language = "javascript",
-  value
-}: ICodeBlockProps) {
+export function CodeBlock({ language = "javascript", value }: ICodeBlockProps) {
   return (
     <pre>
       <PrismCode className={`language-${language || "javascript"}`}>

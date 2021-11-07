@@ -1,5 +1,5 @@
 import Head from "next/head";
-import NotFound from "@components/not-found";
+import { NotFound } from "@components/not-found";
 
 interface IErrorViewProps {
   statusCode: number;

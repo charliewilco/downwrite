@@ -1,9 +1,8 @@
 import Link from "next/link";
-import Logo from "./logo";
-import DropdownUI from "./dropdown-ui";
+import { Logo } from "./logo";
+import { DropdownUI } from "./dropdown-ui";
+import { useDataSource, useSubjectEffect } from "@hooks/index";
 import { Routes } from "@utils/routes";
-import { useDataSource } from "@store/provider";
-import { useSubjectEffect } from "@hooks/useSubject";
 
 export const _UIHeader: React.VFC = () => {
   const store = useDataSource();

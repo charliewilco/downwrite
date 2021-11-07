@@ -3,7 +3,7 @@ import { FiDownload } from "react-icons/fi";
 interface IExportMarkdownButtonProps {
   onClick: () => void;
 }
-export default function ExportMarkdownButton(
+export function ExportMarkdownButton(
   props: IExportMarkdownButtonProps
 ): JSX.Element {
   return (

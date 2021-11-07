@@ -15,6 +15,7 @@ export const Banner: React.FC<IBannerProps> = (props) => {
           max-width: 24rem;
           margin: 1rem auto;
           padding: 0.25rem;
+          background: var(--pixieblue-600);
         }
 
         .inner {

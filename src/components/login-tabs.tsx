@@ -1,6 +1,6 @@
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
-import LoginForm from "./login-form";
-import Register from "./register";
+import { LoginForm } from "./login-form";
+import { RegisterForm } from "./register";
 
 const FormHeader: React.FC = ({ children }) => {
   return (
@@ -23,7 +23,7 @@ interface ILoginContainer {
 // http://simplyaccessible.com/article/danger-aria-tabs/
 // https://inclusive-components.design/tabbed-interfaces/
 
-export default function LoginContainer(props: ILoginContainer): JSX.Element {
+export function LoginContainer(props: ILoginContainer): JSX.Element {
   return (
     <Tabs className="dark:bg-onyx-800 max-w-lg mx-auto shadow">
       <TabList className="flex w-full font-bold text-sm text-center">
@@ -43,7 +43,7 @@ export default function LoginContainer(props: ILoginContainer): JSX.Element {
       <TabPanels className="p-4">
         <TabPanel>
           <FormHeader>Sign Up as a New User</FormHeader>
-          <Register {...props} />
+          <RegisterForm {...props} />
         </TabPanel>
         <TabPanel>
           <FormHeader>Welcome Back!</FormHeader>

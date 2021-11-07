@@ -1,7 +1,7 @@
 import format from "date-fns/format";
 import Markdown from "react-markdown";
 import "prismjs";
-import CodeBlock from "./code-block";
+import { CodeBlock } from "./code-block";
 import { CodeComponent } from "react-markdown/lib/ast-to-react";
 
 interface IContentWrapperProps {
@@ -55,7 +55,7 @@ const MARKDOWN_RENDERS = {
   code
 };
 
-const Content: React.FC<IContentProps> = (props) => {
+export const Content: React.FC<IContentProps> = (props) => {
   return (
     <ContentWrapper title={props.title} dateAdded={props.dateAdded}>
       <aside className="divide-y space-y-8 py-8">{props.children}</aside>
@@ -69,5 +69,3 @@ const Content: React.FC<IContentProps> = (props) => {
     </ContentWrapper>
   );
 };
-
-export default Content;

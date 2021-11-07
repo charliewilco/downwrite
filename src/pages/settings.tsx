@@ -1,13 +1,13 @@
 import Head from "next/head";
 import useSWR from "swr";
 
-import UsageDetails from "@components/usage-details";
-import SettingsUser from "@components/settings-user-form";
-import SettingsLocal from "@components/settings-markdown";
-import SettingsPassword from "@components/settings-password";
-import Loading from "@components/loading";
+import { UsageDetails } from "@components/usage-details";
+import { SettingsUser } from "@components/settings-user-form";
+import { SettingsLocalMarkdown } from "@components/settings-markdown";
+import { SettingsPassword } from "@components/settings-password";
+import { Loading } from "@components/loading";
 import { PageTitle } from "@components/page-title";
-import { useDataSource } from "@store/provider";
+import { useDataSource } from "@hooks/useDataSource";
 
 const SettingsPage = () => {
   const store = useDataSource();
@@ -41,7 +41,7 @@ const SettingsPage = () => {
       />
       <SettingsUser user={data?.settings} />
       <SettingsPassword username={data?.settings.username} />
-      <SettingsLocal />
+      <SettingsLocalMarkdown />
     </div>
   );
 };

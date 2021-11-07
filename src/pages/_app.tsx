@@ -3,7 +3,8 @@ import Router from "next/router";
 import { useEffect } from "react";
 import * as Analytics from "fathom-client";
 import { UIShell } from "@components/ui-shell";
-import { StoreConnector } from "@store/provider";
+import { useCheckAuth } from "@hooks/useDataSource";
+
 import "@reach/tabs/styles.css";
 import "@reach/menu-button/styles.css";
 import "@reach/dialog/styles.css";
@@ -25,11 +26,11 @@ export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
     });
   }, []);
 
+  useCheckAuth();
+
   return (
-    <StoreConnector>
-      <UIShell>
-        <Component {...pageProps} />
-      </UIShell>
+    <UIShell>
+      <Component {...pageProps} />
       <style jsx global>{`
         :root {
           --monospace: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
@@ -233,6 +234,6 @@ export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
           }
         }
       `}</style>
-    </StoreConnector>
+    </UIShell>
   );
 }

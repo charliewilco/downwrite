@@ -28,7 +28,7 @@ function useFileReader() {
 
 type DropCallback = (files: File[]) => void;
 
-const Uploader: React.FC<IUploadProps> = (props) => {
+export const Uploader: React.FC<IUploadProps> = (props) => {
   const reader = useFileReader();
   const onDrop = useCallback<DropCallback>(
     (acceptedFiles: File[]) => {
@@ -66,5 +66,3 @@ const Uploader: React.FC<IUploadProps> = (props) => {
     </div>
   );
 };
-
-export default Uploader;

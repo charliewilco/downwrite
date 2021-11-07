@@ -9,9 +9,9 @@ import {
   RichUtils,
   EditorProps
 } from "draft-js";
+import { useDataSource } from "@hooks/useDataSource";
 import classNames from "@utils/classnames";
 import { Fonts } from "@utils/default-styles";
-import { useDataSource } from "@store/provider";
 
 type OmittedEditorProps =
   | "ref"

@@ -1,4 +1,4 @@
-import classNames from "../utils/classnames";
+import classNames from "@utils/classnames";
 
 interface ILayoutControl {
   layout: boolean;

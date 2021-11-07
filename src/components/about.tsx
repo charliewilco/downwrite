@@ -1,4 +1,4 @@
-export default function AboutBlurb(): JSX.Element {
+export function AboutBlurb(): JSX.Element {
   return (
     <>
       <p>

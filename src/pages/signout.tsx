@@ -3,7 +3,7 @@ import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { removeTokenCookie } from "@lib/cookie-managment";
 import { Routes } from "@utils/routes";
-import { useDataSource } from "@store/provider";
+import { useDataSource } from "@hooks/useDataSource";
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   removeTokenCookie(context.res);

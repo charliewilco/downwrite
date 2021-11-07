@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { Routes } from "../utils/routes";
+import { Routes } from "@utils/routes";
 
 interface IInvalidTokenProps {
   error: string;
 }
 
-export default function InvalidToken(props: IInvalidTokenProps): JSX.Element {
+export function InvalidToken(props: IInvalidTokenProps): JSX.Element {
   return (
     <div data-testid="INVALID_TOKEN_CONTAINER">
       <p>{props.error}</p>

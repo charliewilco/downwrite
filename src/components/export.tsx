@@ -4,13 +4,15 @@ import {
   EditorState,
   convertToRaw
 } from "draft-js";
+import { useCallback } from "react";
+
 import { draftjsToMd } from "draftjs-md-converter";
 import FileSaver from "file-saver";
-import Markdown from "./export-markdown-button";
-import { createMarkdown } from "../utils/markdown-template";
-import classNames from "../utils/classnames";
+import { ExportMarkdownButton } from "./export-markdown-button";
+
+import { createMarkdown } from "@utils/markdown-template";
+import classNames from "@utils/classnames";
 import { LocalSettings } from "./settings-markdown";
-import { useCallback } from "react";
 
 interface IExportProps {
   title: string;
@@ -26,7 +28,7 @@ interface IExportCallback {
 }
 
 // TODO: use `React.useMemo()` to run export
-export default function UIMarkdownExport(props: IExportProps) {
+export function UIMarkdownExport(props: IExportProps) {
   const className = classNames("block mx-4 my-0", props.className);
   const customDraft = (content: RawDraftContentState): string =>
     draftjsToMd(content);
@@ -65,7 +67,7 @@ export default function UIMarkdownExport(props: IExportProps) {
 
   return (
     <aside title="Export entry to a Markdown file." className={className}>
-      <Markdown onClick={exportMarkdown} />
+      <ExportMarkdownButton onClick={exportMarkdown} />
     </aside>
   );
 }

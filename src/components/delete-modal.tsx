@@ -1,4 +1,4 @@
-import Modal from "./modal";
+import { UIModal } from "./modal";
 import { Button, AltButton } from "./button";
 
 const quotedTitle = (title: string) => `"${title}"`;
@@ -10,9 +10,9 @@ interface IDeleteModalProps {
   onDelete: () => void;
 }
 
-export default function DeleteModal(props: IDeleteModalProps) {
+export function DeleteModal(props: IDeleteModalProps) {
   return (
-    <Modal closeUIModal={props.closeModal}>
+    <UIModal closeUIModal={props.closeModal}>
       <div className="bg-onyx-900 pt-4 px-2 pb-0">
         <div className="mb-4 p-4">
           <h6 className="font-black text-xl">Delete Post</h6>
@@ -27,6 +27,6 @@ export default function DeleteModal(props: IDeleteModalProps) {
           </Button>
         </footer>
       </div>
-    </Modal>
+    </UIModal>
   );
 }

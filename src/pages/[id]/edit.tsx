@@ -7,26 +7,27 @@ import useSWR from "swr";
 import { MixedCheckbox } from "@reach/checkbox";
 
 import { Button } from "@components/button";
-import Loading from "@components/loading";
+import { Loading } from "@components/loading";
 import { Input } from "@components/editor-input";
 import { PreviewLink } from "@components/entry-links";
-import TimeMarker from "@components/time-marker";
+import { TimeMarker } from "@components/time-marker";
+import { WordCounter } from "@components/word-count";
+import { UIMarkdownExport } from "@components/export";
 import { __IS_DEV__ } from "@utils/dev";
 
-import { useDataSource } from "@store/provider";
 import { IEdit } from "@store/editor";
-import { useOnce, useEnhancedReducer, useEditor } from "@hooks/index";
-
-const Autosaving = dynamic(() => import("@components/autosaving-interval"), {
-  ssr: false
-});
+import {
+  useDataSource,
+  useOnce,
+  useEnhancedReducer,
+  useEditor,
+  useAutosaving
+} from "@hooks/index";
 
 const Editor = dynamic(() => import("@components/editor"), {
   loading: () => <p>Loading the Editor</p>,
   ssr: false
 });
-const WordCounter = dynamic(() => import("@components/word-count"));
-const ExportMarkdown = dynamic(() => import("@components/export"));
 
 interface IEditPageProps {
   id: string;
@@ -87,6 +88,12 @@ const EditUI: NextPage<IEditPageProps> = (props) => {
     }
   }, [props.id]);
 
+  useAutosaving(
+    __IS_DEV__ ? 30000 : 120000,
+    handleSubmit,
+    `Autosaving “${state.title ?? "Your Entry"}”`
+  );
+
   if (error) {
     return (
       <div>
@@ -105,13 +112,6 @@ const EditUI: NextPage<IEditPageProps> = (props) => {
       <Head>
         <title>{state.title} | Downwrite</title>
       </Head>
-      {state.initialFocus && (
-        <Autosaving
-          title={state.title}
-          duration={__IS_DEV__ ? 30000 : 120000}
-          onUpdate={handleSubmit}
-        />
-      )}
       <div className="px-2">
         <TimeMarker dateAdded={data?.entry?.dateAdded} />
         <Input
@@ -145,7 +145,7 @@ const EditUI: NextPage<IEditPageProps> = (props) => {
           </div>
           <div className="flex items-center">
             {!!state.editorState && (
-              <ExportMarkdown
+              <UIMarkdownExport
                 editorState={state.editorState}
                 title={state.title}
                 date={data?.entry?.dateAdded}

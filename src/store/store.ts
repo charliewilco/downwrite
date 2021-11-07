@@ -50,10 +50,6 @@ export class Store implements IAppState {
     }
   }
 
-  get authed() {
-    return !!this.me.username && !!this.me.id;
-  }
-
   get graphql() {
     return this.#client;
   }

@@ -1,9 +1,8 @@
-import { useDataSource } from "@store/provider";
 import classNames from "@utils/classnames";
 import { UIMessage } from "@components/ui-notification";
-import { useSubjectEffect } from "@hooks/useSubject";
+import { useSubjectEffect, useDataSource } from "@hooks/index";
 
-function MessageList() {
+export function MessageList() {
   const store = useDataSource();
 
   const notifications = useSubjectEffect(store.notifications.subject);
@@ -28,5 +27,3 @@ function MessageList() {
     </div>
   );
 }
-
-export default MessageList;

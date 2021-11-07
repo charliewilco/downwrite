@@ -32,7 +32,7 @@ function getWordCount(editorState: EditorState): number {
   return createWordCount(plainText);
 }
 
-export default function WordCounter(props: IWordCounterProps): JSX.Element {
+export function WordCounter(props: IWordCounterProps): JSX.Element {
   const displayCount = useMemo<number>(() => {
     const selection = getSelectionCount(props.editorState);
     const words = getWordCount(props.editorState);

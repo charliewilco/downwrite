@@ -3,13 +3,12 @@ import { NextPage } from "next";
 import Head from "next/head";
 import useSWR from "swr";
 
-import DeleteModal from "@components/delete-modal";
+import { DeleteModal } from "@components/delete-modal";
 import { PostList } from "@components/post-list";
-import EmptyPosts from "@components/empty-posts";
+import { EmptyPosts } from "@components/empty-posts";
 import { LoadingDashboard, ErrorDashboard } from "@components/dashboard-helpers";
-import { useDataSource } from "@store/provider";
 import { IPartialFeedItem } from "@store/dashboard";
-import { useEnhancedReducer } from "@hooks/useEnhancedReducer";
+import { useEnhancedReducer, useDataSource } from "@hooks/index";
 
 const DashboardUI: NextPage = () => {
   const store = useDataSource();

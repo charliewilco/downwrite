@@ -12,7 +12,7 @@ export interface ICardProps {
   public: boolean;
 }
 
-export default function Card(props: ICardProps): JSX.Element {
+export function Card(props: ICardProps): JSX.Element {
   const onDelete = useCallback(() => {
     if (props.onDelete) {
       props.onDelete({ id: props.id, title: props.title });

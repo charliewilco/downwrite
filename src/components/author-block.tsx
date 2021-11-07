@@ -1,4 +1,4 @@
-import Avatar from "./avatar";
+import { Avatar } from "./avatar";
 import { Gradient } from "@utils/default-styles";
 
 interface IAuthorProps {
@@ -6,7 +6,7 @@ interface IAuthorProps {
   colors: Gradient;
 }
 
-const Author = (props: IAuthorProps): JSX.Element => {
+export const AuthorBlock = (props: IAuthorProps): JSX.Element => {
   return (
     <div className="flex items-center">
       <Avatar colors={props.colors} />
@@ -14,5 +14,3 @@ const Author = (props: IAuthorProps): JSX.Element => {
     </div>
   );
 };
-
-export default Author;

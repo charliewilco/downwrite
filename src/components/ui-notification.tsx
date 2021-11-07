@@ -1,6 +1,5 @@
 import { useCallback } from "react";
-import { useDataSource } from "@store/provider";
-import { useTimeout } from "../hooks/useTimers";
+import { useDataSource, useTimeout } from "@hooks/index";
 import classNames from "@utils/classnames";
 import { NotificationType, UINotificationMessage } from "@store/notifications";
 

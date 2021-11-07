@@ -1,11 +1,12 @@
-import Card from "./card";
+import { useState } from "react";
+import { Card } from "./card";
 import { LayoutControl } from "./layout-control";
-import PostListItem from "./post-list-item";
-import classNames from "../utils/classnames";
+import { PostListItem } from "./post-list-item";
+
+import classNames from "@utils/classnames";
 import { IEntry } from "../__generated__/client";
 import { IPartialFeedItem } from "../store/dashboard";
 import { PageTitle } from "./page-title";
-import { useState } from "react";
 
 export type IFeedList = Pick<IEntry, "title" | "dateAdded" | "id" | "public">[];
 

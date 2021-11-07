@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Checkbox from "./checkbox";
-import { Routes } from "../utils/routes";
+import { CheckboxInput } from "./checkbox";
+import { Routes } from "@utils/routes";
 
 interface ILegalProps {
   name: string;
@@ -14,10 +14,10 @@ const LegalLink = () => (
   </Link>
 );
 
-export default function LegalBoilerplate(props: ILegalProps) {
+export function LegalBoilerplate(props: ILegalProps) {
   return (
     <label className="flex items-center font-bold p-2 dark:bg-onyx-900 my-4 dark:text-white light:shadow">
-      <Checkbox
+      <CheckboxInput
         data-testid="LEGAL_CHECK"
         name={props.name}
         checked={props.checked}

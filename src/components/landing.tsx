@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function LandingPageImage(): JSX.Element {
+export function LandingPageImage(): JSX.Element {
   return (
     <object className="max-w-lg mx-auto">
       <Image

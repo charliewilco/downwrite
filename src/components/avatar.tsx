@@ -25,7 +25,7 @@ interface IAvatarProps {
   className?: string;
 }
 
-export default function Avatar(props: IAvatarProps): JSX.Element {
+export function Avatar(props: IAvatarProps): JSX.Element {
   const style = useMemo<React.CSSProperties>(() => {
     const colors = gradientPoints(props.colors);
     return {

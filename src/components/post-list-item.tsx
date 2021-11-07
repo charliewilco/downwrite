@@ -11,7 +11,7 @@ interface IListItemProps {
   public: boolean;
 }
 
-export default function PostListItem(props: IListItemProps): JSX.Element {
+export function PostListItem(props: IListItemProps): JSX.Element {
   function onDelete() {
     props.onDelete({ id: props.id, title: props.title });
   }

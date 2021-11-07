@@ -1,11 +1,11 @@
 import decode from "jwt-decode";
 import base64 from "base-64";
+import { BehaviorSubject } from "rxjs";
 
-import { TokenContents } from "@lib/token";
 import { IIsMeQuery } from "../__generated__/client";
 import { DownwriteClient } from "@store/client";
-import { IAppState } from "./store";
-import { BehaviorSubject } from "rxjs";
+import { IAppState } from "@store/store";
+import { TokenContents } from "@utils/constants";
 
 export interface ICurrentUserState {
   username?: string;
@@ -26,8 +26,11 @@ export interface ILoginValues {
 }
 
 export class Me {
-  username = "";
-  id = "";
+  #internalState: ICurrentUserState = {
+    username: "",
+    id: "",
+    authed: false
+  };
   readonly state = new BehaviorSubject<ICurrentUserState>({
     username: "",
     id: "",
@@ -41,18 +44,33 @@ export class Me {
   }
 
   checkAuth(value: IIsMeQuery) {
-    this.id = value.me.details.id;
-    this.username = value.me.token;
+    this.#internalState.id = value.me.details.id;
+    this.#internalState.username = value.me.token;
+
+    this.state.next({
+      ...this.#internalState,
+      authed: !!this.#internalState.username && !!this.#internalState.id
+    });
   }
 
   onLogin(username: string, id: string) {
-    this.username = username;
-    this.id = id;
+    this.#internalState.username = username;
+    this.#internalState.id = id;
+
+    this.state.next({
+      ...this.#internalState,
+      authed: !!this.#internalState.username && !!this.#internalState.id
+    });
   }
 
   onLogout() {
-    this.username = "";
-    this.id = "";
+    this.#internalState.username = "";
+    this.#internalState.id = "";
+
+    this.state.next({
+      ...this.#internalState,
+      authed: !!this.#internalState.username && !!this.#internalState.id
+    });
   }
 
   async login(values: ILoginValues) {

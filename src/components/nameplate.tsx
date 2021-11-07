@@ -2,7 +2,7 @@ interface INamePlateProps {
   className: string;
 }
 
-export default function NamePlate(props: INamePlateProps): JSX.Element {
+export function NamePlate(props: INamePlateProps): JSX.Element {
   return (
     <svg
       className={props.className}

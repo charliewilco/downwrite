@@ -1,4 +1,4 @@
-import classNames from "../utils/classnames";
+import classNames from "@utils/classnames";
 
 interface ISettingsFormActionsProps {
   split?: boolean;
@@ -19,7 +19,7 @@ interface ISettingsBlockProps {
   description?: string;
 }
 
-const SettingsBlock: React.FC<ISettingsBlockProps> = (props) => {
+export const SettingsBlock: React.FC<ISettingsBlockProps> = (props) => {
   return (
     <section className="grid grid-cols-12 gap-4 dark:bg-onyx-800 shadow flex-wrap mb-8 p-4">
       <div className="col-span-12 lg:col-span-3">
@@ -32,5 +32,3 @@ const SettingsBlock: React.FC<ISettingsBlockProps> = (props) => {
     </section>
   );
 };
-
-export default SettingsBlock;

@@ -1,15 +1,15 @@
 import { useFormik } from "formik";
-import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
+import { UIInput, UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
-import { LoginFormSchema } from "../utils/validations";
-import { useDataSource } from "@store/provider";
+import { LoginFormSchema } from "@utils/validations";
+import { useDataSource } from "@hooks/useDataSource";
 import { ILoginValues } from "@store/me";
 
 interface ILoginContainer {
   onSuccess(): void;
 }
 
-function Login(props: ILoginContainer): JSX.Element {
+export function LoginForm(props: ILoginContainer): JSX.Element {
   const store = useDataSource();
   const { values, handleSubmit, handleChange, errors } = useFormik<ILoginValues>({
     initialValues: {
@@ -59,5 +59,3 @@ function Login(props: ILoginContainer): JSX.Element {
     </form>
   );
 }
-
-export default Login;
