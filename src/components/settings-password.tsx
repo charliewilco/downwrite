@@ -5,7 +5,7 @@ import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
 import { UpdatePasswordSchema } from "@utils/validations";
-import { useStore } from "@store/provider";
+import { useDataSource } from "@store/provider";
 
 interface IPasswordSettings {
   oldPassword: string;
@@ -18,7 +18,7 @@ interface IPasswordFormProps {
 }
 
 export default function SettingsPassword(props: IPasswordFormProps): JSX.Element {
-  const store = useStore();
+  const store = useDataSource();
   const [isOpen, onToggleOpen] = useReducer((prev: boolean) => !prev, false);
   const onSubmit = useCallback(
     async (

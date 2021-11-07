@@ -1,4 +1,3 @@
-import { makeAutoObservable } from "mobx";
 import { DownwriteClient } from "@store/client";
 import { IAppState } from "./store";
 import { Fonts } from "@utils/default-styles";
@@ -21,14 +20,13 @@ export interface IPasswordSettings {
   confirmPassword: string;
 }
 
-export class Settings implements ISettings {
+export class GlobalSettings implements ISettings {
   isDarkMode = true;
   fileExtension = ".md";
   editorFont = Fonts.monospace;
   #client: DownwriteClient;
   #store: IAppState;
   constructor(_graphql: DownwriteClient, store: IAppState) {
-    makeAutoObservable(this);
     this.#client = _graphql;
     this.#store = store;
   }

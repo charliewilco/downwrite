@@ -1,12 +1,11 @@
 import Card from "./card";
-import LayoutControl from "./layout-control";
+import { LayoutControl } from "./layout-control";
 import PostListItem from "./post-list-item";
 import classNames from "../utils/classnames";
 import { IEntry } from "../__generated__/client";
-import { PostGrid } from "@store/list";
 import { IPartialFeedItem } from "../store/dashboard";
 import { PageTitle } from "./page-title";
-import { useLocalObservable } from "mobx-react";
+import { useState } from "react";
 
 export type IFeedList = Pick<IEntry, "title" | "dateAdded" | "id" | "public">[];
 
@@ -15,29 +14,23 @@ interface IPostListProps {
   onSelect: ({ id, title }: IPartialFeedItem) => void;
 }
 
-export default function PostList(props: IPostListProps): JSX.Element {
-  const grid = useLocalObservable(() => new PostGrid());
+export const PostList: React.VFC<IPostListProps> = (props) => {
+  const [isGridView, setGrid] = useState(false);
 
-  const testID = grid.isGridView ? "ENTRIES_GRIDVIEW" : "ENTRIES_LISTVIEW";
+  const testID = isGridView ? "ENTRIES_GRIDVIEW" : "ENTRIES_LISTVIEW";
 
   return (
-    <>
-      <header className="flex justify-between mb-6 items-center">
+    <div>
+      <header>
         <PageTitle>Entries</PageTitle>
-        <LayoutControl layout={grid.isGridView} layoutChange={grid.setGrid} />
+        <LayoutControl layout={isGridView} layoutChange={setGrid} />
       </header>
 
       <ul
-        className={classNames(
-          "w-full list-none list-inside",
-          grid.isGridView &&
-            "grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4",
-          !grid.isGridView &&
-            "max-w-xl mx-auto divide-y divide-opacity-50 divide-onyx-300"
-        )}
+        className={classNames(isGridView && "grid", !isGridView && "list")}
         data-testid={testID}>
         {props.posts.map((p, i) =>
-          !grid.isGridView ? (
+          !isGridView ? (
             <PostListItem
               key={i}
               title={p.title!}
@@ -59,6 +52,34 @@ export default function PostList(props: IPostListProps): JSX.Element {
           )
         )}
       </ul>
-    </>
+      <style jsx>
+        {`
+          header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+          ul {
+            list-style: none inside;
+            margin: 0;
+            padding: 0;
+          }
+
+          div {
+            padding: 0 0.5rem;
+          }
+
+          .grid {
+            max-width: 84rem;
+            margin: 1rem auto;
+          }
+
+          .list {
+            max-width: 24rem;
+            margin: 1rem auto;
+          }
+        `}
+      </style>
+    </div>
   );
-}
+};

@@ -1,4 +1,3 @@
-import { makeAutoObservable } from "mobx";
 import { DownwriteClient } from "@store/client";
 import { IAppState } from "./store";
 import { IAllPostsQuery } from "../__generated__/client";
@@ -9,21 +8,11 @@ export interface IPartialFeedItem {
 }
 
 export class DashboardState {
-  selected: null | IPartialFeedItem = null;
   #client: DownwriteClient;
   #store: IAppState;
   constructor(_graphql: DownwriteClient, store: IAppState) {
-    makeAutoObservable(this);
     this.#client = _graphql;
     this.#store = store;
-  }
-
-  selectEntry(value: IPartialFeedItem) {
-    this.selected = value;
-  }
-
-  cancel() {
-    this.selected = null;
   }
 
   getFeed() {

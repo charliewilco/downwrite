@@ -31,18 +31,41 @@ export default function PostListItem(props: IListItemProps): JSX.Element {
             added {distance(new Date(props.dateAdded))} ago
           </small>
         </div>
-        <div className="flex justify-between items-center text-xs font-bold">
+        <div className="tray">
           <div>
             <EditLink id={props.id} className="mr-4" />
             {props.public && <PreviewLink id={props.id} />}
           </div>
           {props.onDelete && (
-            <button className="font-bold text-xs" onClick={onDelete}>
+            <button className="delete" onClick={onDelete}>
               Delete
             </button>
           )}
         </div>
       </div>
+
+      <style jsx>{`
+        li {
+          width: 100%;
+          display: block;
+        }
+
+        h2 {
+          margin: 0;
+        }
+
+        .delete {
+          appearance: none;
+          background: none;
+          border: 0;
+        }
+
+        .tray {
+          display: flex;
+          font-weight: 700;
+          justify-content: space-between;
+        }
+      `}</style>
     </li>
   );
 }

@@ -4,29 +4,37 @@ import Head from "next/head";
 import useSWR from "swr";
 
 import DeleteModal from "@components/delete-modal";
-import PostList from "@components/post-list";
+import { PostList } from "@components/post-list";
 import EmptyPosts from "@components/empty-posts";
 import { LoadingDashboard, ErrorDashboard } from "@components/dashboard-helpers";
-import { useStore } from "@store/provider";
+import { useDataSource } from "@store/provider";
 import { IPartialFeedItem } from "@store/dashboard";
+import { useEnhancedReducer } from "@hooks/useEnhancedReducer";
 
 const DashboardUI: NextPage = () => {
-  const store = useStore();
-  const { data, error, mutate } = useSWR(["dashboard"], store.dashboard.getFeed);
+  const store = useDataSource();
+  const [selected, dispatch] = useEnhancedReducer<IPartialFeedItem | null>(null);
+  const { data, error, mutate } = useSWR(["dashboard"], () =>
+    store.dashboard.getFeed()
+  );
 
   const loading = !data;
 
-  const handleDelete = useCallback((selected: IPartialFeedItem) => {
+  const handleDelete = useCallback(() => {
     if (selected !== null) {
       store.dashboard.remove(selected.id).then((value) => {
-        store.dashboard.cancel();
+        dispatch(null);
 
         const mutated = store.dashboard.mutateFeedList(data, value.deleteEntry.id);
 
         mutate(mutated, false);
       });
     }
-  }, []);
+  }, [selected, data, mutate]);
+
+  const handleCancel = useCallback(() => {
+    dispatch(null);
+  }, [dispatch]);
 
   if (loading || (data === undefined && error === undefined)) {
     return <LoadingDashboard />;
@@ -42,23 +50,29 @@ const DashboardUI: NextPage = () => {
         ? data.feed.length.toString().concat(" Entries ")
         : "No Entries ";
     return (
-      <section className="py-4 px-2 min-h-screen">
+      <section className="py-4 px-2">
         <Head>
           <title>{titlePrefix}| Downwrite</title>
         </Head>
-        {store.dashboard.selected !== null && (
+        {selected !== null && (
           <DeleteModal
-            title={store.dashboard.selected.title}
-            onDelete={() => handleDelete(store.dashboard.selected)}
-            onCancelDelete={store.dashboard.cancel}
-            closeModal={store.dashboard.cancel}
+            title={selected.title}
+            onDelete={handleDelete}
+            onCancelDelete={handleCancel}
+            closeModal={handleCancel}
           />
         )}
         {data.feed.length > 0 ? (
-          <PostList onSelect={store.dashboard.selectEntry} posts={data.feed} />
+          <PostList onSelect={dispatch} posts={data.feed} />
         ) : (
           <EmptyPosts />
         )}
+
+        <style jsx>{`
+          section {
+            min-height: 100vh;
+          }
+        `}</style>
       </section>
     );
   }

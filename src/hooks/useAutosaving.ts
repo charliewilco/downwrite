@@ -1,26 +1,17 @@
-import { useRef, useEffect } from "react";
-import { useStore } from "@store/provider";
+import { useDataSource } from "@store/provider";
+import { useInterval } from ".";
 
 export function useAutosaving(
   duration: number = 5000,
   cb?: (...args: any[]) => void,
   message?: string
 ) {
-  const store = useStore();
-  const interval = useRef<NodeJS.Timeout | null>(null);
+  const store = useDataSource();
 
-  useEffect(() => {
-    interval.current = setInterval(async () => {
-      if (cb) {
-        store.notifications.add(message || "Autosaving", true);
-        cb();
-      }
-    }, duration);
-
-    return function cleanup() {
-      if (interval.current !== null) {
-        clearInterval(interval.current);
-      }
-    };
-  }, [message, cb, duration]);
+  useInterval(duration, () => {
+    if (cb) {
+      store.notifications.add(message || "Autosaving", true);
+      cb();
+    }
+  });
 }

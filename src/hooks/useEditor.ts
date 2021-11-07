@@ -7,8 +7,8 @@ import {
   convertFromRaw,
   ContentState
 } from "draft-js";
-import { createEditorProps, IPropCreation } from "./create-editor-props";
-import { MultiDecorator } from "./multidecorator";
+import { createEditorProps, IPropCreation } from "../editor/create-editor-props";
+import { MultiDecorator } from "../editor/multidecorator";
 
 interface IInitializeEditorState {
   contentState?: ContentState;

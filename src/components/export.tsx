@@ -10,6 +10,7 @@ import Markdown from "./export-markdown-button";
 import { createMarkdown } from "../utils/markdown-template";
 import classNames from "../utils/classnames";
 import { LocalSettings } from "./settings-markdown";
+import { useCallback } from "react";
 
 interface IExportProps {
   title: string;
@@ -50,7 +51,7 @@ export default function UIMarkdownExport(props: IExportProps) {
     }
   };
 
-  const exportMarkdown = (): void => {
+  const exportMarkdown = useCallback((): void => {
     const { title, date, editorState } = props;
     const cx: ContentState = editorState.getCurrentContent();
     const content: RawDraftContentState = convertToRaw(cx);
@@ -60,7 +61,7 @@ export default function UIMarkdownExport(props: IExportProps) {
       content,
       date
     });
-  };
+  }, [props]);
 
   return (
     <aside title="Export entry to a Markdown file." className={className}>

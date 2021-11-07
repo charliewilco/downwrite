@@ -1,25 +1,37 @@
 import { NextPage } from "next";
 import Head from "next/head";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import { useCallback } from "react";
 import { useFormik } from "formik";
+import { EditorState } from "draft-js";
 import { IMarkdownConversion } from "@components/upload";
 import { Input } from "@components/editor-input";
 import { Button } from "@components/button";
 
-import { useEditor } from "../editor";
-import { useStore } from "@store/provider";
-import { useRouter } from "next/router";
+import { useDataSource } from "@store/provider";
+import {
+  useEnhancedReducer,
+  useEditor,
+  useDecorators,
+  emptyContentState
+} from "@hooks/index";
+import { imageLinkDecorators, prismHighlightDecorator } from "../editor";
 
 const Editor = dynamic(() => import("@components/editor"));
 const Upload = dynamic(() => import("@components/upload"));
 
 const NewEntryPage: NextPage = () => {
   const router = useRouter();
-  const store = useStore();
+  const store = useDataSource();
+  const decorators = useDecorators([imageLinkDecorators, prismHighlightDecorator]);
+  const [state, dispatch] = useEnhancedReducer({
+    title: "",
+    editorState: EditorState.createWithContent(emptyContentState, decorators)
+  });
   const editorProps = useEditor({
-    getEditorState: store.create.getEditorState,
-    setEditorState: store.create.mutateEditorState
+    getEditorState: () => state.editorState,
+    setEditorState: (editorState) => dispatch({ editorState })
   });
 
   const { values, setFieldValue, handleSubmit, handleChange } = useFormik({
@@ -28,7 +40,10 @@ const NewEntryPage: NextPage = () => {
       title: ""
     },
     async onSubmit(values) {
-      const data = await store.create.create(values.title);
+      const data = await store.create.create({
+        ...state,
+        ...values
+      });
 
       if (!!data) {
         router.push(`/${data.createEntry?.id}/edit`);
@@ -36,10 +51,13 @@ const NewEntryPage: NextPage = () => {
     }
   });
 
-  const handleParsed = useCallback((parsed: IMarkdownConversion) => {
-    setFieldValue("title", parsed.title);
-    store.create.mutateEditorState(parsed.editorState);
-  }, []);
+  const handleParsed = useCallback(
+    ({ title, editorState }: IMarkdownConversion) => {
+      setFieldValue("title", title);
+      dispatch({ title, editorState });
+    },
+    [dispatch]
+  );
 
   return (
     <form
@@ -70,7 +88,7 @@ const NewEntryPage: NextPage = () => {
         <Editor
           onSave={() => handleSubmit()}
           {...editorProps}
-          editorState={store.create.editorState}
+          editorState={state.editorState}
         />
       </Upload>
     </form>

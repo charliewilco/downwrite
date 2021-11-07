@@ -1,5 +1,5 @@
 import cuid from "cuid";
-import { makeAutoObservable } from "mobx";
+import { BehaviorSubject } from "rxjs";
 
 export enum NotificationType {
   DEFAULT = "DEFAULT",
@@ -20,37 +20,41 @@ export class UINotificationMessage {
   }
 }
 
-export class Notifications {
-  list: UINotificationMessage[] = [];
-  constructor() {
-    makeAutoObservable(this);
-  }
+export class GlobalNotifications {
+  subject = new BehaviorSubject<UINotificationMessage[]>([]);
+  #_list: UINotificationMessage[] = [];
+  constructor() {}
 
   getAll() {
-    return this.list;
+    return this.#_list;
   }
 
-  private _add(text: string, variant?: NotificationType, dismissable?: boolean) {
-    this.list.unshift(new UINotificationMessage(text, variant, dismissable));
+  #_add(text: string, variant?: NotificationType, dismissable?: boolean) {
+    this.#_list.unshift(new UINotificationMessage(text, variant, dismissable));
+    this.subject.next(Array.from(this.#_list));
+  }
+  #_remove(id: string) {
+    const index = this.#_list.findIndex((n) => n.id === id);
+
+    if (index > -1) {
+      this.#_list.splice(index, 1);
+    }
   }
 
   warn(text: string, dismissable?: boolean) {
-    this._add(text, NotificationType.WARNING, dismissable);
+    this.#_add(text, NotificationType.WARNING, dismissable);
   }
 
   error(text: string, dismissable?: boolean) {
-    this._add(text, NotificationType.ERROR, dismissable);
+    this.#_add(text, NotificationType.ERROR, dismissable);
   }
 
   add(text: string, dismissable?: boolean) {
-    this._add(text, NotificationType.DEFAULT, dismissable);
+    this.#_add(text, NotificationType.DEFAULT, dismissable);
   }
 
-  remove(selected: UINotificationMessage) {
-    const index = this.list.findIndex((n) => n.id === selected.id);
-
-    if (index > -1) {
-      this.list.splice(index, 1);
-    }
+  remove(id: string) {
+    this.#_remove(id);
+    this.subject.next(Array.from(this.#_list));
   }
 }

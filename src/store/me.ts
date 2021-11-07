@@ -1,14 +1,16 @@
-import { makeAutoObservable } from "mobx";
 import decode from "jwt-decode";
 import base64 from "base-64";
+
 import { TokenContents } from "@lib/token";
 import { IIsMeQuery } from "../__generated__/client";
 import { DownwriteClient } from "@store/client";
 import { IAppState } from "./store";
+import { BehaviorSubject } from "rxjs";
 
 export interface ICurrentUserState {
   username?: string;
   id?: string;
+  authed: boolean;
 }
 
 export interface IRegisterValues {
@@ -23,13 +25,17 @@ export interface ILoginValues {
   password: string;
 }
 
-export class Me implements ICurrentUserState {
+export class Me {
   username = "";
   id = "";
+  readonly state = new BehaviorSubject<ICurrentUserState>({
+    username: "",
+    id: "",
+    authed: false
+  });
   #client: DownwriteClient;
   #store: IAppState;
   constructor(_graphql: DownwriteClient, store: IAppState) {
-    makeAutoObservable(this);
     this.#client = _graphql;
     this.#store = store;
   }
@@ -63,7 +69,7 @@ export class Me implements ICurrentUserState {
       this.#client.setToken(token);
 
       for (const n of this.#store.notifications.getAll()) {
-        this.#store.notifications.remove(n);
+        this.#store.notifications.remove(n.id);
       }
     } catch (error) {
       this.#store.notifications.error(error.message);
@@ -86,7 +92,7 @@ export class Me implements ICurrentUserState {
           this.#client.setToken(token);
 
           for (const n of this.#store.notifications.getAll()) {
-            this.#store.notifications.remove(n);
+            this.#store.notifications.remove(n.id);
           }
         }
       } catch (error) {

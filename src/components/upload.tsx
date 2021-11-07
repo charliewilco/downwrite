@@ -2,7 +2,7 @@ import { useRef, useCallback } from "react";
 import { EditorState, convertFromRaw } from "draft-js";
 import { useDropzone } from "react-dropzone";
 import { mdToDraftjs } from "draftjs-md-converter";
-import { fm } from "@utils/fm";
+import { fmParserr } from "@utils/fm";
 import { __IS_BROWSER__ } from "@utils/dev";
 
 export interface IMarkdownConversion {
@@ -35,7 +35,7 @@ const Uploader: React.FC<IUploadProps> = (props) => {
       function extractMarkdown(files: File[]): void {
         if (reader.current !== null) {
           reader.current.onload = () => {
-            const md: IMarkdown = fm(reader.current!.result as string);
+            const md: IMarkdown = fmParserr(reader.current!.result as string);
             const markdown = mdToDraftjs(md.body);
 
             return props.onParsed({

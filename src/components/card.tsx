@@ -20,7 +20,7 @@ export default function Card(props: ICardProps): JSX.Element {
   }, [props.onDelete, props.id, props.title]);
 
   return (
-    <div className="shadow-md dark:bg-onyx-800 p-2" data-testid="CARD">
+    <div className="shadow-md dark:bg-onyx-800 p-2 card" data-testid="CARD">
       <header className="border-b-2 dark:border-onyx-600 pb-2 mb-12">
         <h2 className="font-bold text-base leading-none" data-testid="CARD_TITLE">
           <EditLink title={props.title} id={props.id} />
@@ -45,6 +45,14 @@ export default function Card(props: ICardProps): JSX.Element {
           </button>
         )}
       </footer>
+
+      <style jsx>
+        {`
+          .card {
+            padding: 0.5rem;
+          }
+        `}
+      </style>
     </div>
   );
 }

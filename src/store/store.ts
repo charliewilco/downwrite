@@ -1,8 +1,6 @@
-import { makeObservable, computed, observable, runInAction } from "mobx";
-
-import { Settings } from "./settings";
+import { GlobalSettings } from "./settings";
 import { Me } from "./me";
-import { Notifications } from "./notifications";
+import { GlobalNotifications } from "./notifications";
 import { EditorAction } from "./editor";
 import { DownwriteClient } from "@store/client";
 import { DashboardState } from "./dashboard";
@@ -10,9 +8,9 @@ import { CreateEntry } from "./create";
 import { __IS_BROWSER__ } from "@utils/dev";
 
 export interface IAppState {
-  settings: Settings;
+  settings: GlobalSettings;
   me: Me;
-  notifications: Notifications;
+  notifications: GlobalNotifications;
   editor: EditorAction;
   dashboard: DashboardState;
   create: CreateEntry;
@@ -24,23 +22,18 @@ export interface ILoginValues {
 }
 
 export class Store implements IAppState {
-  settings: Settings;
+  settings: GlobalSettings;
   me: Me;
-  notifications: Notifications;
+  notifications: GlobalNotifications;
   editor: EditorAction;
   create: CreateEntry;
   dashboard: DashboardState;
   isOffline: boolean = false;
   #client = new DownwriteClient();
   constructor() {
-    makeObservable(this, {
-      authed: computed,
-      isOffline: observable
-    });
-
     this.me = new Me(this.#client, this);
-    this.settings = new Settings(this.#client, this);
-    this.notifications = new Notifications();
+    this.settings = new GlobalSettings(this.#client, this);
+    this.notifications = new GlobalNotifications();
     this.editor = new EditorAction(this.#client, this);
     this.dashboard = new DashboardState(this.#client, this);
     this.create = new CreateEntry(this.#client, this);
@@ -53,9 +46,7 @@ export class Store implements IAppState {
 
   handleOfflineChange() {
     if (__IS_BROWSER__) {
-      runInAction(() => {
-        this.isOffline = window.navigator.onLine;
-      });
+      this.isOffline = window.navigator.onLine;
     }
   }
 

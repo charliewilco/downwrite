@@ -1,5 +1,4 @@
 import { useRef, useReducer } from "react";
-import { inputReducer, InputAction } from "../store/input";
 import classNames from "../utils/classnames";
 
 interface IUIInputProps {
@@ -39,17 +38,20 @@ export function UIInputError({
 export default function UIInput({ testID, label, ...props }: IUIInputProps) {
   const id = useRef("UI_TEXT_INPUT_".concat(label.replace(" ", "")));
 
-  const [state, dispatch] = useReducer(inputReducer, {
-    focused: false
-  });
+  const [isFocused, dispatch] = useReducer(
+    (state: boolean, action: "focus" | "blur") => {
+      return action !== "blur";
+    },
+    false
+  );
 
   return (
     <label className="relative" htmlFor={id.current}>
       <input
         data-testid={testID}
         type="text"
-        onFocus={() => dispatch({ type: InputAction.FOCUS })}
-        onBlur={() => dispatch({ type: InputAction.BLUR })}
+        onFocus={() => dispatch("focus")}
+        onBlur={() => dispatch("blur")}
         id={id.current}
         {...props}
         className={classNames(
@@ -59,7 +61,7 @@ export default function UIInput({ testID, label, ...props }: IUIInputProps) {
       />
       <small
         className="font-bold"
-        style={{ color: state.focused ? "var(--yellow700)" : "#b4b4b4" }}>
+        style={{ color: isFocused ? "var(--yellow700)" : "#b4b4b4" }}>
         {label}
       </small>
     </label>

@@ -1,35 +1,44 @@
-import { motion, AnimatePresence, Transition } from "framer-motion";
-
-function getTransition(duration: number, delay: number): Transition {
-  return { type: "tween", duration, delay, repeat: Infinity };
-}
 export default function Loading(): JSX.Element {
-  const animation = {
-    scale: [0.1, 1, 0],
-    opacity: [1, 0.7, 0]
-  };
-
   return (
-    <AnimatePresence>
-      <motion.div
-        role="img"
-        className="relative flex flex-col justify-center w-20 h-20 mx-auto my-auto">
-        <motion.div
-          animate={animation}
-          transition={getTransition(1.5, 1)}
-          className="absolute left-0 right-0 w-8 h-8 m-auto border-2 rounded-full border-current"
-        />
-        <motion.div
-          animate={animation}
-          transition={getTransition(1.5, 0.75)}
-          className="absolute left-0 right-0 w-12 h-12 m-auto border-2 rounded-full border-current"
-        />
-        <motion.div
-          animate={animation}
-          transition={getTransition(1.5, 0.5)}
-          className="absolute left-0 right-0 w-16 h-16 m-auto border-2 rounded-full border-current"
-        />
-      </motion.div>
-    </AnimatePresence>
+    <div role="img">
+      <div className="ring" />
+      <div className="ring" />
+      <div className="ring" />
+
+      <style jsx>{`
+        [role="img"] {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          width: 5rem;
+          height: 5rem;
+          margin: auto;
+        }
+
+        [role="img"]:nth-child(1) {
+          --size: 2rem;
+        }
+
+        [role="img"]:nth-child(2) {
+          --size: 3rem;
+        }
+
+        [role="img"]:nth-child(3) {
+          --size: 4rem;
+        }
+
+        .ring {
+          position: absolute;
+          left: 0;
+          right: 0;
+          border: 2px solid;
+          border-radius: 100%;
+          margin: auto;
+          width: var(--size);
+          height: var(--size);
+        }
+      `}</style>
+    </div>
   );
 }

@@ -3,7 +3,7 @@ import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { removeTokenCookie } from "@lib/cookie-managment";
 import { Routes } from "@utils/routes";
-import { useStore } from "@store/provider";
+import { useDataSource } from "@store/provider";
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   removeTokenCookie(context.res);
@@ -14,7 +14,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
 
 const SignOut: NextPage = () => {
   const router = useRouter();
-  const store = useStore();
+  const store = useDataSource();
 
   useEffect(() => {
     store.me.onLogout();

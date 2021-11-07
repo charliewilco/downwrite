@@ -5,7 +5,7 @@ import {
   useEditorState,
   useInlineStyles,
   emptyContentState
-} from "./hooks";
+} from "@hooks/index";
 import { prismHighlightDecorator } from "./prism";
 import { imageLinkDecorators } from "./decorators";
 

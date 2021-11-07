@@ -1,7 +1,6 @@
 import { useCallback } from "react";
-import { motion } from "framer-motion";
-import { useStore } from "@store/provider";
-import { useTimeout } from "../hooks/useTimeout";
+import { useDataSource } from "@store/provider";
+import { useTimeout } from "../hooks/useTimers";
 import classNames from "@utils/classnames";
 import { NotificationType, UINotificationMessage } from "@store/notifications";
 
@@ -9,21 +8,16 @@ interface IUIMessageProps {
   notification: UINotificationMessage;
 }
 
-export default function UIMessage(props: IUIMessageProps): JSX.Element {
-  const store = useStore();
+export function UIMessage(props: IUIMessageProps): JSX.Element {
+  const store = useDataSource();
   const onRemove = useCallback(() => {
-    store.notifications.remove(props.notification);
+    store.notifications.remove(props.notification.id);
   }, [props]);
 
   useTimeout(15000, props.notification.dismissable ? onRemove : undefined);
 
   return (
-    <motion.div
-      aria-live="polite"
-      className="mb-2"
-      initial={{ opacity: 0, y: 50, scale: 0.3 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}>
+    <div aria-live="polite" className="mb-2">
       <div
         className={classNames(
           "flex items center justify-between w-full h-full bg-white py-2 pr-4 pl-2 mt-2 text-onyx-900 rounded",
@@ -46,6 +40,6 @@ export default function UIMessage(props: IUIMessageProps): JSX.Element {
           </button>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }

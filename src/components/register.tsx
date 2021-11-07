@@ -3,7 +3,7 @@ import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
 import LegalBoilerplate from "./legal-boilerplate";
 import { RegisterFormSchema as validationSchema } from "../utils/validations";
-import { useStore } from "@store/provider";
+import { useDataSource } from "@store/provider";
 import { IRegisterValues } from "@store/me";
 
 const REGISTER_INPUTS = [
@@ -42,7 +42,7 @@ interface ILoginContainer {
 }
 
 export default function RegisterForm(props: ILoginContainer): JSX.Element {
-  const store = useStore();
+  const store = useDataSource();
 
   const formik = useFormik<IRegisterValues>({
     initialValues,

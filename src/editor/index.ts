@@ -3,7 +3,6 @@ export * from "./constants";
 export * from "./create-editor-props";
 export * from "./decorators";
 export * from "./editor";
-export * from "./hooks";
 export * from "./modifiers";
 export * from "./multidecorator";
 export * from "./prism";

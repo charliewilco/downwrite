@@ -3,7 +3,7 @@ import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
 import { UserSettingsSchema as validationSchema } from "@utils/validations";
-import { useStore } from "@store/provider";
+import { useDataSource } from "@store/provider";
 import { IUserFormValues } from "@store/settings";
 
 interface ISettingsUserForm {
@@ -11,7 +11,7 @@ interface ISettingsUserForm {
 }
 
 export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
-  const store = useStore();
+  const store = useDataSource();
 
   const formik = useFormik<IUserFormValues>({
     initialValues: { ...props.user },

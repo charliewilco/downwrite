@@ -9,9 +9,7 @@ const pattern =
   "(?:\\n)?)";
 const regex = new RegExp(pattern, "m");
 
-export function fm(
-  string: string
-): {
+export function fmParserr(string: string): {
   attributes: Record<string, any>;
   body: string;
   bodyBegin: number;

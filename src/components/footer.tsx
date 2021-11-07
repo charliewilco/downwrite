@@ -17,9 +17,6 @@ export function UIFooter() {
     <footer className="max-w-2xl py-8 px-4 mx-auto">
       <nav>
         <ul className="text-center p-0 m-0 text-sm">
-          <li className="inline-block mr-4">
-            <span>&copy; {date.getFullYear()} Charlie Peters</span>
-          </li>
           {PAGES.map(({ href, name }, i) => (
             <li key={i} className="inline-block mr-4">
               <Link href={href} passHref>
@@ -30,7 +27,40 @@ export function UIFooter() {
             </li>
           ))}
         </ul>
+        <div className="copy">
+          <small>&copy; {date.getFullYear()} Charlie Peters</small>
+        </div>
       </nav>
+
+      <style jsx>{`
+        footer {
+          margin: 0 auto;
+          padding: 2rem 1rem;
+          text-align: center;
+        }
+
+        ul {
+          list-style: none inside;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          justify-content: center;
+          margin-bottom: 1rem;
+        }
+
+        li {
+          margin: 0 0.25rem;
+        }
+
+        .copy {
+          text-transform: uppercase;
+          opacity: 0.5;
+        }
+
+        small {
+          font-family: var(--monospace);
+        }
+      `}</style>
     </footer>
   );
 }

@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
 import useSWR from "swr";
-import { useStore } from "@store/provider";
+import { useDataSource } from "@store/provider";
 import dbConnect from "@lib/db";
 import { getAllPreviewEntries, getPreviewEntry } from "@lib/preview";
 import Content from "@components/content";
@@ -49,7 +49,7 @@ export const getStaticProps: PreviewPageHandler = async ({ params }) => {
 };
 
 const PreviewEntry: NextPage<{ id: string }> = (props) => {
-  const store = useStore();
+  const store = useDataSource();
 
   const router = useRouter();
   const { error, data } = useSWR(props.id, (id) => store.graphql.preview(id));

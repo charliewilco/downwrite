@@ -1,4 +1,5 @@
 import { useRef, useCallback } from "react";
+
 import {
   Editor,
   DraftHandleValue,
@@ -10,7 +11,7 @@ import {
 } from "draft-js";
 import classNames from "@utils/classnames";
 import { Fonts } from "@utils/default-styles";
-import { useStore } from "@store/provider";
+import { useDataSource } from "@store/provider";
 
 type OmittedEditorProps =
   | "ref"
@@ -48,7 +49,7 @@ const saveKeyListener = (
 
 export default function DownwriteEditor({ onSave, ...props }: IEditorProps) {
   let editorRef = useRef<Editor>(null);
-  const store = useStore();
+  const store = useDataSource();
 
   let contentState: Draft.ContentState = props.editorState.getCurrentContent();
   let className = classNames(

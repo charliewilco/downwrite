@@ -12,7 +12,7 @@ import {
 } from "react-icons/fi";
 import { Routes } from "@utils/routes";
 import User from "./user";
-import { useStore } from "@store/provider";
+import { useDataSource } from "@store/provider";
 
 const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) => {
   return (
@@ -23,7 +23,7 @@ const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) 
 });
 
 export function DropdownDarkMode() {
-  const store = useStore();
+  const store = useDataSource();
   return (
     <MenuItem
       onSelect={() => store.settings.toggleDarkMode()}
@@ -48,7 +48,7 @@ export function DropdownDarkMode() {
 }
 
 export default function DropdownUI() {
-  const store = useStore();
+  const store = useDataSource();
 
   return (
     <Menu>

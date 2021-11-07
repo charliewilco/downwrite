@@ -2,49 +2,78 @@ import Link from "next/link";
 import Logo from "./logo";
 import DropdownUI from "./dropdown-ui";
 import { Routes } from "@utils/routes";
-import { useStore } from "@store/provider";
+import { useDataSource } from "@store/provider";
+import { useSubjectEffect } from "@hooks/useSubject";
 
-export function UIHeader(): JSX.Element {
-  const store = useStore();
+export const _UIHeader: React.VFC = () => {
+  const store = useDataSource();
+  const me = useSubjectEffect(store.me.state);
 
-  const homeLink: string = store.authed ? Routes.DASHBOARD : Routes.LOGIN;
+  const link = me.authed ? Routes.DASHBOARD : Routes.LOGIN;
 
   return (
-    <header
-      className="flex items-center justify-between px-2 py-4"
-      data-testid="APP_HEADER">
-      <nav className="flex items-center">
+    <header data-testid="APP_HEADER">
+      <nav>
         <Logo />
-        <h1
-          className="text-base xl:text-xl font-sans leading-none font-bold"
-          data-testid="APP_HEADER_TITLE">
-          <Link href={homeLink} passHref>
-            <a className="ml-3 uppercase text-sm tracking-widest block cursor-pointer">
-              Downwrite
-            </a>
+        <h1 data-testid="APP_HEADER_TITLE">
+          <Link href={link} passHref>
+            <a className="logo-link">Downwrite</a>
           </Link>
         </h1>
       </nav>
-      {store.authed ? (
-        <nav className="flex items-center">
+      {me.authed ? (
+        <nav>
           <Link href={Routes.NEW} passHref>
-            <a
-              data-testid="CREATE_NEW_ENTRY_BUTTON"
-              className="text-white leading-none cursor-pointer opacity-50 text-sm mr-8">
+            <a data-testid="CREATE_NEW_ENTRY_BUTTON" className="new-link">
               New
             </a>
           </Link>
           <DropdownUI />
         </nav>
       ) : (
-        <nav className="flex items-center">
+        <nav>
           <Link href={Routes.LOGIN} passHref>
-            <a className="text-white leading-none cursor-pointer opacity-50 text-sm mr-8">
-              Login or Sign Up
-            </a>
+            <a className="login-link">Login or Sign Up</a>
           </Link>
         </nav>
       )}
+      <style jsx>{`
+        header,
+        nav {
+          display: flex;
+          align-items: center;
+        }
+        header {
+          justify-content: space-between;
+          padding: 1rem 0.5rem;
+          width: 100%;
+        }
+
+        h1 {
+        }
+
+        .logo-link {
+          margin-left: 1rem;
+          text-transform: uppercase;
+          display: block;
+          cursor: pointer;
+          font-size: 0.875rem;
+          line-height: 1;
+          letter-spacing: 0.1em;
+          text-decoration: none;
+        }
+
+        .login-link {
+          opacity: 50%;
+        }
+
+        .login-link,
+        .new-link {
+          margin-right: 1rem;
+        }
+      `}</style>
     </header>
   );
-}
+};
+
+export const UIHeader = _UIHeader;

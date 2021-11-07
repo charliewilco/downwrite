@@ -4,7 +4,7 @@ import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
 import { LocalSettingsSchema } from "../utils/validations";
-import { useStore } from "@store/provider";
+import { useDataSource } from "@store/provider";
 import { Fonts } from "@utils/default-styles";
 
 interface ILocalSettings extends Record<string, string> {
@@ -29,7 +29,7 @@ export enum LocalSettings {
 }
 
 export default function SettingsLocalMarkdown(): JSX.Element {
-  const store = useStore();
+  const store = useDataSource();
 
   const initialValues = useRef<() => ILocalSettings>(() => {
     return {
