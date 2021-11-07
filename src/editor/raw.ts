@@ -1,5 +1,5 @@
 import { RawDraftContentState } from "draft-js";
-import { v4 as uuid } from "uuid";
+import cuid from "cuid";
 
 export const fixRawContentState = (raw: RawDraftContentState) => {
   let keyCache: Record<string, string> = {};
@@ -7,7 +7,7 @@ export const fixRawContentState = (raw: RawDraftContentState) => {
   const clone = Object.assign({}, raw);
 
   clone.blocks = raw.blocks.map((n) => {
-    let key = !!keyCache[n.key] ? n.key : uuid();
+    let key = !!keyCache[n.key] ? n.key : cuid();
     return {
       ...n,
       key

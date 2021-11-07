@@ -1,6 +1,3 @@
-import Tagger from "pos-tagger.js";
-import { Output } from "pos-tagger.js/build/js/packages/posTagger/kotlin/posTagger";
-
 // http://naturalnode.github.io/natural/brill_pos_tagger.html
 
 export var tagLegend = {
@@ -81,48 +78,4 @@ export var tagMap: Record<PosTag, string[]> = {
   WP: [],
   WP$: [],
   WRB: []
-};
-
-export type FlatOutputTree = Record<PosTag, string[]>;
-
-const flat = <T>(arr: T[]) => {
-  return arr.reduce(function (flat, toFlatten) {
-    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
-  }, []);
-};
-
-export const flatten = (tree: Output[][]): FlatOutputTree => {
-  return flat(tree).reduce<FlatOutputTree>((acc, current) => {
-    acc[current.tag as PosTag].push(current.word);
-    return acc;
-  }, tagMap);
-};
-
-export type StringifiedOutput = Pick<Output, "word" | "tag">;
-
-export const toString = (tree: Output[][]): StringifiedOutput[][] => {
-  const r: StringifiedOutput[][] = [];
-  for (const branch of tree) {
-    r.push(branch.map((b) => ({ tag: b.tag, word: b.word })));
-  }
-
-  return r;
-};
-
-interface IParserResult {
-  tree: Output[][];
-  stringified: StringifiedOutput[][];
-  flattened: FlatOutputTree;
-}
-
-export const parser = (input: string): IParserResult => {
-  var processor = new Tagger(Tagger.readModelSync("left3words-wsj-0-18"));
-
-  const tree = processor.tag(input);
-
-  return {
-    tree,
-    stringified: toString(tree),
-    flattened: flatten(tree)
-  };
 };

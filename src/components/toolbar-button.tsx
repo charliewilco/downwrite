@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   BlockQuote,
   BulletedList,
@@ -22,23 +21,23 @@ function findIcon(label: string, active: boolean): React.ReactNode {
   const props = { active };
   switch (label) {
     case "Quote":
-      return React.createElement(BlockQuote, props);
+      return <BlockQuote {...props} />;
     case "Bullets":
-      return React.createElement(BulletedList, props);
+      return <BulletedList {...props} />;
     case "Numbers":
-      return React.createElement(Numbers, props);
+      return <Numbers {...props} />;
     case "Code":
-      return React.createElement(Code, props);
+      return <Code {...props} />;
     case "Bold":
-      return React.createElement(Bold, props);
+      return <Bold {...props} />;
     case "Italic":
-      return React.createElement(Italic, props);
+      return <Italic {...props} />;
     case "Underline":
-      return React.createElement(Underline, props);
+      return <Underline {...props} />;
     case "Mono":
-      return React.createElement(Mono, props);
+      return <Mono {...props} />;
     default:
-      return React.createElement(Label, { label, active });
+      return <Label label={label} active={active} />;
   }
 }
 

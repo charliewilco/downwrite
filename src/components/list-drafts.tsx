@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 
 const searchLocalStorage = () => {
   return localStorage.forEach(
@@ -8,9 +8,9 @@ const searchLocalStorage = () => {
 };
 
 export default function ListDrafts(props: any): JSX.Element {
-  const [drafts] = React.useState<any[]>([]);
+  const [drafts] = useState<any[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     let storage = searchLocalStorage();
 
     storage.forEach((item: any) => {

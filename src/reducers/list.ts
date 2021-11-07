@@ -1,31 +1,19 @@
-export enum ListActions {
-  TOGGLE,
-  SET
-}
-
-export type ListReducerAction =
-  | {
-      type: ListActions.TOGGLE;
-    }
-  | {
-      type: ListActions.SET;
-      payload: boolean;
-    };
+import { makeAutoObservable } from "mobx";
 
 export interface IPostListState {
   isGridView: boolean;
 }
 
-export function listReducer(
-  state: IPostListState,
-  action: ListReducerAction
-): IPostListState {
-  switch (action.type) {
-    case ListActions.TOGGLE:
-      return { isGridView: !state.isGridView };
-    case ListActions.SET:
-      return { isGridView: action.payload };
-    default:
-      throw new Error("Must specify action type");
+export class PostGrid {
+  isGridView: boolean = true;
+  constructor() {
+    makeAutoObservable(this);
+  }
+  toggle() {
+    this.isGridView = !this.isGridView;
+  }
+
+  setGrid(v: boolean) {
+    this.isGridView = v;
   }
 }

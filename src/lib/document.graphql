@@ -98,5 +98,9 @@ mutation UpdatePassword($current: String!, $newPassword: String!) {
 query IsMe {
   me {
     token
+    details {
+      id
+      username
+    }
   }
 }

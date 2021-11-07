@@ -2,7 +2,7 @@ import { ApolloError } from "apollo-server-micro";
 import * as bcrypt from "bcrypt";
 import base64 from "base-64";
 
-import { v4 as uuid } from "uuid";
+import cuid from "cuid";
 import { ResolverContext } from "./context";
 import { PostModel, UserModel } from "./models";
 import { transformPostToEntry } from "./transform";
@@ -58,7 +58,7 @@ export async function createPost(
 ): Promise<IEntry> {
   return verifyUser(context, async ({ user, name }) => {
     try {
-      const id = uuid();
+      const id = cuid();
       const date = new Date();
       const title = args.title ?? "Untitled Entry";
       const content = args.content ?? "";
@@ -130,9 +130,10 @@ export async function authenticateUser(
   username: string,
   password: string
 ): Promise<IAuthUserPayload> {
+  const decoded = base64.decode(password);
+
   await dbConnect();
 
-  const decoded = base64.decode(password);
   try {
     const user = await verifyCredentials(username, decoded);
     const token = createToken(user);
@@ -161,7 +162,7 @@ export async function createUser(
       password: decoded
     });
 
-    const id = uuid();
+    const id = cuid();
     const hash = await getSaltedHash(decoded);
     const m = Object.assign(
       {},
@@ -213,6 +214,7 @@ export async function updateUserSettings(
         return {
           email: details.email,
           username: details.username,
+          id: details.id,
           admin: __IS_DEV__
         };
       } else {

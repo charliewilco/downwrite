@@ -1,9 +1,13 @@
 import { NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
+
 import Landing from "@components/landing";
 import LoginTabs from "@components/login-tabs";
+import { Routes } from "@utils/routes";
 
 const LoginPage: NextPage = () => {
+  const router = useRouter();
   return (
     <div data-testid="LOGIN_PAGE_CONTAINER" className="my-16">
       <Head>
@@ -20,7 +24,7 @@ const LoginPage: NextPage = () => {
           </h1>
         </header>
 
-        <LoginTabs />
+        <LoginTabs onSuccess={() => router.push(Routes.DASHBOARD)} />
       </article>
     </div>
   );

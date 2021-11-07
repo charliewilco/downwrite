@@ -1,4 +1,3 @@
-import * as React from "react";
 import PostListItem from "./post-list-item";
 
 interface ISidebarPostProps {

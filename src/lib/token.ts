@@ -1,7 +1,6 @@
 import * as jwt from "jsonwebtoken";
 import is from "@sindresorhus/is";
 import * as bcrypt from "bcrypt";
-import { IAppState, initialState } from "@reducers/app";
 import { IUserModel } from "./models";
 
 export type TokenContents = {
@@ -11,19 +10,6 @@ export type TokenContents = {
 
 export const SECRET_KEY =
   process.env.SECRET_KEY || "1a9876c4-6642-4b83-838a-9e84ee00646a";
-
-export function getInitialState(t?: TokenContents): IAppState {
-  if (t) {
-    return Object.assign(initialState, {
-      me: {
-        id: t.user,
-        username: t.name
-      }
-    });
-  }
-
-  return initialState;
-}
 
 export async function getSaltedHash(password: string) {
   const salt = await bcrypt.genSalt(10);

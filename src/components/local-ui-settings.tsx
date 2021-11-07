@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useReducer, useEffect, useMemo, createContext } from "react";
 import * as DefaultStyles from "../utils/default-styles";
 
 export interface ILocalUISettings {
@@ -8,7 +8,7 @@ export interface ILocalUISettings {
   };
 }
 
-export const LocalUISettings = React.createContext({
+export const LocalUISettings = createContext({
   monospace: "",
   actions: {}
 } as ILocalUISettings);
@@ -45,11 +45,11 @@ function localSettingsReducer(
 }
 
 function useLocalUISettings(): ILocalUISettings {
-  const [state, dispatch] = React.useReducer(localSettingsReducer, {
+  const [state, dispatch] = useReducer(localSettingsReducer, {
     monospace: DefaultStyles.Fonts.monospace
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (typeof window !== undefined) {
       const local = localStorage.getItem("DW_EDITOR_FONT");
       if (local) {
@@ -79,12 +79,14 @@ function useLocalUISettings(): ILocalUISettings {
     };
   }
 
-  return React.useMemo<ILocalUISettings>(() => getUIContext(), [state]);
+  return useMemo<ILocalUISettings>(() => getUIContext(), [state]);
 }
 
 export function LocalUISettingsProvider({
   children
 }: ILocalSettingsProps): JSX.Element {
   const value = useLocalUISettings();
-  return React.createElement(LocalUISettings.Provider, { value }, children);
+  return (
+    <LocalUISettings.Provider value={value}>{children}</LocalUISettings.Provider>
+  );
 }

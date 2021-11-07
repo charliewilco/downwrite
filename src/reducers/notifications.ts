@@ -1,12 +1,5 @@
-import {
-  useCallback,
-  useReducer,
-  createContext,
-  createElement,
-  Reducer
-} from "react";
-import produce from "immer";
-import { v4 as uuid } from "uuid";
+import cuid from "cuid";
+import { makeAutoObservable } from "mobx";
 
 export enum NotificationType {
   DEFAULT = "DEFAULT",
@@ -15,7 +8,7 @@ export enum NotificationType {
 }
 
 export class UINotificationMessage {
-  public id: string = uuid();
+  public id: string = cuid();
   public text: string;
   public dateAdded: number = Date.now();
   public type: NotificationType;
@@ -27,113 +20,37 @@ export class UINotificationMessage {
   }
 }
 
-export enum NotificationActions {
-  REMOVE_NOTIFICATION = "REMOVE_NOTIFICATION",
-  ADD_NOTIFICATION = "ADD_NOTIFICATION",
-  SORT_NOTIFICATIONS = "SORT_NOTIFICATIONS"
-}
+export class Notifications {
+  list: UINotificationMessage[] = [];
+  constructor() {
+    makeAutoObservable(this);
+  }
 
-export interface INoticationAction {
-  type: NotificationActions;
-  payload?: {
-    text?: string;
-    type?: NotificationType;
-    dismissable?: boolean;
-    selected?: UINotificationMessage;
-  };
-}
+  getAll() {
+    return this.list;
+  }
 
-type NoticationAction =
-  | {
-      type: NotificationActions.REMOVE_NOTIFICATION;
-      selected: UINotificationMessage;
-    }
-  | {
-      type: NotificationActions.ADD_NOTIFICATION;
-      text: string;
-      variant: NotificationType;
-      dismissable: boolean;
-    };
+  private _add(text: string, variant?: NotificationType, dismissable?: boolean) {
+    this.list.unshift(new UINotificationMessage(text, variant, dismissable));
+  }
 
-export interface INotificationState {
-  notifications: UINotificationMessage[];
-}
+  warn(text: string, dismissable?: boolean) {
+    this._add(text, NotificationType.WARNING, dismissable);
+  }
 
-export const notificationReducer = produce(
-  (state: INotificationState, action: NoticationAction) => {
-    switch (action.type) {
-      case NotificationActions.ADD_NOTIFICATION:
-        state.notifications.unshift(
-          new UINotificationMessage(action.text, action.variant, action.dismissable)
-        );
+  error(text: string, dismissable?: boolean) {
+    this._add(text, NotificationType.ERROR, dismissable);
+  }
 
-        break;
-      case NotificationActions.REMOVE_NOTIFICATION:
-        const i = state.notifications.findIndex(
-          ({ id }) => action.selected.id === id
-        );
+  add(text: string, dismissable?: boolean) {
+    this._add(text, NotificationType.DEFAULT, dismissable);
+  }
 
-        if (i > -1) {
-          state.notifications.splice(i, 1);
-        }
-        break;
-      default:
-        throw new Error();
+  remove(selected: UINotificationMessage) {
+    const index = this.list.findIndex((n) => n.id === selected.id);
+
+    if (index > -1) {
+      this.list.splice(index, 1);
     }
   }
-);
-
-interface INotificationActions {
-  add: (m: string, t?: NotificationType, d?: boolean) => void;
-  remove: (m: UINotificationMessage) => void;
-}
-
-export interface INotificationContext extends INotificationState {
-  actions: INotificationActions;
-}
-
-export const NotificationContext = createContext<INotificationContext>(
-  {} as INotificationContext
-);
-
-interface INotificationProps {
-  children: React.ReactNode;
-}
-
-export function NotificationProvider({ children }: INotificationProps): JSX.Element {
-  const [{ notifications }, dispatch] = useReducer<
-    Reducer<INotificationState, NoticationAction>
-  >(notificationReducer, {
-    notifications: []
-  });
-
-  const remove = useCallback(
-    (selected: UINotificationMessage) =>
-      dispatch({
-        type: NotificationActions.REMOVE_NOTIFICATION,
-
-        selected
-      }),
-    [dispatch]
-  );
-
-  const add = useCallback(
-    (text: string, variant?: NotificationType, dismissable?: boolean): void => {
-      dispatch({
-        type: NotificationActions.ADD_NOTIFICATION,
-        text,
-        variant,
-        dismissable
-      });
-    },
-    [dispatch]
-  );
-
-  return createElement(
-    NotificationContext.Provider,
-    {
-      value: { notifications, actions: { add, remove } }
-    },
-    children
-  );
 }

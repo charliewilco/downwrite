@@ -4,11 +4,12 @@ import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
 import { LocalSettingsSchema } from "../utils/validations";
-import { useSettings } from "@reducers/app";
+import { useStore } from "@reducers/app";
+import { Fonts } from "@utils/default-styles";
 
 interface ILocalSettings extends Record<string, string> {
   fileExtension: string;
-  fontFamily: string;
+  fontFamily: Fonts;
 }
 
 const LOCAL_SETTINGS_INPUTS = [
@@ -28,21 +29,20 @@ export enum LocalSettings {
 }
 
 export default function SettingsLocalMarkdown(): JSX.Element {
-  const [
-    { fileExtension, editorFont },
-    { updateFileExtension, updateEditorFont }
-  ] = useSettings();
+  const store = useStore();
 
-  const initialValues = useRef(() => {
+  const initialValues = useRef<() => ILocalSettings>(() => {
     return {
-      fileExtension: fileExtension || ".md",
-      fontFamily: editorFont || "DM Mono"
+      fileExtension: store.settings.fileExtension || ".md",
+      fontFamily: (store.settings.editorFont || "DM Mono") as Fonts
     };
   });
 
   function onSubmit({ fileExtension, fontFamily }: ILocalSettings): void {
-    updateEditorFont(fontFamily);
-    updateFileExtension(fileExtension);
+    store.settings.editorFont = fontFamily as Fonts;
+    store.settings.fileExtension = fileExtension;
+
+    store.settings.handleSettingsUpdate({ fileExtension, fontFamily });
   }
 
   const formik = useFormik<ILocalSettings>({

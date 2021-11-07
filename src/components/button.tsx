@@ -1,4 +1,3 @@
-import React from "react";
 import classNames from "../utils/classnames";
 
 interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}

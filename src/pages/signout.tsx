@@ -3,26 +3,21 @@ import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { removeTokenCookie } from "@lib/cookie-managment";
 import { Routes } from "@utils/routes";
-import { IAppState, initialState, useCurrentUser } from "@reducers/app";
+import { useStore } from "@reducers/app";
 
-export const getServerSideProps: GetServerSideProps<
-  { initialAppState: IAppState },
-  any
-> = async (context) => {
+export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   removeTokenCookie(context.res);
   return {
-    props: {
-      initialAppState: initialState
-    }
+    props: {}
   };
 };
 
 const SignOut: NextPage = () => {
   const router = useRouter();
-  const [, { onCurrentUserLogout }] = useCurrentUser();
+  const store = useStore();
 
   useEffect(() => {
-    onCurrentUserLogout();
+    store.me.onLogout();
     router.push(Routes.LOGIN);
   }, [router]);
 

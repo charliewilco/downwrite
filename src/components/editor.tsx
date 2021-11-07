@@ -10,7 +10,7 @@ import {
 } from "draft-js";
 import classNames from "@utils/classnames";
 import { Fonts } from "@utils/default-styles";
-import { useSettings } from "@reducers/app";
+import { useStore } from "@reducers/app";
 
 type OmittedEditorProps =
   | "ref"
@@ -48,7 +48,7 @@ const saveKeyListener = (
 
 export default function DownwriteEditor({ onSave, ...props }: IEditorProps) {
   let editorRef = useRef<Editor>(null);
-  const [{ editorFont }] = useSettings();
+  const store = useStore();
 
   let contentState: Draft.ContentState = props.editorState.getCurrentContent();
   let className = classNames(
@@ -86,7 +86,9 @@ export default function DownwriteEditor({ onSave, ...props }: IEditorProps) {
   );
 
   return (
-    <div className="relative pt-6 pb-64 mb-64" style={{ fontFamily: editorFont }}>
+    <div
+      className="relative pt-6 pb-64 mb-64"
+      style={{ fontFamily: store.settings.editorFont }}>
       <div className={className} onClick={onFocus}>
         <Editor
           ref={editorRef}

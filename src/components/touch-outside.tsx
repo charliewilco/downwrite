@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useRef, useEffect } from "react";
 import { findDOMNode } from "react-dom";
 
 // TODO: Should blur child
@@ -9,7 +9,7 @@ interface ITouchOutsideProps {
 }
 
 export default function TouchOutside(props: ITouchOutsideProps): JSX.Element {
-  const ref = React.useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const outsideHandleClick = ({ target }: MouseEvent): void => {
     const node = findDOMNode(ref.current);
 
@@ -20,7 +20,7 @@ export default function TouchOutside(props: ITouchOutsideProps): JSX.Element {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (document) {
       document.addEventListener("touchstart", outsideHandleClick);
       document.addEventListener("click", outsideHandleClick);

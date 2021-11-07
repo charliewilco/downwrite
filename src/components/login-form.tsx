@@ -1,24 +1,30 @@
 import { useFormik } from "formik";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
-import { useLoginFns, ILoginValues } from "../hooks";
 import { LoginFormSchema } from "../utils/validations";
+import { useStore } from "@reducers/app";
+import { ILoginValues } from "@reducers/me";
+
+interface ILoginContainer {
+  onSuccess(): void;
+}
 
 /**
  *
  * Login functions
  *
  */
-export default function Login(): JSX.Element {
-  const { onLoginSubmit } = useLoginFns();
-
+export default function Login(props: ILoginContainer): JSX.Element {
+  const store = useStore();
   const { values, handleSubmit, handleChange, errors } = useFormik<ILoginValues>({
     initialValues: {
       user: "",
       password: ""
     },
     validationSchema: LoginFormSchema,
-    onSubmit: onLoginSubmit
+    onSubmit(values) {
+      store.me.login(values).then(() => props.onSuccess());
+    }
   });
 
   return (

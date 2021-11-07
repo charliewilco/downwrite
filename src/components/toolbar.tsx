@@ -1,4 +1,3 @@
-import * as React from "react";
 import ToolbarButton from "./toolbar-button";
 
 const BLOCK_TYPES = [

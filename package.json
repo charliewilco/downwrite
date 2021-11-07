@@ -31,10 +31,12 @@
     "@reach/tabs": "^0.16.1",
     "@reach/visually-hidden": "^0.16.0",
     "@sindresorhus/is": "^4.2.0",
-    "apollo-server-micro": "^3.3.0",
+    "@types/micro": "^7.3.6",
+    "apollo-server-micro": "^2.24.1",
     "base-64": "^1.0.0",
     "bcrypt": "^5.0.1",
     "cookie": "^0.4.1",
+    "cuid": "^2.1.8",
     "date-fns": "^2.24.0",
     "draft-js": "^0.11.7",
     "draftjs-md-converter": "^1.5.1",
@@ -42,13 +44,16 @@
     "file-saver": "^2.0.5",
     "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
-    "graphql": "^16.0.1",
+    "graphql": "^15.7.2",
     "graphql-request": "^3.6.1",
     "graphql-tag": "^2.12.6",
     "immer": "^9.0.6",
     "immutable": "~3.8.2",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
+    "micro": "^9.3.4",
+    "mobx": "^6.3.6",
+    "mobx-react": "^7.2.1",
     "mongoose": "^6.0.7",
     "next": "^12.0.3",
     "pos-tagger.js": "^1.0.10",
@@ -86,8 +91,6 @@
     "@types/react-test-renderer": "^17.0.1",
     "@types/uuid": "^8.3.1",
     "@types/yup": "^0.29.13",
-    "commitizen": "^4.2.4",
-    "cz-conventional-changelog": "3.3.0",
     "husky": "^7.0.4",
     "jest": "^27.2.1",
     "jest-puppeteer": "^5.0.3",
@@ -138,16 +141,10 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged",
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+      "pre-commit": "pretty-quick --staged"
     }
   },
   "engines": {
     "node": "14.x"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }

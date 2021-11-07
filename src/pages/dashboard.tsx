@@ -1,43 +1,42 @@
 import { useCallback } from "react";
-import { GetServerSideProps, NextPage } from "next";
+import { NextPage } from "next";
 import Head from "next/head";
+import useSWR from "swr";
+
 import DeleteModal from "@components/delete-modal";
 import PostList from "@components/post-list";
 import EmptyPosts from "@components/empty-posts";
 import { LoadingDashboard, ErrorDashboard } from "@components/dashboard-helpers";
-import { useRemovePost, useDashboard } from "../hooks";
-import { getInitialStateFromCookie } from "@lib/cookie-managment";
-import { IAppState } from "@reducers/app";
-import useSWR from "swr";
-import { dwClient } from "@lib/client";
-
-interface IDashboardProps {
-  initialAppState: IAppState;
-}
-
-export const getServerSideProps: GetServerSideProps<IDashboardProps> = async ({
-  req
-}) => {
-  const initialAppState = await getInitialStateFromCookie(req);
-
-  return {
-    props: {
-      initialAppState
-    }
-  };
-};
+import { useStore } from "@reducers/app";
+import { IPartialFeedItem } from "@reducers/dashboard";
 
 const DashboardUI: NextPage = () => {
-  const [{ selectedPost, modalOpen }, actions] = useDashboard();
-  const { data, error } = useSWR(["dashboard"], () => dwClient.AllPosts());
-  const onConfirmDelete = useRemovePost();
+  const store = useStore();
+  const { data, error, mutate } = useSWR(["dashboard"], store.dashboard.getFeed);
 
   const loading = !data;
 
-  const onDelete = useCallback(() => {
-    onConfirmDelete(selectedPost!.id);
-    actions.onCloseModal();
-  }, [selectedPost, onConfirmDelete, actions]);
+  const handleDelete = useCallback((selected: IPartialFeedItem) => {
+    if (selected !== null) {
+      store.dashboard.remove(selected.id).then((value) => {
+        store.dashboard.cancel();
+
+        const index = data.feed.findIndex(({ id }) => value.deleteEntry.id === id);
+        if (index > -1) {
+          data.feed.splice(index, 1);
+          mutate(
+            {
+              ...data,
+              feed: {
+                ...data.feed
+              }
+            },
+            false
+          );
+        }
+      });
+    }
+  }, []);
 
   if (loading || (data === undefined && error === undefined)) {
     return <LoadingDashboard />;
@@ -53,26 +52,24 @@ const DashboardUI: NextPage = () => {
         ? data.feed.length.toString().concat(" Entries ")
         : "No Entries ";
     return (
-      <>
-        {modalOpen && selectedPost !== null && (
-          <DeleteModal
-            title={selectedPost.title}
-            onDelete={onDelete}
-            onCancelDelete={actions.onCancel}
-            closeModal={actions.onCloseModal}
-          />
-        )}
+      <section className="py-4 px-2 min-h-screen">
         <Head>
           <title>{titlePrefix}| Downwrite</title>
         </Head>
-        <section className="py-4 px-2 min-h-screen">
-          {data.feed.length > 0 ? (
-            <PostList onSelect={actions.onSelect} posts={data.feed} />
-          ) : (
-            <EmptyPosts />
-          )}
-        </section>
-      </>
+        {store.dashboard.selected !== null && (
+          <DeleteModal
+            title={store.dashboard.selected.title}
+            onDelete={() => handleDelete(store.dashboard.selected)}
+            onCancelDelete={store.dashboard.cancel}
+            closeModal={store.dashboard.cancel}
+          />
+        )}
+        {data.feed.length > 0 ? (
+          <PostList onSelect={store.dashboard.selectEntry} posts={data.feed} />
+        ) : (
+          <EmptyPosts />
+        )}
+      </section>
     );
   }
 

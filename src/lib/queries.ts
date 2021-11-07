@@ -66,8 +66,6 @@ export async function feed(context: ResolverContext): Promise<IEntry[]> {
 }
 
 export async function entry(context: ResolverContext, id: string): Promise<IEntry> {
-  console.log("... create a damn entry...");
-
   return verifyUser(context, async ({ user }) => {
     try {
       const post = await PostModel.findOne({
@@ -112,7 +110,12 @@ export async function settings(context: ResolverContext): Promise<IUser> {
       await UserModel.findById(user, "username email").exec();
     if (details !== null) {
       const user = Array.isArray(details) ? details[0] : details;
-      return { email: user.email!, admin: false, username: user.username! };
+      return {
+        email: user.email!,
+        id: user.id,
+        admin: false,
+        username: user.username!
+      };
     } else {
       throw new ApolloError("Could not find user settings");
     }

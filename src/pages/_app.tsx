@@ -26,7 +26,7 @@ export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <AppProvider initial={pageProps.initialAppState}>
+    <AppProvider>
       <UIShell>
         <Component {...pageProps} />
       </UIShell>

@@ -37,6 +37,7 @@ const typeDefs = gql`
   type User {
     username: String!
     email: String!
+    id: ID!
     admin: Boolean
   }
 

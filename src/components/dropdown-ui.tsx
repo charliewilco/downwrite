@@ -12,7 +12,7 @@ import {
 } from "react-icons/fi";
 import { Routes } from "@utils/routes";
 import User from "./user";
-import { useSettings, useCurrentUser } from "@reducers/app";
+import { useStore } from "@reducers/app";
 
 const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) => {
   return (
@@ -23,10 +23,12 @@ const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) 
 });
 
 export function DropdownDarkMode() {
-  const [settings, { toggleDarkMode }] = useSettings();
+  const store = useStore();
   return (
-    <MenuItem onSelect={() => toggleDarkMode()} className="flex items-center w-full">
-      {settings.isDarkMode ? (
+    <MenuItem
+      onSelect={() => store.settings.toggleDarkMode()}
+      className="flex items-center w-full">
+      {store.settings.isDarkMode ? (
         <>
           <span role="img" aria-label="Sun smiling">
             <FiSun size={16} className="mr-2" />
@@ -46,7 +48,7 @@ export function DropdownDarkMode() {
 }
 
 export default function DropdownUI() {
-  const [currentUser] = useCurrentUser();
+  const store = useStore();
 
   return (
     <Menu>
@@ -54,8 +56,8 @@ export default function DropdownUI() {
         <FiMoreHorizontal size={16} />
       </MenuButton>
       <MenuList className="shadow-md dark:bg-onyx-800 animate-from-left">
-        {currentUser.username && (
-          <User border colors={["#FEB692", "#EA5455"]} name={currentUser.username} />
+        {store.me.username && (
+          <User border colors={["#FEB692", "#EA5455"]} name={store.me.username} />
         )}
         <MenuLink
           to={Routes.DASHBOARD}

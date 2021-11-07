@@ -2,18 +2,11 @@ import { useFormik } from "formik";
 import UIInput, { UIInputError, UIInputContainer } from "./ui-input";
 import { Button } from "./button";
 import LegalBoilerplate from "./legal-boilerplate";
-import { useLoginFns, IRegisterValues } from "../hooks";
 import { RegisterFormSchema as validationSchema } from "../utils/validations";
+import { useStore } from "@reducers/app";
+import { IRegisterValues } from "@reducers/me";
 
-interface IInput {
-  name: string;
-  type: string;
-  placeholder: string;
-  label: string;
-  autoComplete: string;
-}
-
-const REGISTER_INPUTS: IInput[] = [
+const REGISTER_INPUTS = [
   {
     name: "username",
     label: "Username",
@@ -35,7 +28,7 @@ const REGISTER_INPUTS: IInput[] = [
     label: "Password",
     autoComplete: "current-password"
   }
-];
+] as const;
 
 const initialValues: IRegisterValues = {
   legalChecked: false,
@@ -44,18 +37,24 @@ const initialValues: IRegisterValues = {
   email: ""
 };
 
-export default function RegisterForm(): JSX.Element {
-  const { onRegisterSubmit } = useLoginFns();
+interface ILoginContainer {
+  onSuccess(): void;
+}
 
-  const { values, handleChange, handleSubmit, errors } = useFormik<IRegisterValues>({
+export default function RegisterForm(props: ILoginContainer): JSX.Element {
+  const store = useStore();
+
+  const formik = useFormik<IRegisterValues>({
     initialValues,
     validationSchema,
     validateOnChange: false,
-    onSubmit: onRegisterSubmit
+    onSubmit(values) {
+      store.me.register(values).then(() => props.onSuccess());
+    }
   });
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={formik.handleSubmit}>
       <div>
         {REGISTER_INPUTS.map((input) => (
           <UIInputContainer key={input.name}>
@@ -64,23 +63,23 @@ export default function RegisterForm(): JSX.Element {
               placeholder={input.placeholder}
               label={input.label}
               autoComplete={input.autoComplete}
-              name={input.name}
-              value={values[input.name] as string}
-              onChange={handleChange}
+              {...formik.getFieldProps(input.name)}
             />
-            {errors[input.name] && <UIInputError>{errors[input.name]}</UIInputError>}
+            {formik.errors[input.name] && (
+              <UIInputError>{formik.errors[input.name]}</UIInputError>
+            )}
           </UIInputContainer>
         ))}
       </div>
       <LegalBoilerplate
         name="legalChecked"
-        checked={values.legalChecked}
-        onChange={handleChange}
+        checked={formik.values.legalChecked}
+        onChange={formik.handleChange}
       />
       <div className="text-right">
         <UIInputContainer className="text-right">
           <Button
-            disabled={!values.legalChecked}
+            disabled={!formik.values.legalChecked}
             type="submit"
             data-testid="REGISTER_BUTTON">
             Register

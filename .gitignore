@@ -22,4 +22,5 @@ dist
 private.key
 api/docs
 
+tsconfig.tsbuildinfo
 .vercel

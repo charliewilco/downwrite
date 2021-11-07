@@ -143,6 +143,7 @@ export type IUser = {
   __typename?: "User";
   admin: Maybe<Scalars["Boolean"]>;
   email: Scalars["String"];
+  id: Scalars["ID"];
   username: Scalars["String"];
 };
 
@@ -316,7 +317,11 @@ export type IIsMeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type IIsMeQuery = {
   __typename?: "Query";
-  me: { __typename?: "Me"; token: string | null } | null;
+  me: {
+    __typename?: "Me";
+    token: string | null;
+    details: { __typename?: "User"; id: string; username: string } | null;
+  } | null;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -612,6 +617,7 @@ export type IUserResolvers<
 > = ResolversObject<{
   admin: Resolver<Maybe<IResolversTypes["Boolean"]>, ParentType, ContextType>;
   email: Resolver<IResolversTypes["String"], ParentType, ContextType>;
+  id: Resolver<IResolversTypes["ID"], ParentType, ContextType>;
   username: Resolver<IResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;

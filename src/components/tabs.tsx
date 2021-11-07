@@ -1,4 +1,12 @@
-import * as React from "react";
+import {
+  useRef,
+  useState,
+  useEffect,
+  useContext,
+  Children,
+  createContext,
+  cloneElement
+} from "react";
 
 interface ITabsModifier {
   className?: string;
@@ -23,13 +31,13 @@ interface ITabsContext extends ITabsContainerState {
 // http://simplyaccessible.com/article/danger-aria-tabs/
 // https://inclusive-components.design/tabbed-interfaces/
 
-const TabContext = React.createContext<ITabsContext>({
+const TabContext = createContext<ITabsContext>({
   activeIndex: 0,
   onSelectTab: null
 } as ITabsContext);
 
 export function Container({ className, ...props }: ITabsContainerProps) {
-  const [activeIndex, selectTabIndex] = React.useState(0);
+  const [activeIndex, selectTabIndex] = useState(0);
 
   return (
     <TabContext.Provider
@@ -49,11 +57,11 @@ interface ITabsList extends ITabsModifier {
 }
 
 export function List(props: ITabsList): JSX.Element {
-  const context = React.useContext<ITabsContext>(TabContext);
-  const cloned = React.Children.map(
+  const context = useContext<ITabsContext>(TabContext);
+  const cloned = Children.map(
     props.children,
     (child: React.ReactElement<any>, index: number) => {
-      return React.cloneElement(child, {
+      return cloneElement(child, {
         isActive: index === context.activeIndex,
         onSelect: () => context.onSelectTab(index)
       });
@@ -110,16 +118,13 @@ interface ITabsPanels extends ITabsModifier {
 }
 
 export function Panels({ children, className }: ITabsPanels): JSX.Element {
-  const context = React.useContext<ITabsContext>(TabContext);
-  const cloned = React.Children.map(
-    children,
-    (child: React.ReactElement<any>, index) => {
-      return React.cloneElement(child, {
-        isActive: index === context.activeIndex,
-        onSelect: () => context.onSelectTab(index)
-      });
-    }
-  );
+  const context = useContext<ITabsContext>(TabContext);
+  const cloned = Children.map(children, (child: React.ReactElement<any>, index) => {
+    return cloneElement(child, {
+      isActive: index === context.activeIndex,
+      onSelect: () => context.onSelectTab(index)
+    });
+  });
   return <div className={className}>{cloned}</div>;
 }
 
@@ -130,9 +135,9 @@ interface ITabsPanelProps extends ITabsModifier {
 }
 
 export function Panel(props: ITabsPanelProps) {
-  const ref = React.useRef(null);
+  const ref = useRef(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const node = ref.current;
     if (props.isActive) {
       node.focus();

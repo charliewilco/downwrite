@@ -13,6 +13,10 @@ function FormHeader(props: PropsWithChildren<{}>) {
   );
 }
 
+interface ILoginContainer {
+  onSuccess(): void;
+}
+
 /// Reference:
 // ---
 //
@@ -20,7 +24,7 @@ function FormHeader(props: PropsWithChildren<{}>) {
 // http://simplyaccessible.com/article/danger-aria-tabs/
 // https://inclusive-components.design/tabbed-interfaces/
 
-export default function LoginContainer(): JSX.Element {
+export default function LoginContainer(props: ILoginContainer): JSX.Element {
   return (
     <Tabs className="dark:bg-onyx-800 max-w-lg mx-auto shadow">
       <TabList className="flex w-full font-bold text-sm text-center">
@@ -40,11 +44,11 @@ export default function LoginContainer(): JSX.Element {
       <TabPanels className="p-4">
         <TabPanel>
           <FormHeader>Sign Up as a New User</FormHeader>
-          <Register />
+          <Register {...props} />
         </TabPanel>
         <TabPanel>
           <FormHeader>Welcome Back!</FormHeader>
-          <LoginForm />
+          <LoginForm {...props} />
         </TabPanel>
       </TabPanels>
     </Tabs>

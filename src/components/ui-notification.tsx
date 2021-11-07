@@ -1,17 +1,18 @@
 import { useCallback } from "react";
 import { motion } from "framer-motion";
-import { UINotificationMessage, NotificationType } from "@reducers/app";
+import { useStore } from "@reducers/app";
 import { useTimeout } from "../hooks/useTimeout";
 import classNames from "@utils/classnames";
+import { NotificationType, UINotificationMessage } from "@reducers/notifications";
 
 interface IUIMessageProps {
   notification: UINotificationMessage;
-  onDismiss(m: UINotificationMessage): void;
 }
 
 export default function UIMessage(props: IUIMessageProps): JSX.Element {
+  const store = useStore();
   const onRemove = useCallback(() => {
-    props.onDismiss(props.notification);
+    store.notifications.remove(props.notification);
   }, [props]);
 
   useTimeout(15000, props.notification.dismissable ? onRemove : undefined);

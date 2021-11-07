@@ -1,14 +1,11 @@
 import { useCallback, useReducer, ReducerWithoutAction } from "react";
 import { useFormik, FormikHelpers } from "formik";
-import base64 from "base-64";
 import { MixedCheckbox } from "@reach/checkbox";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
 import { UpdatePasswordSchema } from "@utils/validations";
-import { NotificationType, useNotifications } from "@reducers/app";
-
-import { dwClient } from "@lib/client";
+import { useStore } from "@reducers/app";
 
 interface IPasswordSettings {
   oldPassword: string;
@@ -21,27 +18,20 @@ interface IPasswordFormProps {
 }
 
 export default function SettingsPassword(props: IPasswordFormProps): JSX.Element {
+  const store = useStore();
   const [isOpen, onToggleOpen] = useReducer<ReducerWithoutAction<boolean>>(
     (prev: boolean) => !prev,
     false
   );
-  const [, { addNotification }] = useNotifications();
   const onSubmit = useCallback(
     async (
       _: IPasswordSettings,
       actions: FormikHelpers<IPasswordSettings>
     ): Promise<void> => {
-      try {
-        await actions.validateForm();
-        await dwClient.UpdatePassword({
-          current: base64.encode(_.oldPassword),
-          newPassword: base64.encode(_.newPassword)
-        });
-      } catch (err) {
-        addNotification(err.message, NotificationType.ERROR, true);
-      }
+      await actions.validateForm();
+      await store.settings.changePassword(_);
     },
-    [addNotification]
+    []
   );
 
   const initialValues: IPasswordSettings = {

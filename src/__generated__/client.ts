@@ -138,6 +138,7 @@ export type IUser = {
   __typename?: "User";
   admin: Maybe<Scalars["Boolean"]>;
   email: Scalars["String"];
+  id: Scalars["ID"];
   username: Scalars["String"];
 };
 
@@ -311,7 +312,11 @@ export type IIsMeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type IIsMeQuery = {
   __typename?: "Query";
-  me: { __typename?: "Me"; token: string | null } | null;
+  me: {
+    __typename?: "Me";
+    token: string | null;
+    details: { __typename?: "User"; id: string; username: string } | null;
+  } | null;
 };
 
 export const EntryInfoFragmentDoc = gql`
@@ -430,6 +435,10 @@ export const IsMeDocument = gql`
   query IsMe {
     me {
       token
+      details {
+        id
+        username
+      }
     }
   }
 `;

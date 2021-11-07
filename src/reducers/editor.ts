@@ -1,14 +1,10 @@
-import produce from "immer";
-import { IEntry } from "../__generated__/client";
+import { EditorState } from "draft-js";
+import { makeAutoObservable } from "mobx";
+import { DraftParser } from "@reducers/parser";
+import { DownwriteClient } from "@reducers/client";
+import { IAppState } from "./store";
 
-export enum EditActions {
-  UPDATE_TITLE = "UPDATE_TITLE",
-  UPDATE_EDITOR = "UPDATE_EDITOR",
-  TOGGLE_PUBLIC_STATUS = "TOGGLE_PUBLIC_STATUS",
-  SET_INITIAL_FOCUS = "SET_INITIAL_FOCUS",
-  EDITOR_COMMAND = "myeditor-save",
-  INITIALIZE_EDITOR = "INITIALIZE_EDITOR"
-}
+import { IEntry } from "../__generated__/client";
 
 export interface IEditorState {
   publicStatus: boolean;
@@ -16,58 +12,80 @@ export interface IEditorState {
   initialFocus: boolean;
 }
 
-const DEFAULT_EDITOR_STATE: IEditorState = {
-  title: "",
-  publicStatus: false,
-  initialFocus: false
-};
+export class EditorAction implements IEditorState {
+  title = "";
+  publicStatus = false;
+  initialFocus = false;
+  editorState: EditorState | null = null;
+  parser = new DraftParser();
+  #client: DownwriteClient;
+  #store: IAppState;
+  constructor(_graphql: DownwriteClient, store: IAppState) {
+    makeAutoObservable(this);
+    this.#client = _graphql;
+    this.#store = store;
+  }
 
-export function initializer(initialData?: {
-  entry: Pick<IEntry, "title" | "dateAdded" | "content" | "public"> | null;
-}): IEditorState {
-  if (!!initialData && initialData.entry !== null) {
-    return {
-      title: initialData.entry.title || "",
-      publicStatus: !!initialData.entry.public,
-      initialFocus: false
-    };
-  } else {
-    return DEFAULT_EDITOR_STATE;
+  mutateEditorState(editorState: EditorState) {
+    this.editorState = editorState;
+  }
+
+  getEditorState() {
+    return this.editorState;
+  }
+
+  initialize(entry?: Pick<IEntry, "title" | "dateAdded" | "content" | "public">) {
+    this.#_initializer(entry);
+  }
+
+  #_initializer(
+    entry?: Pick<IEntry, "title" | "dateAdded" | "content" | "public"> | null
+  ) {
+    if (!!entry !== null) {
+      this.title = entry.title || "";
+      this.publicStatus = !!entry.public;
+      this.initialFocus = false;
+    } else {
+      this.initialFocus = false;
+      this.title = "";
+      this.publicStatus = false;
+    }
+  }
+
+  setFocus() {
+    this.initialFocus = true;
+  }
+
+  toggleStatus() {
+    this.publicStatus = !this.publicStatus;
+  }
+
+  updateTitle(value: string) {
+    this.title = value;
+  }
+
+  async submit(id: string) {
+    if (this.editorState !== null) {
+      const content = this.parser.fromEditorState(this.editorState);
+      try {
+        const value = await this.#client.updateEntry({
+          id,
+          content,
+          title: this.title,
+          status: this.publicStatus
+        });
+        return value;
+      } catch (err) {
+        this.#store.notifications.error(err.message);
+      }
+    }
+  }
+
+  load(entry: Pick<IEntry, "title" | "dateAdded" | "content" | "public">) {
+    this.editorState = this.parser.fromMarkdown(entry.content);
+  }
+
+  async getEntry(id: string) {
+    return this.#client.edit(id);
   }
 }
-
-export type EditorActions =
-  | {
-      type: EditActions.INITIALIZE_EDITOR;
-      payload: Pick<IEntry, "title" | "dateAdded" | "content" | "public">;
-    }
-  | { type: EditActions.TOGGLE_PUBLIC_STATUS }
-  | { type: EditActions.SET_INITIAL_FOCUS }
-  | { type: EditActions.UPDATE_TITLE; payload: string };
-
-export const reducer = produce((draft: IEditorState, action: EditorActions) => {
-  switch (action.type) {
-    case EditActions.INITIALIZE_EDITOR: {
-      const { title, publicStatus, initialFocus } = initializer({
-        entry: action.payload
-      });
-      draft.title = title;
-      draft.publicStatus = publicStatus;
-      draft.initialFocus = initialFocus;
-
-      break;
-    }
-    case EditActions.SET_INITIAL_FOCUS: {
-      draft.initialFocus = true;
-      break;
-    }
-    case EditActions.TOGGLE_PUBLIC_STATUS: {
-      draft.publicStatus = !draft.publicStatus;
-      break;
-    }
-    case EditActions.UPDATE_TITLE: {
-      draft.title = action.payload;
-      break;
-    }
-  }
-});

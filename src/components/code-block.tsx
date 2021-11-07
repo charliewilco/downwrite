@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useRef } from "react";
 import Prism from "prismjs";
 
 interface ICodeBlockProps {
@@ -7,9 +7,9 @@ interface ICodeBlockProps {
 }
 
 const PrismCode: React.FC<{ className: string }> = ({ children, className }) => {
-  const domRef = React.useRef(null);
+  const domRef = useRef(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     Prism.highlightElement(domRef.current, false);
   }, [children]);
 
@@ -24,13 +24,11 @@ export default function CodeBlock({
   language = "javascript",
   value
 }: ICodeBlockProps) {
-  return React.createElement(
-    "pre",
-    {},
-    React.createElement(
-      PrismCode,
-      { className: `language-${language || "javascript"}` },
-      value
-    )
+  return (
+    <pre>
+      <PrismCode className={`language-${language || "javascript"}`}>
+        {value}
+      </PrismCode>
+    </pre>
   );
 }

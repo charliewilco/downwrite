@@ -2,12 +2,12 @@ import Link from "next/link";
 import Logo from "./logo";
 import DropdownUI from "./dropdown-ui";
 import { Routes } from "@utils/routes";
-import { useCurrentUser } from "@reducers/app";
+import { useStore } from "@reducers/app";
 
 export function UIHeader(): JSX.Element {
-  const [currentUser] = useCurrentUser();
+  const store = useStore();
 
-  const homeLink: string = currentUser.authed ? Routes.DASHBOARD : Routes.LOGIN;
+  const homeLink: string = store.authed ? Routes.DASHBOARD : Routes.LOGIN;
 
   return (
     <header
@@ -25,7 +25,7 @@ export function UIHeader(): JSX.Element {
           </Link>
         </h1>
       </nav>
-      {currentUser.authed ? (
+      {store.authed ? (
         <nav className="flex items-center">
           <Link href={Routes.NEW} passHref>
             <a

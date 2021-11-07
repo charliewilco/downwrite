@@ -1,20 +1,23 @@
 import { useFormik } from "formik";
-import { useUpdateSettings, IUserFormValues } from "@hooks/useUpdateSettings";
 import UIInput, { UIInputContainer, UIInputError } from "./ui-input";
 import SettingsBlock, { SettingsFormActions } from "./settings-block";
 import { Button } from "./button";
 import { UserSettingsSchema as validationSchema } from "@utils/validations";
+import { useStore } from "@reducers/app";
+import { IUserFormValues } from "@reducers/settings";
 
 interface ISettingsUserForm {
   user: IUserFormValues;
 }
 
 export default function SettingsUser(props: ISettingsUserForm): JSX.Element {
-  const onSubmit = useUpdateSettings();
+  const store = useStore();
 
   const formik = useFormik<IUserFormValues>({
     initialValues: { ...props.user },
-    onSubmit,
+    onSubmit(values) {
+      store.settings.update(values);
+    },
     validationSchema
   });
 

@@ -4,7 +4,6 @@ import {
   CompositeDecorator,
   DraftDecorator
 } from "draft-js";
-import React from "react";
 import { prismHighlightDecorator } from "./prism";
 
 export const createLinkStrategy = () => {

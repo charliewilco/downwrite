@@ -3,58 +3,42 @@ import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useCallback } from "react";
 import { useFormik } from "formik";
-import { useNewEntry, INewEditorValues } from "../hooks/useNewEntry";
-import { useOffline } from "@hooks/useOffline";
 import { IMarkdownConversion } from "@components/upload";
 import { Input } from "@components/editor-input";
 import { Button } from "@components/button";
-// import { getInitialStateFromCookie } from "@lib/cookie-managment";
-import {
-  useEditor,
-  useEditorState,
-  useDecorators,
-  defaultDecorators,
-  emptyContentState
-} from "../editor";
+
+import { useEditor } from "../editor";
+import { useStore } from "@reducers/app";
+import { useRouter } from "next/router";
 
 const Editor = dynamic(() => import("@components/editor"));
 const Upload = dynamic(() => import("@components/upload"));
 
-// export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-//   const initialAppState = await getInitialStateFromCookie(req);
-//   return {
-//     props: {
-//       initialAppState
-//     }
-//   };
-// };
-
 const NewEntryPage: NextPage = () => {
-  const [createNewPost] = useNewEntry();
-  const isOffline = useOffline();
-  const decorators = useDecorators(defaultDecorators);
-  const [editorState, editorActions] = useEditorState({
-    contentState: emptyContentState,
-    decorators
+  const router = useRouter();
+  const store = useStore();
+  const editorProps = useEditor({
+    getEditorState: store.create.getEditorState,
+    setEditorState: store.create.mutateEditorState
   });
-
-  const editorProps = useEditor(editorActions);
-
-  function onSubmit(values: INewEditorValues): void {
-    createNewPost(values.title, editorState);
-  }
 
   const { values, setFieldValue, handleSubmit, handleChange } = useFormik({
     enableReinitialize: true,
     initialValues: {
       title: ""
     },
-    onSubmit
+    async onSubmit(values) {
+      const data = await store.create.create(values.title);
+
+      if (!!data) {
+        router.push(`/${data.createEntry?.id}/edit`);
+      }
+    }
   });
 
-  const onParsed = useCallback((parsed: IMarkdownConversion) => {
+  const handleParsed = useCallback((parsed: IMarkdownConversion) => {
     setFieldValue("title", parsed.title);
-    editorActions.setEditorState(parsed.editorState);
+    store.create.mutateEditorState(parsed.editorState);
   }, []);
 
   return (
@@ -65,7 +49,7 @@ const NewEntryPage: NextPage = () => {
       <Head>
         <title>{values.title || "New"} | Downwrite</title>
       </Head>
-      <Upload onParsed={onParsed}>
+      <Upload onParsed={handleParsed}>
         <Input
           value={values.title}
           data-testid="NEW_ENTRY_TITLE_ENTRY"
@@ -75,7 +59,7 @@ const NewEntryPage: NextPage = () => {
         />
         <aside className="flex items-center justify-between py-2 mx-0 mt-2 mb-4">
           <div className="flex items-center">
-            {isOffline && <span>You're Offline Right Now</span>}
+            {store.isOffline && <span>You're Offline Right Now</span>}
           </div>
           <div className="flex items-center">
             <Button type="submit" data-testid="NEW_ENTRY_SUBMIT_BUTTON">
@@ -86,7 +70,7 @@ const NewEntryPage: NextPage = () => {
         <Editor
           onSave={() => handleSubmit()}
           {...editorProps}
-          editorState={editorState}
+          editorState={store.create.editorState}
         />
       </Upload>
     </form>

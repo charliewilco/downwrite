@@ -1,4 +1,3 @@
-import { GetServerSideProps, NextPage, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import useSWR from "swr";
 
@@ -8,23 +7,12 @@ import SettingsLocal from "@components/settings-markdown";
 import SettingsPassword from "@components/settings-password";
 import Loading from "@components/loading";
 import { PageTitle } from "@components/page-title";
-import { getInitialStateFromCookie } from "@lib/cookie-managment";
-import { dwClient } from "@lib/client";
+import { useStore } from "@reducers/app";
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const initialAppState = await getInitialStateFromCookie(req);
-
-  return {
-    props: {
-      initialAppState
-    }
-  };
-};
-
-const SettingsPage: NextPage<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = () => {
-  const { error, data } = useSWR([], () => dwClient.UserDetails());
+const SettingsPage = () => {
+  const store = useStore();
+  const { error, data } = useSWR([], () => store.graphql.userDetails());
+  console.log(error, data);
   const loading = !data;
   if (loading) {
     return <Loading />;
