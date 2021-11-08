@@ -104,7 +104,7 @@
     "prettier": "^2.4.1",
     "pretty-quick": "^3.1.1",
     "prop-types": "^15.7.2",
-    "puppeteer": "^10.4.0",
+    "puppeteer": "^11.0.0",
     "react-test-renderer": "^17.0.2",
     "tailwindcss": "^2.2.19",
     "ts-jest": "^26.5.6",
