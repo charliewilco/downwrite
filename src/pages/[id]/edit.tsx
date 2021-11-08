@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 
 import dynamic from "next/dynamic";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import Head from "next/head";
 
 import useSWR from "swr";
@@ -15,16 +15,11 @@ import { Input } from "@components/editor-input";
 import { PreviewLink } from "@components/entry-links";
 import { TimeMarker } from "@components/time-marker";
 import { WordCounter } from "@components/word-count";
-import { UIMarkdownExport } from "@components/export";
+import { ExportMarkdownButton } from "@components/export-markdown-button";
 import { __IS_DEV__ } from "@utils/dev";
 
 import { EditorAction, IEdit } from "@store/modules";
-import {
-  useDataFactory,
-  useOnce,
-  useEnhancedReducer,
-  useAutosaving
-} from "@hooks/index";
+import { useDataFactory, useEnhancedReducer, useAutosaving } from "@hooks/index";
 import { useEditor } from "@hooks/useEditor";
 
 const Editor = dynamic(() => import("@components/editor"), {
@@ -42,16 +37,18 @@ const EditUI: NextPage = () => {
     editorState: null
   });
 
-  const { data, error, mutate } = useSWR(router.query.id, (id) =>
+  const { data, error, mutate } = useSWR([router.query.id], (id) =>
     factory.getEntry(id)
   );
   const loading = !data;
 
-  useOnce(() => {
+  useEffect(() => {
     if (!!data) {
       dispatch(factory.load(data.entry));
     }
   }, [data]);
+
+  console.log(router.query, data);
 
   const editorProps = useEditor({
     setEditorState: (editorState) => dispatch({ editorState }),
@@ -90,8 +87,17 @@ const EditUI: NextPage = () => {
     return <Loading />;
   }
 
+  console.log(state);
+
+  const handleExport = () =>
+    factory.export({
+      editorState: state.editorState,
+      title: state.title,
+      date: data.entry.dateAdded
+    });
+
   return (
-    <div data-testid="EDIT_ENTRY_CONTAINER">
+    <div data-testid="EDIT_ENTRY_CONTAINER" className="outer">
       <Head>
         <title>{state.title} | Downwrite</title>
       </Head>
@@ -105,28 +111,18 @@ const EditUI: NextPage = () => {
         />
         <aside>
           <div>
-            <div>
-              <label>
-                <MixedCheckbox
-                  name="publicStatus"
-                  checked={state.publicStatus}
-                  onChange={({ target }) =>
-                    dispatch({ publicStatus: target.checked })
-                  }
-                />
-                <span>{state.publicStatus ? "Public" : "Private"}</span>
-              </label>
-            </div>
-            {!!state.publicStatus && <PreviewLink id={router.query.id as string} />}
-          </div>
-          <div>
-            {!!state.editorState && (
-              <UIMarkdownExport
-                editorState={state.editorState}
-                title={state.title}
-                date={data?.entry?.dateAdded}
+            <label>
+              <MixedCheckbox
+                name="publicStatus"
+                checked={state.publicStatus}
+                onChange={({ target }) => dispatch({ publicStatus: target.checked })}
               />
-            )}
+              <span>{state.publicStatus ? "Public" : "Private"}</span>
+            </label>
+          </div>
+          {!!state.publicStatus && <PreviewLink id={router.query.id as string} />}
+          <div className="button-group">
+            {!!state.editorState && <ExportMarkdownButton onClick={handleExport} />}
             <Button
               type="submit"
               onClick={handleSubmit}
@@ -135,6 +131,7 @@ const EditUI: NextPage = () => {
             </Button>
           </div>
         </aside>
+        {!!state.editorState && <WordCounter editorState={state.editorState} />}
         {!!state.editorState && (
           <Editor
             onFocus={() => dispatch({ initialFocus: true })}
@@ -144,7 +141,25 @@ const EditUI: NextPage = () => {
           />
         )}
       </div>
-      {!!state.editorState && <WordCounter editorState={state.editorState} />}
+      <style jsx>{`
+        .outer {
+          width: 100%;
+          max-width: 56rem;
+          margin: 1rem auto;
+        }
+
+        aside {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background: var(--onyx-600);
+        }
+
+        .button-group {
+          display: flex;
+          align-items: center;
+        }
+      `}</style>
     </div>
   );
 };

@@ -10,6 +10,7 @@ export function ExportMarkdownButton(
     <button type="button" onClick={props.onClick}>
       <FiDownload />
       <small>Export</small>
+      <style></style>
     </button>
   );
 }
