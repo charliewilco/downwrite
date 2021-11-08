@@ -1,18 +1,33 @@
-import { UIMessage } from "@components/ui-notification";
+import { ToastUI } from "@components/toast";
 import { useSubjectEffect, useDataSource } from "@hooks/index";
 
-export function MessageList() {
+export function NotificationList() {
   const store = useDataSource();
-
   const notifications = useSubjectEffect(store.notifications.subject);
 
   return (
-    <div>
-      <div>
+    <div aria-live="polite" className="notification-list">
+      <div className="container">
         {notifications.map((notification, i) => (
-          <UIMessage key={i} notification={notification} />
+          <ToastUI key={i} notification={notification} />
         ))}
       </div>
+
+      <style jsx>{`
+        [aria-live="polite"] {
+          position: fixed;
+          bottom: 0;
+          right: 0;
+
+          padding: 1rem;
+          width: 100%;
+          max-width: 24rem;
+        }
+
+        .container {
+          position: relative;
+        }
+      `}</style>
     </div>
   );
 }

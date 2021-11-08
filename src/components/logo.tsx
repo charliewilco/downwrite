@@ -1,12 +1,7 @@
 export function Logo() {
   return (
     <div>
-      <svg
-        width={42.125}
-        height={33}
-        viewBox="0 0 337 264"
-        fill="none"
-        className="LogoIcon">
+      <svg viewBox="0 0 337 264" fill="none" className="LogoIcon">
         <title>Downwrite Logo</title>
         <rect
           x={0.327148}
@@ -46,6 +41,18 @@ export function Logo() {
         </defs>
       </svg>
       <style jsx>{`
+        div {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+        }
+        svg {
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
         #nib-a {
           color: var(--onyx-800);
         }

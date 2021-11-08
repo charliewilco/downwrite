@@ -3,21 +3,13 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true"
 });
 
-const graphqlRule = {
-  test: /\.(graphql|gql)$/,
-  exclude: /node_modules/,
-  loader: "graphql-tag/loader"
-};
-
+/**
+ * @type {import('next').NextConfig}
+ */
 const config = {
   reactStrictMode: true,
-  webpack: (config) => {
-    config.module.rules.push(graphqlRule);
-    return config;
-  },
-  webpackDevMiddleware: (config) => {
-    return config;
-  }
+  swcMinify: true,
+  cleanDistDir: true
 };
 
 module.exports = withBundleAnalyzer(config);

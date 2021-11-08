@@ -1,13 +1,12 @@
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
 import useSWR from "swr";
 
-import dbConnect from "@lib/db";
-import { getAllPreviewEntries, getPreviewEntry } from "@lib/preview";
+import { getPreviewEntry } from "@lib/preview";
 import { Content } from "@components/content";
-import { AuthorBlock } from "@components/author-block";
+import { AuthorBlock } from "@components/user-blocks";
 import { Loading } from "@components/loading";
 import { NotFound } from "@components/not-found";
 import { Routes } from "@utils/routes";
@@ -16,37 +15,28 @@ import { AvatarColors } from "@utils/default-styles";
 import { IPreview } from "../../__generated__/server";
 import { useSubjectEffect, useDataSource } from "@hooks/index";
 
-type PreviewPageHandler = GetStaticProps<
+type PreviewPageHandler = GetServerSideProps<
   { id: string; preview: IPreview },
   { id: string }
 >;
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  await dbConnect();
-  const previews = await getAllPreviewEntries();
-
-  return {
-    paths: previews.map((entry) => {
-      return {
-        params: {
-          id: entry.id
-        }
-      };
-    }),
-    fallback: true
-  };
-};
-
-export const getStaticProps: PreviewPageHandler = async ({ params }) => {
+export const getServerSideProps: PreviewPageHandler = async ({ params }) => {
   const id = params!.id;
-  const preview = await getPreviewEntry(id);
 
-  return {
-    props: {
-      id,
-      preview
-    }
-  };
+  try {
+    const preview = await getPreviewEntry(id);
+
+    return {
+      props: {
+        id,
+        preview
+      }
+    };
+  } catch (error) {
+    return {
+      notFound: true
+    };
+  }
 };
 
 const PreviewEntry: NextPage<{ id: string }> = (props) => {

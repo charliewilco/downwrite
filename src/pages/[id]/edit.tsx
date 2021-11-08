@@ -1,26 +1,23 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-
+import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useCallback, useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import Head from "next/head";
-
 import useSWR from "swr";
 
-import { MixedCheckbox } from "@reach/checkbox";
+import { FiEye, FiDownload } from "react-icons/fi";
 
-import { Button } from "@components/button";
+import { StickyContainer } from "@components/sticky-header";
 import { Loading } from "@components/loading";
-import { Input } from "@components/editor-input";
-import { PreviewLink } from "@components/entry-links";
+import { EditorInput } from "@components/ui-input";
 import { TimeMarker } from "@components/time-marker";
-import { WordCounter } from "@components/word-count";
-import { ExportMarkdownButton } from "@components/export-markdown-button";
 import { __IS_DEV__ } from "@utils/dev";
 
-import { EditorAction, IEdit } from "@store/modules";
+import { UpdateEntryState, IEdit } from "@store/modules";
 import { useDataFactory, useEnhancedReducer, useAutosaving } from "@hooks/index";
-import { useEditor } from "@hooks/useEditor";
+import { useEditor, useWordCount } from "@hooks/useEditor";
+import { VisibilityToggle } from "@components/visibility-toggle";
 
 const Editor = dynamic(() => import("@components/editor"), {
   loading: () => <p>Loading the Editor</p>,
@@ -29,7 +26,7 @@ const Editor = dynamic(() => import("@components/editor"), {
 
 const EditUI: NextPage = () => {
   const router = useRouter();
-  const factory = useDataFactory(EditorAction);
+  const dataSource = useDataFactory(UpdateEntryState);
   const [state, dispatch] = useEnhancedReducer<IEdit>({
     publicStatus: false,
     title: "",
@@ -37,26 +34,29 @@ const EditUI: NextPage = () => {
     editorState: null
   });
 
-  const { data, error, mutate } = useSWR([router.query.id], (id) =>
-    factory.getEntry(id)
+  const { data, error, mutate } = useSWR([router.query.id, "edit"], (id) =>
+    dataSource.getEntry(id)
   );
   const loading = !data;
 
+  const getState = () => state;
+
   useEffect(() => {
     if (!!data) {
-      dispatch(factory.load(data.entry));
+      const nextState = dataSource.load(data.entry);
+      dispatch(nextState);
     }
-  }, [data]);
-
-  console.log(router.query, data);
+  }, [data, dispatch, dataSource]);
 
   const editorProps = useEditor({
     setEditorState: (editorState) => dispatch({ editorState }),
-    getEditorState: () => state.editorState
+    getEditorState: () => getState().editorState
   });
 
+  const displayCount = useWordCount(state.editorState);
+
   const handleSubmit = useCallback(async () => {
-    const value = await factory.submit(router.query.id as string, state);
+    const value = await dataSource.submit(router.query.id as string, getState());
 
     if (value) {
       mutate(
@@ -66,7 +66,8 @@ const EditUI: NextPage = () => {
         false
       );
     }
-  }, [router.query]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataSource, router.query, mutate]);
 
   useAutosaving(
     __IS_DEV__ ? 30000 : 120000,
@@ -87,10 +88,8 @@ const EditUI: NextPage = () => {
     return <Loading />;
   }
 
-  console.log(state);
-
   const handleExport = () =>
-    factory.export({
+    dataSource.export({
       editorState: state.editorState,
       title: state.title,
       date: data.entry.dateAdded
@@ -102,36 +101,53 @@ const EditUI: NextPage = () => {
         <title>{state.title} | Downwrite</title>
       </Head>
       <div>
-        <TimeMarker dateAdded={data?.entry?.dateAdded} />
-        <Input
+        <StickyContainer debug>
+          <div className="sticky-inner">
+            <div className="meta">
+              <TimeMarker dateAdded={data?.entry?.dateAdded} />
+            </div>
+            <div className="title">{state.title}</div>
+            <div className="meta count">
+              {!!state.editorState && <span>Word Count: {displayCount}</span>}
+            </div>
+          </div>
+        </StickyContainer>
+
+        <aside>
+          <div className="check">
+            <label>
+              <VisibilityToggle
+                checked={state.publicStatus}
+                onCheck={({ target }) => dispatch({ publicStatus: target.checked })}>
+                <FiEye size={24} color="currentColor" />
+              </VisibilityToggle>
+            </label>
+            {!!state.publicStatus && (
+              <Link href="/[id]/preview" as={`/${router.query.id}/preview`}>
+                <a>Link</a>
+              </Link>
+            )}
+          </div>
+
+          <div className="button-group">
+            {!!state.editorState && (
+              <button
+                title="export markdown"
+                type="button"
+                className="alt-button"
+                onClick={handleExport}>
+                <FiDownload size={24} />
+              </button>
+            )}
+          </div>
+        </aside>
+        <EditorInput
           value={state.title}
           name="title"
           data-testid="EDIT_ENTRY_TITLE_ENTRY"
           onChange={({ target }) => dispatch({ title: target.value })}
         />
-        <aside>
-          <div>
-            <label>
-              <MixedCheckbox
-                name="publicStatus"
-                checked={state.publicStatus}
-                onChange={({ target }) => dispatch({ publicStatus: target.checked })}
-              />
-              <span>{state.publicStatus ? "Public" : "Private"}</span>
-            </label>
-          </div>
-          {!!state.publicStatus && <PreviewLink id={router.query.id as string} />}
-          <div className="button-group">
-            {!!state.editorState && <ExportMarkdownButton onClick={handleExport} />}
-            <Button
-              type="submit"
-              onClick={handleSubmit}
-              data-testid="UPDATE_ENTRY_SUBMIT_BUTTON">
-              Save
-            </Button>
-          </div>
-        </aside>
-        {!!state.editorState && <WordCounter editorState={state.editorState} />}
+
         {!!state.editorState && (
           <Editor
             onFocus={() => dispatch({ initialFocus: true })}
@@ -148,11 +164,44 @@ const EditUI: NextPage = () => {
           margin: 1rem auto;
         }
 
+        .sticky-inner {
+          padding-top: 0.25rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 0.875rem;
+          font-family: var(--monospace);
+        }
+
+        .sticky-inner > .title {
+          flex: 2;
+          font-size: 1.125rem;
+          text-align: center;
+          font-weight: 300;
+          font-family: var(--sans-serif);
+        }
+
+        .sticky-inner > .meta {
+          flex: 1;
+        }
+
+        .sticky-inner > .count {
+          text-align: right;
+        }
+
+        .check {
+          user-select: none;
+        }
+
+        .check,
         aside {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          background: var(--onyx-600);
+        }
+
+        label {
+          margin-right: 0.5rem;
         }
 
         .button-group {

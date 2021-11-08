@@ -1,30 +1,42 @@
-import classNames from "@utils/classnames";
+import css from "styled-jsx/css";
 
-interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+export const buttons = css.global`
+  .base-button {
+    background: linear-gradient(
+      to bottom right,
+      var(--pixieblue-400),
+      var(--pixieblue-700)
+    );
+    font-size: inherit;
+    border-radius: 0.5rem;
+    color: white;
+    cursor: pointer;
+    padding: 0.5rem 1.5rem;
+    font-weight: 400;
+    border: 0;
+    font-family: inherit;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
 
-export function Button(props: IButtonProps): JSX.Element {
-  return (
-    <button
-      {...props}
-      className={classNames(
-        "bg-pixieblue-400 text-white dark:bg-pixieblue-600 shadow-md font-sm py-1 px-5 cursor-pointer font-bold rounded box-border hover:bg-pixieblue-900 hover:text-white transition-colors duration-500 ease-in-out",
-        props.className
-      )}
-    />
-  );
-}
+  .base-button:hover {
+    opacity: 0.75;
+  }
 
-export function AltButton(props: IButtonProps): JSX.Element {
-  return (
-    <button
-      {...props}
-      className={classNames("border-0 box-border cursor-pointer ", props.className)}
-    />
-  );
-}
+  .alt-button {
+    background: none;
+    border: 0;
+    appearance: none;
+    font-size: inherit;
+    font-family: inherit;
+    color: inherit;
+  }
 
-export function CancelButton(props: IButtonProps): JSX.Element {
-  return (
-    <button {...props} className={classNames("CancelButton", props.className)} />
-  );
-}
+  .cancel-button {
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .base-button {
+    }
+  }
+`;

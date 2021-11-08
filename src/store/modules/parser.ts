@@ -1,5 +1,6 @@
 import { convertFromRaw, convertToRaw, EditorState } from "draft-js";
 import { mdToDraftjs, draftjsToMd } from "draftjs-md-converter";
+import format from "date-fns/format";
 
 import {
   imageLinkDecorators,
@@ -29,5 +30,16 @@ export class DraftParser {
     const content = draftjsToMd(raw);
 
     return content;
+  }
+
+  createMarkdown(title: string, content: string, date?: Date): string {
+    return `
+      ---
+      title: ${title}
+      ${date && `dateAdded: ${format(new Date(date), "dd MMMM yyyy")}`}
+      ---
+      
+      ${content}
+      `;
   }
 }

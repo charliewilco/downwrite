@@ -21,9 +21,11 @@ export class UINotificationMessage {
 }
 
 export class GlobalNotifications {
-  subject = new BehaviorSubject<UINotificationMessage[]>([]);
+  subject: BehaviorSubject<UINotificationMessage[]>;
   #_list: UINotificationMessage[] = [];
-  constructor() {}
+  constructor() {
+    this.subject = new BehaviorSubject<UINotificationMessage[]>([...this.#_list]);
+  }
 
   getAll() {
     return this.#_list;

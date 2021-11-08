@@ -10,7 +10,7 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 import { useDataSource } from "@hooks/useDataSource";
 import { LoginFormSchema, RegisterFormSchema } from "@utils/validations";
 import { UIInput, UIInputContainer, UIInputError } from "@components/ui-input";
-import { Button } from "@components/button";
+import { SiteFooter } from "@components/footer";
 import { Routes } from "@utils/routes";
 import { ILoginValues, IRegisterValues } from "@store/base/me";
 
@@ -73,7 +73,7 @@ const LoginPage: NextPage = () => {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <header>
+              <header className="form-header">
                 <h2 data-testid="LOGIN_TITLE">Sign Up as a New User</h2>
               </header>
 
@@ -129,27 +129,26 @@ const LoginPage: NextPage = () => {
                     onChange={registerFormik.handleChange}
                   />
                   <small>
-                    I'm agreeing to abide in all the{" "}
+                    I&apos;m agreeing to abide in all the{" "}
                     <Link href={Routes.LEGAL} passHref>
                       <a>legal stuff</a>
                     </Link>
                     .
                   </small>
                 </label>
-                <div>
-                  <UIInputContainer>
-                    <Button
-                      disabled={!registerFormik.values.legalChecked}
-                      type="submit"
-                      data-testid="REGISTER_BUTTON">
-                      Register
-                    </Button>
-                  </UIInputContainer>
+                <div className="form-footer">
+                  <button
+                    className="base-button"
+                    disabled={!registerFormik.values.legalChecked}
+                    type="submit"
+                    data-testid="REGISTER_BUTTON">
+                    Register
+                  </button>
                 </div>
               </form>
             </TabPanel>
             <TabPanel>
-              <header>
+              <header className="form-header">
                 <h2 data-testid="LOGIN_TITLE">Welcome Back!</h2>
               </header>
               <form onSubmit={loginFormik.handleSubmit}>
@@ -178,21 +177,21 @@ const LoginPage: NextPage = () => {
                     <UIInputError>{loginFormik.errors.password}</UIInputError>
                   )}
                 </UIInputContainer>
-                <div>
-                  <UIInputContainer>
-                    <Button
-                      type="submit"
-                      id="RELOGIN_BUTTON"
-                      data-testid="RELOGIN_BUTTON">
-                      Login
-                    </Button>
-                  </UIInputContainer>
+                <div className="form-footer">
+                  <button
+                    className="base-button"
+                    type="submit"
+                    id="RELOGIN_BUTTON"
+                    data-testid="RELOGIN_BUTTON">
+                    Login
+                  </button>
                 </div>
               </form>
             </TabPanel>
           </TabPanels>
         </Tabs>
       </article>
+      <SiteFooter />
       <style jsx>{`
         article {
           max-width: 32rem;
@@ -208,7 +207,28 @@ const LoginPage: NextPage = () => {
           margin-bottom: 1rem;
         }
 
+        h2 {
+          font-size: 1.25rem;
+          line-height: 1.1;
+          font-weight: 400;
+        }
+
+        .form-header {
+          padding: 2rem 0.5rem;
+        }
+
+        form {
+          padding: 0 0.5rem 1rem;
+        }
+
+        .form-footer {
+          display: flex;
+          justify-content: flex-end;
+        }
+
         :global(.tabs) {
+          background: var(--surface);
+          box-shadow: 0 2px 6px 0 hsla(0, 0%, 0%, 0.2);
         }
 
         :global(.tab) {

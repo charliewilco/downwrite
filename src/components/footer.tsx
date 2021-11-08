@@ -11,8 +11,9 @@ const PAGES = [
   { name: "@charlespeters", href: TWITTER }
 ] as const;
 
-export function UIFooter() {
+export const SiteFooter = () => {
   const date = new Date(Date.now());
+
   return (
     <footer>
       <nav>
@@ -61,4 +62,4 @@ export function UIFooter() {
       `}</style>
     </footer>
   );
-}
+};

@@ -4,9 +4,9 @@ import { useRef, useReducer } from "react";
 import { useFormik } from "formik";
 import { MixedCheckbox } from "@reach/checkbox";
 import { UIInput, UIInputContainer, UIInputError } from "@components/ui-input";
-import { Button } from "@components/button";
 import { Loading } from "@components/loading";
-import { PageTitle } from "@components/page-title";
+import { SiteFooter } from "@components/footer";
+
 import { useDataSource } from "@hooks/useDataSource";
 import {
   UserSettingsSchema,
@@ -26,20 +26,6 @@ interface IPasswordSettings {
   newPassword: string;
   confirmPassword: string;
 }
-
-interface ISettingsFormActionsProps {
-  split?: boolean;
-  className?: string;
-}
-
-export const SettingsFormActions: React.FC<ISettingsFormActionsProps> = (props) => {
-  // const className = classNames(
-  //   "mt-4 flex justify-end",
-  //   props.split && "justify-between",
-  //   props.className
-  // );
-  return <div className={props.className}>{props.children}</div>;
-};
 
 const SettingsPage = () => {
   const [isOpen, onToggleOpen] = useReducer((prev: boolean) => !prev, false);
@@ -103,7 +89,7 @@ const SettingsPage = () => {
         <title>User Settings</title>
       </Head>
       <header>
-        <PageTitle>Settings</PageTitle>
+        <h1 className="page-title">Settings</h1>
       </header>
 
       <div className="usage">
@@ -158,11 +144,14 @@ const SettingsPage = () => {
                 <UIInputError>{userFormik.errors.email}</UIInputError>
               )}
             </UIInputContainer>
-            <SettingsFormActions>
-              <Button type="submit" disabled={userFormik.isSubmitting}>
+            <div className="action">
+              <button
+                className="base-button"
+                type="submit"
+                disabled={userFormik.isSubmitting}>
                 Save
-              </Button>
-            </SettingsFormActions>
+              </button>
+            </div>
           </form>
         </div>
       </section>
@@ -218,7 +207,7 @@ const SettingsPage = () => {
               )}
             </UIInputContainer>
 
-            <SettingsFormActions split>
+            <div className="action password">
               <div>
                 <label>
                   <MixedCheckbox
@@ -229,10 +218,13 @@ const SettingsPage = () => {
                   <span>{!isOpen ? "Values hidden" : "Values shown"}</span>
                 </label>
               </div>
-              <Button type="submit" disabled={passwordFormik.isSubmitting}>
+              <button
+                className="base-button"
+                type="submit"
+                disabled={passwordFormik.isSubmitting}>
                 Save
-              </Button>
-            </SettingsFormActions>
+              </button>
+            </div>
           </form>
         </div>
       </section>
@@ -240,7 +232,9 @@ const SettingsPage = () => {
       <section>
         <div className="info">
           <h4>Local Settings</h4>
-          <p>Settings only saved in your browser and won't sync across devices.</p>
+          <p>
+            Settings only saved in your browser and won&apos;t sync across devices.
+          </p>
         </div>
         <div className="form">
           <form onSubmit={markdownFormik.handleSubmit}>
@@ -262,14 +256,18 @@ const SettingsPage = () => {
                 <UIInputError>{markdownFormik.errors["fontFamily"]}</UIInputError>
               )}
             </UIInputContainer>
-            <SettingsFormActions>
-              <Button type="submit" disabled={markdownFormik.isSubmitting}>
+            <div className="action">
+              <button
+                className="base-button"
+                type="submit"
+                disabled={markdownFormik.isSubmitting}>
                 Save
-              </Button>
-            </SettingsFormActions>
+              </button>
+            </div>
           </form>
         </div>
       </section>
+      <SiteFooter />
 
       <style jsx>{`
         .outer {
@@ -283,6 +281,11 @@ const SettingsPage = () => {
           margin-bottom: 2rem;
         }
 
+        header {
+          margin-top: 4rem;
+          margin-bottom: 1rem;
+        }
+
         dl,
         section {
           display: grid;
@@ -292,7 +295,7 @@ const SettingsPage = () => {
 
         .usage,
         section {
-          margin-bottom: 2rem;
+          margin-bottom: 1rem;
         }
 
         section {
@@ -336,6 +339,18 @@ const SettingsPage = () => {
         p {
           font-size: small;
           font-style: italic;
+        }
+
+        .action {
+          display: flex;
+          justify-content: flex-end;
+
+          align-items: center;
+          padding: 1rem 0;
+        }
+
+        .action.password {
+          justify-content: space-between;
         }
       `}</style>
     </div>

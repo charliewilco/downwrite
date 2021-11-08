@@ -11,7 +11,7 @@ const IndexPage: NextPage = () => {
       </Head>
       <header>
         <h1>
-          <span>Editing &amp; Sharing Shouldn't Be Hard</span>
+          <span>Editing &amp; Sharing Shouldn&apos;t Be Hard</span>
           <span>Writing Should Be</span>
         </h1>
         <p>A place to write</p>

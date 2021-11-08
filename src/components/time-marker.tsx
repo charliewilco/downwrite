@@ -9,7 +9,7 @@ export function TimeMarker(props: ITimeMarkProps) {
 
   return (
     <div>
-      Added on <time dateTime={date.toString()}>{format(date, "dd MMMM yyyy")}</time>
+      Added on <time dateTime={date.toString()}>{format(date, "dd	LLL yy")}</time>
     </div>
   );
 }

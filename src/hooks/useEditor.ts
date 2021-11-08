@@ -7,6 +7,7 @@ import {
   convertFromRaw,
   ContentState
 } from "draft-js";
+import { getWordCount, getSelectionCount } from "../editor/word-count";
 import { createEditorProps, IPropCreation } from "../editor/create-editor-props";
 import { MultiDecorator } from "../editor/multidecorator";
 
@@ -87,4 +88,16 @@ export const useInlineStyles = ({
     onBold,
     onItalic
   };
+};
+
+export const useWordCount = (editorState: EditorState | null) => {
+  return useMemo<number>(() => {
+    if (editorState === null) {
+      return 0;
+    }
+
+    const selection = getSelectionCount(editorState);
+    const words = getWordCount(editorState);
+    return selection > 0 ? selection : words;
+  }, [editorState]);
 };

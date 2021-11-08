@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { AvatarColors, Gradient } from "@utils/default-styles";
 
 export interface IPointedGradientColors {
@@ -23,7 +23,7 @@ interface IAvatarProps {
   centered?: boolean;
 }
 
-export function Avatar(props: IAvatarProps): JSX.Element {
+export const Avatar: React.VFC<IAvatarProps> = (props: IAvatarProps) => {
   const colors = useMemo(() => gradientPoints(props.colors), [props.colors]);
 
   return (
@@ -47,4 +47,4 @@ export function Avatar(props: IAvatarProps): JSX.Element {
       </style>
     </div>
   );
-}
+};

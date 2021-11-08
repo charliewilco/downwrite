@@ -14,12 +14,12 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
 
 const SignOut: NextPage = () => {
   const router = useRouter();
-  const store = useDataSource();
+  const dataSource = useDataSource();
 
   useEffect(() => {
-    store.me.onLogout();
+    dataSource.me.onLogout();
     router.push(Routes.LOGIN);
-  }, [router]);
+  }, [dataSource, router]);
 
   return <h1>Signing out...</h1>;
 };
