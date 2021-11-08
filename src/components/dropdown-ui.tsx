@@ -1,13 +1,11 @@
 import { forwardRef } from "react";
 import Link from "next/link";
-import { Menu, MenuButton, MenuLink, MenuItem, MenuList } from "@reach/menu-button";
+import { Menu, MenuButton, MenuLink, MenuList } from "@reach/menu-button";
 import {
   FiLogOut,
   FiBook,
   FiEdit3,
   FiSettings,
-  FiSun,
-  FiMoon,
   FiMoreHorizontal
 } from "react-icons/fi";
 import { Routes } from "@utils/routes";
@@ -22,82 +20,90 @@ const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) 
   );
 });
 
-export function DropdownDarkMode() {
-  const store = useDataSource();
-  return (
-    <MenuItem
-      onSelect={() => store.settings.toggleDarkMode()}
-      className="flex items-center w-full">
-      {store.settings.isDarkMode ? (
-        <>
-          <span role="img" aria-label="Sun smiling">
-            <FiSun size={16} className="mr-2" />
-          </span>
-          Switch to Light Mode
-        </>
-      ) : (
-        <>
-          <span role="img" aria-label="Moon">
-            <FiMoon size={16} className="mr-2" />
-          </span>
-          Switch to Dark Mode
-        </>
-      )}
-    </MenuItem>
-  );
-}
-
 export function DropdownUI() {
   const store = useDataSource();
   const me = useSubjectEffect(store.me.state);
 
   return (
     <Menu>
-      <MenuButton className="appearance-none border-0">
-        <FiMoreHorizontal size={16} />
+      <MenuButton>
+        <FiMoreHorizontal size={24} />
       </MenuButton>
-      <MenuList className="shadow-md dark:bg-onyx-800 animate-from-left">
+      <MenuList>
         {me.username && (
           <UserBlock border colors={["#FEB692", "#EA5455"]} name={me.username} />
         )}
-        <MenuLink
-          to={Routes.DASHBOARD}
-          as={NextMenuLink}
-          className="flex items-center w-full">
+        <MenuLink to={Routes.DASHBOARD} as={NextMenuLink} className="menu-link">
           <span role="img" aria-label="Stack of books">
-            <FiBook size={16} className="mr-2" />
+            <FiBook size={16} />
           </span>
           All Entries
         </MenuLink>
-        <MenuLink
-          to={Routes.NEW}
-          as={NextMenuLink}
-          className="flex items-center w-full">
+        <MenuLink to={Routes.NEW} as={NextMenuLink} className="menu-link">
           <span role="img" aria-label="Writing with a Pen">
-            <FiEdit3 size={16} className="mr-2" />
+            <FiEdit3 size={16} />
           </span>
           Create New Entry
         </MenuLink>
-        <MenuLink
-          to={Routes.SETTINGS}
-          as={NextMenuLink}
-          className="flex items-center w-full">
+        <MenuLink to={Routes.SETTINGS} as={NextMenuLink} className="menu-link">
           <span role="img" aria-label="Gear">
-            <FiSettings size={16} className="mr-2" />
+            <FiSettings size={16} />
           </span>
           Settings
         </MenuLink>
 
-        <MenuLink
-          to={Routes.SIGN_OUT}
-          as={NextMenuLink}
-          className="flex items-center w-full">
+        <MenuLink to={Routes.SIGN_OUT} as={NextMenuLink} className="menu-link">
           <span role="img" aria-label="Fearful face">
-            <FiLogOut size={16} className="mr-2" />
+            <FiLogOut size={16} />
           </span>
           Sign Out
         </MenuLink>
       </MenuList>
+      <style jsx>{`
+        :global(.menu-link) {
+          display: flex;
+          align-items: center;
+        }
+
+        :global([data-reach-menu]) {
+          display: block;
+          position: absolute;
+          max-width: 384px;
+          font-weight: 700;
+          width: 100%;
+        }
+
+        :global([data-reach-menu-list]) {
+          display: block;
+          white-space: nowrap;
+          outline: none;
+          padding: 0;
+          background: var(--surface);
+          width: 100%;
+        }
+
+        :global([data-reach-menu-button]) {
+          appearance: none;
+          border: 0;
+          background: none;
+          color: inherit;
+        }
+
+        :global([data-reach-menu-item]) {
+        }
+
+        :global([data-reach-menu-item]) {
+          cursor: pointer;
+          color: inherit;
+          font: inherit;
+          text-decoration: initial;
+          padding: 8px;
+        }
+
+        span[role="img"] {
+          margin-right: 0.5rem;
+        }
+      `}</style>
     </Menu>
   );
 }

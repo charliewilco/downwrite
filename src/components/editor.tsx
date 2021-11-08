@@ -2,13 +2,12 @@ import { useRef, useCallback } from "react";
 
 import {
   Editor,
-  DraftHandleValue,
   DraftEditorCommand,
   getDefaultKeyBinding,
   KeyBindingUtil,
-  RichUtils,
-  EditorProps
+  RichUtils
 } from "draft-js";
+import type { EditorProps, DraftHandleValue } from "draft-js";
 import { useDataSource } from "@hooks/useDataSource";
 import classNames from "@utils/classnames";
 import { Fonts } from "@utils/default-styles";
@@ -87,9 +86,7 @@ export default function DownwriteEditor({ onSave, ...props }: IEditorProps) {
   );
 
   return (
-    <div
-      className="relative pt-6 pb-64 mb-64"
-      style={{ fontFamily: store.settings.editorFont }}>
+    <div style={{ fontFamily: store.settings.editorFont }}>
       <div className={className} onClick={onFocus}>
         <Editor
           ref={editorRef}

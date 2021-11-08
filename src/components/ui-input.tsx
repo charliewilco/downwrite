@@ -1,5 +1,4 @@
 import { useRef, useReducer } from "react";
-import classNames from "@utils/classnames";
 
 interface IUIInputProps {
   onChange(e: React.ChangeEvent<any>): void;
@@ -16,8 +15,7 @@ interface IUIInputProps {
 export function UIInputContainer({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>): JSX.Element {
-  const className = classNames("relative", props.className);
-  return <div {...props} className={className} />;
+  return <div {...props} />;
 }
 
 export function UIInputError({
@@ -25,13 +23,16 @@ export function UIInputError({
   ...props
 }: React.HTMLAttributes<HTMLSpanElement>): JSX.Element {
   return (
-    <span
-      {...props}
-      className={classNames(
-        "block text-sm text-red-500 dark:text-red-300",
-        props.className
-      )}
-    />
+    <span {...props}>
+      {props.children}
+      <style jsx>{`
+        span {
+          display: block;
+          font-size: small;
+          color: red;
+        }
+      `}</style>
+    </span>
   );
 }
 
@@ -46,7 +47,7 @@ export function UIInput({ testID, label, ...props }: IUIInputProps) {
   );
 
   return (
-    <label className="relative" htmlFor={id.current}>
+    <label htmlFor={id.current}>
       <input
         data-testid={testID}
         type="text"
@@ -54,16 +55,30 @@ export function UIInput({ testID, label, ...props }: IUIInputProps) {
         onBlur={() => dispatch("blur")}
         id={id.current}
         {...props}
-        className={classNames(
-          "font-mono text-sm font-normal py-2 px-0 appearance-none block w-full border-0 border-b-2 border-onyx-400 bg-transparent",
-          props.className
-        )}
       />
-      <small
-        className="font-bold"
-        style={{ color: isFocused ? "var(--yellow700)" : "#b4b4b4" }}>
+      <small style={{ color: isFocused ? "var(--goldar700)" : "#b4b4b4" }}>
         {label}
       </small>
+      <style jsx>{`
+        label {
+          display: block;
+          position: relative;
+        }
+        small {
+          padding-top: 0.5rem;
+          display: block;
+        }
+        input {
+          font-family: var(--monospace);
+          width: 100%;
+          padding: 0.5rem 0;
+          appearance: none;
+          display: block;
+          border: 0;
+          background: transparent;
+          border-bottom: 2px solid var(--onyx-400);
+        }
+      `}</style>
     </label>
   );
 }

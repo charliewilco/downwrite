@@ -19,7 +19,7 @@
     "prebuild": "yarn generate",
     "predev": "yarn generate",
     "generate": "graphql-codegen",
-    "typecheck": "tsc --noEmit"
+    "types": "tsc --noEmit --pretty"
   },
   "dependencies": {
     "@graphql-tools/schema": "^8.2.0",

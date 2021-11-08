@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
 import useSWR from "swr";
+
 import dbConnect from "@lib/db";
 import { getAllPreviewEntries, getPreviewEntry } from "@lib/preview";
 import { Content } from "@components/content";
@@ -91,13 +92,13 @@ const PreviewEntry: NextPage<{ id: string }> = (props) => {
         </Head>
         <AuthorBlock name={data.preview?.author?.username!} colors={AvatarColors} />
         {!me.authed && (
-          <div className="space-y-8 py-8">
-            <p className="text-sm italic mb-0">
+          <div>
+            <p>
               <span>
                 You can write and share on Downwrite, you can sign up or log in{" "}
               </span>
               <Link href={Routes.LOGIN} passHref>
-                <a className="text-pixieblue-500 font-bold">here</a>
+                <a>here</a>
               </Link>
             </p>
           </div>

@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { useDataSource, useTimeout } from "@hooks/index";
-import classNames from "@utils/classnames";
-import { NotificationType, UINotificationMessage } from "@store/notifications";
+import { NotificationType, UINotificationMessage } from "@store/base/notifications";
 
 interface IUIMessageProps {
   notification: UINotificationMessage;
@@ -16,15 +15,10 @@ export function UIMessage(props: IUIMessageProps): JSX.Element {
   useTimeout(15000, props.notification.dismissable ? onRemove : undefined);
 
   return (
-    <div aria-live="polite" className="mb-2">
-      <div
-        className={classNames(
-          "flex items center justify-between w-full h-full bg-white py-2 pr-4 pl-2 mt-2 text-onyx-900 rounded",
-          props.notification.type === NotificationType.WARNING && "bg-goldar-500",
-          props.notification.type === NotificationType.ERROR && "bg-red-500"
-        )}>
-        <div className="m-0 text-sm opacity-75">
-          <p className="m-0">
+    <div>
+      <div>
+        <div>
+          <p>
             {props.notification.type !== NotificationType.DEFAULT && (
               <b>{props.notification.type} </b>
             )}
@@ -32,13 +26,15 @@ export function UIMessage(props: IUIMessageProps): JSX.Element {
           </p>
         </div>
         {!props.notification.dismissable && (
-          <button
-            className="ml-4 p-0 border-0 appearance-none font-bold text-xs"
-            onClick={onRemove}>
-            Dismiss
-          </button>
+          <button onClick={onRemove}>Dismiss</button>
         )}
       </div>
+      <style jsx>{`
+        div {
+          background: var(--goldar-500);
+          padding: 0.5rem;
+        }
+      `}</style>
     </div>
   );
 }

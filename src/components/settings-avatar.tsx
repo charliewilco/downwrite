@@ -1,5 +1,4 @@
 import { useFormik } from "formik";
-import { SettingsBlock } from "./settings-block";
 import { GradientEditor } from "./gradient-editor";
 import { gradientPoints } from "../components/avatar";
 
@@ -11,13 +10,11 @@ export function SettingsAvatar(): JSX.Element {
     onSubmit: () => {}
   });
   return (
-    <SettingsBlock title="Avatar">
-      <form onSubmit={handleSubmit}>
-        <GradientEditor
-          colors={values.colors}
-          onColorChange={(colors) => setFieldValue("colors", colors)}
-        />
-      </form>
-    </SettingsBlock>
+    <form onSubmit={handleSubmit}>
+      <GradientEditor
+        colors={values.colors}
+        onColorChange={(colors) => setFieldValue("colors", colors)}
+      />
+    </form>
   );
 }

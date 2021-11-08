@@ -1,5 +1,4 @@
 import { Avatar } from "./avatar";
-import classNames from "@utils/classnames";
 import { Gradient } from "@utils/default-styles";
 
 interface IUserBlockProps {
@@ -10,14 +9,26 @@ interface IUserBlockProps {
 
 export function UserBlock(props: IUserBlockProps): JSX.Element {
   return (
-    <div
-      className={classNames(
-        "relative py-8 px-2",
-        props.border && "border-b border-onyx-200",
-        "text-center"
-      )}>
+    <div>
       <Avatar centered colors={props.colors} />
-      <b className="inline-block text-base">{props.name}</b>
+      <b>{props.name}</b>
+      <style jsx>
+        {`
+          div {
+            padding: 2rem 0.5rem;
+            max-width: 100%;
+            position: relative;
+            text-align: center;
+            border-bottom: ${props.border ? "1px" : 0} solid var(--onyx-200);
+          }
+          b {
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        `}
+      </style>
     </div>
   );
 }

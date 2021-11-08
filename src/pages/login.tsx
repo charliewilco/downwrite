@@ -1,31 +1,221 @@
 import { NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
-import { LandingPageImage } from "@components/landing";
-import { LoginContainer } from "@components/login-tabs";
+import { useFormik } from "formik";
+import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
+
+import { useDataSource } from "@hooks/useDataSource";
+import { LoginFormSchema, RegisterFormSchema } from "@utils/validations";
+import { UIInput, UIInputContainer, UIInputError } from "@components/ui-input";
+import { Button } from "@components/button";
 import { Routes } from "@utils/routes";
+import { ILoginValues, IRegisterValues } from "@store/base/me";
 
 const LoginPage: NextPage = () => {
   const router = useRouter();
+  const store = useDataSource();
+  const loginFormik = useFormik<ILoginValues>({
+    initialValues: {
+      user: "",
+      password: ""
+    },
+    validationSchema: LoginFormSchema,
+    onSubmit(values) {
+      store.me.login(values).then(() => router.push(Routes.DASHBOARD));
+    }
+  });
+
+  const registerFormik = useFormik<IRegisterValues>({
+    initialValues: {
+      legalChecked: false,
+      username: "",
+      password: "",
+      email: ""
+    },
+    validationSchema: RegisterFormSchema,
+    validateOnChange: false,
+    onSubmit(values) {
+      store.me.register(values).then(() => router.push(Routes.DASHBOARD));
+    }
+  });
+
   return (
-    <div data-testid="LOGIN_PAGE_CONTAINER" className="my-16">
+    <div data-testid="LOGIN_PAGE_CONTAINER">
       <Head>
         <title>Downwrite</title>
       </Head>
-      <article className="max-w-lg mx-auto mb-24">
-        <header className="text-center mb-24">
-          <LandingPageImage />
+      <article>
+        <header>
+          <Image
+            alt="Downwrite Logo"
+            src="/static/landing.png"
+            width={128}
+            height={128}
+          />
 
-          <h1
-            className="text-3xl font-sans font-black mb-8"
-            data-testid="Login Page Container">
-            Login
-          </h1>
+          <h1 data-testid="Login Page Container">Login</h1>
         </header>
 
-        <LoginContainer onSuccess={() => router.push(Routes.DASHBOARD)} />
+        <Tabs className="tabs">
+          <TabList className="tabs-list">
+            <Tab
+              className="tab"
+              data-testid="LOGIN_REGISTER_TABBUTTON"
+              id="Register">
+              Register
+            </Tab>
+            <Tab className="tab" data-testid="LOGIN_LOGIN_TABBUTTON" id="Login">
+              Login
+            </Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <header>
+                <h2 data-testid="LOGIN_TITLE">Sign Up as a New User</h2>
+              </header>
+
+              <form onSubmit={registerFormik.handleSubmit}>
+                <div>
+                  <UIInputContainer>
+                    <UIInput
+                      placeholder="Try for something unique"
+                      label="Username"
+                      autoComplete="username"
+                      {...registerFormik.getFieldProps("username")}
+                    />
+                    {registerFormik.errors["username"] && (
+                      <UIInputError>
+                        {registerFormik.errors["username"]}
+                      </UIInputError>
+                    )}
+                  </UIInputContainer>
+                  <UIInputContainer>
+                    <UIInput
+                      placeholder="mail@email.com"
+                      label="Email"
+                      type="email"
+                      autoComplete="email"
+                      {...registerFormik.getFieldProps("email")}
+                    />
+                    {registerFormik.errors["email"] && (
+                      <UIInputError>{registerFormik.errors["email"]}</UIInputError>
+                    )}
+                  </UIInputContainer>
+                  <UIInputContainer>
+                    <UIInput
+                      placeholder="*********"
+                      label="Password"
+                      type="password"
+                      autoComplete="current-password"
+                      {...registerFormik.getFieldProps("password")}
+                    />
+                    {registerFormik.errors["password"] && (
+                      <UIInputError>
+                        {registerFormik.errors["password"]}
+                      </UIInputError>
+                    )}
+                  </UIInputContainer>
+                </div>
+
+                <label className="legal-check-container">
+                  <input
+                    type="checkbox"
+                    data-testid="LEGAL_CHECK"
+                    name="legalChecked"
+                    checked={registerFormik.values.legalChecked}
+                    onChange={registerFormik.handleChange}
+                  />
+                  <small>
+                    I'm agreeing to abide in all the{" "}
+                    <Link href={Routes.LEGAL} passHref>
+                      <a>legal stuff</a>
+                    </Link>
+                    .
+                  </small>
+                </label>
+                <div>
+                  <UIInputContainer>
+                    <Button
+                      disabled={!registerFormik.values.legalChecked}
+                      type="submit"
+                      data-testid="REGISTER_BUTTON">
+                      Register
+                    </Button>
+                  </UIInputContainer>
+                </div>
+              </form>
+            </TabPanel>
+            <TabPanel>
+              <header>
+                <h2 data-testid="LOGIN_TITLE">Welcome Back!</h2>
+              </header>
+              <form onSubmit={loginFormik.handleSubmit}>
+                <UIInputContainer>
+                  <UIInput
+                    testID="LOGIN_USERNAME"
+                    placeholder="user@email.com"
+                    label="Username or Email"
+                    autoComplete="username"
+                    {...loginFormik.getFieldProps("user")}
+                  />
+                  {loginFormik.errors.user && (
+                    <UIInputError>{loginFormik.errors.user}</UIInputError>
+                  )}
+                </UIInputContainer>
+                <UIInputContainer>
+                  <UIInput
+                    testID="LOGIN_PASSWORD"
+                    placeholder="*********"
+                    label="Password"
+                    type="password"
+                    autoComplete="current-password"
+                    {...loginFormik.getFieldProps("password")}
+                  />
+                  {loginFormik.errors.password && (
+                    <UIInputError>{loginFormik.errors.password}</UIInputError>
+                  )}
+                </UIInputContainer>
+                <div>
+                  <UIInputContainer>
+                    <Button
+                      type="submit"
+                      id="RELOGIN_BUTTON"
+                      data-testid="RELOGIN_BUTTON">
+                      Login
+                    </Button>
+                  </UIInputContainer>
+                </div>
+              </form>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </article>
+      <style jsx>{`
+        article {
+          max-width: 32rem;
+          margin: 2rem auto;
+        }
+
+        header {
+          text-align: center;
+        }
+
+        h1 {
+          font-size: 2rem;
+          margin-bottom: 1rem;
+        }
+
+        :global(.tabs) {
+        }
+
+        :global(.tab) {
+          width: 50%;
+          padding: 1rem;
+        }
+      `}</style>
     </div>
   );
 };

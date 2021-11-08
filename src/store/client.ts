@@ -2,8 +2,9 @@ import { GraphQLClient } from "graphql-request";
 import Cookie from "universal-cookie";
 import { TOKEN_NAME } from "@utils/constants";
 
-import {
-  getSdk,
+import { getSdk } from "../__generated__/client";
+
+import type {
   ICreateEntryMutationVariables,
   ICreateUserMutationVariables,
   ILoginUserMutationVariables,

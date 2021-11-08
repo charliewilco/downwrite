@@ -1,9 +1,8 @@
 import { EditorState } from "draft-js";
-import { DraftParser } from "@store/parser";
+import { DraftParser } from "@store/modules/parser";
 import { DownwriteClient } from "@store/client";
-import { IAppState } from "./store";
-
-import { IEntry } from "../__generated__/client";
+import type { IAppState } from "@store/types";
+import type { IEntry } from "../../__generated__/client";
 
 export interface IEdit {
   publicStatus: boolean;

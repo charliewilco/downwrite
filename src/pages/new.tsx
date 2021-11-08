@@ -5,25 +5,21 @@ import { useRouter } from "next/router";
 import { useCallback } from "react";
 import { useFormik } from "formik";
 import { EditorState } from "draft-js";
-import { Uploader, IMarkdownConversion } from "@components/upload";
+import { useDropzone } from "react-dropzone";
 import { Input } from "@components/editor-input";
-import {} from "@components/editor";
 import { Button } from "@components/button";
 
-import {
-  useDataSource,
-  useEnhancedReducer,
-  useEditor,
-  useDecorators,
-  emptyContentState
-} from "@hooks/index";
+import { useDataSource, useDataFactory, useEnhancedReducer } from "@hooks/index";
+import { useEditor, useDecorators, emptyContentState } from "@hooks/useEditor";
 import { imageLinkDecorators, prismHighlightDecorator } from "../editor";
+import { CreateEntry } from "@store/modules/create";
 
 const Editor = dynamic(() => import("@components/editor"));
 
 const NewEntryPage: NextPage = () => {
   const router = useRouter();
   const store = useDataSource();
+  const factory = useDataFactory(CreateEntry);
   const decorators = useDecorators([imageLinkDecorators, prismHighlightDecorator]);
   const [state, dispatch] = useEnhancedReducer({
     title: "",
@@ -40,7 +36,7 @@ const NewEntryPage: NextPage = () => {
       title: ""
     },
     async onSubmit(values) {
-      const data = await store.create.create({
+      const data = await factory.create({
         ...state,
         ...values
       });
@@ -51,23 +47,25 @@ const NewEntryPage: NextPage = () => {
     }
   });
 
-  const handleParsed = useCallback(
-    ({ title, editorState }: IMarkdownConversion) => {
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    factory.onDrop(acceptedFiles).then(({ title, editorState }) => {
       setFieldValue("title", title);
       dispatch({ title, editorState });
-    },
-    [dispatch]
-  );
+    });
+  }, []);
+
+  const { getRootProps } = useDropzone({
+    onDrop,
+    multiple: false,
+    accept: ["text/markdown", "text/x-markdown", "text/plain"]
+  });
 
   return (
-    <form
-      className="max-w-2xl px-2 pt-32 pb-0 mx-auto"
-      onSubmit={handleSubmit}
-      data-testid="NEW_EDITOR_FORM">
+    <form onSubmit={handleSubmit} data-testid="NEW_EDITOR_FORM">
       <Head>
         <title>{values.title || "New"} | Downwrite</title>
       </Head>
-      <Uploader onParsed={handleParsed}>
+      <div {...getRootProps()}>
         <Input
           value={values.title}
           data-testid="NEW_ENTRY_TITLE_ENTRY"
@@ -75,11 +73,9 @@ const NewEntryPage: NextPage = () => {
           name="title"
           placeholder="Untitled Document"
         />
-        <aside className="flex items-center justify-between py-2 mx-0 mt-2 mb-4">
-          <div className="flex items-center">
-            {store.isOffline && <span>You're Offline Right Now</span>}
-          </div>
-          <div className="flex items-center">
+        <aside>
+          <div>{store.isOffline && <span>You're Offline Right Now</span>}</div>
+          <div>
             <Button type="submit" data-testid="NEW_ENTRY_SUBMIT_BUTTON">
               Add New
             </Button>
@@ -90,7 +86,7 @@ const NewEntryPage: NextPage = () => {
           {...editorProps}
           editorState={state.editorState}
         />
-      </Uploader>
+      </div>
     </form>
   );
 };

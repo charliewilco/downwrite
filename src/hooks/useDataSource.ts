@@ -1,5 +1,6 @@
 import { Store } from "@store/store";
-import { createContext, useContext, useEffect } from "react";
+import type { IStoreContructor } from "@store/types";
+import { createContext, useContext, useEffect, useMemo } from "react";
 
 const AppContext = createContext(new Store());
 
@@ -14,4 +15,10 @@ export const useCheckAuth = () => {
       store.me.checkAuth(value);
     });
   }, []);
+};
+
+export const useDataFactory = <T>(store: IStoreContructor<T>): T => {
+  const dataSource = useContext(AppContext);
+
+  return useMemo(() => dataSource.createConnectedStore(store), [store]);
 };

@@ -8,9 +8,20 @@ interface IAuthorProps {
 
 export const AuthorBlock = (props: IAuthorProps): JSX.Element => {
   return (
-    <div className="flex items-center">
+    <div>
       <Avatar colors={props.colors} />
-      <h6 className="ml-4 text-base font-normal">{props.name}</h6>
+      <h6>{props.name}</h6>
+
+      <style jsx>{`
+        h6 {
+          margin-left: 1rem;
+        }
+
+        div {
+          display: flex;
+          align-items: center;
+        }
+      `}</style>
     </div>
   );
 };

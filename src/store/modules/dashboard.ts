@@ -1,6 +1,6 @@
 import { DownwriteClient } from "@store/client";
-import { IAppState } from "./store";
-import { IAllPostsQuery } from "../__generated__/client";
+import type { IAppState } from "../types";
+import type { IAllPostsQuery } from "../../__generated__/client";
 
 export interface IPartialFeedItem {
   id: string;

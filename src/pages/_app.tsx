@@ -1,4 +1,4 @@
-import { AppProps } from "next/app";
+import { AppProps, NextWebVitalsMetric } from "next/app";
 import Router from "next/router";
 import { useEffect } from "react";
 import * as Analytics from "fathom-client";
@@ -13,6 +13,10 @@ import "@reach/checkbox/styles.css";
 Router.events.on("routeChangeComplete", () => {
   Analytics.trackPageview();
 });
+
+export function reportWebVitals(metric: NextWebVitalsMetric) {
+  console.log(metric.name, metric.label, metric.value, "\n");
+}
 
 export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -38,6 +42,9 @@ export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
           --sans-serif: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
             Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
             "Segoe UI Symbol";
+          --serif: "Source Serif Pro", "Charter", "Times", system-ui, -apple-system,
+            BlinkMacSystemFont, "Segoe UI", Helvetica, serif, "Apple Color Emoji",
+            "Segoe UI Emoji", "Segoe UI Symbol";
           --base-spacing: 1rem;
           --base-border: 1px;
 
@@ -148,7 +155,7 @@ export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
 
         a {
           background-color: transparent;
-          text-decoration: objects;
+          text-decoration: none;
           color: var(--highlight);
         }
 
@@ -230,7 +237,7 @@ export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
             --bg: var(--onyx-900);
 
             --bg-offset: #111;
-            --surface: #333;
+            --surface: var(--onyx-800);
           }
         }
       `}</style>

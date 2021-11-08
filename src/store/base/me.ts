@@ -2,10 +2,10 @@ import decode from "jwt-decode";
 import base64 from "base-64";
 import { BehaviorSubject } from "rxjs";
 
-import { IIsMeQuery } from "../__generated__/client";
 import { DownwriteClient } from "@store/client";
-import { IAppState } from "@store/store";
-import { TokenContents } from "@utils/constants";
+import type { IAppState } from "@store/types";
+import type { TokenContents } from "@utils/constants";
+import type { IIsMeQuery } from "../../__generated__/client";
 
 export interface ICurrentUserState {
   username?: string;
@@ -45,7 +45,7 @@ export class Me {
 
   checkAuth(value: IIsMeQuery) {
     this.#internalState.id = value.me.details.id;
-    this.#internalState.username = value.me.token;
+    this.#internalState.username = value.me.details.username;
 
     this.state.next({
       ...this.#internalState,

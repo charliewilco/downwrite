@@ -40,9 +40,9 @@ export function WordCounter(props: IWordCounterProps): JSX.Element {
   }, [props.editorState]);
 
   return (
-    <div className="shadow-md bg-onyx-800 my-4 mx-2 left-0 bottom-0 fixed z-50">
-      <div className="p-3">
-        <small className="opacity-75 text-xs">Word Count: {displayCount}</small>
+    <div>
+      <div>
+        <small>Word Count: {displayCount}</small>
       </div>
     </div>
   );

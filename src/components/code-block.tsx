@@ -6,26 +6,17 @@ interface ICodeBlockProps {
   value: any;
 }
 
-const PrismCode: React.FC<{ className: string }> = ({ children, className }) => {
+export function CodeBlock({ language = "javascript", value }: ICodeBlockProps) {
   const domRef = useRef(null);
 
   useEffect(() => {
     Prism.highlightElement(domRef.current, false);
-  }, [children]);
-
-  return (
-    <code ref={domRef} className={className}>
-      {children}
-    </code>
-  );
-};
-
-export function CodeBlock({ language = "javascript", value }: ICodeBlockProps) {
+  }, [value]);
   return (
     <pre>
-      <PrismCode className={`language-${language || "javascript"}`}>
+      <code ref={domRef} className={`language-${language || "javascript"}`}>
         {value}
-      </PrismCode>
+      </code>
     </pre>
   );
 }

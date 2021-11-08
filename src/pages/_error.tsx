@@ -22,13 +22,19 @@ export default function ErrorPage(props: IErrorViewProps) {
     : "An error occurred on client";
 
   return (
-    <section className="py-128 px-4 text-center">
+    <section>
       <Head>
         <title>Not Found | Downwrite</title>
       </Head>
       <h2 className="SuperErrorMessage">404</h2>
       <StatusCode statusCode={props.statusCode} />
       <NotFound message={message} />
+      <style jsx>{`
+        section {
+          padding: 8rem 1rem;
+          text-align: center;
+        }
+      `}</style>
     </section>
   );
 }

@@ -16,12 +16,12 @@ export function ColorPicker(
   }
 ): JSX.Element {
   return (
-    <div className="p-1 m-1 rounded w-full max-w-xxs flex-1 border-onyx-100">
-      {props.title && <h4 className="opacity-50 mb-2 text-xs">{props.title}</h4>}
-      <div className="flex flex-wrap flex-1 items-center -m-1">
+    <div className="outer">
+      {props.title && <h4>{props.title}</h4>}
+      <div>
         {props.colors.map((background) => (
           <div
-            className="w-8 h-8 mt-0 mx-1 mb-2 rounded"
+            className="color-dot"
             onClick={() => props.onPress(background, props.name)}
             style={{ background }}
             key={background}
@@ -29,6 +29,23 @@ export function ColorPicker(
         ))}
       </div>
       <FunHexInput onChange={(color) => props.onPress(color, props.name)} />
+      <style jsx>
+        {`
+          .outer {
+            width: 100%;
+            padding: 1rem;
+            margin: 1rem;
+            border: 1px solid var(--onyx-100);
+          }
+
+          .color-dot {
+            border-radius: 0.25rem;
+            width: 2rem;
+            height: 2rem;
+            margin-bottom: 0.5rem;
+          }
+        `}
+      </style>
     </div>
   );
 }

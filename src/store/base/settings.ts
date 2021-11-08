@@ -1,5 +1,5 @@
 import { DownwriteClient } from "@store/client";
-import { IAppState } from "./store";
+import type { IAppState } from "@store/types";
 import { Fonts } from "@utils/default-styles";
 import base64 from "base-64";
 
@@ -18,6 +18,11 @@ export interface IPasswordSettings {
   oldPassword: string;
   newPassword: string;
   confirmPassword: string;
+}
+
+export enum LocalSettings {
+  EXTENSION = "DW_FILE_EXTENSION",
+  FONT = "DW_EDITOR_FONT"
 }
 
 export class GlobalSettings implements ISettings {

@@ -70,6 +70,10 @@ export const _UIHeader: React.VFC = () => {
         .new-link {
           margin-right: 1rem;
         }
+
+        nav {
+          position: relative;
+        }
       `}</style>
     </header>
   );

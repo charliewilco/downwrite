@@ -1,4 +1,3 @@
-import classNames from "@utils/classnames";
 import { UIMessage } from "@components/ui-notification";
 import { useSubjectEffect, useDataSource } from "@hooks/index";
 
@@ -7,19 +6,9 @@ export function MessageList() {
 
   const notifications = useSubjectEffect(store.notifications.subject);
 
-  const innerClassName = classNames(
-    "relative max-w-sm",
-    notifications.length === 0 && "w-0 h-0 max-w-0"
-  );
-
-  const outerClassName = classNames(
-    "fixed p-4 flex flex-col justify-end bottom-0 right-0",
-    notifications.length > 0 ? "w-full max-w-sm h-auto" : "w-0 h-0"
-  );
-
   return (
-    <div className={outerClassName}>
-      <div className={innerClassName}>
+    <div>
+      <div>
         {notifications.map((notification, i) => (
           <UIMessage key={i} notification={notification} />
         ))}

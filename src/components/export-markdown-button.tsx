@@ -7,9 +7,9 @@ export function ExportMarkdownButton(
   props: IExportMarkdownButtonProps
 ): JSX.Element {
   return (
-    <button className="flex" onClick={props.onClick}>
+    <button type="button" onClick={props.onClick}>
       <FiDownload />
-      <small className="ml-2 inline-block font-bold">Export</small>
+      <small>Export</small>
     </button>
   );
 }

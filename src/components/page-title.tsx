@@ -9,9 +9,9 @@ export function PageTitle({ children, ...props }: IPageTitleProps) {
       <style jsx>
         {`
           h1 {
-            font-weight: 700;
+            font-weight: 300;
             margin-bottom: 1rem;
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             line-height: 2rem;
           }
         `}

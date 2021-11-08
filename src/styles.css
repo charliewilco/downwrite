@@ -17,35 +17,6 @@ body,
 }
 
 :root {
-  --reach-menu-button: 1;
-}
-
-[data-reach-menu] {
-  display: block;
-  position: absolute;
-  width: 384px;
-  font-weight: 700;
-}
-
-[data-reach-menu-list] {
-  display: block;
-  white-space: nowrap;
-  outline: none;
-  padding: 0;
-}
-
-[data-reach-menu-item] {
-}
-
-[data-reach-menu-item] {
-  cursor: pointer;
-  color: inherit;
-  font: inherit;
-  text-decoration: initial;
-  padding: 8px;
-}
-
-:root {
   --reach-dialog: 1;
 }
 
@@ -171,50 +142,4 @@ body,
 .public-DraftStyleDefault-orderedListItem > *,
 .public-DraftStyleDefault-unorderedListItem > * {
   display: inline;
-}
-
-.__content h2 {
-  font-size: 2rem;
-  font-weight: 800;
-  margin-bottom: 1.5rem;
-}
-
-.__content h3 {
-  font-weight: 700;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.__content li > ul,
-.__content li > ol {
-  margin-bottom: 0;
-}
-
-.__content ul,
-.__content ol {
-  list-style-position: inside;
-}
-
-.__content ul,
-.__content ol,
-.__content pre,
-.__content hr,
-.__content p {
-  margin-bottom: 1.5rem;
-}
-
-.__content p,
-.__content li {
-  line-height: 1.625;
-}
-
-.__content blockquote {
-  font-style: italic;
-  background: #d4ecfe;
-  margin-bottom: 1.5rem;
-  color: #e3e4e4;
-}
-
-.__content blockquote p {
-  padding: 1rem;
 }

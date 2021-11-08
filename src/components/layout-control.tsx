@@ -1,5 +1,3 @@
-import classNames from "@utils/classnames";
-
 interface ILayoutControl {
   layout: boolean;
   layoutChange: (x: boolean) => void;
@@ -14,12 +12,12 @@ export const LayoutControl: React.VFC<ILayoutControl> = (props) => {
       className="switch">
       <div
         data-testid="LAYOUT_CONTROL_GRID"
-        className={classNames("toggleButton", props.layout && "active")}
+        className={`toggleButton ${props.layout && "active"}`}
         onClick={() => props.layoutChange(true)}>
         Grid
       </div>
       <div
-        className={classNames("toggleButton", !props.layout && "active")}
+        className={`toggleButton ${!props.layout && "active"}`}
         data-testid="LAYOUT_CONTROL_LIST"
         onClick={() => props.layoutChange(false)}>
         List
@@ -35,6 +33,10 @@ export const LayoutControl: React.VFC<ILayoutControl> = (props) => {
           border-bottom: 4px solid transparent;
           cursor: pointer;
           font-weight: bold;
+        }
+
+        .toggleButton:first-of-type {
+          margin-right: 1rem;
         }
 
         .toggleButton.active {

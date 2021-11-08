@@ -1,5 +1,6 @@
-import { UIModal } from "./modal";
+import { DialogContent, DialogOverlay } from "@reach/dialog";
 import { Button, AltButton } from "./button";
+import { FiX } from "react-icons/fi";
 
 const quotedTitle = (title: string) => `"${title}"`;
 
@@ -12,21 +13,24 @@ interface IDeleteModalProps {
 
 export function DeleteModal(props: IDeleteModalProps) {
   return (
-    <UIModal closeUIModal={props.closeModal}>
-      <div className="bg-onyx-900 pt-4 px-2 pb-0">
-        <div className="mb-4 p-4">
-          <h6 className="font-black text-xl">Delete Post</h6>
-          <p className="my-4 mx-0 text-base">
-            Are you sure you want to delete <b>{quotedTitle(props.title)}</b>?
-          </p>
+    <DialogOverlay>
+      <DialogContent>
+        <button onClick={props.closeModal}>
+          <FiX />
+        </button>
+        <div>
+          <div>
+            <h6>Delete Post</h6>
+            <p>
+              Are you sure you want to delete <b>{quotedTitle(props.title)}</b>?
+            </p>
+          </div>
+          <footer>
+            <AltButton onClick={props.onCancelDelete}>Cancel</AltButton>
+            <Button onClick={props.onDelete}>Delete</Button>
+          </footer>
         </div>
-        <footer className="border-t flex justify-end py-4 px-0">
-          <AltButton onClick={props.onCancelDelete}>Cancel</AltButton>
-          <Button className="ml-8" onClick={props.onDelete}>
-            Delete
-          </Button>
-        </footer>
-      </div>
-    </UIModal>
+      </DialogContent>
+    </DialogOverlay>
   );
 }

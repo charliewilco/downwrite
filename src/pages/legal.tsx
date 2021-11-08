@@ -8,11 +8,8 @@ const LegalPage: NextPage = (): JSX.Element => {
       <Head>
         <title>Legal Nonsense</title>
       </Head>
-      <aside>
-        <h2>Hello</h2>
-      </aside>
-      <div className="xl:pb-0 xl:col-span-3 xl:row-span-2">
-        <div className="font-serif __content py-8">
+      <div>
+        <div className=" __content">
           <h2>Terms of Service</h2>
 
           <blockquote>

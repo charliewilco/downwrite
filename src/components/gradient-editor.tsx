@@ -26,9 +26,9 @@ export function GradientEditor(props: IGradientEditorProps): JSX.Element {
   );
 
   return (
-    <div className="my-64">
-      <Avatar className="mb-32" centered size={64} colors={colors} />
-      <div className="flex items-center flex-wrap justify-between">
+    <div>
+      <Avatar centered size={64} colors={colors} />
+      <div>
         <ColorPicker
           title="Start Color"
           name="a"

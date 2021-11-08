@@ -14,15 +14,13 @@ const PAGES = [
 export function UIFooter() {
   const date = new Date(Date.now());
   return (
-    <footer className="max-w-2xl py-8 px-4 mx-auto">
+    <footer>
       <nav>
-        <ul className="text-center p-0 m-0 text-sm">
+        <ul>
           {PAGES.map(({ href, name }, i) => (
-            <li key={i} className="inline-block mr-4">
+            <li key={i}>
               <Link href={href} passHref>
-                <a className="dark:text-white leading-none cursor-pointer opacity-50 text-sm">
-                  {name}
-                </a>
+                <a>{name}</a>
               </Link>
             </li>
           ))}

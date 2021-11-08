@@ -1,7 +1,10 @@
-import { GetServerSideProps, NextPage } from "next";
-import Head from "next/head";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
+
 import dynamic from "next/dynamic";
 import { useCallback } from "react";
+import Head from "next/head";
+
 import useSWR from "swr";
 
 import { MixedCheckbox } from "@reach/checkbox";
@@ -15,58 +18,38 @@ import { WordCounter } from "@components/word-count";
 import { UIMarkdownExport } from "@components/export";
 import { __IS_DEV__ } from "@utils/dev";
 
-import { IEdit } from "@store/editor";
+import { EditorAction, IEdit } from "@store/modules";
 import {
-  useDataSource,
+  useDataFactory,
   useOnce,
   useEnhancedReducer,
-  useEditor,
   useAutosaving
 } from "@hooks/index";
+import { useEditor } from "@hooks/useEditor";
 
 const Editor = dynamic(() => import("@components/editor"), {
   loading: () => <p>Loading the Editor</p>,
   ssr: false
 });
 
-interface IEditPageProps {
-  id: string;
-}
-
-type EditPageHandler = GetServerSideProps<
-  IEditPageProps,
-  {
-    id: string;
-  }
->;
-
-export const getServerSideProps: EditPageHandler = async ({ params }) => {
-  const id = params?.id!;
-
-  return {
-    props: {
-      id
-    }
-  };
-};
-
-const EditUI: NextPage<IEditPageProps> = (props) => {
+const EditUI: NextPage = () => {
+  const router = useRouter();
+  const factory = useDataFactory(EditorAction);
   const [state, dispatch] = useEnhancedReducer<IEdit>({
     publicStatus: false,
     title: "",
     initialFocus: false,
     editorState: null
   });
-  const store = useDataSource();
 
-  const { data, error, mutate } = useSWR(props.id, (id) =>
-    store.editor.getEntry(id)
+  const { data, error, mutate } = useSWR(router.query.id, (id) =>
+    factory.getEntry(id)
   );
   const loading = !data;
 
   useOnce(() => {
     if (!!data) {
-      dispatch(store.editor.load(data.entry));
+      dispatch(factory.load(data.entry));
     }
   }, [data]);
 
@@ -76,7 +59,7 @@ const EditUI: NextPage<IEditPageProps> = (props) => {
   });
 
   const handleSubmit = useCallback(async () => {
-    const value = await store.editor.submit(props.id, state);
+    const value = await factory.submit(router.query.id as string, state);
 
     if (value) {
       mutate(
@@ -86,7 +69,7 @@ const EditUI: NextPage<IEditPageProps> = (props) => {
         false
       );
     }
-  }, [props.id]);
+  }, [router.query]);
 
   useAutosaving(
     __IS_DEV__ ? 30000 : 120000,
@@ -108,11 +91,11 @@ const EditUI: NextPage<IEditPageProps> = (props) => {
   }
 
   return (
-    <div className="max-w-4xl mt-16 mx-auto" data-testid="EDIT_ENTRY_CONTAINER">
+    <div data-testid="EDIT_ENTRY_CONTAINER">
       <Head>
         <title>{state.title} | Downwrite</title>
       </Head>
-      <div className="px-2">
+      <div>
         <TimeMarker dateAdded={data?.entry?.dateAdded} />
         <Input
           value={state.title}
@@ -120,10 +103,10 @@ const EditUI: NextPage<IEditPageProps> = (props) => {
           data-testid="EDIT_ENTRY_TITLE_ENTRY"
           onChange={({ target }) => dispatch({ title: target.value })}
         />
-        <aside className="flex items-center justify-between py-2 mx-0 mt-2 mb-4">
-          <div className="flex items-center">
-            <div className="mr-4">
-              <label className="text-xs flex items-center">
+        <aside>
+          <div>
+            <div>
+              <label>
                 <MixedCheckbox
                   name="publicStatus"
                   checked={state.publicStatus}
@@ -131,19 +114,12 @@ const EditUI: NextPage<IEditPageProps> = (props) => {
                     dispatch({ publicStatus: target.checked })
                   }
                 />
-                <span className="flex-1 ml-2 align-middle inline-block leading-none font-bold">
-                  {state.publicStatus ? "Public" : "Private"}
-                </span>
+                <span>{state.publicStatus ? "Public" : "Private"}</span>
               </label>
             </div>
-            {!!state.publicStatus && (
-              <PreviewLink
-                className="inline-block text-xs leading-none font-bold"
-                id={props.id}
-              />
-            )}
+            {!!state.publicStatus && <PreviewLink id={router.query.id as string} />}
           </div>
-          <div className="flex items-center">
+          <div>
             {!!state.editorState && (
               <UIMarkdownExport
                 editorState={state.editorState}

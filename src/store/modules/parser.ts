@@ -5,7 +5,7 @@ import {
   imageLinkDecorators,
   prismHighlightDecorator,
   MultiDecorator
-} from "../editor";
+} from "../../editor";
 
 const decorators = new MultiDecorator([
   imageLinkDecorators,

@@ -1,31 +1,36 @@
-interface IBannerProps {
-  icon: JSX.Element;
-}
+import { FiAlertTriangle } from "react-icons/fi";
 
-export const Banner: React.FC<IBannerProps> = (props) => {
+export const Banner: React.FC = (props) => {
   return (
-    <div className="bg-pixieblue-300 dark:bg-pixieblue-600 " role="banner">
+    <div role="banner">
       <div className="inner">
-        <span className="bg-pixieblue-400 dark:bg-pixieblue-800">{props.icon}</span>
+        <span>
+          <FiAlertTriangle size={20} />
+        </span>
         <p>{props.children}</p>
       </div>
       <style jsx>{`
         [role="banner"] {
           width: 100%;
-          max-width: 24rem;
+          max-width: 36rem;
           margin: 1rem auto;
-          padding: 0.25rem;
-          background: var(--pixieblue-600);
+          padding: 0.5rem;
+          color: var(--pixieblue-600);
+          font-family: var(--monospace);
+          font-weight: 700;
+          font-size: 0.875rem;
+          border: 2px solid;
+          border-radius: 0.25rem;
         }
 
         .inner {
           display: flex;
-          justify-content: space-between;
           align-items: center;
         }
 
         p {
           margin: 0 0 0 1rem;
+          font-size: 100%;
         }
       `}</style>
     </div>
