@@ -9,12 +9,10 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "test": "jest --runInBand",
     "build:analyze": "ANALYZE=true yarn build",
     "dev:inspect": "NODE_OPTIONS='--inspect' next dev",
+    "test": "jest --runInBand",
     "test:ci": "jest --ci --runInBand --no-cache",
-    "test:e2e": "jest --ci --runInBand --config jest.e2e.config.js",
-    "test:mega": "yarn typecheck && yarn build && yarn test:ci && yarn test:e2e",
     "db:clear": "node scripts/prep-db",
     "prepare": "husky install",
     "prebuild": "yarn generate",
@@ -77,9 +75,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/cookie": "^0.4.0",
     "@types/draft-js": "^0.11.5",
-    "@types/expect-puppeteer": "^4.4.7",
     "@types/jest": "^27.0.2",
-    "@types/jest-environment-puppeteer": "^4.4.1",
     "@types/node": "^16.9.4",
     "@types/prismjs": "^1.16.6",
     "@types/puppeteer": "^5.4.4",
@@ -92,13 +88,10 @@
     "eslint-config-next": "12.0.3",
     "husky": "^7.0.4",
     "jest": "^27.2.1",
-    "jest-puppeteer": "^5.0.3",
     "jest-transform-graphql": "^2.1.0",
-    "merge": "^2.1.1",
     "prettier": "^2.4.1",
     "pretty-quick": "^3.1.1",
     "prop-types": "^15.7.2",
-    "puppeteer": "^10.2.0",
     "react-test-renderer": "^17.0.2",
     "ts-jest": "^27.0.5",
     "typescript": "^4.4.3"
@@ -112,9 +105,6 @@
       "^@shared/(.*)$": "<rootDir>/src/shared/$1",
       "^@server/(.*)$": "<rootDir>/src/server/$1",
       "^@data/(.*)$": "<rootDir>/src/data/$1"
-    },
-    "transform": {
-      "\\.(gql|graphql)$": "jest-transform-graphql"
     },
     "globals": {
       "ts-jest": {
