@@ -1,5 +1,5 @@
-schema: ./src/lib/schema.ts
-documents: ./src/lib/document.graphql
+schema: ./src/server/schema.ts
+documents: ./src/server/document.graphql
 generates:
   ./src/__generated__/client.ts:
     plugins:

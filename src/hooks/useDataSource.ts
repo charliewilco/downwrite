@@ -11,9 +11,7 @@ export const useDataSource = () => {
 export const useCheckAuth = () => {
   const dataSource = useDataSource();
   useEffect(() => {
-    dataSource.graphql.isMe().then((value) => {
-      dataSource.me.checkAuth(value);
-    });
+    dataSource.me.checkAuth();
   }, [dataSource]);
 };
 

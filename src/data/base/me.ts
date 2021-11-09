@@ -5,7 +5,6 @@ import { BehaviorSubject } from "rxjs";
 import { DownwriteClient } from "@data/client";
 import type { IAppState } from "@data/types";
 import type { TokenContents } from "@shared/types";
-import type { IIsMeQuery } from "../../__generated__/client";
 
 export interface ICurrentUserState {
   username?: string;
@@ -43,9 +42,21 @@ export class Me {
     this.#store = store;
   }
 
-  checkAuth(value: IIsMeQuery) {
-    this.#internalState.id = value.me.details.id;
-    this.#internalState.username = value.me.details.username;
+  async checkAuth() {
+    try {
+      const value = await this.#client.isMe();
+      this.#internalState.id = value.me.details.id;
+      this.#internalState.username = value.me.details.username;
+
+      this.state.next({
+        ...this.#internalState,
+        authed: !!this.#internalState.username && !!this.#internalState.id
+      });
+    } catch (error) {
+      this.#internalState.id = "";
+      this.#internalState.username = "";
+      console.error(error);
+    }
 
     this.state.next({
       ...this.#internalState,

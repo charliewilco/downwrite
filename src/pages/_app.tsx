@@ -1,4 +1,4 @@
-import type { AppProps, NextWebVitalsMetric } from "next/app";
+import type { AppProps } from "next/app";
 import Router from "next/router";
 import { useEffect } from "react";
 import * as Analytics from "fathom-client";
@@ -13,10 +13,6 @@ import "@reach/checkbox/styles.css";
 Router.events.on("routeChangeComplete", () => {
   Analytics.trackPageview();
 });
-
-export function reportWebVitals(metric: NextWebVitalsMetric) {
-  console.log(metric.name, metric.label, metric.value, "\n");
-}
 
 export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
   useEffect(() => {

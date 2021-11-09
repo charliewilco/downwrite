@@ -1,0 +1,106 @@
+#!/usr/bin/node
+
+const m = require("mongoose");
+const bcrypt = require("bcrypt");
+const { v4: uuid } = require("uuid");
+const fs = require("fs");
+const { join } = require("path");
+const fm = require("./parse-fm");
+const { users } = require("../src/fixtures/user-matrix.json");
+
+const connect = async () =>
+  await m.connect("mongodb://127.0.0.1:27017/downwrite", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+    poolSize: 10
+  });
+
+const postSchema = new m.Schema({
+  id: String,
+  title: String,
+  author: String,
+  content: Object,
+  public: Boolean,
+  dateAdded: Date,
+  dateModified: Date,
+  user: { type: m.Schema.Types.ObjectId, ref: "User" }
+});
+
+const userSchema = new m.Schema({
+  username: { type: String, required: true, index: { unique: true } },
+  email: { type: String, required: true, index: { unique: true } },
+  password: { type: String, required: true },
+  admin: { type: Boolean, required: true },
+  posts: [{ type: m.Schema.Types.ObjectId, ref: "Post" }]
+});
+
+const user = m.model("User", userSchema);
+const post = m.model("Post", postSchema);
+
+// Connect
+
+// Loop through users and create posts
+const getSaltedHash = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+
+  return hash;
+};
+
+const createUser = async ({ username, email, password }) => {
+  console.log("Creating user: ", username);
+  const hash = await getSaltedHash(password);
+  const id = uuid();
+  const u = await user.create({
+    email,
+    username,
+    id,
+    password: hash,
+    admin: false
+  });
+  return u;
+};
+
+const createPost = async ({ title, content }, _id, name) => {
+  console.log("Creating entry: ", title);
+  const id = uuid();
+  const date = new Date();
+  const entry = await post.create({
+    title,
+    content,
+    id,
+    public: false,
+    dateAdded: date,
+    dateModified: date,
+    user: _id,
+    author: name
+  });
+  console.log("Finished");
+  return entry;
+};
+
+const createPostFromFile = (file) => {
+  const { body, attributes } = fm(fs.readFileSync(file, "utf8"));
+
+  return (_id, name) =>
+    createPost({ content: body, title: attributes.title }, _id, name);
+};
+
+const generateContent = async (user) => {
+  const u = await createUser(user);
+  const f = fs.readdirSync("./src/fixtures/entries");
+  await Promise.all(
+    f.map((file) =>
+      createPostFromFile(join("src/fixtures/entries", file))(u._id, u.username)
+    )
+  );
+};
+
+const generateDBContents = async (db) => {
+  await Promise.all(users.map(generateContent));
+  await db.connection.close();
+};
+
+connect().then(generateDBContents);
