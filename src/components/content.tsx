@@ -1,35 +1,12 @@
 import css from "styled-jsx/css";
-import { useEffect, useRef } from "react";
-import Prism from "prismjs";
+import React from "react";
 
 import format from "date-fns/format";
-import Markdown from "react-markdown";
-import "prismjs";
-import { CodeComponent } from "react-markdown/lib/ast-to-react";
 
 interface IContentWrapperProps {
   title?: string;
   dateAdded?: Date;
-}
-
-interface ICodeBlockProps {
-  language: string | "javascript";
-  value: any;
-}
-
-function CodeBlock({ language = "javascript", value }: ICodeBlockProps) {
-  const domRef = useRef(null);
-
-  useEffect(() => {
-    Prism.highlightElement(domRef.current, false);
-  }, [value]);
-  return (
-    <pre>
-      <code ref={domRef} className={`language-${language || "javascript"}`}>
-        {value}
-      </code>
-    </pre>
-  );
+  content?: React.ReactNode;
 }
 
 const content = css.global`
@@ -82,7 +59,7 @@ const content = css.global`
 
 export const ContentWrapper: React.FC<IContentWrapperProps> = (props) => {
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 xl:max-w-5xl xl:px-0 mt-12">
+    <div className="outer">
       <article className="harticle">
         <header>
           {props.dateAdded && (
@@ -95,12 +72,13 @@ export const ContentWrapper: React.FC<IContentWrapperProps> = (props) => {
           <h1 data-testid="PREVIEW_ENTRTY_TITLE">{props.title}</h1>
         </header>
         <section data-testid="PREVIEW_ENTRTY_BODY" className="__content">
-          {props.children}
+          <aside>{props.children}</aside>
+          <div>{props.content}</div>
         </section>
       </article>
       <style jsx>
         {`
-          div {
+          .outer {
             max-width: 48rem;
             margin: 1rem auto;
           }
@@ -121,36 +99,25 @@ export const ContentWrapper: React.FC<IContentWrapperProps> = (props) => {
             font-size: 2rem;
             font-weight: 900;
           }
+
+          section {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+          }
+
+          section > aside {
+            grid-column: span 3 / span 3;
+          }
+
+          section > div {
+            grid-column: span 9 / span 9;
+          }
         `}
       </style>
       <style jsx global>
         {content}
       </style>
     </div>
-  );
-};
-
-interface IContentProps {
-  title?: string;
-  dateAdded?: Date;
-  content?: string;
-}
-
-const code: CodeComponent = (props) => {
-  return <CodeBlock value={props.children} language={props.className} />;
-};
-
-const MARKDOWN_RENDERS = {
-  code
-};
-
-export const Content: React.FC<IContentProps> = (props) => {
-  return (
-    <ContentWrapper title={props.title} dateAdded={props.dateAdded}>
-      <aside>{props.children}</aside>
-      {props.content && (
-        <Markdown components={MARKDOWN_RENDERS}>{props.content}</Markdown>
-      )}
-    </ContentWrapper>
   );
 };

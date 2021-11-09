@@ -17,6 +17,7 @@ const overrides = css.global`
   .RichEditor-editor {
     cursor: text;
     position: relative;
+    font-family: var(--monospace);
   }
 
   .public-DraftEditorPlaceholder-inner {

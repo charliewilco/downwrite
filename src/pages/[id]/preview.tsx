@@ -3,9 +3,11 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
 import useSWR from "swr";
+import { serialize } from "next-mdx-remote/serialize";
+import { MDXRemoteSerializeResult, MDXRemote } from "next-mdx-remote";
 
 import { getPreviewEntry } from "@server/preview";
-import { Content } from "@components/content";
+import { ContentWrapper } from "@components/content";
 import { AuthorBlock } from "@components/user-blocks";
 import { Loading } from "@components/loading";
 import { NotFound } from "@components/not-found";
@@ -15,21 +17,29 @@ import { AvatarColors } from "@shared/gradients";
 import { IPreview } from "../../__generated__/server";
 import { useSubjectSubscription, useDataSource } from "@hooks/index";
 
-type PreviewPageHandler = GetServerSideProps<
-  { id: string; preview: IPreview },
-  { id: string }
->;
+interface IPreviewProps {
+  id: string;
+  preview: IPreview;
+  result: MDXRemoteSerializeResult<Record<string, unknown>>;
+}
+
+type PreviewPageHandler = GetServerSideProps<IPreviewProps, { id: string }>;
 
 export const getServerSideProps: PreviewPageHandler = async ({ params }) => {
   const id = params!.id;
 
   try {
     const preview = await getPreviewEntry(id);
-
+    const _ = await serialize(preview.content, {
+      mdxOptions: {
+        remarkPlugins: [require("remark-prism")]
+      }
+    });
     return {
       props: {
         id,
-        preview
+        preview,
+        result: _
       }
     };
   } catch (error) {
@@ -39,7 +49,7 @@ export const getServerSideProps: PreviewPageHandler = async ({ params }) => {
   }
 };
 
-const PreviewEntry: NextPage<{ id: string }> = (props) => {
+const PreviewEntry: NextPage<IPreviewProps> = (props) => {
   const dataSource = useDataSource();
   const me = useSubjectSubscription(dataSource.me.state);
 
@@ -65,9 +75,9 @@ const PreviewEntry: NextPage<{ id: string }> = (props) => {
 
   if (!!data) {
     return (
-      <Content
+      <ContentWrapper
         title={data.preview?.title!}
-        content={data.preview?.content!}
+        content={<MDXRemote {...props.result} />}
         dateAdded={data.preview?.dateAdded!}>
         <Head>
           <title>{data.preview?.title} | Downwrite</title>
@@ -92,7 +102,7 @@ const PreviewEntry: NextPage<{ id: string }> = (props) => {
             </p>
           </div>
         )}
-      </Content>
+      </ContentWrapper>
     );
   }
 

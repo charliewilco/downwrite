@@ -64,13 +64,14 @@ export const reset = css.global`
   html {
     box-sizing: border-box;
     text-size-adjust: 100%;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
   }
 
   body {
     min-height: 100vh;
     scroll-behavior: smooth;
-    text-rendering: optimizeSpeed;
   }
 
   aside,

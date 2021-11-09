@@ -48,6 +48,8 @@ export class UpdateEntryState extends BaseDraft {
   }
 
   async getEntry(id: string) {
-    return this.#client.edit(id);
+    if (id) {
+      return this.#client.edit(id);
+    }
   }
 }

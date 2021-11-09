@@ -1,5 +1,5 @@
 import { ApolloError } from "apollo-server-micro";
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "bcryptjs";
 import base64 from "base-64";
 import is from "@sindresorhus/is";
 import cuid from "cuid";

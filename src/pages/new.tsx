@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { NextPage } from "next";
 import Head from "next/head";
 import dynamic from "next/dynamic";
@@ -23,8 +24,11 @@ const NewEntryPage: NextPage = () => {
     title: "",
     editorState: EditorState.createWithContent(emptyContentState, decorators)
   });
+
+  const getState = () => state;
+
   const editorProps = useEditor({
-    getEditorState: () => state.editorState,
+    getEditorState: () => getState().editorState,
     setEditorState: (editorState) => dispatch({ editorState })
   });
 
@@ -35,6 +39,7 @@ const NewEntryPage: NextPage = () => {
   }, [state]);
 
   const handleSubmit = useCallback(async () => {
+    const state = getState();
     const content = state.editorState.getCurrentContent();
 
     if (content.hasText() || state.title !== "") {
@@ -46,7 +51,7 @@ const NewEntryPage: NextPage = () => {
         router.push(`/${data.createEntry?.id}/edit`);
       }
     }
-  }, [state, router, dataSource]);
+  }, [router]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {

@@ -1,6 +1,6 @@
 import { useMixedCheckbox } from "@reach/checkbox";
 import { VisuallyHidden } from "@reach/visually-hidden";
-import React, { useRef } from "react";
+import { useRef } from "react";
 
 interface IVisibilityToggleProps {
   checked: boolean;
@@ -19,17 +19,18 @@ export const VisibilityToggle: React.FC<IVisibilityToggleProps> = ({
   });
 
   return (
-    <span>
+    <label>
       <VisuallyHidden>
         <input {...inputProps} ref={inputRef} />
       </VisuallyHidden>
       {children}
       <style jsx>{`
-        span {
+        label {
           display: flex;
+          margin-right: 1rem;
           color: ${!!stateData.checked ? "var(--pixieblue-500)" : "var(--onyx-200)"};
         }
       `}</style>
-    </span>
+    </label>
   );
 };

@@ -38,7 +38,8 @@ const DashboardUI: NextPage = () => {
         mutate(mutated, false);
       });
     }
-  }, [selected, data, mutate, dispatch, dataSource]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected, data, mutate, dispatch]);
 
   const handleSelect = useCallback(
     (feedItem: IPartialFeedItem) => {

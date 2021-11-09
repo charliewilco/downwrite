@@ -34,44 +34,46 @@ const EditUI: NextPage = () => {
     editorState: null
   });
 
-  const { data, error, mutate } = useSWR([router.query.id, "edit"], (id) =>
-    dataSource.getEntry(id)
+  const { data, error, mutate } = useSWR([router.query.id, "edit"], () =>
+    dataSource.getEntry(router.query.id as string)
   );
   const loading = !data;
-
-  const getState = () => state;
 
   useEffect(() => {
     if (!!data) {
       const nextState = dataSource.load(data.entry);
       dispatch(nextState);
     }
-  }, [data, dispatch, dataSource]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, dispatch]);
 
   const editorProps = useEditor({
     setEditorState: (editorState) => dispatch({ editorState }),
-    getEditorState: () => getState().editorState
+    getEditorState: () => state.editorState
   });
 
   const displayCount = useWordCount(state.editorState);
 
-  const handleSubmit = useCallback(async () => {
-    const value = await dataSource.submit(router.query.id as string, getState());
+  const handleSubmit = useCallback(
+    async (state: IEdit) => {
+      const value = await dataSource.submit(router.query.id as string, state);
 
-    if (value) {
-      mutate(
-        {
-          entry: value.updateEntry
-        },
-        false
-      );
-    }
+      if (value) {
+        mutate(
+          {
+            entry: value.updateEntry
+          },
+          false
+        );
+      }
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataSource, router.query, mutate]);
+    [router.query, mutate]
+  );
 
   useAutosaving(
     __IS_DEV__ ? 30000 : 120000,
-    handleSubmit,
+    () => handleSubmit(state),
     `Autosaving “${state.title ?? "Your Entry"}”`
   );
 
@@ -115,13 +117,13 @@ const EditUI: NextPage = () => {
 
         <aside>
           <div className="check">
-            <label>
-              <VisibilityToggle
-                checked={state.publicStatus}
-                onCheck={({ target }) => dispatch({ publicStatus: target.checked })}>
-                <FiEye size={24} color="currentColor" />
-              </VisibilityToggle>
-            </label>
+            <VisibilityToggle
+              checked={state.publicStatus}
+              onCheck={({ target }) => {
+                dispatch({ publicStatus: target.checked });
+              }}>
+              <FiEye size={24} color="currentColor" />
+            </VisibilityToggle>
             {!!state.publicStatus && (
               <Link href="/[id]/preview" as={`/${router.query.id}/preview`}>
                 <a>Link</a>
@@ -151,7 +153,7 @@ const EditUI: NextPage = () => {
         {!!state.editorState && (
           <Editor
             onFocus={() => dispatch({ initialFocus: true })}
-            onSave={handleSubmit}
+            onSave={() => handleSubmit(state)}
             {...editorProps}
             editorState={state.editorState}
           />
@@ -200,7 +202,7 @@ const EditUI: NextPage = () => {
           align-items: center;
         }
 
-        label {
+        .check {
           margin-right: 0.5rem;
         }
 

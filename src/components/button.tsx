@@ -30,6 +30,7 @@ export const buttons = css.global`
     font-size: inherit;
     font-family: inherit;
     color: inherit;
+    cursor: pointer;
   }
 
   .cancel-button {

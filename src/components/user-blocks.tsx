@@ -46,6 +46,8 @@ export const AuthorBlock = (props: IAuthorProps): JSX.Element => {
 
       <style jsx>{`
         h6 {
+          font-family: var(--sans-serif);
+          font-size: 0.875rem;
           margin-left: 1rem;
         }
 
