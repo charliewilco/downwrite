@@ -25,7 +25,7 @@ jobs:
       - name: Build
         run: yarn build
       - name: Type Check
-        run: yarn typecheck
+        run: yarn types
 
   test:
     runs-on: ubuntu-latest

@@ -6,6 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NEXT_TELEMETRY_DISABLED: 1
+      PORT: 4000
     strategy:
       matrix:
         node-version: [14.x]
@@ -34,3 +35,5 @@ jobs:
           NO_HTTPS: true
       - name: Run Puppeteer
         run: yarn test:e2e
+        env:
+          NO_HTTPS: true
