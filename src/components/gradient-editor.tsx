@@ -1,15 +1,10 @@
 import { useMemo, useState, useEffect } from "react";
 import { Avatar } from "@components/avatar";
-import { startColors, endColors, Gradient } from "@utils/default-styles";
+import { startColors, endColors, isValidHex, Gradient } from "src/shared/gradients";
 
 interface IHexInputProps {
   onChange: (color: string) => void;
   initialValue?: string;
-}
-
-function isValidHex(hex: string): boolean {
-  let valid = /^#[0-9A-F]{6}$/i.test(hex);
-  return valid;
 }
 
 export function FunHexInput(props: IHexInputProps): JSX.Element {

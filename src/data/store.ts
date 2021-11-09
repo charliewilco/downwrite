@@ -1,9 +1,9 @@
-import { DownwriteClient } from "@store/client";
-import { Me, GlobalNotifications, GlobalSettings } from "@store/base";
-import { __IS_BROWSER__ } from "@utils/dev";
+import { DownwriteClient } from "src/data/client";
+import { Me, GlobalNotifications, GlobalSettings } from "src/data/base";
+import { __IS_BROWSER__ } from "src/shared/dev";
 import type { IAppState, IStoreContructor } from "./types";
 
-export class Store implements IAppState {
+export class DownwriteUIState implements IAppState {
   settings: GlobalSettings;
   me: Me;
   notifications: GlobalNotifications;

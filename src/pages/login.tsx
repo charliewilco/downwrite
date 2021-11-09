@@ -8,15 +8,15 @@ import { useFormik } from "formik";
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 
 import { useDataSource } from "@hooks/useDataSource";
-import { LoginFormSchema, RegisterFormSchema } from "@utils/validations";
+import { LoginFormSchema, RegisterFormSchema } from "src/shared/validations";
 import { UIInput, UIInputContainer, UIInputError } from "@components/ui-input";
 import { SiteFooter } from "@components/footer";
-import { Routes } from "@utils/routes";
-import { ILoginValues, IRegisterValues } from "@store/base/me";
+import { Routes } from "src/shared/routes";
+import { ILoginValues, IRegisterValues } from "src/data/base/me";
 
 const LoginPage: NextPage = () => {
   const router = useRouter();
-  const store = useDataSource();
+  const dataSource = useDataSource();
   const loginFormik = useFormik<ILoginValues>({
     initialValues: {
       user: "",
@@ -24,7 +24,7 @@ const LoginPage: NextPage = () => {
     },
     validationSchema: LoginFormSchema,
     onSubmit(values) {
-      store.me.login(values).then(() => router.push(Routes.DASHBOARD));
+      dataSource.me.login(values).then(() => router.push(Routes.DASHBOARD));
     }
   });
 
@@ -38,7 +38,7 @@ const LoginPage: NextPage = () => {
     validationSchema: RegisterFormSchema,
     validateOnChange: false,
     onSubmit(values) {
-      store.me.register(values).then(() => router.push(Routes.DASHBOARD));
+      dataSource.me.register(values).then(() => router.push(Routes.DASHBOARD));
     }
   });
 

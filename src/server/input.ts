@@ -1,6 +1,6 @@
 import * as Yup from "yup";
-import { passwordRegex } from "@utils/validations";
-import { validPasswordMessage } from "@utils/constants";
+import { passwordRegex } from "src/shared/validations";
+import { validPasswordMessage } from "src/shared/constants";
 
 export const createUserValidation = Yup.object().shape({
   username: Yup.string().required(),

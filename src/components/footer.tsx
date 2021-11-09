@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Routes } from "@utils/routes";
+import { Routes } from "src/shared/routes";
 
 const GITHUB = "https://github.com/charliewilco/downwrite";
 const TWITTER = "https://twitter.com/charlespeters";

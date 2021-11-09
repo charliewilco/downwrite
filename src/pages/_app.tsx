@@ -1,4 +1,4 @@
-import { AppProps, NextWebVitalsMetric } from "next/app";
+import type { AppProps, NextWebVitalsMetric } from "next/app";
 import Router from "next/router";
 import { useEffect } from "react";
 import * as Analytics from "fathom-client";

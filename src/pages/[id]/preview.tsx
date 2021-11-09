@@ -4,13 +4,13 @@ import Link from "next/link";
 import Head from "next/head";
 import useSWR from "swr";
 
-import { getPreviewEntry } from "@lib/preview";
+import { getPreviewEntry } from "src/server/preview";
 import { Content } from "@components/content";
 import { AuthorBlock } from "@components/user-blocks";
 import { Loading } from "@components/loading";
 import { NotFound } from "@components/not-found";
-import { Routes } from "@utils/routes";
-import { AvatarColors } from "@utils/default-styles";
+import { Routes } from "src/shared/routes";
+import { AvatarColors } from "src/shared/gradients";
 
 import { IPreview } from "../../__generated__/server";
 import { useSubjectEffect, useDataSource } from "@hooks/index";
@@ -40,12 +40,12 @@ export const getServerSideProps: PreviewPageHandler = async ({ params }) => {
 };
 
 const PreviewEntry: NextPage<{ id: string }> = (props) => {
-  const store = useDataSource();
+  const dataSource = useDataSource();
 
   const router = useRouter();
-  const { error, data } = useSWR(props.id, (id) => store.graphql.preview(id));
+  const { error, data } = useSWR(props.id, (id) => dataSource.graphql.preview(id));
 
-  const me = useSubjectEffect(store.me.state);
+  const me = useSubjectEffect(dataSource.me.state);
 
   const loading = !data;
 

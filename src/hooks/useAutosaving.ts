@@ -5,11 +5,11 @@ export function useAutosaving(
   cb?: (...args: any[]) => void,
   message?: string
 ) {
-  const store = useDataSource();
+  const dataSource = useDataSource();
 
   useInterval(duration, () => {
     if (cb) {
-      store.notifications.add(message || "Autosaving", true);
+      dataSource.notifications.add(message || "Autosaving", true);
       cb();
     }
   });

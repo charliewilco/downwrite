@@ -1,5 +1,5 @@
 import { ApolloServer, Config } from "apollo-server-micro";
-import { ResolverContext } from "./context";
+import type { ResolverContext } from "./context";
 import { schema } from "./schema";
 
 export const DownwriteConfig: Config = {

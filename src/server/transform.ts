@@ -1,7 +1,7 @@
 import { ApolloError } from "apollo-server-micro";
 import is from "@sindresorhus/is";
 import { IPostModel, IUserModel } from "./models";
-import { createMarkdownServer } from "../utils/markdown-template";
+import { createMarkdownServer } from "../shared/markdown-template";
 import { IEntry, IPreview } from "../__generated__/server";
 
 const DEFAULT_GRADIENT = ["#FEB692", "#EA5455"];

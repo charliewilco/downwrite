@@ -1,4 +1,6 @@
 import { ApolloError, UserInputError } from "apollo-server-micro";
+import is from "@sindresorhus/is";
+
 import dbConnect from "./db";
 import { PostModel, UserModel, IUserModel } from "./models";
 import {
@@ -9,10 +11,9 @@ import {
 import { ResolverContext } from "./context";
 import { verifyUser } from "./resolver-auth";
 
-import { Many } from "../utils/types";
-import { __IS_DEV__ } from "../utils/dev";
-import { IEntry, IQueryResolvers, IUser } from "../__generated__/server";
-import is from "@sindresorhus/is";
+import type { Many } from "@shared/types";
+import { __IS_DEV__ } from "@shared/dev";
+import type { IEntry, IQueryResolvers, IUser } from "../__generated__/server";
 
 export const Query: IQueryResolvers<ResolverContext> = {
   feed: async (_, __, context) => feed(context),

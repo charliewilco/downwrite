@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-import { validLegalMessage, validPasswordMessage } from "@utils/constants";
+import { validLegalMessage, validPasswordMessage } from "src/shared/constants";
 
 // 1. must contain 1 lowercase letter
 // 2. must contain 1 uppercase letter

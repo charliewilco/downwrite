@@ -123,6 +123,9 @@
       }
     }
   },
+  "eslintConfig": {
+    "extends": "next/core-web-vitals"
+  },
   "browserslist": [
     ">0.25%",
     "not ie 11",

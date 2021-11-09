@@ -1,7 +1,7 @@
 import { AuthenticationError } from "apollo-server-micro";
 import { UserModel, IUserModel } from "./models";
 import { isValidPassword, IReadResults } from "./token";
-import { ResolverContext } from "./context";
+import type { ResolverContext } from "./context";
 import { getUserTokenContents } from "./cookie-managment";
 import dbConnect from "./db";
 

@@ -12,13 +12,11 @@ import {
   UserSettingsSchema,
   UpdatePasswordSchema,
   LocalSettingsSchema
-} from "@utils/validations";
-import { Fonts } from "@utils/default-styles";
-import type { IUserFormValues } from "@store/base/settings";
+} from "src/shared/validations";
+import type { IUserFormValues } from "src/data/base/settings";
 
 interface ILocalSettings {
   fileExtension: string;
-  fontFamily: Fonts;
 }
 
 interface IPasswordSettings {
@@ -29,22 +27,22 @@ interface IPasswordSettings {
 
 const SettingsPage = () => {
   const [isOpen, onToggleOpen] = useReducer((prev: boolean) => !prev, false);
-  const store = useDataSource();
-  const { error, data } = useSWR(["settings"], () => store.graphql.userDetails());
+  const dataSource = useDataSource();
+  const { error, data } = useSWR(["settings"], () =>
+    dataSource.graphql.userDetails()
+  );
 
   const initialMarkdownValues = useRef<() => ILocalSettings>(() => ({
-    fileExtension: store.settings.fileExtension || ".md",
-    fontFamily: (store.settings.editorFont || "DM Mono") as Fonts
+    fileExtension: dataSource.settings.fileExtension || ".md"
   }));
 
   const markdownFormik = useFormik<ILocalSettings>({
     initialValues: initialMarkdownValues.current(),
     validationSchema: LocalSettingsSchema,
     onSubmit(values) {
-      store.settings.editorFont = values.fontFamily as Fonts;
-      store.settings.fileExtension = values.fileExtension;
+      dataSource.settings.fileExtension = values.fileExtension;
 
-      store.settings.handleSettingsUpdate(values);
+      dataSource.settings.handleSettingsUpdate(values);
     }
   });
 
@@ -56,7 +54,7 @@ const SettingsPage = () => {
     },
     async onSubmit(_: IPasswordSettings, actions) {
       await actions.validateForm();
-      await store.settings.changePassword(_);
+      await dataSource.settings.changePassword(_);
     },
     validationSchema: UpdatePasswordSchema
   });
@@ -64,7 +62,7 @@ const SettingsPage = () => {
   const userFormik = useFormik<IUserFormValues>({
     initialValues: { ...data?.settings },
     onSubmit(values) {
-      store.settings.update(values);
+      dataSource.settings.update(values);
     },
     validationSchema: UserSettingsSchema
   });
@@ -245,15 +243,6 @@ const SettingsPage = () => {
               />
               {markdownFormik.errors["fileExtension"] && (
                 <UIInputError>{markdownFormik.errors["fileExtension"]}</UIInputError>
-              )}
-            </UIInputContainer>
-            <UIInputContainer>
-              <UIInput
-                label="Editor Font"
-                {...markdownFormik.getFieldProps("fontFamily")}
-              />
-              {markdownFormik.errors["fontFamily"] && (
-                <UIInputError>{markdownFormik.errors["fontFamily"]}</UIInputError>
               )}
             </UIInputContainer>
             <div className="action">

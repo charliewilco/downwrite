@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { __IS_DEV__, __IS_PROD__, __IS_TEST__ } from "../utils/dev";
+import { __IS_DEV__, __IS_PROD__, __IS_TEST__ } from "../shared/dev";
 
 const developDBAddrress = "mongodb://127.0.0.1:27017/downwrite";
 

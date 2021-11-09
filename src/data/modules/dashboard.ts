@@ -1,4 +1,4 @@
-import { DownwriteClient } from "@store/client";
+import { DownwriteClient } from "src/data/client";
 import type { IAppState } from "../types";
 import type { IAllPostsQuery } from "../../__generated__/client";
 

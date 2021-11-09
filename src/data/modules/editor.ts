@@ -1,6 +1,6 @@
 import { EditorState } from "draft-js";
-import { DownwriteClient } from "@store/client";
-import type { IAppState } from "@store/types";
+import { DownwriteClient } from "src/data/client";
+import type { IAppState } from "src/data/types";
 import type { IEntry } from "../../__generated__/client";
 import { BaseDraft } from "./base-draft";
 

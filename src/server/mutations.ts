@@ -1,15 +1,20 @@
 import { ApolloError } from "apollo-server-micro";
 import * as bcrypt from "bcrypt";
 import base64 from "base-64";
-
+import is from "@sindresorhus/is";
 import cuid from "cuid";
+
 import { ResolverContext } from "./context";
 import { PostModel, UserModel } from "./models";
 import { transformPostToEntry } from "./transform";
 import dbConnect from "./db";
 import { getSaltedHash, createToken } from "./token";
 import { setTokenCookie } from "./cookie-managment";
-import {
+import { createUserValidation } from "./input";
+import { getUniqueChecks, verifyUniqueUser } from "./uniques";
+import { verifyCredentials, verifyUser } from "./resolver-auth";
+
+import type {
   RequireFields,
   IEntry,
   IUser,
@@ -21,11 +26,8 @@ import {
   IAuthUserPayload,
   IMutationUpdatePasswordArgs
 } from "../__generated__/server";
-import { __IS_DEV__ } from "../utils/dev";
-import { createUserValidation } from "./input";
-import { getUniqueChecks, verifyUniqueUser } from "./uniques";
-import { verifyCredentials, verifyUser } from "./resolver-auth";
-import is from "@sindresorhus/is";
+
+import { __IS_DEV__ } from "@shared/dev";
 
 export interface IMutationCreateEntryVars {
   title: string;

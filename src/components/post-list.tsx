@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import distance from "date-fns/formatDistanceToNow";
 
 import { IEntry } from "../__generated__/client";
-import type { IPartialFeedItem } from "@store/modules/dashboard";
+import type { IPartialFeedItem } from "@data/modules/dashboard";
 
 export interface ICardProps {
   title: string;

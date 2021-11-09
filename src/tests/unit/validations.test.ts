@@ -1,5 +1,5 @@
-import * as Validations from "@utils/validations";
-import * as Inputs from "@lib/input";
+import * as Validations from "src/shared/validations";
+import * as Inputs from "src/server/input";
 
 describe("Validations", () => {
   it("Local Settings", async () => {

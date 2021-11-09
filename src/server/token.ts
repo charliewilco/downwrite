@@ -1,8 +1,8 @@
 import * as jwt from "jsonwebtoken";
 import is from "@sindresorhus/is";
 import * as bcrypt from "bcrypt";
-import { IUserModel } from "@lib/models";
-import { TokenContents } from "@utils/constants";
+import { IUserModel } from "@server/models";
+import { TokenContents } from "@shared/types";
 
 export const SECRET_KEY =
   process.env.SECRET_KEY || "1a9876c4-6642-4b83-838a-9e84ee00646a";

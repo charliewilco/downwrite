@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import { removeTokenCookie } from "@lib/cookie-managment";
-import { Routes } from "@utils/routes";
+import { removeTokenCookie } from "src/server/cookie-managment";
+import { Routes } from "src/shared/routes";
 import { useDataSource } from "@hooks/useDataSource";
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {

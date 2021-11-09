@@ -1,12 +1,10 @@
-import { DownwriteClient } from "@store/client";
-import type { IAppState } from "@store/types";
-import { Fonts } from "@utils/default-styles";
+import { DownwriteClient } from "src/data/client";
+import type { IAppState } from "src/data/types";
 import base64 from "base-64";
 
 export interface ISettings {
   isDarkMode: boolean;
   fileExtension: string;
-  editorFont: string;
 }
 
 export interface IUserFormValues {
@@ -21,14 +19,12 @@ export interface IPasswordSettings {
 }
 
 export enum LocalSettings {
-  EXTENSION = "DW_FILE_EXTENSION",
-  FONT = "DW_EDITOR_FONT"
+  EXTENSION = "DW_FILE_EXTENSION"
 }
 
 export class GlobalSettings implements ISettings {
   isDarkMode = true;
   fileExtension = ".md";
-  editorFont = Fonts.monospace;
   #client: DownwriteClient;
   #store: IAppState;
   constructor(_graphql: DownwriteClient, store: IAppState) {
@@ -36,8 +32,7 @@ export class GlobalSettings implements ISettings {
     this.#store = store;
   }
 
-  handleSettingsUpdate(values: { fileExtension: string; fontFamily: Fonts }) {
-    this.editorFont = values.fontFamily;
+  handleSettingsUpdate(values: { fileExtension: string }) {
     this.fileExtension = values.fileExtension;
   }
 

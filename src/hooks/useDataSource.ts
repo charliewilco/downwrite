@@ -1,22 +1,22 @@
-import { Store } from "@store/store";
-import type { IStoreContructor } from "@store/types";
+import { DownwriteUIState } from "src/data/store";
+import type { IStoreContructor } from "src/data/types";
 import { createContext, useContext, useEffect } from "react";
 
-const AppContext = createContext(new Store());
+const DataSourceContext = createContext(new DownwriteUIState());
 
 export const useDataSource = () => {
-  return useContext(AppContext);
+  return useContext(DataSourceContext);
 };
 
 export const useCheckAuth = () => {
-  const store = useDataSource();
+  const dataSource = useDataSource();
   useEffect(() => {
-    store.graphql.isMe().then((value) => {
-      store.me.checkAuth(value);
+    dataSource.graphql.isMe().then((value) => {
+      dataSource.me.checkAuth(value);
     });
-  }, []);
+  }, [dataSource]);
 };
 
 export const useDataFactory = <T>(Store: IStoreContructor<T>): T => {
-  return useContext(AppContext).createConnectedStore(Store);
+  return useContext(DataSourceContext).createConnectedStore(Store);
 };

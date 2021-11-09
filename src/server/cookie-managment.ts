@@ -1,8 +1,8 @@
 import { serialize, parse } from "cookie";
 import { IncomingMessage, ServerResponse } from "http";
 import { readToken } from "./token";
-import { __IS_PROD__ } from "@utils/dev";
-import { TOKEN_NAME } from "@utils/constants";
+import { __IS_PROD__ } from "src/shared/dev";
+import { TOKEN_NAME } from "src/shared/constants";
 
 export const removeTokenCookie = (res: ServerResponse) =>
   res.setHeader(

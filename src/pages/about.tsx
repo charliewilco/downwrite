@@ -2,7 +2,7 @@ import { SiteFooter } from "@components/footer";
 import { NextPage } from "next";
 import Head from "next/head";
 
-import { ContentWrapper } from "../components/content";
+import { ContentWrapper } from "@components/content";
 
 const AboutDetails: NextPage = () => {
   return (

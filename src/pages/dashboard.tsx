@@ -12,9 +12,9 @@ import { PostList } from "@components/post-list";
 import { Loading } from "@components/loading";
 import { Banner } from "@components/banner";
 
-import { DashboardState, IPartialFeedItem } from "@store/modules/dashboard";
+import { DashboardState, IPartialFeedItem } from "src/data/modules/dashboard";
 import { useEnhancedReducer, useDataFactory } from "@hooks/index";
-import { Routes } from "@utils/routes";
+import { Routes } from "src/shared/routes";
 import { SiteFooter } from "@components/footer";
 
 const DashboardUI: NextPage = () => {

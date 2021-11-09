@@ -1,12 +1,13 @@
 import { ApolloServer } from "apollo-server-micro";
-import { ResolverContext } from "@lib/context";
-import { schema } from "@lib/schema";
+import { ResolverContext } from "@server/context";
+import { schema } from "@server/schema";
 
 const server = new ApolloServer({
   schema,
   context(_: ResolverContext) {
     return _;
-  }
+  },
+  introspection: true
 });
 
 export const config = {

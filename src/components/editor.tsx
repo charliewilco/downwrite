@@ -8,9 +8,6 @@ import {
   RichUtils
 } from "draft-js";
 import type { EditorProps, DraftHandleValue } from "draft-js";
-import { useDataSource } from "@hooks/useDataSource";
-import classNames from "@utils/classnames";
-import { Fonts } from "@utils/default-styles";
 
 const overrides = css.global`
   .RichEditor-root {
@@ -123,7 +120,7 @@ interface IEditorProps extends Omit<EditorProps, OmittedEditorProps> {
 const styleMap = {
   CODE: {
     backgroundColor: "rgba(0, 0, 0, 0.05)",
-    fontFamily: Fonts.monospace,
+    fontFamily: "var(--monospace)",
     fontSize: 14,
     padding: 2
   }
@@ -143,16 +140,14 @@ const saveKeyListener = (
 
 export default function DownwriteEditor({ onSave, ...props }: IEditorProps) {
   let editorRef = useRef<Editor>(null);
-  const store = useDataSource();
 
   let contentState: Draft.ContentState = props.editorState.getCurrentContent();
-  let className = classNames(
-    "px-0 py-4 w-full h-full RichEditor-editor",
-    props.className,
-    !contentState.hasText() &&
-      contentState.getBlockMap().first().getType() !== "unstyled" &&
-      "RichEditor-hidePlaceholder"
-  );
+  let className = "RichEditor-editor";
+  if (!contentState.hasText()) {
+    if (contentState.getBlockMap().first().getType() !== "unstyled") {
+      className += " RichEditor-hidePlaceholder";
+    }
+  }
 
   function onFocus(): void {
     editorRef.current!.focus();
@@ -181,7 +176,7 @@ export default function DownwriteEditor({ onSave, ...props }: IEditorProps) {
   );
 
   return (
-    <div style={{ fontFamily: store.settings.editorFont }}>
+    <div>
       <div className={className} onClick={onFocus}>
         <Editor
           ref={editorRef}
