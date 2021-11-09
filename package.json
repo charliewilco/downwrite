@@ -5,7 +5,7 @@
   "repository": "charliewilco/downwrite",
   "author": "Charlie ⚡ <charlespeters42@gmail.com>",
   "scripts": {
-    "start": "next start -p $PORT",
+    "start": "next start",
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
