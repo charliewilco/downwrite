@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { Avatar } from "@components/avatar";
-import { startColors, endColors, isValidHex, Gradient } from "src/shared/gradients";
+import { startColors, endColors, isValidHex, Gradient } from "@shared/gradients";
 
 interface IHexInputProps {
   onChange: (color: string) => void;

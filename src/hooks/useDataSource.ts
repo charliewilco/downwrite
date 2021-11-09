@@ -1,5 +1,5 @@
-import { DownwriteUIState } from "src/data/store";
-import type { IStoreContructor } from "src/data/types";
+import { DownwriteUIState } from "@data/store";
+import type { IStoreContructor } from "@data/types";
 import { createContext, useContext, useEffect } from "react";
 
 const DataSourceContext = createContext(new DownwriteUIState());

@@ -8,11 +8,11 @@ import { useFormik } from "formik";
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 
 import { useDataSource } from "@hooks/useDataSource";
-import { LoginFormSchema, RegisterFormSchema } from "src/shared/validations";
+import { LoginFormSchema, RegisterFormSchema } from "@shared/validations";
 import { UIInput, UIInputContainer, UIInputError } from "@components/ui-input";
 import { SiteFooter } from "@components/footer";
-import { Routes } from "src/shared/routes";
-import { ILoginValues, IRegisterValues } from "src/data/base/me";
+import { Routes } from "@shared/routes";
+import { ILoginValues, IRegisterValues } from "@data/base/me";
 
 const LoginPage: NextPage = () => {
   const router = useRouter();

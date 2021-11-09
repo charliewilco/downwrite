@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import Link from "next/link";
 import Head from "next/head";
-import { Routes } from "src/shared/routes";
+import { Routes } from "@shared/routes";
 
 const IndexPage: NextPage = () => {
   return (

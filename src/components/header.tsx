@@ -12,8 +12,8 @@ import {
 import { Logo } from "@components/logo";
 import { UserBlock } from "@components/user-blocks";
 
-import { useDataSource, useSubjectEffect } from "@hooks/index";
-import { Routes } from "src/shared/routes";
+import { useDataSource, useSubjectSubscription } from "@hooks/index";
+import { Routes } from "@shared/routes";
 
 const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) => {
   return (
@@ -27,7 +27,7 @@ NextMenuLink.displayName = "NextMenuLink";
 
 export const UIHeader: React.VFC = () => {
   const dataSource = useDataSource();
-  const me = useSubjectEffect(dataSource.me.state);
+  const me = useSubjectSubscription(dataSource.me.state);
 
   return (
     <header data-testid="APP_HEADER">

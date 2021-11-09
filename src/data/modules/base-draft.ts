@@ -3,9 +3,9 @@ import type { RawDraftContentState, ContentState } from "draft-js";
 
 import { draftjsToMd, mdToDraftjs } from "draftjs-md-converter";
 import { DraftParser } from "./parser";
-import { LocalSettings } from "src/data/base";
-import { __IS_BROWSER__ } from "src/shared/dev";
-import { fmParserr } from "src/shared/fm";
+import { LocalSettings } from "@data/base";
+import { __IS_BROWSER__ } from "@shared/dev";
+import { fmParserr } from "@shared/fm";
 
 interface IMarkdown {
   body: string;

@@ -1,9 +1,6 @@
 import React, { useCallback } from "react";
 import { useDataSource, useTimeout } from "@hooks/index";
-import {
-  NotificationType,
-  UINotificationMessage
-} from "src/data/base/notifications";
+import { NotificationType, UINotificationMessage } from "@data/base/notifications";
 
 interface IToastUIProps {
   notification: UINotificationMessage;

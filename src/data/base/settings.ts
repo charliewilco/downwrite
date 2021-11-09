@@ -1,5 +1,5 @@
-import { DownwriteClient } from "src/data/client";
-import type { IAppState } from "src/data/types";
+import { DownwriteClient } from "@data/client";
+import type { IAppState } from "@data/types";
 import base64 from "base-64";
 
 export interface ISettings {

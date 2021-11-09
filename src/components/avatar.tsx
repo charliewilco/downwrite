@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { AvatarColors, Gradient } from "src/shared/gradients";
+import { AvatarColors, Gradient } from "@shared/gradients";
 
 export interface IPointedGradientColors {
   a: string;

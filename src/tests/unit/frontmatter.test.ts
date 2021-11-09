@@ -1,4 +1,4 @@
-import { fmParserr } from "src/shared/fm";
+import { fmParserr } from "@shared/fm";
 
 const fixture = `
 ---

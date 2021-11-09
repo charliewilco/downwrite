@@ -12,8 +12,8 @@ import {
   UserSettingsSchema,
   UpdatePasswordSchema,
   LocalSettingsSchema
-} from "src/shared/validations";
-import type { IUserFormValues } from "src/data/base/settings";
+} from "@shared/validations";
+import type { IUserFormValues } from "@data/base/settings";
 
 interface ILocalSettings {
   fileExtension: string;

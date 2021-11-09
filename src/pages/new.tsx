@@ -10,7 +10,7 @@ import { EditorInput } from "@components/ui-input";
 import { useDataFactory, useEnhancedReducer } from "@hooks/index";
 import { useEditor, useDecorators, emptyContentState } from "@hooks/useEditor";
 import { imageLinkDecorators, prismHighlightDecorator } from "../editor";
-import { CreateEntryState } from "src/data/modules/create";
+import { CreateEntryState } from "@data/modules/create";
 import { StickyContainer } from "@components/sticky-header";
 
 const Editor = dynamic(() => import("@components/editor"));

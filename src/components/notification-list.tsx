@@ -1,9 +1,9 @@
 import { ToastUI } from "@components/toast";
-import { useSubjectEffect, useDataSource } from "@hooks/index";
+import { useSubjectSubscription, useDataSource } from "@hooks/index";
 
 export function NotificationList() {
   const dataSource = useDataSource();
-  const notifications = useSubjectEffect(dataSource.notifications.subject);
+  const notifications = useSubjectSubscription(dataSource.notifications.subject);
 
   return (
     <div aria-live="polite" className="notification-list">

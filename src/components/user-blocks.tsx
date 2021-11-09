@@ -1,5 +1,5 @@
 import { Avatar } from "./avatar";
-import { Gradient } from "src/shared/gradients";
+import { Gradient } from "@shared/gradients";
 
 interface IUserBlockProps {
   name: string;

@@ -2,9 +2,9 @@ import decode from "jwt-decode";
 import base64 from "base-64";
 import { BehaviorSubject } from "rxjs";
 
-import { DownwriteClient } from "src/data/client";
-import type { IAppState } from "src/data/types";
-import type { TokenContents } from "src/shared/types";
+import { DownwriteClient } from "@data/client";
+import type { IAppState } from "@data/types";
+import type { TokenContents } from "@shared/types";
 import type { IIsMeQuery } from "../../__generated__/client";
 
 export interface ICurrentUserState {
