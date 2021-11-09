@@ -1,6 +1,4 @@
 import { useRef, useReducer } from "react";
-import { inputReducer, InputAction } from "../reducers/input";
-import classNames from "../utils/classnames";
 
 interface IUIInputProps {
   onChange(e: React.ChangeEvent<any>): void;
@@ -17,8 +15,7 @@ interface IUIInputProps {
 export function UIInputContainer({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>): JSX.Element {
-  const className = classNames("relative", props.className);
-  return <div {...props} className={className} />;
+  return <div {...props} />;
 }
 
 export function UIInputError({
@@ -26,42 +23,86 @@ export function UIInputError({
   ...props
 }: React.HTMLAttributes<HTMLSpanElement>): JSX.Element {
   return (
-    <span
-      {...props}
-      className={classNames(
-        "block text-sm text-red-500 dark:text-red-300",
-        props.className
-      )}
-    />
+    <span {...props}>
+      {props.children}
+      <style jsx>{`
+        span {
+          display: block;
+          font-size: small;
+          color: red;
+        }
+      `}</style>
+    </span>
   );
 }
 
-export default function UIInput({ testID, label, ...props }: IUIInputProps) {
+export function UIInput({ testID, label, ...props }: IUIInputProps) {
   const id = useRef("UI_TEXT_INPUT_".concat(label.replace(" ", "")));
 
-  const [state, dispatch] = useReducer(inputReducer, {
-    focused: false
-  });
+  const [isFocused, dispatch] = useReducer(
+    (state: boolean, action: "focus" | "blur") => {
+      return action !== "blur";
+    },
+    false
+  );
 
   return (
-    <label className="relative" htmlFor={id.current}>
+    <label htmlFor={id.current}>
       <input
         data-testid={testID}
         type="text"
-        onFocus={() => dispatch({ type: InputAction.FOCUS })}
-        onBlur={() => dispatch({ type: InputAction.BLUR })}
+        onFocus={() => dispatch("focus")}
+        onBlur={() => dispatch("blur")}
         id={id.current}
         {...props}
-        className={classNames(
-          "font-mono text-sm font-normal py-2 px-0 appearance-none block w-full border-0 border-b-2 border-onyx-400 bg-transparent",
-          props.className
-        )}
       />
-      <small
-        className="font-bold"
-        style={{ color: state.focused ? "var(--yellow700)" : "#b4b4b4" }}>
+      <small style={{ color: isFocused ? "var(--goldar700)" : "#b4b4b4" }}>
         {label}
       </small>
+      <style jsx>{`
+        label {
+          display: block;
+          position: relative;
+        }
+        small {
+          padding-top: 0.5rem;
+          display: block;
+        }
+        input {
+          font-family: var(--monospace);
+          width: 100%;
+          padding: 0.5rem 0;
+          appearance: none;
+          display: block;
+          border: 0;
+          background: transparent;
+          border-bottom: 2px solid var(--onyx-400);
+          color: inherit;
+        }
+      `}</style>
     </label>
+  );
+}
+
+export function EditorInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
+  return (
+    <div>
+      <input type="text" {...props} />
+      <style jsx>{`
+        input {
+          font-family: var(--monospace);
+          width: 100%;
+          border: 0;
+          display: block;
+          appearance: none;
+          background: transparent;
+          outline: none;
+          padding: 0.5rem 0;
+          font-size: 2.25rem;
+          line-height: 2.5rem;
+          color: inherit;
+        }
+      `}</style>
+    </div>
   );
 }

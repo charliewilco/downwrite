@@ -1,11 +1,11 @@
-schema: ./src/lib/schema.graphql
-documents: ./src/lib/document.graphql
+schema: ./src/server/schema.ts
+documents: ./src/server/document.graphql
 generates:
-  ./src/__generated__/client.tsx:
+  ./src/__generated__/client.ts:
     plugins:
       - typescript
       - typescript-operations
-      - typescript-react-apollo
+      - typescript-graphql-request
   ./src/__generated__/server.ts:
     config:
       useIndexSignature: true
@@ -17,7 +17,6 @@ config:
   typesPrefix: I
   avoidOptionals: true
   withHooks: true
-  gqlImport: "@apollo/client#gql"
 
 hooks:
   afterAllFileWrite:

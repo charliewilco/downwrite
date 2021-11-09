@@ -8,24 +8,20 @@
     "start": "next start",
     "build": "next build",
     "dev": "next dev",
-    "test": "jest --runInBand",
+    "lint": "next lint",
     "build:analyze": "ANALYZE=true yarn build",
     "dev:inspect": "NODE_OPTIONS='--inspect' next dev",
+    "test": "jest --runInBand",
     "test:ci": "jest --ci --runInBand --no-cache",
-    "test:e2e": "jest --ci --runInBand --config jest.e2e.config.js",
-    "test:mega": "yarn typecheck && yarn db:clear && yarn build && yarn test:ci && yarn test:e2e",
-    "db:mock": "node scripts/fill",
     "db:clear": "node scripts/prep-db",
-    "_commit": "cz",
     "prepare": "husky install",
     "prebuild": "yarn generate",
     "predev": "yarn generate",
     "generate": "graphql-codegen",
-    "typecheck": "tsc --noEmit"
+    "types": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.16",
-    "@next/bundle-analyzer": "^12.0.2",
+    "@graphql-tools/schema": "^8.2.0",
     "@reach/checkbox": "^0.16.0",
     "@reach/combobox": "^0.16.3",
     "@reach/dialog": "^0.16.2",
@@ -34,81 +30,69 @@
     "@reach/tabs": "^0.16.1",
     "@reach/visually-hidden": "^0.16.0",
     "@sindresorhus/is": "^4.2.0",
-    "apollo-server-micro": "^2.25.3",
+    "apollo-server-micro": "^2.24.1",
     "base-64": "^1.0.0",
-    "bcrypt": "^5.0.1",
-    "date-fns": "^2.25.0",
+    "bcryptjs": "^2.4.3",
+    "cookie": "^0.4.1",
+    "cuid": "^2.1.8",
+    "date-fns": "^2.24.0",
     "draft-js": "^0.11.7",
     "draftjs-md-converter": "^1.5.1",
     "fathom-client": "^3.2.0",
-    "file-saver": "^2.0.5",
     "formik": "^2.2.9",
-    "framer-motion": "^5.2.1",
     "graphql": "^15.7.2",
-    "immer": "^9.0.6",
-    "immutable": "~4.0.0",
-    "jsonwebtoken": "^8.3.0",
+    "graphql-request": "^3.6.1",
+    "graphql-tag": "^2.12.6",
+    "immutable": "~3.8.2",
+    "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
-    "mongoose": "^5.13.7",
-    "next": "^10.2.2",
-    "pos-tagger.js": "^1.0.10",
+    "mongoose": "^6.0.7",
+    "next": "^12.0.3",
+    "next-mdx-remote": "^3.0.8",
     "prismjs": "^1.25.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-dropzone": "^11.4.2",
+    "react-dropzone": "^11.4.0",
     "react-icons": "^4.3.1",
-    "react-markdown": "^6.0.3",
-    "source-serif-pro": "^3.1.0",
-    "typeface-dm-mono": "^1.1.13",
-    "typeface-inter": "^3.18.1",
+    "remark-prism": "^1.3.6",
+    "rxjs": "^7.4.0",
+    "sharp": "^0.29.2",
+    "swr": "^1.0.1",
     "universal-cookie": "^4.0.4",
-    "uuid": "^8.3.0",
+    "use-subscription": "^1.5.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^2.2.2",
-    "@graphql-codegen/typescript": "^2.3.1",
-    "@graphql-codegen/typescript-operations": "^2.1.7",
-    "@graphql-codegen/typescript-react-apollo": "^3.1.1",
-    "@graphql-codegen/typescript-resolvers": "^2.4.0",
-    "@tailwindcss/aspect-ratio": "^0.3.0",
-    "@tailwindcss/forms": "^0.3.4",
-    "@tailwindcss/typography": "^0.4.1",
+    "@graphql-codegen/cli": "^2.2.0",
+    "@graphql-codegen/typescript": "^2.2.2",
+    "@graphql-codegen/typescript-graphql-request": "^4.3.0",
+    "@graphql-codegen/typescript-operations": "^2.1.4",
+    "@graphql-codegen/typescript-resolvers": "^2.2.1",
+    "@next/bundle-analyzer": "^12.0.3",
     "@types/base-64": "^1.0.0",
-    "@types/bcrypt": "^5.0.0",
-    "@types/draft-js": "^0.11.6",
-    "@types/expect-puppeteer": "^4.4.7",
-    "@types/file-saver": "^2.0.3",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cookie": "^0.4.0",
+    "@types/draft-js": "^0.11.5",
     "@types/jest": "^27.0.2",
-    "@types/jest-environment-puppeteer": "^4.4.1",
-    "@types/jsonwebtoken": "^8.5.5",
-    "@types/mongoose": "^5.11.97",
-    "@types/node": "^15.3.1",
+    "@types/node": "^16.9.4",
     "@types/prismjs": "^1.16.6",
     "@types/puppeteer": "^5.4.4",
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.11",
     "@types/react-test-renderer": "^17.0.1",
-    "@types/uuid": "^8.3.1",
+    "@types/ua-parser-js": "^0.7.36",
+    "@types/use-subscription": "^1.0.0",
     "@types/yup": "^0.29.13",
-    "apollo-server-testing": "^2.25.2",
-    "autoprefixer": "^10.4.0",
-    "commitizen": "^4.2.4",
-    "cz-conventional-changelog": "3.3.0",
+    "eslint": "<8.0.0",
+    "eslint-config-next": "12.0.3",
     "husky": "^7.0.4",
-    "jest": "^26.6.3",
-    "jest-puppeteer": "^6.0.0",
-    "jest-transform-graphql": "^2.1.0",
-    "merge": "^2.1.1",
-    "postcss": "^8.3.11",
+    "jest": "^27.2.1",
     "prettier": "^2.4.1",
     "pretty-quick": "^3.1.1",
     "prop-types": "^15.7.2",
-    "puppeteer": "^10.4.0",
     "react-test-renderer": "^17.0.2",
-    "tailwindcss": "^2.2.19",
-    "ts-jest": "^26.5.6",
-    "typescript": "^4.4.4"
+    "ts-jest": "^27.0.5",
+    "typescript": "^4.4.3"
   },
   "jest": {
     "preset": "ts-jest",
@@ -116,12 +100,9 @@
     "verbose": true,
     "testRegex": "(/__tests__/.*|(\\.|/)(test))\\.[jt]sx?$",
     "moduleNameMapper": {
-      "^@utils/(.*)$": "<rootDir>/src/utils/$1",
-      "^@lib/(.*)$": "<rootDir>/src/lib/$1",
-      "^@reducers/(.*)$": "<rootDir>/src/reducers/$1"
-    },
-    "transform": {
-      "\\.(gql|graphql)$": "jest-transform-graphql"
+      "^@shared/(.*)$": "<rootDir>/src/shared/$1",
+      "^@server/(.*)$": "<rootDir>/src/server/$1",
+      "^@data/(.*)$": "<rootDir>/src/data/$1"
     },
     "globals": {
       "ts-jest": {
@@ -130,6 +111,9 @@
         }
       }
     }
+  },
+  "eslintConfig": {
+    "extends": "next/core-web-vitals"
   },
   "browserslist": [
     ">0.25%",
@@ -147,16 +131,10 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged",
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+      "pre-commit": "pretty-quick --staged"
     }
   },
   "engines": {
     "node": "14.x"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }

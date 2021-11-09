@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   EditorBlock,
   ContentBlock,
@@ -140,14 +139,15 @@ export const checkboxBlockRenderMap = Map({
   }
 });
 
-export const blockRenderMapForSameWrapperAsUnorderedListItem = checkboxBlockRenderMap.merge(
-  Map({
-    [UNORDERED_LIST_ITEM]: {
-      element: "li",
-      wrapper: WRAPPER
-    }
-  })
-);
+export const blockRenderMapForSameWrapperAsUnorderedListItem =
+  checkboxBlockRenderMap.merge(
+    Map({
+      [UNORDERED_LIST_ITEM]: {
+        element: "li",
+        wrapper: WRAPPER
+      }
+    })
+  );
 
 type BlockProps = {
   onChangeChecked: () => void;

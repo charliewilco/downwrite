@@ -1,14 +1,7 @@
-import * as React from "react";
-
-export default function Logo() {
+export function Logo() {
   return (
-    <div className="Logo">
-      <svg
-        width={42.125}
-        height={33}
-        viewBox="0 0 337 264"
-        fill="none"
-        className="LogoIcon">
+    <div>
+      <svg viewBox="0 0 337 264" fill="none" className="LogoIcon">
         <title>Downwrite Logo</title>
         <rect
           x={0.327148}
@@ -18,7 +11,7 @@ export default function Logo() {
           rx={8.97196}
           fill="url(#paint0_linear)"
         />
-        <g className="dark:text-onyx-100 text-onyx-800">
+        <g id="nib-a">
           <path
             fillRule="evenodd"
             clipRule="evenodd"
@@ -26,7 +19,7 @@ export default function Logo() {
             fill="currentColor"
           />
         </g>
-        <g className="dark:text-onyx-200 text-onyx-900">
+        <g id="nib-b">
           <path
             fillRule="evenodd"
             clipRule="evenodd"
@@ -47,6 +40,37 @@ export default function Logo() {
           </linearGradient>
         </defs>
       </svg>
+      <style jsx>{`
+        div {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+        }
+        svg {
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+        #nib-a {
+          color: var(--onyx-800);
+        }
+
+        #nib-b {
+          color: var(--onyx-800);
+        }
+
+        @media (prefers-color-scheme: dark) {
+          #nib-a {
+            color: var(--onyx-100);
+          }
+
+          #nib-b {
+            color: var(--onyx-200);
+          }
+        }
+      `}</style>
     </div>
   );
 }

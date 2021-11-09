@@ -1,7 +1,7 @@
 #!/usr/bin/node
 
 const m = require("mongoose");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const { v4: uuid } = require("uuid");
 const fs = require("fs");
 const { join } = require("path");

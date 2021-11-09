@@ -1,16 +1,11 @@
 import { ApolloServer } from "apollo-server-micro";
-import { schema } from "../../lib/schema";
-import { ResolverContext } from "../../lib/context";
+import { ResolverContext } from "@server/context";
+import { schema } from "@server/schema";
 
 const server = new ApolloServer({
   schema,
-  context(context: ResolverContext) {
-    return context;
-  },
-  playground: {
-    settings: {
-      "editor.fontFamily": "Operator Mono, monospace"
-    }
+  context(_: ResolverContext) {
+    return _;
   },
   introspection: true
 });
@@ -21,4 +16,8 @@ export const config = {
   }
 };
 
-export default server.createHandler({ path: "/api/graphql" });
+const handler = server.createHandler({
+  path: "/api/graphql"
+});
+
+export default handler;

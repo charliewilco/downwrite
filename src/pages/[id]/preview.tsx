@@ -1,65 +1,71 @@
-import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
-import Content from "@components/content";
-import AuthorBlock from "@components/author-block";
-import Loading from "@components/loading";
-import NotFound from "@components/not-found";
-import {
-  usePreviewQuery,
-  PreviewDocument,
-  IPreviewQuery,
-  IPreviewQueryVariables
-} from "../../__generated__/client";
-import { initializeApollo } from "@lib/apollo";
-import { Routes } from "@utils/routes";
-import { AvatarColors } from "@utils/default-styles";
-import { useCurrentUser } from "@reducers/app";
-import { getInitialStateFromCookie } from "@lib/cookie-managment";
+import useSWR from "swr";
+import { serialize } from "next-mdx-remote/serialize";
+import { MDXRemoteSerializeResult, MDXRemote } from "next-mdx-remote";
 
-export const getServerSideProps: GetServerSideProps<
-  { id: string },
-  { id: string }
-> = async ({ req, res, params }) => {
+import { getPreviewEntry } from "@server/preview";
+import { ContentWrapper } from "@components/content";
+import { AuthorBlock } from "@components/user-blocks";
+import { Loading } from "@components/loading";
+import { NotFound } from "@components/not-found";
+import { Routes } from "@shared/routes";
+import { AvatarColors } from "@shared/gradients";
+
+import { IPreview } from "../../__generated__/server";
+import { useSubjectSubscription, useDataSource } from "@hooks/index";
+
+interface IPreviewProps {
+  id: string;
+  preview: IPreview;
+  result: MDXRemoteSerializeResult<Record<string, unknown>>;
+}
+
+type PreviewPageHandler = GetServerSideProps<IPreviewProps, { id: string }>;
+
+export const getServerSideProps: PreviewPageHandler = async ({ params }) => {
   const id = params!.id;
-  const initialAppState = await getInitialStateFromCookie(req);
-  const client = initializeApollo({});
 
-  await client.query<IPreviewQuery, IPreviewQueryVariables>({
-    query: PreviewDocument,
-    variables: {
-      id: params!.id
-    },
-    context: { req, res }
-  });
-
-  return {
-    props: {
-      initialAppState,
-      initialApolloState: client.cache.extract(),
-      id
-    }
-  };
+  try {
+    const preview = await getPreviewEntry(id);
+    const _ = await serialize(preview.content, {
+      mdxOptions: {
+        remarkPlugins: [require("remark-prism")]
+      }
+    });
+    return {
+      props: {
+        id,
+        preview,
+        result: _
+      }
+    };
+  } catch (error) {
+    return {
+      notFound: true
+    };
+  }
 };
 
-const PreviewEntry: NextPage<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = (props) => {
+const PreviewEntry: NextPage<IPreviewProps> = (props) => {
+  const dataSource = useDataSource();
+  const me = useSubjectSubscription(dataSource.me.state);
+
   const router = useRouter();
-  const [currentUser] = useCurrentUser();
-  const { error, loading, data } = usePreviewQuery({
-    variables: { id: props.id }
-  });
+  const { error, data } = useSWR(props.id, (id) => dataSource.graphql.preview(id));
+
+  const loading = !data;
 
   if (error) {
     return (
-      <>
+      <div>
         <Head>
           <title>{error.name} | Downwrite</title>
         </Head>
         <NotFound error={error.name} message={error.message} />
-      </>
+      </div>
     );
   }
 
@@ -69,9 +75,9 @@ const PreviewEntry: NextPage<
 
   if (!!data) {
     return (
-      <Content
-        title={data?.preview?.title!}
-        content={data.preview?.content!}
+      <ContentWrapper
+        title={data.preview?.title!}
+        content={<MDXRemote {...props.result} />}
         dateAdded={data.preview?.dateAdded!}>
         <Head>
           <title>{data.preview?.title} | Downwrite</title>
@@ -84,19 +90,19 @@ const PreviewEntry: NextPage<
           <meta name="description" content={data.preview?.content!.substr(0, 75)} />
         </Head>
         <AuthorBlock name={data.preview?.author?.username!} colors={AvatarColors} />
-        {!currentUser.authed && (
-          <div className="space-y-8 py-8">
-            <p className="text-sm italic mb-0">
+        {!me.authed && (
+          <div>
+            <p>
               <span>
                 You can write and share on Downwrite, you can sign up or log in{" "}
               </span>
               <Link href={Routes.LOGIN} passHref>
-                <a className="text-pixieblue-500 font-bold">here</a>
+                <a>here</a>
               </Link>
             </p>
           </div>
         )}
-      </Content>
+      </ContentWrapper>
     );
   }
 

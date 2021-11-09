@@ -4,7 +4,7 @@ import {
   EditorState,
   RawDraftContentState
 } from "draft-js";
-import { fixRawContentState } from "../../editor";
+import { fixRawContentState } from "../../editor/raw";
 
 const fixture: RawDraftContentState = {
   entityMap: {},
@@ -12,8 +12,7 @@ const fixture: RawDraftContentState = {
     {
       depth: 0,
       type: "unstyled",
-      text:
-        "That song about rainbows from the Rolling Stones, she comes in colors everywhere",
+      text: "That song about rainbows from the Rolling Stones, she comes in colors everywhere",
       key: "...",
       entityRanges: [],
       inlineStyleRanges: []

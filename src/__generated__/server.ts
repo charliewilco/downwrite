@@ -5,14 +5,15 @@ import {
 } from "graphql";
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
 export type RequireFields<T, K extends keyof T> = {
   [X in Exclude<keyof T, K>]?: T[X];
-} &
-  { [P in K]-?: NonNullable<T[P]> };
+} & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -23,56 +24,28 @@ export type Scalars = {
   Date: any;
 };
 
-export type IEntry = {
-  __typename?: "Entry";
-  id: Maybe<Scalars["ID"]>;
-  title: Maybe<Scalars["String"]>;
-  author: Maybe<IAuthor>;
-  content: Maybe<Scalars["String"]>;
-  public: Maybe<Scalars["Boolean"]>;
-  dateAdded: Maybe<Scalars["Date"]>;
-  dateModified: Maybe<Scalars["Date"]>;
-  excerpt: Maybe<Scalars["String"]>;
-  user: Maybe<Scalars["String"]>;
-};
-
-export type IAuthor = {
-  __typename?: "Author";
-  username: Maybe<Scalars["String"]>;
-  gradient: Maybe<Array<Maybe<Scalars["String"]>>>;
-};
-
-export type IPreview = {
-  __typename?: "Preview";
-  title: Maybe<Scalars["String"]>;
-  id: Maybe<Scalars["ID"]>;
-  content: Maybe<Scalars["String"]>;
-  author: Maybe<IAuthor>;
-  dateAdded: Maybe<Scalars["Date"]>;
-};
-
-export type IUser = {
-  __typename?: "User";
-  username: Scalars["String"];
-  email: Scalars["String"];
-  admin: Maybe<Scalars["Boolean"]>;
-};
-
-export type IUserSettingsInput = {
-  username: Maybe<Scalars["String"]>;
-  email: Maybe<Scalars["String"]>;
-};
-
 export type IAuthUserPayload = {
   __typename?: "AuthUserPayload";
   token: Maybe<Scalars["String"]>;
 };
 
-export type IUsageDetails = {
-  __typename?: "UsageDetails";
-  entryCount: Scalars["Int"];
-  privateEntries: Scalars["Int"];
-  publicEntries: Scalars["Int"];
+export type IAuthor = {
+  __typename?: "Author";
+  gradient: Maybe<Array<Maybe<Scalars["String"]>>>;
+  username: Maybe<Scalars["String"]>;
+};
+
+export type IEntry = {
+  __typename?: "Entry";
+  author: Maybe<IAuthor>;
+  content: Maybe<Scalars["String"]>;
+  dateAdded: Maybe<Scalars["Date"]>;
+  dateModified: Maybe<Scalars["Date"]>;
+  excerpt: Maybe<Scalars["String"]>;
+  id: Maybe<Scalars["ID"]>;
+  public: Maybe<Scalars["Boolean"]>;
+  title: Maybe<Scalars["String"]>;
+  user: Maybe<Scalars["String"]>;
 };
 
 export type IMe = {
@@ -82,17 +55,73 @@ export type IMe = {
   usage: IUsageDetails;
 };
 
+export type IMutation = {
+  __typename?: "Mutation";
+  authenticateUser: Maybe<IAuthUserPayload>;
+  createEntry: Maybe<IEntry>;
+  createUser: Maybe<IAuthUserPayload>;
+  deleteEntry: Maybe<IEntry>;
+  updateEntry: Maybe<IEntry>;
+  updatePassword: Maybe<IAuthUserPayload>;
+  updateUserSettings: Maybe<IUser>;
+};
+
+export type IMutationAuthenticateUserArgs = {
+  password: Scalars["String"];
+  username: Scalars["String"];
+};
+
+export type IMutationCreateEntryArgs = {
+  content: Maybe<Scalars["String"]>;
+  title: Maybe<Scalars["String"]>;
+};
+
+export type IMutationCreateUserArgs = {
+  email: Scalars["String"];
+  password: Scalars["String"];
+  username: Scalars["String"];
+};
+
+export type IMutationDeleteEntryArgs = {
+  id: Scalars["ID"];
+};
+
+export type IMutationUpdateEntryArgs = {
+  content: Scalars["String"];
+  id: Scalars["String"];
+  status: Scalars["Boolean"];
+  title: Scalars["String"];
+};
+
+export type IMutationUpdatePasswordArgs = {
+  currentPassword: Scalars["String"];
+  newPassword: Scalars["String"];
+};
+
+export type IMutationUpdateUserSettingsArgs = {
+  settings: IUserSettingsInput;
+};
+
+export type IPreview = {
+  __typename?: "Preview";
+  author: Maybe<IAuthor>;
+  content: Maybe<Scalars["String"]>;
+  dateAdded: Maybe<Scalars["Date"]>;
+  id: Maybe<Scalars["ID"]>;
+  title: Maybe<Scalars["String"]>;
+};
+
 export type IQuery = {
   __typename?: "Query";
   /** Markdown document */
   entry: Maybe<IEntry>;
   /** List of Markdown documents */
   feed: Array<IEntry>;
+  me: Maybe<IMe>;
   /** Public preview of Markdown document */
   preview: Maybe<IPreview>;
   /** User Settings */
   settings: Maybe<IUser>;
-  me: Maybe<IMe>;
 };
 
 export type IQueryEntryArgs = {
@@ -103,99 +132,93 @@ export type IQueryPreviewArgs = {
   id: Scalars["ID"];
 };
 
-export type IMutation = {
-  __typename?: "Mutation";
-  createEntry: Maybe<IEntry>;
-  updateEntry: Maybe<IEntry>;
-  deleteEntry: Maybe<IEntry>;
-  createUser: Maybe<IAuthUserPayload>;
-  authenticateUser: Maybe<IAuthUserPayload>;
-  updateUserSettings: Maybe<IUser>;
-  updatePassword: Maybe<IAuthUserPayload>;
+export type IUsageDetails = {
+  __typename?: "UsageDetails";
+  entryCount: Scalars["Int"];
+  privateEntries: Scalars["Int"];
+  publicEntries: Scalars["Int"];
 };
 
-export type IMutationCreateEntryArgs = {
-  content: Maybe<Scalars["String"]>;
-  title: Maybe<Scalars["String"]>;
-};
-
-export type IMutationUpdateEntryArgs = {
-  id: Scalars["String"];
-  content: Scalars["String"];
-  title: Scalars["String"];
-  status: Scalars["Boolean"];
-};
-
-export type IMutationDeleteEntryArgs = {
-  id: Scalars["ID"];
-};
-
-export type IMutationCreateUserArgs = {
-  username: Scalars["String"];
+export type IUser = {
+  __typename?: "User";
+  admin: Maybe<Scalars["Boolean"]>;
   email: Scalars["String"];
-  password: Scalars["String"];
-};
-
-export type IMutationAuthenticateUserArgs = {
+  id: Scalars["ID"];
   username: Scalars["String"];
-  password: Scalars["String"];
 };
 
-export type IMutationUpdateUserSettingsArgs = {
-  settings: IUserSettingsInput;
+export type IUserSettingsInput = {
+  email: Maybe<Scalars["String"]>;
+  username: Maybe<Scalars["String"]>;
 };
 
-export type IMutationUpdatePasswordArgs = {
-  currentPassword: Scalars["String"];
-  newPassword: Scalars["String"];
+export type IEntryInfoFragment = {
+  __typename?: "Entry";
+  title: string | null;
+  dateAdded: any | null;
+  id: string | null;
+  public: boolean | null;
 };
-
-export type IEntryInfoFragment = { __typename?: "Entry" } & Pick<
-  IEntry,
-  "title" | "dateAdded" | "id" | "public"
->;
 
 export type IAllPostsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type IAllPostsQuery = { __typename?: "Query" } & {
-  feed: Array<{ __typename?: "Entry" } & IEntryInfoFragment>;
+export type IAllPostsQuery = {
+  __typename?: "Query";
+  feed: Array<{
+    __typename?: "Entry";
+    title: string | null;
+    dateAdded: any | null;
+    id: string | null;
+    public: boolean | null;
+  }>;
 };
 
 export type IEditQueryVariables = Exact<{
   id: Scalars["ID"];
 }>;
 
-export type IEditQuery = { __typename?: "Query" } & {
-  entry: Maybe<
-    { __typename?: "Entry" } & Pick<IEntry, "content"> & IEntryInfoFragment
-  >;
+export type IEditQuery = {
+  __typename?: "Query";
+  entry: {
+    __typename?: "Entry";
+    content: string | null;
+    title: string | null;
+    dateAdded: any | null;
+    id: string | null;
+    public: boolean | null;
+  } | null;
 };
 
 export type IPreviewQueryVariables = Exact<{
   id: Scalars["ID"];
 }>;
 
-export type IPreviewQuery = { __typename?: "Query" } & {
-  preview: Maybe<
-    { __typename?: "Preview" } & Pick<
-      IPreview,
-      "title" | "dateAdded" | "id" | "content"
-    > & { author: Maybe<{ __typename?: "Author" } & Pick<IAuthor, "username">> }
-  >;
+export type IPreviewQuery = {
+  __typename?: "Query";
+  preview: {
+    __typename?: "Preview";
+    title: string | null;
+    dateAdded: any | null;
+    id: string | null;
+    content: string | null;
+    author: { __typename?: "Author"; username: string | null } | null;
+  } | null;
 };
 
 export type IUserDetailsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type IUserDetailsQuery = { __typename?: "Query" } & {
-  settings: Maybe<{ __typename?: "User" } & Pick<IUser, "username" | "email">>;
-  me: Maybe<
-    { __typename?: "Me" } & {
-      usage: { __typename?: "UsageDetails" } & Pick<
-        IUsageDetails,
-        "entryCount" | "publicEntries" | "privateEntries"
-      >;
-    }
-  >;
+export type IUserDetailsQuery = {
+  __typename?: "Query";
+  settings: { __typename?: "User"; username: string; email: string } | null;
+  me: {
+    __typename?: "Me";
+    usage: {
+      __typename?: "UsageDetails";
+      entryCount: number;
+      publicEntries: number;
+      privateEntries: number;
+    };
+  } | null;
 };
 
 export type IUpdateEntryMutationVariables = Exact<{
@@ -205,10 +228,16 @@ export type IUpdateEntryMutationVariables = Exact<{
   status: Scalars["Boolean"];
 }>;
 
-export type IUpdateEntryMutation = { __typename?: "Mutation" } & {
-  updateEntry: Maybe<
-    { __typename?: "Entry" } & Pick<IEntry, "content"> & IEntryInfoFragment
-  >;
+export type IUpdateEntryMutation = {
+  __typename?: "Mutation";
+  updateEntry: {
+    __typename?: "Entry";
+    content: string | null;
+    title: string | null;
+    dateAdded: any | null;
+    id: string | null;
+    public: boolean | null;
+  } | null;
 };
 
 export type ICreateEntryMutationVariables = Exact<{
@@ -216,16 +245,28 @@ export type ICreateEntryMutationVariables = Exact<{
   title: Maybe<Scalars["String"]>;
 }>;
 
-export type ICreateEntryMutation = { __typename?: "Mutation" } & {
-  createEntry: Maybe<{ __typename?: "Entry" } & IEntryInfoFragment>;
+export type ICreateEntryMutation = {
+  __typename?: "Mutation";
+  createEntry: {
+    __typename?: "Entry";
+    title: string | null;
+    dateAdded: any | null;
+    id: string | null;
+    public: boolean | null;
+  } | null;
 };
 
 export type IRemoveEntryMutationVariables = Exact<{
   id: Scalars["ID"];
 }>;
 
-export type IRemoveEntryMutation = { __typename?: "Mutation" } & {
-  deleteEntry: Maybe<{ __typename?: "Entry" } & Pick<IEntry, "title" | "id">>;
+export type IRemoveEntryMutation = {
+  __typename?: "Mutation";
+  deleteEntry: {
+    __typename?: "Entry";
+    title: string | null;
+    id: string | null;
+  } | null;
 };
 
 export type ILoginUserMutationVariables = Exact<{
@@ -233,10 +274,9 @@ export type ILoginUserMutationVariables = Exact<{
   password: Scalars["String"];
 }>;
 
-export type ILoginUserMutation = { __typename?: "Mutation" } & {
-  authenticateUser: Maybe<
-    { __typename?: "AuthUserPayload" } & Pick<IAuthUserPayload, "token">
-  >;
+export type ILoginUserMutation = {
+  __typename?: "Mutation";
+  authenticateUser: { __typename?: "AuthUserPayload"; token: string | null } | null;
 };
 
 export type ICreateUserMutationVariables = Exact<{
@@ -245,20 +285,22 @@ export type ICreateUserMutationVariables = Exact<{
   password: Scalars["String"];
 }>;
 
-export type ICreateUserMutation = { __typename?: "Mutation" } & {
-  createUser: Maybe<
-    { __typename?: "AuthUserPayload" } & Pick<IAuthUserPayload, "token">
-  >;
+export type ICreateUserMutation = {
+  __typename?: "Mutation";
+  createUser: { __typename?: "AuthUserPayload"; token: string | null } | null;
 };
 
 export type IUpdateUserSettingsMutationVariables = Exact<{
   settings: IUserSettingsInput;
 }>;
 
-export type IUpdateUserSettingsMutation = { __typename?: "Mutation" } & {
-  updateUserSettings: Maybe<
-    { __typename?: "User" } & Pick<IUser, "username" | "email">
-  >;
+export type IUpdateUserSettingsMutation = {
+  __typename?: "Mutation";
+  updateUserSettings: {
+    __typename?: "User";
+    username: string;
+    email: string;
+  } | null;
 };
 
 export type IUpdatePasswordMutationVariables = Exact<{
@@ -266,16 +308,20 @@ export type IUpdatePasswordMutationVariables = Exact<{
   newPassword: Scalars["String"];
 }>;
 
-export type IUpdatePasswordMutation = { __typename?: "Mutation" } & {
-  updatePassword: Maybe<
-    { __typename?: "AuthUserPayload" } & Pick<IAuthUserPayload, "token">
-  >;
+export type IUpdatePasswordMutation = {
+  __typename?: "Mutation";
+  updatePassword: { __typename?: "AuthUserPayload"; token: string | null } | null;
 };
 
 export type IIsMeQueryVariables = Exact<{ [key: string]: never }>;
 
-export type IIsMeQuery = { __typename?: "Query" } & {
-  me: Maybe<{ __typename?: "Me" } & Pick<IMe, "token">>;
+export type IIsMeQuery = {
+  __typename?: "Query";
+  me: {
+    __typename?: "Me";
+    token: string | null;
+    details: { __typename?: "User"; id: string; username: string } | null;
+  } | null;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -283,21 +329,12 @@ export type ResolversObject<TObject> = WithIndex<TObject>;
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
-export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  fragment: string;
+export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-
-export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  selectionSet: string;
-  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-export type StitchingResolver<TResult, TParent, TContext, TArgs> =
-  | LegacyStitchingResolver<TResult, TParent, TContext, TArgs>
-  | NewStitchingResolver<TResult, TParent, TContext, TArgs>;
 export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
   | ResolverFn<TResult, TParent, TContext, TArgs>
-  | StitchingResolver<TResult, TParent, TContext, TArgs>;
+  | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -395,40 +432,61 @@ export type DirectiveResolverFn<
 
 /** Mapping between all available schema types and the resolvers types */
 export type IResolversTypes = ResolversObject<{
+  AuthUserPayload: ResolverTypeWrapper<IAuthUserPayload>;
+  Author: ResolverTypeWrapper<IAuthor>;
+  Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   Date: ResolverTypeWrapper<Scalars["Date"]>;
   Entry: ResolverTypeWrapper<IEntry>;
   ID: ResolverTypeWrapper<Scalars["ID"]>;
-  String: ResolverTypeWrapper<Scalars["String"]>;
-  Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
-  Author: ResolverTypeWrapper<IAuthor>;
-  Preview: ResolverTypeWrapper<IPreview>;
-  User: ResolverTypeWrapper<IUser>;
-  UserSettingsInput: IUserSettingsInput;
-  AuthUserPayload: ResolverTypeWrapper<IAuthUserPayload>;
-  UsageDetails: ResolverTypeWrapper<IUsageDetails>;
   Int: ResolverTypeWrapper<Scalars["Int"]>;
   Me: ResolverTypeWrapper<IMe>;
-  Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
+  Preview: ResolverTypeWrapper<IPreview>;
+  Query: ResolverTypeWrapper<{}>;
+  String: ResolverTypeWrapper<Scalars["String"]>;
+  UsageDetails: ResolverTypeWrapper<IUsageDetails>;
+  User: ResolverTypeWrapper<IUser>;
+  UserSettingsInput: IUserSettingsInput;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type IResolversParentTypes = ResolversObject<{
+  AuthUserPayload: IAuthUserPayload;
+  Author: IAuthor;
+  Boolean: Scalars["Boolean"];
   Date: Scalars["Date"];
   Entry: IEntry;
   ID: Scalars["ID"];
-  String: Scalars["String"];
-  Boolean: Scalars["Boolean"];
-  Author: IAuthor;
-  Preview: IPreview;
-  User: IUser;
-  UserSettingsInput: IUserSettingsInput;
-  AuthUserPayload: IAuthUserPayload;
-  UsageDetails: IUsageDetails;
   Int: Scalars["Int"];
   Me: IMe;
-  Query: {};
   Mutation: {};
+  Preview: IPreview;
+  Query: {};
+  String: Scalars["String"];
+  UsageDetails: IUsageDetails;
+  User: IUser;
+  UserSettingsInput: IUserSettingsInput;
+}>;
+
+export type IAuthUserPayloadResolvers<
+  ContextType = any,
+  ParentType extends IResolversParentTypes["AuthUserPayload"] = IResolversParentTypes["AuthUserPayload"]
+> = ResolversObject<{
+  token: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type IAuthorResolvers<
+  ContextType = any,
+  ParentType extends IResolversParentTypes["Author"] = IResolversParentTypes["Author"]
+> = ResolversObject<{
+  gradient: Resolver<
+    Maybe<Array<Maybe<IResolversTypes["String"]>>>,
+    ParentType,
+    ContextType
+  >;
+  username: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export interface IDateScalarConfig
@@ -440,68 +498,15 @@ export type IEntryResolvers<
   ContextType = any,
   ParentType extends IResolversParentTypes["Entry"] = IResolversParentTypes["Entry"]
 > = ResolversObject<{
-  id: Resolver<Maybe<IResolversTypes["ID"]>, ParentType, ContextType>;
-  title: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
   author: Resolver<Maybe<IResolversTypes["Author"]>, ParentType, ContextType>;
   content: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
-  public: Resolver<Maybe<IResolversTypes["Boolean"]>, ParentType, ContextType>;
   dateAdded: Resolver<Maybe<IResolversTypes["Date"]>, ParentType, ContextType>;
   dateModified: Resolver<Maybe<IResolversTypes["Date"]>, ParentType, ContextType>;
   excerpt: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
-  user: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type IAuthorResolvers<
-  ContextType = any,
-  ParentType extends IResolversParentTypes["Author"] = IResolversParentTypes["Author"]
-> = ResolversObject<{
-  username: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
-  gradient: Resolver<
-    Maybe<Array<Maybe<IResolversTypes["String"]>>>,
-    ParentType,
-    ContextType
-  >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type IPreviewResolvers<
-  ContextType = any,
-  ParentType extends IResolversParentTypes["Preview"] = IResolversParentTypes["Preview"]
-> = ResolversObject<{
-  title: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
   id: Resolver<Maybe<IResolversTypes["ID"]>, ParentType, ContextType>;
-  content: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
-  author: Resolver<Maybe<IResolversTypes["Author"]>, ParentType, ContextType>;
-  dateAdded: Resolver<Maybe<IResolversTypes["Date"]>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type IUserResolvers<
-  ContextType = any,
-  ParentType extends IResolversParentTypes["User"] = IResolversParentTypes["User"]
-> = ResolversObject<{
-  username: Resolver<IResolversTypes["String"], ParentType, ContextType>;
-  email: Resolver<IResolversTypes["String"], ParentType, ContextType>;
-  admin: Resolver<Maybe<IResolversTypes["Boolean"]>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type IAuthUserPayloadResolvers<
-  ContextType = any,
-  ParentType extends IResolversParentTypes["AuthUserPayload"] = IResolversParentTypes["AuthUserPayload"]
-> = ResolversObject<{
-  token: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type IUsageDetailsResolvers<
-  ContextType = any,
-  ParentType extends IResolversParentTypes["UsageDetails"] = IResolversParentTypes["UsageDetails"]
-> = ResolversObject<{
-  entryCount: Resolver<IResolversTypes["Int"], ParentType, ContextType>;
-  privateEntries: Resolver<IResolversTypes["Int"], ParentType, ContextType>;
-  publicEntries: Resolver<IResolversTypes["Int"], ParentType, ContextType>;
+  public: Resolver<Maybe<IResolversTypes["Boolean"]>, ParentType, ContextType>;
+  title: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
+  user: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -512,6 +517,66 @@ export type IMeResolvers<
   details: Resolver<Maybe<IResolversTypes["User"]>, ParentType, ContextType>;
   token: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
   usage: Resolver<IResolversTypes["UsageDetails"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type IMutationResolvers<
+  ContextType = any,
+  ParentType extends IResolversParentTypes["Mutation"] = IResolversParentTypes["Mutation"]
+> = ResolversObject<{
+  authenticateUser: Resolver<
+    Maybe<IResolversTypes["AuthUserPayload"]>,
+    ParentType,
+    ContextType,
+    RequireFields<IMutationAuthenticateUserArgs, "password" | "username">
+  >;
+  createEntry: Resolver<
+    Maybe<IResolversTypes["Entry"]>,
+    ParentType,
+    ContextType,
+    RequireFields<IMutationCreateEntryArgs, never>
+  >;
+  createUser: Resolver<
+    Maybe<IResolversTypes["AuthUserPayload"]>,
+    ParentType,
+    ContextType,
+    RequireFields<IMutationCreateUserArgs, "email" | "password" | "username">
+  >;
+  deleteEntry: Resolver<
+    Maybe<IResolversTypes["Entry"]>,
+    ParentType,
+    ContextType,
+    RequireFields<IMutationDeleteEntryArgs, "id">
+  >;
+  updateEntry: Resolver<
+    Maybe<IResolversTypes["Entry"]>,
+    ParentType,
+    ContextType,
+    RequireFields<IMutationUpdateEntryArgs, "content" | "id" | "status" | "title">
+  >;
+  updatePassword: Resolver<
+    Maybe<IResolversTypes["AuthUserPayload"]>,
+    ParentType,
+    ContextType,
+    RequireFields<IMutationUpdatePasswordArgs, "currentPassword" | "newPassword">
+  >;
+  updateUserSettings: Resolver<
+    Maybe<IResolversTypes["User"]>,
+    ParentType,
+    ContextType,
+    RequireFields<IMutationUpdateUserSettingsArgs, "settings">
+  >;
+}>;
+
+export type IPreviewResolvers<
+  ContextType = any,
+  ParentType extends IResolversParentTypes["Preview"] = IResolversParentTypes["Preview"]
+> = ResolversObject<{
+  author: Resolver<Maybe<IResolversTypes["Author"]>, ParentType, ContextType>;
+  content: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
+  dateAdded: Resolver<Maybe<IResolversTypes["Date"]>, ParentType, ContextType>;
+  id: Resolver<Maybe<IResolversTypes["ID"]>, ParentType, ContextType>;
+  title: Resolver<Maybe<IResolversTypes["String"]>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -526,6 +591,7 @@ export type IQueryResolvers<
     RequireFields<IQueryEntryArgs, "id">
   >;
   feed: Resolver<Array<IResolversTypes["Entry"]>, ParentType, ContextType>;
+  me: Resolver<Maybe<IResolversTypes["Me"]>, ParentType, ContextType>;
   preview: Resolver<
     Maybe<IResolversTypes["Preview"]>,
     ParentType,
@@ -533,66 +599,38 @@ export type IQueryResolvers<
     RequireFields<IQueryPreviewArgs, "id">
   >;
   settings: Resolver<Maybe<IResolversTypes["User"]>, ParentType, ContextType>;
-  me: Resolver<Maybe<IResolversTypes["Me"]>, ParentType, ContextType>;
 }>;
 
-export type IMutationResolvers<
+export type IUsageDetailsResolvers<
   ContextType = any,
-  ParentType extends IResolversParentTypes["Mutation"] = IResolversParentTypes["Mutation"]
+  ParentType extends IResolversParentTypes["UsageDetails"] = IResolversParentTypes["UsageDetails"]
 > = ResolversObject<{
-  createEntry: Resolver<
-    Maybe<IResolversTypes["Entry"]>,
-    ParentType,
-    ContextType,
-    RequireFields<IMutationCreateEntryArgs, never>
-  >;
-  updateEntry: Resolver<
-    Maybe<IResolversTypes["Entry"]>,
-    ParentType,
-    ContextType,
-    RequireFields<IMutationUpdateEntryArgs, "id" | "content" | "title" | "status">
-  >;
-  deleteEntry: Resolver<
-    Maybe<IResolversTypes["Entry"]>,
-    ParentType,
-    ContextType,
-    RequireFields<IMutationDeleteEntryArgs, "id">
-  >;
-  createUser: Resolver<
-    Maybe<IResolversTypes["AuthUserPayload"]>,
-    ParentType,
-    ContextType,
-    RequireFields<IMutationCreateUserArgs, "username" | "email" | "password">
-  >;
-  authenticateUser: Resolver<
-    Maybe<IResolversTypes["AuthUserPayload"]>,
-    ParentType,
-    ContextType,
-    RequireFields<IMutationAuthenticateUserArgs, "username" | "password">
-  >;
-  updateUserSettings: Resolver<
-    Maybe<IResolversTypes["User"]>,
-    ParentType,
-    ContextType,
-    RequireFields<IMutationUpdateUserSettingsArgs, "settings">
-  >;
-  updatePassword: Resolver<
-    Maybe<IResolversTypes["AuthUserPayload"]>,
-    ParentType,
-    ContextType,
-    RequireFields<IMutationUpdatePasswordArgs, "currentPassword" | "newPassword">
-  >;
+  entryCount: Resolver<IResolversTypes["Int"], ParentType, ContextType>;
+  privateEntries: Resolver<IResolversTypes["Int"], ParentType, ContextType>;
+  publicEntries: Resolver<IResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type IUserResolvers<
+  ContextType = any,
+  ParentType extends IResolversParentTypes["User"] = IResolversParentTypes["User"]
+> = ResolversObject<{
+  admin: Resolver<Maybe<IResolversTypes["Boolean"]>, ParentType, ContextType>;
+  email: Resolver<IResolversTypes["String"], ParentType, ContextType>;
+  id: Resolver<IResolversTypes["ID"], ParentType, ContextType>;
+  username: Resolver<IResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type IResolvers<ContextType = any> = ResolversObject<{
+  AuthUserPayload: IAuthUserPayloadResolvers<ContextType>;
+  Author: IAuthorResolvers<ContextType>;
   Date: GraphQLScalarType;
   Entry: IEntryResolvers<ContextType>;
-  Author: IAuthorResolvers<ContextType>;
-  Preview: IPreviewResolvers<ContextType>;
-  User: IUserResolvers<ContextType>;
-  AuthUserPayload: IAuthUserPayloadResolvers<ContextType>;
-  UsageDetails: IUsageDetailsResolvers<ContextType>;
   Me: IMeResolvers<ContextType>;
-  Query: IQueryResolvers<ContextType>;
   Mutation: IMutationResolvers<ContextType>;
+  Preview: IPreviewResolvers<ContextType>;
+  Query: IQueryResolvers<ContextType>;
+  UsageDetails: IUsageDetailsResolvers<ContextType>;
+  User: IUserResolvers<ContextType>;
 }>;

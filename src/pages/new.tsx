@@ -1,95 +1,120 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { NextPage } from "next";
 import Head from "next/head";
 import dynamic from "next/dynamic";
-import { useCallback } from "react";
-import { useFormik } from "formik";
-import { useNewEntry, INewEditorValues } from "../hooks/useNewEntry";
-import { useOffline } from "@hooks/useOffline";
-import { IMarkdownConversion } from "@components/upload";
-import { Input } from "@components/editor-input";
-import { Button } from "@components/button";
-// import { getInitialStateFromCookie } from "@lib/cookie-managment";
-import {
-  useEditor,
-  useEditorState,
-  useDecorators,
-  defaultDecorators,
-  emptyContentState
-} from "../editor";
+import { useRouter } from "next/router";
+import { useCallback, useMemo } from "react";
+import { EditorState } from "draft-js";
+import { useDropzone } from "react-dropzone";
+import { EditorInput } from "@components/ui-input";
+
+import { useDataFactory, useEnhancedReducer } from "@hooks/index";
+import { useEditor, useDecorators, emptyContentState } from "@hooks/useEditor";
+import { imageLinkDecorators, prismHighlightDecorator } from "../editor";
+import { CreateEntryState } from "@data/modules/create";
+import { StickyContainer } from "@components/sticky-header";
 
 const Editor = dynamic(() => import("@components/editor"));
-const Upload = dynamic(() => import("@components/upload"));
-
-// export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-//   const initialAppState = await getInitialStateFromCookie(req);
-//   return {
-//     props: {
-//       initialAppState
-//     }
-//   };
-// };
 
 const NewEntryPage: NextPage = () => {
-  const [createNewPost] = useNewEntry();
-  const isOffline = useOffline();
-  const decorators = useDecorators(defaultDecorators);
-  const [editorState, editorActions] = useEditorState({
-    contentState: emptyContentState,
-    decorators
+  const router = useRouter();
+  const dataSource = useDataFactory(CreateEntryState);
+  const decorators = useDecorators([imageLinkDecorators, prismHighlightDecorator]);
+  const [state, dispatch] = useEnhancedReducer({
+    title: "",
+    editorState: EditorState.createWithContent(emptyContentState, decorators)
   });
 
-  const editorProps = useEditor(editorActions);
+  const getState = () => state;
 
-  function onSubmit(values: INewEditorValues): void {
-    createNewPost(values.title, editorState);
-  }
+  const editorProps = useEditor({
+    getEditorState: () => getState().editorState,
+    setEditorState: (editorState) => dispatch({ editorState })
+  });
 
-  const { values, setFieldValue, handleSubmit, handleChange } = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      title: ""
+  const hasUnsavedChanges = useMemo(() => {
+    const content = state.editorState.getCurrentContent();
+
+    return content.hasText() || state.title !== "";
+  }, [state]);
+
+  const handleSubmit = useCallback(async () => {
+    const state = getState();
+    const content = state.editorState.getCurrentContent();
+
+    if (content.hasText() || state.title !== "") {
+      const data = await dataSource.create({
+        ...state
+      });
+
+      if (!!data) {
+        router.push(`/${data.createEntry?.id}/edit`);
+      }
+    }
+  }, [router]);
+
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      dataSource.onDrop(acceptedFiles).then(({ title, editorState }) => {
+        dispatch({ title, editorState });
+      });
     },
-    onSubmit
-  });
+    [dataSource, dispatch]
+  );
 
-  const onParsed = useCallback((parsed: IMarkdownConversion) => {
-    setFieldValue("title", parsed.title);
-    editorActions.setEditorState(parsed.editorState);
-  }, []);
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    (e) => {
+      dispatch({ title: e.target.value });
+    },
+    [dispatch]
+  );
+
+  const { getRootProps } = useDropzone({
+    onDrop,
+    multiple: false,
+    accept: ["text/markdown", "text/x-markdown", "text/plain"]
+  });
 
   return (
-    <form
-      className="max-w-2xl px-2 pt-32 pb-0 mx-auto"
-      onSubmit={handleSubmit}
-      data-testid="NEW_EDITOR_FORM">
+    <div className="outer" data-testid="NEW_EDITOR_FORM">
       <Head>
-        <title>{values.title || "New"} | Downwrite</title>
+        <title>{state.title || "New"} | Downwrite</title>
       </Head>
-      <Upload onParsed={onParsed}>
-        <Input
-          value={values.title}
+      <div {...getRootProps()}>
+        <EditorInput
+          value={state.title}
           data-testid="NEW_ENTRY_TITLE_ENTRY"
           onChange={handleChange}
           name="title"
           placeholder="Untitled Document"
         />
-        <aside className="flex items-center justify-between py-2 mx-0 mt-2 mb-4">
-          <div className="flex items-center">
-            {isOffline && <span>You're Offline Right Now</span>}
+        <StickyContainer debug>
+          <div>
+            {hasUnsavedChanges && (
+              <button
+                className="alt-button"
+                onClick={handleSubmit}
+                data-testid="NEW_ENTRY_SUBMIT_BUTTON">
+                Save Changes
+              </button>
+            )}
           </div>
-          <div className="flex items-center">
-            <Button type="submit" data-testid="NEW_ENTRY_SUBMIT_BUTTON">
-              Add New
-            </Button>
-          </div>
-        </aside>
+        </StickyContainer>
         <Editor
           onSave={() => handleSubmit()}
           {...editorProps}
-          editorState={editorState}
+          editorState={state.editorState}
         />
-      </Upload>
-    </form>
+      </div>
+      <style jsx>{`
+        .outer {
+          width: 100%;
+          padding-top: 8rem;
+          max-width: 56rem;
+          margin: 1rem auto;
+        }
+      `}</style>
+    </div>
   );
 };
 

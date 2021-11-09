@@ -5,13 +5,12 @@ interface IPostErrorProps {
   error?: string;
 }
 
-export default function PostError({ error, message }: IPostErrorProps): JSX.Element {
+export function NotFound({ error, message }: IPostErrorProps): JSX.Element {
   return (
-    <div className="py-2 max-w-md mx-auto text-center">
+    <div>
       <Image
         width={127}
         height={151}
-        className="inline-block mb-4 w-1/4"
         alt="Document with an Negative mark"
         src="/static/entry-not-found.png"
       />

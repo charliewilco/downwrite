@@ -1,10 +1,7 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiHandler } from "next";
 import { mdToDraftjs, draftjsToMd } from "draftjs-md-converter";
 
-export default async function markdown(
-  { body, query }: NextApiRequest,
-  res: NextApiResponse
-) {
+const handler: NextApiHandler = async ({ body, query }, res) => {
   const q = !!query && Array.isArray(query) ? query.join("") : query;
   const isFromMarkdown = q === "fromMarkdown";
   if (isFromMarkdown) {
@@ -14,9 +11,9 @@ export default async function markdown(
 
     res.json({ editorState });
   } else {
-    const { rawEditorState } = body;
+    const markdown = draftjsToMd(body.rawEditorState);
 
-    const md = draftjsToMd(rawEditorState);
-    res.json({ markdown: md });
+    res.json({ markdown });
   }
-}
+};
+export default handler;
