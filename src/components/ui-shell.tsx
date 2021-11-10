@@ -1,20 +1,12 @@
-import Head from "next/head";
 import { UIHeader } from "@components/header";
 import { NotificationList } from "@components/notification-list";
-import { buttons } from "./button";
-import { typography } from "./typography";
-import { variables, reset } from "./reset";
+import { buttons } from "@components/button";
+import { typography } from "@components/typography";
+import { variables, reset } from "@components/reset";
 
 export const UIShell: React.FC = ({ children }) => {
   return (
     <div className="outer">
-      <Head>
-        <meta
-          name="viewport"
-          content="initial-scale=1.0, width=device-width"
-          key="viewport"
-        />
-      </Head>
       <UIHeader />
       <main>{children}</main>
       <NotificationList />

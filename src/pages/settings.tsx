@@ -1,28 +1,20 @@
-import Head from "next/head";
 import useSWR from "swr";
 import { useRef, useReducer } from "react";
 import { useFormik } from "formik";
 import { MixedCheckbox } from "@reach/checkbox";
+
+import { CustomMeta } from "@components/custom-meta";
 import { UIInput, UIInputContainer, UIInputError } from "@components/ui-input";
 import { Loading } from "@components/loading";
 import { SiteFooter } from "@components/footer";
 
 import { useDataSource } from "@hooks/useDataSource";
-
 import type { IUserFormValues } from "@data/base/settings";
 import {
   UserSettingsSchema,
   UpdatePasswordSchema,
   LocalSettingsSchema
 } from "@shared/validations";
-import {
-  ICON_LINK,
-  OG_DESCRIPTION,
-  OG_IMAGE_URL,
-  createMetadata
-} from "@shared/constants";
-
-const meta = createMetadata("settings", "User Settings");
 
 interface ILocalSettings {
   fileExtension: string;
@@ -92,25 +84,7 @@ const SettingsPage = () => {
 
   return (
     <div className="outer" data-testid="SETTINGS_CONTAINER">
-      <Head>
-        <title>{meta.PAGE_TITLE}</title>
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="192x192" href={ICON_LINK} />
-        <meta name="description" content={OG_DESCRIPTION} />
-        <meta name="title" content={meta.PAGE_TITLE} />
-        <meta name="theme-color" content="#050505" />
-        <link rel="canonical" href={meta.PAGE_URL} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={meta.PAGE_URL} />
-        <meta property="og:title" content={meta.PAGE_TITLE} />
-        <meta property="og:description" content={OG_DESCRIPTION} />
-        <meta property="og:image" content={OG_IMAGE_URL} />
-        <meta property="twitter:url" content={meta.PAGE_URL} />
-        <meta property="twitter:title" content={meta.PAGE_TITLE} />
-        <meta property="twitter:description" content={OG_DESCRIPTION} />
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:image" content={OG_IMAGE_URL} />
-      </Head>
+      <CustomMeta title="User Settings" path="settings" />
       <header>
         <h1 className="page-title">Settings</h1>
       </header>

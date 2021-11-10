@@ -1,18 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { NextPage } from "next";
-import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useCallback, useMemo } from "react";
 import { EditorState } from "draft-js";
 import { useDropzone } from "react-dropzone";
 import { EditorInput } from "@components/ui-input";
-
+import { CustomMeta } from "@components/custom-meta";
+import { StickyContainer } from "@components/sticky-header";
 import { useDataFactory, useEnhancedReducer } from "@hooks/index";
 import { useEditor, useDecorators, emptyContentState } from "@hooks/useEditor";
 import { imageLinkDecorators, prismHighlightDecorator } from "../editor";
 import { CreateEntryState } from "@data/modules/create";
-import { StickyContainer } from "@components/sticky-header";
 
 const Editor = dynamic(() => import("@components/editor"));
 
@@ -77,9 +76,7 @@ const NewEntryPage: NextPage = () => {
 
   return (
     <div className="outer" data-testid="NEW_EDITOR_FORM">
-      <Head>
-        <title>{state.title || "New"} | Downwrite</title>
-      </Head>
+      <CustomMeta title={state.title || "New"} path="new" />
       <div {...getRootProps()}>
         <EditorInput
           value={state.title}

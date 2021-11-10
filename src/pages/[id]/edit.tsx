@@ -3,12 +3,13 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useEffect, useCallback } from "react";
-import Head from "next/head";
 import useSWR from "swr";
 
 import { FiEye, FiDownload } from "react-icons/fi";
 
+import { CustomMeta } from "@components/custom-meta";
 import { StickyContainer } from "@components/sticky-header";
+import { VisibilityToggle } from "@components/visibility-toggle";
 import { Loading } from "@components/loading";
 import { EditorInput } from "@components/ui-input";
 import { TimeMarker } from "@components/time-marker";
@@ -17,7 +18,6 @@ import { __IS_DEV__ } from "@shared/constants";
 import { UpdateEntryState, IEdit } from "@data/modules";
 import { useDataFactory, useEnhancedReducer, useAutosaving } from "@hooks/index";
 import { useEditor, useWordCount } from "@hooks/useEditor";
-import { VisibilityToggle } from "@components/visibility-toggle";
 
 const Editor = dynamic(() => import("@components/editor"), {
   loading: () => <p>Loading the Editor</p>,
@@ -99,9 +99,10 @@ const EditUI: NextPage = () => {
 
   return (
     <div data-testid="EDIT_ENTRY_CONTAINER" className="outer">
-      <Head>
-        <title>{state.title} | Downwrite</title>
-      </Head>
+      <CustomMeta
+        title={state.title}
+        path={(router.query.id as string).concat("/preview")}
+      />
       <div>
         <StickyContainer debug>
           <div className="sticky-inner">

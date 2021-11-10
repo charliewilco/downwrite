@@ -16,6 +16,7 @@ import { AvatarColors } from "@shared/gradients";
 
 import { IPreview } from "../../__generated__/server";
 import { useSubjectSubscription, useDataSource } from "@hooks/index";
+import { CustomMeta } from "@components/custom-meta";
 
 interface IPreviewProps {
   id: string;
@@ -64,6 +65,7 @@ const PreviewEntry: NextPage<IPreviewProps> = (props) => {
         <Head>
           <title>{error.name} | Downwrite</title>
         </Head>
+        <CustomMeta title={error.name} path={props.id.concat("/preview")} />
         <NotFound error={error.name} message={error.message} />
       </div>
     );
@@ -79,9 +81,9 @@ const PreviewEntry: NextPage<IPreviewProps> = (props) => {
         title={data.preview?.title!}
         content={<MDXRemote {...props.result} />}
         dateAdded={data.preview?.dateAdded!}>
+        <CustomMeta title={data.preview?.title} path={props.id.concat("/preview")} />
+
         <Head>
-          <title>{data.preview?.title} | Downwrite</title>
-          <meta name="og:title" content={data.preview?.title!} />
           <meta
             name="og:description"
             content={data.preview?.content!.substr(0, 75)}

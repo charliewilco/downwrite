@@ -12,6 +12,12 @@ export const CustomMeta: React.VFC<ICustomMetaProps> = ({ title, path }) => {
   return (
     <Head>
       <title>{meta.PAGE_TITLE}</title>
+      <meta
+        name="viewport"
+        content="initial-scale=1.0, width=device-width"
+        key="viewport"
+      />
+      <meta charSet="utf-8" />
       <meta name="title" content={meta.PAGE_TITLE} />
       <link rel="canonical" href={meta.PAGE_URL} />
       <meta property="og:url" content={meta.PAGE_URL} />
