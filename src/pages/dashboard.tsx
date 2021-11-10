@@ -7,7 +7,7 @@ import useSWR from "swr";
 import { DialogContent, DialogOverlay } from "@reach/dialog";
 import { FiX } from "react-icons/fi";
 
-import { PostList } from "@components/post-list";
+import { PostList } from "@components/feed";
 import { Loading } from "@components/loading";
 import { Banner } from "@components/banner";
 import { CustomMeta } from "@components/custom-meta";
