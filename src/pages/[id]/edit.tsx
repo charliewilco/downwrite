@@ -13,11 +13,12 @@ import { VisibilityToggle } from "@components/visibility-toggle";
 import { Loading } from "@components/loading";
 import { EditorInput } from "@components/ui-input";
 import { TimeMarker } from "@components/time-marker";
-import { __IS_DEV__ } from "@shared/constants";
 
 import { UpdateEntryState, IEdit } from "@data/modules";
 import { useDataFactory, useEnhancedReducer, useAutosaving } from "@hooks/index";
 import { useEditor, useWordCount } from "@hooks/useEditor";
+import { Routes } from "@shared/routes";
+import { __IS_DEV__ } from "@shared/constants";
 
 const Editor = dynamic(() => import("@components/editor"), {
   loading: () => <p>Loading the Editor</p>,
@@ -126,7 +127,7 @@ const EditUI: NextPage = () => {
               <FiEye size={24} color="currentColor" />
             </VisibilityToggle>
             {!!state.publicStatus && (
-              <Link href="/[id]/preview" as={`/${router.query.id}/preview`}>
+              <Link href={Routes.PREVIEW} as={`/${router.query.id}/preview`}>
                 <a>Link</a>
               </Link>
             )}

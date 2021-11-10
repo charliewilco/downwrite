@@ -2,9 +2,10 @@ import Link from "next/link";
 import { useState, useCallback } from "react";
 
 import distance from "date-fns/formatDistanceToNow";
-
-import { IEntry } from "../__generated__/client";
 import type { IPartialFeedItem } from "@data/modules/dashboard";
+
+import type { IEntry } from "../__generated__/client";
+import { Routes } from "@shared/routes";
 
 export interface ICardProps {
   title: string;
@@ -26,7 +27,7 @@ export function Card(props: ICardProps): JSX.Element {
     <div className="card" data-testid="CARD">
       <header>
         <h2 data-testid="CARD_TITLE">
-          <Link href="/[id]/edit" as={`/${props.id}/edit`}>
+          <Link href={Routes.EDIT} as={`/${props.id}/edit`}>
             <a>{props.title}</a>
           </Link>
         </h2>
@@ -36,11 +37,11 @@ export function Card(props: ICardProps): JSX.Element {
       </header>
       <footer>
         <div className="links" data-testid="CARD_EXCERPT">
-          <Link href="/[id]/edit" as={`/${props.id}/edit`}>
+          <Link href={Routes.EDIT} as={`/${props.id}/edit`}>
             <a>Edit</a>
           </Link>
           {props.public && (
-            <Link href="/[id]/preview" as={`/${props.id}/preview`}>
+            <Link href={Routes.PREVIEW} as={`/${props.id}/preview`}>
               <a>Preview</a>
             </Link>
           )}
@@ -126,17 +127,17 @@ function PostListItem(props: IListItemProps): JSX.Element {
         <small>added {distance(new Date(props.dateAdded))} ago</small>
 
         <h2>
-          <Link href={editLink} as="/[id]/edit" passHref>
+          <Link as={editLink} href={Routes.EDIT} passHref>
             <a>{props.title}</a>
           </Link>
         </h2>
         <div className="tray">
           <div className="links">
-            <Link href={editLink} as="/[id]/edit">
+            <Link as={editLink} href={Routes.EDIT}>
               <a>Edit</a>
             </Link>
             {props.public && (
-              <Link href={previewLink} as="/[id]/preview">
+              <Link as={previewLink} href={Routes.PREVIEW}>
                 <a>Preview</a>
               </Link>
             )}

@@ -93,7 +93,11 @@ export const UIHeader: React.VFC = () => {
       ) : (
         <nav>
           <Link href={Routes.LOGIN} passHref>
-            <a className="login-link">Login or Sign Up</a>
+            <a className="login-link">Login</a>
+          </Link>
+          <span className="separator">or</span>&nbsp;
+          <Link href={Routes.REGISTER} passHref>
+            <a className="login-link">Register</a>
           </Link>
         </nav>
       )}
@@ -128,15 +132,17 @@ export const UIHeader: React.VFC = () => {
         }
 
         .login-link {
-          opacity: 50%;
+          opacity: 75%;
+          font-weight: 700;
         }
 
-        .login-link,
+        .separator {
+          margin-right: 0.5rem;
+          margin-left: 0.5rem;
+          user-select: none;
+        }
         .new-link {
           margin-right: 1rem;
-        }
-
-        .new-link {
           margin-left: 1rem;
         }
 
