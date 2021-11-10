@@ -27,7 +27,7 @@ NextMenuLink.displayName = "NextMenuLink";
 
 export const UIHeader: React.VFC = () => {
   const dataSource = useDataSource();
-  const me = useSubjectSubscription(dataSource.me.state);
+  const me = useSubjectSubscription(dataSource.auth.state);
 
   return (
     <header data-testid="APP_HEADER">

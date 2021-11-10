@@ -17,7 +17,7 @@ const SignOut: NextPage = () => {
   const dataSource = useDataSource();
 
   useEffect(() => {
-    dataSource.me.onLogout();
+    dataSource.auth.onLogout();
     router.push(Routes.LOGIN);
   }, [dataSource, router]);
 

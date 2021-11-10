@@ -52,7 +52,7 @@ export const getServerSideProps: PreviewPageHandler = async ({ params }) => {
 
 const PreviewEntry: NextPage<IPreviewProps> = (props) => {
   const dataSource = useDataSource();
-  const me = useSubjectSubscription(dataSource.me.state);
+  const me = useSubjectSubscription(dataSource.auth.state);
 
   const router = useRouter();
   const { error, data } = useSWR(props.id, (id) => dataSource.graphql.preview(id));

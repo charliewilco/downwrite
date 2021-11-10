@@ -10,7 +10,7 @@ import { useDataSource } from "@hooks/useDataSource";
 import { CustomMeta } from "@components/custom-meta";
 import { UIInput, UIInputContainer, UIInputError } from "@components/ui-input";
 import { SiteFooter } from "@components/footer";
-import { ILoginValues, IRegisterValues } from "@data/base/me";
+import { ILoginValues, IRegisterValues } from "@data/base/auth";
 import { LoginFormSchema, RegisterFormSchema } from "@shared/validations";
 import { Routes } from "@shared/routes";
 
@@ -24,7 +24,7 @@ const LoginPage: NextPage = () => {
     },
     validationSchema: LoginFormSchema,
     onSubmit(values) {
-      dataSource.me.login(values).then(() => router.push(Routes.DASHBOARD));
+      dataSource.auth.login(values).then(() => router.push(Routes.DASHBOARD));
     }
   });
 
@@ -38,7 +38,7 @@ const LoginPage: NextPage = () => {
     validationSchema: RegisterFormSchema,
     validateOnChange: false,
     onSubmit(values) {
-      dataSource.me.register(values).then(() => router.push(Routes.DASHBOARD));
+      dataSource.auth.register(values).then(() => router.push(Routes.DASHBOARD));
     }
   });
 

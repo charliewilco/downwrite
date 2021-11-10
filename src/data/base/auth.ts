@@ -24,7 +24,7 @@ export interface ILoginValues {
   password: string;
 }
 
-export class Me {
+export class Auth {
   #internalState: ICurrentUserState = {
     username: "",
     id: "",
@@ -42,19 +42,18 @@ export class Me {
     this.#store = store;
   }
 
-  async checkAuth() {
+  async check() {
     try {
       const value = await this.#client.isMe();
       this.#internalState.id = value.me.details.id;
       this.#internalState.username = value.me.details.username;
+      this.#callNext();
     } catch (error) {
       this.#internalState.id = "";
       this.#internalState.username = "";
 
-      console.error(error);
+      console.log(error.message);
     }
-
-    this.#callNext();
   }
 
   #callNext() {

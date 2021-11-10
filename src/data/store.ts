@@ -1,16 +1,16 @@
 import { DownwriteClient } from "@data/client";
-import { Me, GlobalNotifications, GlobalSettings } from "@data/base";
+import { Auth, GlobalNotifications, GlobalSettings } from "@data/base";
 import { __IS_BROWSER__ } from "@shared/constants";
 import type { IAppState, IStoreContructor } from "./types";
 
 export class DownwriteUIState implements IAppState {
   settings: GlobalSettings;
-  me: Me;
+  auth: Auth;
   notifications: GlobalNotifications;
   isOffline: boolean = false;
   #client = new DownwriteClient();
   constructor() {
-    this.me = new Me(this.#client, this);
+    this.auth = new Auth(this.#client, this);
     this.settings = new GlobalSettings(this.#client, this);
     this.notifications = new GlobalNotifications();
 
