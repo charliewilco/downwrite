@@ -4,7 +4,7 @@ interface ITimeMarkProps {
   dateAdded: Date;
 }
 
-export function TimeMarker(props: ITimeMarkProps) {
+export const TimeMarker: React.VFC<ITimeMarkProps> = (props) => {
   const date = new Date(props.dateAdded.toString());
 
   return (
@@ -12,4 +12,4 @@ export function TimeMarker(props: ITimeMarkProps) {
       Added on <time dateTime={date.toString()}>{format(date, "dd	LLL yy")}</time>
     </div>
   );
-}
+};

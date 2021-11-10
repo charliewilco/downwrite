@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import { MixedCheckbox } from "@reach/checkbox";
 
 import { CustomMeta } from "@components/custom-meta";
-import { UIInput, UIInputContainer, UIInputError } from "@components/ui-input";
+import { UIInput, UIInputError } from "@components/ui-input";
 import { Loading } from "@components/loading";
 import { SiteFooter } from "@components/footer";
 
@@ -112,7 +112,7 @@ const SettingsPage = () => {
         </div>
         <div className="form">
           <form onSubmit={userFormik.handleSubmit}>
-            <UIInputContainer>
+            <div>
               <UIInput
                 testID="SETTINGS_USERNAME_INPUT"
                 placeholder="username"
@@ -125,8 +125,8 @@ const SettingsPage = () => {
               {userFormik.errors.username && (
                 <UIInputError>{userFormik.errors.username}</UIInputError>
               )}
-            </UIInputContainer>
-            <UIInputContainer>
+            </div>
+            <div>
               <UIInput
                 testID="SETTINGS_EMAIL_INPUT"
                 placeholder="user@email.com"
@@ -140,7 +140,7 @@ const SettingsPage = () => {
               {userFormik.errors.email && (
                 <UIInputError>{userFormik.errors.email}</UIInputError>
               )}
-            </UIInputContainer>
+            </div>
             <div className="action">
               <button
                 className="base-button"
@@ -160,7 +160,7 @@ const SettingsPage = () => {
         <div className="form">
           <form onSubmit={passwordFormik.handleSubmit}>
             <input type="hidden" name="username" value={data.settings.username} />
-            <UIInputContainer>
+            <div>
               <UIInput
                 label="Old Password"
                 name="oldPassword"
@@ -173,8 +173,8 @@ const SettingsPage = () => {
               {passwordFormik.errors.oldPassword && (
                 <UIInputError>{passwordFormik.errors.oldPassword}</UIInputError>
               )}
-            </UIInputContainer>
-            <UIInputContainer>
+            </div>
+            <div>
               <UIInput
                 label="New Password"
                 name="newPassword"
@@ -187,9 +187,9 @@ const SettingsPage = () => {
               {passwordFormik.errors.newPassword && (
                 <UIInputError>{passwordFormik.errors.newPassword}</UIInputError>
               )}
-            </UIInputContainer>
+            </div>
 
-            <UIInputContainer>
+            <div>
               <UIInput
                 label="Confirm Your New Password"
                 name="confirmPassword"
@@ -202,7 +202,7 @@ const SettingsPage = () => {
               {passwordFormik.errors.confirmPassword && (
                 <UIInputError>{passwordFormik.errors.confirmPassword}</UIInputError>
               )}
-            </UIInputContainer>
+            </div>
 
             <div className="action password">
               <div>
@@ -235,7 +235,7 @@ const SettingsPage = () => {
         </div>
         <div className="form">
           <form onSubmit={markdownFormik.handleSubmit}>
-            <UIInputContainer>
+            <div>
               <UIInput
                 label="File Extension"
                 {...markdownFormik.getFieldProps("fileExtension")}
@@ -243,7 +243,7 @@ const SettingsPage = () => {
               {markdownFormik.errors["fileExtension"] && (
                 <UIInputError>{markdownFormik.errors["fileExtension"]}</UIInputError>
               )}
-            </UIInputContainer>
+            </div>
             <div className="action">
               <button
                 className="base-button"

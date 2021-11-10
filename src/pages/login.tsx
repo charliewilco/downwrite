@@ -6,7 +6,7 @@ import { useFormik } from "formik";
 
 import { useDataSource } from "@hooks/useDataSource";
 import { CustomMeta } from "@components/custom-meta";
-import { UIInput, UIInputContainer, UIInputError } from "@components/ui-input";
+import { UIInput, UIInputError } from "@components/ui-input";
 import { SiteFooter } from "@components/footer";
 import { ILoginValues } from "@data/base/auth";
 import { LoginFormSchema } from "@shared/validations";
@@ -54,7 +54,7 @@ const LoginPage: NextPage = () => {
             </p>
           </header>
           <form onSubmit={formik.handleSubmit}>
-            <UIInputContainer>
+            <div>
               <UIInput
                 testID="LOGIN_USERNAME"
                 placeholder="user@email.com"
@@ -65,8 +65,8 @@ const LoginPage: NextPage = () => {
               {formik.errors.user && (
                 <UIInputError>{formik.errors.user}</UIInputError>
               )}
-            </UIInputContainer>
-            <UIInputContainer>
+            </div>
+            <div>
               <UIInput
                 testID="LOGIN_PASSWORD"
                 placeholder="*********"
@@ -78,7 +78,7 @@ const LoginPage: NextPage = () => {
               {formik.errors.password && (
                 <UIInputError>{formik.errors.password}</UIInputError>
               )}
-            </UIInputContainer>
+            </div>
             <div className="form-footer">
               <button
                 className="base-button"

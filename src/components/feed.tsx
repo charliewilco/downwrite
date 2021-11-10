@@ -7,16 +7,21 @@ import type { IPartialFeedItem } from "@data/modules/dashboard";
 import type { IEntry } from "../__generated__/client";
 import { Routes } from "@shared/routes";
 
-export interface ICardProps {
+interface IBaseFeedItem {
   title: string;
-  excerpt?: string;
   id: string;
   dateAdded: Date | string;
   onDelete: ({ id, title }: IPartialFeedItem) => void;
   public: boolean;
 }
 
-export function Card(props: ICardProps): JSX.Element {
+export interface ICardProps extends IBaseFeedItem {
+  excerpt?: string;
+}
+
+interface IListItemProps extends IBaseFeedItem {}
+
+const Card: React.VFC<ICardProps> = (props) => {
   const onDelete = useCallback(() => {
     if (props.onDelete) {
       props.onDelete({ id: props.id, title: props.title });
@@ -103,17 +108,9 @@ export function Card(props: ICardProps): JSX.Element {
       </style>
     </div>
   );
-}
+};
 
-interface IListItemProps {
-  title: string;
-  id: string;
-  dateAdded: Date;
-  onDelete: ({ id, title }: IPartialFeedItem) => void;
-  public: boolean;
-}
-
-function PostListItem(props: IListItemProps): JSX.Element {
+const PostListItem: React.VFC<IListItemProps> = (props) => {
   function onDelete() {
     props.onDelete({ id: props.id, title: props.title });
   }
@@ -183,7 +180,7 @@ function PostListItem(props: IListItemProps): JSX.Element {
       `}</style>
     </li>
   );
-}
+};
 
 export type IFeedList = Pick<IEntry, "title" | "dateAdded" | "id" | "public">[];
 

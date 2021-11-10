@@ -7,7 +7,7 @@ import { useFormik } from "formik";
 
 import { useDataSource } from "@hooks/useDataSource";
 import { CustomMeta } from "@components/custom-meta";
-import { UIInput, UIInputContainer, UIInputError } from "@components/ui-input";
+import { UIInput, UIInputError } from "@components/ui-input";
 import { SiteFooter } from "@components/footer";
 import { IRegisterValues } from "@data/base/auth";
 import { RegisterFormSchema } from "@shared/validations";
@@ -53,7 +53,7 @@ const RegisterPage: NextPage = () => {
           </header>
           <form onSubmit={formik.handleSubmit}>
             <div>
-              <UIInputContainer>
+              <div>
                 <UIInput
                   placeholder="Try for something unique"
                   label="Username"
@@ -63,8 +63,8 @@ const RegisterPage: NextPage = () => {
                 {formik.errors["username"] && (
                   <UIInputError>{formik.errors["username"]}</UIInputError>
                 )}
-              </UIInputContainer>
-              <UIInputContainer>
+              </div>
+              <div>
                 <UIInput
                   placeholder="mail@email.com"
                   label="Email"
@@ -75,8 +75,8 @@ const RegisterPage: NextPage = () => {
                 {formik.errors["email"] && (
                   <UIInputError>{formik.errors["email"]}</UIInputError>
                 )}
-              </UIInputContainer>
-              <UIInputContainer>
+              </div>
+              <div>
                 <UIInput
                   placeholder="*********"
                   label="Password"
@@ -87,7 +87,7 @@ const RegisterPage: NextPage = () => {
                 {formik.errors["password"] && (
                   <UIInputError>{formik.errors["password"]}</UIInputError>
                 )}
-              </UIInputContainer>
+              </div>
             </div>
 
             <label className="legal-check-container">

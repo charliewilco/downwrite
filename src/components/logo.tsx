@@ -1,4 +1,4 @@
-export function Logo() {
+export const Logo: React.VFC = () => {
   return (
     <div>
       <svg viewBox="0 0 337 264" fill="none" className="LogoIcon">
@@ -73,4 +73,4 @@ export function Logo() {
       `}</style>
     </div>
   );
-}
+};

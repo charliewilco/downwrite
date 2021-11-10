@@ -139,7 +139,7 @@ const saveKeyListener = (
   return getDefaultKeyBinding(e);
 };
 
-export default function DownwriteEditor({ onSave, ...props }: IEditorProps) {
+const DownwriteEditor: React.VFC<IEditorProps> = ({ onSave, ...props }) => {
   let editorRef = useRef<Editor>(null);
 
   let contentState: Draft.ContentState = props.editorState.getCurrentContent();
@@ -194,4 +194,6 @@ export default function DownwriteEditor({ onSave, ...props }: IEditorProps) {
       </style>
     </div>
   );
-}
+};
+
+export default DownwriteEditor;

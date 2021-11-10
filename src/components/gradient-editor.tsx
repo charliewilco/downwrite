@@ -7,7 +7,7 @@ interface IHexInputProps {
   initialValue?: string;
 }
 
-export function FunHexInput(props: IHexInputProps): JSX.Element {
+export const FunHexInput: React.VFC<IHexInputProps> = (props) => {
   const [hex, setHexColor] = useState<string>(props.initialValue || "");
 
   function handleChange({
@@ -43,7 +43,7 @@ export function FunHexInput(props: IHexInputProps): JSX.Element {
       />
     </div>
   );
-}
+};
 
 interface IColorPickerProps {
   title?: string;
@@ -52,13 +52,13 @@ interface IColorPickerProps {
   name: string;
 }
 
-export function ColorPicker(
-  props: IColorPickerProps = {
+export const ColorPicker: React.VFC<IColorPickerProps> = (
+  props = {
     colors: startColors,
     onPress: (color: string, name: string) => ({ color, name }),
     name: "Color Picker"
   }
-): JSX.Element {
+) => {
   return (
     <div className="outer">
       {props.title && <h4>{props.title}</h4>}
@@ -92,7 +92,7 @@ export function ColorPicker(
       </style>
     </div>
   );
-}
+};
 
 interface IColors {
   a: string;
@@ -105,7 +105,7 @@ interface IGradientEditorProps {
   colors: IColors;
 }
 
-export function GradientEditor(props: IGradientEditorProps): JSX.Element {
+export const GradientEditor: React.VFC<IGradientEditorProps> = (props) => {
   function handleColorChange(value: string, name: string): void {
     props.onColorChange(value, name);
   }
@@ -134,4 +134,4 @@ export function GradientEditor(props: IGradientEditorProps): JSX.Element {
       </div>
     </div>
   );
-}
+};

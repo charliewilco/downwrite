@@ -7,7 +7,7 @@ interface IUserBlockProps {
   colors: Gradient;
 }
 
-export function UserBlock(props: IUserBlockProps): JSX.Element {
+export const UserBlock: React.VFC<IUserBlockProps> = (props) => {
   return (
     <div>
       <Avatar centered colors={props.colors} />
@@ -31,7 +31,7 @@ export function UserBlock(props: IUserBlockProps): JSX.Element {
       </style>
     </div>
   );
-}
+};
 
 interface IAuthorProps {
   name: string;

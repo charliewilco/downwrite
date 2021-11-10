@@ -22,7 +22,7 @@ Router.events.on("routeChangeComplete", () => {
   Analytics.trackPageview();
 });
 
-export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
+const CustomAppWrapper = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
     Analytics.load("FENETBXC", {
       includedDomains: [
@@ -64,4 +64,6 @@ export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
       <Component {...pageProps} />
     </UIShell>
   );
-}
+};
+
+export default CustomAppWrapper;
