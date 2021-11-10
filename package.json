@@ -43,7 +43,7 @@
     "graphql": "^15.7.2",
     "graphql-request": "^3.6.1",
     "graphql-tag": "^2.12.6",
-    "immutable": "~3.8.2",
+    "immutable": "~4.0.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
     "mongoose": "^6.0.7",
