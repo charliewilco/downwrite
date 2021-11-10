@@ -54,17 +54,30 @@ const IndexPage: NextPage = () => {
         article {
           max-width: 33rem;
           margin: 2rem auto;
-
           font-family: var(--serif);
+          padding: 0.5rem;
+        }
+
+        header {
+          text-align: center;
+          margin-left: -2rem;
+          margin-right: -2rem;
         }
 
         h1 {
           margin-bottom: 2rem;
+          font-size: 2rem;
         }
 
         h1 > span {
           color: var(--pixieblue-400);
           display: block;
+        }
+
+        header p {
+          font-size: 1.25rem;
+          font-style: italic;
+          opacity: 0.75;
         }
 
         aside {
