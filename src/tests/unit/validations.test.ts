@@ -1,55 +1,48 @@
 import * as Validations from "@shared/validations";
-import * as Inputs from "@server/input";
 
 describe("Validations", () => {
   it("Local Settings", async () => {
     await expect(
-      Validations.LocalSettingsSchema.isValid({
+      Validations.LocalSettingsSchema.parseAsync({
         fontFamily: "Fira Code",
         fileExtension: "doc"
       })
-    ).resolves.toBeFalsy();
+    ).rejects.toThrowError();
   });
 
   it("Register", async () => {
     await expect(
-      Validations.RegisterFormSchema.isValid({
+      Validations.RegisterFormSchema.parseAsync({
         legalChecked: false
       })
-    ).resolves.toBeFalsy();
+    ).rejects.toThrowError();
 
     await expect(
-      Validations.RegisterFormSchema.validate(
-        {
-          legalChecked: false,
-          password: "Nope",
-          email: "email@test.com",
-          user: "charlie"
-        },
-        { abortEarly: false }
-      )
+      Validations.RegisterFormSchema.parseAsync({
+        legalChecked: false,
+        password: "Nope",
+        email: "email@test.com",
+        user: "charlie"
+      })
     ).rejects.toThrowError();
   });
 
   it("User Settings", async () => {
     await expect(
-      Validations.UserSettingsSchema.isValid({
+      Validations.UserSettingsSchema.parseAsync({
         email: "red.com",
         user: "somehello"
       })
-    ).resolves.toBeFalsy();
+    ).rejects.toThrowError();
   });
 
   it("Login", async () => {
-    expect(
-      Validations.LoginFormSchema.isValid(
-        {
-          user: "hello",
-          password: "not hello"
-        },
-        { strict: true }
-      )
-    ).resolves.toBeTruthy();
+    await expect(
+      Validations.LoginFormSchema.parseAsync({
+        user: "hello",
+        password: "not hello"
+      })
+    ).rejects.toThrowError();
   });
 
   it("passwords", async () => {
@@ -66,11 +59,9 @@ describe("Validations", () => {
     };
 
     await expect(
-      Inputs.createUserValidation.validate(broken, { strict: true })
+      Validations.createUserValidation.parseAsync(broken)
     ).rejects.toThrowError();
 
-    await expect(Inputs.createUserValidation.validate(working)).resolves.toBe(
-      working
-    );
+    expect(Validations.createUserValidation.parse(working)).toStrictEqual(working);
   });
 });

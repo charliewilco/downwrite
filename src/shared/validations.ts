@@ -46,15 +46,6 @@ export function zodAdapter<T>(schema: z.ZodSchema<T>): {
 // 4. must contain 1 special character
 // 5. must contain 6 characters
 
-export const LoginFormSchema = z.object({
-  user: z.string({
-    required_error: "Username is required"
-  }),
-  password: z.string({
-    required_error: "Password is required"
-  })
-});
-
 export const legacyPasswordRegex = new RegExp(
   /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/
 );
@@ -70,6 +61,17 @@ export const passwordStringSchema = z
   .regex(passwordRegex, VALID_PASSWORD);
 
 /// Forms
+
+export const LoginFormSchema = z.object({
+  user: z.string({
+    required_error: "Username is required"
+  }),
+  password: z
+    .string({
+      required_error: "Password is required"
+    })
+    .regex(passwordRegex, VALID_PASSWORD)
+});
 
 export const RegisterFormSchema = z.object({
   legalChecked: z.boolean({
