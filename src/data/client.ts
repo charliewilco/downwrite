@@ -13,13 +13,13 @@ import type {
 } from "../__generated__/client";
 
 export class DownwriteClient extends GraphQLClient {
-  #cookies = new Cookie();
+  cookies = new Cookie();
   constructor(options?: RequestInit) {
     super("/api/graphql", options);
 
     this._checkToken();
 
-    this.#cookies.addChangeListener((options) => {
+    this.cookies.addChangeListener((options) => {
       if (options.name === TOKEN_NAME && options.value) {
         this.setToken(options.value);
       }
@@ -27,7 +27,7 @@ export class DownwriteClient extends GraphQLClient {
   }
 
   private _checkToken() {
-    const token = this.#cookies.get(TOKEN_NAME);
+    const token = this.cookies.get(TOKEN_NAME);
 
     if (token) {
       this.setToken(token);
@@ -36,7 +36,7 @@ export class DownwriteClient extends GraphQLClient {
 
   setToken(token: string) {
     this.setHeader("Authorization", token);
-    this.#cookies.set(TOKEN_NAME, token);
+    this.cookies.set(TOKEN_NAME, token);
   }
 
   allPosts() {

@@ -3,13 +3,20 @@ import { NotificationList } from "@components/notification-list";
 import { buttons } from "@components/button";
 import { typography } from "@components/typography";
 import { variables, reset } from "@components/reset";
+import { ErrorBoundary, ErrorFallback } from "./errors";
+
+const myErrorHandler = (error: Error, info: { componentStack: string }) => {
+  console.log(error, info.componentStack);
+};
 
 export const UIShell: React.FC = ({ children }) => {
   return (
-    <div className="outer">
-      <UIHeader />
-      <main>{children}</main>
-      <NotificationList />
+    <ErrorBoundary FallbackComponent={ErrorFallback} onError={myErrorHandler}>
+      <div className="outer">
+        <UIHeader />
+        <main>{children}</main>
+        <NotificationList />
+      </div>
       <style jsx global>
         {variables}
       </style>
@@ -64,6 +71,6 @@ export const UIShell: React.FC = ({ children }) => {
           height: 100%;
         }
       `}</style>
-    </div>
+    </ErrorBoundary>
   );
 };

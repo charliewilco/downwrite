@@ -4,6 +4,7 @@ import { BehaviorSubject } from "rxjs";
 
 import { DownwriteClient } from "@data/client";
 import type { IAppState } from "@data/types";
+import { TOKEN_NAME } from "@shared/constants";
 import type { TokenContents } from "@shared/types";
 
 export interface ICurrentUserState {
@@ -43,16 +44,23 @@ export class Auth {
   }
 
   async check() {
-    try {
-      const value = await this.#client.isMe();
-      this.#internalState.id = value.me.details.id;
-      this.#internalState.username = value.me.details.username;
-      this.#callNext();
-    } catch (error) {
-      this.#internalState.id = "";
-      this.#internalState.username = "";
+    const cookies = this.#client.cookies.getAll();
 
-      console.log(error.message);
+    if (cookies[TOKEN_NAME]) {
+      try {
+        const value = await this.#client.isMe();
+
+        if (value) {
+          this.#internalState.id = value.me.details.id;
+          this.#internalState.username = value.me.details.username;
+          this.#callNext();
+        }
+      } catch (error) {
+        this.#internalState.id = "";
+        this.#internalState.username = "";
+
+        console.log(error.message);
+      }
     }
   }
 
