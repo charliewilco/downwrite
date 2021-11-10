@@ -4,15 +4,16 @@ import base64 from "base-64";
 import is from "@sindresorhus/is";
 import cuid from "cuid";
 
-import { ResolverContext } from "./context";
-import { PostModel, UserModel } from "./models";
-import { transformPostToEntry } from "./transform";
-import dbConnect from "./db";
-import { getSaltedHash, createToken } from "./token";
-import { setTokenCookie } from "./cookie-managment";
-import { createUserValidation } from "./input";
-import { getUniqueChecks, verifyUniqueUser } from "./uniques";
-import { verifyCredentials, verifyUser } from "./resolver-auth";
+import { ResolverContext } from "@server/context";
+import { PostModel, UserModel } from "@server/models";
+import { transformPostToEntry } from "@server/transform";
+import dbConnect from "@server/db";
+import { getSaltedHash, createToken } from "@server/token";
+import { setTokenCookie } from "@server/cookie-managment";
+import { getUniqueChecks, verifyUniqueUser } from "@server/uniques";
+import { verifyCredentials, verifyUser } from "@server/resolver-auth";
+import { createUserValidation } from "@shared/validations";
+import { __IS_DEV__ } from "@shared/constants";
 
 import type {
   RequireFields,
@@ -26,8 +27,6 @@ import type {
   IAuthUserPayload,
   IMutationUpdatePasswordArgs
 } from "../__generated__/server";
-
-import { __IS_DEV__ } from "@shared/constants";
 
 export interface IMutationCreateEntryVars {
   title: string;
@@ -158,7 +157,7 @@ export async function createUser(
   const decoded = base64.decode(password);
   try {
     await verifyUniqueUser(username, email);
-    await createUserValidation.validate({
+    await createUserValidation.parseAsync({
       username,
       email,
       password: decoded

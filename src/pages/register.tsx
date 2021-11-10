@@ -10,7 +10,7 @@ import { CustomMeta } from "@components/custom-meta";
 import { UIInput, UIInputError } from "@components/ui-input";
 import { SiteFooter } from "@components/footer";
 import { IRegisterValues } from "@data/base/auth";
-import { RegisterFormSchema } from "@shared/validations";
+import { RegisterFormSchema, zodAdapter } from "@shared/validations";
 import { Routes } from "@shared/routes";
 
 const RegisterPage: NextPage = () => {
@@ -24,7 +24,7 @@ const RegisterPage: NextPage = () => {
       password: "",
       email: ""
     },
-    validationSchema: RegisterFormSchema,
+    validationSchema: zodAdapter(RegisterFormSchema),
     validateOnChange: false,
     validateOnMount: false,
     onSubmit(values) {

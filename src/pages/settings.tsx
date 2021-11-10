@@ -13,7 +13,8 @@ import type { IUserFormValues } from "@data/base/settings";
 import {
   UserSettingsSchema,
   UpdatePasswordSchema,
-  LocalSettingsSchema
+  LocalSettingsSchema,
+  zodAdapter
 } from "@shared/validations";
 
 interface ILocalSettings {
@@ -39,7 +40,7 @@ const SettingsPage = () => {
 
   const markdownFormik = useFormik<ILocalSettings>({
     initialValues: initialMarkdownValues.current(),
-    validationSchema: LocalSettingsSchema,
+    validationSchema: zodAdapter(LocalSettingsSchema),
     onSubmit(values) {
       dataSource.settings.fileExtension = values.fileExtension;
 
@@ -57,7 +58,7 @@ const SettingsPage = () => {
       await actions.validateForm();
       await dataSource.settings.changePassword(_);
     },
-    validationSchema: UpdatePasswordSchema
+    validationSchema: zodAdapter(UpdatePasswordSchema)
   });
 
   const userFormik = useFormik<IUserFormValues>({
@@ -65,7 +66,7 @@ const SettingsPage = () => {
     onSubmit(values) {
       dataSource.settings.update(values);
     },
-    validationSchema: UserSettingsSchema
+    validationSchema: zodAdapter(UserSettingsSchema)
   });
 
   const loading = !data;

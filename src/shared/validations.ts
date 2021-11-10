@@ -1,6 +1,44 @@
-import * as Yup from "yup";
-
+import { z } from "zod";
 import { VALID_LEGAL, VALID_PASSWORD } from "@shared/constants";
+
+export class ValidationError extends Error {
+  public name = "ValidationError";
+
+  public inner: Array<{ path: string; message: string }> = [];
+
+  public constructor(message: string) {
+    super(message);
+  }
+}
+
+function createValidationError(e: z.ZodError) {
+  const error = new ValidationError(e.message);
+  error.inner = e.errors.map((err) => ({
+    message: err.message,
+    path: err.path.join(".")
+  }));
+
+  return error;
+}
+
+/**
+ * Wrap your zod schema in this function when providing it to Formik's validation schema prop
+ * @param schema The zod schema
+ * @returns An object containing the `validate` method expected by Formik
+ */
+export function zodAdapter<T>(schema: z.ZodSchema<T>): {
+  validate: (obj: T) => Promise<void>;
+} {
+  return {
+    async validate(obj: T) {
+      try {
+        await schema.parseAsync(obj);
+      } catch (err: unknown) {
+        throw createValidationError(err as z.ZodError<T>);
+      }
+    }
+  };
+}
 
 // 1. must contain 1 lowercase letter
 // 2. must contain 1 uppercase letter
@@ -8,9 +46,13 @@ import { VALID_LEGAL, VALID_PASSWORD } from "@shared/constants";
 // 4. must contain 1 special character
 // 5. must contain 6 characters
 
-export const LoginFormSchema = Yup.object().shape({
-  user: Yup.string().required("Username is required"),
-  password: Yup.string().required("Password is required")
+export const LoginFormSchema = z.object({
+  user: z.string({
+    required_error: "Username is required"
+  }),
+  password: z.string({
+    required_error: "Password is required"
+  })
 });
 
 export const legacyPasswordRegex = new RegExp(
@@ -21,48 +63,50 @@ export const passwordRegex = new RegExp(
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/
 );
 
-export const passwordStringSchema = Yup.string()
-  .matches(passwordRegex, {
-    message: VALID_PASSWORD,
-    excludeEmptyString: true
+export const passwordStringSchema = z
+  .string({
+    required_error: "Must include password"
   })
-  .required("Must include password");
+  .regex(passwordRegex, VALID_PASSWORD);
 
 /// Forms
 
-export const RegisterFormSchema = Yup.object().shape({
-  legalChecked: Yup.boolean().oneOf([true], VALID_LEGAL).required(VALID_LEGAL),
-  username: Yup.string().required("Username is required"),
-  password: Yup.string()
-    .matches(passwordRegex, {
-      message: VALID_PASSWORD,
-      excludeEmptyString: true
+export const RegisterFormSchema = z.object({
+  legalChecked: z.boolean({
+    required_error: VALID_LEGAL
+  }),
+  username: z.string({ required_error: "Username is required" }),
+  password: z
+    .string({
+      required_error: "Must include password"
     })
-    .required("Must include password"),
-  email: Yup.string().email().required("Email is required")
+    .regex(passwordRegex, VALID_PASSWORD),
+  email: z.string({ required_error: "Email is required" }).email()
 });
 
-export const UserSettingsSchema = Yup.object().shape({
-  username: Yup.string().required("You need a user name"),
-  email: Yup.string().email().required("Email is required")
+export const UserSettingsSchema = z.object({
+  username: z.string({ required_error: "You need a user name" }),
+  email: z.string({ required_error: "Email is required" }).email()
 });
 
-export const UpdatePasswordSchema = Yup.object().shape({
-  oldPassword: Yup.string().required("Old password is required"),
-  newPassword: Yup.string()
-    .matches(passwordRegex, {
-      message: VALID_PASSWORD,
-      excludeEmptyString: true
-    })
-    .required("Must include password"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("newPassword"), null])
-    .required("Passwords must match")
+export const UpdatePasswordSchema = z
+  .object({
+    oldPassword: z.string({ required_error: "Old password is required" }),
+    newPassword: z.string().regex(passwordRegex, VALID_PASSWORD),
+    confirmPassword: z.string()
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"] // path of error
+  });
+
+export const LocalSettingsSchema = z.object({
+  fontFamily: z.string(),
+  fileExtension: z.enum([".md", ".mdx", ".txt"])
 });
 
-export const LocalSettingsSchema = Yup.object().shape({
-  fontFamily: Yup.string(),
-  fileExtension: Yup.string()
-    .matches(/.(md|mdx|txt)/)
-    .required("Must be .md, .mdx or .txt")
+export const createUserValidation = z.object({
+  username: z.string(),
+  email: z.string().email(),
+  password: z.string().regex(passwordRegex, VALID_PASSWORD)
 });

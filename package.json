@@ -60,7 +60,7 @@
     "swr": "^1.0.1",
     "universal-cookie": "^4.0.4",
     "use-subscription": "^1.5.1",
-    "yup": "^0.32.11"
+    "zod": "^3.11.6"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.2.0",
@@ -82,7 +82,6 @@
     "@types/react-test-renderer": "^17.0.1",
     "@types/ua-parser-js": "^0.7.36",
     "@types/use-subscription": "^1.0.0",
-    "@types/yup": "^0.29.13",
     "eslint": "<8.0.0",
     "eslint-config-next": "12.0.3",
     "husky": "^7.0.4",

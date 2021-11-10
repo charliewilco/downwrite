@@ -9,7 +9,7 @@ import { CustomMeta } from "@components/custom-meta";
 import { UIInput, UIInputError } from "@components/ui-input";
 import { SiteFooter } from "@components/footer";
 import { ILoginValues } from "@data/base/auth";
-import { LoginFormSchema } from "@shared/validations";
+import { LoginFormSchema, zodAdapter } from "@shared/validations";
 import { Routes } from "@shared/routes";
 
 const LoginPage: NextPage = () => {
@@ -20,7 +20,7 @@ const LoginPage: NextPage = () => {
       user: "",
       password: ""
     },
-    validationSchema: LoginFormSchema,
+    validationSchema: zodAdapter(LoginFormSchema),
     validateOnChange: false,
     validateOnMount: false,
     onSubmit(values) {
