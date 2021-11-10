@@ -12,7 +12,7 @@ import { ResolverContext } from "./context";
 import { verifyUser } from "./resolver-auth";
 
 import type { Many } from "@shared/types";
-import { __IS_DEV__ } from "@shared/dev";
+import { __IS_DEV__ } from "@shared/constants";
 import type { IEntry, IQueryResolvers, IUser } from "../__generated__/server";
 
 export const Query: IQueryResolvers<ResolverContext> = {

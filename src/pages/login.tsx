@@ -1,5 +1,4 @@
 import { NextPage } from "next";
-import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -8,11 +7,12 @@ import { useFormik } from "formik";
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 
 import { useDataSource } from "@hooks/useDataSource";
-import { LoginFormSchema, RegisterFormSchema } from "@shared/validations";
+import { CustomMeta } from "@components/custom-meta";
 import { UIInput, UIInputContainer, UIInputError } from "@components/ui-input";
 import { SiteFooter } from "@components/footer";
-import { Routes } from "@shared/routes";
 import { ILoginValues, IRegisterValues } from "@data/base/me";
+import { LoginFormSchema, RegisterFormSchema } from "@shared/validations";
+import { Routes } from "@shared/routes";
 
 const LoginPage: NextPage = () => {
   const router = useRouter();
@@ -44,9 +44,7 @@ const LoginPage: NextPage = () => {
 
   return (
     <div data-testid="LOGIN_PAGE_CONTAINER">
-      <Head>
-        <title>Downwrite</title>
-      </Head>
+      <CustomMeta title="Login" path="login" />
       <article>
         <header>
           <Image
@@ -204,13 +202,15 @@ const LoginPage: NextPage = () => {
 
         h1 {
           font-size: 2rem;
-          margin-bottom: 1rem;
+          font-weight: 900;
+          margin: 1rem auto 4rem;
+          font-family: var(--serif);
         }
 
         h2 {
           font-size: 1.25rem;
           line-height: 1.1;
-          font-weight: 400;
+          font-weight: 700;
         }
 
         .form-header {

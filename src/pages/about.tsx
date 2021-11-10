@@ -1,16 +1,13 @@
 import { SiteFooter } from "@components/footer";
 import { NextPage } from "next";
-import Head from "next/head";
-
-import { ContentWrapper } from "@components/content";
+import { StaticContentWrapper } from "@components/content";
+import { CustomMeta } from "@components/custom-meta";
 
 const AboutDetails: NextPage = () => {
   return (
     <div>
-      <Head>
-        <title>About Downwrite</title>
-      </Head>
-      <ContentWrapper title="About Downwrite">
+      <CustomMeta title="About" path="about" />
+      <StaticContentWrapper title="About Downwrite">
         <div>
           <div data-testid="ABOUT_PAGE">
             <p>
@@ -72,7 +69,7 @@ const AboutDetails: NextPage = () => {
             </p>
           </div>
         </div>
-      </ContentWrapper>
+      </StaticContentWrapper>
       <SiteFooter />
     </div>
   );

@@ -9,7 +9,7 @@ interface IContentWrapperProps {
   content?: React.ReactNode;
 }
 
-const content = css.global`
+export const content = css.global`
   .__content h2 {
     font-size: 2rem;
     font-weight: 800;
@@ -49,13 +49,72 @@ const content = css.global`
     font-style: italic;
     background: #d4ecfe;
     margin-bottom: 1.5rem;
-    color: #e3e4e4;
+    color: var(--onyx-800);
   }
 
   .__content blockquote p {
     padding: 1rem;
   }
 `;
+
+export const StaticContentWrapper: React.FC<
+  Omit<IContentWrapperProps, "content" | "dateAdded">
+> = ({ children, title }) => {
+  return (
+    <div className="outer">
+      <article className="harticle">
+        <header>
+          <h1 data-testid="PREVIEW_ENTRTY_TITLE">{title}</h1>
+        </header>
+        <section data-testid="PREVIEW_ENTRTY_BODY" className="__content">
+          <div>{children}</div>
+        </section>
+      </article>
+      <style jsx>
+        {`
+          .outer {
+            max-width: 48rem;
+            margin: 1rem auto;
+          }
+          article {
+            font-family: var(--serif);
+          }
+
+          header {
+            padding: 1.5rem 0;
+          }
+
+          time {
+            opacity: 50%;
+            font-family: var(--monospace);
+          }
+
+          h1 {
+            font-size: 2rem;
+            font-weight: 900;
+          }
+
+          section {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+          }
+
+          section > aside {
+            grid-column: span 3 / span 3;
+          }
+
+          section > div {
+            grid-column: span 9 / span 9;
+          }
+        `}
+      </style>
+      <style jsx global>
+        {content}
+      </style>
+    </div>
+  );
+};
 
 export const ContentWrapper: React.FC<IContentWrapperProps> = (props) => {
   return (

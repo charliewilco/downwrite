@@ -12,10 +12,19 @@ import { PostList } from "@components/post-list";
 import { Loading } from "@components/loading";
 import { Banner } from "@components/banner";
 
+import { SiteFooter } from "@components/footer";
 import { DashboardState, IPartialFeedItem } from "@data/modules/dashboard";
 import { useEnhancedReducer, useDataFactory } from "@hooks/index";
 import { Routes } from "@shared/routes";
-import { SiteFooter } from "@components/footer";
+
+import {
+  ICON_LINK,
+  OG_DESCRIPTION,
+  OG_IMAGE_URL,
+  createMetadata
+} from "@shared/constants";
+
+const meta = createMetadata("dashboard", "Dashboard");
 
 const DashboardUI: NextPage = () => {
   const dataSource = useDataFactory(DashboardState);

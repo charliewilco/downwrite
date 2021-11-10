@@ -12,7 +12,7 @@ import { MockContext } from "./mock";
 
 import { schema } from "@server/schema";
 import { stopDB } from "@server/db";
-import { validPasswordMessage } from "@shared/constants";
+import { VALID_PASSWORD } from "@shared/constants";
 
 const serverContext = new MockContext();
 const testServer = new ApolloServer({
@@ -50,7 +50,7 @@ describe("GraphQL API", () => {
       }
     });
     if (errors) {
-      expect(errors[0].message).toContain(validPasswordMessage);
+      expect(errors[0].message).toContain(VALID_PASSWORD);
     }
     if (working.data?.createUser) {
       serverContext.setAuthorization(working.data.createUser.token);

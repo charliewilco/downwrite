@@ -12,7 +12,7 @@ import { StickyContainer } from "@components/sticky-header";
 import { Loading } from "@components/loading";
 import { EditorInput } from "@components/ui-input";
 import { TimeMarker } from "@components/time-marker";
-import { __IS_DEV__ } from "@shared/dev";
+import { __IS_DEV__ } from "@shared/constants";
 
 import { UpdateEntryState, IEdit } from "@data/modules";
 import { useDataFactory, useEnhancedReducer, useAutosaving } from "@hooks/index";

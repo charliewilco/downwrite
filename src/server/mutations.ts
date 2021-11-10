@@ -27,7 +27,7 @@ import type {
   IMutationUpdatePasswordArgs
 } from "../__generated__/server";
 
-import { __IS_DEV__ } from "@shared/dev";
+import { __IS_DEV__ } from "@shared/constants";
 
 export interface IMutationCreateEntryVars {
   title: string;

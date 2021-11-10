@@ -1,7 +1,7 @@
 import { EditorState } from "draft-js";
 import { DownwriteClient } from "@data/client";
 import type { IAppState } from "@data/types";
-import { __IS_BROWSER__ } from "@shared/dev";
+import { __IS_BROWSER__ } from "@shared/constants";
 import { BaseDraft } from "./base-draft";
 
 export interface INewEditorValues {
