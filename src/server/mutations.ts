@@ -12,7 +12,7 @@ import { getSaltedHash, createToken } from "@server/token";
 import { setTokenCookie } from "@server/cookie-managment";
 import { getUniqueChecks, verifyUniqueUser } from "@server/uniques";
 import { verifyCredentials, verifyUser } from "@server/resolver-auth";
-import { createUserValidation } from "@shared/validations";
+import { createUserArgs } from "@shared/validations";
 import { __IS_DEV__ } from "@shared/constants";
 
 import type {
@@ -157,7 +157,7 @@ export async function createUser(
   const decoded = base64.decode(password);
   try {
     await verifyUniqueUser(username, email);
-    await createUserValidation.parseAsync({
+    await createUserArgs.parseAsync({
       username,
       email,
       password: decoded

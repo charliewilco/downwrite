@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { useRef, useReducer } from "react";
+import { useRef, useReducer, useMemo } from "react";
 import { useFormik } from "formik";
 import { MixedCheckbox } from "@reach/checkbox";
 
@@ -11,9 +11,9 @@ import { SiteFooter } from "@components/footer";
 import { useDataSource } from "@hooks/useDataSource";
 import type { IUserFormValues } from "@data/base/settings";
 import {
-  UserSettingsSchema,
-  UpdatePasswordSchema,
-  LocalSettingsSchema,
+  userSettings,
+  updatePassword,
+  localSettings,
   zodAdapter
 } from "@shared/validations";
 
@@ -28,6 +28,13 @@ interface IPasswordSettings {
 }
 
 const SettingsPage = () => {
+  const adaptedSchemas = useMemo(() => {
+    return {
+      userSettings: zodAdapter(userSettings),
+      updatePassword: zodAdapter(updatePassword),
+      localSettings: zodAdapter(localSettings)
+    };
+  }, []);
   const [isOpen, onToggleOpen] = useReducer((prev: boolean) => !prev, false);
   const dataSource = useDataSource();
   const { error, data } = useSWR(["settings"], () =>
@@ -40,7 +47,7 @@ const SettingsPage = () => {
 
   const markdownFormik = useFormik<ILocalSettings>({
     initialValues: initialMarkdownValues.current(),
-    validationSchema: zodAdapter(LocalSettingsSchema),
+    validationSchema: adaptedSchemas.localSettings,
     onSubmit(values) {
       dataSource.settings.fileExtension = values.fileExtension;
 
@@ -58,7 +65,7 @@ const SettingsPage = () => {
       await actions.validateForm();
       await dataSource.settings.changePassword(_);
     },
-    validationSchema: zodAdapter(UpdatePasswordSchema)
+    validationSchema: adaptedSchemas.updatePassword
   });
 
   const userFormik = useFormik<IUserFormValues>({
@@ -66,7 +73,7 @@ const SettingsPage = () => {
     onSubmit(values) {
       dataSource.settings.update(values);
     },
-    validationSchema: zodAdapter(UserSettingsSchema)
+    validationSchema: adaptedSchemas.userSettings
   });
 
   const loading = !data;

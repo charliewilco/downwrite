@@ -62,18 +62,17 @@ export const passwordStringSchema = z
 
 /// Forms
 
-export const LoginFormSchema = z.object({
+export const loginForm = z.object({
   user: z.string({
     required_error: "Username is required"
   }),
-  password: z
-    .string({
-      required_error: "Password is required"
-    })
-    .regex(passwordRegex, VALID_PASSWORD)
+  password: z.string({
+    required_error: "Password is required"
+  })
+  // .regex(passwordRegex, VALID_PASSWORD)
 });
 
-export const RegisterFormSchema = z.object({
+export const registerForm = z.object({
   legalChecked: z.boolean({
     required_error: VALID_LEGAL
   }),
@@ -86,12 +85,12 @@ export const RegisterFormSchema = z.object({
   email: z.string({ required_error: "Email is required" }).email()
 });
 
-export const UserSettingsSchema = z.object({
+export const userSettings = z.object({
   username: z.string({ required_error: "You need a user name" }),
   email: z.string({ required_error: "Email is required" }).email()
 });
 
-export const UpdatePasswordSchema = z
+export const updatePassword = z
   .object({
     oldPassword: z.string({ required_error: "Old password is required" }),
     newPassword: z.string().regex(passwordRegex, VALID_PASSWORD),
@@ -102,12 +101,12 @@ export const UpdatePasswordSchema = z
     path: ["confirmPassword"] // path of error
   });
 
-export const LocalSettingsSchema = z.object({
+export const localSettings = z.object({
   fontFamily: z.string(),
   fileExtension: z.enum([".md", ".mdx", ".txt"])
 });
 
-export const createUserValidation = z.object({
+export const createUserArgs = z.object({
   username: z.string(),
   email: z.string().email(),
   password: z.string().regex(passwordRegex, VALID_PASSWORD)

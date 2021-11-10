@@ -3,7 +3,7 @@ import * as Validations from "@shared/validations";
 describe("Validations", () => {
   it("Local Settings", async () => {
     await expect(
-      Validations.LocalSettingsSchema.parseAsync({
+      Validations.localSettings.parseAsync({
         fontFamily: "Fira Code",
         fileExtension: "doc"
       })
@@ -12,13 +12,13 @@ describe("Validations", () => {
 
   it("Register", async () => {
     await expect(
-      Validations.RegisterFormSchema.parseAsync({
+      Validations.registerForm.parseAsync({
         legalChecked: false
       })
     ).rejects.toThrowError();
 
     await expect(
-      Validations.RegisterFormSchema.parseAsync({
+      Validations.registerForm.parseAsync({
         legalChecked: false,
         password: "Nope",
         email: "email@test.com",
@@ -29,7 +29,7 @@ describe("Validations", () => {
 
   it("User Settings", async () => {
     await expect(
-      Validations.UserSettingsSchema.parseAsync({
+      Validations.userSettings.parseAsync({
         email: "red.com",
         user: "somehello"
       })
@@ -38,11 +38,11 @@ describe("Validations", () => {
 
   it("Login", async () => {
     await expect(
-      Validations.LoginFormSchema.parseAsync({
+      Validations.loginForm.parseAsync({
         user: "hello",
         password: "not hello"
       })
-    ).rejects.toThrowError();
+    ).resolves.not.toThrowError();
   });
 
   it("passwords", async () => {
@@ -59,9 +59,9 @@ describe("Validations", () => {
     };
 
     await expect(
-      Validations.createUserValidation.parseAsync(broken)
+      Validations.createUserArgs.parseAsync(broken)
     ).rejects.toThrowError();
 
-    expect(Validations.createUserValidation.parse(working)).toStrictEqual(working);
+    expect(Validations.createUserArgs.parse(working)).toStrictEqual(working);
   });
 });
