@@ -1,6 +1,6 @@
 import { DownwriteClient } from "@data/client";
 import { Me, GlobalNotifications, GlobalSettings } from "@data/base";
-import { __IS_BROWSER__ } from "@shared/dev";
+import { __IS_BROWSER__ } from "@shared/constants";
 import type { IAppState, IStoreContructor } from "./types";
 
 export class DownwriteUIState implements IAppState {

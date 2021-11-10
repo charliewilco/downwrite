@@ -1,15 +1,13 @@
 import { NextPage } from "next";
-import Head from "next/head";
+import { CustomMeta } from "@components/custom-meta";
 import { SiteFooter } from "@components/footer";
-import { ContentWrapper } from "@components/content";
+import { StaticContentWrapper } from "@components/content";
 
 const LegalPage: NextPage = (): JSX.Element => {
   return (
     <div>
-      <ContentWrapper title="Legal">
-        <Head>
-          <title>Legal Nonsense</title>
-        </Head>
+      <StaticContentWrapper title="Legal Nonsense">
+        <CustomMeta title="Legal Nonsense" path="legal" />
         <div>
           <div className=" __content">
             <h2>Terms of Service</h2>
@@ -330,7 +328,7 @@ const LegalPage: NextPage = (): JSX.Element => {
             </p>
           </div>
         </div>
-      </ContentWrapper>
+      </StaticContentWrapper>
       <SiteFooter />
     </div>
   );

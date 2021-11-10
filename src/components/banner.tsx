@@ -3,25 +3,31 @@ interface IBannerProps {
   label: string;
 }
 
-export const Banner: React.FC<IBannerProps> = (props) => {
+export const Banner: React.FC<IBannerProps> = ({ children, label }) => {
   return (
-    <div role="banner">
-      <p>
-        <b>{props.label}:</b> {props.children}
-      </p>
+    <div className="banner-container">
+      <div role="banner">
+        <p>
+          <b>{label}:</b> {children}
+        </p>
+      </div>
       <style jsx>{`
         [role="banner"] {
-          max-width: 33rem;
-          margin: 1rem auto;
           padding: 0.5rem;
           color: var(--pixieblue-400);
           font-size: 0.875rem;
           border: 1px solid;
           border-radius: 0.25rem;
-          width: auto;
+          text-align: center;
+          display: inline-block;
         }
 
-        .inner {
+        .banner-container {
+          max-width: 33rem;
+          width: 100%;
+          margin: 1rem auto;
+          display: flex;
+          justify-content: center;
         }
 
         p {

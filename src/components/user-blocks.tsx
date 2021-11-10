@@ -1,4 +1,4 @@
-import { Avatar } from "./avatar";
+import { Avatar } from "@components/avatar";
 import { Gradient } from "@shared/gradients";
 
 interface IUserBlockProps {

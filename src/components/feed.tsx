@@ -117,30 +117,32 @@ function PostListItem(props: IListItemProps): JSX.Element {
     props.onDelete({ id: props.id, title: props.title });
   }
 
+  const editLink = `/${props.id}/edit`;
+  const previewLink = `/${props.id}/preview`;
+
   return (
     <li>
       <div data-testid="POST_LIST_ITEM">
-        <div>
-          <h2>
-            <Link href="/[id]/edit" as={`/${props.id}/edit`} passHref>
-              <a>{props.title}</a>
-            </Link>
-          </h2>
-          <small>added {distance(new Date(props.dateAdded))} ago</small>
-        </div>
+        <small>added {distance(new Date(props.dateAdded))} ago</small>
+
+        <h2>
+          <Link href={editLink} as="/[id]/edit" passHref>
+            <a>{props.title}</a>
+          </Link>
+        </h2>
         <div className="tray">
-          <div>
-            <Link href={`/${props.id}/edit`} as="/[id]/edit">
-              <a>{props.title}</a>
+          <div className="links">
+            <Link href={editLink} as="/[id]/edit">
+              <a>Edit</a>
             </Link>
             {props.public && (
-              <Link href={`/${props.id}/preview`} as="/[id]/preview">
+              <Link href={previewLink} as="/[id]/preview">
                 <a>Preview</a>
               </Link>
             )}
           </div>
           {props.onDelete && (
-            <button className="delete" onClick={onDelete}>
+            <button className="alt-button delete" onClick={onDelete}>
               Delete
             </button>
           )}
@@ -154,7 +156,11 @@ function PostListItem(props: IListItemProps): JSX.Element {
         }
 
         h2 {
-          margin: 0;
+          margin: 0 0 1rem;
+        }
+
+        small {
+          opacity: 0.75;
         }
 
         .delete {
@@ -165,8 +171,13 @@ function PostListItem(props: IListItemProps): JSX.Element {
 
         .tray {
           display: flex;
-          font-weight: 700;
           justify-content: space-between;
+          font-size: small;
+        }
+
+        .links {
+          display: flex;
+          gap: 0.5rem;
         }
       `}</style>
     </li>
@@ -238,8 +249,9 @@ export const PostList: React.VFC<IPostListProps> = (props) => {
           header {
             display: flex;
             justify-content: space-between;
+            max-width: ${isGridView ? "100%" : "38rem"};
             align-items: center;
-            margin-bottom: 1rem;
+            margin: 0 auto 1rem;
           }
           ul {
             list-style: none inside;
@@ -260,7 +272,7 @@ export const PostList: React.VFC<IPostListProps> = (props) => {
           }
 
           .list {
-            max-width: 24rem;
+            max-width: 38rem;
             margin: 1rem auto;
           }
 

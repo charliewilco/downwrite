@@ -11,7 +11,11 @@ export const useDataSource = () => {
 export const useCheckAuth = () => {
   const dataSource = useDataSource();
   useEffect(() => {
-    dataSource.me.checkAuth();
+    try {
+      dataSource.me.checkAuth();
+    } catch (error) {
+      console.log(error);
+    }
   }, [dataSource]);
 };
 

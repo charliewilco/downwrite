@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
-import { __IS_DEV__, __IS_PROD__, __IS_TEST__ } from "../shared/dev";
-
-const developDBAddrress = "mongodb://127.0.0.1:27017/downwrite";
+import {
+  LOCAL_DB_ADDRESS,
+  __IS_DEV__,
+  __IS_PROD__,
+  __IS_TEST__
+} from "@shared/constants";
 
 function getAddress() {
-  return process.env.ATLAS_DB_ADDRESS || developDBAddrress;
+  return process.env.ATLAS_DB_ADDRESS || LOCAL_DB_ADDRESS;
 }
 
 const connection: {
@@ -36,7 +39,7 @@ export const clearDB = async () => {
   }
 
   console.log("Clearing the database and it's dangerous");
-  const db = await mongoose.connect(developDBAddrress, {
+  const db = await mongoose.connect(LOCAL_DB_ADDRESS, {
     autoCreate: true,
     autoIndex: true
   });

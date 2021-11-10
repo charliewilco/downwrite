@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-import { validLegalMessage, validPasswordMessage } from "@shared/constants";
+import { VALID_LEGAL, VALID_PASSWORD } from "@shared/constants";
 
 // 1. must contain 1 lowercase letter
 // 2. must contain 1 uppercase letter
@@ -23,7 +23,7 @@ export const passwordRegex = new RegExp(
 
 export const passwordStringSchema = Yup.string()
   .matches(passwordRegex, {
-    message: validPasswordMessage,
+    message: VALID_PASSWORD,
     excludeEmptyString: true
   })
   .required("Must include password");
@@ -31,13 +31,11 @@ export const passwordStringSchema = Yup.string()
 /// Forms
 
 export const RegisterFormSchema = Yup.object().shape({
-  legalChecked: Yup.boolean()
-    .oneOf([true], validLegalMessage)
-    .required(validLegalMessage),
+  legalChecked: Yup.boolean().oneOf([true], VALID_LEGAL).required(VALID_LEGAL),
   username: Yup.string().required("Username is required"),
   password: Yup.string()
     .matches(passwordRegex, {
-      message: validPasswordMessage,
+      message: VALID_PASSWORD,
       excludeEmptyString: true
     })
     .required("Must include password"),
@@ -53,7 +51,7 @@ export const UpdatePasswordSchema = Yup.object().shape({
   oldPassword: Yup.string().required("Old password is required"),
   newPassword: Yup.string()
     .matches(passwordRegex, {
-      message: validPasswordMessage,
+      message: VALID_PASSWORD,
       excludeEmptyString: true
     })
     .required("Must include password"),

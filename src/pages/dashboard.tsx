@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { NextPage } from "next";
-import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
@@ -8,14 +7,14 @@ import useSWR from "swr";
 import { DialogContent, DialogOverlay } from "@reach/dialog";
 import { FiX } from "react-icons/fi";
 
-import { PostList } from "@components/post-list";
+import { PostList } from "@components/feed";
 import { Loading } from "@components/loading";
 import { Banner } from "@components/banner";
-
+import { CustomMeta } from "@components/custom-meta";
+import { SiteFooter } from "@components/footer";
 import { DashboardState, IPartialFeedItem } from "@data/modules/dashboard";
 import { useEnhancedReducer, useDataFactory } from "@hooks/index";
 import { Routes } from "@shared/routes";
-import { SiteFooter } from "@components/footer";
 
 const DashboardUI: NextPage = () => {
   const dataSource = useDataFactory(DashboardState);
@@ -58,9 +57,7 @@ const DashboardUI: NextPage = () => {
   if (loading || (data === undefined && error === undefined)) {
     return (
       <div className="outer">
-        <Head>
-          <title>Loading | Downwrite</title>
-        </Head>
+        <CustomMeta title="Loading" path="dashboard" />
         <Loading />
         <style jsx>{`
           .outer {
@@ -74,9 +71,7 @@ const DashboardUI: NextPage = () => {
   if (error) {
     return (
       <div className="outer">
-        <Head>
-          <title>Error | Downwrite</title>
-        </Head>
+        <CustomMeta title="Error" path="dashboard" />
         <div data-testid="INVALID_TOKEN_CONTAINER">
           <p>{error.message}</p>
           <Link href={Routes.LOGIN} passHref>
@@ -99,12 +94,12 @@ const DashboardUI: NextPage = () => {
         : "No Entries ";
     return (
       <section className="outer">
+        <CustomMeta title={titlePrefix} path="dashboard" />
+
         <Banner label="Note">
           This app is currently in a major major beta. Swim at your own risk.
         </Banner>
-        <Head>
-          <title>{titlePrefix}| Downwrite</title>
-        </Head>
+
         {selected !== null && (
           <DialogOverlay>
             <DialogContent>

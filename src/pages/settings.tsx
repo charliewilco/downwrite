@@ -1,19 +1,20 @@
-import Head from "next/head";
 import useSWR from "swr";
 import { useRef, useReducer } from "react";
 import { useFormik } from "formik";
 import { MixedCheckbox } from "@reach/checkbox";
+
+import { CustomMeta } from "@components/custom-meta";
 import { UIInput, UIInputContainer, UIInputError } from "@components/ui-input";
 import { Loading } from "@components/loading";
 import { SiteFooter } from "@components/footer";
 
 import { useDataSource } from "@hooks/useDataSource";
+import type { IUserFormValues } from "@data/base/settings";
 import {
   UserSettingsSchema,
   UpdatePasswordSchema,
   LocalSettingsSchema
 } from "@shared/validations";
-import type { IUserFormValues } from "@data/base/settings";
 
 interface ILocalSettings {
   fileExtension: string;
@@ -83,9 +84,7 @@ const SettingsPage = () => {
 
   return (
     <div className="outer" data-testid="SETTINGS_CONTAINER">
-      <Head>
-        <title>User Settings</title>
-      </Head>
+      <CustomMeta title="User Settings" path="settings" />
       <header>
         <h1 className="page-title">Settings</h1>
       </header>
