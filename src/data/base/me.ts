@@ -47,17 +47,17 @@ export class Me {
       const value = await this.#client.isMe();
       this.#internalState.id = value.me.details.id;
       this.#internalState.username = value.me.details.username;
-
-      this.state.next({
-        ...this.#internalState,
-        authed: !!this.#internalState.username && !!this.#internalState.id
-      });
     } catch (error) {
       this.#internalState.id = "";
       this.#internalState.username = "";
+
       console.error(error);
     }
 
+    this.#callNext();
+  }
+
+  #callNext() {
     this.state.next({
       ...this.#internalState,
       authed: !!this.#internalState.username && !!this.#internalState.id
@@ -68,20 +68,14 @@ export class Me {
     this.#internalState.username = username;
     this.#internalState.id = id;
 
-    this.state.next({
-      ...this.#internalState,
-      authed: !!this.#internalState.username && !!this.#internalState.id
-    });
+    this.#callNext();
   }
 
   onLogout() {
     this.#internalState.username = "";
     this.#internalState.id = "";
 
-    this.state.next({
-      ...this.#internalState,
-      authed: !!this.#internalState.username && !!this.#internalState.id
-    });
+    this.#callNext();
   }
 
   async login(values: ILoginValues) {

@@ -2,6 +2,10 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
+    ignore:
+      - "immutable"
+      - "draft-js"
+      - "draft-js-md-converter"
     commit-message:
       prefix: "chore"
     open-pull-requests-limit: 10
