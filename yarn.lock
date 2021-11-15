@@ -800,10 +800,10 @@
     auto-bind "~4.0.0"
     tslib "~2.3.0"
 
-"@graphql-codegen/typescript-resolvers@^2.2.1":
-  version "2.4.0"
-  resolved "https://registry.npmjs.org/@graphql-codegen/typescript-resolvers/-/typescript-resolvers-2.4.0.tgz#94a818f7e903ab50c67461ab73aea7b74dfefbde"
-  integrity sha512-yz1hG9NK3MRePPixWnEU70WvtjxJxqXrNOV/t4/VK2Z38lmDH98TpCQvYq/kAoGb3Y7RqU5K+Ms7DJD6VQB+sg==
+"@graphql-codegen/typescript-resolvers@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-resolvers/-/typescript-resolvers-2.4.1.tgz#2d5bd359c682ede84fade3f7d0e0686408da0263"
+  integrity sha512-6RXfZd8dIWT1C01pHI3rO49H9ynxC9f5zAxIOC2oKr/EwoHQWOqG+7TPWPvG0WT9RtceXi8jazjdTR8iD291+Q==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^2.3.0"
     "@graphql-codegen/typescript" "^2.3.0"
@@ -1041,17 +1041,10 @@
     value-or-promise "1.0.11"
     ws "8.2.3"
 
-"@graphql-tools/utils@8.5.2", "@graphql-tools/utils@^8.5.1":
+"@graphql-tools/utils@8.5.2", "@graphql-tools/utils@^8.1.1", "@graphql-tools/utils@^8.3.0", "@graphql-tools/utils@^8.5.1":
   version "8.5.2"
   resolved "https://registry.npmjs.org/@graphql-tools/utils/-/utils-8.5.2.tgz#fa775d92c19237f648105f7d4aeeeb63ba3d257f"
   integrity sha512-wxA51td/759nQziPYh+HxE0WbURRufrp1lwfOYMgfK4e8Aa6gCa1P1p6ERogUIm423NrIfOVau19Q/BBpHdolw==
-  dependencies:
-    tslib "~2.3.0"
-
-"@graphql-tools/utils@^8.1.1", "@graphql-tools/utils@^8.3.0":
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-8.3.0.tgz#382111bc4a93f248e3641740a5300f44286bffae"
-  integrity sha512-ksE0RxS0AFllo6KIJjvQsRgcUAzoyZUgUrDbCngv4SaQwyX9YxTfddTLN4uQmbiZB9h25fPp/Xgeyaa3ARCzgg==
   dependencies:
     tslib "~2.3.0"
 
