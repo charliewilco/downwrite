@@ -74,7 +74,7 @@
     "@types/cookie": "^0.4.0",
     "@types/draft-js": "^0.11.5",
     "@types/jest": "^27.0.2",
-    "@types/node": "^16.9.4",
+    "@types/node": "^16.11.7",
     "@types/prismjs": "^1.16.6",
     "@types/puppeteer": "^5.4.4",
     "@types/react": "^17.0.35",
