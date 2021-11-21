@@ -1,5 +1,6 @@
 import type { AppProps } from "next/app";
-import Router from "next/router";
+import { useRouter } from "next/router";
+
 import Head from "next/head";
 import { useEffect } from "react";
 import * as Analytics from "fathom-client";
@@ -18,11 +19,8 @@ import "@reach/menu-button/styles.css";
 import "@reach/dialog/styles.css";
 import "@reach/checkbox/styles.css";
 
-Router.events.on("routeChangeComplete", () => {
-  Analytics.trackPageview();
-});
-
 const CustomAppWrapper = ({ Component, pageProps }: AppProps) => {
+  const router = useRouter();
   useEffect(() => {
     Analytics.load("FENETBXC", {
       includedDomains: [
@@ -32,7 +30,16 @@ const CustomAppWrapper = ({ Component, pageProps }: AppProps) => {
         "next.downwrite.us"
       ]
     });
-  }, []);
+
+    function onRouteChangeComplete() {
+      Analytics.trackPageview();
+    }
+    router.events.on("routeChangeComplete", onRouteChangeComplete);
+
+    return () => {
+      router.events.off("routeChangeComplete", onRouteChangeComplete);
+    };
+  }, [router.events]);
 
   useCheckAuth();
 
