@@ -13,16 +13,19 @@ export const removeTokenCookie = (res: ServerResponse) =>
     })
   );
 
-export const setTokenCookie = (res: ServerResponse, token: string) =>
+export const setTokenCookie = (res: ServerResponse, token: string) => {
+  const secure = !Boolean(process.env.NO_HTTPS);
+  console.log(secure);
   res.setHeader(
     "Set-Cookie",
     serialize(TOKEN_NAME, token, {
       httpOnly: true,
-      secure: !Boolean(process.env.NO_HTTPS),
+      secure,
       path: "/",
       sameSite: "lax"
     })
   );
+};
 
 export const MAX_AGE = 60 * 60 * 8; // 8 hours
 

@@ -45,12 +45,14 @@ export class Auth {
 
   async check() {
     const cookies = this.#client.cookies.getAll();
+    console.log(cookies);
 
     if (cookies[TOKEN_NAME]) {
       try {
         const value = await this.#client.isMe();
 
         if (value) {
+          console.log(value);
           this.#internalState.id = value.me.details.id;
           this.#internalState.username = value.me.details.username;
           this.#callNext();

@@ -24,6 +24,7 @@ export class CreateEntryState extends BaseDraft {
 
   async create(state: ICreateEntryState) {
     const content = this.parser.fromEditorState(state.editorState);
+    console.log(state.title);
     try {
       return this.#client.createEntry({ content, title: state.title });
     } catch (error) {
