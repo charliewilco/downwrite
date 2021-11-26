@@ -1,8 +1,8 @@
 import { EditorState } from "draft-js";
+import { BaseDraft } from "./base-draft";
 import { DownwriteClient } from "@data/client";
 import type { IAppState } from "@data/types";
 import { __IS_BROWSER__ } from "@shared/constants";
-import { BaseDraft } from "./base-draft";
 
 export interface INewEditorValues {
   title: string;
@@ -22,11 +22,10 @@ export class CreateEntryState extends BaseDraft {
     this.#store = store;
   }
 
-  async create(state: ICreateEntryState) {
-    const content = this.parser.fromEditorState(state.editorState);
-    console.log(state.title);
+  async create({ editorState, title }: ICreateEntryState) {
+    const content = this.parser.fromEditorState(editorState);
     try {
-      return this.#client.createEntry({ content, title: state.title });
+      return this.#client.createEntry({ content, title });
     } catch (error) {
       this.#store.notifications.error(error.message);
     }

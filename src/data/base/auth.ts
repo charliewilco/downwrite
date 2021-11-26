@@ -45,7 +45,6 @@ export class Auth {
 
   async check() {
     const cookies = this.#client.cookies.getAll();
-    console.log(cookies);
 
     if (cookies[TOKEN_NAME]) {
       try {

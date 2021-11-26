@@ -15,11 +15,10 @@ export const removeTokenCookie = (res: ServerResponse) =>
 
 export const setTokenCookie = (res: ServerResponse, token: string) => {
   const secure = !Boolean(process.env.NO_HTTPS);
-  console.log(secure);
+  console.log("is secure", secure);
   res.setHeader(
     "Set-Cookie",
     serialize(TOKEN_NAME, token, {
-      httpOnly: true,
       secure,
       path: "/",
       sameSite: "lax"

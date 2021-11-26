@@ -8,10 +8,10 @@ import { useDropzone } from "react-dropzone";
 import { EditorInput } from "@components/ui-input";
 import { CustomMeta } from "@components/custom-meta";
 import { StickyContainer } from "@components/sticky-header";
+import { CreateEntryState } from "@data/modules/create";
 import { useDataFactory, useEnhancedReducer } from "@hooks/index";
 import { useEditor, useDecorators, emptyContentState } from "@hooks/useEditor";
 import { imageLinkDecorators, prismHighlightDecorator } from "../editor";
-import { CreateEntryState } from "@data/modules/create";
 
 const Editor = dynamic(() => import("@components/editor"));
 
@@ -39,8 +39,6 @@ const NewEntryPage: NextPage = () => {
 
   const handleSubmit = async () => {
     const content = state.editorState.getCurrentContent();
-    console.log(state);
-
     if (content.hasText() || state.title !== "") {
       const data = await dataSource.create({
         ...state

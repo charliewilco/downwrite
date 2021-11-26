@@ -68,6 +68,7 @@ export const UIInput: React.VFC<IUIInputProps> = ({ testID, label, ...props }) =
           padding: 0.5rem 0;
           appearance: none;
           display: block;
+          border-radius: 0;
           border: 0;
           background: transparent;
           border-bottom: 2px solid var(--onyx-400);
@@ -92,6 +93,7 @@ export const EditorInput: React.VFC<React.InputHTMLAttributes<HTMLInputElement>>
           display: block;
           appearance: none;
           background: transparent;
+          border-radius: 0;
           outline: none;
           padding: 0.5rem 0;
           font-size: 2.25rem;
