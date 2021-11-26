@@ -1,5 +1,4 @@
 import * as jwt from "jsonwebtoken";
-import is from "@sindresorhus/is";
 import * as bcrypt from "bcryptjs";
 import { IUserModel } from "@server/models";
 import { TokenContents } from "@shared/types";
@@ -13,6 +12,9 @@ export async function getSaltedHash(password: string) {
 
   return hash;
 }
+
+const isObject = (value: unknown): value is object =>
+  value !== null && (typeof value === "object" || typeof value === "function");
 
 export function createToken(user: IUserModel): string {
   const jwtConfig: jwt.SignOptions = {
@@ -37,7 +39,7 @@ export function readToken(token: string): IReadResults | null {
   const contents: TokenContents = jwt.verify(token, SECRET_KEY, {
     complete: false
   }) as TokenContents;
-  return is.object(contents) ? { ...contents, token } : null;
+  return isObject(contents) ? { ...contents, token } : null;
 }
 
 export async function isValidPassword(password: string, hashPassword: string) {

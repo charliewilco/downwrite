@@ -1,11 +1,10 @@
 import React, { useReducer } from "react";
-import is from "@sindresorhus/is";
 
 type PrevStateFn<T> = (prev: T) => T;
 type Callable<T> = Partial<T> | PrevStateFn<T>;
 
 const reducer = <T>(prev: T, action: Callable<T>): T => {
-  if (is.function_(action)) {
+  if (typeof action === "function") {
     return action(prev);
   } else {
     return {
