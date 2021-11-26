@@ -1,11 +1,9 @@
 import { draftjsToMd } from "draftjs-md-converter";
 
-import is from "@sindresorhus/is";
-
 export function createMarkdownServer(
   content: Draft.RawDraftContentState | string
 ): string {
-  if (is.string(content)) {
+  if (typeof content === "string") {
     return content;
   }
 

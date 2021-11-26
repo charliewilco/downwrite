@@ -6,7 +6,7 @@ export const variables = css.global`
       Liberation Mono, monospace;
     --sans-serif: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
       sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    --serif: "Source Serif Pro", "Charter", "Times", system-ui, -apple-system,
+    --serif: "Newsreader", "Charter", "Times", system-ui, -apple-system,
       BlinkMacSystemFont, "Segoe UI", Helvetica, serif, "Apple Color Emoji",
       "Segoe UI Emoji", "Segoe UI Symbol";
     --base-spacing: 1rem;

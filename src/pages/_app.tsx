@@ -62,11 +62,6 @@ const CustomAppWrapper = ({ Component, pageProps }: AppProps) => {
         <meta property="twitter:description" content={OG_DESCRIPTION} />
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:image" content={OG_IMAGE_URL} />
-        <link
-          type="text/css"
-          rel="stylesheet"
-          href="https://unpkg.com/ganymede-light-duotone-prism"
-        />
       </Head>
       <Component {...pageProps} />
     </UIShell>

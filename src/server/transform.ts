@@ -1,19 +1,21 @@
 import { ApolloError } from "apollo-server-micro";
-import is from "@sindresorhus/is";
 import { IPostModel, IUserModel } from "./models";
 import { createMarkdownServer } from "../shared/markdown-template";
 import { IEntry, IPreview } from "../__generated__/server";
 
 const DEFAULT_GRADIENT = ["#FEB692", "#EA5455"];
 
+const isUndefined = (value: unknown): value is undefined =>
+  typeof value === "undefined";
+
 export function transformPostsToFeed(posts: IPostModel[]): IEntry[] {
   const feed = posts.map((post) => {
     const md = createMarkdownServer(post.content);
     const user = post.user.toString();
-    const dateAdded = is.undefined(post.dateAdded)
+    const dateAdded = isUndefined(post.dateAdded)
       ? new Date().toString()
       : post.dateAdded.toString();
-    const dateModified = is.undefined(post.dateModified)
+    const dateModified = isUndefined(post.dateModified)
       ? new Date().toString()
       : post.dateModified.toString();
     return {
@@ -25,7 +27,7 @@ export function transformPostsToFeed(posts: IPostModel[]): IEntry[] {
       dateAdded,
       public: post.public,
       content: md,
-      excerpt: md.trim().substr(0, 90)
+      excerpt: md.trim().substring(0, 90)
     };
   });
 
@@ -43,10 +45,10 @@ export function transformPostToEntry(post: IPostModel | null): IEntry {
     md = createMarkdownServer(post.content);
   }
 
-  const dateAdded = is.undefined(post.dateAdded)
+  const dateAdded = isUndefined(post.dateAdded)
     ? new Date().toString()
     : post.dateAdded.toString();
-  const dateModified = is.undefined(post.dateModified)
+  const dateModified = isUndefined(post.dateModified)
     ? new Date().toString()
     : post.dateModified.toString();
 
@@ -59,17 +61,17 @@ export function transformPostToEntry(post: IPostModel | null): IEntry {
     dateAdded,
     public: post.public,
     content: md,
-    excerpt: md.trim().substr(0, 90)
+    excerpt: md.trim().substring(0, 90)
   };
 
   return entry;
 }
 
 export function transformMDToPreview(post: IPostModel, user: IUserModel): IPreview {
-  const dateAdded = is.undefined(post.dateAdded)
+  const dateAdded = isUndefined(post.dateAdded)
     ? new Date().toString()
     : post.dateAdded.toString();
-  const dateModified = is.undefined(post.dateModified)
+  const dateModified = isUndefined(post.dateModified)
     ? new Date().toString()
     : post.dateModified.toString();
 

@@ -1,7 +1,6 @@
 import { ApolloError } from "apollo-server-micro";
 import * as bcrypt from "bcryptjs";
 import base64 from "base-64";
-import is from "@sindresorhus/is";
 import cuid from "cuid";
 
 import { ResolverContext } from "@server/context";
@@ -191,7 +190,7 @@ export async function updateUserSettings(
     try {
       const currentUser = await UserModel.findById({ _id: user });
 
-      if (is.nullOrUndefined(currentUser)) {
+      if (currentUser === null || typeof currentUser === "undefined") {
         throw new ApolloError("user cannot be null");
       }
 
@@ -205,7 +204,7 @@ export async function updateUserSettings(
         { $set: { username: username!, email: email! } },
         { new: true }
       );
-      if (is.nullOrUndefined(details)) {
+      if (details === null || typeof details === "undefined") {
         throw new ApolloError("Update failed, user details came back null");
       }
       if (details.email && details.username) {
@@ -247,7 +246,7 @@ export async function updatePassword(
       { new: true }
     );
 
-    if (is.nullOrUndefined(updated)) {
+    if (updated === null || typeof updated === "undefined") {
       throw new ApolloError("Update failed");
     }
 

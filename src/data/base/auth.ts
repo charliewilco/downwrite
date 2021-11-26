@@ -51,6 +51,7 @@ export class Auth {
         const value = await this.#client.isMe();
 
         if (value) {
+          console.log(value);
           this.#internalState.id = value.me.details.id;
           this.#internalState.username = value.me.details.username;
           this.#callNext();

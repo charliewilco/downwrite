@@ -8,8 +8,12 @@ export class DownwriteUIState implements IAppState {
   auth: Auth;
   notifications: GlobalNotifications;
   isOffline: boolean = false;
-  #client = new DownwriteClient();
-  constructor() {
+  #client: DownwriteClient;
+  /**
+   * @param client should be a mock for testing
+   */
+  constructor(client?: any) {
+    this.#client = client ?? new DownwriteClient();
     this.auth = new Auth(this.#client, this);
     this.settings = new GlobalSettings(this.#client, this);
     this.notifications = new GlobalNotifications();

@@ -8,10 +8,10 @@ import { useDropzone } from "react-dropzone";
 import { EditorInput } from "@components/ui-input";
 import { CustomMeta } from "@components/custom-meta";
 import { StickyContainer } from "@components/sticky-header";
+import { CreateEntryState } from "@data/modules/create";
 import { useDataFactory, useEnhancedReducer } from "@hooks/index";
 import { useEditor, useDecorators, emptyContentState } from "@hooks/useEditor";
 import { imageLinkDecorators, prismHighlightDecorator } from "../editor";
-import { CreateEntryState } from "@data/modules/create";
 
 const Editor = dynamic(() => import("@components/editor"));
 
@@ -37,10 +37,8 @@ const NewEntryPage: NextPage = () => {
     return content.hasText() || state.title !== "";
   }, [state]);
 
-  const handleSubmit = useCallback(async () => {
-    const state = getState();
+  const handleSubmit = async () => {
     const content = state.editorState.getCurrentContent();
-
     if (content.hasText() || state.title !== "") {
       const data = await dataSource.create({
         ...state
@@ -50,7 +48,7 @@ const NewEntryPage: NextPage = () => {
         router.push(`/${data.createEntry?.id}/edit`);
       }
     }
-  }, [router]);
+  };
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {

@@ -5,6 +5,7 @@ import { TOKEN_NAME } from "@shared/constants";
 import { getSdk } from "../__generated__/client";
 
 import type {
+  IIsMeQuery,
   ICreateEntryMutationVariables,
   ICreateUserMutationVariables,
   ILoginUserMutationVariables,
@@ -88,5 +89,32 @@ export class DownwriteClient extends GraphQLClient {
       current,
       newPassword
     });
+  }
+}
+
+export class MockClient {
+  cookies = new Cookie({ [TOKEN_NAME]: "" });
+  setToken(value: string) {
+    this.cookies.set(TOKEN_NAME, value);
+  }
+  async loginUser(variables: ILoginUserMutationVariables) {
+    console.log(variables);
+    return {
+      authenticateUser: {
+        token: "..."
+      }
+    };
+  }
+
+  async isMe(): Promise<IIsMeQuery> {
+    return {
+      me: {
+        token: "MOCK_TOKEN_2",
+        details: {
+          id: "1",
+          username: "david-yates"
+        }
+      }
+    };
   }
 }

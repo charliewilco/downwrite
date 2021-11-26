@@ -1,6 +1,4 @@
 import { ApolloError, UserInputError } from "apollo-server-micro";
-import is from "@sindresorhus/is";
-
 import dbConnect from "./db";
 import { PostModel, UserModel, IUserModel } from "./models";
 import {
@@ -32,7 +30,7 @@ export async function me(context: ResolverContext) {
     });
     const _user = await UserModel.findById(user, "username email").exec();
 
-    if (is.nullOrUndefined(_user)) {
+    if (_user === null || typeof _user === "undefined") {
       throw new ApolloError("Cannot find user");
     }
 
