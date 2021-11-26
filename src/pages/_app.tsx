@@ -14,7 +14,6 @@ import {
   BASE_PROD_URL
 } from "@shared/constants";
 
-import "@reach/tabs/styles.css";
 import "@reach/menu-button/styles.css";
 import "@reach/dialog/styles.css";
 import "@reach/checkbox/styles.css";
