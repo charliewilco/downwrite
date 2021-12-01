@@ -146,7 +146,7 @@ Working on this project it uses GitHub actions to run the tests and deploys usin
 
 MIT License
 
-Copyright (c) 2020 Charles Peters
+Copyright (c) 2022 Charlie Peters
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
