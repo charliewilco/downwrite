@@ -3739,7 +3739,7 @@ deprecated-decorator@^0.1.6:
   resolved "https://registry.npmjs.org/deprecated-decorator/-/deprecated-decorator-0.1.6.tgz#00966317b7a12fe92f3cc831f7583af329b86c37"
   integrity sha1-AJZjF7ehL+kvPMgx91g68ym4bDc=
 
-dequal@2.0.2, dequal@^2.0.0:
+dequal@^2.0.0:
   version "2.0.2"
   resolved "https://registry.npmjs.org/dequal/-/dequal-2.0.2.tgz#85ca22025e3a87e65ef75a7a437b35284a7e319d"
   integrity sha512-q9K8BlJVxK7hQYqa6XISGmBZbtQQWVXSrRrWreHC94rMt1QL/Impruc+7p2CYSYuVIUr+YCt6hjrs1kkdJRTug==
@@ -8986,12 +8986,10 @@ swap-case@^2.0.2:
   dependencies:
     tslib "^2.0.3"
 
-swr@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/swr/-/swr-1.0.1.tgz#15f62846b87ee000e52fa07812bb65eb62d79483"
-  integrity sha512-EPQAxSjoD4IaM49rpRHK0q+/NzcwoT8c0/Ylu/u3/6mFj/CWnQVjNJ0MV2Iuw/U+EJSd2TX5czdAwKPYZIG0YA==
-  dependencies:
-    dequal "2.0.2"
+swr@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-1.1.0.tgz#7710cdbc5ff664c13e41fba6a1fa4734f82aba35"
+  integrity sha512-MFL3mkl752Uap81nLA1tEu7vQmikPamSziW+6dBidYKAo4oLOlUx/x5GZy4ZCkCwfZe2uedylkz1UMGnatUX4g==
 
 symbol-observable@^1.0.4, symbol-observable@^1.1.0:
   version "1.2.0"
