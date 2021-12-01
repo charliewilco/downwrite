@@ -33,6 +33,6 @@
     "isolatedModules": true,
     "incremental": true
   },
-  "exclude": ["next.config.js", "postcss.config.js", "node_modules/@jest"],
+  "exclude": ["next.config.js", "node_modules/@jest"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

@@ -2,13 +2,13 @@ import Link from "next/link";
 import { Routes } from "@shared/routes";
 
 const GITHUB = "https://github.com/charliewilco/downwrite";
-const TWITTER = "https://twitter.com/charlespeters";
+const TWITTER = "https://twitter.com/_charliewilco";
 
 const PAGES = [
   { name: "About", href: Routes.ABOUT },
   { name: "Legal", href: Routes.LEGAL },
   { name: "GitHub", href: GITHUB },
-  { name: "@charlespeters", href: TWITTER }
+  { name: "@_charliewilco", href: TWITTER }
 ] as const;
 
 export const SiteFooter = () => {
