@@ -3,13 +3,19 @@ import { NotificationList } from "@components/notification-list";
 import { buttons } from "@components/button";
 import { typography } from "@components/typography";
 import { variables, reset } from "@components/reset";
+import { useDataSource } from "@hooks/useDataSource";
 import { ErrorBoundary, ErrorFallback } from "./errors";
+import { useIsomorphicLayoutEffect } from "./portal";
 
 const myErrorHandler = (error: Error, info: { componentStack: string }) => {
   console.log(error, info.componentStack);
 };
 
 export const UIShell: React.FC = ({ children }) => {
+  const ds = useDataSource();
+  useIsomorphicLayoutEffect(() => {
+    ds.auth.check();
+  }, [ds]);
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={myErrorHandler}>
       <div className="outer">

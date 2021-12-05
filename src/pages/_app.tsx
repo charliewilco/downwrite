@@ -5,7 +5,6 @@ import Head from "next/head";
 import { useEffect } from "react";
 import * as Analytics from "fathom-client";
 import { UIShell } from "@components/ui-shell";
-import { useCheckAuth } from "@hooks/useDataSource";
 import {
   ICON_LINK,
   OG_DESCRIPTION,
@@ -39,8 +38,6 @@ const CustomAppWrapper = ({ Component, pageProps }: AppProps) => {
       router.events.off("routeChangeComplete", onRouteChangeComplete);
     };
   }, [router.events]);
-
-  useCheckAuth();
 
   return (
     <UIShell>

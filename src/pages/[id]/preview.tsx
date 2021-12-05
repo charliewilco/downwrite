@@ -25,7 +25,6 @@ type PreviewPageHandler = GetServerSideProps<IPreviewProps, { id: string }>;
 export const getServerSideProps: PreviewPageHandler = async ({ params }) => {
   const id = params!.id;
 
-  console.log(id, params);
   try {
     const preview = await getPreviewEntry(id);
     const _ = await toSafeHTML(preview.content);
