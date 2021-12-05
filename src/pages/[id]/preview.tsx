@@ -52,36 +52,40 @@ const PreviewEntry: NextPage<IPreviewProps> = (props) => {
   const router = useRouter();
 
   return (
-    <ContentWrapper
-      title={props.preview?.title!}
-      content={<section dangerouslySetInnerHTML={{ __html: props.result }} />}
-      dateAdded={props.preview?.dateAdded!}>
-      <CustomMeta title={props.preview?.title} path={props.id.concat("/preview")} />
-
-      <Head>
-        <meta
-          name="og:description"
-          content={props.preview?.content!.substring(0, 75)}
+    <div className="outer">
+      <ContentWrapper
+        title={props.preview?.title!}
+        content={<section dangerouslySetInnerHTML={{ __html: props.result }} />}
+        dateAdded={props.preview?.dateAdded!}>
+        <CustomMeta
+          title={props.preview?.title}
+          path={props.id.concat("/preview")}
         />
-        <meta name="og:url" content={router.pathname} />
-        <meta
-          name="description"
-          content={props.preview?.content!.substring(0, 75)}
-        />
-      </Head>
-      <AuthorBlock name={props.preview?.author?.username!} colors={AvatarColors} />
-      {!me.authed && (
-        <div>
-          <p>
-            <span>
-              You can write and share on Downwrite, you can sign up or log in{" "}
-            </span>
-            <Link href={Routes.LOGIN} passHref>
-              <a>here</a>
-            </Link>
-          </p>
-        </div>
-      )}
+        <Head>
+          <meta
+            name="og:description"
+            content={props.preview?.content!.substring(0, 75)}
+          />
+          <meta name="og:url" content={router.pathname} />
+          <meta
+            name="description"
+            content={props.preview?.content!.substring(0, 75)}
+          />
+        </Head>
+        <AuthorBlock name={props.preview?.author?.username!} colors={AvatarColors} />
+        {!me.authed && (
+          <div>
+            <p>
+              <span>
+                You can write and share on Downwrite, you can sign up or log in{" "}
+              </span>
+              <Link href={Routes.LOGIN} passHref>
+                <a>here</a>
+              </Link>
+            </p>
+          </div>
+        )}
+      </ContentWrapper>
       <style jsx>{`
         div {
           margin: 1rem 0;
@@ -90,8 +94,12 @@ const PreviewEntry: NextPage<IPreviewProps> = (props) => {
           font-size: 0.875rem;
           font-family: var(--monospace);
         }
+
+        .outer {
+          padding: 0.5rem;
+        }
       `}</style>
-    </ContentWrapper>
+    </div>
   );
 };
 

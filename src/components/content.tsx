@@ -92,6 +92,7 @@ export const StaticContentWrapper: React.FC<
           h1 {
             font-size: 2rem;
             font-weight: 900;
+            font-family: var(--sans-serif);
           }
 
           section {
@@ -101,11 +102,20 @@ export const StaticContentWrapper: React.FC<
           }
 
           section > aside {
-            grid-column: span 3 / span 3;
+            grid-column: span 12 / span 12;
           }
 
           section > div {
-            grid-column: span 9 / span 9;
+            grid-column: span 12 / span 12;
+          }
+
+          @media (min-width: 40rem) {
+            section > aside {
+              grid-column: span 3 / span 3;
+            }
+            section > div {
+              grid-column: span 9 / span 9;
+            }
           }
         `}
       </style>
@@ -157,6 +167,7 @@ export const ContentWrapper: React.FC<IContentWrapperProps> = (props) => {
           h1 {
             font-size: 2rem;
             font-weight: 900;
+            font-family: var(--sans-serif);
           }
 
           section {
@@ -166,11 +177,20 @@ export const ContentWrapper: React.FC<IContentWrapperProps> = (props) => {
           }
 
           section > aside {
-            grid-column: span 3 / span 3;
+            grid-column: span 12 / span 12;
           }
 
           section > div {
-            grid-column: span 9 / span 9;
+            grid-column: span 12 / span 12;
+          }
+
+          @media (min-width: 40rem) {
+            section > aside {
+              grid-column: span 3 / span 3;
+            }
+            section > div {
+              grid-column: span 9 / span 9;
+            }
           }
         `}
       </style>
