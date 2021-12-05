@@ -75,6 +75,9 @@ const Card: React.VFC<ICardProps> = (props) => {
           h2 {
             font-weight: 700;
             font-size: 1rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
           }
 
           footer {
@@ -262,11 +265,12 @@ export const PostList: React.VFC<IPostListProps> = (props) => {
           }
 
           .grid {
+            --columns: 1;
             max-width: 100%;
             margin: 0 auto;
             display: grid;
             gap: 1rem;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
+            grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
           }
 
           .list {
@@ -293,6 +297,30 @@ export const PostList: React.VFC<IPostListProps> = (props) => {
           .toggleButton.active {
             opacity: 100%;
             border-bottom-color: #2597f1;
+          }
+
+          @media (min-width: 40rem) {
+            .grid {
+              --columns: 2;
+            }
+          }
+
+          @media (min-width: 56rem) {
+            .grid {
+              --columns: 3;
+            }
+          }
+
+          @media (min-width: 64rem) {
+            .grid {
+              --columns: 4;
+            }
+          }
+
+          @media (min-width: 72rem) {
+            .grid {
+              --columns: 5;
+            }
           }
         `}
       </style>
