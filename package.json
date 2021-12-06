@@ -75,7 +75,7 @@
     "@types/base-64": "^1.0.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/cookie": "^0.4.0",
-    "@types/draft-js": "^0.11.5",
+    "@types/draft-js": "^0.11.7",
     "@types/jest": "^27.0.3",
     "@types/node": "^16.11.11",
     "@types/prismjs": "^1.16.6",
