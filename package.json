@@ -39,7 +39,7 @@
     "fathom-client": "^3.2.0",
     "formik": "^2.2.9",
     "graphql": "^15.7.2",
-    "graphql-request": "^3.6.1",
+    "graphql-request": "^3.7.0",
     "graphql-tag": "^2.12.6",
     "immutable": "4.0.0",
     "jsonwebtoken": "^8.5.1",
