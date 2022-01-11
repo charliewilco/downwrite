@@ -1,6 +1,5 @@
 {
-  "editor.formatOnSave": true,
   "jest.showCoverageOnLoad": true,
   "jest.autoEnable": false,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
