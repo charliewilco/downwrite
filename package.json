@@ -128,7 +128,7 @@
     "tabWidth": 2,
     "useTabs": false,
     "bracketSpacing": true,
-    "jsxBracketSameLine": true,
+    "bracketSameLine": true,
     "trailingComma": "none"
   },
   "husky": {
