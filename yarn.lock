@@ -1652,10 +1652,10 @@
   dependencies:
     "@types/ms" "*"
 
-"@types/draft-js@^0.11.8":
-  version "0.11.8"
-  resolved "https://registry.yarnpkg.com/@types/draft-js/-/draft-js-0.11.8.tgz#ef1e1dfbb5e3f1d13a8769eb5dfd282cae8b127b"
-  integrity sha512-WddWQKbjbVEeJEuwS7oczvaVGsfML141ywwgpFeKE2E+NI9/Qk+AU/xTd6A7/dNsS8lf3ziubm8WugrttwQk2g==
+"@types/draft-js@^0.11.9":
+  version "0.11.9"
+  resolved "https://registry.yarnpkg.com/@types/draft-js/-/draft-js-0.11.9.tgz#b7535fb2511e8b8c8e33ffac2199a5f2988f4fd5"
+  integrity sha512-cQJBZjjIlGaPA1tOY+wGz2KhlPtAAZOIXpUvGPxPRw5uzZ2tcj8m6Yu1QDV9YgP36+cqE3cUvgkARBzgUiuI/Q==
   dependencies:
     "@types/react" "*"
     immutable "~3.7.4"
