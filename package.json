@@ -59,7 +59,7 @@
     "remark-stringify": "^10.0.2",
     "rxjs": "^7.5.4",
     "sharp": "^0.30.1",
-    "swr": "^1.2.1",
+    "swr": "^1.2.2",
     "unified": "^10.1.1",
     "universal-cookie": "^4.0.4",
     "use-subscription": "^1.5.1",
