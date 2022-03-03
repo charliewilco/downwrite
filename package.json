@@ -63,7 +63,7 @@
     "unified": "^10.1.1",
     "universal-cookie": "^4.0.4",
     "use-subscription": "^1.5.1",
-    "zod": "^3.13.2"
+    "zod": "^3.13.4"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.6.1",
