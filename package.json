@@ -69,7 +69,7 @@
     "@graphql-codegen/cli": "^2.6.1",
     "@graphql-codegen/typescript": "^2.4.4",
     "@graphql-codegen/typescript-graphql-request": "^4.4.2",
-    "@graphql-codegen/typescript-operations": "^2.3.2",
+    "@graphql-codegen/typescript-operations": "^2.3.4",
     "@graphql-codegen/typescript-resolvers": "^2.4.3",
     "@next/bundle-analyzer": "^12.1.0",
     "@types/base-64": "^1.0.0",
