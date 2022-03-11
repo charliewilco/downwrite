@@ -4548,10 +4548,19 @@ graphql-extensions@^0.15.0:
     apollo-server-env "^3.1.0"
     apollo-server-types "^0.9.0"
 
-graphql-request@^3.3.0, graphql-request@^3.7.0:
+graphql-request@^3.3.0:
   version "3.7.0"
   resolved "https://registry.npmjs.org/graphql-request/-/graphql-request-3.7.0.tgz#c7406e537084f8b9788541e3e6704340ca13055b"
   integrity sha512-dw5PxHCgBneN2DDNqpWu8QkbbJ07oOziy8z+bK/TAXufsOLaETuVO4GkXrbs0WjhdKhBMN3BkpN/RIvUHkmNUQ==
+  dependencies:
+    cross-fetch "^3.0.6"
+    extract-files "^9.0.0"
+    form-data "^3.0.0"
+
+graphql-request@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-4.1.0.tgz#98d0d8d4458fd81674d8566d0b5781bd2823c26e"
+  integrity sha512-CBFcO6LP7cg+aBMc+x9C1dZEQsKTBZKR2J+HzuB0cR/6aaU4K4/tRXTQu8CDMp5195ZU+DTNKZZOSK1WRbTeAg==
   dependencies:
     cross-fetch "^3.0.6"
     extract-files "^9.0.0"
