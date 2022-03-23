@@ -21,7 +21,7 @@
     "types": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "@graphql-tools/schema": "^8.3.3",
+    "@graphql-tools/schema": "^8.3.5",
     "@reach/checkbox": "^0.16.0",
     "@reach/combobox": "^0.16.5",
     "@reach/dialog": "^0.16.2",
