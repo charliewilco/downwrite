@@ -81,7 +81,7 @@
     "@types/prismjs": "^1.26.0",
     "@types/puppeteer": "^5.4.5",
     "@types/react": "^17.0.43",
-    "@types/react-dom": "^17.0.13",
+    "@types/react-dom": "^17.0.14",
     "@types/react-test-renderer": "^17.0.1",
     "@types/ua-parser-js": "^0.7.36",
     "@types/use-subscription": "^1.0.0",
