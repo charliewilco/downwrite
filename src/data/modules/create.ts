@@ -32,6 +32,6 @@ export class CreateEntryState extends BaseDraft {
   }
 
   onDrop(acceptedFiles: File[]) {
-    return this.import(acceptedFiles);
+    return this.importFiles(acceptedFiles);
   }
 }

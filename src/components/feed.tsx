@@ -156,7 +156,12 @@ const PostListItem: React.VFC<IListItemProps> = (props) => {
           display: block;
         }
 
+        li:not(:first-of-type) {
+          margin-top: 1rem;
+        }
+
         h2 {
+          font-size: 1.25rem;
           margin: 0 0 1rem;
         }
 

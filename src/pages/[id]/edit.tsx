@@ -92,7 +92,7 @@ const EditUI: NextPage = () => {
   }
 
   const handleExport = () =>
-    dataSource.export({
+    dataSource.exportEntry({
       editorState: state.editorState,
       title: state.title,
       date: data.entry.dateAdded

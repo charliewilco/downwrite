@@ -20,7 +20,7 @@ export abstract class BaseDraft {
   #reader: FileReader = null;
   parser = new DraftParser();
 
-  async import(files: File[]) {
+  async importFiles(files: File[]) {
     return new Promise<{
       title: string;
       editorState: EditorState;
@@ -45,7 +45,7 @@ export abstract class BaseDraft {
     });
   }
 
-  export(values: { title: string; date: Date; editorState: EditorState }) {
+  exportEntry(values: { title: string; date: Date; editorState: EditorState }) {
     let localFileExtension = localStorage.getItem(LocalSettings.EXTENSION) || "";
     let extension = localFileExtension.replace(/\./g, "") || "md";
     let isFileSaverSupported = !!new Blob();

@@ -155,10 +155,10 @@ export type IUserSettingsInput = {
 
 export type IEntryInfoFragment = {
   __typename?: "Entry";
-  title: string | null | undefined;
-  dateAdded: any | null | undefined;
-  id: string | null | undefined;
-  public: boolean | null | undefined;
+  title: string | null;
+  dateAdded: any | null;
+  id: string | null;
+  public: boolean | null;
 };
 
 export type IAllPostsQueryVariables = Exact<{ [key: string]: never }>;
@@ -167,10 +167,10 @@ export type IAllPostsQuery = {
   __typename?: "Query";
   feed: Array<{
     __typename?: "Entry";
-    title: string | null | undefined;
-    dateAdded: any | null | undefined;
-    id: string | null | undefined;
-    public: boolean | null | undefined;
+    title: string | null;
+    dateAdded: any | null;
+    id: string | null;
+    public: boolean | null;
   }>;
 };
 
@@ -180,17 +180,14 @@ export type IEditQueryVariables = Exact<{
 
 export type IEditQuery = {
   __typename?: "Query";
-  entry:
-    | {
-        __typename?: "Entry";
-        content: string | null | undefined;
-        title: string | null | undefined;
-        dateAdded: any | null | undefined;
-        id: string | null | undefined;
-        public: boolean | null | undefined;
-      }
-    | null
-    | undefined;
+  entry: {
+    __typename?: "Entry";
+    content: string | null;
+    title: string | null;
+    dateAdded: any | null;
+    id: string | null;
+    public: boolean | null;
+  } | null;
 };
 
 export type IPreviewQueryVariables = Exact<{
@@ -199,42 +196,30 @@ export type IPreviewQueryVariables = Exact<{
 
 export type IPreviewQuery = {
   __typename?: "Query";
-  preview:
-    | {
-        __typename?: "Preview";
-        title: string | null | undefined;
-        dateAdded: any | null | undefined;
-        id: string | null | undefined;
-        content: string | null | undefined;
-        author:
-          | { __typename?: "Author"; username: string | null | undefined }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
+  preview: {
+    __typename?: "Preview";
+    title: string | null;
+    dateAdded: any | null;
+    id: string | null;
+    content: string | null;
+    author: { __typename?: "Author"; username: string | null } | null;
+  } | null;
 };
 
 export type IUserDetailsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type IUserDetailsQuery = {
   __typename?: "Query";
-  settings:
-    | { __typename?: "User"; username: string; email: string }
-    | null
-    | undefined;
-  me:
-    | {
-        __typename?: "Me";
-        usage: {
-          __typename?: "UsageDetails";
-          entryCount: number;
-          publicEntries: number;
-          privateEntries: number;
-        };
-      }
-    | null
-    | undefined;
+  settings: { __typename?: "User"; username: string; email: string } | null;
+  me: {
+    __typename?: "Me";
+    usage: {
+      __typename?: "UsageDetails";
+      entryCount: number;
+      publicEntries: number;
+      privateEntries: number;
+    };
+  } | null;
 };
 
 export type IUpdateEntryMutationVariables = Exact<{
@@ -246,17 +231,14 @@ export type IUpdateEntryMutationVariables = Exact<{
 
 export type IUpdateEntryMutation = {
   __typename?: "Mutation";
-  updateEntry:
-    | {
-        __typename?: "Entry";
-        content: string | null | undefined;
-        title: string | null | undefined;
-        dateAdded: any | null | undefined;
-        id: string | null | undefined;
-        public: boolean | null | undefined;
-      }
-    | null
-    | undefined;
+  updateEntry: {
+    __typename?: "Entry";
+    content: string | null;
+    title: string | null;
+    dateAdded: any | null;
+    id: string | null;
+    public: boolean | null;
+  } | null;
 };
 
 export type ICreateEntryMutationVariables = Exact<{
@@ -266,16 +248,13 @@ export type ICreateEntryMutationVariables = Exact<{
 
 export type ICreateEntryMutation = {
   __typename?: "Mutation";
-  createEntry:
-    | {
-        __typename?: "Entry";
-        title: string | null | undefined;
-        dateAdded: any | null | undefined;
-        id: string | null | undefined;
-        public: boolean | null | undefined;
-      }
-    | null
-    | undefined;
+  createEntry: {
+    __typename?: "Entry";
+    title: string | null;
+    dateAdded: any | null;
+    id: string | null;
+    public: boolean | null;
+  } | null;
 };
 
 export type IRemoveEntryMutationVariables = Exact<{
@@ -284,14 +263,11 @@ export type IRemoveEntryMutationVariables = Exact<{
 
 export type IRemoveEntryMutation = {
   __typename?: "Mutation";
-  deleteEntry:
-    | {
-        __typename?: "Entry";
-        title: string | null | undefined;
-        id: string | null | undefined;
-      }
-    | null
-    | undefined;
+  deleteEntry: {
+    __typename?: "Entry";
+    title: string | null;
+    id: string | null;
+  } | null;
 };
 
 export type ILoginUserMutationVariables = Exact<{
@@ -301,10 +277,7 @@ export type ILoginUserMutationVariables = Exact<{
 
 export type ILoginUserMutation = {
   __typename?: "Mutation";
-  authenticateUser:
-    | { __typename?: "AuthUserPayload"; token: string | null | undefined }
-    | null
-    | undefined;
+  authenticateUser: { __typename?: "AuthUserPayload"; token: string | null } | null;
 };
 
 export type ICreateUserMutationVariables = Exact<{
@@ -315,10 +288,7 @@ export type ICreateUserMutationVariables = Exact<{
 
 export type ICreateUserMutation = {
   __typename?: "Mutation";
-  createUser:
-    | { __typename?: "AuthUserPayload"; token: string | null | undefined }
-    | null
-    | undefined;
+  createUser: { __typename?: "AuthUserPayload"; token: string | null } | null;
 };
 
 export type IUpdateUserSettingsMutationVariables = Exact<{
@@ -327,10 +297,11 @@ export type IUpdateUserSettingsMutationVariables = Exact<{
 
 export type IUpdateUserSettingsMutation = {
   __typename?: "Mutation";
-  updateUserSettings:
-    | { __typename?: "User"; username: string; email: string }
-    | null
-    | undefined;
+  updateUserSettings: {
+    __typename?: "User";
+    username: string;
+    email: string;
+  } | null;
 };
 
 export type IUpdatePasswordMutationVariables = Exact<{
@@ -340,27 +311,18 @@ export type IUpdatePasswordMutationVariables = Exact<{
 
 export type IUpdatePasswordMutation = {
   __typename?: "Mutation";
-  updatePassword:
-    | { __typename?: "AuthUserPayload"; token: string | null | undefined }
-    | null
-    | undefined;
+  updatePassword: { __typename?: "AuthUserPayload"; token: string | null } | null;
 };
 
 export type IIsMeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type IIsMeQuery = {
   __typename?: "Query";
-  me:
-    | {
-        __typename?: "Me";
-        token: string | null | undefined;
-        details:
-          | { __typename?: "User"; id: string; username: string }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
+  me: {
+    __typename?: "Me";
+    token: string | null;
+    details: { __typename?: "User"; id: string; username: string } | null;
+  } | null;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;

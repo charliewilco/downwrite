@@ -25,21 +25,43 @@ const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) 
 
 NextMenuLink.displayName = "NextMenuLink";
 
+const LoginNav: React.VFC = () => {
+  return (
+    <nav>
+      <Link href={Routes.LOGIN} passHref>
+        <a className="login-link">Login</a>
+      </Link>
+      <Link href={Routes.REGISTER} passHref>
+        <a className="login-link">Register</a>
+      </Link>
+      <style jsx>{`
+        nav {
+          display: grid;
+          gap: 0.5rem;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .login-link {
+          opacity: 75%;
+          font-weight: 700;
+        }
+      `}</style>
+    </nav>
+  );
+};
+
 export const UIHeader: React.VFC = () => {
   const dataSource = useDataSource();
   const me = useSubjectSubscription(dataSource.auth.state);
 
   return (
     <header data-testid="APP_HEADER">
-      <nav>
-        <h1 data-testid="APP_HEADER_TITLE">
-          <Link href={me.authed ? Routes.DASHBOARD : Routes.LOGIN} passHref>
-            <a className="logo-link">
-              <Logo />
-            </a>
-          </Link>
-        </h1>
-      </nav>
+      <h1 data-testid="APP_HEADER_TITLE">
+        <Link href={me.authed ? Routes.DASHBOARD : Routes.LOGIN} passHref>
+          <a className="logo-link">
+            <Logo />
+          </a>
+        </Link>
+      </h1>
       {me.authed ? (
         <nav>
           <Link href={Routes.NEW} passHref>
@@ -91,15 +113,7 @@ export const UIHeader: React.VFC = () => {
           </Menu>
         </nav>
       ) : (
-        <nav>
-          <Link href={Routes.LOGIN} passHref>
-            <a className="login-link">Login</a>
-          </Link>
-          <span className="separator">or</span>&nbsp;
-          <Link href={Routes.REGISTER} passHref>
-            <a className="login-link">Register</a>
-          </Link>
-        </nav>
+        <LoginNav />
       )}
       <style jsx>{`
         header,
@@ -131,16 +145,6 @@ export const UIHeader: React.VFC = () => {
           color: var(--pixieblue-500);
         }
 
-        .login-link {
-          opacity: 75%;
-          font-weight: 700;
-        }
-
-        .separator {
-          margin-right: 0.5rem;
-          margin-left: 0.5rem;
-          user-select: none;
-        }
         .new-link {
           margin-right: 1rem;
           margin-left: 1rem;
