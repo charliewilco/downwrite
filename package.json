@@ -70,7 +70,7 @@
     "@graphql-codegen/typescript": "^2.4.4",
     "@graphql-codegen/typescript-graphql-request": "^4.4.4",
     "@graphql-codegen/typescript-operations": "^2.3.5",
-    "@graphql-codegen/typescript-resolvers": "^2.4.3",
+    "@graphql-codegen/typescript-resolvers": "^2.6.1",
     "@next/bundle-analyzer": "^12.1.1",
     "@types/base-64": "^1.0.0",
     "@types/bcryptjs": "^2.4.2",
