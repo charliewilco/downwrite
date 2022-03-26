@@ -54,7 +54,7 @@ export const Mutation: IMutationResolvers<ResolverContext> = {
 
 export async function createPost(
   context: ResolverContext,
-  args: RequireFields<IMutationCreateEntryArgs, never>
+  args: Partial<IMutationCreateEntryArgs>
 ): Promise<IEntry> {
   return verifyUser(context, async ({ user, name }) => {
     try {

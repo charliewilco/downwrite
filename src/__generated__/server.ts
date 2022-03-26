@@ -12,9 +12,9 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>;
 };
-export type RequireFields<T, K extends keyof T> = {
-  [X in Exclude<keyof T, K>]?: T[X];
-} & { [P in K]-?: NonNullable<T[P]> };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
+  [P in K]-?: NonNullable<T[P]>;
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -535,7 +535,7 @@ export type IMutationResolvers<
     Maybe<IResolversTypes["Entry"]>,
     ParentType,
     ContextType,
-    RequireFields<IMutationCreateEntryArgs, never>
+    Partial<IMutationCreateEntryArgs>
   >;
   createUser: Resolver<
     Maybe<IResolversTypes["AuthUserPayload"]>,
