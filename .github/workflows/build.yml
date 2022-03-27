@@ -8,7 +8,7 @@ jobs:
       NEXT_TELEMETRY_DISABLED: 1
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [14.x, 16.x]
 
     steps:
       - uses: actions/cache@v2
@@ -24,8 +24,6 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build
         run: yarn build
-      - name: Type Check
-        run: yarn types
 
   test:
     runs-on: ubuntu-latest
@@ -33,7 +31,7 @@ jobs:
       NEXT_TELEMETRY_DISABLED: 1
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [14.x, 16.x]
 
     services:
       mongodb:

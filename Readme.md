@@ -34,11 +34,11 @@ This is meant to be a simple writing application with some key features:
 
 ## Setup 📲⏳⚙️
 
-This project uses Node (v12.18.x), [TypeScript](https://www.typescriptlang.org/) and Yarn.
+This project uses Node (v12.18.x), [TypeScript](https://www.typescriptlang.org/) and yarn.
 
 ```bash
 brew cask install yarn
-yarn
+yarn install
 ```
 
 Personally use [`fnm`](https://github.com/Schniz/fnm) to manage my node versions.
