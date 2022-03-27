@@ -214,13 +214,15 @@ const SettingsPage = () => {
 
             <div className="action password">
               <div>
-                <label>
+                <label className="checkbox-container">
                   <MixedCheckbox
                     name="Password Hidden"
                     checked={isOpen}
                     onChange={onToggleOpen}
                   />
-                  <span>{!isOpen ? "Values hidden" : "Values shown"}</span>
+                  <span className="checkbox-label">
+                    {!isOpen ? "Values hidden" : "Values shown"}
+                  </span>
                 </label>
               </div>
               <button
@@ -268,13 +270,14 @@ const SettingsPage = () => {
       <style jsx>{`
         .outer {
           max-width: 56rem;
+          padding: 0 0.5rem;
           margin-left: auto;
           margin-right: auto;
         }
 
         h4 {
           font-size: 1.25rem;
-          margin-bottom: 2rem;
+          margin-bottom: 1rem;
         }
 
         header {
@@ -287,6 +290,15 @@ const SettingsPage = () => {
           display: grid;
           gap: 1rem;
           grid-template-columns: repeat(12, minmax(0, 1fr));
+        }
+
+        .checkbox-container {
+          display: flex;
+          align-items: center;
+        }
+
+        .checkbox-label {
+          margin-left: 1rem;
         }
 
         .usage,
@@ -325,11 +337,11 @@ const SettingsPage = () => {
         }
 
         .info {
-          grid-column: span 3 / span 3;
+          grid-column: span 12 / span 12;
         }
 
         .form {
-          grid-column: span 9 / span 9;
+          grid-column: span 12 / span 12;
         }
 
         p {
@@ -342,11 +354,25 @@ const SettingsPage = () => {
           justify-content: flex-end;
 
           align-items: center;
-          padding: 1rem 0;
+          padding: 1rem 0 0;
         }
 
         .action.password {
           justify-content: space-between;
+        }
+
+        @media (min-width: 40rem) {
+          .info {
+            grid-column: span 3 / span 3;
+          }
+
+          .form {
+            grid-column: span 9 / span 9;
+          }
+
+          h4 {
+            margin-bottom: 1.5rem;
+          }
         }
       `}</style>
     </div>
