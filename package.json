@@ -133,5 +133,8 @@
     "bracketSpacing": true,
     "bracketSameLine": true,
     "trailingComma": "none"
+  },
+  "engines": {
+    "node": "14.x"
   }
 }
