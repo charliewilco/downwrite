@@ -34,11 +34,11 @@ This is meant to be a simple writing application with some key features:
 
 ## Setup 📲⏳⚙️
 
-This project uses Node (v12.18.x), [TypeScript](https://www.typescriptlang.org/) and Yarn.
+This project uses Node (v12.18.x), [TypeScript](https://www.typescriptlang.org/) and pnpm.
 
 ```bash
-brew cask install yarn
-yarn
+brew cask install pnpm
+pnpm install
 ```
 
 Personally use [`fnm`](https://github.com/Schniz/fnm) to manage my node versions.
@@ -66,7 +66,7 @@ CURRENT_DB_ADDRESS="127.0.0.1:27017/downwrite"
 Run in your terminal from the root of the project.
 
 ```bash
-yarn dev
+pnpm dev
 ```
 
 Open [`http://localhost:3000`](http://localhost:3000/) in your browser.
@@ -107,7 +107,7 @@ To authenticate we're using JWT to call the basic CRUD functions. Basically this
 ![Logos for Related Projects](.github/images/Integration.png)
 
 ```bash
-yarn test
+pnpm test
 ```
 
 #### Info 📝🧪
