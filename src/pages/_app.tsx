@@ -6,7 +6,6 @@ import { useEffect } from "react";
 import * as Analytics from "fathom-client";
 import { UIShell } from "@components/ui-shell";
 import {
-  ICON_LINK,
   OG_DESCRIPTION,
   OG_IMAGE_URL,
   BASE_OG_TITLE,
@@ -43,8 +42,7 @@ const CustomAppWrapper = ({ Component, pageProps }: AppProps) => {
     <UIShell>
       <Head>
         <title>{BASE_OG_TITLE}</title>
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="192x192" href={ICON_LINK} />
+        <link rel="icon" type="image/png" href="/transitional.png" />
         <meta name="description" content={OG_DESCRIPTION} />
         <meta name="title" content={BASE_OG_TITLE} />
         <meta name="theme-color" content="#050505" />

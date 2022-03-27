@@ -6,7 +6,6 @@ export const OG_DESCRIPTION = "A place to write.";
 export const OG_IMAGE_URL = "https://downwrite.vercel.app/og.png";
 export const BASE_PROD_URL = "https://beta.downwrite.us/";
 export const BASE_OG_TITLE = "Downwrite";
-export const ICON_LINK = "/icon-192x192.png";
 
 export const createMetadata = (path?: string, title?: string) => {
   return {
