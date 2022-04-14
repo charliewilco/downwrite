@@ -7,7 +7,7 @@ import { useDataSource } from "@hooks/useDataSource";
 import { ErrorBoundary, ErrorFallback } from "./errors";
 import { useIsomorphicLayoutEffect } from "./portal";
 
-const myErrorHandler = (error: Error, info: { componentStack: string }) => {
+const customErrorHandler = (error: Error, info: { componentStack: string }) => {
   console.log(error, info.componentStack);
 };
 
@@ -17,7 +17,7 @@ export const UIShell: React.FC = ({ children }) => {
     ds.auth.check();
   }, [ds]);
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback} onError={myErrorHandler}>
+    <ErrorBoundary FallbackComponent={ErrorFallback} onError={customErrorHandler}>
       <div className="outer">
         <UIHeader />
         <main>{children}</main>

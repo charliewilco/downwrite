@@ -52,11 +52,7 @@ export const SiteFooter = () => {
         }
 
         .copy {
-          text-transform: uppercase;
           opacity: 0.5;
-        }
-
-        small {
           font-family: var(--monospace);
         }
       `}</style>

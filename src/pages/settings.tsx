@@ -45,7 +45,7 @@ const SettingsPage = () => {
     fileExtension: dataSource.settings.fileExtension || ".md"
   }));
 
-  const markdownFormik = useFormik<ILocalSettings>({
+  const markdownForm = useFormik<ILocalSettings>({
     initialValues: initialMarkdownValues.current(),
     validationSchema: adaptedSchemas.localSettings,
     onSubmit(values) {
@@ -55,7 +55,7 @@ const SettingsPage = () => {
     }
   });
 
-  const passwordFormik = useFormik<IPasswordSettings>({
+  const passwordForm = useFormik<IPasswordSettings>({
     initialValues: {
       oldPassword: "",
       newPassword: "",
@@ -68,7 +68,7 @@ const SettingsPage = () => {
     validationSchema: adaptedSchemas.updatePassword
   });
 
-  const userFormik = useFormik<IUserFormValues>({
+  const userForm = useFormik<IUserFormValues>({
     initialValues: { ...data?.settings },
     onSubmit(values) {
       dataSource.settings.update(values);
@@ -119,7 +119,7 @@ const SettingsPage = () => {
           <h4>User Settings</h4>
         </div>
         <div className="form">
-          <form onSubmit={userFormik.handleSubmit}>
+          <form onSubmit={userForm.handleSubmit}>
             <div>
               <UIInput
                 testID="SETTINGS_USERNAME_INPUT"
@@ -127,11 +127,11 @@ const SettingsPage = () => {
                 label="Username"
                 name="username"
                 autoComplete="username"
-                value={userFormik.values.username}
-                onChange={userFormik.handleChange}
+                value={userForm.values.username}
+                onChange={userForm.handleChange}
               />
-              {userFormik.errors.username && (
-                <UIInputError>{userFormik.errors.username}</UIInputError>
+              {userForm.errors.username && (
+                <UIInputError>{userForm.errors.username}</UIInputError>
               )}
             </div>
             <div>
@@ -142,18 +142,18 @@ const SettingsPage = () => {
                 autoComplete="email"
                 type="email"
                 name="email"
-                value={userFormik.values.email}
-                onChange={userFormik.handleChange}
+                value={userForm.values.email}
+                onChange={userForm.handleChange}
               />
-              {userFormik.errors.email && (
-                <UIInputError>{userFormik.errors.email}</UIInputError>
+              {userForm.errors.email && (
+                <UIInputError>{userForm.errors.email}</UIInputError>
               )}
             </div>
             <div className="action">
               <button
                 className="base-button"
                 type="submit"
-                disabled={userFormik.isSubmitting}>
+                disabled={userForm.isSubmitting}>
                 Save
               </button>
             </div>
@@ -166,7 +166,7 @@ const SettingsPage = () => {
           <h4>Password</h4>
         </div>
         <div className="form">
-          <form onSubmit={passwordFormik.handleSubmit}>
+          <form onSubmit={passwordForm.handleSubmit}>
             <input type="hidden" name="username" value={data.settings.username} />
             <div>
               <UIInput
@@ -174,12 +174,12 @@ const SettingsPage = () => {
                 name="oldPassword"
                 type={!isOpen ? "password" : "text"}
                 placeholder="*********"
-                value={passwordFormik.values.oldPassword}
-                onChange={passwordFormik.handleChange}
+                value={passwordForm.values.oldPassword}
+                onChange={passwordForm.handleChange}
                 autoComplete="current-password"
               />
-              {passwordFormik.errors.oldPassword && (
-                <UIInputError>{passwordFormik.errors.oldPassword}</UIInputError>
+              {passwordForm.errors.oldPassword && (
+                <UIInputError>{passwordForm.errors.oldPassword}</UIInputError>
               )}
             </div>
             <div>
@@ -188,12 +188,12 @@ const SettingsPage = () => {
                 name="newPassword"
                 type={!isOpen ? "password" : "text"}
                 placeholder="*********"
-                value={passwordFormik.values.newPassword}
-                onChange={passwordFormik.handleChange}
+                value={passwordForm.values.newPassword}
+                onChange={passwordForm.handleChange}
                 autoComplete="new-password"
               />
-              {passwordFormik.errors.newPassword && (
-                <UIInputError>{passwordFormik.errors.newPassword}</UIInputError>
+              {passwordForm.errors.newPassword && (
+                <UIInputError>{passwordForm.errors.newPassword}</UIInputError>
               )}
             </div>
 
@@ -203,12 +203,12 @@ const SettingsPage = () => {
                 name="confirmPassword"
                 type={!isOpen ? "password" : "text"}
                 placeholder="*********"
-                value={passwordFormik.values.confirmPassword}
-                onChange={passwordFormik.handleChange}
+                value={passwordForm.values.confirmPassword}
+                onChange={passwordForm.handleChange}
                 autoComplete="new-password"
               />
-              {passwordFormik.errors.confirmPassword && (
-                <UIInputError>{passwordFormik.errors.confirmPassword}</UIInputError>
+              {passwordForm.errors.confirmPassword && (
+                <UIInputError>{passwordForm.errors.confirmPassword}</UIInputError>
               )}
             </div>
 
@@ -228,7 +228,7 @@ const SettingsPage = () => {
               <button
                 className="base-button"
                 type="submit"
-                disabled={passwordFormik.isSubmitting}>
+                disabled={passwordForm.isSubmitting}>
                 Save
               </button>
             </div>
@@ -244,21 +244,21 @@ const SettingsPage = () => {
           </p>
         </div>
         <div className="form">
-          <form onSubmit={markdownFormik.handleSubmit}>
+          <form onSubmit={markdownForm.handleSubmit}>
             <div>
               <UIInput
                 label="File Extension"
-                {...markdownFormik.getFieldProps("fileExtension")}
+                {...markdownForm.getFieldProps("fileExtension")}
               />
-              {markdownFormik.errors["fileExtension"] && (
-                <UIInputError>{markdownFormik.errors["fileExtension"]}</UIInputError>
+              {markdownForm.errors["fileExtension"] && (
+                <UIInputError>{markdownForm.errors["fileExtension"]}</UIInputError>
               )}
             </div>
             <div className="action">
               <button
                 className="base-button"
                 type="submit"
-                disabled={markdownFormik.isSubmitting}>
+                disabled={markdownForm.isSubmitting}>
                 Save
               </button>
             </div>

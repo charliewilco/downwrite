@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useState, useCallback } from "react";
+import { FiEdit3, FiEye, FiTrash } from "react-icons/fi";
 
 import distance from "date-fns/formatDistanceToNow";
 import type { IPartialFeedItem } from "@data/modules/dashboard";
@@ -15,13 +16,7 @@ interface IBaseFeedItem {
   public: boolean;
 }
 
-export interface ICardProps extends IBaseFeedItem {
-  excerpt?: string;
-}
-
-interface IListItemProps extends IBaseFeedItem {}
-
-const Card: React.VFC<ICardProps> = (props) => {
+const Card: React.VFC<IBaseFeedItem> = (props) => {
   const onDelete = useCallback(() => {
     if (props.onDelete) {
       props.onDelete({ id: props.id, title: props.title });
@@ -113,7 +108,7 @@ const Card: React.VFC<ICardProps> = (props) => {
   );
 };
 
-const PostListItem: React.VFC<IListItemProps> = (props) => {
+const PostListItem: React.VFC<IBaseFeedItem> = (props) => {
   function onDelete() {
     props.onDelete({ id: props.id, title: props.title });
   }
@@ -123,28 +118,34 @@ const PostListItem: React.VFC<IListItemProps> = (props) => {
 
   return (
     <li>
-      <div data-testid="POST_LIST_ITEM">
-        <small>added {distance(new Date(props.dateAdded))} ago</small>
-
-        <h2>
-          <Link as={editLink} href={Routes.EDIT} passHref>
-            <a>{props.title}</a>
-          </Link>
-        </h2>
-        <div className="tray">
-          <div className="links">
-            <Link as={editLink} href={Routes.EDIT}>
-              <a>Edit</a>
+      <div data-testid="POST_LIST_ITEM" className="item">
+        <div className="info">
+          <h2>
+            <Link as={editLink} href={Routes.EDIT} passHref>
+              <a>{props.title}</a>
             </Link>
-            {props.public && (
-              <Link as={previewLink} href={Routes.PREVIEW}>
-                <a>Preview</a>
-              </Link>
-            )}
-          </div>
+          </h2>
+
+          <small>added {distance(new Date(props.dateAdded))} ago</small>
+        </div>
+
+        <div className="tray">
+          {props.public && (
+            <Link as={previewLink} href={Routes.PREVIEW}>
+              <a>
+                <FiEye size={16} />
+              </a>
+            </Link>
+          )}
+
+          <Link as={editLink} href={Routes.EDIT}>
+            <a>
+              <FiEdit3 size={16} />
+            </a>
+          </Link>
           {props.onDelete && (
             <button className="alt-button delete" onClick={onDelete}>
-              Delete
+              <FiTrash size={16} />
             </button>
           )}
         </div>
@@ -162,11 +163,22 @@ const PostListItem: React.VFC<IListItemProps> = (props) => {
 
         h2 {
           font-size: 1.25rem;
-          margin: 0 0 1rem;
+          margin: 0;
         }
 
         small {
           opacity: 0.75;
+        }
+
+        .item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .info {
+          flex: 1;
+          margin-right: 1rem;
         }
 
         .delete {
@@ -176,14 +188,11 @@ const PostListItem: React.VFC<IListItemProps> = (props) => {
         }
 
         .tray {
+          flex: 0;
           display: flex;
-          justify-content: space-between;
+          justify-content: flex-end;
           font-size: small;
-        }
-
-        .links {
-          display: flex;
-          gap: 0.5rem;
+          gap: 0.75rem;
         }
       `}</style>
     </li>
