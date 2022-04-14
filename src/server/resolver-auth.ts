@@ -1,4 +1,4 @@
-import { AuthenticationError } from "apollo-server-micro";
+import { AuthenticationError } from "apollo-server-errors";
 import { UserModel, IUserModel } from "./models";
 import { isValidPassword, IReadResults } from "./token";
 import type { ResolverContext } from "./context";

@@ -1,4 +1,4 @@
-import { ApolloError } from "apollo-server-micro";
+import { ApolloError } from "apollo-server-errors";
 import { IPostModel, IUserModel } from "./models";
 import { createMarkdownServer } from "../shared/markdown-template";
 import { IEntry, IPreview } from "../__generated__/server";

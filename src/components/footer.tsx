@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Routes } from "@shared/routes";
+import { useRef } from "react";
 
 const GITHUB = "https://github.com/charliewilco/downwrite";
 const TWITTER = "https://twitter.com/_charliewilco";
@@ -12,7 +13,7 @@ const PAGES = [
 ] as const;
 
 export const SiteFooter = () => {
-  const date = new Date(Date.now());
+  const year = useRef(new Date().getFullYear());
 
   return (
     <footer>
@@ -27,7 +28,7 @@ export const SiteFooter = () => {
           ))}
         </ul>
         <div className="copy">
-          <small>&copy; {date.getFullYear()} Charlie Peters</small>
+          <small>&copy; {year.current} Charlie Peters</small>
         </div>
       </nav>
 

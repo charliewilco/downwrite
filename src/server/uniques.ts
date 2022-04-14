@@ -1,4 +1,4 @@
-import { ApolloError } from "apollo-server-micro";
+import { ApolloError } from "apollo-server-errors";
 import { UserModel, IUserModel } from "./models";
 
 export async function verifyUniqueUser(username: string, email: string) {

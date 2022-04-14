@@ -1,4 +1,4 @@
-import { ApolloError } from "apollo-server-micro";
+import { ApolloError } from "apollo-server-errors";
 import * as bcrypt from "bcryptjs";
 import base64 from "base-64";
 import cuid from "cuid";

@@ -1,4 +1,4 @@
-import { ApolloError, UserInputError } from "apollo-server-micro";
+import { ApolloError, UserInputError } from "apollo-server-errors";
 import dbConnect from "./db";
 import { PostModel, UserModel, IUserModel } from "./models";
 import {

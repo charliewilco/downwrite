@@ -13,6 +13,7 @@ import { AvatarColors } from "@shared/gradients";
 
 import { IPreview } from "../../__generated__/server";
 import { useSubjectSubscription, useDataSource } from "@hooks/index";
+import { SiteFooter } from "@components/footer";
 
 interface IPreviewProps {
   id: string;
@@ -85,6 +86,7 @@ const PreviewEntry: NextPage<IPreviewProps> = (props) => {
           </div>
         )}
       </ContentWrapper>
+      <SiteFooter />
       <style jsx>{`
         div {
           margin: 1rem 0;
