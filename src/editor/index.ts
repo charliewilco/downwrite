@@ -4,6 +4,5 @@ export * from "./create-editor-props";
 export * from "./decorators";
 export * from "./modifiers";
 export * from "./multidecorator";
-export * from "./prism";
 export * from "./raw";
 export * from "./word-count";
