@@ -4,14 +4,15 @@ import { useRef } from "react";
 
 interface IVisibilityToggleProps {
   checked: boolean;
+  children?: React.ReactNode;
   onCheck(ev: React.ChangeEvent<HTMLInputElement>): void;
 }
 
-export const VisibilityToggle: React.FC<IVisibilityToggleProps> = ({
+export const VisibilityToggle = ({
   checked,
   onCheck,
   children
-}) => {
+}: IVisibilityToggleProps) => {
   let inputRef = useRef(null);
   let [inputProps, stateData] = useMixedCheckbox(inputRef, {
     checked,

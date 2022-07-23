@@ -6,7 +6,7 @@ interface IToastUIProps {
   notification: UINotificationMessage;
 }
 
-export const ToastUI: React.VFC<IToastUIProps> = (props) => {
+export const ToastUI = (props: IToastUIProps) => {
   const dataSource = useDataSource();
 
   const onRemove = useCallback(() => {

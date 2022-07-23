@@ -11,7 +11,11 @@ const customErrorHandler = (error: Error, info: { componentStack: string }) => {
   console.log(error, info.componentStack);
 };
 
-export const UIShell: React.FC = ({ children }) => {
+interface IUIShellProps {
+  children?: React.ReactNode;
+}
+
+export const UIShell = ({ children }: IUIShellProps) => {
   const ds = useDataSource();
   useIsomorphicLayoutEffect(() => {
     ds.auth.check();

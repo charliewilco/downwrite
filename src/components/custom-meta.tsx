@@ -7,7 +7,7 @@ interface ICustomMetaProps {
   path?: string;
 }
 
-export const CustomMeta: React.VFC<ICustomMetaProps> = ({ title, path }) => {
+export const CustomMeta = ({ title, path }: ICustomMetaProps) => {
   const meta = useMemo(() => createMetadata(path, title), [title, path]);
   return (
     <Head>

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import {
   ContentBlock,
   ContentState,
@@ -41,9 +42,10 @@ export const createImageStrategy = () => {
 interface IDecoratorProps {
   entityKey: string;
   contentState: ContentState;
+  children?: React.ReactNode;
 }
 
-const Link: React.FC<IDecoratorProps> = (props) => {
+const Link = (props: IDecoratorProps) => {
   const { contentState, children, entityKey } = props;
   const { href, title } = contentState.getEntity(entityKey).getData();
   return (
@@ -53,7 +55,7 @@ const Link: React.FC<IDecoratorProps> = (props) => {
   );
 };
 
-const Image: React.FC<IDecoratorProps> = ({ entityKey, children, contentState }) => {
+const Image = ({ entityKey, children, contentState }: IDecoratorProps) => {
   const { src, alt, title } = contentState.getEntity(entityKey).getData();
   return (
     <span>

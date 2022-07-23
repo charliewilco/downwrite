@@ -16,7 +16,7 @@ interface IBaseFeedItem {
   public: boolean;
 }
 
-const Card: React.VFC<IBaseFeedItem> = (props) => {
+const Card = (props: IBaseFeedItem) => {
   const onDelete = useCallback(() => {
     if (props.onDelete) {
       props.onDelete({ id: props.id, title: props.title });
@@ -108,7 +108,7 @@ const Card: React.VFC<IBaseFeedItem> = (props) => {
   );
 };
 
-const PostListItem: React.VFC<IBaseFeedItem> = (props) => {
+const PostListItem = (props: IBaseFeedItem) => {
   function onDelete() {
     props.onDelete({ id: props.id, title: props.title });
   }
@@ -206,7 +206,7 @@ interface IPostListProps {
   onSelect: ({ id, title }: IPartialFeedItem) => void;
 }
 
-export const PostList: React.VFC<IPostListProps> = (props) => {
+export const PostList = (props: IPostListProps) => {
   const [isGridView, setGrid] = useState(true);
 
   const testID = isGridView ? "ENTRIES_GRIDVIEW" : "ENTRIES_LISTVIEW";

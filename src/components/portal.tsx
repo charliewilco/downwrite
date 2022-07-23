@@ -22,9 +22,10 @@ export const useIsomorphicLayoutEffect = canUseDOM() ? useLayoutEffect : useEffe
 interface IPortalProps {
   type: string;
   containerRef?: React.RefObject<Node>;
+  children?: React.ReactNode;
 }
 
-export const Portal: React.FC<IPortalProps> = ({ type, children, containerRef }) => {
+export const Portal = ({ type, children, containerRef }: IPortalProps) => {
   let mountNode = useRef<HTMLDivElement | null>(null);
   let portalNode = useRef<HTMLElement | null>(null);
 

@@ -7,6 +7,7 @@ interface IContentWrapperProps {
   title?: string;
   dateAdded?: Date;
   content?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export const content = css.global`
@@ -57,9 +58,10 @@ export const content = css.global`
   }
 `;
 
-export const StaticContentWrapper: React.FC<
-  Omit<IContentWrapperProps, "content" | "dateAdded">
-> = ({ children, title }) => {
+export const StaticContentWrapper = ({
+  children,
+  title
+}: Omit<IContentWrapperProps, "content" | "dateAdded">) => {
   return (
     <div className="outer">
       <article className="harticle">
@@ -126,7 +128,7 @@ export const StaticContentWrapper: React.FC<
   );
 };
 
-export const ContentWrapper: React.FC<IContentWrapperProps> = (props) => {
+export const ContentWrapper = (props: IContentWrapperProps) => {
   return (
     <div className="outer">
       <article className="harticle">

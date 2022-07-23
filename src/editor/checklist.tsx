@@ -159,7 +159,7 @@ interface ICheckableListItemProps {
   offsetKey: string;
 }
 
-export const CheckableListItem: React.FC<ICheckableListItemProps> = (props) => {
+export const CheckableListItem = (props: ICheckableListItemProps) => {
   const {
     offsetKey,
     blockProps: { onChangeChecked, checked }

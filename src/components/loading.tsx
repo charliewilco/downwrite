@@ -1,4 +1,4 @@
-export const Loading: React.VFC = () => {
+export const Loading = () => {
   return (
     <div role="img">
       <div className="ring" />

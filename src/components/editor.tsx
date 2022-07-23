@@ -139,7 +139,7 @@ const saveKeyListener = (
   return getDefaultKeyBinding(e);
 };
 
-const DownwriteEditor: React.VFC<IEditorProps> = ({ onSave, ...props }) => {
+const DownwriteEditor = ({ onSave, ...props }: IEditorProps) => {
   let editorRef = useRef<Editor>(null);
 
   let contentState: Draft.ContentState = props.editorState.getCurrentContent();

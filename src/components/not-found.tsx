@@ -5,7 +5,7 @@ interface IPostErrorProps {
   error?: string;
 }
 
-export const NotFound: React.VFC<IPostErrorProps> = ({ error, message }) => {
+export const NotFound = ({ error, message }: IPostErrorProps) => {
   return (
     <div>
       <Image

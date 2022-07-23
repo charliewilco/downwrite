@@ -23,7 +23,7 @@ interface IAvatarProps {
   centered?: boolean;
 }
 
-export const Avatar: React.VFC<IAvatarProps> = (props: IAvatarProps) => {
+export const Avatar = (props: IAvatarProps) => {
   const colors = useMemo(() => gradientPoints(props.colors), [props.colors]);
 
   return (

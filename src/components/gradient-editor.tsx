@@ -7,7 +7,7 @@ interface IHexInputProps {
   initialValue?: string;
 }
 
-export const FunHexInput: React.VFC<IHexInputProps> = (props) => {
+export const FunHexInput = (props: IHexInputProps) => {
   const [hex, setHexColor] = useState<string>(props.initialValue || "");
 
   function handleChange({
@@ -52,8 +52,8 @@ interface IColorPickerProps {
   name: string;
 }
 
-export const ColorPicker: React.VFC<IColorPickerProps> = (
-  props = {
+export const ColorPicker = (
+  props: IColorPickerProps = {
     colors: startColors,
     onPress: (color: string, name: string) => ({ color, name }),
     name: "Color Picker"
@@ -105,7 +105,7 @@ interface IGradientEditorProps {
   colors: IColors;
 }
 
-export const GradientEditor: React.VFC<IGradientEditorProps> = (props) => {
+export const GradientEditor = (props: IGradientEditorProps) => {
   function handleColorChange(value: string, name: string): void {
     props.onColorChange(value, name);
   }

@@ -4,7 +4,7 @@ interface ITimeMarkProps {
   dateAdded: Date;
 }
 
-export const TimeMarker: React.VFC<ITimeMarkProps> = (props) => {
+export const TimeMarker = (props: ITimeMarkProps) => {
   const date = new Date(props.dateAdded.toString());
 
   return (
