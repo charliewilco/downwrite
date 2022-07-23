@@ -3,7 +3,6 @@ import { ResolverContext } from "@server/context";
 import { schema } from "@server/schema";
 
 import { createServer } from "@graphql-yoga/node";
-import { useApolloServerErrors } from "@envelop/apollo-server-errors";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const server = createServer<{
@@ -13,8 +12,7 @@ const server = createServer<{
   schema,
   context(_: ResolverContext) {
     return _;
-  },
-  plugins: [useApolloServerErrors()]
+  }
 });
 
 export const config = {

@@ -69,7 +69,9 @@ const NewEntryPage: NextPage = () => {
   const { getRootProps } = useDropzone({
     onDrop,
     multiple: false,
-    accept: ["text/markdown", "text/x-markdown", "text/plain"]
+    accept: {
+      "text/*": ["*.md", "*.mdx", "*.txt"]
+    }
   });
 
   return (
