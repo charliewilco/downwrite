@@ -12,7 +12,8 @@ import { Routes } from "@shared/routes";
 import { AvatarColors } from "@shared/gradients";
 
 import { IPreview } from "../../__generated__/server";
-import { useSubjectSubscription, useDataSource } from "@hooks/index";
+import { useDataSource, useSubjectEffect } from "@hooks/index";
+import { SiteFooter } from "@components/footer";
 
 interface IPreviewProps {
   id: string;
@@ -46,7 +47,7 @@ export const getServerSideProps: PreviewPageHandler = async ({ params }) => {
 
 const PreviewEntry: NextPage<IPreviewProps> = (props) => {
   const dataSource = useDataSource();
-  const me = useSubjectSubscription(dataSource.auth.state);
+  const me = useSubjectEffect(dataSource.auth.state);
 
   const router = useRouter();
 
@@ -85,6 +86,7 @@ const PreviewEntry: NextPage<IPreviewProps> = (props) => {
           </div>
         )}
       </ContentWrapper>
+      <SiteFooter />
       <style jsx>{`
         div {
           margin: 1rem 0;

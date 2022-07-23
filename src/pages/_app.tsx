@@ -16,7 +16,7 @@ import "@reach/menu-button/styles.css";
 import "@reach/dialog/styles.css";
 import "@reach/checkbox/styles.css";
 
-const CustomAppWrapper = ({ Component, pageProps }: AppProps) => {
+export default function CustomAppWrapper({ Component, pageProps }: AppProps) {
   const router = useRouter();
   useEffect(() => {
     Analytics.load("FENETBXC", {
@@ -60,6 +60,4 @@ const CustomAppWrapper = ({ Component, pageProps }: AppProps) => {
       <Component {...pageProps} />
     </UIShell>
   );
-};
-
-export default CustomAppWrapper;
+}

@@ -1,4 +1,4 @@
-export const Loading: React.VFC = () => {
+export function Loading() {
   return (
     <div role="img">
       <div className="ring" />
@@ -65,4 +65,4 @@ export const Loading: React.VFC = () => {
       `}</style>
     </div>
   );
-};
+}

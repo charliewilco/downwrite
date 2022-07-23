@@ -1,8 +1,10 @@
 import { draftjsToMd } from "draftjs-md-converter";
 
-export function createMarkdownServer(
-  content: Draft.RawDraftContentState | string
-): string {
+export function createMarkdownServer({
+  content
+}: {
+  content: Draft.RawDraftContentState | string;
+}): string {
   if (typeof content === "string") {
     return content;
   }

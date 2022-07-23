@@ -1,9 +1,8 @@
 import { SiteFooter } from "@components/footer";
-import { NextPage } from "next";
 import { StaticContentWrapper } from "@components/content";
 import { CustomMeta } from "@components/custom-meta";
 
-const AboutDetails: NextPage = () => {
+export default function AboutDetails() {
   return (
     <div>
       <CustomMeta title="About" path="about" />
@@ -73,6 +72,4 @@ const AboutDetails: NextPage = () => {
       <SiteFooter />
     </div>
   );
-};
-
-export default AboutDetails;
+}

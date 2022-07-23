@@ -1,4 +1,4 @@
-import { DownwriteClient } from "@data/client";
+import { APIClient } from "@data/client";
 import { Auth, GlobalNotifications, GlobalSettings } from "@data/base";
 import { __IS_BROWSER__ } from "@shared/constants";
 import type { IAppState, IStoreContructor } from "./types";
@@ -8,12 +8,12 @@ export class DownwriteUIState implements IAppState {
   auth: Auth;
   notifications: GlobalNotifications;
   isOffline: boolean = false;
-  #client: DownwriteClient;
+  #client: APIClient;
   /**
    * @param client should be a mock for testing
    */
   constructor(client?: any) {
-    this.#client = client ?? new DownwriteClient();
+    this.#client = client ?? new APIClient();
     this.auth = new Auth(this.#client, this);
     this.settings = new GlobalSettings(this.#client, this);
     this.notifications = new GlobalNotifications();

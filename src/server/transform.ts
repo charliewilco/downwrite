@@ -1,4 +1,4 @@
-import { ApolloError } from "apollo-server-micro";
+import { GraphQLYogaError } from "@graphql-yoga/node";
 import { IPostModel, IUserModel } from "./models";
 import { createMarkdownServer } from "../shared/markdown-template";
 import { IEntry, IPreview } from "../__generated__/server";
@@ -10,7 +10,7 @@ const isUndefined = (value: unknown): value is undefined =>
 
 export function transformPostsToFeed(posts: IPostModel[]): IEntry[] {
   const feed = posts.map((post) => {
-    const md = createMarkdownServer(post.content);
+    const md = createMarkdownServer({ content: post.content });
     const user = post.user.toString();
     const dateAdded = isUndefined(post.dateAdded)
       ? new Date().toString()
@@ -38,11 +38,11 @@ export function transformPostToEntry(post: IPostModel | null): IEntry {
   let md = ``;
 
   if (post === null) {
-    throw new ApolloError("Post does not exist");
+    throw new GraphQLYogaError("Post does not exist");
   }
 
   if (post.content !== null) {
-    md = createMarkdownServer(post.content);
+    md = createMarkdownServer({ content: post.content });
   }
 
   const dateAdded = isUndefined(post.dateAdded)
@@ -82,7 +82,7 @@ export function transformMDToPreview(post: IPostModel, user: IUserModel): IPrevi
       gradient: user.gradient || ["#FEB692", "#EA5455"],
       avatar: user.gradient || ["#FEB692", "#EA5455"]
     },
-    content: createMarkdownServer(post.content),
+    content: createMarkdownServer({ content: post.content }),
     title: post.title,
     dateModified,
     dateAdded

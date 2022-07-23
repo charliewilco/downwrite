@@ -1,9 +1,10 @@
 interface IBannerProps {
   variant?: "warning" | "error";
   label: string;
+  children?: React.ReactNode;
 }
 
-export const Banner: React.FC<IBannerProps> = ({ children, label }) => {
+export function Banner({ children, label }: IBannerProps) {
   return (
     <div className="banner-container">
       <div role="banner">
@@ -37,4 +38,4 @@ export const Banner: React.FC<IBannerProps> = ({ children, label }) => {
       `}</style>
     </div>
   );
-};
+}

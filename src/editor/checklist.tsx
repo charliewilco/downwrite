@@ -36,11 +36,11 @@ function adjustBlockDepthForContentState(
   }) as ContentState;
 }
 
-const adjustBlockDepth = (
+function adjustBlockDepth(
   editorState: EditorState,
   adjustment: number,
   maxDepth: number
-): EditorState => {
+): EditorState {
   const content = adjustBlockDepthForContentState(
     editorState.getCurrentContent(),
     editorState.getSelection(),
@@ -49,13 +49,13 @@ const adjustBlockDepth = (
   );
 
   return EditorState.push(editorState, content, "adjust-depth");
-};
+}
 
-const mergeBlockDataByKey = (
+function mergeBlockDataByKey(
   editorState: EditorState,
   blockKey: string,
   data: { [id: string]: any }
-): EditorState => {
+): EditorState {
   const contentState = editorState.getCurrentContent();
   const updatedBlock = contentState.getBlockForKey(blockKey).mergeIn(["data"], data);
   const blockMap = contentState
@@ -66,7 +66,7 @@ const mergeBlockDataByKey = (
     contentState.merge({ blockMap }) as ContentState,
     "change-block-data"
   );
-};
+}
 
 export const CHECKABLE_LIST_ITEM = "checkable-list-item";
 export const UNORDERED_LIST_ITEM = "unordered-list-item";
@@ -159,7 +159,7 @@ interface ICheckableListItemProps {
   offsetKey: string;
 }
 
-export const CheckableListItem: React.FC<ICheckableListItemProps> = (props) => {
+export function CheckableListItem(props: ICheckableListItemProps) {
   const {
     offsetKey,
     blockProps: { onChangeChecked, checked }
@@ -179,4 +179,4 @@ export const CheckableListItem: React.FC<ICheckableListItemProps> = (props) => {
       </div>
     </div>
   );
-};
+}

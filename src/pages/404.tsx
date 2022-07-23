@@ -1,6 +1,4 @@
-import { NextPage } from "next";
-
-const Custom404: NextPage = () => {
+export default function Custom404() {
   return (
     <div>
       <h1>
@@ -30,6 +28,4 @@ const Custom404: NextPage = () => {
       `}</style>
     </div>
   );
-};
-
-export default Custom404;
+}

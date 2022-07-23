@@ -1,4 +1,4 @@
-import { ApolloError, UserInputError } from "apollo-server-micro";
+import { GraphQLYogaError } from "@graphql-yoga/node";
 import dbConnect from "./db";
 import { PostModel, UserModel, IUserModel } from "./models";
 import {
@@ -31,7 +31,7 @@ export async function me(context: ResolverContext) {
     const _user = await UserModel.findById(user, "username email").exec();
 
     if (_user === null || typeof _user === "undefined") {
-      throw new ApolloError("Cannot find user");
+      throw new GraphQLYogaError("Cannot find user");
     }
 
     const { email } = _user;
@@ -59,7 +59,7 @@ export async function feed(context: ResolverContext): Promise<IEntry[]> {
       const posts = await PostModel.find({ user: { $eq: user } });
       return transformPostsToFeed(posts);
     } catch (error: any) {
-      throw new ApolloError(error.message);
+      throw new GraphQLYogaError(error.message);
     }
   });
 }
@@ -73,7 +73,7 @@ export async function entry(context: ResolverContext, id: string): Promise<IEntr
       });
       return transformPostToEntry(post);
     } catch (error: any) {
-      throw new ApolloError(error.message);
+      throw new GraphQLYogaError(error.message);
     }
   });
 }
@@ -84,15 +84,15 @@ export async function preview(_: ResolverContext, id: string) {
   const user = await UserModel.findOne({ _id: post!.user });
 
   if (user === null) {
-    throw new ApolloError("Author could not be found");
+    throw new GraphQLYogaError("Author could not be found");
   }
 
   if (post === null) {
-    throw new ApolloError("Post doesn't exist");
+    throw new GraphQLYogaError("Post doesn't exist");
   }
 
   if (!post.public) {
-    throw new UserInputError(
+    throw new GraphQLYogaError(
       "This post is either not public or I couldn't even find it. Things are hard sometimes.",
       {
         invalidArgs: [id]
@@ -116,7 +116,7 @@ export async function settings(context: ResolverContext): Promise<IUser> {
         username: user.username!
       };
     } else {
-      throw new ApolloError("Could not find user settings");
+      throw new GraphQLYogaError("Could not find user settings");
     }
   });
 }

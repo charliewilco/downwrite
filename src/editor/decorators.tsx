@@ -1,12 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
 import {
   ContentBlock,
   ContentState,
   CompositeDecorator,
-  DraftDecorator
+  type DraftDecorator
 } from "draft-js";
-import { prismHighlightDecorator } from "./prism";
 
-export const createLinkStrategy = () => {
+export function createLinkStrategy() {
   const findLinkEntities = (
     block: ContentBlock,
     callback: (start: number, end: number) => void,
@@ -20,9 +20,9 @@ export const createLinkStrategy = () => {
     }, callback);
   };
   return findLinkEntities;
-};
+}
 
-export const createImageStrategy = () => {
+export function createImageStrategy() {
   const findImageEntities = (
     block: ContentBlock,
     callback: (start: number, end: number) => void,
@@ -36,14 +36,15 @@ export const createImageStrategy = () => {
     }, callback);
   };
   return findImageEntities;
-};
+}
 
 interface IDecoratorProps {
   entityKey: string;
   contentState: ContentState;
+  children?: React.ReactNode;
 }
 
-const Link: React.FC<IDecoratorProps> = (props) => {
+function Link(props: IDecoratorProps) {
   const { contentState, children, entityKey } = props;
   const { href, title } = contentState.getEntity(entityKey).getData();
   return (
@@ -51,9 +52,9 @@ const Link: React.FC<IDecoratorProps> = (props) => {
       {children}
     </a>
   );
-};
+}
 
-const Image: React.FC<IDecoratorProps> = ({ entityKey, children, contentState }) => {
+function Image({ entityKey, children, contentState }: IDecoratorProps) {
   const { src, alt, title } = contentState.getEntity(entityKey).getData();
   return (
     <span>
@@ -61,7 +62,7 @@ const Image: React.FC<IDecoratorProps> = ({ entityKey, children, contentState })
       <img src={src} alt={alt} title={title} />
     </span>
   );
-};
+}
 
 const LINK: DraftDecorator = {
   strategy: createLinkStrategy(),
@@ -75,4 +76,4 @@ const IMAGE: DraftDecorator = {
 
 export const imageLinkDecorators = new CompositeDecorator([LINK, IMAGE]);
 
-export const defaultDecorators = [imageLinkDecorators, prismHighlightDecorator];
+export const defaultDecorators = [imageLinkDecorators];

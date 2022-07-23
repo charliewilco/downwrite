@@ -1,13 +1,18 @@
-import { ApolloServer } from "apollo-server-micro";
+/* eslint-disable react-hooks/rules-of-hooks */
 import { ResolverContext } from "@server/context";
 import { schema } from "@server/schema";
 
-const server = new ApolloServer({
+import { createServer } from "@graphql-yoga/node";
+import { NextApiRequest, NextApiResponse } from "next";
+
+const server = createServer<{
+  req: NextApiRequest;
+  res: NextApiResponse;
+}>({
   schema,
   context(_: ResolverContext) {
     return _;
-  },
-  introspection: true
+  }
 });
 
 export const config = {
@@ -16,8 +21,4 @@ export const config = {
   }
 };
 
-const handler = server.createHandler({
-  path: "/api/graphql"
-});
-
-export default handler;
+export default server;

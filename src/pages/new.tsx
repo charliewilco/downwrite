@@ -11,14 +11,14 @@ import { StickyContainer } from "@components/sticky-header";
 import { CreateEntryState } from "@data/modules/create";
 import { useDataFactory, useEnhancedReducer } from "@hooks/index";
 import { useEditor, useDecorators, emptyContentState } from "@hooks/useEditor";
-import { imageLinkDecorators, prismHighlightDecorator } from "../editor";
+import { imageLinkDecorators } from "../editor";
 
 const Editor = dynamic(() => import("@components/editor"));
 
 const NewEntryPage: NextPage = () => {
   const router = useRouter();
   const dataSource = useDataFactory(CreateEntryState);
-  const decorators = useDecorators([imageLinkDecorators, prismHighlightDecorator]);
+  const decorators = useDecorators([imageLinkDecorators]);
   const [state, dispatch] = useEnhancedReducer({
     title: "",
     editorState: EditorState.createWithContent(emptyContentState, decorators)
@@ -69,7 +69,9 @@ const NewEntryPage: NextPage = () => {
   const { getRootProps } = useDropzone({
     onDrop,
     multiple: false,
-    accept: ["text/markdown", "text/x-markdown", "text/plain"]
+    accept: {
+      "text/*": ["*.md", "*.mdx", "*.txt"]
+    }
   });
 
   return (

@@ -7,11 +7,15 @@ import { useDataSource } from "@hooks/useDataSource";
 import { ErrorBoundary, ErrorFallback } from "./errors";
 import { useIsomorphicLayoutEffect } from "./portal";
 
-const customErrorHandler = (error: Error, info: { componentStack: string }) => {
+function customErrorHandler(error: Error, info: { componentStack: string }) {
   console.log(error, info.componentStack);
-};
+}
 
-export const UIShell: React.FC = ({ children }) => {
+interface IUIShellProps {
+  children?: React.ReactNode;
+}
+
+export function UIShell({ children }: IUIShellProps) {
   const ds = useDataSource();
   useIsomorphicLayoutEffect(() => {
     ds.auth.check();
@@ -79,4 +83,4 @@ export const UIShell: React.FC = ({ children }) => {
       `}</style>
     </ErrorBoundary>
   );
-};
+}

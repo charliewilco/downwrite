@@ -13,7 +13,7 @@ import type {
   IUpdateUserSettingsMutationVariables
 } from "../__generated__/client";
 
-export class DownwriteClient extends GraphQLClient {
+export class APIClient extends GraphQLClient {
   cookies = new Cookie();
   constructor(options?: RequestInit) {
     super("/api/graphql", options);

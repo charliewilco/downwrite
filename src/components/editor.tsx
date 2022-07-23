@@ -129,17 +129,17 @@ const styleMap = {
 
 const SAVE_COMMAND = "save_command";
 
-const saveKeyListener = (
+function saveKeyListener(
   e: React.KeyboardEvent
-): DraftEditorCommand | typeof SAVE_COMMAND | null => {
+): DraftEditorCommand | typeof SAVE_COMMAND | null {
   if (e.keyCode === 83 && KeyBindingUtil.hasCommandModifier(e)) {
     return SAVE_COMMAND;
   }
 
   return getDefaultKeyBinding(e);
-};
+}
 
-const DownwriteEditor: React.VFC<IEditorProps> = ({ onSave, ...props }) => {
+function DownwriteEditor({ onSave, ...props }: IEditorProps) {
   let editorRef = useRef<Editor>(null);
 
   let contentState: Draft.ContentState = props.editorState.getCurrentContent();
@@ -169,7 +169,6 @@ const DownwriteEditor: React.VFC<IEditorProps> = ({ onSave, ...props }) => {
       }
 
       // handleKeyCommand(command, state, eventTimeStamp);
-
       return "not-handled";
     },
 
@@ -194,6 +193,6 @@ const DownwriteEditor: React.VFC<IEditorProps> = ({ onSave, ...props }) => {
       </style>
     </div>
   );
-};
+}
 
 export default DownwriteEditor;

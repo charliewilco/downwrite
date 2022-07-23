@@ -1,8 +1,8 @@
 // @ts-check
-import bundleAnalyzer from "@next/bundle-analyzer";
+const bundleAnalyzer = require("@next/bundle-analyzer");
 
 const withBundleAnalyzer = bundleAnalyzer({
-  enabled: process.env.ANALYZE === "true"
+  enabled: Boolean(process.env.ANALYZE === "true")
 });
 
 /**
@@ -14,4 +14,4 @@ const config = {
   cleanDistDir: true
 };
 
-export default withBundleAnalyzer(config);
+module.exports = withBundleAnalyzer(config);

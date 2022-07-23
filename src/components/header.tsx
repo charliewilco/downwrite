@@ -12,7 +12,7 @@ import {
 import { Logo } from "@components/logo";
 import { UserBlock } from "@components/user-blocks";
 
-import { useDataSource, useSubjectSubscription } from "@hooks/index";
+import { useDataSource, useSubjectEffect } from "@hooks/index";
 import { Routes } from "@shared/routes";
 
 const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) => {
@@ -25,7 +25,7 @@ const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) 
 
 NextMenuLink.displayName = "NextMenuLink";
 
-const LoginNav: React.VFC = () => {
+function LoginNav() {
   return (
     <nav>
       <Link href={Routes.LOGIN} passHref>
@@ -47,11 +47,11 @@ const LoginNav: React.VFC = () => {
       `}</style>
     </nav>
   );
-};
+}
 
-export const UIHeader: React.VFC = () => {
+export function UIHeader() {
   const dataSource = useDataSource();
-  const me = useSubjectSubscription(dataSource.auth.state);
+  const me = useSubjectEffect(dataSource.auth.state);
 
   return (
     <header data-testid="APP_HEADER">
@@ -203,4 +203,4 @@ export const UIHeader: React.VFC = () => {
       `}</style>
     </header>
   );
-};
+}

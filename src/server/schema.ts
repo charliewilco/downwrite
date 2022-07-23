@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-micro";
+import { gql } from "graphql-tag";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { Query } from "./queries";
 import { Mutation } from "./mutations";

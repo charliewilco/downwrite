@@ -1,5 +1,5 @@
 import { EditorState } from "draft-js";
-import { DownwriteClient } from "@data/client";
+import { APIClient } from "@data/client";
 import type { IAppState } from "@data/types";
 import type { IEntry } from "../../__generated__/client";
 import { BaseDraft } from "./base-draft";
@@ -12,9 +12,9 @@ export interface IEdit {
 }
 
 export class UpdateEntryState extends BaseDraft {
-  #client: DownwriteClient;
+  #client: APIClient;
   #store: IAppState;
-  constructor(_graphql: DownwriteClient, store: IAppState) {
+  constructor(_graphql: APIClient, store: IAppState) {
     super();
     this.#client = _graphql;
     this.#store = store;

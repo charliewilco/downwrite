@@ -1,6 +1,6 @@
 import { EditorState } from "draft-js";
 import { BaseDraft } from "./base-draft";
-import { DownwriteClient } from "@data/client";
+import { APIClient } from "@data/client";
 import type { IAppState } from "@data/types";
 import { __IS_BROWSER__ } from "@shared/constants";
 
@@ -14,9 +14,9 @@ interface ICreateEntryState {
 }
 
 export class CreateEntryState extends BaseDraft {
-  #client: DownwriteClient;
+  #client: APIClient;
   #store: IAppState;
-  constructor(_graphql: DownwriteClient, store: IAppState) {
+  constructor(_graphql: APIClient, store: IAppState) {
     super();
     this.#client = _graphql;
     this.#store = store;
