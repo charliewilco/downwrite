@@ -1,4 +1,4 @@
-import { AuthenticationError } from "apollo-server-errors";
+import { GraphQLYogaError } from "@graphql-yoga/node";
 import { UserModel, IUserModel } from "./models";
 import { isValidPassword, IReadResults } from "./token";
 import type { ResolverContext } from "./context";
@@ -16,7 +16,7 @@ export async function verifyUser<T>(
 
     return cb(token);
   } else {
-    throw new AuthenticationError("No valid token in cookie");
+    throw new GraphQLYogaError("No valid token in cookie");
   }
 }
 
@@ -32,8 +32,8 @@ export async function verifyCredentials(
     const isValid = await isValidPassword(password, user.password);
     if (isValid) return user;
 
-    throw new AuthenticationError("Incorrect password");
+    throw new GraphQLYogaError("Incorrect password");
   } else {
-    throw new AuthenticationError("Incorrect username or email!");
+    throw new GraphQLYogaError("Incorrect username or email!");
   }
 }

@@ -1,7 +1,7 @@
-import { ApolloError } from "apollo-server-errors";
 import * as bcrypt from "bcryptjs";
 import base64 from "base-64";
 import cuid from "cuid";
+import { GraphQLYogaError } from "@graphql-yoga/node";
 
 import { ResolverContext } from "@server/context";
 import { PostModel, UserModel } from "@server/models";
@@ -77,7 +77,7 @@ export async function createPost(
       const post = await PostModel.create(entry);
       return transformPostToEntry(post);
     } catch (error: any) {
-      throw new ApolloError(error);
+      throw new GraphQLYogaError(error);
     }
   });
 }
@@ -103,7 +103,7 @@ export async function updatePost(
       );
       return transformPostToEntry(n);
     } catch (error: any) {
-      throw new ApolloError(error, "Could not find post to update");
+      throw new GraphQLYogaError("Could not find post to update");
     }
   });
 }
@@ -120,7 +120,7 @@ export async function removePost(
       });
       return transformPostToEntry(post);
     } catch (error: any) {
-      throw new ApolloError(error);
+      throw new GraphQLYogaError(error);
     }
   });
 }
@@ -142,7 +142,7 @@ export async function authenticateUser(
 
     return { token };
   } catch (error: any) {
-    throw new ApolloError(error);
+    throw new GraphQLYogaError(error);
   }
 }
 
@@ -176,7 +176,7 @@ export async function createUser(
     return { token };
   } catch (error: any) {
     console.log(error.message);
-    throw new ApolloError(error);
+    throw new GraphQLYogaError(error);
   }
 }
 
@@ -191,7 +191,7 @@ export async function updateUserSettings(
       const currentUser = await UserModel.findById({ _id: user });
 
       if (currentUser === null || typeof currentUser === "undefined") {
-        throw new ApolloError("user cannot be null");
+        throw new GraphQLYogaError("user cannot be null");
       }
 
       const uniqueChecks = getUniqueChecks(currentUser, email!, username!);
@@ -205,7 +205,7 @@ export async function updateUserSettings(
         { new: true }
       );
       if (details === null || typeof details === "undefined") {
-        throw new ApolloError("Update failed, user details came back null");
+        throw new GraphQLYogaError("Update failed, user details came back null");
       }
       if (details.email && details.username) {
         const token = createToken(details);
@@ -218,10 +218,10 @@ export async function updateUserSettings(
           admin: __IS_DEV__
         };
       } else {
-        throw new ApolloError("Couldn't update user settings");
+        throw new GraphQLYogaError("Couldn't update user settings");
       }
     } catch (error: any) {
-      throw new ApolloError(error);
+      throw new GraphQLYogaError(error);
     }
   });
 }
@@ -247,7 +247,7 @@ export async function updatePassword(
     );
 
     if (updated === null || typeof updated === "undefined") {
-      throw new ApolloError("Update failed");
+      throw new GraphQLYogaError("Update failed");
     }
 
     const token = createToken(updated);

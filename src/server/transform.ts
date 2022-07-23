@@ -1,4 +1,4 @@
-import { ApolloError } from "apollo-server-errors";
+import { GraphQLYogaError } from "@graphql-yoga/node";
 import { IPostModel, IUserModel } from "./models";
 import { createMarkdownServer } from "../shared/markdown-template";
 import { IEntry, IPreview } from "../__generated__/server";
@@ -38,7 +38,7 @@ export function transformPostToEntry(post: IPostModel | null): IEntry {
   let md = ``;
 
   if (post === null) {
-    throw new ApolloError("Post does not exist");
+    throw new GraphQLYogaError("Post does not exist");
   }
 
   if (post.content !== null) {

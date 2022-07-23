@@ -1,4 +1,4 @@
-import { ApolloError } from "apollo-server-errors";
+import { GraphQLYogaError } from "@graphql-yoga/node";
 import { UserModel, IUserModel } from "./models";
 
 export async function verifyUniqueUser(username: string, email: string) {
@@ -8,10 +8,10 @@ export async function verifyUniqueUser(username: string, email: string) {
 
   if (user) {
     if (user.username === username) {
-      throw new ApolloError("Username taken");
+      throw new GraphQLYogaError("Username taken");
     }
     if (user.email === email) {
-      throw new ApolloError("Email taken");
+      throw new GraphQLYogaError("Email taken");
     }
   }
 }
@@ -44,10 +44,10 @@ export function getUniqueChecks(
 
     if (found) {
       if (diff === "username" && found.username === username) {
-        throw new ApolloError("Username already taken");
+        throw new GraphQLYogaError("Username already taken");
       }
       if (diff === "email" && found.email === email) {
-        throw new ApolloError("Email already taken");
+        throw new GraphQLYogaError("Email already taken");
       }
     }
   });
