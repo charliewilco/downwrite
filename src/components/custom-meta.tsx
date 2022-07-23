@@ -7,7 +7,7 @@ interface ICustomMetaProps {
   path?: string;
 }
 
-export const CustomMeta = ({ title, path }: ICustomMetaProps) => {
+export function CustomMeta({ title, path }: ICustomMetaProps) {
   const meta = useMemo(() => createMetadata(path, title), [title, path]);
   return (
     <Head>
@@ -26,4 +26,4 @@ export const CustomMeta = ({ title, path }: ICustomMetaProps) => {
       <meta property="twitter:title" content={meta.PAGE_TITLE} />
     </Head>
   );
-};
+}

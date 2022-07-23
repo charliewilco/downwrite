@@ -12,7 +12,7 @@ const PAGES = [
   { name: "@_charliewilco", href: TWITTER }
 ] as const;
 
-export const SiteFooter = () => {
+export function SiteFooter() {
   const year = useRef(new Date().getFullYear());
 
   return (
@@ -59,4 +59,4 @@ export const SiteFooter = () => {
       `}</style>
     </footer>
   );
-};
+}

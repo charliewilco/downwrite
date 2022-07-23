@@ -25,7 +25,7 @@ const NextMenuLink = forwardRef<HTMLAnchorElement, any>(({ to, ...props }, ref) 
 
 NextMenuLink.displayName = "NextMenuLink";
 
-const LoginNav = () => {
+function LoginNav() {
   return (
     <nav>
       <Link href={Routes.LOGIN} passHref>
@@ -47,9 +47,9 @@ const LoginNav = () => {
       `}</style>
     </nav>
   );
-};
+}
 
-export const UIHeader = () => {
+export function UIHeader() {
   const dataSource = useDataSource();
   const me = useSubjectEffect(dataSource.auth.state);
 
@@ -203,4 +203,4 @@ export const UIHeader = () => {
       `}</style>
     </header>
   );
-};
+}

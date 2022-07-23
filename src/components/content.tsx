@@ -58,10 +58,10 @@ export const content = css.global`
   }
 `;
 
-export const StaticContentWrapper = ({
+export function StaticContentWrapper({
   children,
   title
-}: Omit<IContentWrapperProps, "content" | "dateAdded">) => {
+}: Omit<IContentWrapperProps, "content" | "dateAdded">) {
   return (
     <div className="outer">
       <article className="harticle">
@@ -126,9 +126,9 @@ export const StaticContentWrapper = ({
       </style>
     </div>
   );
-};
+}
 
-export const ContentWrapper = (props: IContentWrapperProps) => {
+export function ContentWrapper(props: IContentWrapperProps) {
   return (
     <div className="outer">
       <article className="harticle">
@@ -201,4 +201,4 @@ export const ContentWrapper = (props: IContentWrapperProps) => {
       </style>
     </div>
   );
-};
+}

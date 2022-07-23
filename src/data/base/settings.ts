@@ -1,4 +1,4 @@
-import { DownwriteClient } from "@data/client";
+import { APIClient } from "@data/client";
 import type { IAppState } from "@data/types";
 import base64 from "base-64";
 
@@ -25,9 +25,9 @@ export enum LocalSettings {
 export class GlobalSettings implements ISettings {
   isDarkMode = true;
   fileExtension = ".md";
-  #client: DownwriteClient;
+  #client: APIClient;
   #store: IAppState;
-  constructor(_graphql: DownwriteClient, store: IAppState) {
+  constructor(_graphql: APIClient, store: IAppState) {
     this.#client = _graphql;
     this.#store = store;
   }

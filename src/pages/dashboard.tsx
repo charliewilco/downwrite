@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
@@ -16,7 +15,7 @@ import { DashboardState, IPartialFeedItem } from "@data/modules/dashboard";
 import { useEnhancedReducer, useDataFactory } from "@hooks/index";
 import { Routes } from "@shared/routes";
 
-const DashboardUI: NextPage = () => {
+export default function DashboardUI() {
   const dataSource = useDataFactory(DashboardState);
   const [{ selected }, dispatch] = useEnhancedReducer<{
     selected: IPartialFeedItem | null;
@@ -209,6 +208,4 @@ const DashboardUI: NextPage = () => {
   }
 
   return null;
-};
-
-export default DashboardUI;
+}

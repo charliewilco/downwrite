@@ -25,7 +25,7 @@ interface IPortalProps {
   children?: React.ReactNode;
 }
 
-export const Portal = ({ type, children, containerRef }: IPortalProps) => {
+export function Portal({ type, children, containerRef }: IPortalProps) {
   let mountNode = useRef<HTMLDivElement | null>(null);
   let portalNode = useRef<HTMLElement | null>(null);
 
@@ -50,4 +50,4 @@ export const Portal = ({ type, children, containerRef }: IPortalProps) => {
   ) : (
     <span ref={mountNode} />
   );
-};
+}

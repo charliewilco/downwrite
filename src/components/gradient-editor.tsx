@@ -1,13 +1,18 @@
 import { useMemo, useState, useEffect } from "react";
 import { Avatar } from "@components/avatar";
-import { startColors, endColors, isValidHex, Gradient } from "@shared/gradients";
+import {
+  startColors,
+  endColors,
+  isValidHex,
+  type Gradient
+} from "@shared/gradients";
 
 interface IHexInputProps {
   onChange: (color: string) => void;
   initialValue?: string;
 }
 
-export const FunHexInput = (props: IHexInputProps) => {
+export function FunHexInput(props: IHexInputProps) {
   const [hex, setHexColor] = useState<string>(props.initialValue || "");
 
   function handleChange({
@@ -43,7 +48,7 @@ export const FunHexInput = (props: IHexInputProps) => {
       />
     </div>
   );
-};
+}
 
 interface IColorPickerProps {
   title?: string;
@@ -52,13 +57,13 @@ interface IColorPickerProps {
   name: string;
 }
 
-export const ColorPicker = (
+export function ColorPicker(
   props: IColorPickerProps = {
     colors: startColors,
     onPress: (color: string, name: string) => ({ color, name }),
     name: "Color Picker"
   }
-) => {
+) {
   return (
     <div className="outer">
       {props.title && <h4>{props.title}</h4>}
@@ -92,7 +97,7 @@ export const ColorPicker = (
       </style>
     </div>
   );
-};
+}
 
 interface IColors {
   a: string;
@@ -105,7 +110,7 @@ interface IGradientEditorProps {
   colors: IColors;
 }
 
-export const GradientEditor = (props: IGradientEditorProps) => {
+export function GradientEditor(props: IGradientEditorProps) {
   function handleColorChange(value: string, name: string): void {
     props.onColorChange(value, name);
   }
@@ -134,4 +139,4 @@ export const GradientEditor = (props: IGradientEditorProps) => {
       </div>
     </div>
   );
-};
+}

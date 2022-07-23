@@ -1,4 +1,3 @@
-import { NextPage } from "next";
 import Head from "next/head";
 import { NotFound } from "@components/not-found";
 
@@ -6,7 +5,7 @@ interface IErrorViewProps {
   statusCode: number;
 }
 
-const ErrorPage: NextPage<IErrorViewProps> = (props) => {
+export default function ErrorPage(props: IErrorViewProps) {
   const message = props.statusCode
     ? "An error " + props.statusCode + " occurred on server"
     : "An error occurred on client";
@@ -28,6 +27,4 @@ const ErrorPage: NextPage<IErrorViewProps> = (props) => {
       `}</style>
     </section>
   );
-};
-
-export default ErrorPage;
+}

@@ -3,11 +3,10 @@ import {
   ContentBlock,
   ContentState,
   CompositeDecorator,
-  DraftDecorator
+  type DraftDecorator
 } from "draft-js";
-import { prismHighlightDecorator } from "./prism";
 
-export const createLinkStrategy = () => {
+export function createLinkStrategy() {
   const findLinkEntities = (
     block: ContentBlock,
     callback: (start: number, end: number) => void,
@@ -21,9 +20,9 @@ export const createLinkStrategy = () => {
     }, callback);
   };
   return findLinkEntities;
-};
+}
 
-export const createImageStrategy = () => {
+export function createImageStrategy() {
   const findImageEntities = (
     block: ContentBlock,
     callback: (start: number, end: number) => void,
@@ -37,7 +36,7 @@ export const createImageStrategy = () => {
     }, callback);
   };
   return findImageEntities;
-};
+}
 
 interface IDecoratorProps {
   entityKey: string;
@@ -45,7 +44,7 @@ interface IDecoratorProps {
   children?: React.ReactNode;
 }
 
-const Link = (props: IDecoratorProps) => {
+function Link(props: IDecoratorProps) {
   const { contentState, children, entityKey } = props;
   const { href, title } = contentState.getEntity(entityKey).getData();
   return (
@@ -53,9 +52,9 @@ const Link = (props: IDecoratorProps) => {
       {children}
     </a>
   );
-};
+}
 
-const Image = ({ entityKey, children, contentState }: IDecoratorProps) => {
+function Image({ entityKey, children, contentState }: IDecoratorProps) {
   const { src, alt, title } = contentState.getEntity(entityKey).getData();
   return (
     <span>
@@ -63,7 +62,7 @@ const Image = ({ entityKey, children, contentState }: IDecoratorProps) => {
       <img src={src} alt={alt} title={title} />
     </span>
   );
-};
+}
 
 const LINK: DraftDecorator = {
   strategy: createLinkStrategy(),
@@ -77,4 +76,4 @@ const IMAGE: DraftDecorator = {
 
 export const imageLinkDecorators = new CompositeDecorator([LINK, IMAGE]);
 
-export const defaultDecorators = [imageLinkDecorators, prismHighlightDecorator];
+export const defaultDecorators = [imageLinkDecorators];

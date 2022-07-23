@@ -1,7 +1,10 @@
 import { Component, isValidElement, useState } from "react";
 
-const changedArray = (a: unknown[] = [], b: unknown[] = []) =>
-  a.length !== b.length || a.some((item, index) => !Object.is(item, b[index]));
+function changedArray(a: unknown[] = [], b: unknown[] = []) {
+  return (
+    a.length !== b.length || a.some((item, index) => !Object.is(item, b[index]))
+  );
+}
 
 export interface IFallbackProps {
   error: Error;

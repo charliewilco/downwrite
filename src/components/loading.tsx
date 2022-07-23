@@ -1,4 +1,4 @@
-export const Loading = () => {
+export function Loading() {
   return (
     <div role="img">
       <div className="ring" />
@@ -65,4 +65,4 @@ export const Loading = () => {
       `}</style>
     </div>
   );
-};
+}

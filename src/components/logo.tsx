@@ -1,4 +1,4 @@
-export const Logo = () => {
+export function Logo() {
   return (
     <div>
       <svg viewBox="0 0 337 264" fill="none" className="LogoIcon">
@@ -73,4 +73,4 @@ export const Logo = () => {
       `}</style>
     </div>
   );
-};
+}

@@ -4,7 +4,7 @@ interface IBannerProps {
   children?: React.ReactNode;
 }
 
-export const Banner = ({ children, label }: IBannerProps) => {
+export function Banner({ children, label }: IBannerProps) {
   return (
     <div className="banner-container">
       <div role="banner">
@@ -38,4 +38,4 @@ export const Banner = ({ children, label }: IBannerProps) => {
       `}</style>
     </div>
   );
-};
+}

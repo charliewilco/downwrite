@@ -5,7 +5,7 @@ interface IPostErrorProps {
   error?: string;
 }
 
-export const NotFound = ({ error, message }: IPostErrorProps) => {
+export function NotFound({ error, message }: IPostErrorProps) {
   return (
     <div>
       <Image
@@ -21,4 +21,4 @@ export const NotFound = ({ error, message }: IPostErrorProps) => {
       <p>{message}</p>
     </div>
   );
-};
+}

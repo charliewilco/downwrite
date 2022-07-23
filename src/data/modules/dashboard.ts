@@ -1,4 +1,4 @@
-import { DownwriteClient } from "@data/client";
+import { APIClient } from "@data/client";
 import type { IAppState } from "../types";
 import type { IAllPostsQuery } from "../../__generated__/client";
 
@@ -8,9 +8,9 @@ export interface IPartialFeedItem {
 }
 
 export class DashboardState {
-  #client: DownwriteClient;
+  #client: APIClient;
   #store: IAppState;
-  constructor(_graphql: DownwriteClient, store: IAppState) {
+  constructor(_graphql: APIClient, store: IAppState) {
     this.#client = _graphql;
     this.#store = store;
   }

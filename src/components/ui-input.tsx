@@ -12,10 +12,10 @@ interface IUIInputProps {
   testID?: string;
 }
 
-export const UIInputError = ({
+export function UIInputError({
   style,
   ...props
-}: React.HTMLAttributes<HTMLSpanElement>) => {
+}: React.HTMLAttributes<HTMLSpanElement>) {
   return (
     <span {...props}>
       {props.children}
@@ -28,9 +28,9 @@ export const UIInputError = ({
       `}</style>
     </span>
   );
-};
+}
 
-export const UIInput = ({ testID, label, ...props }: IUIInputProps) => {
+export function UIInput({ testID, label, ...props }: IUIInputProps) {
   const id = useRef("UI_TEXT_INPUT_".concat(label.replace(" ", "")));
 
   const [isFocused, dispatch] = useReducer(
@@ -77,9 +77,9 @@ export const UIInput = ({ testID, label, ...props }: IUIInputProps) => {
       `}</style>
     </label>
   );
-};
+}
 
-export const EditorInput = (props: React.InputHTMLAttributes<HTMLInputElement>) => {
+export function EditorInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div>
       <input type="text" {...props} />
@@ -101,4 +101,4 @@ export const EditorInput = (props: React.InputHTMLAttributes<HTMLInputElement>) 
       `}</style>
     </div>
   );
-};
+}

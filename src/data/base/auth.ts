@@ -2,7 +2,7 @@ import decode from "jwt-decode";
 import base64 from "base-64";
 import { BehaviorSubject } from "rxjs";
 
-import { DownwriteClient } from "@data/client";
+import { APIClient } from "@data/client";
 import type { IAppState } from "@data/types";
 import { TOKEN_NAME } from "@shared/constants";
 import type { TokenContents } from "@shared/types";
@@ -36,9 +36,9 @@ export class Auth {
     id: "",
     authed: false
   });
-  #client: DownwriteClient;
+  #client: APIClient;
   #store: IAppState;
-  constructor(_graphql: DownwriteClient, store: IAppState) {
+  constructor(_graphql: APIClient, store: IAppState) {
     this.#client = _graphql;
     this.#store = store;
   }

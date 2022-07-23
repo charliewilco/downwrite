@@ -2,15 +2,11 @@ import { convertFromRaw, convertToRaw, EditorState } from "draft-js";
 import { mdToDraftjs, draftjsToMd } from "draftjs-md-converter";
 import format from "date-fns/format";
 
-import {
-  imageLinkDecorators,
-  prismHighlightDecorator,
-  MultiDecorator
-} from "../../editor";
+import { imageLinkDecorators, MultiDecorator } from "../../editor";
 
 const decorators = new MultiDecorator([
-  imageLinkDecorators,
-  prismHighlightDecorator
+  imageLinkDecorators
+  // prismHighlightDecorator
 ]);
 
 export class DraftParser {

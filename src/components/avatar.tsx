@@ -1,15 +1,17 @@
 import React, { useMemo } from "react";
-import { AvatarColors, Gradient } from "@shared/gradients";
+import { AvatarColors, type Gradient } from "@shared/gradients";
 
 export interface IPointedGradientColors {
   a: string;
   b: string;
 }
 
-export const gradientPoints = (colors: Gradient = AvatarColors) => ({
-  a: colors[0],
-  b: colors[1]
-});
+export function createGradientPoints(colors: Gradient = AvatarColors) {
+  return {
+    a: colors[0],
+    b: colors[1]
+  };
+}
 
 export interface IAvatarCircleProps {
   colors: IPointedGradientColors;
@@ -23,8 +25,8 @@ interface IAvatarProps {
   centered?: boolean;
 }
 
-export const Avatar = (props: IAvatarProps) => {
-  const colors = useMemo(() => gradientPoints(props.colors), [props.colors]);
+export function Avatar(props: IAvatarProps) {
+  const colors = useMemo(() => createGradientPoints(props.colors), [props.colors]);
 
   return (
     <div
@@ -47,4 +49,4 @@ export const Avatar = (props: IAvatarProps) => {
       </style>
     </div>
   );
-};
+}

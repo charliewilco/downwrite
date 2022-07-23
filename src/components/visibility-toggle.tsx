@@ -8,11 +8,11 @@ interface IVisibilityToggleProps {
   onCheck(ev: React.ChangeEvent<HTMLInputElement>): void;
 }
 
-export const VisibilityToggle = ({
+export function VisibilityToggle({
   checked,
   onCheck,
   children
-}: IVisibilityToggleProps) => {
+}: IVisibilityToggleProps) {
   let inputRef = useRef(null);
   let [inputProps, stateData] = useMixedCheckbox(inputRef, {
     checked,
@@ -34,4 +34,4 @@ export const VisibilityToggle = ({
       `}</style>
     </label>
   );
-};
+}

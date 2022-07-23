@@ -1,5 +1,5 @@
 import { Avatar } from "@components/avatar";
-import { Gradient } from "@shared/gradients";
+import type { Gradient } from "@shared/gradients";
 
 interface IUserBlockProps {
   name: string;
@@ -7,7 +7,7 @@ interface IUserBlockProps {
   colors: Gradient;
 }
 
-export const UserBlock = (props: IUserBlockProps) => {
+export function UserBlock(props: IUserBlockProps) {
   return (
     <div>
       <Avatar centered colors={props.colors} />
@@ -31,14 +31,14 @@ export const UserBlock = (props: IUserBlockProps) => {
       </style>
     </div>
   );
-};
+}
 
 interface IAuthorProps {
   name: string;
   colors: Gradient;
 }
 
-export const AuthorBlock = (props: IAuthorProps): JSX.Element => {
+export function AuthorBlock(props: IAuthorProps): JSX.Element {
   return (
     <div>
       <Avatar colors={props.colors} />
@@ -58,4 +58,4 @@ export const AuthorBlock = (props: IAuthorProps): JSX.Element => {
       `}</style>
     </div>
   );
-};
+}
