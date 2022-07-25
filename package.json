@@ -26,7 +26,7 @@
     "@reach/checkbox": "^0.16.0",
     "@reach/combobox": "^0.16.5",
     "@reach/dialog": "^0.16.2",
-    "@reach/menu-button": "^0.16.2",
+    "@reach/menu-button": "^0.17.0",
     "@reach/skip-nav": "^0.16.0",
     "@reach/visually-hidden": "^0.16.0",
     "apollo-server-micro": "^2.24.1",
