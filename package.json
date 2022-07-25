@@ -28,7 +28,7 @@
     "@reach/dialog": "^0.16.2",
     "@reach/menu-button": "^0.16.2",
     "@reach/skip-nav": "^0.16.0",
-    "@reach/visually-hidden": "^0.16.0",
+    "@reach/visually-hidden": "^0.17.0",
     "apollo-server-micro": "^2.24.1",
     "base-64": "^1.0.0",
     "bcryptjs": "^2.4.3",
