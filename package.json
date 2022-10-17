@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@graphql-tools/schema": "^8.3.5",
-    "@reach/checkbox": "^0.16.0",
+    "@reach/checkbox": "^0.18.0",
     "@reach/combobox": "^0.16.5",
     "@reach/dialog": "^0.16.2",
     "@reach/menu-button": "^0.16.2",
