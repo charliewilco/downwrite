@@ -1,8 +1,8 @@
 ## Terms of Service
 
 > **TLDR**: You're accepting that any public entry containing libelous, profane or racist,
-queerphobic, xenophobic or sexist content has the potential to be revoked
-and set back to private at my discretion.
+> queerphobic, xenophobic or sexist content has the potential to be revoked
+> and set back to private at my discretion.
 
 ### 1. Terms
 
@@ -48,9 +48,9 @@ These terms and conditions are governed by and construed in accordance with the 
 ## Privacy Policy
 
 > **TLDR**: Any content, albeit your personal information or an entry, is private until you
-opt out of making the entry private. I do not have the intention of selling,
-repackaging for sale, any of your content. And obviously this site uses cookies and
-disabling them is a bad idea.
+> opt out of making the entry private. I do not have the intention of selling,
+> repackaging for sale, any of your content. And obviously this site uses cookies and
+> disabling them is a bad idea.
 
 Your privacy is important to us.
 
@@ -64,21 +64,21 @@ It is Downwrite's policy to respect your privacy regarding any information we ma
 
 We may ask you for personal information, such as:
 
-* Your name
-* Email address
-* Social media profile/s, and
-* Contact details
+- Your name
+- Email address
+- Social media profile/s, and
+- Contact details
 
 This information is used for the purposes of:
 
-* providing you with products and services
-* providing you with information about our products and services
-* managing and improving our products, services, quality control, administration, communication and internal processes
-* personalising and customising your experience with us
-* verifying your identity
-* granting you access to your account with us
-* investigating any enquiries or complaints submitted by or about you; and/or
-* complying with regulatory or legal obligations
+- providing you with products and services
+- providing you with information about our products and services
+- managing and improving our products, services, quality control, administration, communication and internal processes
+- personalising and customising your experience with us
+- verifying your identity
+- granting you access to your account with us
+- investigating any enquiries or complaints submitted by or about you; and/or
+- complying with regulatory or legal obligations
 
 You are free to refuse our request for your personal information, with the understanding that we may be unable to provide you with some of your desired services.
 
@@ -100,9 +100,9 @@ If you do not wish to accept cookies from us, you should instruct your browser t
 
 We employ third-party services for our:
 
-* Website analytics
-* Customer relationship management, and
-* Advertising and remarketing
+- Website analytics
+- Customer relationship management, and
+- Advertising and remarketing
 
 These third parties have access to selected personal information only to perform specific tasks on our behalf or to improve the relevance of information presented to you. We review the privacy policies of all our third-party providers before enlisting their services to ensure their practices align with ours.
 

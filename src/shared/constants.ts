@@ -8,10 +8,10 @@ export const BASE_PROD_URL = "https://beta.downwrite.us/";
 export const BASE_OG_TITLE = "Downwrite";
 
 export const createMetadata = (path?: string, title?: string) => {
-  return {
-    PAGE_TITLE: title ? `${title} | ${BASE_OG_TITLE}` : BASE_OG_TITLE,
-    PAGE_URL: path ? `https://beta.downwrite.us/${path}` : BASE_PROD_URL
-  };
+	return {
+		PAGE_TITLE: title ? `${title} | ${BASE_OG_TITLE}` : BASE_OG_TITLE,
+		PAGE_URL: path ? `https://beta.downwrite.us/${path}` : BASE_PROD_URL
+	};
 };
 
 export const __IS_DEV__: boolean = process.env.NODE_ENV === "development";

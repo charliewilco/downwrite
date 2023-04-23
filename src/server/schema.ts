@@ -5,114 +5,114 @@ import { Mutation } from "./mutations";
 import { ResolverContext } from "./context";
 
 const typeDefs = gql`
-  scalar Date
+	scalar Date
 
-  # Models
+	# Models
 
-  type Entry {
-    id: ID
-    title: String
-    author: Author
-    content: String
-    public: Boolean
-    dateAdded: Date
-    dateModified: Date
-    excerpt: String
-    user: String
-  }
+	type Entry {
+		id: ID
+		title: String
+		author: Author
+		content: String
+		public: Boolean
+		dateAdded: Date
+		dateModified: Date
+		excerpt: String
+		user: String
+	}
 
-  type Author {
-    username: String
-    gradient: [String]
-  }
+	type Author {
+		username: String
+		gradient: [String]
+	}
 
-  type Preview {
-    title: String
-    id: ID
-    content: String
-    author: Author
-    dateAdded: Date
-  }
+	type Preview {
+		title: String
+		id: ID
+		content: String
+		author: Author
+		dateAdded: Date
+	}
 
-  type User {
-    username: String!
-    email: String!
-    id: ID!
-    admin: Boolean
-  }
+	type User {
+		username: String!
+		email: String!
+		id: ID!
+		admin: Boolean
+	}
 
-  # Inputs
+	# Inputs
 
-  input UserSettingsInput {
-    username: String
-    email: String
-  }
+	input UserSettingsInput {
+		username: String
+		email: String
+	}
 
-  # Payload
+	# Payload
 
-  type AuthUserPayload {
-    token: String
-  }
+	type AuthUserPayload {
+		token: String
+	}
 
-  type UsageDetails {
-    entryCount: Int!
-    privateEntries: Int!
-    publicEntries: Int!
-  }
+	type UsageDetails {
+		entryCount: Int!
+		privateEntries: Int!
+		publicEntries: Int!
+	}
 
-  type Me {
-    details: User
-    token: String
-    usage: UsageDetails!
-  }
+	type Me {
+		details: User
+		token: String
+		usage: UsageDetails!
+	}
 
-  # Root
+	# Root
 
-  type Query {
-    """
-    Markdown document
-    """
-    entry(id: ID!): Entry
-    """
-    List of Markdown documents
-    """
-    feed: [Entry!]!
-    """
-    Public preview of Markdown document
-    """
-    preview(id: ID!): Preview
-    """
-    User Settings
-    """
-    settings: User
-    me: Me
-  }
+	type Query {
+		"""
+		Markdown document
+		"""
+		entry(id: ID!): Entry
+		"""
+		List of Markdown documents
+		"""
+		feed: [Entry!]!
+		"""
+		Public preview of Markdown document
+		"""
+		preview(id: ID!): Preview
+		"""
+		User Settings
+		"""
+		settings: User
+		me: Me
+	}
 
-  type Mutation {
-    createEntry(content: String, title: String): Entry
-    updateEntry(
-      id: String!
-      content: String!
-      title: String!
-      status: Boolean!
-    ): Entry
-    deleteEntry(id: ID!): Entry
-    createUser(username: String!, email: String!, password: String!): AuthUserPayload
-    authenticateUser(username: String!, password: String!): AuthUserPayload
-    updateUserSettings(settings: UserSettingsInput!): User
-    updatePassword(currentPassword: String!, newPassword: String!): AuthUserPayload
-  }
+	type Mutation {
+		createEntry(content: String, title: String): Entry
+		updateEntry(
+			id: String!
+			content: String!
+			title: String!
+			status: Boolean!
+		): Entry
+		deleteEntry(id: ID!): Entry
+		createUser(username: String!, email: String!, password: String!): AuthUserPayload
+		authenticateUser(username: String!, password: String!): AuthUserPayload
+		updateUserSettings(settings: UserSettingsInput!): User
+		updatePassword(currentPassword: String!, newPassword: String!): AuthUserPayload
+	}
 
-  schema {
-    query: Query
-    mutation: Mutation
-  }
+	schema {
+		query: Query
+		mutation: Mutation
+	}
 `;
 
 export const schema = makeExecutableSchema<ResolverContext>({
-  typeDefs,
-  resolvers: {
-    Query,
-    Mutation
-  }
+	typeDefs,
+	resolvers: {
+		Query,
+		Mutation
+	}
 });

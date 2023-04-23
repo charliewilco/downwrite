@@ -5,116 +5,116 @@ import { TOKEN_NAME } from "@shared/constants";
 import { getSdk } from "../__generated__/client";
 
 import type {
-  IIsMeQuery,
-  ICreateEntryMutationVariables,
-  ICreateUserMutationVariables,
-  ILoginUserMutationVariables,
-  IUpdateEntryMutationVariables,
-  IUpdateUserSettingsMutationVariables
+	IIsMeQuery,
+	ICreateEntryMutationVariables,
+	ICreateUserMutationVariables,
+	ILoginUserMutationVariables,
+	IUpdateEntryMutationVariables,
+	IUpdateUserSettingsMutationVariables
 } from "../__generated__/client";
 
 export class DownwriteClient extends GraphQLClient {
-  cookies = new Cookie();
-  constructor(options?: RequestInit) {
-    super("/api/graphql", options);
+	cookies = new Cookie();
+	constructor(options?: RequestInit) {
+		super("/api/graphql", options);
 
-    this._checkToken();
+		this._checkToken();
 
-    this.cookies.addChangeListener((options) => {
-      if (options.name === TOKEN_NAME && options.value) {
-        this.setToken(options.value);
-      }
-    });
-  }
+		this.cookies.addChangeListener((options) => {
+			if (options.name === TOKEN_NAME && options.value) {
+				this.setToken(options.value);
+			}
+		});
+	}
 
-  private _checkToken() {
-    const token = this.cookies.get(TOKEN_NAME);
+	private _checkToken() {
+		const token = this.cookies.get(TOKEN_NAME);
 
-    if (token) {
-      this.setToken(token);
-    }
-  }
+		if (token) {
+			this.setToken(token);
+		}
+	}
 
-  setToken(token: string) {
-    this.setHeader("Authorization", token);
-    this.cookies.set(TOKEN_NAME, token);
-  }
+	setToken(token: string) {
+		this.setHeader("Authorization", token);
+		this.cookies.set(TOKEN_NAME, token);
+	}
 
-  allPosts() {
-    return getSdk(this).AllPosts();
-  }
+	allPosts() {
+		return getSdk(this).AllPosts();
+	}
 
-  isMe() {
-    return getSdk(this).IsMe();
-  }
+	isMe() {
+		return getSdk(this).IsMe();
+	}
 
-  edit(id: string) {
-    return getSdk(this).Edit({ id });
-  }
+	edit(id: string) {
+		return getSdk(this).Edit({ id });
+	}
 
-  preview(id: string) {
-    return getSdk(this).Preview({ id });
-  }
+	preview(id: string) {
+		return getSdk(this).Preview({ id });
+	}
 
-  userDetails() {
-    return getSdk(this).UserDetails();
-  }
+	userDetails() {
+		return getSdk(this).UserDetails();
+	}
 
-  updateEntry(variables: IUpdateEntryMutationVariables) {
-    return getSdk(this).UpdateEntry(variables);
-  }
+	updateEntry(variables: IUpdateEntryMutationVariables) {
+		return getSdk(this).UpdateEntry(variables);
+	}
 
-  createEntry(variables: ICreateEntryMutationVariables) {
-    return getSdk(this).CreateEntry(variables);
-  }
+	createEntry(variables: ICreateEntryMutationVariables) {
+		return getSdk(this).CreateEntry(variables);
+	}
 
-  removeEntry(id: string) {
-    return getSdk(this).RemoveEntry({ id });
-  }
+	removeEntry(id: string) {
+		return getSdk(this).RemoveEntry({ id });
+	}
 
-  loginUser(variables: ILoginUserMutationVariables) {
-    return getSdk(this).LoginUser(variables);
-  }
+	loginUser(variables: ILoginUserMutationVariables) {
+		return getSdk(this).LoginUser(variables);
+	}
 
-  createUser(variables: ICreateUserMutationVariables) {
-    return getSdk(this).CreateUser(variables);
-  }
+	createUser(variables: ICreateUserMutationVariables) {
+		return getSdk(this).CreateUser(variables);
+	}
 
-  updateSettings(variables: IUpdateUserSettingsMutationVariables) {
-    return getSdk(this).UpdateUserSettings(variables);
-  }
+	updateSettings(variables: IUpdateUserSettingsMutationVariables) {
+		return getSdk(this).UpdateUserSettings(variables);
+	}
 
-  updatePassword(current: string, newPassword: string) {
-    return getSdk(this).UpdatePassword({
-      current,
-      newPassword
-    });
-  }
+	updatePassword(current: string, newPassword: string) {
+		return getSdk(this).UpdatePassword({
+			current,
+			newPassword
+		});
+	}
 }
 
 export class MockClient {
-  cookies = new Cookie({ [TOKEN_NAME]: "" });
-  setToken(value: string) {
-    this.cookies.set(TOKEN_NAME, value);
-  }
-  async loginUser(variables: ILoginUserMutationVariables) {
-    console.log(variables);
-    return {
-      authenticateUser: {
-        token: "..."
-      }
-    };
-  }
+	cookies = new Cookie({ [TOKEN_NAME]: "" });
+	setToken(value: string) {
+		this.cookies.set(TOKEN_NAME, value);
+	}
+	async loginUser(variables: ILoginUserMutationVariables) {
+		console.log(variables);
+		return {
+			authenticateUser: {
+				token: "..."
+			}
+		};
+	}
 
-  async isMe(): Promise<IIsMeQuery> {
-    return {
-      me: {
-        token: "MOCK_TOKEN_2",
-        details: {
-          id: "1",
-          username: "david-yates"
-        }
-      }
-    };
-  }
+	async isMe(): Promise<IIsMeQuery> {
+		return {
+			me: {
+				token: "MOCK_TOKEN_2",
+				details: {
+					id: "1",
+					username: "david-yates"
+				}
+			}
+		};
+	}
 }

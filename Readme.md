@@ -118,11 +118,11 @@ Using Puppeteer I write assertions like this:
 
 ```js
 describe("Feature", () => {
-  it("does this thing", async () => {
-    await page.waitForSelector("#selector");
-    await page.click("#selector");
-    await page.waitForSelector("#other-selector");
-  });
+	it("does this thing", async () => {
+		await page.waitForSelector("#selector");
+		await page.click("#selector");
+		await page.waitForSelector("#other-selector");
+	});
 });
 ```
 

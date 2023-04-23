@@ -1,6 +1,6 @@
 import { ServerResponse, IncomingMessage } from "http";
 
 export type ResolverContext = {
-  req: IncomingMessage;
-  res: ServerResponse;
+	req: IncomingMessage;
+	res: ServerResponse;
 };

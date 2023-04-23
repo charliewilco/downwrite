@@ -1,13 +1,13 @@
 {
-  "name": "Node.js & Mongo DB",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "app",
-  "workspaceFolder": "/workspace",
-  "settings": {
-    "terminal.integrated.shell.linux": "/bin/bash"
-  },
-  "extensions": ["mongodb.mongodb-vscode"],
+	"name": "Node.js & Mongo DB",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspace",
+	"settings": {
+		"terminal.integrated.shell.linux": "/bin/bash"
+	},
+	"extensions": ["mongodb.mongodb-vscode"],
 
-  "forwardPorts": [3000, 27017],
-  "remoteUser": "node"
+	"forwardPorts": [3000, 27017],
+	"remoteUser": "node"
 }

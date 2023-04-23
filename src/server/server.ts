@@ -3,8 +3,8 @@ import { ResolverContext } from "./context";
 import { schema } from "./schema";
 
 export const server = new ApolloServer({
-  schema,
-  context(_: ResolverContext) {
-    return _;
-  }
+	schema,
+	context(_: ResolverContext) {
+		return _;
+	}
 });

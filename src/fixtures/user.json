@@ -1,7 +1,7 @@
 {
-  "user": {
-    "username": "testme_baby92",
-    "password": "P@ssw0rd",
-    "email": "test@tester.com"
-  }
+	"user": {
+		"username": "testme_baby92",
+		"password": "P@ssw0rd",
+		"email": "test@tester.com"
+	}
 }

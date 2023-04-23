@@ -5,33 +5,33 @@ import type { IAppState } from "@data/types";
 import { __IS_BROWSER__ } from "@shared/constants";
 
 export interface INewEditorValues {
-  title: string;
+	title: string;
 }
 
 interface ICreateEntryState {
-  title: string;
-  editorState: EditorState;
+	title: string;
+	editorState: EditorState;
 }
 
 export class CreateEntryState extends BaseDraft {
-  #client: DownwriteClient;
-  #store: IAppState;
-  constructor(_graphql: DownwriteClient, store: IAppState) {
-    super();
-    this.#client = _graphql;
-    this.#store = store;
-  }
+	#client: DownwriteClient;
+	#store: IAppState;
+	constructor(_graphql: DownwriteClient, store: IAppState) {
+		super();
+		this.#client = _graphql;
+		this.#store = store;
+	}
 
-  async create({ editorState, title }: ICreateEntryState) {
-    const content = this.parser.fromEditorState(editorState);
-    try {
-      return this.#client.createEntry({ content, title });
-    } catch (error) {
-      this.#store.notifications.error(error.message);
-    }
-  }
+	async create({ editorState, title }: ICreateEntryState) {
+		const content = this.parser.fromEditorState(editorState);
+		try {
+			return this.#client.createEntry({ content, title });
+		} catch (error) {
+			this.#store.notifications.error(error.message);
+		}
+	}
 
-  onDrop(acceptedFiles: File[]) {
-    return this.importFiles(acceptedFiles);
-  }
+	onDrop(acceptedFiles: File[]) {
+		return this.importFiles(acceptedFiles);
+	}
 }

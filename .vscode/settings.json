@@ -1,5 +1,5 @@
 {
-  "jest.showCoverageOnLoad": true,
-  "jest.autoRun": "off",
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+	"jest.showCoverageOnLoad": true,
+	"jest.autoRun": "off",
+	"editor.defaultFormatter": "esbenp.prettier-vscode"
 }

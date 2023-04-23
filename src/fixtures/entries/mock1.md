@@ -27,11 +27,11 @@ Custom properties store any value you want. It can be a color, a `calc()` functi
 
 ```css
 :root {
-  --base-color: #147aab;
+	--base-color: #147aab;
 }
 
 a {
-  color: var(--base-color);
+	color: var(--base-color);
 }
 ```
 
@@ -39,13 +39,13 @@ You can also define a custom property at the selector level and then that proper
 
 ```css
 .Block {
-  --theme: #147aab;
-  border-top-color: var(--theme);
-  padding: 1rem;
+	--theme: #147aab;
+	border-top-color: var(--theme);
+	padding: 1rem;
 }
 
 .Block__title {
-  color: var(--theme);
+	color: var(--theme);
 }
 ```
 
@@ -53,7 +53,7 @@ You can optionally set a fallback in the `var()` function if that named variable
 
 ```css
 .Block {
-  color: var(--theme, #ffc600);
+	color: var(--theme, #ffc600);
 }
 ```
 
@@ -61,17 +61,17 @@ You can redefine custom properties at breakpoints.
 
 ```css
 :root {
-  --blue: #5886a7;
+	--blue: #5886a7;
 }
 
 html {
-  background: var(--blue, #ffc600);
+	background: var(--blue, #ffc600);
 }
 
 @media only screen and (min-width: 20rem) {
-  :root {
-    --blue: #147aab;
-  }
+	:root {
+		--blue: #147aab;
+	}
 }
 ```
 
@@ -81,12 +81,12 @@ Custom properties store values but you can't interpolate them like you can with 
 
 ```css
 :root {
-  --size: 1.5;
+	--size: 1.5;
 }
 
 h1 {
-  font-size: var(--size) rem; /* Doesn't Work */
-  font-size: calc(var(--size) * 1rem); /* Works Perfectly */
+	font-size: var(--size) rem; /* Doesn't Work */
+	font-size: calc(var(--size) * 1rem); /* Works Perfectly */
 }
 ```
 
@@ -96,15 +96,15 @@ There's another [spec](http://tabatkins.github.io/specs/css-apply-rule/) related
 
 ```css
 :root {
-  --awesome-headline: {
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--base-color);
-  }
+	--awesome-headline: {
+		text-transform: uppercase;
+		letter-spacing: 2px;
+		color: var(--base-color);
+	}
 }
 
 h1 {
-  @apply --awesome-headline;
+	@apply --awesome-headline;
 }
 ```
 

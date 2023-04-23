@@ -10,7 +10,7 @@ services:
         VARIANT: 14
         # On Linux, you may need to update USER_UID and USER_GID below if not your local UID is not 1000.
         USER_UID: 1000
-        USER_GID: 1000
+        USER_GID: 100
 
     volumes:
       - ..:/workspace:cached

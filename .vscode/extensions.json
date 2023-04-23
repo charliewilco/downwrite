@@ -1,7 +1,7 @@
 {
-  "recommendations": [
-    "orta.vscode-jest",
-    "esbenp.prettier-vscode",
-    "graphql.vscode-graphql"
-  ]
+	"recommendations": [
+		"orta.vscode-jest",
+		"esbenp.prettier-vscode",
+		"graphql.vscode-graphql"
+	]
 }

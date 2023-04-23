@@ -4,12 +4,12 @@ import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 
 export const toSafeHTML = async (content: string) => {
-  const file = await unified()
-    .use(remarkParse)
-    .use(require("remark-prism"))
-    .use(remarkRehype)
-    .use(rehypeStringify)
-    .process(content);
+	const file = await unified()
+		.use(remarkParse)
+		.use(require("remark-prism"))
+		.use(remarkRehype)
+		.use(rehypeStringify)
+		.process(content);
 
-  return String(file);
+	return String(file);
 };

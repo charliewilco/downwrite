@@ -5,25 +5,25 @@ import { __IS_PROD__ } from "@shared/constants";
 import { TOKEN_NAME } from "@shared/constants";
 
 export const removeTokenCookie = (res: ServerResponse) =>
-  res.setHeader(
-    "Set-Cookie",
-    serialize(TOKEN_NAME, "", {
-      maxAge: -1,
-      path: "/"
-    })
-  );
+	res.setHeader(
+		"Set-Cookie",
+		serialize(TOKEN_NAME, "", {
+			maxAge: -1,
+			path: "/"
+		})
+	);
 
 export const setTokenCookie = (res: ServerResponse, token: string) => {
-  const secure = !Boolean(process.env.NO_HTTPS);
-  console.log("is secure", secure);
-  res.setHeader(
-    "Set-Cookie",
-    serialize(TOKEN_NAME, token, {
-      secure,
-      path: "/",
-      sameSite: "lax"
-    })
-  );
+	const secure = !Boolean(process.env.NO_HTTPS);
+	console.log("is secure", secure);
+	res.setHeader(
+		"Set-Cookie",
+		serialize(TOKEN_NAME, token, {
+			secure,
+			path: "/",
+			sameSite: "lax"
+		})
+	);
 };
 
 export const MAX_AGE = 60 * 60 * 8; // 8 hours
@@ -31,19 +31,19 @@ export const MAX_AGE = 60 * 60 * 8; // 8 hours
 export type __NextRequest = IncomingMessage;
 
 export const parseCookies = (req: IncomingMessage) => {
-  // For pages we do need to parse the cookies.
-  return parse(req.headers.cookie || "");
+	// For pages we do need to parse the cookies.
+	return parse(req.headers.cookie || "");
 };
 
 export const getTokenFromHeader = (req: IncomingMessage) => {
-  const cookies = parse(req.headers.cookie || "");
-  return cookies[TOKEN_NAME] ?? req.headers.authorization;
+	const cookies = parse(req.headers.cookie || "");
+	return cookies[TOKEN_NAME] ?? req.headers.authorization;
 };
 
 export const getUserTokenContents = (req: IncomingMessage) => {
-  const token = getTokenFromHeader(req);
+	const token = getTokenFromHeader(req);
 
-  if (!token) return;
+	if (!token) return;
 
-  return readToken(token);
+	return readToken(token);
 };

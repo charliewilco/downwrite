@@ -9,15 +9,15 @@ Hello
 `.trim();
 
 describe("Front matter", () => {
-  it("parses frontmatter", () => {
-    const parsed = fmParserr(fixture);
+	it("parses frontmatter", () => {
+		const parsed = fmParserr(fixture);
 
-    expect(parsed.attributes.title).toBe("Red Dead Redemption");
-  });
+		expect(parsed.attributes.title).toBe("Red Dead Redemption");
+	});
 
-  it("preserves body", () => {
-    const parsed = fmParserr(fixture);
+	it("preserves body", () => {
+		const parsed = fmParserr(fixture);
 
-    expect(parsed.body).toContain("Hello");
-  });
+		expect(parsed.body).toContain("Hello");
+	});
 });

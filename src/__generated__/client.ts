@@ -5,632 +5,632 @@ export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
+	[SubKey in K]?: Maybe<T[SubKey]>;
 };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
+	[SubKey in K]: Maybe<T[SubKey]>;
 };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  Date: any;
+	ID: string;
+	String: string;
+	Boolean: boolean;
+	Int: number;
+	Float: number;
+	Date: any;
 };
 
 export type IAuthUserPayload = {
-  __typename?: "AuthUserPayload";
-  token: Maybe<Scalars["String"]>;
+	__typename?: "AuthUserPayload";
+	token: Maybe<Scalars["String"]>;
 };
 
 export type IAuthor = {
-  __typename?: "Author";
-  gradient: Maybe<Array<Maybe<Scalars["String"]>>>;
-  username: Maybe<Scalars["String"]>;
+	__typename?: "Author";
+	gradient: Maybe<Array<Maybe<Scalars["String"]>>>;
+	username: Maybe<Scalars["String"]>;
 };
 
 export type IEntry = {
-  __typename?: "Entry";
-  author: Maybe<IAuthor>;
-  content: Maybe<Scalars["String"]>;
-  dateAdded: Maybe<Scalars["Date"]>;
-  dateModified: Maybe<Scalars["Date"]>;
-  excerpt: Maybe<Scalars["String"]>;
-  id: Maybe<Scalars["ID"]>;
-  public: Maybe<Scalars["Boolean"]>;
-  title: Maybe<Scalars["String"]>;
-  user: Maybe<Scalars["String"]>;
+	__typename?: "Entry";
+	author: Maybe<IAuthor>;
+	content: Maybe<Scalars["String"]>;
+	dateAdded: Maybe<Scalars["Date"]>;
+	dateModified: Maybe<Scalars["Date"]>;
+	excerpt: Maybe<Scalars["String"]>;
+	id: Maybe<Scalars["ID"]>;
+	public: Maybe<Scalars["Boolean"]>;
+	title: Maybe<Scalars["String"]>;
+	user: Maybe<Scalars["String"]>;
 };
 
 export type IMe = {
-  __typename?: "Me";
-  details: Maybe<IUser>;
-  token: Maybe<Scalars["String"]>;
-  usage: IUsageDetails;
+	__typename?: "Me";
+	details: Maybe<IUser>;
+	token: Maybe<Scalars["String"]>;
+	usage: IUsageDetails;
 };
 
 export type IMutation = {
-  __typename?: "Mutation";
-  authenticateUser: Maybe<IAuthUserPayload>;
-  createEntry: Maybe<IEntry>;
-  createUser: Maybe<IAuthUserPayload>;
-  deleteEntry: Maybe<IEntry>;
-  updateEntry: Maybe<IEntry>;
-  updatePassword: Maybe<IAuthUserPayload>;
-  updateUserSettings: Maybe<IUser>;
+	__typename?: "Mutation";
+	authenticateUser: Maybe<IAuthUserPayload>;
+	createEntry: Maybe<IEntry>;
+	createUser: Maybe<IAuthUserPayload>;
+	deleteEntry: Maybe<IEntry>;
+	updateEntry: Maybe<IEntry>;
+	updatePassword: Maybe<IAuthUserPayload>;
+	updateUserSettings: Maybe<IUser>;
 };
 
 export type IMutationAuthenticateUserArgs = {
-  password: Scalars["String"];
-  username: Scalars["String"];
+	password: Scalars["String"];
+	username: Scalars["String"];
 };
 
 export type IMutationCreateEntryArgs = {
-  content: InputMaybe<Scalars["String"]>;
-  title: InputMaybe<Scalars["String"]>;
+	content: InputMaybe<Scalars["String"]>;
+	title: InputMaybe<Scalars["String"]>;
 };
 
 export type IMutationCreateUserArgs = {
-  email: Scalars["String"];
-  password: Scalars["String"];
-  username: Scalars["String"];
+	email: Scalars["String"];
+	password: Scalars["String"];
+	username: Scalars["String"];
 };
 
 export type IMutationDeleteEntryArgs = {
-  id: Scalars["ID"];
+	id: Scalars["ID"];
 };
 
 export type IMutationUpdateEntryArgs = {
-  content: Scalars["String"];
-  id: Scalars["String"];
-  status: Scalars["Boolean"];
-  title: Scalars["String"];
+	content: Scalars["String"];
+	id: Scalars["String"];
+	status: Scalars["Boolean"];
+	title: Scalars["String"];
 };
 
 export type IMutationUpdatePasswordArgs = {
-  currentPassword: Scalars["String"];
-  newPassword: Scalars["String"];
+	currentPassword: Scalars["String"];
+	newPassword: Scalars["String"];
 };
 
 export type IMutationUpdateUserSettingsArgs = {
-  settings: IUserSettingsInput;
+	settings: IUserSettingsInput;
 };
 
 export type IPreview = {
-  __typename?: "Preview";
-  author: Maybe<IAuthor>;
-  content: Maybe<Scalars["String"]>;
-  dateAdded: Maybe<Scalars["Date"]>;
-  id: Maybe<Scalars["ID"]>;
-  title: Maybe<Scalars["String"]>;
+	__typename?: "Preview";
+	author: Maybe<IAuthor>;
+	content: Maybe<Scalars["String"]>;
+	dateAdded: Maybe<Scalars["Date"]>;
+	id: Maybe<Scalars["ID"]>;
+	title: Maybe<Scalars["String"]>;
 };
 
 export type IQuery = {
-  __typename?: "Query";
-  /** Markdown document */
-  entry: Maybe<IEntry>;
-  /** List of Markdown documents */
-  feed: Array<IEntry>;
-  me: Maybe<IMe>;
-  /** Public preview of Markdown document */
-  preview: Maybe<IPreview>;
-  /** User Settings */
-  settings: Maybe<IUser>;
+	__typename?: "Query";
+	/** Markdown document */
+	entry: Maybe<IEntry>;
+	/** List of Markdown documents */
+	feed: Array<IEntry>;
+	me: Maybe<IMe>;
+	/** Public preview of Markdown document */
+	preview: Maybe<IPreview>;
+	/** User Settings */
+	settings: Maybe<IUser>;
 };
 
 export type IQueryEntryArgs = {
-  id: Scalars["ID"];
+	id: Scalars["ID"];
 };
 
 export type IQueryPreviewArgs = {
-  id: Scalars["ID"];
+	id: Scalars["ID"];
 };
 
 export type IUsageDetails = {
-  __typename?: "UsageDetails";
-  entryCount: Scalars["Int"];
-  privateEntries: Scalars["Int"];
-  publicEntries: Scalars["Int"];
+	__typename?: "UsageDetails";
+	entryCount: Scalars["Int"];
+	privateEntries: Scalars["Int"];
+	publicEntries: Scalars["Int"];
 };
 
 export type IUser = {
-  __typename?: "User";
-  admin: Maybe<Scalars["Boolean"]>;
-  email: Scalars["String"];
-  id: Scalars["ID"];
-  username: Scalars["String"];
+	__typename?: "User";
+	admin: Maybe<Scalars["Boolean"]>;
+	email: Scalars["String"];
+	id: Scalars["ID"];
+	username: Scalars["String"];
 };
 
 export type IUserSettingsInput = {
-  email: InputMaybe<Scalars["String"]>;
-  username: InputMaybe<Scalars["String"]>;
+	email: InputMaybe<Scalars["String"]>;
+	username: InputMaybe<Scalars["String"]>;
 };
 
 export type IEntryInfoFragment = {
-  __typename?: "Entry";
-  title: string | null;
-  dateAdded: any | null;
-  id: string | null;
-  public: boolean | null;
+	__typename?: "Entry";
+	title: string | null;
+	dateAdded: any | null;
+	id: string | null;
+	public: boolean | null;
 };
 
 export type IAllPostsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type IAllPostsQuery = {
-  __typename?: "Query";
-  feed: Array<{
-    __typename?: "Entry";
-    title: string | null;
-    dateAdded: any | null;
-    id: string | null;
-    public: boolean | null;
-  }>;
+	__typename?: "Query";
+	feed: Array<{
+		__typename?: "Entry";
+		title: string | null;
+		dateAdded: any | null;
+		id: string | null;
+		public: boolean | null;
+	}>;
 };
 
 export type IEditQueryVariables = Exact<{
-  id: Scalars["ID"];
+	id: Scalars["ID"];
 }>;
 
 export type IEditQuery = {
-  __typename?: "Query";
-  entry: {
-    __typename?: "Entry";
-    content: string | null;
-    title: string | null;
-    dateAdded: any | null;
-    id: string | null;
-    public: boolean | null;
-  } | null;
+	__typename?: "Query";
+	entry: {
+		__typename?: "Entry";
+		content: string | null;
+		title: string | null;
+		dateAdded: any | null;
+		id: string | null;
+		public: boolean | null;
+	} | null;
 };
 
 export type IPreviewQueryVariables = Exact<{
-  id: Scalars["ID"];
+	id: Scalars["ID"];
 }>;
 
 export type IPreviewQuery = {
-  __typename?: "Query";
-  preview: {
-    __typename?: "Preview";
-    title: string | null;
-    dateAdded: any | null;
-    id: string | null;
-    content: string | null;
-    author: { __typename?: "Author"; username: string | null } | null;
-  } | null;
+	__typename?: "Query";
+	preview: {
+		__typename?: "Preview";
+		title: string | null;
+		dateAdded: any | null;
+		id: string | null;
+		content: string | null;
+		author: { __typename?: "Author"; username: string | null } | null;
+	} | null;
 };
 
 export type IUserDetailsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type IUserDetailsQuery = {
-  __typename?: "Query";
-  settings: { __typename?: "User"; username: string; email: string } | null;
-  me: {
-    __typename?: "Me";
-    usage: {
-      __typename?: "UsageDetails";
-      entryCount: number;
-      publicEntries: number;
-      privateEntries: number;
-    };
-  } | null;
+	__typename?: "Query";
+	settings: { __typename?: "User"; username: string; email: string } | null;
+	me: {
+		__typename?: "Me";
+		usage: {
+			__typename?: "UsageDetails";
+			entryCount: number;
+			publicEntries: number;
+			privateEntries: number;
+		};
+	} | null;
 };
 
 export type IUpdateEntryMutationVariables = Exact<{
-  id: Scalars["String"];
-  content: Scalars["String"];
-  title: Scalars["String"];
-  status: Scalars["Boolean"];
+	id: Scalars["String"];
+	content: Scalars["String"];
+	title: Scalars["String"];
+	status: Scalars["Boolean"];
 }>;
 
 export type IUpdateEntryMutation = {
-  __typename?: "Mutation";
-  updateEntry: {
-    __typename?: "Entry";
-    content: string | null;
-    title: string | null;
-    dateAdded: any | null;
-    id: string | null;
-    public: boolean | null;
-  } | null;
+	__typename?: "Mutation";
+	updateEntry: {
+		__typename?: "Entry";
+		content: string | null;
+		title: string | null;
+		dateAdded: any | null;
+		id: string | null;
+		public: boolean | null;
+	} | null;
 };
 
 export type ICreateEntryMutationVariables = Exact<{
-  content: InputMaybe<Scalars["String"]>;
-  title: InputMaybe<Scalars["String"]>;
+	content: InputMaybe<Scalars["String"]>;
+	title: InputMaybe<Scalars["String"]>;
 }>;
 
 export type ICreateEntryMutation = {
-  __typename?: "Mutation";
-  createEntry: {
-    __typename?: "Entry";
-    title: string | null;
-    dateAdded: any | null;
-    id: string | null;
-    public: boolean | null;
-  } | null;
+	__typename?: "Mutation";
+	createEntry: {
+		__typename?: "Entry";
+		title: string | null;
+		dateAdded: any | null;
+		id: string | null;
+		public: boolean | null;
+	} | null;
 };
 
 export type IRemoveEntryMutationVariables = Exact<{
-  id: Scalars["ID"];
+	id: Scalars["ID"];
 }>;
 
 export type IRemoveEntryMutation = {
-  __typename?: "Mutation";
-  deleteEntry: {
-    __typename?: "Entry";
-    title: string | null;
-    id: string | null;
-  } | null;
+	__typename?: "Mutation";
+	deleteEntry: {
+		__typename?: "Entry";
+		title: string | null;
+		id: string | null;
+	} | null;
 };
 
 export type ILoginUserMutationVariables = Exact<{
-  username: Scalars["String"];
-  password: Scalars["String"];
+	username: Scalars["String"];
+	password: Scalars["String"];
 }>;
 
 export type ILoginUserMutation = {
-  __typename?: "Mutation";
-  authenticateUser: { __typename?: "AuthUserPayload"; token: string | null } | null;
+	__typename?: "Mutation";
+	authenticateUser: { __typename?: "AuthUserPayload"; token: string | null } | null;
 };
 
 export type ICreateUserMutationVariables = Exact<{
-  username: Scalars["String"];
-  email: Scalars["String"];
-  password: Scalars["String"];
+	username: Scalars["String"];
+	email: Scalars["String"];
+	password: Scalars["String"];
 }>;
 
 export type ICreateUserMutation = {
-  __typename?: "Mutation";
-  createUser: { __typename?: "AuthUserPayload"; token: string | null } | null;
+	__typename?: "Mutation";
+	createUser: { __typename?: "AuthUserPayload"; token: string | null } | null;
 };
 
 export type IUpdateUserSettingsMutationVariables = Exact<{
-  settings: IUserSettingsInput;
+	settings: IUserSettingsInput;
 }>;
 
 export type IUpdateUserSettingsMutation = {
-  __typename?: "Mutation";
-  updateUserSettings: {
-    __typename?: "User";
-    username: string;
-    email: string;
-  } | null;
+	__typename?: "Mutation";
+	updateUserSettings: {
+		__typename?: "User";
+		username: string;
+		email: string;
+	} | null;
 };
 
 export type IUpdatePasswordMutationVariables = Exact<{
-  current: Scalars["String"];
-  newPassword: Scalars["String"];
+	current: Scalars["String"];
+	newPassword: Scalars["String"];
 }>;
 
 export type IUpdatePasswordMutation = {
-  __typename?: "Mutation";
-  updatePassword: { __typename?: "AuthUserPayload"; token: string | null } | null;
+	__typename?: "Mutation";
+	updatePassword: { __typename?: "AuthUserPayload"; token: string | null } | null;
 };
 
 export type IIsMeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type IIsMeQuery = {
-  __typename?: "Query";
-  me: {
-    __typename?: "Me";
-    token: string | null;
-    details: { __typename?: "User"; id: string; username: string } | null;
-  } | null;
+	__typename?: "Query";
+	me: {
+		__typename?: "Me";
+		token: string | null;
+		details: { __typename?: "User"; id: string; username: string } | null;
+	} | null;
 };
 
 export const EntryInfoFragmentDoc = gql`
-  fragment EntryInfo on Entry {
-    title
-    dateAdded
-    id
-    public
-  }
+	fragment EntryInfo on Entry {
+		title
+		dateAdded
+		id
+		public
+	}
 `;
 export const AllPostsDocument = gql`
-  query AllPosts {
-    feed {
-      ...EntryInfo
-    }
-  }
-  ${EntryInfoFragmentDoc}
+	query AllPosts {
+		feed {
+			...EntryInfo
+		}
+	}
+	${EntryInfoFragmentDoc}
 `;
 export const EditDocument = gql`
-  query Edit($id: ID!) {
-    entry(id: $id) {
-      ...EntryInfo
-      content
-    }
-  }
-  ${EntryInfoFragmentDoc}
+	query Edit($id: ID!) {
+		entry(id: $id) {
+			...EntryInfo
+			content
+		}
+	}
+	${EntryInfoFragmentDoc}
 `;
 export const PreviewDocument = gql`
-  query Preview($id: ID!) {
-    preview(id: $id) {
-      title
-      dateAdded
-      id
-      content
-      author {
-        username
-      }
-    }
-  }
+	query Preview($id: ID!) {
+		preview(id: $id) {
+			title
+			dateAdded
+			id
+			content
+			author {
+				username
+			}
+		}
+	}
 `;
 export const UserDetailsDocument = gql`
-  query UserDetails {
-    settings {
-      username
-      email
-    }
-    me {
-      usage {
-        entryCount
-        publicEntries
-        privateEntries
-      }
-    }
-  }
+	query UserDetails {
+		settings {
+			username
+			email
+		}
+		me {
+			usage {
+				entryCount
+				publicEntries
+				privateEntries
+			}
+		}
+	}
 `;
 export const UpdateEntryDocument = gql`
-  mutation UpdateEntry(
-    $id: String!
-    $content: String!
-    $title: String!
-    $status: Boolean!
-  ) {
-    updateEntry(id: $id, content: $content, title: $title, status: $status) {
-      ...EntryInfo
-      content
-    }
-  }
-  ${EntryInfoFragmentDoc}
+	mutation UpdateEntry(
+		$id: String!
+		$content: String!
+		$title: String!
+		$status: Boolean!
+	) {
+		updateEntry(id: $id, content: $content, title: $title, status: $status) {
+			...EntryInfo
+			content
+		}
+	}
+	${EntryInfoFragmentDoc}
 `;
 export const CreateEntryDocument = gql`
-  mutation CreateEntry($content: String, $title: String) {
-    createEntry(content: $content, title: $title) {
-      ...EntryInfo
-    }
-  }
-  ${EntryInfoFragmentDoc}
+	mutation CreateEntry($content: String, $title: String) {
+		createEntry(content: $content, title: $title) {
+			...EntryInfo
+		}
+	}
+	${EntryInfoFragmentDoc}
 `;
 export const RemoveEntryDocument = gql`
-  mutation RemoveEntry($id: ID!) {
-    deleteEntry(id: $id) {
-      title
-      id
-    }
-  }
+	mutation RemoveEntry($id: ID!) {
+		deleteEntry(id: $id) {
+			title
+			id
+		}
+	}
 `;
 export const LoginUserDocument = gql`
-  mutation LoginUser($username: String!, $password: String!) {
-    authenticateUser(username: $username, password: $password) {
-      token
-    }
-  }
+	mutation LoginUser($username: String!, $password: String!) {
+		authenticateUser(username: $username, password: $password) {
+			token
+		}
+	}
 `;
 export const CreateUserDocument = gql`
-  mutation CreateUser($username: String!, $email: String!, $password: String!) {
-    createUser(username: $username, email: $email, password: $password) {
-      token
-    }
-  }
+	mutation CreateUser($username: String!, $email: String!, $password: String!) {
+		createUser(username: $username, email: $email, password: $password) {
+			token
+		}
+	}
 `;
 export const UpdateUserSettingsDocument = gql`
-  mutation UpdateUserSettings($settings: UserSettingsInput!) {
-    updateUserSettings(settings: $settings) {
-      username
-      email
-    }
-  }
+	mutation UpdateUserSettings($settings: UserSettingsInput!) {
+		updateUserSettings(settings: $settings) {
+			username
+			email
+		}
+	}
 `;
 export const UpdatePasswordDocument = gql`
-  mutation UpdatePassword($current: String!, $newPassword: String!) {
-    updatePassword(currentPassword: $current, newPassword: $newPassword) {
-      token
-    }
-  }
+	mutation UpdatePassword($current: String!, $newPassword: String!) {
+		updatePassword(currentPassword: $current, newPassword: $newPassword) {
+			token
+		}
+	}
 `;
 export const IsMeDocument = gql`
-  query IsMe {
-    me {
-      token
-      details {
-        id
-        username
-      }
-    }
-  }
+	query IsMe {
+		me {
+			token
+			details {
+				id
+				username
+			}
+		}
+	}
 `;
 
 export type SdkFunctionWrapper = <T>(
-  action: (requestHeaders?: Record<string, string>) => Promise<T>,
-  operationName: string,
-  operationType?: string
+	action: (requestHeaders?: Record<string, string>) => Promise<T>,
+	operationName: string,
+	operationType?: string
 ) => Promise<T>;
 
 const defaultWrapper: SdkFunctionWrapper = (
-  action,
-  _operationName,
-  _operationType
+	action,
+	_operationName,
+	_operationType
 ) => action();
 
 export function getSdk(
-  client: GraphQLClient,
-  withWrapper: SdkFunctionWrapper = defaultWrapper
+	client: GraphQLClient,
+	withWrapper: SdkFunctionWrapper = defaultWrapper
 ) {
-  return {
-    AllPosts(
-      variables?: IAllPostsQueryVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<IAllPostsQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<IAllPostsQuery>(AllPostsDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders
-          }),
-        "AllPosts",
-        "query"
-      );
-    },
-    Edit(
-      variables: IEditQueryVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<IEditQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<IEditQuery>(EditDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders
-          }),
-        "Edit",
-        "query"
-      );
-    },
-    Preview(
-      variables: IPreviewQueryVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<IPreviewQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<IPreviewQuery>(PreviewDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders
-          }),
-        "Preview",
-        "query"
-      );
-    },
-    UserDetails(
-      variables?: IUserDetailsQueryVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<IUserDetailsQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<IUserDetailsQuery>(UserDetailsDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders
-          }),
-        "UserDetails",
-        "query"
-      );
-    },
-    UpdateEntry(
-      variables: IUpdateEntryMutationVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<IUpdateEntryMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<IUpdateEntryMutation>(UpdateEntryDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders
-          }),
-        "UpdateEntry",
-        "mutation"
-      );
-    },
-    CreateEntry(
-      variables?: ICreateEntryMutationVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<ICreateEntryMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<ICreateEntryMutation>(CreateEntryDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders
-          }),
-        "CreateEntry",
-        "mutation"
-      );
-    },
-    RemoveEntry(
-      variables: IRemoveEntryMutationVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<IRemoveEntryMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<IRemoveEntryMutation>(RemoveEntryDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders
-          }),
-        "RemoveEntry",
-        "mutation"
-      );
-    },
-    LoginUser(
-      variables: ILoginUserMutationVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<ILoginUserMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<ILoginUserMutation>(LoginUserDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders
-          }),
-        "LoginUser",
-        "mutation"
-      );
-    },
-    CreateUser(
-      variables: ICreateUserMutationVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<ICreateUserMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<ICreateUserMutation>(CreateUserDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders
-          }),
-        "CreateUser",
-        "mutation"
-      );
-    },
-    UpdateUserSettings(
-      variables: IUpdateUserSettingsMutationVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<IUpdateUserSettingsMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<IUpdateUserSettingsMutation>(
-            UpdateUserSettingsDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders }
-          ),
-        "UpdateUserSettings",
-        "mutation"
-      );
-    },
-    UpdatePassword(
-      variables: IUpdatePasswordMutationVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<IUpdatePasswordMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<IUpdatePasswordMutation>(
-            UpdatePasswordDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders }
-          ),
-        "UpdatePassword",
-        "mutation"
-      );
-    },
-    IsMe(
-      variables?: IIsMeQueryVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<IIsMeQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<IIsMeQuery>(IsMeDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders
-          }),
-        "IsMe",
-        "query"
-      );
-    }
-  };
+	return {
+		AllPosts(
+			variables?: IAllPostsQueryVariables,
+			requestHeaders?: Dom.RequestInit["headers"]
+		): Promise<IAllPostsQuery> {
+			return withWrapper(
+				(wrappedRequestHeaders) =>
+					client.request<IAllPostsQuery>(AllPostsDocument, variables, {
+						...requestHeaders,
+						...wrappedRequestHeaders
+					}),
+				"AllPosts",
+				"query"
+			);
+		},
+		Edit(
+			variables: IEditQueryVariables,
+			requestHeaders?: Dom.RequestInit["headers"]
+		): Promise<IEditQuery> {
+			return withWrapper(
+				(wrappedRequestHeaders) =>
+					client.request<IEditQuery>(EditDocument, variables, {
+						...requestHeaders,
+						...wrappedRequestHeaders
+					}),
+				"Edit",
+				"query"
+			);
+		},
+		Preview(
+			variables: IPreviewQueryVariables,
+			requestHeaders?: Dom.RequestInit["headers"]
+		): Promise<IPreviewQuery> {
+			return withWrapper(
+				(wrappedRequestHeaders) =>
+					client.request<IPreviewQuery>(PreviewDocument, variables, {
+						...requestHeaders,
+						...wrappedRequestHeaders
+					}),
+				"Preview",
+				"query"
+			);
+		},
+		UserDetails(
+			variables?: IUserDetailsQueryVariables,
+			requestHeaders?: Dom.RequestInit["headers"]
+		): Promise<IUserDetailsQuery> {
+			return withWrapper(
+				(wrappedRequestHeaders) =>
+					client.request<IUserDetailsQuery>(UserDetailsDocument, variables, {
+						...requestHeaders,
+						...wrappedRequestHeaders
+					}),
+				"UserDetails",
+				"query"
+			);
+		},
+		UpdateEntry(
+			variables: IUpdateEntryMutationVariables,
+			requestHeaders?: Dom.RequestInit["headers"]
+		): Promise<IUpdateEntryMutation> {
+			return withWrapper(
+				(wrappedRequestHeaders) =>
+					client.request<IUpdateEntryMutation>(UpdateEntryDocument, variables, {
+						...requestHeaders,
+						...wrappedRequestHeaders
+					}),
+				"UpdateEntry",
+				"mutation"
+			);
+		},
+		CreateEntry(
+			variables?: ICreateEntryMutationVariables,
+			requestHeaders?: Dom.RequestInit["headers"]
+		): Promise<ICreateEntryMutation> {
+			return withWrapper(
+				(wrappedRequestHeaders) =>
+					client.request<ICreateEntryMutation>(CreateEntryDocument, variables, {
+						...requestHeaders,
+						...wrappedRequestHeaders
+					}),
+				"CreateEntry",
+				"mutation"
+			);
+		},
+		RemoveEntry(
+			variables: IRemoveEntryMutationVariables,
+			requestHeaders?: Dom.RequestInit["headers"]
+		): Promise<IRemoveEntryMutation> {
+			return withWrapper(
+				(wrappedRequestHeaders) =>
+					client.request<IRemoveEntryMutation>(RemoveEntryDocument, variables, {
+						...requestHeaders,
+						...wrappedRequestHeaders
+					}),
+				"RemoveEntry",
+				"mutation"
+			);
+		},
+		LoginUser(
+			variables: ILoginUserMutationVariables,
+			requestHeaders?: Dom.RequestInit["headers"]
+		): Promise<ILoginUserMutation> {
+			return withWrapper(
+				(wrappedRequestHeaders) =>
+					client.request<ILoginUserMutation>(LoginUserDocument, variables, {
+						...requestHeaders,
+						...wrappedRequestHeaders
+					}),
+				"LoginUser",
+				"mutation"
+			);
+		},
+		CreateUser(
+			variables: ICreateUserMutationVariables,
+			requestHeaders?: Dom.RequestInit["headers"]
+		): Promise<ICreateUserMutation> {
+			return withWrapper(
+				(wrappedRequestHeaders) =>
+					client.request<ICreateUserMutation>(CreateUserDocument, variables, {
+						...requestHeaders,
+						...wrappedRequestHeaders
+					}),
+				"CreateUser",
+				"mutation"
+			);
+		},
+		UpdateUserSettings(
+			variables: IUpdateUserSettingsMutationVariables,
+			requestHeaders?: Dom.RequestInit["headers"]
+		): Promise<IUpdateUserSettingsMutation> {
+			return withWrapper(
+				(wrappedRequestHeaders) =>
+					client.request<IUpdateUserSettingsMutation>(
+						UpdateUserSettingsDocument,
+						variables,
+						{ ...requestHeaders, ...wrappedRequestHeaders }
+					),
+				"UpdateUserSettings",
+				"mutation"
+			);
+		},
+		UpdatePassword(
+			variables: IUpdatePasswordMutationVariables,
+			requestHeaders?: Dom.RequestInit["headers"]
+		): Promise<IUpdatePasswordMutation> {
+			return withWrapper(
+				(wrappedRequestHeaders) =>
+					client.request<IUpdatePasswordMutation>(
+						UpdatePasswordDocument,
+						variables,
+						{ ...requestHeaders, ...wrappedRequestHeaders }
+					),
+				"UpdatePassword",
+				"mutation"
+			);
+		},
+		IsMe(
+			variables?: IIsMeQueryVariables,
+			requestHeaders?: Dom.RequestInit["headers"]
+		): Promise<IIsMeQuery> {
+			return withWrapper(
+				(wrappedRequestHeaders) =>
+					client.request<IIsMeQuery>(IsMeDocument, variables, {
+						...requestHeaders,
+						...wrappedRequestHeaders
+					}),
+				"IsMe",
+				"query"
+			);
+		}
+	};
 }
 export type Sdk = ReturnType<typeof getSdk>;

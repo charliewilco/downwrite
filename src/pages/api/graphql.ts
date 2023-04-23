@@ -3,21 +3,21 @@ import { ResolverContext } from "@server/context";
 import { schema } from "@server/schema";
 
 const server = new ApolloServer({
-  schema,
-  context(_: ResolverContext) {
-    return _;
-  },
-  introspection: true
+	schema,
+	context(_: ResolverContext) {
+		return _;
+	},
+	introspection: true
 });
 
 export const config = {
-  api: {
-    bodyParser: false
-  }
+	api: {
+		bodyParser: false
+	}
 };
 
 const handler = server.createHandler({
-  path: "/api/graphql"
+	path: "/api/graphql"
 });
 
 export default handler;

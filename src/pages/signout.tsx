@@ -6,22 +6,22 @@ import { Routes } from "@shared/routes";
 import { useDataSource } from "@hooks/useDataSource";
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  removeTokenCookie(context.res);
-  return {
-    props: {}
-  };
+	removeTokenCookie(context.res);
+	return {
+		props: {}
+	};
 };
 
 const SignOut: NextPage = () => {
-  const router = useRouter();
-  const dataSource = useDataSource();
+	const router = useRouter();
+	const dataSource = useDataSource();
 
-  useEffect(() => {
-    dataSource.auth.onLogout();
-    router.push(Routes.LOGIN);
-  }, [dataSource, router]);
+	useEffect(() => {
+		dataSource.auth.onLogout();
+		router.push(Routes.LOGIN);
+	}, [dataSource, router]);
 
-  return <h1>Signing out...</h1>;
+	return <h1>Signing out...</h1>;
 };
 
 export default SignOut;

@@ -5,21 +5,21 @@ const m = require("mongoose");
 const connection = {}; /* creating connection object*/
 
 const clearDB = async () => {
-  if (connection.isConnected) {
-    console.log("DB Connection", connection);
-  }
+	if (connection.isConnected) {
+		console.log("DB Connection", connection);
+	}
 
-  console.log("Clearing the database and it's dangerous");
-  const db = await m.connect("mongodb://127.0.0.1:27017/downwrite", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-    poolSize: 10
-  });
+	console.log("Clearing the database and it's dangerous");
+	const db = await m.connect("mongodb://127.0.0.1:27017/downwrite", {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useFindAndModify: false,
+		useCreateIndex: true,
+		poolSize: 10
+	});
 
-  await db.connection.dropDatabase();
-  await db.connection.close();
+	await db.connection.dropDatabase();
+	await db.connection.close();
 };
 
 clearDB();

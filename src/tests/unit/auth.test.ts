@@ -2,23 +2,23 @@ import { MockClient } from "@data/client";
 import { DownwriteUIState } from "@data/store";
 
 describe("Auth Module", () => {
-  it("can load data", () => {
-    const mockClient = new MockClient();
-    const store = new DownwriteUIState(mockClient);
-    const state = store.auth.state.getValue();
-    expect(state.authed).toBeFalsy();
-  });
+	it("can load data", () => {
+		const mockClient = new MockClient();
+		const store = new DownwriteUIState(mockClient);
+		const state = store.auth.state.getValue();
+		expect(state.authed).toBeFalsy();
+	});
 
-  it("can check data", async () => {
-    const mockClient = new MockClient();
-    const store = new DownwriteUIState(mockClient);
+	it("can check data", async () => {
+		const mockClient = new MockClient();
+		const store = new DownwriteUIState(mockClient);
 
-    store.graphql.setToken("MOCK_TOKEN");
-    await store.auth.check();
+		store.graphql.setToken("MOCK_TOKEN");
+		await store.auth.check();
 
-    const state = store.auth.state.getValue();
+		const state = store.auth.state.getValue();
 
-    expect(state.username).toEqual("david-yates");
-    expect(state.id).toEqual("1");
-  });
+		expect(state.username).toEqual("david-yates");
+		expect(state.id).toEqual("1");
+	});
 });
