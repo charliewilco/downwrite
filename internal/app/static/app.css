@@ -1,0 +1,580 @@
+@import url("https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap");
+
+:root {
+	--bg: oklch(98% 0% 90deg);
+	--fg: oklch(12% 0% 55deg);
+	--site-color: oklch(60% 60% 254deg);
+	--panel: color-mix(in oklab, white 74%, var(--bg));
+	--panel-strong: color-mix(in oklab, white 88%, var(--bg));
+	--ink: var(--fg);
+	--muted: color-mix(in oklab, var(--fg) 62%, white);
+	--line: color-mix(in oklab, var(--fg) 12%, transparent);
+	--accent: var(--site-color);
+	--accent-2: color-mix(in oklab, var(--site-color) 58%, var(--fg));
+	--shadow: 0 12px 28px color-mix(in oklab, var(--fg) 6%, transparent);
+	--mono: "IBM Plex Mono", "SFMono-Regular", "Menlo", monospace;
+	--ui: "General Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	--serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background:
+		radial-gradient(circle at top left, color-mix(in oklab, var(--site-color) 8%, transparent), transparent 36%),
+		radial-gradient(circle at bottom right, color-mix(in oklab, var(--site-color) 4%, var(--bg)), transparent 30%),
+		var(--bg);
+	color: var(--ink);
+	font-family: var(--ui);
+	font-weight: 400;
+}
+
+a {
+	color: inherit;
+}
+
+.marketing,
+.auth-shell,
+.app-shell {
+	padding: 2rem 2.25rem 3rem;
+}
+
+.hero,
+.panel {
+	background: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: 18px;
+	box-shadow: var(--shadow);
+	backdrop-filter: blur(8px);
+}
+
+.hero {
+	max-width: 52rem;
+	margin: 8vh auto 0;
+	padding: 3rem;
+}
+
+.hero h1,
+.topbar h1 {
+	font-size: clamp(2.5rem, 5vw, 4.7rem);
+	line-height: 0.92;
+	letter-spacing: -0.03em;
+	margin: 0 0 0.55rem;
+	font-family: var(--ui);
+	font-weight: 600;
+}
+
+.lede,
+.muted,
+time {
+	color: var(--muted);
+}
+
+.subdued {
+	color: var(--muted);
+	max-width: 42rem;
+}
+
+.eyebrow {
+	font-family: var(--mono);
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	font-size: 0.74rem;
+	color: var(--accent);
+}
+
+.actions,
+.topnav {
+	display: flex;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.button {
+	border: 1px solid transparent;
+	border-radius: 999px;
+	padding: 0.8rem 1.15rem;
+	font-family: var(--ui);
+	font-size: 0.96rem;
+	font-weight: 500;
+	background: var(--ink);
+	color: white;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.button-secondary {
+	background: color-mix(in oklab, white 45%, var(--bg));
+	color: var(--ink);
+	border: 1px solid var(--line);
+}
+
+.auth-panel {
+	max-width: 32rem;
+	margin: 10vh auto 0;
+	padding: 2rem;
+}
+
+.workspace-grid,
+.reader-grid {
+	display: grid;
+	gap: 2rem;
+	margin-top: 2rem;
+}
+
+.workspace-grid {
+	grid-template-columns: minmax(19rem, 23rem) minmax(0, 1fr);
+}
+
+.reader-grid {
+	grid-template-columns: minmax(15rem, 18rem) minmax(0, 1fr) minmax(18rem, 24rem);
+}
+
+.document-stage {
+	display: grid;
+	grid-template-columns: minmax(12rem, 15rem) minmax(0, 1fr) minmax(16rem, 20rem);
+	gap: 2.5rem;
+	align-items: start;
+	margin-top: 2.25rem;
+}
+
+.narrow {
+	max-width: 76rem;
+	margin: 0 auto;
+}
+
+.topbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 1.5rem;
+}
+
+.panel {
+	padding: 1.2rem;
+}
+
+.panel-quiet {
+	background: color-mix(in oklab, white 58%, var(--bg));
+}
+
+.topbar-copy {
+	max-width: 48rem;
+}
+
+.topbar-document {
+	padding-bottom: 1.35rem;
+	border-bottom: 1px solid color-mix(in oklab, var(--fg) 12%, transparent);
+}
+
+.topnav a {
+	text-decoration: none;
+	color: var(--muted);
+}
+
+.topnav a:hover {
+	color: var(--ink);
+}
+
+.nested-panel {
+	margin-top: 1.5rem;
+}
+
+.form-stack,
+.form-inline {
+	display: grid;
+	gap: 0.75rem;
+}
+
+.form-inline {
+	grid-template-columns: 1fr auto;
+	align-items: center;
+}
+
+label {
+	display: grid;
+	gap: 0.35rem;
+	font-family: var(--ui);
+	font-weight: 500;
+	font-size: 0.82rem;
+}
+
+input,
+textarea {
+	width: 100%;
+	padding: 0.85rem 0.95rem;
+	border-radius: 14px;
+	border: 1px solid var(--line);
+	background: color-mix(in oklab, white 80%, var(--bg));
+	color: var(--ink);
+	font-family: var(--ui);
+	font-size: 0.98rem;
+}
+
+textarea {
+	resize: vertical;
+}
+
+.document-list,
+.version-list,
+.activity-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: grid;
+	gap: 0.75rem;
+}
+
+.document-list a {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	text-decoration: none;
+}
+
+.document-list li,
+.annotation,
+.activity-list li {
+	padding: 0.9rem;
+	border: 1px solid var(--line);
+	border-radius: 14px;
+	background: color-mix(in oklab, white 42%, var(--bg));
+}
+
+.document-list strong,
+.activity-list strong {
+	font-weight: 600;
+}
+
+.document-list p,
+.activity-list p {
+	margin-bottom: 0.2rem;
+}
+
+.reader-html {
+	line-height: 1.82;
+	font-size: 1.08rem;
+	max-width: 44rem;
+	margin: 0 auto;
+	font-family: var(--serif);
+	font-weight: 400;
+}
+
+.reader-html h1,
+.reader-html h2,
+.reader-html h3 {
+	letter-spacing: -0.03em;
+	line-height: 1.05;
+	margin-top: 2.2rem;
+	margin-bottom: 0.8rem;
+	font-family: var(--serif);
+	font-weight: 600;
+}
+
+.reader-html p,
+.reader-html li {
+	font-size: 1.08rem;
+}
+
+.reader-html p + p {
+	margin-top: 1.05rem;
+}
+
+.reader-html blockquote,
+.annotation blockquote {
+	margin: 0;
+	padding-left: 1rem;
+	border-left: 3px solid var(--accent);
+	color: var(--muted);
+}
+
+.annotation-list {
+	display: grid;
+	gap: 0.85rem;
+}
+
+.annotation-comment {
+	margin: 0.4rem 0;
+	padding: 0.5rem 0.75rem;
+	background: color-mix(in oklab, white 54%, var(--bg));
+	border-radius: 12px;
+}
+
+.share-box {
+	margin-top: 1rem;
+	padding: 0.75rem;
+	border-radius: 14px;
+	background: color-mix(in oklab, white 70%, var(--site-color));
+	border: 1px solid color-mix(in oklab, var(--site-color) 22%, transparent);
+}
+
+.diff-panel ins {
+	display: block;
+	white-space: pre-wrap;
+	background: #dcfce7;
+	text-decoration: none;
+}
+
+.diff-panel del {
+	display: block;
+	white-space: pre-wrap;
+	background: #fee2e2;
+}
+
+.diff-panel pre {
+	margin: 0;
+	white-space: pre-wrap;
+	font-family: var(--mono);
+}
+
+.error {
+	color: #991b1b;
+}
+
+.library-sidebar,
+.library-main {
+	display: grid;
+	gap: 1.25rem;
+	align-content: start;
+}
+
+.workspace-intro h2,
+.section-heading h2 {
+	margin: 0 0 0.45rem;
+	font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+	letter-spacing: -0.03em;
+}
+
+.section-heading p,
+.workspace-intro p {
+	margin-top: 0;
+}
+
+.document-list,
+.activity-list,
+.rail-copy,
+.subdued,
+.muted,
+.lede,
+.dropzone-meta,
+.ingest-result,
+.topnav,
+.document-kicker {
+	font-family: var(--ui);
+}
+
+.search-input {
+	margin: 0.5rem 0 1rem;
+}
+
+.dropzone {
+	display: grid;
+	place-items: center;
+	min-height: 14rem;
+	padding: 1.5rem;
+	border: 1px dashed color-mix(in oklab, var(--site-color) 28%, transparent);
+	border-radius: 18px;
+	background:
+		linear-gradient(180deg, color-mix(in oklab, white 60%, var(--bg)), color-mix(in oklab, white 82%, var(--bg))),
+		repeating-linear-gradient(135deg, color-mix(in oklab, var(--site-color) 3%, transparent), color-mix(in oklab, var(--site-color) 3%, transparent) 10px, transparent 10px, transparent 20px);
+	cursor: pointer;
+	transition: border-color 140ms ease, transform 140ms ease, background-color 140ms ease;
+}
+
+.dropzone:hover,
+.dropzone.is-dragover {
+	border-color: color-mix(in oklab, var(--site-color) 62%, transparent);
+	transform: translateY(-1px);
+}
+
+.dropzone-copy {
+	text-align: center;
+}
+
+.dropzone-title {
+	margin: 0 0 0.35rem;
+	font-size: 1.35rem;
+}
+
+.dropzone-meta {
+	margin: 0;
+	color: var(--muted);
+}
+
+.ingest-result {
+	padding: 0.95rem 0 0;
+}
+
+.ingest-result a {
+	text-decoration: none;
+	border-bottom: 1px solid color-mix(in oklab, var(--site-color) 30%, transparent);
+}
+
+.library-panel,
+.activity-panel {
+	padding: 1.35rem;
+}
+
+.document-main {
+	min-width: 0;
+}
+
+.document-rail {
+	position: sticky;
+	top: 2rem;
+	display: grid;
+	gap: 1.65rem;
+}
+
+.document-rail-left {
+	padding-top: 0.25rem;
+}
+
+.document-rail-right {
+	padding-top: 0.25rem;
+}
+
+.rail-section {
+	display: grid;
+	gap: 0.7rem;
+	padding: 0.1rem 0;
+}
+
+.rail-section-list {
+	border-top: 1px solid color-mix(in oklab, var(--fg) 12%, transparent);
+	padding-top: 1rem;
+}
+
+.rail-copy {
+	margin: 0;
+	color: var(--muted);
+	font-size: 0.96rem;
+	line-height: 1.55;
+}
+
+.version-list-quiet {
+	gap: 0.35rem;
+}
+
+.version-list-quiet li {
+	list-style: none;
+}
+
+.version-list-quiet a {
+	display: inline-block;
+	padding: 0.12rem 0;
+	text-decoration: none;
+	color: var(--muted);
+}
+
+.version-list-quiet a:hover {
+	color: var(--ink);
+}
+
+.document-meta-row {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	margin: 0 auto 1rem;
+	max-width: 44rem;
+}
+
+.document-kicker {
+	margin: 0;
+	font-family: var(--mono);
+	font-size: 0.72rem;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+.reader-page {
+	padding: 3.25rem 3.5rem;
+	background: color-mix(in oklab, white 72%, var(--bg));
+	border-top: 1px solid color-mix(in oklab, var(--fg) 8%, transparent);
+	border-bottom: 1px solid color-mix(in oklab, var(--fg) 8%, transparent);
+}
+
+.revision-editor {
+	margin: 2.5rem auto 0;
+	max-width: 44rem;
+	padding-top: 1.75rem;
+	border-top: 1px solid color-mix(in oklab, var(--fg) 12%, transparent);
+}
+
+.form-stack-quiet {
+	gap: 0.65rem;
+}
+
+.checkbox-row {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	font-family: var(--ui);
+	font-size: 0.95rem;
+	color: var(--muted);
+}
+
+.checkbox-row input {
+	width: auto;
+}
+
+#annotation-quote-preview {
+	font-style: italic;
+	background: color-mix(in oklab, white 55%, var(--bg));
+}
+
+.annotation {
+	padding: 0.2rem 0 1rem;
+	border: 0;
+	border-bottom: 1px solid color-mix(in oklab, var(--fg) 12%, transparent);
+	border-radius: 0;
+	background: transparent;
+}
+
+.annotation:last-child {
+	border-bottom: 0;
+	padding-bottom: 0;
+}
+
+.annotation blockquote {
+	margin-bottom: 0.65rem;
+}
+
+.annotation-list {
+	gap: 1rem;
+}
+
+.annotation-comment {
+	background: rgba(244, 241, 234, 0.6);
+}
+
+.form-inline input {
+	border-radius: 999px;
+}
+
+@media (max-width: 1080px) {
+	.workspace-grid,
+	.reader-grid,
+	.document-stage {
+		grid-template-columns: 1fr;
+	}
+
+	.document-rail {
+		position: static;
+	}
+
+	.reader-page {
+		padding: 2rem 1.35rem;
+	}
+
+	.document-meta-row {
+		flex-direction: column;
+		gap: 0.4rem;
+	}
+}

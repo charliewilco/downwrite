@@ -24,3 +24,6 @@ api/docs
 
 tsconfig.tsbuildinfo
 .vercel
+bin/
+tmp/
+coverage.out

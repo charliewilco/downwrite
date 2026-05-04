@@ -1,0 +1,95 @@
+{{define "workspace.html"}}
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>{{.Title}}</title>
+		<link rel="stylesheet" href="/static/app.css">
+		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+		<script defer src="/static/app.js"></script>
+	</head>
+	<body>
+<main class="app-shell">
+	<header class="topbar">
+		<div class="topbar-copy">
+			<p class="eyebrow">Workspace</p>
+			<h1>{{.Viewer.Workspace.Name}}</h1>
+			<p class="lede subdued">A quiet library for versioned markdown, annotations, and shareable documents.</p>
+		</div>
+		<nav class="topnav">
+			<a href="/app">Library</a>
+			<a href="/app/documents/new">New document</a>
+			<a href="/app/activity">Activity</a>
+			<form method="post" action="/logout"><button class="button button-secondary" type="submit">Logout</button></form>
+		</nav>
+	</header>
+
+	<section class="workspace-grid">
+		<aside class="library-sidebar">
+			<section class="panel panel-quiet library-panel">
+				<div class="section-heading">
+					<h2>Library</h2>
+					<p>Search what matters, not everything.</p>
+				</div>
+				<input
+					class="search-input"
+					type="search"
+					name="q"
+					placeholder="Search titles and content"
+					hx-get="/app/partials/documents"
+					hx-target="#documents-list"
+					hx-trigger="keyup changed delay:200ms">
+				<div id="documents-list">
+					{{template "documents_partial" .}}
+				</div>
+			</section>
+		</aside>
+
+		<section class="library-main">
+			<section class="workspace-intro">
+				<p class="eyebrow">Ingest</p>
+				<h2>Drop a markdown file to add it to the workspace.</h2>
+				<p class="subdued">Upload `.md`, `.markdown`, or `.txt` files directly into versioned storage. Keep it simple: import, read, annotate, share.</p>
+			</section>
+
+			<form
+				id="dropzone"
+				class="dropzone"
+				method="post"
+				action="/app/ingest"
+				enctype="multipart/form-data"
+				hx-post="/app/ingest"
+				hx-encoding="multipart/form-data"
+				hx-target="#ingest-result">
+				<input id="dropzone-file" type="file" name="file" accept=".md,.markdown,.txt,text/markdown,text/plain" hidden>
+				<div class="dropzone-copy">
+					<p class="dropzone-title">Drag and drop a file here</p>
+					<p class="dropzone-meta">or click to choose a markdown document</p>
+				</div>
+			</form>
+			<div id="ingest-result"></div>
+
+			<section class="panel panel-quiet activity-panel">
+				<div class="section-heading">
+					<h2>Recent activity</h2>
+					<p>Version history and discussion, without noise.</p>
+				</div>
+				<ul class="activity-list">
+					{{range .Events}}
+						<li>
+							<strong>{{.EventType}}</strong>
+							<p>{{.Summary}}</p>
+							<time>{{.CreatedAt.Format "2006-01-02 15:04"}}</time>
+						</li>
+					{{else}}
+						<li>No activity yet.</li>
+					{{end}}
+				</ul>
+			</section>
+		</section>
+	</section>
+</main>
+	</body>
+</html>
+{{end}}
