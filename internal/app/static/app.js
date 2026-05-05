@@ -31,6 +31,37 @@ function plainTextSelection(container) {
 	};
 }
 
+function setAnnotationDraftState(isReady) {
+	const form = document.getElementById("annotation-form");
+	const callout = document.getElementById("annotation-callout");
+	const preview = document.getElementById("annotation-quote-preview");
+	const quote = document.getElementById("annotation-quote");
+	const start = document.getElementById("annotation-start");
+	const end = document.getElementById("annotation-end");
+	const prefix = document.getElementById("annotation-prefix");
+	const suffix = document.getElementById("annotation-suffix");
+	const submit = form ? form.querySelector("button[type='submit']") : null;
+
+	if (!form || !callout || !preview || !quote || !start || !end || !prefix || !suffix || !(submit instanceof HTMLButtonElement)) {
+		return;
+	}
+
+	form.classList.toggle("is-ready", isReady);
+	submit.disabled = !isReady;
+	callout.textContent = isReady
+		? "Annotation draft is ready. Add a short note in the margin, then attach it."
+		: "Select a passage in the document to open an annotation draft.";
+
+	if (!isReady) {
+		quote.value = "";
+		preview.value = "";
+		start.value = "";
+		end.value = "";
+		prefix.value = "";
+		suffix.value = "";
+	}
+}
+
 document.addEventListener("selectionchange", () => {
 	const container = document.getElementById("reader-content");
 	if (!container) {
@@ -39,6 +70,7 @@ document.addEventListener("selectionchange", () => {
 
 	const payload = plainTextSelection(container);
 	if (!payload) {
+		setAnnotationDraftState(false);
 		return;
 	}
 
@@ -59,6 +91,7 @@ document.addEventListener("selectionchange", () => {
 	end.value = String(payload.endOffset);
 	prefix.value = payload.prefix;
 	suffix.value = payload.suffix;
+	setAnnotationDraftState(true);
 });
 
 function setupDropzone() {
@@ -119,4 +152,7 @@ function setupDropzone() {
 	});
 }
 
-document.addEventListener("DOMContentLoaded", setupDropzone);
+document.addEventListener("DOMContentLoaded", () => {
+	setupDropzone();
+	setAnnotationDraftState(false);
+});

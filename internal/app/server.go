@@ -1151,26 +1151,24 @@ func (a *App) hybridSearch(ctx context.Context, workspaceID, query string, lates
 		return []SearchResult{}, nil
 	}
 
-	results, err := a.store.ListChunks(ctx, workspaceID, latestOnly)
+	lexicalResults, err := a.store.SearchChunksLexical(ctx, SearchParams{
+		WorkspaceID: workspaceID,
+		Query:       query,
+		LatestOnly:  latestOnly,
+		Limit:       24,
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	queryEmbedding := deterministicEmbedding(query)
-	filtered := make([]SearchResult, 0, len(results))
-	for _, result := range results {
-		result.LexicalScore = lexicalScore(query, result.Snippet)
-		result.SemanticScore = cosineSimilarity(queryEmbedding, deterministicEmbedding(result.Snippet))
-		result.CombinedScore = (result.LexicalScore * 0.55) + (result.SemanticScore * 0.45)
-
-		if result.CombinedScore <= 0 {
-			continue
-		}
-
-		filtered = append(filtered, result)
+	semanticCandidates, err := a.store.ListChunks(ctx, workspaceID, latestOnly)
+	if err != nil {
+		return nil, err
 	}
 
-	return fuseScores(filtered), nil
+	lexicalResults = normalizeLexicalResults(query, lexicalResults)
+	semanticResults := rankSemanticResults(DeterministicEmbedder{}, query, semanticCandidates, 48)
+	return reciprocalRankFusion(lexicalResults, semanticResults, 20), nil
 }
 
 func (a *App) requireAuth(c *gin.Context) {

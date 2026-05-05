@@ -38,7 +38,8 @@ type Store interface {
 	CreateAnnotationComment(ctx context.Context, annotationID, authorID, body string) (AnnotationComment, error)
 	ListActivity(ctx context.Context, workspaceID string, limit int) ([]ActivityEvent, error)
 	CreateIngestSource(ctx context.Context, workspaceID, createdBy, kind, name string) (IngestSource, error)
-	ReplaceChunks(ctx context.Context, documentID, versionID string, chunks []Chunk) error
+	ReplaceChunks(ctx context.Context, documentID, versionID string, chunks []ChunkDraft) error
+	SearchChunksLexical(ctx context.Context, params SearchParams) ([]SearchResult, error)
 	ListChunks(ctx context.Context, workspaceID string, latestOnly bool) ([]SearchResult, error)
 	GetChunkTrace(ctx context.Context, chunkID string) (TraceResult, error)
 	ListRecentDocuments(ctx context.Context, workspaceID string, limit int, since *time.Time) ([]DocumentSummary, error)
@@ -706,37 +707,41 @@ func (s *PostgresStore) CreateIngestSource(ctx context.Context, workspaceID, cre
 	return source, err
 }
 
-func (s *PostgresStore) ReplaceChunks(ctx context.Context, documentID, versionID string, chunks []Chunk) error {
+func (s *PostgresStore) ReplaceChunks(ctx context.Context, documentID, versionID string, chunks []ChunkDraft) error {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback(ctx)
 
-	if err := replaceChunksTx(ctx, tx, documentID, versionID, chunkContents(chunks)); err != nil {
+	if err := replaceChunksTx(ctx, tx, documentID, versionID, chunks); err != nil {
 		return err
 	}
 
 	return tx.Commit(ctx)
 }
 
-func replaceChunksTx(ctx context.Context, tx pgx.Tx, documentID, versionID string, contents []string) error {
+func replaceChunksTx(ctx context.Context, tx pgx.Tx, documentID, versionID string, chunks []ChunkDraft) error {
 	if _, err := tx.Exec(ctx, `
 		delete from document_chunks where document_version_id = $1
 	`, versionID); err != nil {
 		return err
 	}
 
-	for _, content := range contents {
-		embedding, err := json.Marshal(deterministicEmbedding(content))
+	chunkCount := len(chunks)
+	for _, chunk := range chunks {
+		searchText := searchTextForChunk(chunk.Content)
+		embedding, err := json.Marshal(DeterministicEmbedder{}.Embed(searchText))
 		if err != nil {
 			return err
 		}
 
 		if _, err := tx.Exec(ctx, `
-			insert into document_chunks (document_id, document_version_id, content, search_text, embedding)
-			values ($1, $2, $3, $4, $5::jsonb)
-		`, documentID, versionID, content, strings.ToLower(content), string(embedding)); err != nil {
+			insert into document_chunks (
+				document_id, document_version_id, chunk_index, chunk_count, token_count, content, search_text, embedding
+			)
+			values ($1, $2, $3, $4, $5, $6, $7, $8::jsonb)
+		`, documentID, versionID, chunk.ChunkIndex, chunkCount, chunk.TokenCount, chunk.Content, searchText, string(embedding)); err != nil {
 			return err
 		}
 	}
@@ -744,27 +749,40 @@ func replaceChunksTx(ctx context.Context, tx pgx.Tx, documentID, versionID strin
 	return nil
 }
 
-func chunkContents(chunks []Chunk) []string {
-	values := make([]string, 0, len(chunks))
-	for _, chunk := range chunks {
-		values = append(values, chunk.Content)
+func (s *PostgresStore) SearchChunksLexical(ctx context.Context, params SearchParams) ([]SearchResult, error) {
+	limit := params.Limit
+	if limit <= 0 {
+		limit = 20
 	}
-	return values
-}
 
-func (s *PostgresStore) ListChunks(ctx context.Context, workspaceID string, latestOnly bool) ([]SearchResult, error) {
 	latestFilter := ""
-	if latestOnly {
+	if params.LatestOnly {
 		latestFilter = "and d.latest_version_id = v.id"
 	}
 
 	rows, err := s.pool.Query(ctx, `
-		select d.id, d.title, d.slug, v.id, v.version_number, c.id, c.content, d.workspace_id
+		select
+			d.id,
+			d.title,
+			d.slug,
+			v.id,
+			v.version_number,
+			c.id,
+			c.chunk_index,
+			c.chunk_count,
+			c.content,
+			c.search_text,
+			d.workspace_id,
+			ts_rank_cd(c.search_vector, websearch_to_tsquery('english', $2)) as lexical_score
 		from document_chunks c
 		join document_versions v on v.id = c.document_version_id
 		join documents d on d.id = c.document_id
-		where d.workspace_id = $1 `+latestFilter+`
-	`, workspaceID)
+		where d.workspace_id = $1
+			`+latestFilter+`
+			and c.search_vector @@ websearch_to_tsquery('english', $2)
+		order by lexical_score desc, v.version_number desc, c.chunk_index asc
+		limit $3
+	`, params.WorkspaceID, params.Query, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -780,12 +798,69 @@ func (s *PostgresStore) ListChunks(ctx context.Context, workspaceID string, late
 			&result.VersionID,
 			&result.VersionNumber,
 			&result.ChunkID,
+			&result.ChunkIndex,
+			&result.ChunkCount,
 			&result.Snippet,
+			&result.SearchText,
+			&result.Provenance.WorkspaceID,
+			&result.LexicalScore,
+		); err != nil {
+			return nil, err
+		}
+
+		result.Snippet = snippetForResult(result.Snippet, params.Query)
+		result.Provenance.DocumentID = result.DocumentID
+		result.Provenance.DocumentVersionID = result.VersionID
+		result.Provenance.ChunkID = result.ChunkID
+		results = append(results, result)
+	}
+
+	return results, rows.Err()
+}
+
+func (s *PostgresStore) ListChunks(ctx context.Context, workspaceID string, latestOnly bool) ([]SearchResult, error) {
+	latestFilter := ""
+	if latestOnly {
+		latestFilter = "and d.latest_version_id = v.id"
+	}
+
+	rows, err := s.pool.Query(ctx, `
+		select d.id, d.title, d.slug, v.id, v.version_number, c.id, c.chunk_index, c.chunk_count, c.content, c.search_text, c.embedding, d.workspace_id
+		from document_chunks c
+		join document_versions v on v.id = c.document_version_id
+		join documents d on d.id = c.document_id
+		where d.workspace_id = $1 `+latestFilter+`
+	`, workspaceID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []SearchResult
+	for rows.Next() {
+		var result SearchResult
+		var rawEmbedding []byte
+		if err := rows.Scan(
+			&result.DocumentID,
+			&result.DocumentTitle,
+			&result.DocumentSlug,
+			&result.VersionID,
+			&result.VersionNumber,
+			&result.ChunkID,
+			&result.ChunkIndex,
+			&result.ChunkCount,
+			&result.Snippet,
+			&result.SearchText,
+			&rawEmbedding,
 			&result.Provenance.WorkspaceID,
 		); err != nil {
 			return nil, err
 		}
 
+		if err := json.Unmarshal(rawEmbedding, &result.Embedding); err != nil {
+			return nil, err
+		}
+		result.Snippet = snippetForResult(result.Snippet, "")
 		result.Provenance.DocumentID = result.DocumentID
 		result.Provenance.DocumentVersionID = result.VersionID
 		result.Provenance.ChunkID = result.ChunkID
@@ -797,7 +872,7 @@ func (s *PostgresStore) ListChunks(ctx context.Context, workspaceID string, late
 
 func (s *PostgresStore) GetChunkTrace(ctx context.Context, chunkID string) (TraceResult, error) {
 	row := s.pool.QueryRow(ctx, `
-		select c.id, c.document_id, c.document_version_id, c.content, c.search_text, c.embedding,
+		select c.id, c.document_id, c.document_version_id, c.chunk_index, c.chunk_count, c.token_count, c.content, c.search_text, c.embedding,
 			d.id, d.workspace_id, d.title, d.slug, d.status, d.created_by, coalesce(d.latest_version_id::text, ''), d.created_at, d.updated_at,
 			v.id, v.document_id, v.version_number, v.content_markdown, v.content_html, v.content_text, v.content_hash, v.authored_by, v.ingest_source_id, v.created_at
 		from document_chunks c
@@ -809,7 +884,7 @@ func (s *PostgresStore) GetChunkTrace(ctx context.Context, chunkID string) (Trac
 	var trace TraceResult
 	var rawEmbedding []byte
 	if err := row.Scan(
-		&trace.Chunk.ID, &trace.Chunk.DocumentID, &trace.Chunk.DocumentVersionID, &trace.Chunk.Content, &trace.Chunk.SearchText, &rawEmbedding,
+		&trace.Chunk.ID, &trace.Chunk.DocumentID, &trace.Chunk.DocumentVersionID, &trace.Chunk.ChunkIndex, &trace.Chunk.ChunkCount, &trace.Chunk.TokenCount, &trace.Chunk.Content, &trace.Chunk.SearchText, &rawEmbedding,
 		&trace.Document.ID, &trace.Document.WorkspaceID, &trace.Document.Title, &trace.Document.Slug, &trace.Document.Status, &trace.Document.CreatedBy, &trace.Document.LatestVersionID, &trace.Document.CreatedAt, &trace.Document.UpdatedAt,
 		&trace.Version.ID, &trace.Version.DocumentID, &trace.Version.VersionNumber, &trace.Version.ContentMarkdown, &trace.Version.ContentHTML, &trace.Version.ContentText, &trace.Version.ContentHash, &trace.Version.AuthoredBy, &trace.Version.IngestSourceID, &trace.Version.CreatedAt,
 	); err != nil {

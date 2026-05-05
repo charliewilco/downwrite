@@ -133,14 +133,24 @@ create table if not exists document_chunks (
 	id uuid primary key default gen_random_uuid(),
 	document_id uuid not null references documents(id) on delete cascade,
 	document_version_id uuid not null references document_versions(id) on delete cascade,
+	chunk_index integer not null default 0,
+	chunk_count integer not null default 1,
+	token_count integer not null default 0,
 	content text not null,
 	search_text text not null,
+	search_vector tsvector generated always as (to_tsvector('english', search_text)) stored,
 	embedding jsonb not null,
 	created_at timestamptz not null default now()
 );
+
+alter table document_chunks add column if not exists chunk_index integer not null default 0;
+alter table document_chunks add column if not exists chunk_count integer not null default 1;
+alter table document_chunks add column if not exists token_count integer not null default 0;
+alter table document_chunks add column if not exists search_vector tsvector generated always as (to_tsvector('english', search_text)) stored;
 
 create index if not exists idx_documents_workspace_updated on documents(workspace_id, updated_at desc);
 create index if not exists idx_versions_document on document_versions(document_id, version_number desc);
 create index if not exists idx_annotations_version on annotations(document_version_id, created_at asc);
 create index if not exists idx_activity_workspace on activity_events(workspace_id, created_at desc);
 create index if not exists idx_chunks_document_version on document_chunks(document_version_id);
+create index if not exists idx_chunks_search_vector on document_chunks using gin(search_vector);

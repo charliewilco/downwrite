@@ -122,9 +122,19 @@ type Chunk struct {
 	ID                string
 	DocumentID        string
 	DocumentVersionID string
+	ChunkIndex        int
+	ChunkCount        int
+	TokenCount        int
 	Content           string
 	SearchText        string
 	Embedding         []float64
+}
+
+type SearchParams struct {
+	WorkspaceID string
+	Query       string
+	LatestOnly  bool
+	Limit       int
 }
 
 type SearchResult struct {
@@ -134,11 +144,15 @@ type SearchResult struct {
 	VersionID     string           `json:"version_id"`
 	VersionNumber int              `json:"version_number"`
 	ChunkID       string           `json:"chunk_id"`
+	ChunkIndex    int              `json:"chunk_index"`
+	ChunkCount    int              `json:"chunk_count"`
 	Snippet       string           `json:"snippet"`
 	LexicalScore  float64          `json:"lexical_score"`
 	SemanticScore float64          `json:"semantic_score"`
 	CombinedScore float64          `json:"combined_score"`
 	Provenance    SearchProvenance `json:"provenance"`
+	SearchText    string           `json:"-"`
+	Embedding     []float64        `json:"-"`
 }
 
 type SearchProvenance struct {

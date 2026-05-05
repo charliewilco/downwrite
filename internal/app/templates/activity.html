@@ -11,25 +11,30 @@
 	</head>
 	<body>
 <main class="app-shell narrow">
-	<header class="topbar">
-		<div>
+	<header class="topbar shell-header">
+		<div class="topbar-copy">
 			<p class="eyebrow">Activity</p>
 			<h1>{{.Viewer.Workspace.Name}}</h1>
+			<p class="subdued">A running record of versions, shares, and discussion around the library.</p>
 		</div>
 		<nav class="topnav">
 			<a href="/app">Library</a>
 		</nav>
 	</header>
-	<section class="panel">
+
+	<section class="activity-sheet">
 		<ul class="activity-list">
 			{{range .Events}}
 				<li>
-					<strong>{{.EventType}}</strong>
-					<p>{{.Summary}}</p>
+					<strong>{{.Summary}}</strong>
+					<p>{{.EventType}}</p>
 					<time>{{.CreatedAt.Format "2006-01-02 15:04"}}</time>
 				</li>
 			{{else}}
-				<li>No activity yet.</li>
+				<li class="empty-state">
+					<strong>No activity yet.</strong>
+					<p>The archive is quiet until the first import, version, or annotation.</p>
+				</li>
 			{{end}}
 		</ul>
 	</section>

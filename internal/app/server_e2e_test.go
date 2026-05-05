@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
 )
@@ -187,13 +188,23 @@ func TestAPIAndMCPReadFlows(t *testing.T) {
 		CreatedBy:   store.defaultUser.ID,
 		Title:       "Search Notes",
 		Slug:        "search-notes",
-		Content:     "markdown in, context out",
+		Content:     "markdown in, context out with agent retrieval and grounding",
 	})
 	if err != nil {
 		t.Fatalf("create document: %v", err)
 	}
 
-	apiReq := httptest.NewRequest(http.MethodGet, "/v1/search?q=context", nil)
+	if _, _, err := store.CreateDocument(t.Context(), CreateDocumentParams{
+		WorkspaceID: store.defaultWorkspace.ID,
+		CreatedBy:   store.defaultUser.ID,
+		Title:       "Loose Notes",
+		Slug:        "loose-notes",
+		Content:     "context exists here too but without the agent retrieval emphasis",
+	}); err != nil {
+		t.Fatalf("create document: %v", err)
+	}
+
+	apiReq := httptest.NewRequest(http.MethodGet, "/v1/search?q="+url.QueryEscape("agent retrieval context"), nil)
 	apiReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
 
 	apiRecorder := newRecorder()
@@ -211,6 +222,9 @@ func TestAPIAndMCPReadFlows(t *testing.T) {
 	}
 	if len(searchResponse.Results) == 0 {
 		t.Fatal("expected search results")
+	}
+	if searchResponse.Results[0].DocumentID != document.ID {
+		t.Fatalf("expected most relevant document first, got %#v", searchResponse.Results[0])
 	}
 
 	mcpReq := httptest.NewRequest(http.MethodPost, "/mcp", strings.NewReader(`{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"read_document","arguments":{"id_or_slug":"`+document.ID+`","version":"`+version.ID+`"}}}`))

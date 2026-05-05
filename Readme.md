@@ -16,7 +16,7 @@ This repository now contains the v3 Go rewrite:
 
 ## Current state
 
-The legacy `Next.js + GraphQL + Mongo + Draft.js` app is no longer the primary runtime. The new entrypoint is the Go service under `cmd/downwrite`.
+This repository now contains only the Go-based v3 application. The entrypoint is the service under `cmd/downwrite`.
 
 ## Container policy
 

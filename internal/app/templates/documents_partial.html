@@ -1,15 +1,20 @@
 {{define "documents_partial"}}
 <ul class="document-list">
 	{{range .Documents}}
-		<li>
-			<a href="/app/documents/{{.ID}}">
-				<strong>{{.Title}}</strong>
-				<span>v{{.VersionNumber}}</span>
+		<li class="document-row">
+			<a class="document-link" href="/app/documents/{{.ID}}">
+				<span class="document-link-main">
+					<strong>{{.Title}}</strong>
+					<span class="document-excerpt">{{.Excerpt}}</span>
+				</span>
+				<span class="document-meta">v{{.VersionNumber}}</span>
 			</a>
-			<p>{{.Excerpt}}</p>
 		</li>
 	{{else}}
-		<li>No documents yet.</li>
+		<li class="empty-state">
+			<strong>No documents yet.</strong>
+			<p>Import a markdown file or create a document to start the library.</p>
+		</li>
 	{{end}}
 </ul>
 {{end}}

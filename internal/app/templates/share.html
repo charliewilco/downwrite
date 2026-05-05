@@ -10,20 +10,26 @@
 		<script defer src="/static/app.js"></script>
 	</head>
 	<body>
-<main class="app-shell narrow">
-	<header class="topbar">
-		<div>
+<main class="app-shell narrow shared-shell">
+	<header class="topbar shell-header">
+		<div class="topbar-copy">
 			<p class="eyebrow">Shared version</p>
 			<h1>{{.Document.Title}}</h1>
-			<p class="muted">Version {{.Version.VersionNumber}}</p>
+			<p class="subdued">Version {{.Version.VersionNumber}}. A stable reading view for this exact revision.</p>
 		</div>
 	</header>
-	<article class="panel reader-panel">
-		<div class="reader-html">{{safeHTML .Version.ContentHTML}}</div>
+
+	<article class="shared-reader">
+		<div class="reader-page">
+			<div class="reader-html">{{safeHTML .Version.ContentHTML}}</div>
+		</div>
 	</article>
 	{{if .Annotations}}
-	<section class="panel">
-		<h2>Annotations</h2>
+	<section class="shared-annotations">
+		<div class="section-heading section-heading-inline">
+			<h2>Annotations</h2>
+			<p>Comments anchored to quoted passages in this version.</p>
+		</div>
 		{{template "annotations_partial" .}}
 	</section>
 	{{end}}

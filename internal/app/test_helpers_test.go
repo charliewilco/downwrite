@@ -434,14 +434,83 @@ func (s *fakeStore) CreateIngestSource(_ context.Context, workspaceID, createdBy
 	}, nil
 }
 
-func (s *fakeStore) ReplaceChunks(_ context.Context, _, _ string, _ []Chunk) error {
+func (s *fakeStore) ReplaceChunks(_ context.Context, _, _ string, _ []ChunkDraft) error {
 	return nil
 }
 
-func (s *fakeStore) ListChunks(_ context.Context, workspaceID string, _ bool) ([]SearchResult, error) {
+func (s *fakeStore) SearchChunksLexical(_ context.Context, params SearchParams) ([]SearchResult, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	return slices.Clone(s.chunksByWorkspace[workspaceID]), nil
+
+	if len(tokenizeSearchText(params.Query)) == 0 {
+		return []SearchResult{}, nil
+	}
+
+	results := make([]SearchResult, 0, len(s.chunksByWorkspace[params.WorkspaceID]))
+	for _, result := range s.chunksByWorkspace[params.WorkspaceID] {
+		if params.LatestOnly {
+			document := s.documents[result.DocumentID]
+			if document.LatestVersionID != result.VersionID {
+				continue
+			}
+		}
+
+		score := 0.0
+		for _, token := range tokenizeSearchText(params.Query) {
+			if strings.Contains(result.SearchText, token) {
+				score += 1
+			}
+		}
+		if score <= 0 {
+			continue
+		}
+
+		result.LexicalScore = score
+		result.Snippet = snippetForResult(result.Snippet, params.Query)
+		results = append(results, result)
+	}
+
+	slices.SortFunc(results, func(a, b SearchResult) int {
+		switch {
+		case a.LexicalScore > b.LexicalScore:
+			return -1
+		case a.LexicalScore < b.LexicalScore:
+			return 1
+		case a.VersionNumber > b.VersionNumber:
+			return -1
+		case a.VersionNumber < b.VersionNumber:
+			return 1
+		case a.ChunkIndex < b.ChunkIndex:
+			return -1
+		case a.ChunkIndex > b.ChunkIndex:
+			return 1
+		default:
+			return strings.Compare(a.ChunkID, b.ChunkID)
+		}
+	})
+
+	limit := params.Limit
+	if limit <= 0 || limit > len(results) {
+		limit = len(results)
+	}
+	return slices.Clone(results[:limit]), nil
+}
+
+func (s *fakeStore) ListChunks(_ context.Context, workspaceID string, latestOnly bool) ([]SearchResult, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	results := make([]SearchResult, 0, len(s.chunksByWorkspace[workspaceID]))
+	for _, result := range s.chunksByWorkspace[workspaceID] {
+		if latestOnly {
+			document := s.documents[result.DocumentID]
+			if document.LatestVersionID != result.VersionID {
+				continue
+			}
+		}
+		results = append(results, result)
+	}
+	return slices.Clone(results), nil
 }
 
 func (s *fakeStore) GetChunkTrace(_ context.Context, chunkID string) (TraceResult, error) {
@@ -483,30 +552,47 @@ func (s *fakeStore) ListRecentDocuments(_ context.Context, workspaceID string, l
 }
 
 func (s *fakeStore) addChunk(document Document, version DocumentVersion, content string) {
-	chunk := Chunk{
-		ID:                s.id("chunk"),
-		DocumentID:        document.ID,
-		DocumentVersionID: version.ID,
-		Content:           content,
-		SearchText:        strings.ToLower(content),
-		Embedding:         deterministicEmbedding(content),
+	drafts := chunkMarkdown(content)
+	chunkCount := len(drafts)
+	if chunkCount == 0 {
+		return
 	}
-	s.chunks[chunk.ID] = chunk
-	s.chunksByWorkspace[document.WorkspaceID] = append(s.chunksByWorkspace[document.WorkspaceID], SearchResult{
-		DocumentID:    document.ID,
-		DocumentTitle: document.Title,
-		DocumentSlug:  document.Slug,
-		VersionID:     version.ID,
-		VersionNumber: version.VersionNumber,
-		ChunkID:       chunk.ID,
-		Snippet:       chunk.Content,
-		Provenance: SearchProvenance{
-			WorkspaceID:       document.WorkspaceID,
+
+	embedder := DeterministicEmbedder{}
+	for _, draft := range drafts {
+		searchText := searchTextForChunk(draft.Content)
+		chunk := Chunk{
+			ID:                s.id("chunk"),
 			DocumentID:        document.ID,
 			DocumentVersionID: version.ID,
-			ChunkID:           chunk.ID,
-		},
-	})
+			ChunkIndex:        draft.ChunkIndex,
+			ChunkCount:        chunkCount,
+			TokenCount:        draft.TokenCount,
+			Content:           draft.Content,
+			SearchText:        searchText,
+			Embedding:         embedder.Embed(searchText),
+		}
+		s.chunks[chunk.ID] = chunk
+		s.chunksByWorkspace[document.WorkspaceID] = append(s.chunksByWorkspace[document.WorkspaceID], SearchResult{
+			DocumentID:    document.ID,
+			DocumentTitle: document.Title,
+			DocumentSlug:  document.Slug,
+			VersionID:     version.ID,
+			VersionNumber: version.VersionNumber,
+			ChunkID:       chunk.ID,
+			ChunkIndex:    chunk.ChunkIndex,
+			ChunkCount:    chunk.ChunkCount,
+			Snippet:       snippetForResult(chunk.Content, ""),
+			SearchText:    chunk.SearchText,
+			Embedding:     slices.Clone(chunk.Embedding),
+			Provenance: SearchProvenance{
+				WorkspaceID:       document.WorkspaceID,
+				DocumentID:        document.ID,
+				DocumentVersionID: version.ID,
+				ChunkID:           chunk.ID,
+			},
+		})
+	}
 }
 
 func (s *fakeStore) recordActivity(workspaceID string, documentID, actorID *string, eventType, summary string) {

@@ -11,11 +11,11 @@
 	</head>
 	<body>
 <main class="app-shell">
-	<header class="topbar topbar-document">
+	<header class="topbar topbar-document shell-header">
 		<div class="topbar-copy">
 			<p class="eyebrow">Document</p>
 			<h1>{{.Document.Title}}</h1>
-			<p class="subdued">Immutable version {{.Version.VersionNumber}}. Read first, discuss in the margins, version deliberately.</p>
+			<p class="subdued">Immutable version {{.Version.VersionNumber}}. Read first, discuss in the margins, then version deliberately.</p>
 		</div>
 		<nav class="topnav">
 			<a href="/app">Library</a>
@@ -26,8 +26,9 @@
 
 	<section class="document-stage">
 		<aside class="document-rail document-rail-left">
-			<section class="rail-section">
+			<section class="rail-section rail-note">
 				<p class="eyebrow">Versions</p>
+				<p class="rail-copy">Each saved revision becomes a stable reading surface with its own share and annotation trail.</p>
 				<ul class="version-list version-list-quiet">
 					{{range .Versions}}
 						<li><a href="/app/documents/{{$.Document.ID}}?version={{.ID}}">Version {{.VersionNumber}}</a></li>
@@ -35,7 +36,7 @@
 				</ul>
 			</section>
 
-			<section class="rail-section">
+			<section class="rail-section rail-note">
 				<p class="eyebrow">Share</p>
 				<form class="form-stack form-stack-quiet" method="post" action="/app/documents/{{.Document.ID}}/shares" hx-post="/app/documents/{{.Document.ID}}/shares" hx-target="#share-result">
 					<input type="hidden" name="version_id" value="{{.Version.ID}}">
@@ -49,30 +50,32 @@
 		<article class="document-main">
 			<div class="document-meta-row">
 				<p class="document-kicker">Version {{.Version.VersionNumber}}</p>
-				<p class="document-kicker">Select text to annotate</p>
+				<p class="document-kicker">Select text to annotate in the margins</p>
 			</div>
 
 			<div class="reader-page">
 				<div class="reader-html" id="reader-content" data-document-id="{{.Document.ID}}" data-version-id="{{.Version.ID}}">{{safeHTML .Version.ContentHTML}}</div>
 			</div>
 
-			<section class="revision-editor">
-				<div class="section-heading">
+			<details class="revision-editor">
+				<summary>Draft a new version</summary>
+				<div class="section-heading section-heading-tight">
 					<h2>New version</h2>
-					<p>Keep changes deliberate and easy to compare.</p>
+					<p>Keep changes deliberate, legible, and easy to compare.</p>
 				</div>
 				<form class="form-stack" method="post" action="/app/documents/{{.Document.ID}}/versions">
 					<textarea name="content" rows="12">{{.Version.ContentMarkdown}}</textarea>
 					<button class="button" type="submit">Save new version</button>
 				</form>
-			</section>
+			</details>
 		</article>
 
 		<aside class="document-rail document-rail-right">
-			<section class="rail-section">
+			<section class="rail-section rail-note">
 				<p class="eyebrow">Annotations</p>
 				<p class="rail-copy">Quote precisely. Keep discussion attached to the text, not floating around it.</p>
-				<form id="annotation-form" class="form-stack form-stack-quiet" method="post" action="/app/annotations" hx-post="/app/annotations" hx-target="#annotations-list" hx-swap="afterbegin">
+				<div class="annotation-callout" id="annotation-callout">Select a passage in the document to open an annotation draft.</div>
+				<form id="annotation-form" class="form-stack form-stack-quiet annotation-form-shell" method="post" action="/app/annotations" hx-post="/app/annotations" hx-target="#annotations-list" hx-swap="afterbegin">
 					<input type="hidden" name="document_id" value="{{.Document.ID}}">
 					<input type="hidden" name="document_version_id" value="{{.Version.ID}}">
 					<input type="hidden" name="quote" id="annotation-quote">
