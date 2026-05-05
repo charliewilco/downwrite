@@ -1,12 +1,7 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
+  - package-ecosystem: "gomod"
     directory: "/"
-    ignore:
-      - dependency-name: "immutable"
-      - dependency-name: "draft-js-md-converter"
-      - dependency-name: "draft-js"
-      - dependency-name: "apollo-server-micro"
     commit-message:
       prefix: "chore"
     open-pull-requests-limit: 10
@@ -15,3 +10,14 @@ updates:
     labels:
       - "dependencies"
       - "automerge"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    commit-message:
+      prefix: "chore"
+    open-pull-requests-limit: 5
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "github-actions"
