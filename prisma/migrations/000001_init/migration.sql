@@ -1,4 +1,5 @@
 create extension if not exists pgcrypto;
+create extension if not exists vector;
 
 create table if not exists users (
 	id uuid primary key default gen_random_uuid(),
@@ -139,7 +140,7 @@ create table if not exists document_chunks (
 	content text not null,
 	search_text text not null,
 	search_vector tsvector generated always as (to_tsvector('english', search_text)) stored,
-	embedding jsonb not null,
+	embedding vector(32) not null,
 	created_at timestamptz not null default now()
 );
 
@@ -148,9 +149,24 @@ alter table document_chunks add column if not exists chunk_count integer not nul
 alter table document_chunks add column if not exists token_count integer not null default 0;
 alter table document_chunks add column if not exists search_vector tsvector generated always as (to_tsvector('english', search_text)) stored;
 
+do $$ begin
+	if exists (
+		select 1
+		from information_schema.columns
+		where table_name = 'document_chunks'
+			and column_name = 'embedding'
+			and udt_name = 'jsonb'
+	) then
+		alter table document_chunks
+			alter column embedding type vector(32)
+			using embedding::text::vector(32);
+	end if;
+end $$;
+
 create index if not exists idx_documents_workspace_updated on documents(workspace_id, updated_at desc);
 create index if not exists idx_versions_document on document_versions(document_id, version_number desc);
 create index if not exists idx_annotations_version on annotations(document_version_id, created_at asc);
 create index if not exists idx_activity_workspace on activity_events(workspace_id, created_at desc);
 create index if not exists idx_chunks_document_version on document_chunks(document_version_id);
 create index if not exists idx_chunks_search_vector on document_chunks using gin(search_vector);
+create index if not exists idx_chunks_embedding_cosine on document_chunks using hnsw (embedding vector_cosine_ops);

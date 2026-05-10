@@ -1,0 +1,29 @@
+{
+	"name": "downwrite",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "tsc",
+		"check": "tsc --noEmit",
+		"dev": "tsx src/server.ts",
+		"start": "node dist/server.js",
+		"prisma:generate": "prisma generate",
+		"prisma:migrate": "prisma migrate dev",
+		"prisma:deploy": "prisma migrate deploy",
+		"prisma:validate": "prisma validate"
+	},
+	"dependencies": {
+		"@hono/node-server": "^2.0.2",
+		"@prisma/client": "^6.0.0",
+		"bcryptjs": "^3.0.3",
+		"hono": "^4.12.18",
+		"marked": "^18.0.3",
+		"zod": "^4.4.3"
+	},
+	"devDependencies": {
+		"@types/node": "^25.6.2",
+		"prisma": "^6.0.0",
+		"tsx": "^4.21.0",
+		"typescript": "^6.0.3"
+	}
+}

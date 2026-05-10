@@ -1,4 +1,4 @@
-name: Go CI
+name: Hono CI
 
 on:
   push:
@@ -11,23 +11,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          go-version-file: go.mod
-          cache: true
+          node-version: 24
+          cache: npm
 
-      - name: Verify formatting
-        run: |
-          files=$(gofmt -l cmd internal)
-          if [ -n "$files" ]; then
-            echo "These files need gofmt:"
-            echo "$files"
-            exit 1
-          fi
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Run tests
-        run: go test ./...
+      - name: Validate Prisma schema
+        run: npm run prisma:validate
+        env:
+          DOWNWRITE_DATABASE_URL: postgresql://downwrite:downwrite@localhost:5432/downwrite
+
+      - name: Type-check
+        run: npm run check
 
       - name: Build
-        run: go build ./cmd/downwrite
+        run: npm run build

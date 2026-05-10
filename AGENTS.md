@@ -2,22 +2,34 @@
 
 ## Project Structure & Module Organization
 
-Downwrite v3 is a Go document hub. The primary runtime starts at `cmd/downwrite/main.go`, with application code in `internal/app/`. Templates live in `internal/app/templates/`, browser assets in `internal/app/static/`, and database schema setup in `internal/app/schema.sql`. Container notes are in `docs/containers.md`; the canonical OCI image definition is `Containerfile`.
+Downwrite v3 is a Hono document hub. The primary runtime starts at `src/server.ts`, with Hono route handlers, server-rendered views, and browser assets under `src/`. The canonical database contract lives in `prisma/schema.prisma` and `prisma/migrations/`. Container notes are in `docs/containers.md`; the canonical OCI image definition is `Containerfile`.
+
+## Implementation Direction
+
+For database-layer work, use Prisma, not Drizzle or Kysely. The persistence stack is Prisma schema, Prisma migrations, Postgres, and pgvector. If Prisma has limitations around pgvector support, document the limitation clearly and use raw SQL migrations or typed raw queries only where necessary. Do not switch to Drizzle or Kysely without explicit approval.
+
+Keep client-side interactions limited. Prefer server-rendered HTML, Hono-rendered views, form posts, progressive enhancement, and small Preact islands only where interaction genuinely improves the workflow. LitElement/Web Components are acceptable for portable interactive primitives. Avoid large SPA architecture, client-heavy routing, excessive client state, Notion-style UI complexity, and early drag-and-drop frameworks.
+
+Reserve richer client-side interactivity for high-value areas: side-by-side document viewing, merge canvas, document stack interactions, diff viewer enhancements, query playground, and retrieval trace inspection. Everything else should stay boring, server-rendered, and easy to reason about.
+
+For document diffs, use https://diffs.com/ as the visual and product reference. Start with a simple text diff API and clean UI placeholder; do not overbuild v1. The intended direction is readable side-by-side comparison with clear insertions/deletions, document/version metadata, source/provenance context, easy human scanning, and beautiful but restrained rendering.
 
 ## Build, Test, and Development Commands
 
-- `go run ./cmd/downwrite`: run the current Go service locally. Requires `DOWNWRITE_DATABASE_URL` and `DOWNWRITE_SESSION_SECRET`.
-- `go test ./...`: run all Go tests.
-- `go build ./cmd/downwrite`: compile the Go entrypoint.
+- `npm run dev`: run the Hono service locally. Requires `DOWNWRITE_DATABASE_URL` and `DOWNWRITE_SESSION_SECRET`.
+- `npm run check`: type-check the Hono runtime.
+- `npm run build`: compile the Hono runtime into `dist/`.
+- `npm run prisma:validate`: validate the Prisma schema.
+- `npm run prisma:deploy`: apply Prisma migrations.
 - `container build -t downwrite:dev .`: build the OCI image using the repository `Containerfile`.
 
 ## Coding Style & Naming Conventions
 
-Prefer tabs for indentation where the language/tooling supports it. Go code must remain `gofmt`/`go test` friendly; keep package names short and lowercase. Keep HTTP handlers, store methods, and template names descriptive and aligned with domain terms such as documents, versions, annotations, and workspaces.
+Prefer tabs for indentation where the language/tooling supports it. TypeScript must remain `tsc` friendly. Keep Hono handlers, store functions, and view helpers descriptive and aligned with domain terms such as documents, versions, annotations, and workspaces.
 
 ## Testing Guidelines
 
-Place Go tests beside the code under test using `*_test.go`. Prefer focused tests around persistence, request handling, markdown rendering, search, and security boundaries. Use fixtures/helpers from `internal/app/test_helpers_test.go` when extending app tests.
+Prefer focused tests around persistence, request handling, markdown rendering, search, and security boundaries.
 
 ## Commit & Pull Request Guidelines
 

@@ -2,6 +2,7 @@
 .env
 .env.*
 dist
+node_modules
 private.key
 api/docs
 

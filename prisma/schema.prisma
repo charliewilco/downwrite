@@ -1,0 +1,234 @@
+generator client {
+	provider = "prisma-client-js"
+}
+
+datasource db {
+	provider = "postgresql"
+	url      = env("DOWNWRITE_DATABASE_URL")
+}
+
+model User {
+	id           String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	name         String
+	email        String              @unique
+	passwordHash String              @map("password_hash")
+	createdAt    DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+	workspaces   Workspace[]         @relation("WorkspaceCreator")
+	memberships  WorkspaceMembership[]
+	sessions     Session[]
+	sources      IngestSource[]      @relation("IngestSourceCreator")
+	documents    Document[]          @relation("DocumentCreator")
+	versions     DocumentVersion[]   @relation("VersionAuthor")
+	shares       DocumentShare[]      @relation("ShareCreator")
+	annotations  Annotation[]        @relation("AnnotationAuthor")
+	comments     AnnotationComment[] @relation("CommentAuthor")
+	activity     ActivityEvent[]     @relation("ActivityActor")
+
+	@@map("users")
+}
+
+model Workspace {
+	id          String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	name        String
+	slug        String                @unique
+	createdBy   String                @map("created_by") @db.Uuid
+	createdAt   DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+	creator     User                  @relation("WorkspaceCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+	memberships WorkspaceMembership[]
+	sources     IngestSource[]
+	documents   Document[]
+	activity    ActivityEvent[]
+	tags        Tag[]
+
+	@@map("workspaces")
+}
+
+model WorkspaceMembership {
+	workspaceId String    @map("workspace_id") @db.Uuid
+	userId      String    @map("user_id") @db.Uuid
+	role        String
+	createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+	workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+	user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+	@@id([workspaceId, userId])
+	@@map("workspace_memberships")
+}
+
+model Session {
+	id        String   @id
+	userId    String   @map("user_id") @db.Uuid
+	createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+	expiresAt DateTime @map("expires_at") @db.Timestamptz(6)
+	user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+	@@map("sessions")
+}
+
+model IngestSource {
+	id          String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	workspaceId String            @map("workspace_id") @db.Uuid
+	kind        String
+	name        String
+	createdBy   String            @map("created_by") @db.Uuid
+	createdAt   DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+	workspace   Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+	creator     User              @relation("IngestSourceCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+	versions    DocumentVersion[]
+
+	@@map("ingest_sources")
+}
+
+model Document {
+	id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	workspaceId     String            @map("workspace_id") @db.Uuid
+	title           String
+	slug            String
+	status          String            @default("active")
+	createdBy       String            @map("created_by") @db.Uuid
+	latestVersionId String?           @map("latest_version_id") @db.Uuid
+	createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+	updatedAt       DateTime          @default(now()) @map("updated_at") @db.Timestamptz(6)
+	workspace       Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+	creator         User              @relation("DocumentCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+	latestVersion   DocumentVersion?  @relation("DocumentLatestVersion", fields: [latestVersionId], references: [id], onDelete: SetNull)
+	versions        DocumentVersion[] @relation("DocumentVersions")
+	shares          DocumentShare[]
+	annotations     Annotation[]
+	activity        ActivityEvent[]
+	tags            DocumentTag[]
+	chunks          DocumentChunk[]
+
+	@@unique([workspaceId, slug])
+	@@index([workspaceId, updatedAt(sort: Desc)], map: "idx_documents_workspace_updated")
+	@@map("documents")
+}
+
+model DocumentVersion {
+	id              String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	documentId      String          @map("document_id") @db.Uuid
+	versionNumber   Int             @map("version_number")
+	contentMarkdown String          @map("content_markdown")
+	contentHtml     String          @map("content_html")
+	contentText     String          @map("content_text")
+	contentHash     String          @map("content_hash")
+	authoredBy      String          @map("authored_by") @db.Uuid
+	ingestSourceId  String?         @map("ingest_source_id") @db.Uuid
+	createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+	document        Document        @relation("DocumentVersions", fields: [documentId], references: [id], onDelete: Cascade)
+	latestFor       Document[]      @relation("DocumentLatestVersion")
+	author          User            @relation("VersionAuthor", fields: [authoredBy], references: [id], onDelete: Cascade)
+	ingestSource    IngestSource?   @relation(fields: [ingestSourceId], references: [id], onDelete: SetNull)
+	shares          DocumentShare[]
+	annotations     Annotation[]
+	chunks          DocumentChunk[]
+
+	@@unique([documentId, versionNumber])
+	@@index([documentId, versionNumber(sort: Desc)], map: "idx_versions_document")
+	@@map("document_versions")
+}
+
+model DocumentShare {
+	id                 String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	documentId         String          @map("document_id") @db.Uuid
+	documentVersionId  String          @map("document_version_id") @db.Uuid
+	token              String          @unique
+	includeAnnotations Boolean         @default(false) @map("include_annotations")
+	createdBy          String          @map("created_by") @db.Uuid
+	createdAt          DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+	document           Document        @relation(fields: [documentId], references: [id], onDelete: Cascade)
+	version            DocumentVersion @relation(fields: [documentVersionId], references: [id], onDelete: Cascade)
+	creator            User            @relation("ShareCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+
+	@@map("document_shares")
+}
+
+model Annotation {
+	id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	documentId        String              @map("document_id") @db.Uuid
+	documentVersionId String              @map("document_version_id") @db.Uuid
+	authorId          String              @map("author_id") @db.Uuid
+	quote             String
+	comment           String
+	startOffset       Int                 @map("start_offset")
+	endOffset         Int                 @map("end_offset")
+	prefixText        String              @default("") @map("prefix_text")
+	suffixText        String              @default("") @map("suffix_text")
+	createdAt         DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+	document          Document            @relation(fields: [documentId], references: [id], onDelete: Cascade)
+	version           DocumentVersion     @relation(fields: [documentVersionId], references: [id], onDelete: Cascade)
+	author            User                @relation("AnnotationAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+	comments          AnnotationComment[]
+
+	@@index([documentVersionId, createdAt], map: "idx_annotations_version")
+	@@map("annotations")
+}
+
+model AnnotationComment {
+	id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	annotationId String     @map("annotation_id") @db.Uuid
+	authorId     String     @map("author_id") @db.Uuid
+	body         String
+	createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+	annotation   Annotation @relation(fields: [annotationId], references: [id], onDelete: Cascade)
+	author       User       @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+
+	@@map("annotation_comments")
+}
+
+model ActivityEvent {
+	id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	workspaceId String     @map("workspace_id") @db.Uuid
+	documentId  String?    @map("document_id") @db.Uuid
+	actorId     String?    @map("actor_id") @db.Uuid
+	eventType   String     @map("event_type")
+	summary     String
+	createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+	workspace   Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+	document    Document?  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+	actor       User?      @relation("ActivityActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+	@@index([workspaceId, createdAt(sort: Desc)], map: "idx_activity_workspace")
+	@@map("activity_events")
+}
+
+model Tag {
+	id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	workspaceId String        @map("workspace_id") @db.Uuid
+	name        String
+	createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+	workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+	documents   DocumentTag[]
+
+	@@unique([workspaceId, name])
+	@@map("tags")
+}
+
+model DocumentTag {
+	documentId String   @map("document_id") @db.Uuid
+	tagId      String   @map("tag_id") @db.Uuid
+	document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+	tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+	@@id([documentId, tagId])
+	@@map("document_tags")
+}
+
+model DocumentChunk {
+	id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	documentId        String          @map("document_id") @db.Uuid
+	documentVersionId String          @map("document_version_id") @db.Uuid
+	chunkIndex        Int             @default(0) @map("chunk_index")
+	chunkCount        Int             @default(1) @map("chunk_count")
+	tokenCount        Int             @default(0) @map("token_count")
+	content           String
+	searchText        String          @map("search_text")
+	searchVector      Unsupported("tsvector")? @map("search_vector")
+	embedding         Unsupported("vector(32)")
+	createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+	document          Document        @relation(fields: [documentId], references: [id], onDelete: Cascade)
+	version           DocumentVersion @relation(fields: [documentVersionId], references: [id], onDelete: Cascade)
+
+	@@index([documentVersionId], map: "idx_chunks_document_version")
+	@@map("document_chunks")
+}
