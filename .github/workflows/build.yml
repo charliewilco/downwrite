@@ -7,6 +7,23 @@ on:
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_DB: downwrite
+          POSTGRES_USER: downwrite
+          POSTGRES_PASSWORD: downwrite
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U downwrite -d downwrite"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DOWNWRITE_DATABASE_URL: postgresql://downwrite:downwrite@localhost:5432/downwrite
+      DOWNWRITE_SESSION_SECRET: ci-local-secret-with-at-least-thirty-two-characters
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -22,8 +39,6 @@ jobs:
 
       - name: Validate Prisma schema
         run: npm run prisma:validate
-        env:
-          DOWNWRITE_DATABASE_URL: postgresql://downwrite:downwrite@localhost:5432/downwrite
 
       - name: Lint
         run: npm run lint

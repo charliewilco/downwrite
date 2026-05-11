@@ -12,6 +12,7 @@
 		"test:e2e": "playwright test",
 		"seed:test-user": "tsx src/seed-test-user.ts",
 		"start": "node dist/server.js",
+		"start:e2e": "npm run prisma:deploy && npm run start",
 		"prisma:generate": "prisma generate",
 		"prisma:migrate": "prisma migrate dev",
 		"prisma:deploy": "prisma migrate deploy",
