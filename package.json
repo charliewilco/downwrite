@@ -10,6 +10,7 @@
 		"lint": "biome check",
 		"test": "node --test --import tsx \"src/**/*.test.ts\" \"tests/**/*.test.ts\"",
 		"test:e2e": "playwright test",
+		"seed:test-user": "tsx src/seed-test-user.ts",
 		"start": "node dist/server.js",
 		"prisma:generate": "prisma generate",
 		"prisma:migrate": "prisma migrate dev",

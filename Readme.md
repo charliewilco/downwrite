@@ -60,10 +60,16 @@ export DOWNWRITE_MCP_WRITE_ENABLED=false
 ```bash
 npm ci
 npm run prisma:deploy
+npm run seed:test-user
 npm run dev
 ```
 
 Prisma migration files are the canonical schema-change artifact. The Hono runtime does not apply embedded startup schema DDL.
+
+For local development and E2E setup, `npm run seed:test-user` creates or repairs a Better Auth-backed test account:
+
+- Email: `test@downwrite.local`
+- Password: `downwrite-test-password`
 
 ## Local Apple container workflow
 
@@ -95,6 +101,7 @@ npm run check
 npm run lint
 npm test
 npm run test:e2e
+npm run seed:test-user
 npm run build
 npm run prisma:validate
 container build -t downwrite:dev .

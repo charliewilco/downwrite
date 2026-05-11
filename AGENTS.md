@@ -23,6 +23,7 @@ Use Better Auth for authentication, mounted through Hono under `/api/auth/*` wit
 - `npm run lint`: run Biome checks.
 - `npm test`: run unit and service-level tests with Node's built-in test runner.
 - `npm run test:e2e`: run Playwright end-to-end tests.
+- `npm run seed:test-user`: create or repair the local Better Auth test user.
 - `npm run build`: compile the Hono runtime into `dist/`.
 - `npm run prisma:validate`: validate the Prisma schema.
 - `npm run prisma:deploy`: apply Prisma migrations.
