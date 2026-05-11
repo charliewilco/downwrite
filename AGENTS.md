@@ -14,10 +14,15 @@ Reserve richer client-side interactivity for high-value areas: side-by-side docu
 
 For document diffs, use https://diffs.com/ as the visual and product reference. Start with a simple text diff API and clean UI placeholder; do not overbuild v1. The intended direction is readable side-by-side comparison with clear insertions/deletions, document/version metadata, source/provenance context, easy human scanning, and beautiful but restrained rendering.
 
+Use Better Auth for authentication, mounted through Hono under `/api/auth/*` with the Prisma adapter. Do not reintroduce bespoke password hashing, custom session tables, or hand-rolled auth flows unless explicitly approved.
+
 ## Build, Test, and Development Commands
 
 - `npm run dev`: run the Hono service locally. Requires `DOWNWRITE_DATABASE_URL` and `DOWNWRITE_SESSION_SECRET`.
 - `npm run check`: type-check the Hono runtime.
+- `npm run lint`: run Biome checks.
+- `npm test`: run unit and service-level tests with Node's built-in test runner.
+- `npm run test:e2e`: run Playwright end-to-end tests.
 - `npm run build`: compile the Hono runtime into `dist/`.
 - `npm run prisma:validate`: validate the Prisma schema.
 - `npm run prisma:deploy`: apply Prisma migrations.
@@ -25,11 +30,11 @@ For document diffs, use https://diffs.com/ as the visual and product reference. 
 
 ## Coding Style & Naming Conventions
 
-Prefer tabs for indentation where the language/tooling supports it. TypeScript must remain `tsc` friendly. Keep Hono handlers, store functions, and view helpers descriptive and aligned with domain terms such as documents, versions, annotations, and workspaces.
+Prefer tabs for indentation where the language/tooling supports it. TypeScript must remain `tsc` and Biome friendly. Keep Hono handlers, store functions, and view helpers descriptive and aligned with domain terms such as documents, versions, annotations, and workspaces.
 
 ## Testing Guidelines
 
-Prefer focused tests around persistence, request handling, markdown rendering, search, and security boundaries.
+Use Node's built-in test runner as the default for unit and service-level tests. Prefer focused tests around persistence, request handling, markdown rendering, search, and security boundaries. Use Playwright for browser-level end-to-end coverage.
 
 ## Commit & Pull Request Guidelines
 

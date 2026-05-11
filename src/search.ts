@@ -32,7 +32,11 @@ export type SearchResult = {
 };
 
 export function chunkMarkdown(content: string): ChunkDraft[] {
-	const segments = content.replace(/\r\n?/g, "\n").split("\n\n").map((part) => part.trim()).filter(Boolean);
+	const segments = content
+		.replace(/\r\n?/g, "\n")
+		.split("\n\n")
+		.map((part) => part.trim())
+		.filter(Boolean);
 	const chunks: ChunkDraft[] = [];
 	let current = "";
 
@@ -42,7 +46,11 @@ export function chunkMarkdown(content: string): ChunkDraft[] {
 			current = "";
 			return;
 		}
-		chunks.push({ content: text, chunkIndex: chunks.length, tokenCount: tokenizeSearchText(text).length });
+		chunks.push({
+			content: text,
+			chunkIndex: chunks.length,
+			tokenCount: tokenizeSearchText(text).length,
+		});
 		current = "";
 	};
 
@@ -52,7 +60,10 @@ export function chunkMarkdown(content: string): ChunkDraft[] {
 			continue;
 		}
 
-		if (current.length + 2 + segment.length > 900 || startsStructuredBlock(segment)) {
+		if (
+			current.length + 2 + segment.length > 900 ||
+			startsStructuredBlock(segment)
+		) {
 			appendChunk();
 			current = segment;
 			continue;
@@ -63,7 +74,15 @@ export function chunkMarkdown(content: string): ChunkDraft[] {
 	appendChunk();
 
 	const fallback = content.trim();
-	return chunks.length > 0 || !fallback ? chunks : [{ content: fallback, chunkIndex: 0, tokenCount: tokenizeSearchText(fallback).length }];
+	return chunks.length > 0 || !fallback
+		? chunks
+		: [
+				{
+					content: fallback,
+					chunkIndex: 0,
+					tokenCount: tokenizeSearchText(fallback).length,
+				},
+			];
 }
 
 export function searchTextForChunk(content: string): string {
@@ -83,7 +102,7 @@ export function deterministicEmbedding(text: string): number[] {
 }
 
 export function vectorLiteral(values: number[]): string {
-	return `[${values.map((value) => Number.isFinite(value) ? String(value) : "0").join(",")}]`;
+	return `[${values.map((value) => (Number.isFinite(value) ? String(value) : "0")).join(",")}]`;
 }
 
 export function parseVectorLiteral(value: string): number[] {
@@ -94,29 +113,53 @@ export function parseVectorLiteral(value: string): number[] {
 	return trimmed.split(",").map((part) => Number.parseFloat(part.trim()));
 }
 
-export function rankSemanticResults(query: string, candidates: SearchResult[], limit: number): SearchResult[] {
+export function rankSemanticResults(
+	query: string,
+	candidates: SearchResult[],
+	limit: number,
+): SearchResult[] {
 	const queryEmbedding = deterministicEmbedding(query);
 	return candidates
 		.map((candidate) => ({
 			...candidate,
-			semantic_score: cosineSimilarity(queryEmbedding, candidate.embedding ?? []),
+			semantic_score: cosineSimilarity(
+				queryEmbedding,
+				candidate.embedding ?? [],
+			),
 			snippet: snippetForResult(candidate.snippet, query),
 		}))
 		.filter((candidate) => candidate.semantic_score >= 0.2)
-		.sort((a, b) => b.semantic_score - a.semantic_score || a.chunk_id.localeCompare(b.chunk_id))
+		.sort(
+			(a, b) =>
+				b.semantic_score - a.semantic_score ||
+				a.chunk_id.localeCompare(b.chunk_id),
+		)
 		.slice(0, limit);
 }
 
-export function reciprocalRankFusion(lexical: SearchResult[], semantic: SearchResult[], limit: number): SearchResult[] {
+export function reciprocalRankFusion(
+	lexical: SearchResult[],
+	semantic: SearchResult[],
+	limit: number,
+): SearchResult[] {
 	const merged = new Map<string, SearchResult>();
 	const apply = (results: SearchResult[], source: "lexical" | "semantic") => {
 		results.forEach((result, index) => {
-			const existing = merged.get(result.chunk_id) ?? { ...result, combined_score: 0 };
+			const existing = merged.get(result.chunk_id) ?? {
+				...result,
+				combined_score: 0,
+			};
 			existing.combined_score += 1 / (60 + index + 1);
 			if (source === "lexical") {
-				existing.lexical_score = Math.max(existing.lexical_score, result.lexical_score);
+				existing.lexical_score = Math.max(
+					existing.lexical_score,
+					result.lexical_score,
+				);
 			} else {
-				existing.semantic_score = Math.max(existing.semantic_score, result.semantic_score);
+				existing.semantic_score = Math.max(
+					existing.semantic_score,
+					result.semantic_score,
+				);
 			}
 			if (!existing.snippet) {
 				existing.snippet = result.snippet;
@@ -128,7 +171,12 @@ export function reciprocalRankFusion(lexical: SearchResult[], semantic: SearchRe
 	apply(lexical, "lexical");
 	apply(semantic, "semantic");
 	return [...merged.values()]
-		.sort((a, b) => b.combined_score - a.combined_score || b.lexical_score - a.lexical_score || b.semantic_score - a.semantic_score)
+		.sort(
+			(a, b) =>
+				b.combined_score - a.combined_score ||
+				b.lexical_score - a.lexical_score ||
+				b.semantic_score - a.semantic_score,
+		)
 		.slice(0, limit);
 }
 
@@ -142,7 +190,12 @@ export function snippetForResult(content: string, query: string): string {
 	for (const token of tokenizeSearchText(query)) {
 		const index = lower.indexOf(token);
 		if (index >= 0) {
-			return trimmed.slice(Math.max(index - 60, 0), Math.min(index + token.length + 120, trimmed.length)).trim();
+			return trimmed
+				.slice(
+					Math.max(index - 60, 0),
+					Math.min(index + token.length + 120, trimmed.length),
+				)
+				.trim();
 		}
 	}
 
@@ -150,16 +203,22 @@ export function snippetForResult(content: string, query: string): string {
 }
 
 function tokenizeSearchText(text: string): string[] {
-	return text.toLowerCase().replace(/[^a-z0-9 ]+/g, " ").split(/\s+/).filter(Boolean);
+	return text
+		.toLowerCase()
+		.replace(/[^a-z0-9 ]+/g, " ")
+		.split(/\s+/)
+		.filter(Boolean);
 }
 
 function startsStructuredBlock(segment: string): boolean {
-	return segment.startsWith("#")
-		|| segment.startsWith(">")
-		|| segment.startsWith("```")
-		|| segment.startsWith("- ")
-		|| segment.startsWith("* ")
-		|| segment.startsWith("1. ");
+	return (
+		segment.startsWith("#") ||
+		segment.startsWith(">") ||
+		segment.startsWith("```") ||
+		segment.startsWith("- ") ||
+		segment.startsWith("* ") ||
+		segment.startsWith("1. ")
+	);
 }
 
 function cosineSimilarity(a: number[], b: number[]): number {

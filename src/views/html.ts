@@ -1,8 +1,16 @@
-import { ActivityEvent, AnnotationThread, Document, DocumentVersion, User, Workspace } from "../store.js";
-import { DiffLine, DiffSummary } from "../diff.js";
+import type { AuthSession } from "../auth.js";
+import type { DiffLine, DiffSummary } from "../diff.js";
+import type {
+	ActivityEvent,
+	AnnotationThread,
+	Document,
+	DocumentVersion,
+	Workspace,
+} from "../store.js";
 
 export type Viewer = {
-	user: User;
+	user: AuthSession["user"];
+	session: AuthSession["session"];
 	workspace: Workspace;
 	workspaces: Workspace[];
 };
@@ -23,7 +31,9 @@ export function page(title: string, body: string): string {
 }
 
 export function home(): string {
-	return page("Downwrite", `<main class="marketing">
+	return page(
+		"Downwrite",
+		`<main class="marketing">
 	<section class="hero">
 		<p class="eyebrow">Markdown document hub</p>
 		<h1>Downwrite</h1>
@@ -33,12 +43,15 @@ export function home(): string {
 			<a class="button button-secondary" href="/login">Login</a>
 		</div>
 	</section>
-</main>`);
+</main>`,
+	);
 }
 
 export function auth(mode: "login" | "signup", error = ""): string {
 	const isSignup = mode === "signup";
-	return page(isSignup ? "Create account" : "Login", `<main class="auth-shell">
+	return page(
+		isSignup ? "Create account" : "Login",
+		`<main class="auth-shell">
 	<section class="panel auth-panel">
 		<p class="eyebrow">${isSignup ? "Create account" : "Welcome back"}</p>
 		<h1>${isSignup ? "Create account" : "Login"}</h1>
@@ -50,11 +63,18 @@ export function auth(mode: "login" | "signup", error = ""): string {
 			<button class="button" type="submit">${isSignup ? "Create account" : "Login"}</button>
 		</form>
 	</section>
-</main>`);
+</main>`,
+	);
 }
 
-export function workspace(viewer: Viewer, documents: Array<Document & { version_number: number; excerpt: string }>, results: unknown[]): string {
-	return page("Workspace", `<main class="app-shell">
+export function workspace(
+	viewer: Viewer,
+	documents: Array<Document & { version_number: number; excerpt: string }>,
+	results: unknown[],
+): string {
+	return page(
+		"Workspace",
+		`<main class="app-shell">
 	${topbar(viewer, "Workspace", viewer.workspace.name)}
 	<section class="workspace-intake">
 		<form method="post" action="/app/documents" class="stack-form">
@@ -72,11 +92,14 @@ export function workspace(viewer: Viewer, documents: Array<Document & { version_
 		${documentsList(documents)}
 	</section>
 	${results.length > 0 ? `<section class="workspace-feed"><h2>Search</h2><pre>${escapeHTML(JSON.stringify(results, null, 2))}</pre></section>` : ""}
-</main>`);
+</main>`,
+	);
 }
 
 export function newDocument(viewer: Viewer): string {
-	return page("New document", `<main class="app-shell narrow">
+	return page(
+		"New document",
+		`<main class="app-shell narrow">
 	${topbar(viewer, "New document", "Create document")}
 	<section class="form-sheet">
 		<form method="post" action="/app/documents" class="stack-form">
@@ -86,11 +109,20 @@ export function newDocument(viewer: Viewer): string {
 			<button class="button" type="submit">Create document</button>
 		</form>
 	</section>
-</main>`);
+</main>`,
+	);
 }
 
-export function documentPage(viewer: Viewer, document: Document, version: DocumentVersion, versions: DocumentVersion[], annotations: AnnotationThread[]): string {
-	return page(document.title, `<main class="app-shell">
+export function documentPage(
+	viewer: Viewer,
+	document: Document,
+	version: DocumentVersion,
+	versions: DocumentVersion[],
+	annotations: AnnotationThread[],
+): string {
+	return page(
+		document.title,
+		`<main class="app-shell">
 	${topbar(viewer, "Document", document.title, `<a href="/app/documents/${document.id}/diff?to=${version.id}">Diff</a>`)}
 	<div class="document-stage">
 		<aside class="document-rail document-rail-left">
@@ -123,11 +155,22 @@ export function documentPage(viewer: Viewer, document: Document, version: Docume
 			<button class="button" type="submit">Create version</button>
 		</form>
 	</section>
-</main>`);
+</main>`,
+	);
 }
 
-export function diffPage(viewer: Viewer, document: Document, versions: DocumentVersion[], from: DocumentVersion, to: DocumentVersion, rows: DiffLine[], summary: DiffSummary): string {
-	return page(`${document.title} diff`, `<main class="app-shell diff-shell">
+export function diffPage(
+	viewer: Viewer,
+	document: Document,
+	versions: DocumentVersion[],
+	from: DocumentVersion,
+	to: DocumentVersion,
+	rows: DiffLine[],
+	summary: DiffSummary,
+): string {
+	return page(
+		`${document.title} diff`,
+		`<main class="app-shell diff-shell">
 	${topbar(viewer, "Diff", document.title, `<a href="/app/documents/${document.id}?version=${to.id}">Back to document</a>`)}
 	<p class="subdued">Version ${from.version_number} to ${to.version_number} · ${summary.inserted} inserted · ${summary.deleted} deleted</p>
 	<form class="diff-toolbar" method="get" action="/app/documents/${document.id}/diff">
@@ -143,29 +186,44 @@ export function diffPage(viewer: Viewer, document: Document, versions: DocumentV
 		<div class="diff-header"><span>v${from.version_number}</span><span>v${to.version_number}</span></div>
 		${rows.map(diffRow).join("")}
 	</section>
-</main>`);
+</main>`,
+	);
 }
 
-export function sharePage(document: Document, version: DocumentVersion, annotations: AnnotationThread[]): string {
-	return page(document.title, `<main class="shared-shell">
+export function sharePage(
+	document: Document,
+	version: DocumentVersion,
+	annotations: AnnotationThread[],
+): string {
+	return page(
+		document.title,
+		`<main class="shared-shell">
 	<header class="topbar shell-header">
 		<div class="topbar-copy"><p class="eyebrow">Shared document</p><h1>${escapeHTML(document.title)}</h1></div>
 	</header>
 	<article class="reader-page shared-reader"><div class="reader-panel">${version.content_html}</div></article>
 	${annotations.length ? `<section class="shared-annotations">${annotations.map(annotationThread).join("")}</section>` : ""}
-</main>`);
+</main>`,
+	);
 }
 
 export function activityPage(viewer: Viewer, events: ActivityEvent[]): string {
-	return page("Activity", `<main class="app-shell narrow">
+	return page(
+		"Activity",
+		`<main class="app-shell narrow">
 	${topbar(viewer, "Activity", viewer.workspace.name)}
 	<section class="activity-sheet">
 		${events.map((event) => `<article><p>${escapeHTML(event.summary)}</p><time>${formatDate(event.created_at)}</time></article>`).join("") || `<p class="subdued">No activity yet.</p>`}
 	</section>
-</main>`);
+</main>`,
+	);
 }
 
-export function ingestResult(document: Document, version: DocumentVersion, source: { name: string }): string {
+export function ingestResult(
+	document: Document,
+	version: DocumentVersion,
+	source: { name: string },
+): string {
 	return `<section class="panel ingest-result">
 		<p class="eyebrow">Ingested</p>
 		<h2>${escapeHTML(document.title)}</h2>
@@ -174,28 +232,44 @@ export function ingestResult(document: Document, version: DocumentVersion, sourc
 	</section>`;
 }
 
-export function documentsPartial(documents: Array<Document & { version_number: number; excerpt: string }>): string {
+export function documentsPartial(
+	documents: Array<Document & { version_number: number; excerpt: string }>,
+): string {
 	return documentsList(documents);
 }
 
 export function annotationsPartial(annotations: AnnotationThread[]): string {
-	return annotations.map(annotationThread).join("") || `<p class="subdued">No annotations yet.</p>`;
+	return (
+		annotations.map(annotationThread).join("") ||
+		`<p class="subdued">No annotations yet.</p>`
+	);
 }
 
-function topbar(viewer: Viewer, eyebrow: string, title: string, extraNav = ""): string {
+function topbar(
+	viewer: Viewer,
+	eyebrow: string,
+	title: string,
+	extraNav = "",
+): string {
 	return `<header class="topbar shell-header">
 		<div class="topbar-copy"><p class="eyebrow">${escapeHTML(eyebrow)}</p><h1>${escapeHTML(title)}</h1><p class="subdued">${escapeHTML(viewer.user.name)}</p></div>
 		<nav class="topnav"><a href="/app">Workspace</a><a href="/app/documents/new">New</a><a href="/app/activity">Activity</a>${extraNav}<form method="post" action="/logout"><button class="button button-secondary" type="submit">Logout</button></form></nav>
 	</header>`;
 }
 
-function documentsList(documents: Array<Document & { version_number: number; excerpt: string }>): string {
+function documentsList(
+	documents: Array<Document & { version_number: number; excerpt: string }>,
+): string {
 	if (documents.length === 0) {
 		return `<p class="subdued">No documents yet.</p>`;
 	}
-	return documents.map((document) => `<article class="document-link">
+	return documents
+		.map(
+			(document) => `<article class="document-link">
 		<a href="/app/documents/${document.id}"><strong>${escapeHTML(document.title)}</strong><span>v${document.version_number}</span><p>${escapeHTML(document.excerpt)}</p></a>
-	</article>`).join("");
+	</article>`,
+		)
+		.join("");
 }
 
 function annotationThread(thread: AnnotationThread): string {
@@ -210,7 +284,11 @@ function annotationThread(thread: AnnotationThread): string {
 	</article>`;
 }
 
-function versionSelect(name: string, versions: DocumentVersion[], selected: string): string {
+function versionSelect(
+	name: string,
+	versions: DocumentVersion[],
+	selected: string,
+): string {
 	return `<label><span>${name}</span><select name="${name}">
 		${versions.map((version) => `<option value="${version.id}" ${version.id === selected ? "selected" : ""}>v${version.version_number} · ${formatDate(version.created_at)}</option>`).join("")}
 	</select></label>`;

@@ -9,3 +9,4 @@ api/docs
 bin/
 tmp/
 coverage.out
+test-results/

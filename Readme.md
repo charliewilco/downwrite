@@ -7,6 +7,8 @@ This repository now contains the v3 Hono implementation:
 - `Hono + server-rendered HTML + HTMX-compatible partials`
 - `Postgres + pgvector`
 - `Prisma schema and migrations`
+- `Better Auth with the Prisma adapter`
+- `Biome formatting and linting`
 - OCI-first container definition via `Containerfile`
 - server-rendered UI with small JS islands
 - document versioning
@@ -26,6 +28,10 @@ Database-layer work is built around Prisma, Prisma migrations, Postgres, and pgv
 Document diff rendering starts with a simple text diff API and a clean side-by-side UI placeholder. The intended product direction is closer to [diffs.com](https://diffs.com/): readable comparison, clear insertions and deletions, document/version metadata, source and provenance context, and restrained rendering that is easy to scan.
 
 Client-side behavior should stay limited by default. Prefer server-rendered HTML, Hono-rendered views, form posts, progressive enhancement, and small Preact islands only where they materially improve workflows. Reserve heavier interaction for side-by-side document viewing, merge canvas, document stacks, diff viewer enhancements, query playgrounds, and retrieval trace inspection.
+
+Authentication uses Better Auth mounted under `/api/auth/*` with the Prisma adapter. Keep auth changes inside that integration unless there is a clear reason to extend it; do not reintroduce bespoke password hashing or hand-rolled session storage.
+
+Testing should stay boring and fast by default. Use Node's built-in test runner for unit and service-level tests, and reserve Playwright for end-to-end browser coverage.
 
 ## Container policy
 
@@ -86,6 +92,9 @@ Notes:
 
 ```bash
 npm run check
+npm run lint
+npm test
+npm run test:e2e
 npm run build
 npm run prisma:validate
 container build -t downwrite:dev .

@@ -4,8 +4,12 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsc",
-		"check": "tsc --noEmit",
+		"check": "tsc --noEmit -p tsconfig.check.json",
 		"dev": "tsx src/server.ts",
+		"format": "biome format --write",
+		"lint": "biome check",
+		"test": "node --test --import tsx \"src/**/*.test.ts\" \"tests/**/*.test.ts\"",
+		"test:e2e": "playwright test",
 		"start": "node dist/server.js",
 		"prisma:generate": "prisma generate",
 		"prisma:migrate": "prisma migrate dev",
@@ -13,14 +17,17 @@
 		"prisma:validate": "prisma validate"
 	},
 	"dependencies": {
+		"@better-auth/prisma-adapter": "^1.6.10",
 		"@hono/node-server": "^2.0.2",
 		"@prisma/client": "^6.0.0",
-		"bcryptjs": "^3.0.3",
+		"better-auth": "^1.6.10",
 		"hono": "^4.12.18",
 		"marked": "^18.0.3",
 		"zod": "^4.4.3"
 	},
 	"devDependencies": {
+		"@biomejs/biome": "^2.4.15",
+		"@playwright/test": "^1.59.1",
 		"@types/node": "^25.6.2",
 		"prisma": "^6.0.0",
 		"tsx": "^4.21.0",

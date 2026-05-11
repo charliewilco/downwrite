@@ -5,11 +5,16 @@ export function randomToken(bytes = 18): string {
 }
 
 export function signValue(secret: string, value: string): string {
-	const signature = createHmac("sha256", secret).update(value).digest("base64url");
+	const signature = createHmac("sha256", secret)
+		.update(value)
+		.digest("base64url");
 	return `${value}.${signature}`;
 }
 
-export function verifySignedValue(secret: string, signed: string): string | null {
+export function verifySignedValue(
+	secret: string,
+	signed: string,
+): string | null {
 	const index = signed.lastIndexOf(".");
 	if (index <= 0) {
 		return null;
@@ -17,7 +22,9 @@ export function verifySignedValue(secret: string, signed: string): string | null
 
 	const value = signed.slice(0, index);
 	const signature = signed.slice(index + 1);
-	const expected = createHmac("sha256", secret).update(value).digest("base64url");
+	const expected = createHmac("sha256", secret)
+		.update(value)
+		.digest("base64url");
 	const actualBuffer = Buffer.from(signature);
 	const expectedBuffer = Buffer.from(expected);
 

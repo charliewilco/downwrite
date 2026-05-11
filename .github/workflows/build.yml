@@ -25,8 +25,20 @@ jobs:
         env:
           DOWNWRITE_DATABASE_URL: postgresql://downwrite:downwrite@localhost:5432/downwrite
 
+      - name: Lint
+        run: npm run lint
+
       - name: Type-check
         run: npm run check
 
+      - name: Test
+        run: npm test
+
       - name: Build
         run: npm run build
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: End-to-end test
+        run: npm run test:e2e
