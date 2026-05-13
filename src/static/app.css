@@ -957,6 +957,309 @@ textarea {
 	margin: 0;
 }
 
+/* Canvas-style workspace pass: flat shared board, quiet chrome, paper documents. */
+body {
+	background:
+		linear-gradient(color-mix(in oklab, var(--fg) 4%, transparent) 1px, transparent 1px),
+		linear-gradient(90deg, color-mix(in oklab, var(--fg) 4%, transparent) 1px, transparent 1px),
+		#f6f4ee;
+	background-size: 28px 28px;
+	color: #22201d;
+}
+
+:root {
+	--bg: #f6f4ee;
+	--fg: #22201d;
+	--site-color: #315fbd;
+	--surface-1: #fbfaf6;
+	--surface-2: #fffef9;
+	--surface-3: #ffffff;
+	--line: rgba(42, 38, 31, 0.13);
+	--line-strong: rgba(42, 38, 31, 0.24);
+	--muted: rgba(34, 32, 29, 0.58);
+	--ink-soft: rgba(34, 32, 29, 0.78);
+	--accent: #315fbd;
+	--accent-soft: #e8eefc;
+	--accent-ink: #264d9d;
+	--shadow-soft: 0 18px 42px rgba(36, 31, 22, 0.08);
+	--shadow-quiet: 0 1px 2px rgba(36, 31, 22, 0.06);
+	--radius-1: 6px;
+	--radius-2: 8px;
+	--type-page: clamp(1.9rem, 3vw, 2.8rem);
+	--type-section: clamp(1.18rem, 1.5vw, 1.45rem);
+}
+
+.marketing,
+.auth-shell,
+.app-shell {
+	width: min(100%, 96rem);
+	padding-top: var(--space-4);
+}
+
+.hero,
+.panel,
+.reader-page,
+.activity-sheet,
+.shared-annotations,
+.library-index,
+.workspace-intake,
+.workspace-feed,
+.form-sheet,
+.diff-panel,
+.annotation-form-shell {
+	border-radius: var(--radius-2);
+	box-shadow: var(--shadow-quiet);
+}
+
+.hero {
+	max-width: 54rem;
+	margin-top: 12vh;
+	background: rgba(255, 254, 249, 0.92);
+	border-color: var(--line-strong);
+}
+
+.hero h1,
+.topbar h1 {
+	letter-spacing: 0;
+}
+
+.shell-header {
+	align-items: center;
+	margin: 0 calc(var(--space-5) * -1) var(--space-4);
+	padding: var(--space-3) var(--space-5);
+	background: rgba(255, 254, 249, 0.78);
+	border: 1px solid var(--line);
+	border-radius: 0;
+	box-shadow: 0 1px 0 rgba(36, 31, 22, 0.04);
+}
+
+.topbar-copy {
+	gap: 0;
+}
+
+.topbar-copy .subdued {
+	font-size: 0.86rem;
+}
+
+.topnav {
+	gap: var(--space-2);
+	font-size: 0.9rem;
+}
+
+.topnav a {
+	padding: 0.45rem 0.65rem;
+	border: 1px solid transparent;
+	border-radius: var(--radius-1);
+}
+
+.topnav a:hover,
+.topnav a:focus-visible {
+	background: var(--accent-soft);
+	border-color: color-mix(in oklab, var(--accent) 20%, transparent);
+}
+
+.button {
+	min-height: 2.35rem;
+	padding: 0.55rem 0.82rem;
+	border-radius: var(--radius-1);
+	background: var(--accent);
+	font-size: 0.88rem;
+	box-shadow: none;
+}
+
+.button-secondary {
+	background: #ffffff;
+	color: var(--ink);
+	border-color: var(--line-strong);
+}
+
+.button:hover,
+.button:focus-visible {
+	transform: none;
+	box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 12%, transparent);
+}
+
+.canvas-board {
+	display: grid;
+	grid-template-columns: minmax(18rem, 26rem) minmax(0, 1fr);
+	align-items: start;
+	gap: var(--space-4);
+}
+
+.workspace-intake,
+.library-index,
+.workspace-feed,
+.activity-sheet,
+.form-sheet {
+	background: rgba(255, 254, 249, 0.9);
+	border-color: var(--line-strong);
+}
+
+.workspace-intake {
+	position: sticky;
+	top: var(--space-4);
+}
+
+.section-heading-inline {
+	align-items: center;
+	padding-bottom: var(--space-4);
+	border-bottom: 1px solid var(--line);
+}
+
+.section-heading-inline form {
+	width: min(100%, 18rem);
+}
+
+label {
+	color: var(--ink-soft);
+}
+
+input,
+textarea {
+	border-radius: var(--radius-1);
+	background: #fff;
+	border-color: var(--line-strong);
+	box-shadow: inset 0 1px 0 rgba(36, 31, 22, 0.03);
+}
+
+textarea {
+	font-family: var(--mono);
+	font-size: 0.92rem;
+}
+
+.document-link {
+	position: relative;
+	display: block;
+	margin-top: var(--space-3);
+	padding: 0;
+	background: #fff;
+	border: 1px solid var(--line);
+	border-left: 3px solid color-mix(in oklab, var(--accent) 54%, #fff);
+	border-radius: var(--radius-2);
+	box-shadow: var(--shadow-quiet);
+}
+
+.document-link:hover,
+.document-link:focus-visible {
+	transform: translateY(-1px);
+	border-color: var(--line-strong);
+}
+
+.document-link a {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: var(--space-2);
+	padding: var(--space-4);
+	text-decoration: none;
+}
+
+.document-link strong {
+	font-size: 1rem;
+}
+
+.document-link span {
+	align-self: start;
+	padding: 0.18rem 0.42rem;
+	border-radius: var(--radius-1);
+	background: var(--accent-soft);
+	color: var(--accent-ink);
+	font-family: var(--mono);
+	font-size: 0.72rem;
+}
+
+.document-link p {
+	grid-column: 1 / -1;
+	margin: 0;
+	color: var(--muted);
+	font-size: 0.9rem;
+}
+
+.document-stage {
+	grid-template-columns: minmax(12rem, 15rem) minmax(28rem, 1fr) minmax(17rem, 22rem);
+	gap: var(--space-4);
+}
+
+.document-rail {
+	padding: var(--space-4);
+	background: rgba(255, 254, 249, 0.86);
+	border: 1px solid var(--line);
+	border-radius: var(--radius-2);
+}
+
+.document-rail h2 {
+	margin: 0 0 var(--space-3);
+	font-size: 1rem;
+}
+
+.document-rail a {
+	display: block;
+	padding: 0.48rem 0;
+	color: var(--ink-soft);
+	text-decoration: none;
+	border-top: 1px solid var(--line);
+}
+
+.document-rail a:hover,
+.document-rail a:focus-visible {
+	color: var(--accent-ink);
+}
+
+.reader-page {
+	padding: var(--space-7) min(5vw, var(--space-8));
+	background: #fffef9;
+	border: 1px solid rgba(42, 38, 31, 0.18);
+	border-radius: var(--radius-2);
+	box-shadow:
+		0 1px 0 rgba(42, 38, 31, 0.08),
+		0 20px 48px rgba(42, 38, 31, 0.08);
+}
+
+.reader-panel {
+	max-width: 44rem;
+	margin: 0 auto;
+	padding: 0;
+	font-family: var(--serif);
+	font-size: var(--type-reading);
+	line-height: 1.8;
+	color: var(--ink-soft);
+}
+
+.reader-panel h1,
+.reader-panel h2,
+.reader-panel h3 {
+	color: var(--ink);
+	letter-spacing: 0;
+}
+
+.annotation-callout {
+	background: #fff;
+	border-style: solid;
+	border-color: var(--line-strong);
+	border-left: 3px solid #e0b446;
+}
+
+.share-box {
+	background: #fff;
+	border-color: var(--line-strong);
+}
+
+.diff-panel {
+	background: #fff;
+	border-color: var(--line-strong);
+}
+
+.diff-header {
+	background: #fbfaf6;
+}
+
+.diff-row-inserted .diff-cell-right {
+	background: #edf8ee;
+}
+
+.diff-row-deleted .diff-cell-left {
+	background: #fff0ed;
+}
+
 @media (max-width: 1100px) {
 	.document-stage {
 		grid-template-columns: minmax(0, 1fr);

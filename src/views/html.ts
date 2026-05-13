@@ -35,9 +35,9 @@ export function home(): string {
 		"Downwrite",
 		`<main class="marketing">
 	<section class="hero">
-		<p class="eyebrow">Markdown document hub</p>
+		<p class="eyebrow">Shared document canvas</p>
 		<h1>Downwrite</h1>
-		<p class="lede">Version documents, annotate exact quotes, search with provenance, and share immutable snapshots.</p>
+		<p class="lede">A calm place to collect working notes, shape them into durable documents, compare revisions, and leave context in the margins.</p>
 		<div class="actions">
 			<a class="button" href="/signup">Create account</a>
 			<a class="button button-secondary" href="/login">Login</a>
@@ -76,21 +76,27 @@ export function workspace(
 		"Workspace",
 		`<main class="app-shell">
 	${topbar(viewer, "Workspace", viewer.workspace.name)}
-	<section class="workspace-intake">
-		<form method="post" action="/app/documents" class="stack-form">
-			<label>Title<input name="title" required></label>
-			<label>Slug<input name="slug"></label>
-			<label>Markdown<textarea name="content" rows="10" required></textarea></label>
-			<button class="button" type="submit">Create document</button>
-		</form>
-	</section>
-	<section class="library-index">
-		<div class="section-heading-inline">
-			<h2>Documents</h2>
-			<form method="get" action="/app"><input name="q" placeholder="Search documents"></form>
-		</div>
-		${documentsList(documents)}
-	</section>
+	<div class="canvas-board">
+		<section class="workspace-intake">
+			<p class="eyebrow">New canvas item</p>
+			<form method="post" action="/app/documents" class="stack-form">
+				<label>Title<input name="title" required></label>
+				<label>Slug<input name="slug"></label>
+				<label>Markdown<textarea name="content" rows="10" required></textarea></label>
+				<button class="button" type="submit">Create document</button>
+			</form>
+		</section>
+		<section class="library-index">
+			<div class="section-heading-inline">
+				<div>
+					<p class="eyebrow">Library</p>
+					<h2>Documents</h2>
+				</div>
+				<form method="get" action="/app"><input name="q" placeholder="Search documents"></form>
+			</div>
+			${documentsList(documents)}
+		</section>
+	</div>
 	${results.length > 0 ? `<section class="workspace-feed"><h2>Search</h2><pre>${escapeHTML(JSON.stringify(results, null, 2))}</pre></section>` : ""}
 </main>`,
 	);
@@ -126,6 +132,7 @@ export function documentPage(
 	${topbar(viewer, "Document", document.title, `<a href="/app/documents/${document.id}/diff?to=${version.id}">Diff</a>`)}
 	<div class="document-stage">
 		<aside class="document-rail document-rail-left">
+			<p class="eyebrow">History</p>
 			<h2>Versions</h2>
 			${versions.map((item) => `<a href="/app/documents/${document.id}?version=${item.id}">v${item.version_number}</a>`).join("")}
 			<form method="post" action="/app/documents/${document.id}/shares">
@@ -137,6 +144,7 @@ export function documentPage(
 			<div class="reader-panel">${version.content_html}</div>
 		</article>
 		<aside class="document-rail document-rail-right">
+			<p class="eyebrow">Margin</p>
 			<h2>Annotations</h2>
 			${annotations.map(annotationThread).join("")}
 			<form method="post" action="/app/annotations" class="stack-form">
@@ -253,7 +261,7 @@ function topbar(
 ): string {
 	return `<header class="topbar shell-header">
 		<div class="topbar-copy"><p class="eyebrow">${escapeHTML(eyebrow)}</p><h1>${escapeHTML(title)}</h1><p class="subdued">${escapeHTML(viewer.user.name)}</p></div>
-		<nav class="topnav"><a href="/app">Workspace</a><a href="/app/documents/new">New</a><a href="/app/activity">Activity</a>${extraNav}<form method="post" action="/logout"><button class="button button-secondary" type="submit">Logout</button></form></nav>
+		<nav class="topnav"><a href="/app">Canvas</a><a href="/app/documents/new">New</a><a href="/app/activity">Activity</a>${extraNav}<form method="post" action="/logout"><button class="button button-secondary" type="submit">Logout</button></form></nav>
 	</header>`;
 }
 

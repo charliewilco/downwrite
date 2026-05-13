@@ -61,7 +61,7 @@ test("runs the core document workflow", async ({ context, page }) => {
 		).toBeVisible();
 		await expect(page.getByText("This is the first draft.")).toBeVisible();
 
-		await page.getByRole("link", { name: "Workspace" }).click();
+		await page.getByRole("link", { name: "Canvas" }).click();
 		await page.getByPlaceholder("Search documents").fill("first draft");
 		await page.keyboard.press("Enter");
 		await expect(page.getByRole("heading", { name: "Search" })).toBeVisible();
@@ -102,7 +102,7 @@ test("runs the core document workflow", async ({ context, page }) => {
 	});
 
 	await test.step("user can create and open a public share", async () => {
-		await page.getByRole("link", { name: "Workspace" }).click();
+		await page.getByRole("link", { name: "Canvas" }).click();
 		await page.getByRole("link", { name: document.title }).click();
 		await page.getByRole("button", { name: "Share" }).click();
 
