@@ -1,0 +1,38 @@
+{{define "stack_settings.html"}}
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>{{.Title}}</title>
+		<link rel="stylesheet" href="/static/app.css?v=canvas13">
+		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+		<script type="module" src="/static/app.js?v=canvas13"></script>
+	</head>
+	<body>
+<main class="app-shell canvas-document-app settings-app">
+	<header class="canvas-toolbar document-toolbar">
+		<a class="toolbar-icon" href="/app/stacks/{{.Stack.ID}}" aria-label="Back">{{template "icon_arrow_left" .}}</a>
+		<h1>Stack settings</h1>
+		<div></div>
+	</header>
+
+	<section class="settings-stage">
+		<div class="settings-heading">
+			<p class="eyebrow">Stack</p>
+			<h2>{{.Stack.Name}}</h2>
+		</div>
+
+		<form class="settings-form" method="post" action="/app/stacks/{{.Stack.ID}}/settings">
+			<label>Title <input type="text" name="name" value="{{.Stack.Name}}" required autofocus></label>
+			<label class="checkbox-row settings-checkbox"><input type="checkbox" name="public" {{if .Stack.Public}}checked{{end}}> Public stack</label>
+			<div class="settings-actions">
+				<a class="button button-secondary" href="/app/stacks/{{.Stack.ID}}">Cancel</a>
+				<button class="button" type="submit">Save stack</button>
+			</div>
+		</form>
+	</section>
+</main>
+	</body>
+</html>
+{{end}}

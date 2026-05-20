@@ -5,13 +5,14 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>{{.Title}}</title>
-		<link rel="stylesheet" href="/static/app.css">
+		<link rel="stylesheet" href="/static/app.css?v=canvas13">
 		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
-		<script defer src="/static/app.js"></script>
+		<script type="module" src="/static/app.js?v=canvas13"></script>
 	</head>
 	<body>
 <main class="auth-shell">
-	<form class="panel auth-panel" method="post" action="{{.Action}}">
+	<form class="panel auth-panel form-stack" method="post" action="{{.Action}}">
+		<p class="eyebrow">{{if eq .Mode "signup"}}Create account{{else}}Welcome back{{end}}</p>
 		<h1>{{.Title}}</h1>
 		{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
 		{{if eq .Mode "signup"}}

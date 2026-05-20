@@ -1,0 +1,37 @@
+{{define "workspace_settings.html"}}
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>{{.Title}}</title>
+		<link rel="stylesheet" href="/static/app.css?v=canvas13">
+		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+		<script type="module" src="/static/app.js?v=canvas13"></script>
+	</head>
+	<body>
+<main class="app-shell canvas-document-app settings-app">
+	<header class="canvas-toolbar document-toolbar">
+		<a class="toolbar-icon" href="/app" aria-label="Back">{{template "icon_arrow_left" .}}</a>
+		<h1>Workspace settings</h1>
+		<div></div>
+	</header>
+
+	<section class="settings-stage">
+		<div class="settings-heading">
+			<p class="eyebrow">Workspace</p>
+			<h2>{{.Viewer.Workspace.Name}}</h2>
+		</div>
+
+		<form class="settings-form" method="post" action="/app/settings">
+			<label>Name <input type="text" name="name" value="{{.Viewer.Workspace.Name}}" required autofocus></label>
+			<div class="settings-actions">
+				<a class="button button-secondary" href="/app">Cancel</a>
+				<button class="button" type="submit">Save workspace</button>
+			</div>
+		</form>
+	</section>
+</main>
+	</body>
+</html>
+{{end}}
