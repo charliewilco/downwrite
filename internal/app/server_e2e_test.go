@@ -6,6 +6,8 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func TestHomeRedirectsAuthenticatedUserToApp(t *testing.T) {
@@ -107,6 +109,182 @@ func TestDocumentLifecycleAndShareFlow(t *testing.T) {
 	body := shareRecorder.Body.String()
 	if !strings.Contains(body, "/s/token-") {
 		t.Fatalf("expected share url in response, got %q", body)
+	}
+}
+
+func TestWorkspaceAndDocumentRenderWebComponents(t *testing.T) {
+	router, store, cfg := newTestRouter(t)
+	session, err := store.CreateSession(t.Context(), store.defaultUser.ID)
+	if err != nil {
+		t.Fatalf("create session: %v", err)
+	}
+
+	document, _, err := store.CreateDocument(t.Context(), CreateDocumentParams{
+		WorkspaceID: store.defaultWorkspace.ID,
+		CreatedBy:   store.defaultUser.ID,
+		Title:       "Interface Notes",
+		Slug:        "interface-notes",
+		Content:     "# Interface\n\nKeep it direct.",
+	})
+	if err != nil {
+		t.Fatalf("create document: %v", err)
+	}
+
+	workspaceReq := httptest.NewRequest(http.MethodGet, "/app", nil)
+	workspaceReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	workspaceRecorder := newRecorder()
+	router.ServeHTTP(workspaceRecorder, workspaceReq)
+
+	if workspaceRecorder.Code != http.StatusOK {
+		t.Fatalf("expected workspace render, got %d", workspaceRecorder.Code)
+	}
+
+	workspaceBody := workspaceRecorder.Body.String()
+	for _, expected := range []string{
+		`<script type="module" src="/static/app.js?v=canvas13"></script>`,
+		"<dw-dropzone>",
+		"<dw-document-card",
+		`href="/app/stacks/`,
+		`color="sky"`,
+		`typeface="sans-serif"`,
+		`class="feather-icon"`,
+		`href="/new"`,
+		`href="/app/settings"`,
+		`hx-get="/app/partials/documents"`,
+		`Drop markdown anywhere`,
+	} {
+		if !strings.Contains(workspaceBody, expected) {
+			t.Fatalf("expected workspace body to contain %q, got %q", expected, workspaceBody)
+		}
+	}
+
+	newReq := httptest.NewRequest(http.MethodGet, "/new", nil)
+	newReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	newPageRecorder := newRecorder()
+	router.ServeHTTP(newPageRecorder, newReq)
+
+	if newPageRecorder.Code != http.StatusOK {
+		t.Fatalf("expected new document render, got %d", newPageRecorder.Code)
+	}
+
+	newBody := newPageRecorder.Body.String()
+	for _, expected := range []string{
+		`class="new-canvas-composer"`,
+		`class="new-stack-input"`,
+		`class="new-title-input"`,
+		`name="theme_color" value="sky"`,
+		`name="theme_type" value="serif"`,
+		`<dw-markdown-editor>`,
+		`class="new-markdown-canvas"`,
+	} {
+		if !strings.Contains(newBody, expected) {
+			t.Fatalf("expected new document body to contain %q, got %q", expected, newBody)
+		}
+	}
+
+	stackReq := httptest.NewRequest(http.MethodGet, "/app/stacks/"+document.StackID, nil)
+	stackReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	stackRecorder := newRecorder()
+	router.ServeHTTP(stackRecorder, stackReq)
+
+	if stackRecorder.Code != http.StatusOK {
+		t.Fatalf("expected stack render, got %d", stackRecorder.Code)
+	}
+
+	stackBody := stackRecorder.Body.String()
+	for _, expected := range []string{
+		`href="/new?stack=` + document.StackID + `"`,
+		`href="/app/stacks/` + document.StackID + `/settings"`,
+		`Interface Notes`,
+		`href="/app/documents/` + document.ID + `"`,
+	} {
+		if !strings.Contains(stackBody, expected) {
+			t.Fatalf("expected stack body to contain %q, got %q", expected, stackBody)
+		}
+	}
+
+	workspaceSettingsReq := httptest.NewRequest(http.MethodGet, "/app/settings", nil)
+	workspaceSettingsReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	workspaceSettingsRecorder := newRecorder()
+	router.ServeHTTP(workspaceSettingsRecorder, workspaceSettingsReq)
+
+	if workspaceSettingsRecorder.Code != http.StatusOK {
+		t.Fatalf("expected workspace settings render, got %d", workspaceSettingsRecorder.Code)
+	}
+	if !strings.Contains(workspaceSettingsRecorder.Body.String(), `action="/app/settings"`) {
+		t.Fatalf("expected workspace settings form, got %q", workspaceSettingsRecorder.Body.String())
+	}
+
+	updateWorkspaceReq := httptest.NewRequest(http.MethodPost, "/app/settings", strings.NewReader(form(map[string]string{
+		"name": "Edited workspace",
+	})))
+	updateWorkspaceReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	updateWorkspaceReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	updateWorkspaceRecorder := newRecorder()
+	router.ServeHTTP(updateWorkspaceRecorder, updateWorkspaceReq)
+
+	if updateWorkspaceRecorder.Code != http.StatusFound {
+		t.Fatalf("expected workspace settings redirect, got %d", updateWorkspaceRecorder.Code)
+	}
+	if store.workspaces[store.defaultWorkspace.ID].Name != "Edited workspace" {
+		t.Fatalf("expected workspace name update, got %q", store.workspaces[store.defaultWorkspace.ID].Name)
+	}
+
+	stackSettingsReq := httptest.NewRequest(http.MethodGet, "/app/stacks/"+document.StackID+"/settings", nil)
+	stackSettingsReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	stackSettingsRecorder := newRecorder()
+	router.ServeHTTP(stackSettingsRecorder, stackSettingsReq)
+
+	if stackSettingsRecorder.Code != http.StatusOK {
+		t.Fatalf("expected stack settings render, got %d", stackSettingsRecorder.Code)
+	}
+	if !strings.Contains(stackSettingsRecorder.Body.String(), `action="/app/stacks/`+document.StackID+`/settings"`) {
+		t.Fatalf("expected stack settings form, got %q", stackSettingsRecorder.Body.String())
+	}
+
+	updateStackReq := httptest.NewRequest(http.MethodPost, "/app/stacks/"+document.StackID+"/settings", strings.NewReader(form(map[string]string{
+		"name":   "Edited stack",
+		"public": "on",
+	})))
+	updateStackReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	updateStackReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	updateStackRecorder := newRecorder()
+	router.ServeHTTP(updateStackRecorder, updateStackReq)
+
+	if updateStackRecorder.Code != http.StatusFound {
+		t.Fatalf("expected stack settings redirect, got %d", updateStackRecorder.Code)
+	}
+	if stack := store.stacks[document.StackID]; stack.Name != "Edited stack" || !stack.Public {
+		t.Fatalf("expected stack update, got %#v", stack)
+	}
+
+	documentReq := httptest.NewRequest(http.MethodGet, "/app/documents/"+document.ID, nil)
+	documentReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	documentRecorder := newRecorder()
+	router.ServeHTTP(documentRecorder, documentReq)
+
+	if documentRecorder.Code != http.StatusOK {
+		t.Fatalf("expected document render, got %d", documentRecorder.Code)
+	}
+
+	documentBody := documentRecorder.Body.String()
+	for _, expected := range []string{
+		`<script type="module" src="/static/app.js?v=canvas13"></script>`,
+		`theme-color-sky theme-type-sans-serif`,
+		`<dw-annotation-form reader="reader-content">`,
+		`hx-post="/app/annotations"`,
+	} {
+		if !strings.Contains(documentBody, expected) {
+			t.Fatalf("expected document body to contain %q, got %q", expected, documentBody)
+		}
 	}
 }
 
@@ -266,5 +444,198 @@ func TestWorkspaceMultipartIngestFlow(t *testing.T) {
 
 	if !found {
 		t.Fatal("expected uploaded document to be created")
+	}
+}
+
+func TestAPIDiscoveryAndOpenAPIArePublic(t *testing.T) {
+	router, _, _ := newTestRouter(t)
+
+	discoveryReq := httptest.NewRequest(http.MethodGet, "/.well-known/downwrite", nil)
+	discoveryRecorder := newRecorder()
+	router.ServeHTTP(discoveryRecorder, discoveryReq)
+
+	if discoveryRecorder.Code != http.StatusOK {
+		t.Fatalf("expected discovery success, got %d", discoveryRecorder.Code)
+	}
+
+	var discovery struct {
+		Name        string   `json:"name"`
+		APIBase     string   `json:"api_base"`
+		OpenAPIURL  string   `json:"openapi_url"`
+		AuthMethods []string `json:"auth_methods"`
+	}
+	if err := json.Unmarshal(discoveryRecorder.Body.Bytes(), &discovery); err != nil {
+		t.Fatalf("unmarshal discovery: %v", err)
+	}
+	if discovery.Name != "Downwrite" || discovery.APIBase != "/v1" || discovery.OpenAPIURL != "/v1/openapi.json" {
+		t.Fatalf("unexpected discovery payload: %#v", discovery)
+	}
+	if len(discovery.AuthMethods) != 1 || discovery.AuthMethods[0] != "password" {
+		t.Fatalf("unexpected auth methods: %#v", discovery.AuthMethods)
+	}
+
+	openAPIReq := httptest.NewRequest(http.MethodGet, "/v1/openapi.json", nil)
+	openAPIRecorder := newRecorder()
+	router.ServeHTTP(openAPIRecorder, openAPIReq)
+
+	if openAPIRecorder.Code != http.StatusOK {
+		t.Fatalf("expected openapi success, got %d", openAPIRecorder.Code)
+	}
+
+	var openAPI struct {
+		Paths map[string]any `json:"paths"`
+	}
+	if err := json.Unmarshal(openAPIRecorder.Body.Bytes(), &openAPI); err != nil {
+		t.Fatalf("unmarshal openapi: %v", err)
+	}
+	for _, path := range []string{"/.well-known/downwrite", "/v1/auth/login", "/v1/auth/signup", "/v1/me"} {
+		if _, ok := openAPI.Paths[path]; !ok {
+			t.Fatalf("expected openapi to include %s", path)
+		}
+	}
+}
+
+func TestAPIAuthLoginMeLogoutFlow(t *testing.T) {
+	router, store, _ := newTestRouter(t)
+	hash, err := bcrypt.GenerateFromPassword([]byte("supersafe"), bcrypt.DefaultCost)
+	if err != nil {
+		t.Fatalf("hash password: %v", err)
+	}
+	if _, _, err := store.CreateUserWithWorkspace(t.Context(), "Nova", "nova@example.com", string(hash)); err != nil {
+		t.Fatalf("create user: %v", err)
+	}
+
+	loginReq := httptest.NewRequest(http.MethodPost, "/v1/auth/login", strings.NewReader(`{"email":"nova@example.com","password":"supersafe"}`))
+	loginReq.Header.Set("Content-Type", "application/json")
+	loginRecorder := newRecorder()
+	router.ServeHTTP(loginRecorder, loginReq)
+
+	if loginRecorder.Code != http.StatusOK {
+		t.Fatalf("expected login success, got %d body=%q", loginRecorder.Code, loginRecorder.Body.String())
+	}
+
+	var loginResponse struct {
+		Session struct {
+			Token     string `json:"token"`
+			ExpiresAt string `json:"expires_at"`
+		} `json:"session"`
+		User               User        `json:"user"`
+		Workspaces         []Workspace `json:"workspaces"`
+		DefaultWorkspaceID string      `json:"default_workspace_id"`
+	}
+	if err := json.Unmarshal(loginRecorder.Body.Bytes(), &loginResponse); err != nil {
+		t.Fatalf("unmarshal login: %v", err)
+	}
+	if loginResponse.Session.Token == "" || loginResponse.Session.ExpiresAt == "" {
+		t.Fatalf("expected session token and expiry: %#v", loginResponse.Session)
+	}
+	if loginResponse.User.PasswordHash != "" {
+		t.Fatalf("password hash leaked in auth response")
+	}
+	if len(loginResponse.Workspaces) != 1 || loginResponse.DefaultWorkspaceID != loginResponse.Workspaces[0].ID {
+		t.Fatalf("unexpected workspace response: %#v", loginResponse)
+	}
+
+	meReq := httptest.NewRequest(http.MethodGet, "/v1/me", nil)
+	meReq.Header.Set("Authorization", "Bearer "+loginResponse.Session.Token)
+	meRecorder := newRecorder()
+	router.ServeHTTP(meRecorder, meReq)
+
+	if meRecorder.Code != http.StatusOK {
+		t.Fatalf("expected me success, got %d body=%q", meRecorder.Code, meRecorder.Body.String())
+	}
+
+	logoutReq := httptest.NewRequest(http.MethodPost, "/v1/auth/logout", nil)
+	logoutReq.Header.Set("Authorization", "Bearer "+loginResponse.Session.Token)
+	logoutRecorder := newRecorder()
+	router.ServeHTTP(logoutRecorder, logoutReq)
+
+	if logoutRecorder.Code != http.StatusNoContent {
+		t.Fatalf("expected logout success, got %d", logoutRecorder.Code)
+	}
+
+	afterLogoutReq := httptest.NewRequest(http.MethodGet, "/v1/me", nil)
+	afterLogoutReq.Header.Set("Authorization", "Bearer "+loginResponse.Session.Token)
+	afterLogoutRecorder := newRecorder()
+	router.ServeHTTP(afterLogoutRecorder, afterLogoutReq)
+
+	if afterLogoutRecorder.Code != http.StatusUnauthorized {
+		t.Fatalf("expected token to be invalid after logout, got %d", afterLogoutRecorder.Code)
+	}
+}
+
+func TestAPISignupReturnsMobileAuthPayload(t *testing.T) {
+	router, _, _ := newTestRouter(t)
+
+	req := httptest.NewRequest(http.MethodPost, "/v1/auth/signup", strings.NewReader(`{"name":"Iris","email":"iris@example.com","password":"supersafe"}`))
+	req.Header.Set("Content-Type", "application/json")
+
+	recorder := newRecorder()
+	router.ServeHTTP(recorder, req)
+
+	if recorder.Code != http.StatusCreated {
+		t.Fatalf("expected signup success, got %d body=%q", recorder.Code, recorder.Body.String())
+	}
+
+	var response struct {
+		Session            apiSessionBody `json:"session"`
+		User               User           `json:"user"`
+		Workspaces         []Workspace    `json:"workspaces"`
+		DefaultWorkspaceID string         `json:"default_workspace_id"`
+	}
+	if err := json.Unmarshal(recorder.Body.Bytes(), &response); err != nil {
+		t.Fatalf("unmarshal signup: %v", err)
+	}
+	if response.Session.Token == "" || response.User.Email != "iris@example.com" || len(response.Workspaces) != 1 {
+		t.Fatalf("unexpected signup payload: %#v", response)
+	}
+}
+
+func TestAPIBearerTokenStillWorksForExistingEndpoints(t *testing.T) {
+	router, store, cfg := newTestRouter(t)
+	session, err := store.CreateSession(t.Context(), store.defaultUser.ID)
+	if err != nil {
+		t.Fatalf("create session: %v", err)
+	}
+	if _, _, err := store.CreateDocument(t.Context(), CreateDocumentParams{
+		WorkspaceID: store.defaultWorkspace.ID,
+		CreatedBy:   store.defaultUser.ID,
+		Title:       "Search Notes",
+		Slug:        "search-notes",
+		Content:     "markdown in, context out",
+	}); err != nil {
+		t.Fatalf("create document: %v", err)
+	}
+
+	req := httptest.NewRequest(http.MethodGet, "/v1/search?q=context", nil)
+	req.Header.Set("Authorization", "Bearer "+signValue(cfg.SessionSecret, session.ID))
+
+	recorder := newRecorder()
+	router.ServeHTTP(recorder, req)
+
+	if recorder.Code != http.StatusOK {
+		t.Fatalf("expected bearer search success, got %d body=%q", recorder.Code, recorder.Body.String())
+	}
+}
+
+func TestAPIErrorEnvelope(t *testing.T) {
+	router, _, _ := newTestRouter(t)
+
+	req := httptest.NewRequest(http.MethodGet, "/v1/me", nil)
+	recorder := newRecorder()
+	router.ServeHTTP(recorder, req)
+
+	if recorder.Code != http.StatusUnauthorized {
+		t.Fatalf("expected unauthorized, got %d", recorder.Code)
+	}
+
+	var response struct {
+		Error apiErrorBody `json:"error"`
+	}
+	if err := json.Unmarshal(recorder.Body.Bytes(), &response); err != nil {
+		t.Fatalf("unmarshal error: %v", err)
+	}
+	if response.Error.Code != apiErrorUnauthorized || response.Error.Message == "" {
+		t.Fatalf("unexpected error envelope: %#v", response.Error)
 	}
 }

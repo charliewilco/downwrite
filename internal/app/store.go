@@ -24,8 +24,13 @@ type Store interface {
 	DeleteSession(ctx context.Context, sessionID string) error
 	GetUser(ctx context.Context, userID string) (User, error)
 	ListWorkspacesForUser(ctx context.Context, userID string) ([]Workspace, error)
+	UpdateWorkspace(ctx context.Context, workspaceID, name string) (Workspace, error)
 	CreateDocument(ctx context.Context, params CreateDocumentParams) (Document, DocumentVersion, error)
 	CreateDocumentVersion(ctx context.Context, params CreateVersionParams) (DocumentVersion, error)
+	ListStacks(ctx context.Context, workspaceID string, query string) ([]StackSummary, error)
+	GetStack(ctx context.Context, workspaceID, stackID string) (Stack, error)
+	UpdateStack(ctx context.Context, workspaceID, stackID, name string, public bool) (Stack, error)
+	ListStackDocuments(ctx context.Context, workspaceID, stackID string) ([]DocumentSummary, error)
 	ListDocuments(ctx context.Context, workspaceID string, query string) ([]DocumentSummary, error)
 	GetDocument(ctx context.Context, workspaceID, documentID string) (Document, error)
 	GetVersion(ctx context.Context, documentID, versionID string) (DocumentVersion, error)
@@ -47,9 +52,13 @@ type Store interface {
 type CreateDocumentParams struct {
 	WorkspaceID string
 	CreatedBy   string
+	StackID     string
+	StackName   string
 	Title       string
 	Slug        string
 	Content     string
+	Color       Color
+	Theme       Theme
 	SourceID    *string
 }
 
@@ -61,15 +70,15 @@ type CreateVersionParams struct {
 }
 
 type CreateAnnotationParams struct {
-	DocumentID        string
-	DocumentVersionID string
-	AuthorID          string
-	Quote             string
-	Comment           string
-	StartOffset       int
-	EndOffset         int
-	Prefix            string
-	Suffix            string
+	DocumentID        string `json:"document_id"`
+	DocumentVersionID string `json:"document_version_id"`
+	AuthorID          string `json:"author_id"`
+	Quote             string `json:"quote"`
+	Comment           string `json:"comment"`
+	StartOffset       int    `json:"start_offset"`
+	EndOffset         int    `json:"end_offset"`
+	Prefix            string `json:"prefix"`
+	Suffix            string `json:"suffix"`
 }
 
 type PostgresStore struct {
@@ -220,6 +229,19 @@ func (s *PostgresStore) ListWorkspacesForUser(ctx context.Context, userID string
 	return workspaces, rows.Err()
 }
 
+func (s *PostgresStore) UpdateWorkspace(ctx context.Context, workspaceID, name string) (Workspace, error) {
+	row := s.pool.QueryRow(ctx, `
+		update workspaces
+		set name = $2
+		where id = $1
+		returning id, name, slug, created_by, created_at
+	`, workspaceID, name)
+
+	var workspace Workspace
+	err := row.Scan(&workspace.ID, &workspace.Name, &workspace.Slug, &workspace.CreatedBy, &workspace.CreatedAt)
+	return workspace, err
+}
+
 func (s *PostgresStore) CreateDocument(ctx context.Context, params CreateDocumentParams) (Document, DocumentVersion, error) {
 	html, text, err := renderMarkdown(params.Content)
 	if err != nil {
@@ -232,19 +254,49 @@ func (s *PostgresStore) CreateDocument(ctx context.Context, params CreateDocumen
 	}
 	defer tx.Rollback(ctx)
 
+	stackID := params.StackID
+	stackName := fallback(params.StackName, params.Title)
+	if stackID == "" {
+		if err := tx.QueryRow(ctx, `
+			insert into stacks (workspace_id, name, slug, created_by)
+			values ($1, $2, $3, $4)
+			on conflict (workspace_id, slug) do update set name = excluded.name, updated_at = now()
+			returning id
+		`, params.WorkspaceID, stackName, slugify(stackName), params.CreatedBy).Scan(&stackID); err != nil {
+			return Document{}, DocumentVersion{}, err
+		}
+	}
+
+	var stackPosition int
+	if err := tx.QueryRow(ctx, `
+		select coalesce(max(stack_position), -1) + 1
+		from documents
+		where stack_id = $1
+	`, stackID).Scan(&stackPosition); err != nil {
+		return Document{}, DocumentVersion{}, err
+	}
+
+	themeColor := normalizeColor(params.Color)
+	themeType := normalizeTheme(params.Theme)
+
 	document := Document{}
 	if err := tx.QueryRow(ctx, `
-		insert into documents (workspace_id, title, slug, status, created_by)
-		values ($1, $2, $3, 'active', $4)
-		returning id, workspace_id, title, slug, status, created_by, coalesce(latest_version_id::text, ''), created_at, updated_at
-	`, params.WorkspaceID, params.Title, params.Slug, params.CreatedBy).Scan(
+		insert into documents (workspace_id, stack_id, title, slug, status, created_by, stack_position, theme_color, theme_type)
+		values ($1, $2, $3, $4, 'active', $5, $6, $7, $8)
+		returning id, workspace_id, coalesce(stack_id::text, ''), title, slug, status, public, created_by, coalesce(latest_version_id::text, ''), stack_position, theme_color, theme_type, created_at, updated_at
+	`, params.WorkspaceID, stackID, params.Title, params.Slug, params.CreatedBy, stackPosition, themeColor, themeType).Scan(
 		&document.ID,
 		&document.WorkspaceID,
+		&document.StackID,
 		&document.Title,
 		&document.Slug,
 		&document.Status,
+		&document.Public,
 		&document.CreatedBy,
 		&document.LatestVersionID,
+		&document.StackPosition,
+		&document.Color,
+		&document.Theme,
 		&document.CreatedAt,
 		&document.UpdatedAt,
 	); err != nil {
@@ -278,6 +330,14 @@ func (s *PostgresStore) CreateDocument(ctx context.Context, params CreateDocumen
 		set latest_version_id = $2, updated_at = now()
 		where id = $1
 	`, document.ID, version.ID); err != nil {
+		return Document{}, DocumentVersion{}, err
+	}
+
+	if _, err := tx.Exec(ctx, `
+		update stacks
+		set updated_at = now()
+		where id = $1
+	`, stackID); err != nil {
 		return Document{}, DocumentVersion{}, err
 	}
 
@@ -372,6 +432,123 @@ func (s *PostgresStore) CreateDocumentVersion(ctx context.Context, params Create
 	return version, nil
 }
 
+func (s *PostgresStore) ListStacks(ctx context.Context, workspaceID string, query string) ([]StackSummary, error) {
+	pattern := "%"
+	if query != "" {
+		pattern = "%" + strings.ToLower(query) + "%"
+	}
+
+	rows, err := s.pool.Query(ctx, `
+		with stack_docs as (
+			select distinct on (d.stack_id)
+				d.stack_id,
+				d.id as latest_document_id,
+				d.title as latest_document_title,
+				d.theme_color,
+				d.theme_type,
+				v.version_number,
+				left(v.content_text, 180) as excerpt
+			from documents d
+			join document_versions v on v.id = d.latest_version_id
+			where d.workspace_id = $1
+			order by d.stack_id, d.updated_at desc
+		)
+		select s.id, s.workspace_id, s.name, s.slug, s.public, s.created_by, s.created_at, s.updated_at,
+			count(d.id), coalesce(sd.latest_document_id::text, ''), coalesce(sd.latest_document_title, ''),
+			coalesce(sd.version_number, 0), coalesce(sd.excerpt, ''), coalesce(sd.theme_color, 'sky'), coalesce(sd.theme_type, 'sans-serif')
+		from stacks s
+		left join documents d on d.stack_id = s.id
+		left join document_versions v on v.id = d.latest_version_id
+		left join stack_docs sd on sd.stack_id = s.id
+		where s.workspace_id = $1 and ($2 = '%' or lower(s.name) like $2 or lower(coalesce(d.title, '')) like $2 or lower(coalesce(v.content_text, '')) like $2)
+		group by s.id, sd.latest_document_id, sd.latest_document_title, sd.version_number, sd.excerpt, sd.theme_color, sd.theme_type
+		order by s.updated_at desc
+	`, workspaceID, pattern)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var stacks []StackSummary
+	for rows.Next() {
+		var summary StackSummary
+		if err := rows.Scan(
+			&summary.ID,
+			&summary.WorkspaceID,
+			&summary.Name,
+			&summary.Slug,
+			&summary.Public,
+			&summary.CreatedBy,
+			&summary.CreatedAt,
+			&summary.UpdatedAt,
+			&summary.DocumentCount,
+			&summary.LatestDocumentID,
+			&summary.LatestDocumentTitle,
+			&summary.LatestVersionNumber,
+			&summary.Excerpt,
+			&summary.Color,
+			&summary.Theme,
+		); err != nil {
+			return nil, err
+		}
+		stacks = append(stacks, summary)
+	}
+
+	return stacks, rows.Err()
+}
+
+func (s *PostgresStore) GetStack(ctx context.Context, workspaceID, stackID string) (Stack, error) {
+	row := s.pool.QueryRow(ctx, `
+		select id, workspace_id, name, slug, public, created_by, created_at, updated_at
+		from stacks
+		where id = $1 and workspace_id = $2
+	`, stackID, workspaceID)
+
+	var stack Stack
+	err := row.Scan(&stack.ID, &stack.WorkspaceID, &stack.Name, &stack.Slug, &stack.Public, &stack.CreatedBy, &stack.CreatedAt, &stack.UpdatedAt)
+	return stack, err
+}
+
+func (s *PostgresStore) UpdateStack(ctx context.Context, workspaceID, stackID, name string, public bool) (Stack, error) {
+	row := s.pool.QueryRow(ctx, `
+		update stacks
+		set name = $3, public = $4, updated_at = now()
+		where id = $1 and workspace_id = $2
+		returning id, workspace_id, name, slug, public, created_by, created_at, updated_at
+	`, stackID, workspaceID, name, public)
+
+	var stack Stack
+	err := row.Scan(&stack.ID, &stack.WorkspaceID, &stack.Name, &stack.Slug, &stack.Public, &stack.CreatedBy, &stack.CreatedAt, &stack.UpdatedAt)
+	return stack, err
+}
+
+func (s *PostgresStore) ListStackDocuments(ctx context.Context, workspaceID, stackID string) ([]DocumentSummary, error) {
+	rows, err := s.pool.Query(ctx, `
+		select d.id, d.workspace_id, coalesce(d.stack_id::text, ''), d.title, d.slug, d.status, d.public, d.created_by, coalesce(d.latest_version_id::text, ''),
+			d.stack_position, d.theme_color, d.theme_type, d.created_at, d.updated_at,
+			v.version_number, left(v.content_text, 180)
+		from documents d
+		join document_versions v on v.id = d.latest_version_id
+		where d.workspace_id = $1 and d.stack_id = $2
+		order by d.stack_position asc, d.created_at asc
+	`, workspaceID, stackID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var documents []DocumentSummary
+	for rows.Next() {
+		summary, err := scanDocumentSummary(rows)
+		if err != nil {
+			return nil, err
+		}
+		documents = append(documents, summary)
+	}
+
+	return documents, rows.Err()
+}
+
 func (s *PostgresStore) ListDocuments(ctx context.Context, workspaceID string, query string) ([]DocumentSummary, error) {
 	pattern := "%"
 	if query != "" {
@@ -379,7 +556,8 @@ func (s *PostgresStore) ListDocuments(ctx context.Context, workspaceID string, q
 	}
 
 	rows, err := s.pool.Query(ctx, `
-		select d.id, d.workspace_id, d.title, d.slug, d.status, d.created_by, coalesce(d.latest_version_id::text, ''), d.created_at, d.updated_at,
+		select d.id, d.workspace_id, coalesce(d.stack_id::text, ''), d.title, d.slug, d.status, d.public, d.created_by, coalesce(d.latest_version_id::text, ''),
+			d.stack_position, d.theme_color, d.theme_type, d.created_at, d.updated_at,
 			v.version_number, left(v.content_text, 180)
 		from documents d
 		join document_versions v on v.id = d.latest_version_id
@@ -393,20 +571,8 @@ func (s *PostgresStore) ListDocuments(ctx context.Context, workspaceID string, q
 
 	var documents []DocumentSummary
 	for rows.Next() {
-		var summary DocumentSummary
-		if err := rows.Scan(
-			&summary.ID,
-			&summary.WorkspaceID,
-			&summary.Title,
-			&summary.Slug,
-			&summary.Status,
-			&summary.CreatedBy,
-			&summary.LatestVersionID,
-			&summary.CreatedAt,
-			&summary.UpdatedAt,
-			&summary.VersionNumber,
-			&summary.Excerpt,
-		); err != nil {
+		summary, err := scanDocumentSummary(rows)
+		if err != nil {
 			return nil, err
 		}
 
@@ -418,24 +584,13 @@ func (s *PostgresStore) ListDocuments(ctx context.Context, workspaceID string, q
 
 func (s *PostgresStore) GetDocument(ctx context.Context, workspaceID, documentID string) (Document, error) {
 	row := s.pool.QueryRow(ctx, `
-		select id, workspace_id, title, slug, status, created_by, coalesce(latest_version_id::text, ''), created_at, updated_at
+		select id, workspace_id, coalesce(stack_id::text, ''), title, slug, status, public, created_by, coalesce(latest_version_id::text, ''),
+			stack_position, theme_color, theme_type, created_at, updated_at
 		from documents
 		where id = $1 and workspace_id = $2
 	`, documentID, workspaceID)
 
-	var document Document
-	err := row.Scan(
-		&document.ID,
-		&document.WorkspaceID,
-		&document.Title,
-		&document.Slug,
-		&document.Status,
-		&document.CreatedBy,
-		&document.LatestVersionID,
-		&document.CreatedAt,
-		&document.UpdatedAt,
-	)
-	return document, err
+	return scanDocument(row)
 }
 
 func (s *PostgresStore) GetVersion(ctx context.Context, documentID, versionID string) (DocumentVersion, error) {
@@ -516,7 +671,8 @@ func (s *PostgresStore) CreateShare(ctx context.Context, documentID, versionID, 
 func (s *PostgresStore) GetShare(ctx context.Context, token string) (Share, Document, DocumentVersion, error) {
 	row := s.pool.QueryRow(ctx, `
 		select s.id, s.document_id, s.document_version_id, s.token, s.include_annotations, s.created_by, s.created_at,
-			d.id, d.workspace_id, d.title, d.slug, d.status, d.created_by, coalesce(d.latest_version_id::text, ''), d.created_at, d.updated_at,
+			d.id, d.workspace_id, coalesce(d.stack_id::text, ''), d.title, d.slug, d.status, d.public, d.created_by, coalesce(d.latest_version_id::text, ''),
+			d.stack_position, d.theme_color, d.theme_type, d.created_at, d.updated_at,
 			v.id, v.document_id, v.version_number, v.content_markdown, v.content_html, v.content_text, v.content_hash, v.authored_by, v.ingest_source_id, v.created_at
 		from document_shares s
 		join documents d on d.id = s.document_id
@@ -530,7 +686,7 @@ func (s *PostgresStore) GetShare(ctx context.Context, token string) (Share, Docu
 
 	err := row.Scan(
 		&share.ID, &share.DocumentID, &share.DocumentVersionID, &share.Token, &share.IncludeAnnotations, &share.CreatedBy, &share.CreatedAt,
-		&document.ID, &document.WorkspaceID, &document.Title, &document.Slug, &document.Status, &document.CreatedBy, &document.LatestVersionID, &document.CreatedAt, &document.UpdatedAt,
+		&document.ID, &document.WorkspaceID, &document.StackID, &document.Title, &document.Slug, &document.Status, &document.Public, &document.CreatedBy, &document.LatestVersionID, &document.StackPosition, &document.Color, &document.Theme, &document.CreatedAt, &document.UpdatedAt,
 		&version.ID, &version.DocumentID, &version.VersionNumber, &version.ContentMarkdown, &version.ContentHTML, &version.ContentText, &version.ContentHash, &version.AuthoredBy, &version.IngestSourceID, &version.CreatedAt,
 	)
 
@@ -798,7 +954,8 @@ func (s *PostgresStore) ListChunks(ctx context.Context, workspaceID string, late
 func (s *PostgresStore) GetChunkTrace(ctx context.Context, chunkID string) (TraceResult, error) {
 	row := s.pool.QueryRow(ctx, `
 		select c.id, c.document_id, c.document_version_id, c.content, c.search_text, c.embedding,
-			d.id, d.workspace_id, d.title, d.slug, d.status, d.created_by, coalesce(d.latest_version_id::text, ''), d.created_at, d.updated_at,
+			d.id, d.workspace_id, coalesce(d.stack_id::text, ''), d.title, d.slug, d.status, d.public, d.created_by, coalesce(d.latest_version_id::text, ''),
+			d.stack_position, d.theme_color, d.theme_type, d.created_at, d.updated_at,
 			v.id, v.document_id, v.version_number, v.content_markdown, v.content_html, v.content_text, v.content_hash, v.authored_by, v.ingest_source_id, v.created_at
 		from document_chunks c
 		join documents d on d.id = c.document_id
@@ -810,7 +967,7 @@ func (s *PostgresStore) GetChunkTrace(ctx context.Context, chunkID string) (Trac
 	var rawEmbedding []byte
 	if err := row.Scan(
 		&trace.Chunk.ID, &trace.Chunk.DocumentID, &trace.Chunk.DocumentVersionID, &trace.Chunk.Content, &trace.Chunk.SearchText, &rawEmbedding,
-		&trace.Document.ID, &trace.Document.WorkspaceID, &trace.Document.Title, &trace.Document.Slug, &trace.Document.Status, &trace.Document.CreatedBy, &trace.Document.LatestVersionID, &trace.Document.CreatedAt, &trace.Document.UpdatedAt,
+		&trace.Document.ID, &trace.Document.WorkspaceID, &trace.Document.StackID, &trace.Document.Title, &trace.Document.Slug, &trace.Document.Status, &trace.Document.Public, &trace.Document.CreatedBy, &trace.Document.LatestVersionID, &trace.Document.StackPosition, &trace.Document.Color, &trace.Document.Theme, &trace.Document.CreatedAt, &trace.Document.UpdatedAt,
 		&trace.Version.ID, &trace.Version.DocumentID, &trace.Version.VersionNumber, &trace.Version.ContentMarkdown, &trace.Version.ContentHTML, &trace.Version.ContentText, &trace.Version.ContentHash, &trace.Version.AuthoredBy, &trace.Version.IngestSourceID, &trace.Version.CreatedAt,
 	); err != nil {
 		return TraceResult{}, err
@@ -831,7 +988,8 @@ func (s *PostgresStore) ListRecentDocuments(ctx context.Context, workspaceID str
 	}
 
 	rows, err := s.pool.Query(ctx, `
-		select d.id, d.workspace_id, d.title, d.slug, d.status, d.created_by, coalesce(d.latest_version_id::text, ''), d.created_at, d.updated_at,
+		select d.id, d.workspace_id, coalesce(d.stack_id::text, ''), d.title, d.slug, d.status, d.public, d.created_by, coalesce(d.latest_version_id::text, ''),
+			d.stack_position, d.theme_color, d.theme_type, d.created_at, d.updated_at,
 			v.version_number, left(v.content_text, 180)
 		from documents d
 		join document_versions v on v.id = d.latest_version_id
@@ -846,20 +1004,8 @@ func (s *PostgresStore) ListRecentDocuments(ctx context.Context, workspaceID str
 
 	var documents []DocumentSummary
 	for rows.Next() {
-		var summary DocumentSummary
-		if err := rows.Scan(
-			&summary.ID,
-			&summary.WorkspaceID,
-			&summary.Title,
-			&summary.Slug,
-			&summary.Status,
-			&summary.CreatedBy,
-			&summary.LatestVersionID,
-			&summary.CreatedAt,
-			&summary.UpdatedAt,
-			&summary.VersionNumber,
-			&summary.Excerpt,
-		); err != nil {
+		summary, err := scanDocumentSummary(rows)
+		if err != nil {
 			return nil, err
 		}
 
@@ -873,6 +1019,50 @@ func scanUser(row interface{ Scan(dest ...any) error }) (User, error) {
 	var user User
 	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.CreatedAt)
 	return user, err
+}
+
+func scanDocument(row interface{ Scan(dest ...any) error }) (Document, error) {
+	var document Document
+	err := row.Scan(
+		&document.ID,
+		&document.WorkspaceID,
+		&document.StackID,
+		&document.Title,
+		&document.Slug,
+		&document.Status,
+		&document.Public,
+		&document.CreatedBy,
+		&document.LatestVersionID,
+		&document.StackPosition,
+		&document.Color,
+		&document.Theme,
+		&document.CreatedAt,
+		&document.UpdatedAt,
+	)
+	return document, err
+}
+
+func scanDocumentSummary(row interface{ Scan(dest ...any) error }) (DocumentSummary, error) {
+	var summary DocumentSummary
+	err := row.Scan(
+		&summary.ID,
+		&summary.WorkspaceID,
+		&summary.StackID,
+		&summary.Title,
+		&summary.Slug,
+		&summary.Status,
+		&summary.Public,
+		&summary.CreatedBy,
+		&summary.LatestVersionID,
+		&summary.StackPosition,
+		&summary.Color,
+		&summary.Theme,
+		&summary.CreatedAt,
+		&summary.UpdatedAt,
+		&summary.VersionNumber,
+		&summary.Excerpt,
+	)
+	return summary, err
 }
 
 func scanVersion(row interface{ Scan(dest ...any) error }) (DocumentVersion, error) {
@@ -890,6 +1080,34 @@ func scanVersion(row interface{ Scan(dest ...any) error }) (DocumentVersion, err
 		&version.CreatedAt,
 	)
 	return version, err
+}
+
+func normalizeColor(value Color) Color {
+	switch Color(strings.ToLower(strings.TrimSpace(string(value)))) {
+	case ColorBlush, ColorLavender, ColorMint, ColorSky, ColorPeach:
+		return Color(strings.ToLower(strings.TrimSpace(string(value))))
+	case "blue":
+		return ColorSky
+	case "pink":
+		return ColorBlush
+	case "yellow":
+		return ColorPeach
+	case "green":
+		return ColorMint
+	default:
+		return ColorSky
+	}
+}
+
+func normalizeTheme(value Theme) Theme {
+	switch Theme(strings.ToLower(strings.TrimSpace(string(value)))) {
+	case ThemeSerif, ThemeMono, ThemeSansSerif:
+		return Theme(strings.ToLower(strings.TrimSpace(string(value))))
+	case "sans":
+		return ThemeSansSerif
+	default:
+		return ThemeSansSerif
+	}
 }
 
 func slugify(input string) string {

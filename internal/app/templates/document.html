@@ -5,32 +5,29 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>{{.Title}}</title>
-		<link rel="stylesheet" href="/static/app.css">
+		<link rel="stylesheet" href="/static/app.css?v=canvas13">
 		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
-		<script defer src="/static/app.js"></script>
+		<script type="module" src="/static/app.js?v=canvas13"></script>
 	</head>
 	<body>
-<main class="app-shell">
-	<header class="topbar topbar-document">
-		<div class="topbar-copy">
-			<p class="eyebrow">Document</p>
-			<h1>{{.Document.Title}}</h1>
-			<p class="subdued">Immutable version {{.Version.VersionNumber}}. Read first, discuss in the margins, version deliberately.</p>
-		</div>
-		<nav class="topnav">
-			<a href="/app">Library</a>
-			<a href="/app/documents/{{.Document.ID}}/diff?to={{.Version.ID}}">Diff</a>
-			<a href="/app/activity">Activity</a>
+<main class="app-shell canvas-document-app theme-color-{{.Document.Color}} theme-type-{{.Document.Theme}}">
+	<header class="canvas-toolbar document-toolbar">
+		<a class="toolbar-icon" href="/app" aria-label="Back">{{template "icon_arrow_left" .}}</a>
+		<h1>{{.Document.Title}}</h1>
+		<nav class="document-actions" aria-label="Document actions">
+			<a class="toolbar-icon" href="/app/documents/{{.Document.ID}}/diff?to={{.Version.ID}}" aria-label="Time Machine">{{template "icon_clock" .}}</a>
+			<a class="toolbar-icon" href="/app/activity" aria-label="Activity">{{template "icon_activity" .}}</a>
 		</nav>
 	</header>
 
 	<section class="document-stage">
 		<aside class="document-rail document-rail-left">
 			<section class="rail-section">
-				<p class="eyebrow">Versions</p>
+				<p class="eyebrow">History</p>
+				<h2>Time Machine</h2>
 				<ul class="version-list version-list-quiet">
 					{{range .Versions}}
-						<li><a href="/app/documents/{{$.Document.ID}}?version={{.ID}}">Version {{.VersionNumber}}</a></li>
+						<li><a href="/app/documents/{{$.Document.ID}}?version={{.ID}}">v{{.VersionNumber}}</a></li>
 					{{end}}
 				</ul>
 			</section>
@@ -47,43 +44,56 @@
 		</aside>
 
 		<article class="document-main">
-			<div class="document-meta-row">
-				<p class="document-kicker">Version {{.Version.VersionNumber}}</p>
-				<p class="document-kicker">Select text to annotate</p>
+			<div class="canvas-byline">
+				<p>Viewing <strong>version {{.Version.VersionNumber}}</strong></p>
+				<p>Select text to annotate</p>
 			</div>
 
-			<div class="reader-page">
-				<div class="reader-html" id="reader-content" data-document-id="{{.Document.ID}}" data-version-id="{{.Version.ID}}">{{safeHTML .Version.ContentHTML}}</div>
+			<div class="reader-page canvas-reader">
+				<div class="reader-panel" id="reader-content" data-document-id="{{.Document.ID}}" data-version-id="{{.Version.ID}}">{{safeHTML .Version.ContentHTML}}</div>
 			</div>
 
-			<section class="revision-editor">
-				<div class="section-heading">
-					<h2>New version</h2>
-					<p>Keep changes deliberate and easy to compare.</p>
+			<details class="revision-editor canvas-editor" open>
+				<summary>Edit markdown</summary>
+				<div class="section-heading section-heading-tight editor-heading">
+					<div>
+						<p class="eyebrow">Draft</p>
+						<h2>Revise this document</h2>
+					</div>
+					<p>Saving creates a new version.</p>
 				</div>
 				<form class="form-stack" method="post" action="/app/documents/{{.Document.ID}}/versions">
-					<textarea name="content" rows="12">{{.Version.ContentMarkdown}}</textarea>
-					<button class="button" type="submit">Save new version</button>
+					<textarea class="markdown-editor" name="content" rows="16">{{.Version.ContentMarkdown}}</textarea>
+					<div class="editor-actions">
+						<button class="button" type="submit">Save version</button>
+						<a class="button button-secondary" href="/app/documents/{{.Document.ID}}/diff?to={{.Version.ID}}">Review history</a>
+					</div>
 				</form>
-			</section>
+			</details>
 		</article>
 
-		<aside class="document-rail document-rail-right">
+		<aside class="document-rail document-rail-right comment-margin">
 			<section class="rail-section">
-				<p class="eyebrow">Annotations</p>
-				<p class="rail-copy">Quote precisely. Keep discussion attached to the text, not floating around it.</p>
-				<form id="annotation-form" class="form-stack form-stack-quiet" method="post" action="/app/annotations" hx-post="/app/annotations" hx-target="#annotations-list" hx-swap="afterbegin">
-					<input type="hidden" name="document_id" value="{{.Document.ID}}">
-					<input type="hidden" name="document_version_id" value="{{.Version.ID}}">
-					<input type="hidden" name="quote" id="annotation-quote">
-					<input type="hidden" name="start_offset" id="annotation-start">
-					<input type="hidden" name="end_offset" id="annotation-end">
-					<input type="hidden" name="prefix" id="annotation-prefix">
-					<input type="hidden" name="suffix" id="annotation-suffix">
-					<label>Selected quote <textarea id="annotation-quote-preview" rows="4" readonly></textarea></label>
-					<label>Comment <textarea name="comment" rows="5" required></textarea></label>
-					<button class="button" type="submit">Attach annotation</button>
-				</form>
+				<p class="eyebrow">Margin</p>
+				<h2>Annotations</h2>
+				<p class="rail-copy">Select text in the document to leave a note.</p>
+				<dw-annotation-form reader="reader-content">
+					<form id="annotation-form" class="annotation-form-shell form-stack form-stack-quiet" method="post" action="/app/annotations" hx-post="/app/annotations" hx-target="#annotations-list" hx-swap="afterbegin">
+						<input type="hidden" name="document_id" value="{{.Document.ID}}">
+						<input type="hidden" name="document_version_id" value="{{.Version.ID}}">
+						<input type="hidden" name="quote" id="annotation-quote">
+						<input type="hidden" name="start_offset" id="annotation-start">
+						<input type="hidden" name="end_offset" id="annotation-end">
+						<input type="hidden" name="prefix" id="annotation-prefix">
+						<input type="hidden" name="suffix" id="annotation-suffix">
+						<p class="annotation-form-empty">Select a phrase or sentence to annotate.</p>
+						<label class="annotation-quote-field">Quote <textarea id="annotation-quote-preview" rows="2" readonly></textarea></label>
+						<label class="annotation-comment-field">Comment <textarea name="comment" rows="3" placeholder="Leave a note..." required></textarea></label>
+						<div class="annotation-actions">
+							<button class="button" type="submit">Comment</button>
+						</div>
+					</form>
+				</dw-annotation-form>
 			</section>
 
 			<section class="rail-section rail-section-list">

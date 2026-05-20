@@ -5,24 +5,24 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>{{.Title}}</title>
-		<link rel="stylesheet" href="/static/app.css">
+		<link rel="stylesheet" href="/static/app.css?v=canvas13">
 		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
-		<script defer src="/static/app.js"></script>
+		<script type="module" src="/static/app.js?v=canvas13"></script>
 	</head>
 	<body>
-<main class="app-shell narrow">
-	<header class="topbar">
-		<div>
-			<p class="eyebrow">Shared version</p>
+<main class="shared-shell app-shell">
+	<header class="topbar shell-header">
+		<div class="topbar-copy">
+			<p class="eyebrow">Shared document</p>
 			<h1>{{.Document.Title}}</h1>
-			<p class="muted">Version {{.Version.VersionNumber}}</p>
+			<p class="subdued">Version {{.Version.VersionNumber}}</p>
 		</div>
 	</header>
-	<article class="panel reader-panel">
-		<div class="reader-html">{{safeHTML .Version.ContentHTML}}</div>
+	<article class="reader-page shared-reader">
+		<div class="reader-panel">{{safeHTML .Version.ContentHTML}}</div>
 	</article>
 	{{if .Annotations}}
-	<section class="panel">
+	<section class="shared-annotations">
 		<h2>Annotations</h2>
 		{{template "annotations_partial" .}}
 	</section>

@@ -5,18 +5,19 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>{{.Title}}</title>
-		<link rel="stylesheet" href="/static/app.css">
+		<link rel="stylesheet" href="/static/app.css?v=canvas13">
 		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
-		<script defer src="/static/app.js"></script>
+		<script type="module" src="/static/app.js?v=canvas13"></script>
 	</head>
 	<body>
 <main class="marketing">
 	<div class="hero">
-		<p class="eyebrow">Downwrite v3</p>
-		<h1>Markdown in, context out.</h1>
-		<p class="lede">A document hub for teams and agents: versioned markdown, immutable share links, quote annotations, activity, search, and MCP.</p>
+		<img class="hero-logo" src="/static/logo.svg" alt="">
+		<p class="eyebrow">Shared document canvas</p>
+		<h1>Downwrite</h1>
+		<p class="lede">A calm place to collect working notes, shape them into durable documents, compare revisions, and leave context in the margins.</p>
 		<div class="actions">
-			<a class="button" href="/signup">Create an account</a>
+			<a class="button" href="/signup">Create account</a>
 			<a class="button button-secondary" href="/login">Login</a>
 		</div>
 	</div>

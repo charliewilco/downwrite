@@ -26,6 +26,7 @@ type fakeStore struct {
 	workspaces        map[string]Workspace
 	memberships       map[string][]Workspace
 	sessions          map[string]Session
+	stacks            map[string]Stack
 	documents         map[string]Document
 	versions          map[string]DocumentVersion
 	versionsByDoc     map[string][]DocumentVersion
@@ -46,6 +47,7 @@ func newFakeStore() *fakeStore {
 		workspaces:        map[string]Workspace{},
 		memberships:       map[string][]Workspace{},
 		sessions:          map[string]Session{},
+		stacks:            map[string]Stack{},
 		documents:         map[string]Document{},
 		versions:          map[string]DocumentVersion{},
 		versionsByDoc:     map[string][]DocumentVersion{},
@@ -167,6 +169,31 @@ func (s *fakeStore) ListWorkspacesForUser(_ context.Context, userID string) ([]W
 	return slices.Clone(s.memberships[userID]), nil
 }
 
+func (s *fakeStore) UpdateWorkspace(_ context.Context, workspaceID, name string) (Workspace, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	workspace, ok := s.workspaces[workspaceID]
+	if !ok {
+		return Workspace{}, errors.New("not found")
+	}
+
+	workspace.Name = name
+	s.workspaces[workspaceID] = workspace
+	for userID, workspaces := range s.memberships {
+		for index := range workspaces {
+			if workspaces[index].ID == workspaceID {
+				workspaces[index] = workspace
+			}
+		}
+		s.memberships[userID] = workspaces
+	}
+	if s.defaultWorkspace.ID == workspaceID {
+		s.defaultWorkspace = workspace
+	}
+	return workspace, nil
+}
+
 func (s *fakeStore) CreateDocument(_ context.Context, params CreateDocumentParams) (Document, DocumentVersion, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -176,15 +203,41 @@ func (s *fakeStore) CreateDocument(_ context.Context, params CreateDocumentParam
 		return Document{}, DocumentVersion{}, err
 	}
 
+	stackID := params.StackID
+	if stackID == "" {
+		stack := Stack{
+			ID:          s.id("stack"),
+			WorkspaceID: params.WorkspaceID,
+			Name:        fallback(params.StackName, params.Title),
+			Slug:        slugify(fallback(params.StackName, params.Title)),
+			CreatedBy:   params.CreatedBy,
+			CreatedAt:   time.Now().UTC(),
+			UpdatedAt:   time.Now().UTC(),
+		}
+		s.stacks[stack.ID] = stack
+		stackID = stack.ID
+	}
+
+	stackPosition := 0
+	for _, existing := range s.documents {
+		if existing.StackID == stackID && existing.StackPosition >= stackPosition {
+			stackPosition = existing.StackPosition + 1
+		}
+	}
+
 	document := Document{
-		ID:          s.id("doc"),
-		WorkspaceID: params.WorkspaceID,
-		Title:       params.Title,
-		Slug:        params.Slug,
-		Status:      "active",
-		CreatedBy:   params.CreatedBy,
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
+		ID:            s.id("doc"),
+		WorkspaceID:   params.WorkspaceID,
+		StackID:       stackID,
+		Title:         params.Title,
+		Slug:          params.Slug,
+		Status:        "active",
+		CreatedBy:     params.CreatedBy,
+		StackPosition: stackPosition,
+		Color:         normalizeColor(params.Color),
+		Theme:         normalizeTheme(params.Theme),
+		CreatedAt:     time.Now().UTC(),
+		UpdatedAt:     time.Now().UTC(),
 	}
 	version := DocumentVersion{
 		ID:              s.id("ver"),
@@ -246,6 +299,102 @@ func (s *fakeStore) CreateDocumentVersion(_ context.Context, params CreateVersio
 	s.recordActivity(document.WorkspaceID, &document.ID, &params.AuthoredBy, "document.version_created", fmt.Sprintf("Created version %d for %s", version.VersionNumber, document.Title))
 
 	return version, nil
+}
+
+func (s *fakeStore) ListStacks(_ context.Context, workspaceID string, query string) ([]StackSummary, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	query = strings.ToLower(strings.TrimSpace(query))
+	byStack := map[string][]Document{}
+	for _, document := range s.documents {
+		if document.WorkspaceID == workspaceID {
+			byStack[document.StackID] = append(byStack[document.StackID], document)
+		}
+	}
+
+	var stacks []StackSummary
+	for stackID, documents := range byStack {
+		stack := s.stacks[stackID]
+		if stack.ID == "" {
+			continue
+		}
+
+		slices.SortFunc(documents, func(a, b Document) int {
+			return b.UpdatedAt.Compare(a.UpdatedAt)
+		})
+		latest := documents[0]
+		version := s.versions[latest.LatestVersionID]
+		if query != "" && !strings.Contains(strings.ToLower(stack.Name), query) && !strings.Contains(strings.ToLower(latest.Title), query) && !strings.Contains(strings.ToLower(version.ContentText), query) {
+			continue
+		}
+
+		stacks = append(stacks, StackSummary{
+			Stack:               stack,
+			DocumentCount:       len(documents),
+			LatestDocumentID:    latest.ID,
+			LatestDocumentTitle: latest.Title,
+			LatestVersionNumber: version.VersionNumber,
+			Excerpt:             version.ContentText,
+			Color:               latest.Color,
+			Theme:               latest.Theme,
+		})
+	}
+
+	slices.SortFunc(stacks, func(a, b StackSummary) int {
+		return strings.Compare(b.ID, a.ID)
+	})
+	return stacks, nil
+}
+
+func (s *fakeStore) GetStack(_ context.Context, workspaceID, stackID string) (Stack, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	stack, ok := s.stacks[stackID]
+	if !ok || stack.WorkspaceID != workspaceID {
+		return Stack{}, errors.New("not found")
+	}
+	return stack, nil
+}
+
+func (s *fakeStore) UpdateStack(_ context.Context, workspaceID, stackID, name string, public bool) (Stack, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	stack, ok := s.stacks[stackID]
+	if !ok || stack.WorkspaceID != workspaceID {
+		return Stack{}, errors.New("not found")
+	}
+
+	stack.Name = name
+	stack.Public = public
+	stack.UpdatedAt = time.Now().UTC()
+	s.stacks[stackID] = stack
+	return stack, nil
+}
+
+func (s *fakeStore) ListStackDocuments(_ context.Context, workspaceID, stackID string) ([]DocumentSummary, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	var documents []DocumentSummary
+	for _, document := range s.documents {
+		if document.WorkspaceID != workspaceID || document.StackID != stackID {
+			continue
+		}
+		version := s.versions[document.LatestVersionID]
+		documents = append(documents, DocumentSummary{
+			Document:      document,
+			VersionNumber: version.VersionNumber,
+			Excerpt:       version.ContentText,
+		})
+	}
+
+	slices.SortFunc(documents, func(a, b DocumentSummary) int {
+		return a.StackPosition - b.StackPosition
+	})
+	return documents, nil
 }
 
 func (s *fakeStore) ListDocuments(_ context.Context, workspaceID string, query string) ([]DocumentSummary, error) {

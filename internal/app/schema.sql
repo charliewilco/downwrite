@@ -40,18 +40,58 @@ create table if not exists ingest_sources (
 	created_at timestamptz not null default now()
 );
 
-create table if not exists documents (
+create table if not exists stacks (
 	id uuid primary key default gen_random_uuid(),
 	workspace_id uuid not null references workspaces(id) on delete cascade,
-	title text not null,
+	name text not null,
 	slug text not null,
-	status text not null default 'active',
+	public boolean not null default false,
 	created_by uuid not null references users(id) on delete cascade,
-	latest_version_id uuid,
 	created_at timestamptz not null default now(),
 	updated_at timestamptz not null default now(),
 	unique(workspace_id, slug)
 );
+
+create table if not exists documents (
+	id uuid primary key default gen_random_uuid(),
+	workspace_id uuid not null references workspaces(id) on delete cascade,
+	stack_id uuid references stacks(id) on delete set null,
+	title text not null,
+	slug text not null,
+	status text not null default 'active',
+	public boolean not null default false,
+	created_by uuid not null references users(id) on delete cascade,
+	latest_version_id uuid,
+	stack_position integer not null default 0,
+	theme_color text not null default 'sky',
+	theme_type text not null default 'sans-serif',
+	created_at timestamptz not null default now(),
+	updated_at timestamptz not null default now(),
+	unique(workspace_id, slug)
+);
+
+alter table documents add column if not exists stack_id uuid references stacks(id) on delete set null;
+alter table documents add column if not exists public boolean not null default false;
+alter table documents add column if not exists stack_position integer not null default 0;
+alter table documents add column if not exists theme_color text not null default 'sky';
+alter table documents add column if not exists theme_type text not null default 'sans-serif';
+alter table stacks add column if not exists public boolean not null default false;
+alter table documents alter column theme_color set default 'sky';
+alter table documents alter column theme_type set default 'sans-serif';
+
+update documents
+set theme_color = case theme_color
+	when 'blue' then 'sky'
+	when 'pink' then 'blush'
+	when 'yellow' then 'peach'
+	when 'green' then 'mint'
+	else theme_color
+end
+where theme_color in ('blue', 'pink', 'yellow', 'green');
+
+update documents
+set theme_type = 'sans-serif'
+where theme_type = 'sans';
 
 create table if not exists document_versions (
 	id uuid primary key default gen_random_uuid(),
@@ -140,7 +180,20 @@ create table if not exists document_chunks (
 );
 
 create index if not exists idx_documents_workspace_updated on documents(workspace_id, updated_at desc);
+create index if not exists idx_stacks_workspace_updated on stacks(workspace_id, updated_at desc);
+create index if not exists idx_documents_stack_position on documents(stack_id, stack_position asc);
 create index if not exists idx_versions_document on document_versions(document_id, version_number desc);
 create index if not exists idx_annotations_version on annotations(document_version_id, created_at asc);
 create index if not exists idx_activity_workspace on activity_events(workspace_id, created_at desc);
 create index if not exists idx_chunks_document_version on document_chunks(document_version_id);
+
+insert into stacks (workspace_id, name, slug, created_by, created_at, updated_at)
+select d.workspace_id, d.title, d.slug, d.created_by, d.created_at, d.updated_at
+from documents d
+where d.stack_id is null
+on conflict (workspace_id, slug) do update set updated_at = excluded.updated_at;
+
+update documents d
+set stack_id = s.id
+from stacks s
+where d.stack_id is null and s.workspace_id = d.workspace_id and s.slug = d.slug;

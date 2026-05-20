@@ -118,10 +118,12 @@ func (s *Server) Shutdown(ctx context.Context) error {
 
 func (a *App) registerRoutes(router *gin.Engine) {
 	router.GET("/", a.home)
+	router.GET("/.well-known/downwrite", a.apiDiscovery)
 	router.GET("/signup", a.showSignup)
 	router.POST("/signup", a.signup)
 	router.GET("/login", a.showLogin)
 	router.POST("/login", a.login)
+	router.GET("/new", a.requireAuth, a.newDocumentPage)
 	router.POST("/logout", a.requireAuth, a.logout)
 	router.GET("/s/:token", a.sharePage)
 	router.POST("/mcp", a.mcp)
@@ -130,6 +132,11 @@ func (a *App) registerRoutes(router *gin.Engine) {
 	app.Use(a.requireAuth)
 	{
 		app.GET("", a.workspaceHome)
+		app.GET("/settings", a.workspaceSettingsPage)
+		app.POST("/settings", a.updateWorkspaceSettings)
+		app.GET("/stacks/:id", a.stackPage)
+		app.GET("/stacks/:id/settings", a.stackSettingsPage)
+		app.POST("/stacks/:id/settings", a.updateStackSettings)
 		app.GET("/documents/new", a.newDocumentPage)
 		app.POST("/documents", a.createDocument)
 		app.POST("/ingest", a.ingestDocument)
@@ -145,8 +152,14 @@ func (a *App) registerRoutes(router *gin.Engine) {
 	}
 
 	api := router.Group("/v1")
+	api.GET("/openapi.json", a.apiOpenAPI)
+	api.POST("/auth/login", a.apiLogin)
+	api.POST("/auth/signup", a.apiSignup)
+
 	api.Use(a.apiAuth)
 	{
+		api.GET("/me", a.apiMe)
+		api.POST("/auth/logout", a.apiLogout)
 		api.POST("/documents", a.apiCreateDocument)
 		api.GET("/documents/:id", a.apiGetDocument)
 		api.GET("/documents/:id/versions", a.apiListVersions)
@@ -275,9 +288,9 @@ func (a *App) workspaceHome(c *gin.Context) {
 		return
 	}
 
-	documents, err := a.store.ListDocuments(c.Request.Context(), viewer.Workspace.ID, "")
+	stacks, err := a.store.ListStacks(c.Request.Context(), viewer.Workspace.ID, "")
 	if err != nil {
-		c.String(http.StatusInternalServerError, "list documents")
+		c.String(http.StatusInternalServerError, "list stacks")
 		return
 	}
 
@@ -288,10 +301,10 @@ func (a *App) workspaceHome(c *gin.Context) {
 	}
 
 	a.renderPage(c, http.StatusOK, "workspace.html", gin.H{
-		"Title":     "Workspace",
-		"Viewer":    viewer,
-		"Documents": documents,
-		"Events":    events,
+		"Title":  "Workspace",
+		"Viewer": viewer,
+		"Stacks": stacks,
+		"Events": events,
 	})
 }
 
@@ -303,22 +316,61 @@ func (a *App) documentsPartial(c *gin.Context) {
 	}
 
 	query := c.Query("q")
-	documents, err := a.store.ListDocuments(c.Request.Context(), viewer.Workspace.ID, query)
+	stacks, err := a.store.ListStacks(c.Request.Context(), viewer.Workspace.ID, query)
 	if err != nil {
-		c.String(http.StatusInternalServerError, "list documents")
+		c.String(http.StatusInternalServerError, "list stacks")
 		return
 	}
 
 	c.HTML(http.StatusOK, "documents_partial", gin.H{
-		"Documents": documents,
+		"Stacks": stacks,
 	})
+}
+
+func (a *App) workspaceSettingsPage(c *gin.Context) {
+	viewer, ok := a.currentViewer(c)
+	if !ok {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
+	a.renderPage(c, http.StatusOK, "workspace_settings.html", gin.H{
+		"Title":  "Workspace settings",
+		"Viewer": viewer,
+	})
+}
+
+func (a *App) updateWorkspaceSettings(c *gin.Context) {
+	viewer, ok := a.currentViewer(c)
+	if !ok {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
+	name := strings.TrimSpace(c.PostForm("name"))
+	if name == "" {
+		c.String(http.StatusBadRequest, "workspace name is required")
+		return
+	}
+
+	if _, err := a.store.UpdateWorkspace(c.Request.Context(), viewer.Workspace.ID, name); err != nil {
+		c.String(http.StatusInternalServerError, "update workspace")
+		return
+	}
+
+	c.Redirect(http.StatusFound, "/app")
 }
 
 func (a *App) newDocumentPage(c *gin.Context) {
 	viewer, _ := a.currentViewer(c)
+	var stack Stack
+	if stackID := strings.TrimSpace(c.Query("stack")); stackID != "" {
+		stack, _ = a.store.GetStack(c.Request.Context(), viewer.Workspace.ID, stackID)
+	}
 	a.renderPage(c, http.StatusOK, "document_new.html", gin.H{
 		"Title":  "New document",
 		"Viewer": viewer,
+		"Stack":  stack,
 	})
 }
 
@@ -330,6 +382,8 @@ func (a *App) createDocument(c *gin.Context) {
 	}
 
 	title := strings.TrimSpace(c.PostForm("title"))
+	stackID := strings.TrimSpace(c.PostForm("stack_id"))
+	stackName := strings.TrimSpace(c.PostForm("stack_name"))
 	content := strings.TrimSpace(c.PostForm("content"))
 	if title == "" || content == "" {
 		c.String(http.StatusBadRequest, "title and content are required")
@@ -339,9 +393,13 @@ func (a *App) createDocument(c *gin.Context) {
 	document, _, err := a.store.CreateDocument(c.Request.Context(), CreateDocumentParams{
 		WorkspaceID: viewer.Workspace.ID,
 		CreatedBy:   viewer.User.ID,
+		StackID:     stackID,
+		StackName:   stackName,
 		Title:       title,
 		Slug:        slugify(title),
 		Content:     content,
+		Color:       Color(c.PostForm("theme_color")),
+		Theme:       Theme(c.PostForm("theme_type")),
 	})
 	if err != nil {
 		c.String(http.StatusInternalServerError, "create document")
@@ -349,6 +407,75 @@ func (a *App) createDocument(c *gin.Context) {
 	}
 
 	c.Redirect(http.StatusFound, "/app/documents/"+document.ID)
+}
+
+func (a *App) stackPage(c *gin.Context) {
+	viewer, ok := a.currentViewer(c)
+	if !ok {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
+	stack, err := a.store.GetStack(c.Request.Context(), viewer.Workspace.ID, c.Param("id"))
+	if err != nil {
+		c.String(http.StatusNotFound, "stack not found")
+		return
+	}
+
+	documents, err := a.store.ListStackDocuments(c.Request.Context(), viewer.Workspace.ID, stack.ID)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "list stack documents")
+		return
+	}
+
+	a.renderPage(c, http.StatusOK, "stack.html", gin.H{
+		"Title":     stack.Name,
+		"Viewer":    viewer,
+		"Stack":     stack,
+		"Documents": documents,
+	})
+}
+
+func (a *App) stackSettingsPage(c *gin.Context) {
+	viewer, ok := a.currentViewer(c)
+	if !ok {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
+	stack, err := a.store.GetStack(c.Request.Context(), viewer.Workspace.ID, c.Param("id"))
+	if err != nil {
+		c.String(http.StatusNotFound, "stack not found")
+		return
+	}
+
+	a.renderPage(c, http.StatusOK, "stack_settings.html", gin.H{
+		"Title":  stack.Name + " settings",
+		"Viewer": viewer,
+		"Stack":  stack,
+	})
+}
+
+func (a *App) updateStackSettings(c *gin.Context) {
+	viewer, ok := a.currentViewer(c)
+	if !ok {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
+	name := strings.TrimSpace(c.PostForm("name"))
+	if name == "" {
+		c.String(http.StatusBadRequest, "stack title is required")
+		return
+	}
+
+	stack, err := a.store.UpdateStack(c.Request.Context(), viewer.Workspace.ID, c.Param("id"), name, c.PostForm("public") == "on")
+	if err != nil {
+		c.String(http.StatusInternalServerError, "update stack")
+		return
+	}
+
+	c.Redirect(http.StatusFound, "/app/stacks/"+stack.ID)
 }
 
 func (a *App) ingestDocument(c *gin.Context) {
@@ -658,33 +785,224 @@ func (a *App) activityPage(c *gin.Context) {
 	})
 }
 
+func (a *App) apiDiscovery(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"name":         "Downwrite",
+		"version":      "3",
+		"api_version":  apiVersion,
+		"api_base":     "/v1",
+		"openapi_url":  "/v1/openapi.json",
+		"auth_methods": []string{"password"},
+		"features": gin.H{
+			"activity":    true,
+			"annotations": true,
+			"documents":   true,
+			"ingest":      true,
+			"mcp":         true,
+			"search":      true,
+			"shares":      true,
+			"versions":    true,
+		},
+	})
+}
+
+func (a *App) apiLogin(c *gin.Context) {
+	var body struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	if err := c.ShouldBindJSON(&body); err != nil {
+		writeAPIError(c, http.StatusBadRequest, apiErrorValidationFailed, "Request body must be valid JSON.")
+		return
+	}
+
+	email := strings.TrimSpace(body.Email)
+	if email == "" || body.Password == "" {
+		writeAPIError(c, http.StatusBadRequest, apiErrorValidationFailed, "Email and password are required.",
+			apiFieldError{Field: "email", Message: "Email is required."},
+			apiFieldError{Field: "password", Message: "Password is required."},
+		)
+		return
+	}
+
+	user, err := a.store.GetUserByEmail(c.Request.Context(), email)
+	if err != nil || bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(body.Password)) != nil {
+		writeAPIError(c, http.StatusUnauthorized, apiErrorInvalidCredentials, "Invalid email or password.")
+		return
+	}
+
+	session, err := a.store.CreateSession(c.Request.Context(), user.ID)
+	if err != nil {
+		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not create session.")
+		return
+	}
+
+	response, ok := a.apiAuthResponse(c, user, session)
+	if !ok {
+		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not load account workspaces.")
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
+}
+
+func (a *App) apiSignup(c *gin.Context) {
+	var body struct {
+		Name     string `json:"name"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	if err := c.ShouldBindJSON(&body); err != nil {
+		writeAPIError(c, http.StatusBadRequest, apiErrorValidationFailed, "Request body must be valid JSON.")
+		return
+	}
+
+	name := strings.TrimSpace(body.Name)
+	email := strings.TrimSpace(body.Email)
+	if name == "" || email == "" || body.Password == "" {
+		writeAPIError(c, http.StatusBadRequest, apiErrorValidationFailed, "Name, email, and password are required.",
+			apiFieldError{Field: "name", Message: "Name is required."},
+			apiFieldError{Field: "email", Message: "Email is required."},
+			apiFieldError{Field: "password", Message: "Password is required."},
+		)
+		return
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
+	if err != nil {
+		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not create account.")
+		return
+	}
+
+	user, _, err := a.store.CreateUserWithWorkspace(c.Request.Context(), name, email, string(hash))
+	if err != nil {
+		writeAPIError(c, http.StatusConflict, apiErrorConflict, "Could not create account. The email may already be in use.")
+		return
+	}
+
+	session, err := a.store.CreateSession(c.Request.Context(), user.ID)
+	if err != nil {
+		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not create session.")
+		return
+	}
+
+	response, ok := a.apiAuthResponse(c, user, session)
+	if !ok {
+		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not load account workspaces.")
+		return
+	}
+
+	c.JSON(http.StatusCreated, response)
+}
+
+func (a *App) apiLogout(c *gin.Context) {
+	sessionID, ok := a.sessionIDFromRequest(c)
+	if !ok {
+		writeUnauthorized(c)
+		return
+	}
+
+	if err := a.store.DeleteSession(c.Request.Context(), sessionID); err != nil {
+		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not end session.")
+		return
+	}
+
+	c.Status(http.StatusNoContent)
+}
+
+func (a *App) apiMe(c *gin.Context) {
+	viewer, ok := a.currentViewer(c)
+	if !ok {
+		writeUnauthorized(c)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"user":                 viewer.User,
+		"workspaces":           viewer.Workspaces,
+		"default_workspace_id": viewer.Workspace.ID,
+	})
+}
+
+func (a *App) apiOpenAPI(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"openapi": "3.1.0",
+		"info": gin.H{
+			"title":   "Downwrite API",
+			"version": "v1",
+		},
+		"components": gin.H{
+			"securitySchemes": gin.H{
+				"bearerAuth": gin.H{
+					"type":         "http",
+					"scheme":       "bearer",
+					"bearerFormat": "signed session",
+				},
+			},
+		},
+		"paths": gin.H{
+			"/.well-known/downwrite": gin.H{"get": openAPIOperation("Discover a Downwrite instance", false)},
+			"/v1/openapi.json":       gin.H{"get": openAPIOperation("Fetch the OpenAPI contract", false)},
+			"/v1/auth/login":         gin.H{"post": openAPIOperation("Create a session with email and password", false)},
+			"/v1/auth/signup":        gin.H{"post": openAPIOperation("Create an account, workspace, and session", false)},
+			"/v1/auth/logout":        gin.H{"post": openAPIOperation("End the current session", true)},
+			"/v1/me":                 gin.H{"get": openAPIOperation("Fetch the current user and workspaces", true)},
+			"/v1/documents":          gin.H{"post": openAPIOperation("Create a document", true)},
+			"/v1/documents/{id}":     gin.H{"get": openAPIOperation("Fetch a document and version", true)},
+			"/v1/documents/{id}/versions": gin.H{
+				"get":  openAPIOperation("List document versions", true),
+				"post": openAPIOperation("Create a document version", true),
+			},
+			"/v1/documents/{id}/versions/{versionID}":             gin.H{"get": openAPIOperation("Fetch a document version", true)},
+			"/v1/documents/{id}/versions/{versionID}/annotations": gin.H{"get": openAPIOperation("List version annotations", true)},
+			"/v1/search":                    gin.H{"get": openAPIOperation("Search the workspace corpus", true)},
+			"/v1/ingest":                    gin.H{"post": openAPIOperation("Ingest a document", true)},
+			"/v1/annotations":               gin.H{"post": openAPIOperation("Create an annotation", true)},
+			"/v1/annotations/{id}/comments": gin.H{"post": openAPIOperation("Create an annotation comment", true)},
+			"/v1/shares":                    gin.H{"post": openAPIOperation("Create a share link", true)},
+			"/v1/activity":                  gin.H{"get": openAPIOperation("List workspace activity", true)},
+			"/v1/trace/{chunkID}":           gin.H{"get": openAPIOperation("Trace search chunk provenance", true)},
+		},
+	})
+}
+
 func (a *App) apiCreateDocument(c *gin.Context) {
 	viewer, ok := a.currentViewer(c)
 	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		writeUnauthorized(c)
 		return
 	}
 
 	var body struct {
-		Title   string `json:"title"`
-		Slug    string `json:"slug"`
-		Content string `json:"content"`
+		Title     string `json:"title"`
+		Slug      string `json:"slug"`
+		Content   string `json:"content"`
+		StackID   string `json:"stack_id"`
+		StackName string `json:"stack_name"`
+		Color     Color  `json:"theme_color"`
+		Theme     Theme  `json:"theme_type"`
 	}
 
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusBadRequest, apiErrorValidationFailed, "Request body must be valid JSON.")
 		return
 	}
 
 	document, version, err := a.store.CreateDocument(c.Request.Context(), CreateDocumentParams{
 		WorkspaceID: viewer.Workspace.ID,
 		CreatedBy:   viewer.User.ID,
+		StackID:     body.StackID,
+		StackName:   body.StackName,
 		Title:       body.Title,
 		Slug:        fallbackSlug(body.Slug, body.Title),
 		Content:     body.Content,
+		Color:       body.Color,
+		Theme:       body.Theme,
 	})
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusBadRequest, apiErrorValidationFailed, "Could not create document.")
 		return
 	}
 
@@ -694,20 +1012,20 @@ func (a *App) apiCreateDocument(c *gin.Context) {
 func (a *App) apiGetDocument(c *gin.Context) {
 	viewer, ok := a.currentViewer(c)
 	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		writeUnauthorized(c)
 		return
 	}
 
 	document, err := a.store.GetDocument(c.Request.Context(), viewer.Workspace.ID, c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "document not found"})
+		writeAPIError(c, http.StatusNotFound, apiErrorNotFound, "Document not found.")
 		return
 	}
 
 	versionID := c.Query("version")
 	version, err := a.resolveVersion(c.Request.Context(), document.ID, versionID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "version not found"})
+		writeAPIError(c, http.StatusNotFound, apiErrorNotFound, "Version not found.")
 		return
 	}
 
@@ -717,19 +1035,19 @@ func (a *App) apiGetDocument(c *gin.Context) {
 func (a *App) apiListVersions(c *gin.Context) {
 	viewer, ok := a.currentViewer(c)
 	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		writeUnauthorized(c)
 		return
 	}
 
 	document, err := a.store.GetDocument(c.Request.Context(), viewer.Workspace.ID, c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "document not found"})
+		writeAPIError(c, http.StatusNotFound, apiErrorNotFound, "Document not found.")
 		return
 	}
 
 	versions, err := a.store.ListVersions(c.Request.Context(), document.ID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not list versions.")
 		return
 	}
 
@@ -739,19 +1057,19 @@ func (a *App) apiListVersions(c *gin.Context) {
 func (a *App) apiGetVersion(c *gin.Context) {
 	viewer, ok := a.currentViewer(c)
 	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		writeUnauthorized(c)
 		return
 	}
 
 	document, err := a.store.GetDocument(c.Request.Context(), viewer.Workspace.ID, c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "document not found"})
+		writeAPIError(c, http.StatusNotFound, apiErrorNotFound, "Document not found.")
 		return
 	}
 
 	version, err := a.store.GetVersion(c.Request.Context(), document.ID, c.Param("versionID"))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "version not found"})
+		writeAPIError(c, http.StatusNotFound, apiErrorNotFound, "Version not found.")
 		return
 	}
 
@@ -761,13 +1079,13 @@ func (a *App) apiGetVersion(c *gin.Context) {
 func (a *App) apiCreateVersion(c *gin.Context) {
 	viewer, ok := a.currentViewer(c)
 	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		writeUnauthorized(c)
 		return
 	}
 
 	document, err := a.store.GetDocument(c.Request.Context(), viewer.Workspace.ID, c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "document not found"})
+		writeAPIError(c, http.StatusNotFound, apiErrorNotFound, "Document not found.")
 		return
 	}
 
@@ -776,7 +1094,7 @@ func (a *App) apiCreateVersion(c *gin.Context) {
 	}
 
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusBadRequest, apiErrorValidationFailed, "Request body must be valid JSON.")
 		return
 	}
 
@@ -786,7 +1104,7 @@ func (a *App) apiCreateVersion(c *gin.Context) {
 		Content:    body.Content,
 	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not create version.")
 		return
 	}
 
@@ -796,13 +1114,13 @@ func (a *App) apiCreateVersion(c *gin.Context) {
 func (a *App) apiSearch(c *gin.Context) {
 	viewer, ok := a.currentViewer(c)
 	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		writeUnauthorized(c)
 		return
 	}
 
 	results, err := a.hybridSearch(c.Request.Context(), viewer.Workspace.ID, c.Query("q"), c.DefaultQuery("latest_only", "true") != "false")
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not search documents.")
 		return
 	}
 
@@ -812,7 +1130,7 @@ func (a *App) apiSearch(c *gin.Context) {
 func (a *App) apiIngest(c *gin.Context) {
 	viewer, ok := a.currentViewer(c)
 	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		writeUnauthorized(c)
 		return
 	}
 
@@ -825,7 +1143,7 @@ func (a *App) apiIngest(c *gin.Context) {
 	}
 
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusBadRequest, apiErrorValidationFailed, "Request body must be valid JSON.")
 		return
 	}
 
@@ -837,7 +1155,7 @@ func (a *App) apiIngest(c *gin.Context) {
 		SourceName: body.SourceName,
 	})
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusBadRequest, apiErrorValidationFailed, "Could not ingest document.")
 		return
 	}
 
@@ -851,20 +1169,20 @@ func (a *App) apiIngest(c *gin.Context) {
 func (a *App) apiCreateAnnotation(c *gin.Context) {
 	viewer, ok := a.currentViewer(c)
 	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		writeUnauthorized(c)
 		return
 	}
 
 	var body CreateAnnotationParams
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusBadRequest, apiErrorValidationFailed, "Request body must be valid JSON.")
 		return
 	}
 
 	body.AuthorID = viewer.User.ID
 	annotation, err := a.store.CreateAnnotation(c.Request.Context(), body)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusBadRequest, apiErrorValidationFailed, "Could not create annotation.")
 		return
 	}
 
@@ -874,24 +1192,24 @@ func (a *App) apiCreateAnnotation(c *gin.Context) {
 func (a *App) apiListAnnotations(c *gin.Context) {
 	viewer, ok := a.currentViewer(c)
 	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		writeUnauthorized(c)
 		return
 	}
 
 	document, err := a.store.GetDocument(c.Request.Context(), viewer.Workspace.ID, c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "document not found"})
+		writeAPIError(c, http.StatusNotFound, apiErrorNotFound, "Document not found.")
 		return
 	}
 
 	if _, err := a.store.GetVersion(c.Request.Context(), document.ID, c.Param("versionID")); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "version not found"})
+		writeAPIError(c, http.StatusNotFound, apiErrorNotFound, "Version not found.")
 		return
 	}
 
 	annotations, err := a.store.ListAnnotations(c.Request.Context(), c.Param("versionID"))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not list annotations.")
 		return
 	}
 
@@ -901,7 +1219,7 @@ func (a *App) apiListAnnotations(c *gin.Context) {
 func (a *App) apiCreateAnnotationComment(c *gin.Context) {
 	viewer, ok := a.currentViewer(c)
 	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		writeUnauthorized(c)
 		return
 	}
 
@@ -910,13 +1228,13 @@ func (a *App) apiCreateAnnotationComment(c *gin.Context) {
 	}
 
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusBadRequest, apiErrorValidationFailed, "Request body must be valid JSON.")
 		return
 	}
 
 	comment, err := a.store.CreateAnnotationComment(c.Request.Context(), c.Param("id"), viewer.User.ID, body.Body)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusBadRequest, apiErrorValidationFailed, "Could not create annotation comment.")
 		return
 	}
 
@@ -926,7 +1244,7 @@ func (a *App) apiCreateAnnotationComment(c *gin.Context) {
 func (a *App) apiCreateShare(c *gin.Context) {
 	viewer, ok := a.currentViewer(c)
 	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		writeUnauthorized(c)
 		return
 	}
 
@@ -937,25 +1255,25 @@ func (a *App) apiCreateShare(c *gin.Context) {
 	}
 
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusBadRequest, apiErrorValidationFailed, "Request body must be valid JSON.")
 		return
 	}
 
 	document, err := a.store.GetDocument(c.Request.Context(), viewer.Workspace.ID, body.DocumentID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "document not found"})
+		writeAPIError(c, http.StatusNotFound, apiErrorNotFound, "Document not found.")
 		return
 	}
 
 	version, err := a.resolveVersion(c.Request.Context(), document.ID, body.DocumentVersionID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "version not found"})
+		writeAPIError(c, http.StatusBadRequest, apiErrorNotFound, "Version not found.")
 		return
 	}
 
 	share, err := a.store.CreateShare(c.Request.Context(), document.ID, version.ID, viewer.User.ID, body.IncludeAnnotations)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not create share.")
 		return
 	}
 
@@ -965,13 +1283,13 @@ func (a *App) apiCreateShare(c *gin.Context) {
 func (a *App) apiActivity(c *gin.Context) {
 	viewer, ok := a.currentViewer(c)
 	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		writeUnauthorized(c)
 		return
 	}
 
 	events, err := a.store.ListActivity(c.Request.Context(), viewer.Workspace.ID, 40)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not list activity.")
 		return
 	}
 
@@ -981,13 +1299,13 @@ func (a *App) apiActivity(c *gin.Context) {
 func (a *App) apiTraceChunk(c *gin.Context) {
 	viewer, ok := a.currentViewer(c)
 	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		writeUnauthorized(c)
 		return
 	}
 
 	trace, err := a.store.GetChunkTrace(c.Request.Context(), c.Param("chunkID"))
 	if err != nil || trace.Document.WorkspaceID != viewer.Workspace.ID {
-		c.JSON(http.StatusNotFound, gin.H{"error": "chunk not found"})
+		writeAPIError(c, http.StatusNotFound, apiErrorNotFound, "Chunk not found.")
 		return
 	}
 
@@ -1189,23 +1507,19 @@ func (a *App) apiAuth(c *gin.Context) {
 		return
 	}
 
-	authHeader := strings.TrimSpace(c.GetHeader("Authorization"))
-	if strings.HasPrefix(authHeader, "Bearer ") {
-		raw := strings.TrimPrefix(authHeader, "Bearer ")
-		if sessionID, valid := verifySignedValue(a.config.SessionSecret, raw); valid {
-			session, err := a.store.GetSession(c.Request.Context(), sessionID)
+	if sessionID, valid := a.sessionIDFromRequest(c); valid {
+		session, err := a.store.GetSession(c.Request.Context(), sessionID)
+		if err == nil {
+			user, err := a.store.GetUser(c.Request.Context(), session.UserID)
 			if err == nil {
-				user, err := a.store.GetUser(c.Request.Context(), session.UserID)
-				if err == nil {
-					c.Set("user", user)
-					c.Next()
-					return
-				}
+				c.Set("user", user)
+				c.Next()
+				return
 			}
 		}
 	}
 
-	c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+	writeUnauthorized(c)
 	c.Abort()
 }
 

@@ -5,88 +5,84 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>{{.Title}}</title>
-		<link rel="stylesheet" href="/static/app.css">
+		<link rel="stylesheet" href="/static/app.css?v=canvas13">
 		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
-		<script defer src="/static/app.js"></script>
+		<script type="module" src="/static/app.js?v=canvas13"></script>
 	</head>
 	<body>
-<main class="app-shell">
-	<header class="topbar">
-		<div class="topbar-copy">
-			<p class="eyebrow">Workspace</p>
+<main class="app-shell canvas-app">
+	<aside class="canvas-rail">
+		<a class="rail-mark rail-mark-logo rail-mark-active" href="/app" aria-label="Library"><img src="/static/logo.svg" alt=""></a>
+		<a class="rail-mark" href="/new" aria-label="New document">{{template "icon_plus" .}}</a>
+		<a class="rail-mark" href="/app/activity" aria-label="Activity">{{template "icon_activity" .}}</a>
+		<a class="rail-mark" href="/app/settings" aria-label="Workspace settings">{{template "icon_settings" .}}</a>
+		<form method="post" action="/logout"><button class="rail-mark rail-mark-bottom" type="submit" aria-label="Logout">{{template "icon_log_out" .}}</button></form>
+	</aside>
+
+	<section class="canvas-workspace">
+		<header class="canvas-toolbar">
+			<a class="toolbar-icon" href="/" aria-label="Back">{{template "icon_arrow_left" .}}</a>
 			<h1>{{.Viewer.Workspace.Name}}</h1>
-			<p class="lede subdued">A quiet library for versioned markdown, annotations, and shareable documents.</p>
-		</div>
-		<nav class="topnav">
-			<a href="/app">Library</a>
-			<a href="/app/documents/new">New document</a>
-			<a href="/app/activity">Activity</a>
-			<form method="post" action="/logout"><button class="button button-secondary" type="submit">Logout</button></form>
-		</nav>
-	</header>
+			<nav class="toolbar-actions" aria-label="Workspace actions">
+				<a class="toolbar-icon" href="/app/settings" aria-label="Workspace settings">{{template "icon_settings" .}}</a>
+				<a class="toolbar-icon" href="/new" aria-label="New document">{{template "icon_plus" .}}</a>
+			</nav>
+		</header>
 
-	<section class="workspace-grid">
-		<aside class="library-sidebar">
-			<section class="panel panel-quiet library-panel">
-				<div class="section-heading">
-					<h2>Library</h2>
-					<p>Search what matters, not everything.</p>
-				</div>
-				<input
-					class="search-input"
-					type="search"
-					name="q"
-					placeholder="Search titles and content"
-					hx-get="/app/partials/documents"
-					hx-target="#documents-list"
-					hx-trigger="keyup changed delay:200ms">
-				<div id="documents-list">
-					{{template "documents_partial" .}}
-				</div>
-			</section>
-		</aside>
+		<section class="workspace-search">
+			<input
+				class="search-input"
+				type="search"
+				name="q"
+				placeholder="Search {{.Viewer.Workspace.Name}}..."
+				hx-get="/app/partials/documents"
+				hx-target="#documents-list"
+				hx-trigger="keyup changed delay:200ms">
+		</section>
 
-		<section class="library-main">
-			<section class="workspace-intro">
-				<p class="eyebrow">Ingest</p>
-				<h2>Drop a markdown file to add it to the workspace.</h2>
-				<p class="subdued">Upload `.md`, `.markdown`, or `.txt` files directly into versioned storage. Keep it simple: import, read, annotate, share.</p>
-			</section>
+		<section class="library-index canvas-list-panel">
+			<div id="documents-list">
+				{{template "documents_partial" .}}
+			</div>
+		</section>
 
-			<form
-				id="dropzone"
-				class="dropzone"
-				method="post"
-				action="/app/ingest"
-				enctype="multipart/form-data"
-				hx-post="/app/ingest"
-				hx-encoding="multipart/form-data"
-				hx-target="#ingest-result">
-				<input id="dropzone-file" type="file" name="file" accept=".md,.markdown,.txt,text/markdown,text/plain" hidden>
-				<div class="dropzone-copy">
-					<p class="dropzone-title">Drag and drop a file here</p>
-					<p class="dropzone-meta">or click to choose a markdown document</p>
-				</div>
-			</form>
+		<section class="canvas-import-panel">
+			<dw-dropzone>
+				<form
+					id="dropzone"
+					class="dropzone"
+					method="post"
+					action="/app/ingest"
+					enctype="multipart/form-data"
+					hx-post="/app/ingest"
+					hx-encoding="multipart/form-data"
+					hx-target="#ingest-result">
+					<input id="dropzone-file" type="file" name="file" accept=".md,.markdown,.txt,text/markdown,text/plain" hidden>
+					<div class="dropzone-copy">
+						<p class="dropzone-title">Drop markdown anywhere</p>
+						<p class="dropzone-meta">Markdown, plain text, or a quick click to import</p>
+					</div>
+				</form>
+			</dw-dropzone>
 			<div id="ingest-result"></div>
+		</section>
 
-			<section class="panel panel-quiet activity-panel">
-				<div class="section-heading">
-					<h2>Recent activity</h2>
-					<p>Version history and discussion, without noise.</p>
-				</div>
-				<ul class="activity-list">
-					{{range .Events}}
-						<li>
-							<strong>{{.EventType}}</strong>
-							<p>{{.Summary}}</p>
-							<time>{{.CreatedAt.Format "2006-01-02 15:04"}}</time>
-						</li>
-					{{else}}
-						<li>No activity yet.</li>
-					{{end}}
-				</ul>
-			</section>
+		<section class="activity-sheet canvas-activity">
+			<div class="section-heading">
+				<p class="eyebrow">Activity</p>
+				<h2>Recent changes</h2>
+			</div>
+			<ul class="activity-list">
+				{{range .Events}}
+					<li>
+						<strong>{{.EventType}}</strong>
+						<p>{{.Summary}}</p>
+						<time>{{.CreatedAt.Format "2006-01-02 15:04"}}</time>
+					</li>
+				{{else}}
+					<li>No activity yet.</li>
+				{{end}}
+			</ul>
 		</section>
 	</section>
 </main>
