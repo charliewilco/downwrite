@@ -1,28 +1,43 @@
-FROM golang:1.26 AS build
+FROM node:24-bookworm-slim AS base
+
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends ca-certificates openssl \
+	&& rm -rf /var/lib/apt/lists/*
+
+FROM base AS deps
 
 WORKDIR /src
 
-COPY go.mod go.sum ./
-RUN go mod download
+COPY package.json package-lock.json ./
+COPY prisma ./prisma
+RUN npm ci
+RUN npm run prisma:generate
 
-COPY cmd ./cmd
-COPY internal ./internal
-COPY Readme.md ./
+FROM base AS build
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o /out/downwrite ./cmd/downwrite
+WORKDIR /src
 
-FROM debian:bookworm-slim
+COPY --from=deps /src/node_modules ./node_modules
+COPY package.json package-lock.json tsconfig.json ./
+COPY prisma ./prisma
+COPY src ./src
+COPY src/static ./src/static
+RUN npm run build
+RUN npm prune --omit=dev
 
-RUN apt-get update \
-	&& apt-get install -y --no-install-recommends ca-certificates \
-	&& rm -rf /var/lib/apt/lists/*
+FROM base
 
 WORKDIR /app
 
-COPY --from=build /out/downwrite /usr/local/bin/downwrite
+COPY --from=build /src/package.json /src/package-lock.json ./
+COPY --from=build /src/node_modules ./node_modules
+COPY --from=build /src/dist ./dist
+COPY --from=build /src/prisma ./prisma
+COPY --from=build /src/src/static ./src/static
 
 ENV DOWNWRITE_ADDR=:7878
+ENV NODE_ENV=production
 
 EXPOSE 7878
 
-ENTRYPOINT ["/usr/local/bin/downwrite"]
+CMD ["sh", "-c", "npm run prisma:deploy && npm run start"]

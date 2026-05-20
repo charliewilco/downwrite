@@ -1,4 +1,4 @@
-name: Go CI
+name: Hono CI
 
 on:
   push:
@@ -7,27 +7,53 @@ on:
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_DB: downwrite
+          POSTGRES_USER: downwrite
+          POSTGRES_PASSWORD: downwrite
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U downwrite -d downwrite"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DOWNWRITE_DATABASE_URL: postgresql://downwrite:downwrite@localhost:5432/downwrite
+      DOWNWRITE_SESSION_SECRET: ci-local-secret-with-at-least-thirty-two-characters
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          go-version-file: go.mod
-          cache: true
+          node-version: 24
+          cache: npm
 
-      - name: Verify formatting
-        run: |
-          files=$(gofmt -l cmd internal)
-          if [ -n "$files" ]; then
-            echo "These files need gofmt:"
-            echo "$files"
-            exit 1
-          fi
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Run tests
-        run: go test ./...
+      - name: Validate Prisma schema
+        run: npm run prisma:validate
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npm run check
+
+      - name: Test
+        run: npm test
 
       - name: Build
-        run: go build ./cmd/downwrite
+        run: npm run build
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: End-to-end test
+        run: npm run test:e2e
