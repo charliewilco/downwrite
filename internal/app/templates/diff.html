@@ -5,24 +5,24 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>{{.Title}}</title>
-		<link rel="stylesheet" href="/static/app.css">
+		<link rel="stylesheet" href="/static/app.css?v=canvas13">
 		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
-		<script defer src="/static/app.js"></script>
+		<script type="module" src="/static/app.js?v=canvas13"></script>
 	</head>
 	<body>
-<main class="app-shell narrow">
-	<header class="topbar">
-		<div>
-			<p class="eyebrow">Diff</p>
+<main class="app-shell diff-shell">
+	<header class="topbar shell-header">
+		<div class="topbar-copy">
+			<p class="eyebrow">Time Machine</p>
 			<h1>{{.Document.Title}}</h1>
-			<p class="muted">Version {{.FromVersion.VersionNumber}} to {{.ToVersion.VersionNumber}}</p>
+			<p class="subdued">Version {{.FromVersion.VersionNumber}} to {{.ToVersion.VersionNumber}}</p>
 		</div>
 		<nav class="topnav">
 			<a href="/app/documents/{{.Document.ID}}?version={{.ToVersion.ID}}">Back to document</a>
 		</nav>
 	</header>
 
-	<section class="panel diff-panel">
+	<section class="diff-panel">
 		{{range .Diffs}}
 			{{if eq .Type 1}}
 				<ins>{{.Text}}</ins>

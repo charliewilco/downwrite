@@ -3,7 +3,7 @@
 	{{range .Annotations}}
 		{{template "annotation_item" (dict "Thread" .)}}
 	{{else}}
-		<p class="muted">No annotations yet.</p>
+		<p class="annotation-empty">No annotations yet.</p>
 	{{end}}
 </div>
 {{end}}

@@ -2,6 +2,26 @@ package app
 
 import "time"
 
+type ID string
+
+type Theme string
+
+const (
+	ThemeSerif     Theme = "serif"
+	ThemeMono      Theme = "mono"
+	ThemeSansSerif Theme = "sans-serif"
+)
+
+type Color string
+
+const (
+	ColorBlush    Color = "blush"
+	ColorLavender Color = "lavender"
+	ColorMint     Color = "mint"
+	ColorSky      Color = "sky"
+	ColorPeach    Color = "peach"
+)
+
 type User struct {
 	ID           string    `json:"id"`
 	Name         string    `json:"name"`
@@ -34,13 +54,29 @@ type Session struct {
 type Document struct {
 	ID              string    `json:"id"`
 	WorkspaceID     string    `json:"workspace_id"`
+	StackID         string    `json:"stack_id"`
 	Title           string    `json:"title"`
 	Slug            string    `json:"slug"`
 	Status          string    `json:"status"`
+	Public          bool      `json:"public"`
 	CreatedBy       string    `json:"created_by"`
 	LatestVersionID string    `json:"latest_version_id"`
+	StackPosition   int       `json:"stack_position"`
+	Color           Color     `json:"color"`
+	Theme           Theme     `json:"theme"`
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
+}
+
+type Stack struct {
+	ID          string    `json:"id"`
+	WorkspaceID string    `json:"workspace_id"`
+	Name        string    `json:"name"`
+	Slug        string    `json:"slug"`
+	Public      bool      `json:"public"`
+	CreatedBy   string    `json:"created_by"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 type DocumentVersion struct {
@@ -60,6 +96,44 @@ type DocumentSummary struct {
 	Document
 	VersionNumber int    `json:"version_number"`
 	Excerpt       string `json:"excerpt"`
+}
+
+type StackSummary struct {
+	Stack
+	DocumentCount       int
+	LatestDocumentID    string
+	LatestDocumentTitle string
+	LatestVersionNumber int
+	Excerpt             string
+	Color               Color
+	Theme               Theme
+}
+
+type MDocumentVersion struct {
+	ID      ID        `json:"id"`
+	Content string    `json:"content"`
+	Updated time.Time `json:"updated"`
+	Created time.Time `json:"created"`
+}
+
+type MDocument struct {
+	ID       ID                 `json:"id"`
+	Title    string             `json:"title"`
+	Public   bool               `json:"public"`
+	Theme    Theme              `json:"theme"`
+	Color    Color              `json:"color"`
+	Versions []MDocumentVersion `json:"versions"`
+	Updated  time.Time          `json:"updated"`
+	Created  time.Time          `json:"created"`
+}
+
+type MStack struct {
+	ID      ID          `json:"id"`
+	Title   string      `json:"title"`
+	Public  bool        `json:"public"`
+	Docs    []MDocument `json:"docs"`
+	Updated time.Time   `json:"updated"`
+	Created time.Time   `json:"created"`
 }
 
 type Share struct {

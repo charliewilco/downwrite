@@ -1,0 +1,52 @@
+{{define "stack.html"}}
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>{{.Title}}</title>
+		<link rel="stylesheet" href="/static/app.css?v=canvas13">
+		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+		<script type="module" src="/static/app.js?v=canvas13"></script>
+	</head>
+	<body>
+<main class="app-shell canvas-document-app stack-app">
+	<header class="canvas-toolbar document-toolbar">
+		<a class="toolbar-icon" href="/app" aria-label="Back">{{template "icon_arrow_left" .}}</a>
+		<h1>{{.Stack.Name}}</h1>
+		<nav class="toolbar-actions" aria-label="Stack actions">
+			<a class="toolbar-icon" href="/app/stacks/{{.Stack.ID}}/settings" aria-label="Stack settings">{{template "icon_settings" .}}</a>
+			<a class="toolbar-icon" href="/new?stack={{.Stack.ID}}" aria-label="Add document">{{template "icon_plus" .}}</a>
+		</nav>
+	</header>
+
+	<section class="stack-stage">
+		<div class="stack-heading">
+			<p class="eyebrow">Stack</p>
+			<h2>{{.Stack.Name}}</h2>
+			{{if .Stack.Public}}<p class="settings-status">Public</p>{{else}}<p class="settings-status">Private</p>{{end}}
+		</div>
+
+		<ul class="document-list stack-document-list">
+			{{range .Documents}}
+				<li class="document-row">
+					<dw-document-card
+						href="/app/documents/{{.ID}}"
+						title="{{.Title}}"
+						version="v{{.VersionNumber}}"
+						excerpt="{{.Excerpt}}"
+						color="{{.Color}}"
+						typeface="{{.Theme}}"></dw-document-card>
+				</li>
+			{{else}}
+				<li class="empty-state">
+					<strong>No documents in this stack.</strong>
+					<p class="subdued">Add a markdown document to start it.</p>
+				</li>
+			{{end}}
+		</ul>
+	</section>
+</main>
+	</body>
+</html>
+{{end}}
