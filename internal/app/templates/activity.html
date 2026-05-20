@@ -5,14 +5,14 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>{{.Title}}</title>
-		<link rel="stylesheet" href="/static/app.css">
+		<link rel="stylesheet" href="/static/app.css?v=canvas13">
 		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
-		<script defer src="/static/app.js"></script>
+		<script type="module" src="/static/app.js?v=canvas13"></script>
 	</head>
 	<body>
 <main class="app-shell narrow">
-	<header class="topbar">
-		<div>
+	<header class="topbar shell-header">
+		<div class="topbar-copy">
 			<p class="eyebrow">Activity</p>
 			<h1>{{.Viewer.Workspace.Name}}</h1>
 		</div>
@@ -20,7 +20,7 @@
 			<a href="/app">Library</a>
 		</nav>
 	</header>
-	<section class="panel">
+	<section class="activity-sheet">
 		<ul class="activity-list">
 			{{range .Events}}
 				<li>

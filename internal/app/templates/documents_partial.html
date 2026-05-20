@@ -1,15 +1,20 @@
 {{define "documents_partial"}}
 <ul class="document-list">
-	{{range .Documents}}
-		<li>
-			<a href="/app/documents/{{.ID}}">
-				<strong>{{.Title}}</strong>
-				<span>v{{.VersionNumber}}</span>
-			</a>
-			<p>{{.Excerpt}}</p>
+	{{range .Stacks}}
+		<li class="document-row">
+			<dw-document-card
+				href="/app/stacks/{{.ID}}"
+				title="{{.Name}}"
+				version="{{.DocumentCount}} doc{{if ne .DocumentCount 1}}s{{end}}"
+				excerpt="{{.LatestDocumentTitle}} · {{.Excerpt}}"
+				color="{{.Color}}"
+				typeface="{{.Theme}}"></dw-document-card>
 		</li>
 	{{else}}
-		<li>No documents yet.</li>
+		<li class="empty-state">
+			<strong>No stacks yet.</strong>
+			<p class="subdued">Create a named stack from markdown or import a file.</p>
+		</li>
 	{{end}}
 </ul>
 {{end}}

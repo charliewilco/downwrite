@@ -110,6 +110,182 @@ func TestDocumentLifecycleAndShareFlow(t *testing.T) {
 	}
 }
 
+func TestWorkspaceAndDocumentRenderWebComponents(t *testing.T) {
+	router, store, cfg := newTestRouter(t)
+	session, err := store.CreateSession(t.Context(), store.defaultUser.ID)
+	if err != nil {
+		t.Fatalf("create session: %v", err)
+	}
+
+	document, _, err := store.CreateDocument(t.Context(), CreateDocumentParams{
+		WorkspaceID: store.defaultWorkspace.ID,
+		CreatedBy:   store.defaultUser.ID,
+		Title:       "Interface Notes",
+		Slug:        "interface-notes",
+		Content:     "# Interface\n\nKeep it direct.",
+	})
+	if err != nil {
+		t.Fatalf("create document: %v", err)
+	}
+
+	workspaceReq := httptest.NewRequest(http.MethodGet, "/app", nil)
+	workspaceReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	workspaceRecorder := newRecorder()
+	router.ServeHTTP(workspaceRecorder, workspaceReq)
+
+	if workspaceRecorder.Code != http.StatusOK {
+		t.Fatalf("expected workspace render, got %d", workspaceRecorder.Code)
+	}
+
+	workspaceBody := workspaceRecorder.Body.String()
+	for _, expected := range []string{
+		`<script type="module" src="/static/app.js?v=canvas13"></script>`,
+		"<dw-dropzone>",
+		"<dw-document-card",
+		`href="/app/stacks/`,
+		`color="sky"`,
+		`typeface="sans-serif"`,
+		`class="feather-icon"`,
+		`href="/new"`,
+		`href="/app/settings"`,
+		`hx-get="/app/partials/documents"`,
+		`Drop markdown anywhere`,
+	} {
+		if !strings.Contains(workspaceBody, expected) {
+			t.Fatalf("expected workspace body to contain %q, got %q", expected, workspaceBody)
+		}
+	}
+
+	newReq := httptest.NewRequest(http.MethodGet, "/new", nil)
+	newReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	newPageRecorder := newRecorder()
+	router.ServeHTTP(newPageRecorder, newReq)
+
+	if newPageRecorder.Code != http.StatusOK {
+		t.Fatalf("expected new document render, got %d", newPageRecorder.Code)
+	}
+
+	newBody := newPageRecorder.Body.String()
+	for _, expected := range []string{
+		`class="new-canvas-composer"`,
+		`class="new-stack-input"`,
+		`class="new-title-input"`,
+		`name="theme_color" value="sky"`,
+		`name="theme_type" value="serif"`,
+		`<dw-markdown-editor>`,
+		`class="new-markdown-canvas"`,
+	} {
+		if !strings.Contains(newBody, expected) {
+			t.Fatalf("expected new document body to contain %q, got %q", expected, newBody)
+		}
+	}
+
+	stackReq := httptest.NewRequest(http.MethodGet, "/app/stacks/"+document.StackID, nil)
+	stackReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	stackRecorder := newRecorder()
+	router.ServeHTTP(stackRecorder, stackReq)
+
+	if stackRecorder.Code != http.StatusOK {
+		t.Fatalf("expected stack render, got %d", stackRecorder.Code)
+	}
+
+	stackBody := stackRecorder.Body.String()
+	for _, expected := range []string{
+		`href="/new?stack=` + document.StackID + `"`,
+		`href="/app/stacks/` + document.StackID + `/settings"`,
+		`Interface Notes`,
+		`href="/app/documents/` + document.ID + `"`,
+	} {
+		if !strings.Contains(stackBody, expected) {
+			t.Fatalf("expected stack body to contain %q, got %q", expected, stackBody)
+		}
+	}
+
+	workspaceSettingsReq := httptest.NewRequest(http.MethodGet, "/app/settings", nil)
+	workspaceSettingsReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	workspaceSettingsRecorder := newRecorder()
+	router.ServeHTTP(workspaceSettingsRecorder, workspaceSettingsReq)
+
+	if workspaceSettingsRecorder.Code != http.StatusOK {
+		t.Fatalf("expected workspace settings render, got %d", workspaceSettingsRecorder.Code)
+	}
+	if !strings.Contains(workspaceSettingsRecorder.Body.String(), `action="/app/settings"`) {
+		t.Fatalf("expected workspace settings form, got %q", workspaceSettingsRecorder.Body.String())
+	}
+
+	updateWorkspaceReq := httptest.NewRequest(http.MethodPost, "/app/settings", strings.NewReader(form(map[string]string{
+		"name": "Edited workspace",
+	})))
+	updateWorkspaceReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	updateWorkspaceReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	updateWorkspaceRecorder := newRecorder()
+	router.ServeHTTP(updateWorkspaceRecorder, updateWorkspaceReq)
+
+	if updateWorkspaceRecorder.Code != http.StatusFound {
+		t.Fatalf("expected workspace settings redirect, got %d", updateWorkspaceRecorder.Code)
+	}
+	if store.workspaces[store.defaultWorkspace.ID].Name != "Edited workspace" {
+		t.Fatalf("expected workspace name update, got %q", store.workspaces[store.defaultWorkspace.ID].Name)
+	}
+
+	stackSettingsReq := httptest.NewRequest(http.MethodGet, "/app/stacks/"+document.StackID+"/settings", nil)
+	stackSettingsReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	stackSettingsRecorder := newRecorder()
+	router.ServeHTTP(stackSettingsRecorder, stackSettingsReq)
+
+	if stackSettingsRecorder.Code != http.StatusOK {
+		t.Fatalf("expected stack settings render, got %d", stackSettingsRecorder.Code)
+	}
+	if !strings.Contains(stackSettingsRecorder.Body.String(), `action="/app/stacks/`+document.StackID+`/settings"`) {
+		t.Fatalf("expected stack settings form, got %q", stackSettingsRecorder.Body.String())
+	}
+
+	updateStackReq := httptest.NewRequest(http.MethodPost, "/app/stacks/"+document.StackID+"/settings", strings.NewReader(form(map[string]string{
+		"name":   "Edited stack",
+		"public": "on",
+	})))
+	updateStackReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	updateStackReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	updateStackRecorder := newRecorder()
+	router.ServeHTTP(updateStackRecorder, updateStackReq)
+
+	if updateStackRecorder.Code != http.StatusFound {
+		t.Fatalf("expected stack settings redirect, got %d", updateStackRecorder.Code)
+	}
+	if stack := store.stacks[document.StackID]; stack.Name != "Edited stack" || !stack.Public {
+		t.Fatalf("expected stack update, got %#v", stack)
+	}
+
+	documentReq := httptest.NewRequest(http.MethodGet, "/app/documents/"+document.ID, nil)
+	documentReq.AddCookie(&http.Cookie{Name: "downwrite_session", Value: signValue(cfg.SessionSecret, session.ID)})
+
+	documentRecorder := newRecorder()
+	router.ServeHTTP(documentRecorder, documentReq)
+
+	if documentRecorder.Code != http.StatusOK {
+		t.Fatalf("expected document render, got %d", documentRecorder.Code)
+	}
+
+	documentBody := documentRecorder.Body.String()
+	for _, expected := range []string{
+		`<script type="module" src="/static/app.js?v=canvas13"></script>`,
+		`theme-color-sky theme-type-sans-serif`,
+		`<dw-annotation-form reader="reader-content">`,
+		`hx-post="/app/annotations"`,
+	} {
+		if !strings.Contains(documentBody, expected) {
+			t.Fatalf("expected document body to contain %q, got %q", expected, documentBody)
+		}
+	}
+}
+
 func TestCreateAnnotationAndReplyFlow(t *testing.T) {
 	router, store, cfg := newTestRouter(t)
 	session, err := store.CreateSession(t.Context(), store.defaultUser.ID)
