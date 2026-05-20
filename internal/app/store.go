@@ -61,15 +61,15 @@ type CreateVersionParams struct {
 }
 
 type CreateAnnotationParams struct {
-	DocumentID        string
-	DocumentVersionID string
-	AuthorID          string
-	Quote             string
-	Comment           string
-	StartOffset       int
-	EndOffset         int
-	Prefix            string
-	Suffix            string
+	DocumentID        string `json:"document_id"`
+	DocumentVersionID string `json:"document_version_id"`
+	AuthorID          string `json:"author_id"`
+	Quote             string `json:"quote"`
+	Comment           string `json:"comment"`
+	StartOffset       int    `json:"start_offset"`
+	EndOffset         int    `json:"end_offset"`
+	Prefix            string `json:"prefix"`
+	Suffix            string `json:"suffix"`
 }
 
 type PostgresStore struct {
