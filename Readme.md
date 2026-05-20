@@ -2,7 +2,7 @@
 
 Downwrite is a markdown-first document hub for people and agents. It ingests markdown, versions it, makes it searchable, exposes it over HTTP and MCP, and lets teams annotate exact quotes on immutable document versions.
 
-This repository now contains the v3 Go rewrite:
+This repository contains the v3 Go rewrite:
 
 - `Go + Gin + HTMX`
 - `Postgres`
@@ -16,13 +16,13 @@ This repository now contains the v3 Go rewrite:
 
 ## Current state
 
-The legacy `Next.js + GraphQL + Mongo + Draft.js` app is no longer the primary runtime. The new entrypoint is the Go service under `cmd/downwrite`.
+The legacy `Next.js + GraphQL + Mongo + Draft.js` app has been removed. The entrypoint is the Go service under `cmd/downwrite`.
 
 ## Container policy
 
 Downwrite is OCI-first and Docker-optional.
 
-- The canonical image definition lives in [`Containerfile`](/Users/charliewilco/Developer/downwrite/Containerfile).
+- The canonical image definition lives in [`Containerfile`](Containerfile).
 - Local macOS development may use Apple's `container` CLI.
 - Docker Desktop is not required for local development.
 - CI should not depend on Apple's container runtime.
