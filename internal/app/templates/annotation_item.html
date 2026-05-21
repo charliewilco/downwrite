@@ -1,0 +1,16 @@
+{{define "annotation_item"}}
+<article class="annotation">
+	<blockquote>{{.Thread.Annotation.Quote}}</blockquote>
+	<p class="annotation-body">{{.Thread.Annotation.Comment}}</p>
+	<small>{{.Thread.Annotation.CreatedAt.Format "Jan 02 15:04"}}</small>
+	<div class="comment-list">
+		{{range .Thread.Comments}}
+			{{template "annotation_comment" (dict "Comment" .)}}
+		{{end}}
+	</div>
+	<form class="form-inline" method="post" action="/app/annotations/{{.Thread.Annotation.ID}}/comments" hx-post="/app/annotations/{{.Thread.Annotation.ID}}/comments" hx-target="closest .annotation .comment-list" hx-swap="beforeend">
+		<input type="text" name="body" placeholder="Reply to annotation">
+		<button class="button button-secondary" type="submit">Send</button>
+	</form>
+</article>
+{{end}}

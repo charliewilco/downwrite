@@ -1,60 +1,64 @@
-name: Node CI
-on: [push, pull_request]
+name: Go CI
+
+on:
+  push:
+  pull_request:
 
 jobs:
-  build:
+  test-and-build:
     runs-on: ubuntu-latest
-    env:
-      NEXT_TELEMETRY_DISABLED: 1
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x]
-
     steps:
-      - uses: actions/cache@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          path: ${{ github.workspace }}/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-      - uses: pnpm/action-setup@v2.1.0
-        with:
-          version: 6.32.0
-      - name: Install deps and build package
-        run: pnpm install --frozen-lockfile
+          go-version-file: go.mod
+          cache: true
+
+      - name: Verify formatting
+        run: |
+          files=$(gofmt -l cmd internal)
+          if [ -n "$files" ]; then
+            echo "These files need gofmt:"
+            echo "$files"
+            exit 1
+          fi
+
+      - name: Run tests
+        run: go test ./...
+
       - name: Build
-        run: pnpm build
+        run: go build ./cmd/downwrite
 
-  test:
+  postgres-store:
     runs-on: ubuntu-latest
-    env:
-      NEXT_TELEMETRY_DISABLED: 1
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x]
-
     services:
-      mongodb:
-        image: mongo:4.4
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_DB: downwrite
+          POSTGRES_USER: downwrite
+          POSTGRES_PASSWORD: downwrite
         ports:
-          - 27017:27017
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U downwrite -d downwrite"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DOWNWRITE_TEST_DATABASE_URL: postgresql://downwrite:downwrite@localhost:5432/downwrite
     steps:
-      - uses: actions/cache@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          path: ${{ github.workspace }}/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-      - uses: pnpm/action-setup@v2.1.0
-        with:
-          version: 6.32.0
-      - name: Install deps and build package
-        run: pnpm install --frozen-lockfile
-      - name: Unit Tests
-        run: pnpm test:ci
+          go-version-file: go.mod
+          cache: true
+
+      - name: Run Postgres store test
+        run: go test ./internal/app -run TestPostgresStoreDocumentWorkflow -count=1

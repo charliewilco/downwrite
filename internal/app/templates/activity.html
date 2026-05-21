@@ -1,0 +1,39 @@
+{{define "activity.html"}}
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>{{.Title}}</title>
+		<link rel="stylesheet" href="/static/app.css?v=canvas13">
+		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+		<script type="module" src="/static/app.js?v=canvas13"></script>
+	</head>
+	<body>
+<main class="app-shell narrow">
+	<header class="topbar shell-header">
+		<div class="topbar-copy">
+			<p class="eyebrow">Activity</p>
+			<h1>{{.Viewer.Workspace.Name}}</h1>
+		</div>
+		<nav class="topnav">
+			<a href="/app">Library</a>
+		</nav>
+	</header>
+	<section class="activity-sheet">
+		<ul class="activity-list">
+			{{range .Events}}
+				<li>
+					<strong>{{.EventType}}</strong>
+					<p>{{.Summary}}</p>
+					<time>{{.CreatedAt.Format "2006-01-02 15:04"}}</time>
+				</li>
+			{{else}}
+				<li>No activity yet.</li>
+			{{end}}
+		</ul>
+	</section>
+</main>
+	</body>
+</html>
+{{end}}

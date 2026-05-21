@@ -1,0 +1,9 @@
+{{define "annotations_partial"}}
+<div class="annotation-list">
+	{{range .Annotations}}
+		{{template "annotation_item" (dict "Thread" .)}}
+	{{else}}
+		<p class="annotation-empty">No annotations yet.</p>
+	{{end}}
+</div>
+{{end}}

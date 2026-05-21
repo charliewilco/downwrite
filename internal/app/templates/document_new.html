@@ -1,0 +1,50 @@
+{{define "document_new.html"}}
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>{{.Title}}</title>
+		<link rel="stylesheet" href="/static/app.css?v=canvas13">
+		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+		<script type="module" src="/static/app.js?v=canvas13"></script>
+	</head>
+	<body>
+<main class="app-shell canvas-document-app new-document-app">
+	<header class="canvas-toolbar document-toolbar">
+		<a class="toolbar-icon" href="/app" aria-label="Back">{{template "icon_arrow_left" .}}</a>
+		<h1>New canvas</h1>
+		<div></div>
+	</header>
+
+	<form class="new-canvas-composer" method="post" action="/app/documents">
+		{{if .Stack.ID}}<input type="hidden" name="stack_id" value="{{.Stack.ID}}">{{end}}
+		<input class="new-stack-input" type="text" name="stack_name" placeholder="Stack name" autocomplete="off" value="{{.Stack.Name}}">
+		<input class="new-title-input" type="text" name="title" placeholder="Untitled document" autocomplete="off" required autofocus>
+		<fieldset class="theme-controls" aria-label="Document theme">
+			<legend>Theme</legend>
+			<div class="theme-group" aria-label="Pastel color">
+				<label class="theme-swatch theme-sky"><input type="radio" name="theme_color" value="sky" checked><span title="Sky"></span></label>
+				<label class="theme-swatch theme-blush"><input type="radio" name="theme_color" value="blush"><span title="Blush"></span></label>
+				<label class="theme-swatch theme-peach"><input type="radio" name="theme_color" value="peach"><span title="Peach"></span></label>
+				<label class="theme-swatch theme-mint"><input type="radio" name="theme_color" value="mint"><span title="Mint"></span></label>
+				<label class="theme-swatch theme-lavender"><input type="radio" name="theme_color" value="lavender"><span title="Lavender"></span></label>
+			</div>
+			<div class="theme-group theme-type-group" aria-label="Typeface">
+				<label><input type="radio" name="theme_type" value="sans-serif" checked><span>Sans</span></label>
+				<label><input type="radio" name="theme_type" value="serif"><span>Serif</span></label>
+				<label><input type="radio" name="theme_type" value="mono"><span>Mono</span></label>
+			</div>
+		</fieldset>
+		<dw-markdown-editor>
+			<textarea class="new-markdown-canvas" name="content" rows="24" placeholder="Start writing..." required></textarea>
+		</dw-markdown-editor>
+		<footer class="new-canvas-actions">
+			<p>Markdown is saved as version 1 in this stack.</p>
+			<button class="button" type="submit">Create document</button>
+		</footer>
+	</form>
+</main>
+	</body>
+</html>
+{{end}}
