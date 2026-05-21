@@ -100,13 +100,13 @@ type DocumentSummary struct {
 
 type StackSummary struct {
 	Stack
-	DocumentCount       int
-	LatestDocumentID    string
-	LatestDocumentTitle string
-	LatestVersionNumber int
-	Excerpt             string
-	Color               Color
-	Theme               Theme
+	DocumentCount       int    `json:"document_count"`
+	LatestDocumentID    string `json:"latest_document_id"`
+	LatestDocumentTitle string `json:"latest_document_title"`
+	LatestVersionNumber int    `json:"latest_version_number"`
+	Excerpt             string `json:"excerpt"`
+	Color               Color  `json:"color"`
+	Theme               Theme  `json:"theme"`
 }
 
 type MDocumentVersion struct {

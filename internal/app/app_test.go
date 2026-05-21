@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"errors"
 	"testing"
 )
 
@@ -50,6 +51,95 @@ func TestSignAndVerifyValue(t *testing.T) {
 
 	if _, ok := verifySignedValue("wrong", signed); ok {
 		t.Fatal("expected signature mismatch with wrong secret")
+	}
+}
+
+func TestAuthenticatorSignupLoginAndLogout(t *testing.T) {
+	store := newFakeStore()
+	auth := NewAuthenticator(store, "auth-secret")
+
+	user, session, err := auth.Signup(context.Background(), "Nova", "nova@example.com", "Supersafe1!")
+	if err != nil {
+		t.Fatalf("signup: %v", err)
+	}
+	if user.PasswordHash == "" || user.PasswordHash == "Supersafe1!" {
+		t.Fatalf("expected password to be hashed, got %q", user.PasswordHash)
+	}
+	if session.ID == "" {
+		t.Fatal("expected signup to create a session")
+	}
+
+	loggedIn, loginSession, err := auth.Login(context.Background(), "nova@example.com", "Supersafe1!")
+	if err != nil {
+		t.Fatalf("login: %v", err)
+	}
+	if loggedIn.ID != user.ID || loginSession.ID == "" {
+		t.Fatalf("unexpected login result: user=%#v session=%#v", loggedIn, loginSession)
+	}
+
+	payload, ok := auth.AuthResponse(context.Background(), loggedIn, loginSession)
+	if !ok {
+		t.Fatal("expected auth response")
+	}
+	if payload.Session.Token == "" || payload.DefaultWorkspaceID == "" || len(payload.Workspaces) != 1 {
+		t.Fatalf("unexpected auth payload: %#v", payload)
+	}
+
+	if err := auth.Logout(context.Background(), loginSession.ID); err != nil {
+		t.Fatalf("logout: %v", err)
+	}
+	if _, err := store.GetSession(context.Background(), loginSession.ID); err == nil {
+		t.Fatal("expected logout to delete session")
+	}
+}
+
+func TestAuthenticatorRejectsInvalidPassword(t *testing.T) {
+	store := newFakeStore()
+	auth := NewAuthenticator(store, "auth-secret")
+	if _, _, err := auth.Signup(context.Background(), "Nova", "nova@example.com", "Supersafe1!"); err != nil {
+		t.Fatalf("signup: %v", err)
+	}
+
+	_, _, err := auth.Login(context.Background(), "nova@example.com", "wrong")
+	if !errors.Is(err, errInvalidCredentials) {
+		t.Fatalf("expected invalid credentials, got %v", err)
+	}
+}
+
+func TestPasswordStandard(t *testing.T) {
+	validPasswords := []string{
+		"Supersafe1!",
+		"n0t Bad!",
+		"Åbcdef1!",
+	}
+	for _, password := range validPasswords {
+		if !meetsPasswordStandard(password) {
+			t.Fatalf("expected password %q to meet standard", password)
+		}
+	}
+
+	invalidPasswords := []string{
+		"Sh1!",
+		"lowercase1!",
+		"UPPERCASE1!",
+		"NoNumber!",
+		"NoSpecial1",
+		"Sup3r safe",
+	}
+	for _, password := range invalidPasswords {
+		if meetsPasswordStandard(password) {
+			t.Fatalf("expected password %q to fail standard", password)
+		}
+	}
+}
+
+func TestAuthenticatorRejectsWeakSignupPassword(t *testing.T) {
+	store := newFakeStore()
+	auth := NewAuthenticator(store, "auth-secret")
+
+	_, _, err := auth.Signup(context.Background(), "Nova", "nova@example.com", "supersafe")
+	if !errors.Is(err, errWeakPassword) {
+		t.Fatalf("expected weak password error, got %v", err)
 	}
 }
 

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"slices"
 	"strings"
 	"testing"
 
@@ -41,7 +42,7 @@ func TestSignupCreatesSessionAndRedirects(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPost, "/signup", strings.NewReader(form(map[string]string{
 		"name":     "Nova",
 		"email":    "nova@example.com",
-		"password": "supersafe",
+		"password": "Supersafe1!",
 	})))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
@@ -474,6 +475,27 @@ func TestAPIDiscoveryAndOpenAPIArePublic(t *testing.T) {
 		t.Fatalf("unexpected auth methods: %#v", discovery.AuthMethods)
 	}
 
+	validateReq := httptest.NewRequest(http.MethodGet, "/v1/instance/validate", nil)
+	validateRecorder := newRecorder()
+	router.ServeHTTP(validateRecorder, validateReq)
+
+	if validateRecorder.Code != http.StatusOK {
+		t.Fatalf("expected instance validation success, got %d", validateRecorder.Code)
+	}
+
+	var validation struct {
+		Valid      bool     `json:"valid"`
+		Name       string   `json:"name"`
+		APIVersion string   `json:"api_version"`
+		Features   []string `json:"features"`
+	}
+	if err := json.Unmarshal(validateRecorder.Body.Bytes(), &validation); err != nil {
+		t.Fatalf("unmarshal validation: %v", err)
+	}
+	if !validation.Valid || validation.Name != "Downwrite" || validation.APIVersion != apiVersion || !slices.Contains(validation.Features, "annotations") {
+		t.Fatalf("unexpected validation payload: %#v", validation)
+	}
+
 	openAPIReq := httptest.NewRequest(http.MethodGet, "/v1/openapi.json", nil)
 	openAPIRecorder := newRecorder()
 	router.ServeHTTP(openAPIRecorder, openAPIReq)
@@ -488,10 +510,87 @@ func TestAPIDiscoveryAndOpenAPIArePublic(t *testing.T) {
 	if err := json.Unmarshal(openAPIRecorder.Body.Bytes(), &openAPI); err != nil {
 		t.Fatalf("unmarshal openapi: %v", err)
 	}
-	for _, path := range []string{"/.well-known/downwrite", "/v1/auth/login", "/v1/auth/signup", "/v1/me"} {
+	for _, path := range []string{"/.well-known/downwrite", "/v1/instance/validate", "/v1/auth/login", "/v1/auth/signup", "/v1/me", "/v1/stacks", "/v1/stacks/{id}", "/v1/stacks/{id}/documents"} {
 		if _, ok := openAPI.Paths[path]; !ok {
 			t.Fatalf("expected openapi to include %s", path)
 		}
+	}
+}
+
+func TestAPIListStacksAndStackDetails(t *testing.T) {
+	router, store, cfg := newTestRouter(t)
+	session, err := store.CreateSession(t.Context(), store.defaultUser.ID)
+	if err != nil {
+		t.Fatalf("create session: %v", err)
+	}
+	document, _, err := store.CreateDocument(t.Context(), CreateDocumentParams{
+		WorkspaceID: store.defaultWorkspace.ID,
+		CreatedBy:   store.defaultUser.ID,
+		Title:       "Mobile client notes",
+		Slug:        "mobile-client-notes",
+		StackName:   "Mobile",
+		Content:     "A document that should show up in the SwiftUI client.",
+	})
+	if err != nil {
+		t.Fatalf("create document: %v", err)
+	}
+
+	stacksReq := httptest.NewRequest(http.MethodGet, "/v1/stacks", nil)
+	stacksReq.Header.Set("Authorization", "Bearer "+signValue(cfg.SessionSecret, session.ID))
+	stacksRecorder := newRecorder()
+	router.ServeHTTP(stacksRecorder, stacksReq)
+
+	if stacksRecorder.Code != http.StatusOK {
+		t.Fatalf("expected stacks success, got %d body=%q", stacksRecorder.Code, stacksRecorder.Body.String())
+	}
+
+	var stacksResponse struct {
+		Stacks []StackSummary `json:"stacks"`
+	}
+	if err := json.Unmarshal(stacksRecorder.Body.Bytes(), &stacksResponse); err != nil {
+		t.Fatalf("unmarshal stacks: %v", err)
+	}
+	if len(stacksResponse.Stacks) != 1 || stacksResponse.Stacks[0].DocumentCount != 1 || stacksResponse.Stacks[0].LatestDocumentID != document.ID {
+		t.Fatalf("unexpected stacks payload: %#v", stacksResponse)
+	}
+
+	stackReq := httptest.NewRequest(http.MethodGet, "/v1/stacks/"+document.StackID, nil)
+	stackReq.Header.Set("Authorization", "Bearer "+signValue(cfg.SessionSecret, session.ID))
+	stackRecorder := newRecorder()
+	router.ServeHTTP(stackRecorder, stackReq)
+
+	if stackRecorder.Code != http.StatusOK {
+		t.Fatalf("expected stack detail success, got %d body=%q", stackRecorder.Code, stackRecorder.Body.String())
+	}
+
+	var stackResponse struct {
+		Stack     Stack             `json:"stack"`
+		Documents []DocumentSummary `json:"documents"`
+	}
+	if err := json.Unmarshal(stackRecorder.Body.Bytes(), &stackResponse); err != nil {
+		t.Fatalf("unmarshal stack detail: %v", err)
+	}
+	if stackResponse.Stack.ID != document.StackID || len(stackResponse.Documents) != 1 || stackResponse.Documents[0].ID != document.ID {
+		t.Fatalf("unexpected stack detail payload: %#v", stackResponse)
+	}
+
+	documentsReq := httptest.NewRequest(http.MethodGet, "/v1/stacks/"+document.StackID+"/documents", nil)
+	documentsReq.Header.Set("Authorization", "Bearer "+signValue(cfg.SessionSecret, session.ID))
+	documentsRecorder := newRecorder()
+	router.ServeHTTP(documentsRecorder, documentsReq)
+
+	if documentsRecorder.Code != http.StatusOK {
+		t.Fatalf("expected stack documents success, got %d body=%q", documentsRecorder.Code, documentsRecorder.Body.String())
+	}
+
+	var documentsResponse struct {
+		Documents []DocumentSummary `json:"documents"`
+	}
+	if err := json.Unmarshal(documentsRecorder.Body.Bytes(), &documentsResponse); err != nil {
+		t.Fatalf("unmarshal documents: %v", err)
+	}
+	if len(documentsResponse.Documents) != 1 || documentsResponse.Documents[0].ID != document.ID {
+		t.Fatalf("unexpected documents payload: %#v", documentsResponse)
 	}
 }
 
@@ -567,7 +666,7 @@ func TestAPIAuthLoginMeLogoutFlow(t *testing.T) {
 func TestAPISignupReturnsMobileAuthPayload(t *testing.T) {
 	router, _, _ := newTestRouter(t)
 
-	req := httptest.NewRequest(http.MethodPost, "/v1/auth/signup", strings.NewReader(`{"name":"Iris","email":"iris@example.com","password":"supersafe"}`))
+	req := httptest.NewRequest(http.MethodPost, "/v1/auth/signup", strings.NewReader(`{"name":"Iris","email":"iris@example.com","password":"Supersafe1!"}`))
 	req.Header.Set("Content-Type", "application/json")
 
 	recorder := newRecorder()
@@ -588,6 +687,30 @@ func TestAPISignupReturnsMobileAuthPayload(t *testing.T) {
 	}
 	if response.Session.Token == "" || response.User.Email != "iris@example.com" || len(response.Workspaces) != 1 {
 		t.Fatalf("unexpected signup payload: %#v", response)
+	}
+}
+
+func TestAPISignupRejectsWeakPassword(t *testing.T) {
+	router, _, _ := newTestRouter(t)
+
+	req := httptest.NewRequest(http.MethodPost, "/v1/auth/signup", strings.NewReader(`{"name":"Iris","email":"weak@example.com","password":"supersafe"}`))
+	req.Header.Set("Content-Type", "application/json")
+
+	recorder := newRecorder()
+	router.ServeHTTP(recorder, req)
+
+	if recorder.Code != http.StatusBadRequest {
+		t.Fatalf("expected signup validation failure, got %d body=%q", recorder.Code, recorder.Body.String())
+	}
+
+	var response struct {
+		Error apiErrorBody `json:"error"`
+	}
+	if err := json.Unmarshal(recorder.Body.Bytes(), &response); err != nil {
+		t.Fatalf("unmarshal signup error: %v", err)
+	}
+	if response.Error.Code != apiErrorValidationFailed || len(response.Error.Fields) != 1 || response.Error.Fields[0].Field != "password" {
+		t.Fatalf("unexpected signup error: %#v", response)
 	}
 }
 
