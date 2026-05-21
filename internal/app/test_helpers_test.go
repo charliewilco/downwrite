@@ -689,6 +689,7 @@ func newTestRouter(t *testing.T) (*gin.Engine, *fakeStore, Config) {
 	app := &App{
 		config:    cfg,
 		store:     store,
+		auth:      NewAuthenticator(store, cfg.SessionSecret),
 		templates: templates,
 	}
 

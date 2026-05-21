@@ -3,7 +3,6 @@ package app
 import (
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -73,23 +72,6 @@ func openAPIOperation(summary string, protected bool) gin.H {
 		operation["security"] = []gin.H{{"bearerAuth": []string{}}}
 	}
 	return operation
-}
-
-func (a *App) apiAuthResponse(c *gin.Context, user User, session Session) (apiAuthBody, bool) {
-	workspaces, err := a.store.ListWorkspacesForUser(c.Request.Context(), user.ID)
-	if err != nil || len(workspaces) == 0 {
-		return apiAuthBody{}, false
-	}
-
-	return apiAuthBody{
-		Session: apiSessionBody{
-			Token:     signValue(a.config.SessionSecret, session.ID),
-			ExpiresAt: session.ExpiresAt.UTC().Format(time.RFC3339),
-		},
-		User:               user,
-		Workspaces:         workspaces,
-		DefaultWorkspaceID: workspaces[0].ID,
-	}, true
 }
 
 func (a *App) sessionIDFromRequest(c *gin.Context) (string, bool) {

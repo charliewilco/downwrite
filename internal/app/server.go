@@ -14,7 +14,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/sergi/go-diff/diffmatchpatch"
-	"golang.org/x/crypto/bcrypt"
 )
 
 //go:embed templates/*.html static/*
@@ -28,6 +27,7 @@ type Server struct {
 type App struct {
 	config    Config
 	store     Store
+	auth      Authenticator
 	templates *template.Template
 }
 
@@ -54,6 +54,7 @@ func NewServer(cfg Config) (*Server, error) {
 	app := &App{
 		config:    cfg,
 		store:     store,
+		auth:      NewAuthenticator(store, cfg.SessionSecret),
 		templates: tmpl,
 	}
 
@@ -153,6 +154,7 @@ func (a *App) registerRoutes(router *gin.Engine) {
 
 	api := router.Group("/v1")
 	api.GET("/openapi.json", a.apiOpenAPI)
+	api.GET("/instance/validate", a.apiValidateInstance)
 	api.POST("/auth/login", a.apiLogin)
 	api.POST("/auth/signup", a.apiSignup)
 
@@ -160,6 +162,9 @@ func (a *App) registerRoutes(router *gin.Engine) {
 	{
 		api.GET("/me", a.apiMe)
 		api.POST("/auth/logout", a.apiLogout)
+		api.GET("/stacks", a.apiListStacks)
+		api.GET("/stacks/:id", a.apiGetStack)
+		api.GET("/stacks/:id/documents", a.apiListStackDocuments)
 		api.POST("/documents", a.apiCreateDocument)
 		api.GET("/documents/:id", a.apiGetDocument)
 		api.GET("/documents/:id/versions", a.apiListVersions)
@@ -210,26 +215,18 @@ func (a *App) signup(c *gin.Context) {
 		return
 	}
 
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	_, session, err := a.auth.Signup(c.Request.Context(), name, email, password)
 	if err != nil {
-		c.String(http.StatusInternalServerError, "hash password")
-		return
-	}
-
-	user, _, err := a.store.CreateUserWithWorkspace(c.Request.Context(), name, email, string(hash))
-	if err != nil {
+		message := "Could not create account. The email may already be in use."
+		if errors.Is(err, errWeakPassword) {
+			message = passwordStandardMessage
+		}
 		a.renderPage(c, http.StatusBadRequest, "auth.html", gin.H{
 			"Title":  "Create account",
 			"Action": "/signup",
 			"Mode":   "signup",
-			"Error":  "Could not create account. The email may already be in use.",
+			"Error":  message,
 		})
-		return
-	}
-
-	session, err := a.store.CreateSession(c.Request.Context(), user.ID)
-	if err != nil {
-		c.String(http.StatusInternalServerError, "create session")
 		return
 	}
 
@@ -249,20 +246,14 @@ func (a *App) login(c *gin.Context) {
 	email := strings.TrimSpace(c.PostForm("email"))
 	password := c.PostForm("password")
 
-	user, err := a.store.GetUserByEmail(c.Request.Context(), email)
-	if err != nil || bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password)) != nil {
+	_, session, err := a.auth.Login(c.Request.Context(), email, password)
+	if err != nil {
 		a.renderPage(c, http.StatusUnauthorized, "auth.html", gin.H{
 			"Title":  "Login",
 			"Action": "/login",
 			"Mode":   "login",
 			"Error":  "Invalid credentials.",
 		})
-		return
-	}
-
-	session, err := a.store.CreateSession(c.Request.Context(), user.ID)
-	if err != nil {
-		c.String(http.StatusInternalServerError, "create session")
 		return
 	}
 
@@ -273,7 +264,7 @@ func (a *App) login(c *gin.Context) {
 func (a *App) logout(c *gin.Context) {
 	if cookie, err := c.Cookie("downwrite_session"); err == nil {
 		if sessionID, ok := verifySignedValue(a.config.SessionSecret, cookie); ok {
-			_ = a.store.DeleteSession(c.Request.Context(), sessionID)
+			_ = a.auth.Logout(c.Request.Context(), sessionID)
 		}
 	}
 
@@ -826,19 +817,13 @@ func (a *App) apiLogin(c *gin.Context) {
 		return
 	}
 
-	user, err := a.store.GetUserByEmail(c.Request.Context(), email)
-	if err != nil || bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(body.Password)) != nil {
+	user, session, err := a.auth.Login(c.Request.Context(), email, body.Password)
+	if err != nil {
 		writeAPIError(c, http.StatusUnauthorized, apiErrorInvalidCredentials, "Invalid email or password.")
 		return
 	}
 
-	session, err := a.store.CreateSession(c.Request.Context(), user.ID)
-	if err != nil {
-		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not create session.")
-		return
-	}
-
-	response, ok := a.apiAuthResponse(c, user, session)
+	response, ok := a.auth.AuthResponse(c.Request.Context(), user, session)
 	if !ok {
 		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not load account workspaces.")
 		return
@@ -870,25 +855,19 @@ func (a *App) apiSignup(c *gin.Context) {
 		return
 	}
 
-	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
+	user, session, err := a.auth.Signup(c.Request.Context(), name, email, body.Password)
 	if err != nil {
-		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not create account.")
-		return
-	}
-
-	user, _, err := a.store.CreateUserWithWorkspace(c.Request.Context(), name, email, string(hash))
-	if err != nil {
+		if errors.Is(err, errWeakPassword) {
+			writeAPIError(c, http.StatusBadRequest, apiErrorValidationFailed, passwordStandardMessage,
+				apiFieldError{Field: "password", Message: passwordStandardMessage},
+			)
+			return
+		}
 		writeAPIError(c, http.StatusConflict, apiErrorConflict, "Could not create account. The email may already be in use.")
 		return
 	}
 
-	session, err := a.store.CreateSession(c.Request.Context(), user.ID)
-	if err != nil {
-		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not create session.")
-		return
-	}
-
-	response, ok := a.apiAuthResponse(c, user, session)
+	response, ok := a.auth.AuthResponse(c.Request.Context(), user, session)
 	if !ok {
 		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not load account workspaces.")
 		return
@@ -904,7 +883,7 @@ func (a *App) apiLogout(c *gin.Context) {
 		return
 	}
 
-	if err := a.store.DeleteSession(c.Request.Context(), sessionID); err != nil {
+	if err := a.auth.Logout(c.Request.Context(), sessionID); err != nil {
 		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not end session.")
 		return
 	}
@@ -945,12 +924,18 @@ func (a *App) apiOpenAPI(c *gin.Context) {
 		"paths": gin.H{
 			"/.well-known/downwrite": gin.H{"get": openAPIOperation("Discover a Downwrite instance", false)},
 			"/v1/openapi.json":       gin.H{"get": openAPIOperation("Fetch the OpenAPI contract", false)},
+			"/v1/instance/validate":  gin.H{"get": openAPIOperation("Validate a Downwrite instance", false)},
 			"/v1/auth/login":         gin.H{"post": openAPIOperation("Create a session with email and password", false)},
 			"/v1/auth/signup":        gin.H{"post": openAPIOperation("Create an account, workspace, and session", false)},
 			"/v1/auth/logout":        gin.H{"post": openAPIOperation("End the current session", true)},
 			"/v1/me":                 gin.H{"get": openAPIOperation("Fetch the current user and workspaces", true)},
-			"/v1/documents":          gin.H{"post": openAPIOperation("Create a document", true)},
-			"/v1/documents/{id}":     gin.H{"get": openAPIOperation("Fetch a document and version", true)},
+			"/v1/stacks":             gin.H{"get": openAPIOperation("List workspace stacks", true)},
+			"/v1/stacks/{id}":        gin.H{"get": openAPIOperation("Fetch stack details and documents", true)},
+			"/v1/stacks/{id}/documents": gin.H{
+				"get": openAPIOperation("List documents in a stack", true),
+			},
+			"/v1/documents":      gin.H{"post": openAPIOperation("Create a document", true)},
+			"/v1/documents/{id}": gin.H{"get": openAPIOperation("Fetch a document and version", true)},
 			"/v1/documents/{id}/versions": gin.H{
 				"get":  openAPIOperation("List document versions", true),
 				"post": openAPIOperation("Create a document version", true),
@@ -966,6 +951,80 @@ func (a *App) apiOpenAPI(c *gin.Context) {
 			"/v1/trace/{chunkID}":           gin.H{"get": openAPIOperation("Trace search chunk provenance", true)},
 		},
 	})
+}
+
+func (a *App) apiValidateInstance(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"valid":       true,
+		"name":        "Downwrite",
+		"api_version": apiVersion,
+		"features": []string{
+			"password_auth",
+			"stacks",
+			"documents",
+			"annotations",
+			"annotation_comments",
+		},
+	})
+}
+
+func (a *App) apiListStacks(c *gin.Context) {
+	viewer, ok := a.currentViewer(c)
+	if !ok {
+		writeUnauthorized(c)
+		return
+	}
+
+	stacks, err := a.store.ListStacks(c.Request.Context(), viewer.Workspace.ID, c.Query("q"))
+	if err != nil {
+		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not list stacks.")
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"stacks": stacks})
+}
+
+func (a *App) apiGetStack(c *gin.Context) {
+	viewer, ok := a.currentViewer(c)
+	if !ok {
+		writeUnauthorized(c)
+		return
+	}
+
+	stack, err := a.store.GetStack(c.Request.Context(), viewer.Workspace.ID, c.Param("id"))
+	if err != nil {
+		writeAPIError(c, http.StatusNotFound, apiErrorNotFound, "Stack not found.")
+		return
+	}
+
+	documents, err := a.store.ListStackDocuments(c.Request.Context(), viewer.Workspace.ID, stack.ID)
+	if err != nil {
+		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not list stack documents.")
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"stack": stack, "documents": documents})
+}
+
+func (a *App) apiListStackDocuments(c *gin.Context) {
+	viewer, ok := a.currentViewer(c)
+	if !ok {
+		writeUnauthorized(c)
+		return
+	}
+
+	if _, err := a.store.GetStack(c.Request.Context(), viewer.Workspace.ID, c.Param("id")); err != nil {
+		writeAPIError(c, http.StatusNotFound, apiErrorNotFound, "Stack not found.")
+		return
+	}
+
+	documents, err := a.store.ListStackDocuments(c.Request.Context(), viewer.Workspace.ID, c.Param("id"))
+	if err != nil {
+		writeAPIError(c, http.StatusInternalServerError, apiErrorInternal, "Could not list stack documents.")
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"documents": documents})
 }
 
 func (a *App) apiCreateDocument(c *gin.Context) {

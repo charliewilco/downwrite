@@ -19,7 +19,7 @@
 			<label>Name <input type="text" name="name" required></label>
 		{{end}}
 		<label>Email <input type="email" name="email" required></label>
-		<label>Password <input type="password" name="password" required></label>
+		<label>Password <input type="password" name="password" minlength="6" {{if eq .Mode "signup"}}pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9\s]).{6,}" title="Use at least 6 characters with lowercase, uppercase, number, and special character"{{end}} required></label>
 		<button class="button" type="submit">{{.Title}}</button>
 		<p class="muted">
 			{{if eq .Mode "signup"}}
