@@ -22,7 +22,7 @@
 		"format": "pretty-quick"
 	},
 	"dependencies": {
-		"@graphql-tools/schema": "^8.3.5",
+		"@graphql-tools/schema": "^10.0.33",
 		"@reach/checkbox": "^0.16.0",
 		"@reach/combobox": "^0.16.5",
 		"@reach/dialog": "^0.16.2",
