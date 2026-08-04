@@ -23,6 +23,7 @@ final result: desktop single-Worker routes passed; fresh narrow-viewport verific
 - Single-Worker invitation acceptance route: `.codex/design-qa/downwrite-worker-invitation.jpg`
 - Single-Worker anonymous public document route: `.codex/design-qa/downwrite-worker-public.jpg`
 - Single-Worker workspace settings route: `.codex/design-qa/downwrite-worker-settings.jpg`
+- Safari automation blocker capture: `.codex/design-qa/safari-phase1-screen.png`
 
 The browser was verified through real `prefers-color-scheme` states by temporarily switching macOS appearance from dark to light and restoring dark afterward. The app exposes no theme override control and no persisted theme preference.
 
@@ -44,6 +45,8 @@ The browser was verified through real `prefers-color-scheme` states by temporari
 - Anonymous public reading: created a temporary public link, opened `/public/:token`, and verified read-only Markdown rendering through the public-link API under the same Worker origin.
 - Single-Worker deployment shape: `curl http://localhost:8787/` returned compiled Preact `index.html`; `curl http://localhost:8787/workspaces/not-real` returned the SPA fallback; `curl http://localhost:8787/api/v1/health` returned `{"ok":true,"name":"downwrite-api","version":"v1"}`; `curl http://localhost:8787/.well-known/downwrite` returned discovery metadata with `baseUrl` on the same `http://localhost:8787` origin.
 - Cleanup: temporary QA invitations, public links, and `dev-editor` collaborator rows were removed from the local D1 database after route verification.
+- Phase 1 integration-readiness pass: Safari was opened manually through `open -a Safari` and a screen capture was collected, but both Safari AppleScript resizing/navigation attempts hung on the same local automation permission/access limitation and were stopped. No further Safari/window automation was attempted. The deterministic fallback remains the single-Worker browser-wrapper route evidence, CSS media-query/token inspection, and prior captured mobile/light/dark screenshots.
+- Phase 1 responsive decision: no P0/P1/P2 code refinements were made in this pass because the available rendered evidence did not show a concrete responsive regression. The remaining gap is verification tooling, not an observed UI defect.
 
 ## Theme Coverage
 
@@ -55,3 +58,4 @@ The browser was verified through real `prefers-color-scheme` states by temporari
 - The current local auth setup still shows bootstrap-required/development controls in the rail because no production passkey bootstrap is configured locally. This is product state, not a visual-system failure.
 - Full-page screenshot capture in the in-app browser was unreliable after client-side document navigation, so document/share/settings evidence uses viewport screenshots plus DOM/computed-layout checks.
 - Current final-pass browser tooling did not expose viewport or media emulation. The previous mobile and light/dark evidence remains in this report; the single-Worker final pass verified the current browser's actual 1280px dark device state, no horizontal overflow, and the new routes. A fresh narrow-width run should be repeated in Safari/Chrome DevTools before a visual-release PR if mobile polish is the gating concern.
+- Safari narrow-viewport verification is explicitly blocked in this environment by automation permission/access behavior. It should be repeated manually or with a configured external-browser automation profile before treating mobile visual QA as release-complete.
