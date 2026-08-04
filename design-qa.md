@@ -1,6 +1,6 @@
 # Downwrite Visual QA
 
-final result: passed
+final result: desktop single-Worker routes passed; fresh narrow-viewport verification is still limited by the available browser tooling
 
 ## Source Target
 
