@@ -8,6 +8,7 @@ const ACCESS_TOKEN_SECONDS = 15 * 60;
 const REFRESH_TOKEN_SECONDS = 30 * 24 * 60 * 60;
 const AUTHORIZATION_CODE_SECONDS = 10 * 60;
 const SUPPORTED_CODE_CHALLENGE_METHOD = "S256";
+const PKCE_VALUE_PATTERN = /^[A-Za-z0-9._~-]{43,128}$/;
 
 export const OAUTH_SCOPES = [
   "workspaces:read",
@@ -62,9 +63,8 @@ export function parseAuthorizationRequest(url: string): AuthorizationRequest {
     requestUrl,
     "code_challenge_method",
   );
-  const resource =
-    requestUrl.searchParams.get("resource") ?? `${origin}/api/v1`;
-  const scopes = parseScopes(requestUrl.searchParams.get("scope"));
+  const resource = optionalSearch(requestUrl, "resource") ?? `${origin}/api/v1`;
+  const scopes = parseScopes(optionalSearch(requestUrl, "scope"));
 
   if (responseType !== "code") {
     throw new HttpError(400, "OAuth response_type must be code");
@@ -74,6 +74,7 @@ export function parseAuthorizationRequest(url: string): AuthorizationRequest {
     throw new HttpError(400, "OAuth PKCE code_challenge_method must be S256");
   }
 
+  assertPkceValue("code_challenge", codeChallenge);
   assertAllowedClientRedirect(clientId, redirectUri);
   assertExpectedResource(resource, origin);
   assertScopeResourceCompatibility(scopes, resource, origin);
@@ -86,7 +87,7 @@ export function parseAuthorizationRequest(url: string): AuthorizationRequest {
     codeChallengeMethod,
     scopes,
     resource,
-    state: requestUrl.searchParams.get("state"),
+    state: optionalSearch(requestUrl, "state"),
   };
 }
 
@@ -260,6 +261,7 @@ async function exchangeAuthorizationCode(
     throw new HttpError(400, "OAuth client or redirect_uri does not match");
   }
 
+  assertPkceValue("code_verifier", codeVerifier);
   const verifierChallenge = await sha256Base64Url(codeVerifier);
   if (!(await timingSafeEqual(verifierChallenge, code.codeChallenge))) {
     throw new HttpError(400, "OAuth PKCE verifier failed");
@@ -443,11 +445,21 @@ function assertScopeResourceCompatibility(
 }
 
 function requiredSearch(url: URL, key: string) {
-  const value = url.searchParams.get(key);
+  const value = optionalSearch(url, key);
   if (!value) {
     throw new HttpError(400, `Expected OAuth ${key}`);
   }
   return value;
+}
+
+function optionalSearch(url: URL, key: string) {
+  const values = url.searchParams.getAll(key);
+  if (values.length > 1) {
+    throw new HttpError(400, `OAuth ${key} must be provided once`);
+  }
+
+  const value = values[0];
+  return value?.trim() ? value.trim() : null;
 }
 
 function requiredForm(form: FormData, key: string) {
@@ -459,8 +471,22 @@ function requiredForm(form: FormData, key: string) {
 }
 
 function formString(form: FormData, key: string) {
-  const value = form.get(key);
+  const values = form.getAll(key);
+  if (values.length > 1) {
+    throw new HttpError(400, `OAuth ${key} must be provided once`);
+  }
+
+  const value = values[0];
   return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+function assertPkceValue(name: string, value: string) {
+  if (!PKCE_VALUE_PATTERN.test(value)) {
+    throw new HttpError(
+      400,
+      `OAuth PKCE ${name} must be 43-128 unreserved characters`,
+    );
+  }
 }
 
 function secondsFromNow(seconds: number) {

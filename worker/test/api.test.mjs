@@ -283,6 +283,141 @@ test("OAuth approval uses a server-side authorization transaction", async () => 
   assert.equal(token.scope, "workspaces:read");
 });
 
+test("OAuth rejects duplicate singleton parameters and malformed PKCE values", async () => {
+  const { app, env, storage } = createHarness();
+  const cookie = await createSessionCookie(storage, "dev-owner");
+  const validVerifier = "a".repeat(128);
+  const validChallenge = await sha256Base64Url(validVerifier);
+  const authorizeUrl = new URL(
+    "https://example.downwrite.test/oauth/authorize",
+  );
+  authorizeUrl.searchParams.set("response_type", "code");
+  authorizeUrl.searchParams.set("client_id", "downwrite-mcp");
+  authorizeUrl.searchParams.set(
+    "redirect_uri",
+    "http://127.0.0.1:49152/callback",
+  );
+  authorizeUrl.searchParams.set("code_challenge", validChallenge);
+  authorizeUrl.searchParams.set("code_challenge_method", "S256");
+  authorizeUrl.searchParams.set("scope", "workspaces:read");
+  authorizeUrl.searchParams.set(
+    "resource",
+    "https://example.downwrite.test/api/v1",
+  );
+
+  const duplicateClientUrl = new URL(authorizeUrl);
+  duplicateClientUrl.searchParams.append("client_id", "downwrite-ios");
+  const invalidChallengeUrl = new URL(authorizeUrl);
+  invalidChallengeUrl.searchParams.set("code_challenge", "short");
+
+  const duplicateAuthorize = await app.request(
+    duplicateClientUrl.toString(),
+    { headers: { cookie } },
+    env,
+  );
+  const invalidChallenge = await app.request(
+    invalidChallengeUrl.toString(),
+    { headers: { cookie } },
+    env,
+  );
+  const validConsent = await app.request(
+    authorizeUrl.toString(),
+    { headers: { cookie } },
+    env,
+  );
+  const authorizationRequest = hiddenInputValue(
+    await validConsent.text(),
+    "authorization_request",
+  );
+  const approve = await app.request(
+    "https://example.downwrite.test/oauth/authorize/approve",
+    {
+      method: "POST",
+      headers: formHeaders({
+        cookie,
+        origin: "https://example.downwrite.test",
+      }),
+      body: new URLSearchParams({
+        authorization_request: authorizationRequest,
+      }),
+    },
+    env,
+  );
+  const code = new URL(approve.headers.get("location")).searchParams.get(
+    "code",
+  );
+  const duplicateVerifier = await app.request(
+    "https://example.downwrite.test/oauth/token",
+    {
+      method: "POST",
+      headers: formHeaders(),
+      body: new URLSearchParams([
+        ["grant_type", "authorization_code"],
+        ["client_id", "downwrite-mcp"],
+        ["redirect_uri", "http://127.0.0.1:49152/callback"],
+        ["code", code],
+        ["code_verifier", validVerifier],
+        ["code_verifier", validVerifier],
+      ]),
+    },
+    env,
+  );
+  const invalidVerifier = await app.request(
+    "https://example.downwrite.test/oauth/token",
+    {
+      method: "POST",
+      headers: formHeaders(),
+      body: new URLSearchParams({
+        grant_type: "authorization_code",
+        client_id: "downwrite-mcp",
+        redirect_uri: "http://127.0.0.1:49152/callback",
+        code,
+        code_verifier: "short",
+      }),
+    },
+    env,
+  );
+  const validToken = await app.request(
+    "https://example.downwrite.test/oauth/token",
+    {
+      method: "POST",
+      headers: formHeaders(),
+      body: new URLSearchParams({
+        grant_type: "authorization_code",
+        client_id: "downwrite-mcp",
+        redirect_uri: "http://127.0.0.1:49152/callback",
+        code,
+        code_verifier: validVerifier,
+      }),
+    },
+    env,
+  );
+
+  assert.equal(duplicateAuthorize.status, 400);
+  assert.equal(
+    (await duplicateAuthorize.json()).error,
+    "OAuth client_id must be provided once",
+  );
+  assert.equal(invalidChallenge.status, 400);
+  assert.equal(
+    (await invalidChallenge.json()).error,
+    "OAuth PKCE code_challenge must be 43-128 unreserved characters",
+  );
+  assert.equal(validConsent.status, 200);
+  assert.equal(approve.status, 302);
+  assert.equal(duplicateVerifier.status, 400);
+  assert.equal(
+    (await duplicateVerifier.json()).error,
+    "OAuth code_verifier must be provided once",
+  );
+  assert.equal(invalidVerifier.status, 400);
+  assert.equal(
+    (await invalidVerifier.json()).error,
+    "OAuth PKCE code_verifier must be 43-128 unreserved characters",
+  );
+  assert.equal(validToken.status, 200);
+});
+
 test("OAuth refresh rotates tokens and revoke invalidates access", async () => {
   const { app, env, storage } = createHarness();
   await createGroup(app, env);

@@ -435,7 +435,10 @@ function paths(origin: string): OpenApiDocument["paths"] {
             "redirect_uri",
             "Allowed redirect URI for the public client.",
           ),
-          queryParameter("code_challenge", "PKCE S256 challenge."),
+          queryParameter(
+            "code_challenge",
+            "PKCE S256 challenge, 43-128 unreserved characters.",
+          ),
           queryParameter("code_challenge_method", "PKCE method. Must be S256."),
           queryParameter("scope", "Space-delimited requested scopes."),
           queryParameter(
@@ -1166,7 +1169,12 @@ const schemas: Record<string, JsonSchema> = {
     client_id: { type: "string" },
     code: { type: "string" },
     redirect_uri: { type: "string" },
-    code_verifier: { type: "string" },
+    code_verifier: {
+      type: "string",
+      minLength: 43,
+      maxLength: 128,
+      pattern: "^[A-Za-z0-9._~-]+$",
+    },
     refresh_token: { type: "string" },
   }),
   OAuthRevokeRequest: objectSchema(

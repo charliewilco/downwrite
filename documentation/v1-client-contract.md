@@ -26,6 +26,8 @@ opaque, scoped, and issued by the deployer's self-hosted Worker instance.
   API/iOS tokens request the instance `/api/v1` resource. MCP tokens request the
   instance `/mcp` resource. OAuth approval is bound to a short-lived
   server-side authorization transaction created when the consent page renders.
+  OAuth singleton parameters must be provided once, and PKCE challenge/verifier
+  values must be 43-128 unreserved characters.
 - Current development/API smoke path: instance-local `Authorization: Bearer`
   tokens from `DEVELOPMENT_API_TOKENS`.
 - Public links: anonymous, read-only, bearer-by-possession URL tokens.
