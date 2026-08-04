@@ -69,6 +69,13 @@ hashes in D1, and revocable through `POST /oauth/revoke`. API/iOS clients reques
 the instance `/api/v1` resource. MCP clients request the instance `/mcp` resource
 with `mcp:documents`.
 
+OAuth consent is bound to a short-lived server-side authorization transaction.
+The approval form posts only that transaction token, so hidden form fields cannot
+change the validated client, redirect URI, scopes, resource, PKCE challenge, or
+state after the consent page is rendered. There is no third-party dynamic client
+registration yet; production deployments should configure `INSTANCE_PUBLIC_URL`
+and `WEBAUTHN_RP_ID` to match the public origin.
+
 ## Deploy to Cloudflare
 
 The root README and Worker README expose Cloudflare's official Deploy to

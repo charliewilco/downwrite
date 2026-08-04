@@ -24,7 +24,8 @@ opaque, scoped, and issued by the deployer's self-hosted Worker instance.
   `downwrite://oauth/callback` and `downwrite-mcp` with a loopback
   `http://127.0.0.1:{port}/callback` or `http://localhost:{port}/callback`.
   API/iOS tokens request the instance `/api/v1` resource. MCP tokens request the
-  instance `/mcp` resource.
+  instance `/mcp` resource. OAuth approval is bound to a short-lived
+  server-side authorization transaction created when the consent page renders.
 - Current development/API smoke path: instance-local `Authorization: Bearer`
   tokens from `DEVELOPMENT_API_TOKENS`.
 - Public links: anonymous, read-only, bearer-by-possession URL tokens.

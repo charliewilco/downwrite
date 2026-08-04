@@ -7,11 +7,13 @@ export class MemoryStorage {
   #sessionCounter = 0;
   #credentialCounter = 0;
   #oauthCodeCounter = 0;
+  #oauthRequestCounter = 0;
   #identities = new Map();
   #credentials = new Map();
   #challenges = new Map();
   #sessions = new Map();
   #oauthCodes = new Map();
+  #oauthRequests = new Map();
   #oauthAccessTokens = new Map();
   #oauthRefreshTokens = new Map();
   #groups = new Map();
@@ -192,6 +194,50 @@ export class MemoryStorage {
     }
   }
 
+  async createOAuthAuthorizationRequest({
+    requestHash,
+    identityId,
+    clientId,
+    redirectUri,
+    codeChallenge,
+    scopes,
+    resource,
+    state,
+    expiresAt,
+  }) {
+    const record = {
+      id: `oauth-request-${++this.#oauthRequestCounter}`,
+      requestHash,
+      identityId,
+      clientId,
+      redirectUri,
+      codeChallenge,
+      codeChallengeMethod: "S256",
+      scopes,
+      resource,
+      state,
+      createdAt: now(),
+      expiresAt,
+      consumedAt: null,
+    };
+    this.#oauthRequests.set(requestHash, record);
+    return record;
+  }
+
+  async getOAuthAuthorizationRequestByHash(requestHash) {
+    return this.#oauthRequests.get(requestHash) ?? null;
+  }
+
+  async consumeOAuthAuthorizationRequest(requestHash) {
+    const current = this.#oauthRequests.get(requestHash);
+    if (current) {
+      this.#oauthRequests.set(requestHash, {
+        ...current,
+        consumedAt: now(),
+      });
+    }
+  }
+
   async createOAuthAccessToken({
     tokenHash,
     identityId,
@@ -293,6 +339,7 @@ export class MemoryStorage {
       sessions: 0,
       webauthnChallenges: 0,
       oauthAuthorizationCodes: 0,
+      oauthAuthorizationRequests: 0,
       oauthAccessTokens: 0,
       oauthRefreshTokens: 0,
       rateLimits: 0,
@@ -316,6 +363,16 @@ export class MemoryStorage {
       if (new Date(code.expiresAt).getTime() <= nowMs || code.consumedAt) {
         this.#oauthCodes.delete(key);
         result.oauthAuthorizationCodes += 1;
+      }
+    }
+
+    for (const [key, request] of this.#oauthRequests) {
+      if (
+        new Date(request.expiresAt).getTime() <= nowMs ||
+        request.consumedAt
+      ) {
+        this.#oauthRequests.delete(key);
+        result.oauthAuthorizationRequests += 1;
       }
     }
 

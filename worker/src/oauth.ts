@@ -96,6 +96,18 @@ export async function renderAuthorizationPage(input: {
 }) {
   const request = parseAuthorizationRequest(input.c.req.url);
   const identity = await readSessionIdentity(input);
+  const authorizationRequest = randomToken();
+  await input.storage.createOAuthAuthorizationRequest({
+    requestHash: await sha256Base64Url(authorizationRequest),
+    identityId: identity.id,
+    clientId: request.clientId,
+    redirectUri: request.redirectUri,
+    codeChallenge: request.codeChallenge,
+    scopes: request.scopes,
+    resource: request.resource,
+    state: request.state,
+    expiresAt: secondsFromNow(AUTHORIZATION_CODE_SECONDS),
+  });
 
   return input.c.html(
     `<!doctype html>
@@ -121,13 +133,7 @@ export async function renderAuthorizationPage(input: {
       <p>This client is requesting:</p>
       <ul>${request.scopes.map((scope) => `<li><code>${scope}</code></li>`).join("")}</ul>
       <form method="post" action="/oauth/authorize/approve">
-        ${hidden("client_id", request.clientId)}
-        ${hidden("redirect_uri", request.redirectUri)}
-        ${hidden("code_challenge", request.codeChallenge)}
-        ${hidden("code_challenge_method", request.codeChallengeMethod)}
-        ${hidden("scope", request.scopes.join(" "))}
-        ${hidden("resource", request.resource)}
-        ${request.state ? hidden("state", request.state) : ""}
+        ${hidden("authorization_request", authorizationRequest)}
         <button type="submit">Authorize client</button>
       </form>
     </main>
@@ -144,7 +150,30 @@ export async function approveAuthorizationRequest(input: {
 }) {
   const identity = await readSessionIdentity(input);
   const form = await input.c.req.raw.formData();
-  const request = parseAuthorizationForm(form, input.c.req.url);
+  const requestToken = requiredForm(form, "authorization_request");
+  const requestHash = await sha256Base64Url(requestToken);
+  const request =
+    await input.storage.getOAuthAuthorizationRequestByHash(requestHash);
+
+  if (!request) {
+    throw new HttpError(400, "Unknown OAuth authorization request");
+  }
+  if (request.consumedAt) {
+    throw new HttpError(
+      400,
+      "OAuth authorization request has already been used",
+    );
+  }
+  if (new Date(request.expiresAt).getTime() <= Date.now()) {
+    throw new HttpError(400, "OAuth authorization request has expired");
+  }
+  if (request.identityId !== identity.id) {
+    throw new HttpError(
+      403,
+      "OAuth authorization request belongs to another identity",
+    );
+  }
+
   const code = randomToken();
   await input.storage.createOAuthAuthorizationCode({
     codeHash: await sha256Base64Url(code),
@@ -156,6 +185,7 @@ export async function approveAuthorizationRequest(input: {
     resource: request.resource,
     expiresAt: secondsFromNow(AUTHORIZATION_CODE_SECONDS),
   });
+  await input.storage.consumeOAuthAuthorizationRequest(requestHash);
 
   const redirect = new URL(request.redirectUri);
   redirect.searchParams.set("code", code);
@@ -343,34 +373,6 @@ async function readSessionIdentity(input: {
   }
 
   return { id: session.identityId, authKind: "session" };
-}
-
-function parseAuthorizationForm(form: FormData, requestUrl: string) {
-  const origin = new URL(requestUrl).origin;
-  const clientId = requiredForm(form, "client_id");
-  const redirectUri = requiredForm(form, "redirect_uri");
-  const codeChallenge = requiredForm(form, "code_challenge");
-  const codeChallengeMethod = requiredForm(form, "code_challenge_method");
-  const resource = formString(form, "resource") ?? `${origin}/api/v1`;
-  const scopes = parseScopes(formString(form, "scope"));
-
-  if (codeChallengeMethod !== SUPPORTED_CODE_CHALLENGE_METHOD) {
-    throw new HttpError(400, "OAuth PKCE code_challenge_method must be S256");
-  }
-
-  assertAllowedClientRedirect(clientId, redirectUri);
-  assertExpectedResource(resource, origin);
-  assertScopeResourceCompatibility(scopes, resource, origin);
-
-  return {
-    clientId,
-    redirectUri,
-    codeChallenge,
-    codeChallengeMethod,
-    scopes,
-    resource,
-    state: formString(form, "state"),
-  };
 }
 
 function parseScopes(value: string | null): OAuthScope[] {

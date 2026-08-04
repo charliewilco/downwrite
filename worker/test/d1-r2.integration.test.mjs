@@ -113,6 +113,7 @@ test("scheduled maintenance removes expired D1 operational records", async () =>
       sessions: 1,
       webauthnChallenges: 1,
       oauthAuthorizationCodes: 1,
+      oauthAuthorizationRequests: 1,
       oauthAccessTokens: 1,
       oauthRefreshTokens: 1,
       rateLimits: 1,
@@ -120,6 +121,10 @@ test("scheduled maintenance removes expired D1 operational records", async () =>
     assert.equal(await countRows(proxy.env.DB, "sessions"), 0);
     assert.equal(await countRows(proxy.env.DB, "webauthn_challenges"), 0);
     assert.equal(await countRows(proxy.env.DB, "oauth_authorization_codes"), 0);
+    assert.equal(
+      await countRows(proxy.env.DB, "oauth_authorization_requests"),
+      0,
+    );
     assert.equal(await countRows(proxy.env.DB, "oauth_access_tokens"), 0);
     assert.equal(await countRows(proxy.env.DB, "oauth_refresh_tokens"), 0);
     assert.equal(await countRows(proxy.env.DB, "rate_limits"), 0);
@@ -196,6 +201,17 @@ async function seedExpiredOperationalRows(db) {
         'https://example.downwrite.test/api/v1', ?)`,
     )
     .bind(await sha256Base64Url("expired-code"), expiredAt)
+    .run();
+  await db
+    .prepare(
+      `INSERT INTO oauth_authorization_requests
+        (id, request_hash, identity_id, client_id, redirect_uri, code_challenge,
+          code_challenge_method, scopes, resource, state, expires_at)
+      VALUES ('request-expired', ?, 'cleanup', 'downwrite-ios',
+        'downwrite://oauth/callback', 'challenge', 'S256', '[]',
+        'https://example.downwrite.test/api/v1', 'state', ?)`,
+    )
+    .bind(await sha256Base64Url("expired-request"), expiredAt)
     .run();
   await db
     .prepare(

@@ -460,7 +460,7 @@ function paths(origin: string): OpenApiDocument["paths"] {
         tags: ["External auth"],
         summary: "Approve OAuth authorization and redirect with a code.",
         description:
-          "Cookie-authenticated consent action. Unsafe cookie writes require a same-origin Origin header. On success, redirects to the validated client redirect_uri with code and optional state.",
+          "Cookie-authenticated consent action. The consent page stores the validated OAuth request server-side and posts only authorization_request. Unsafe cookie writes require a same-origin Origin header. On success, redirects to the validated client redirect_uri with code and optional state.",
         operationId: "approveOAuthClient",
         security: [sessionSecurity()],
         "x-downwrite-status": "implemented",
@@ -1150,22 +1150,13 @@ const schemas: Record<string, JsonSchema> = {
   ),
   OAuthAuthorizeApproveRequest: objectSchema(
     {
-      client_id: { type: "string" },
-      redirect_uri: { type: "string" },
-      code_challenge: { type: "string" },
-      code_challenge_method: { type: "string", const: "S256" },
-      scope: { type: "string" },
-      resource: { type: "string", format: "uri" },
-      state: { type: "string" },
+      authorization_request: {
+        type: "string",
+        description:
+          "Opaque server-issued authorization transaction from the consent page.",
+      },
     },
-    [
-      "client_id",
-      "redirect_uri",
-      "code_challenge",
-      "code_challenge_method",
-      "scope",
-      "resource",
-    ],
+    ["authorization_request"],
   ),
   OAuthTokenRequest: objectSchema({
     grant_type: {

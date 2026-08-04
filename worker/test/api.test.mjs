@@ -174,6 +174,115 @@ test("OAuth authorization code with PKCE issues scoped bearer tokens", async () 
   assert.equal((await createResponse.json()).code, "forbidden");
 });
 
+test("OAuth approval uses a server-side authorization transaction", async () => {
+  const { app, env, storage } = createHarness();
+  const ownerCookie = await createSessionCookie(storage, "dev-owner");
+  const editorCookie = await createSessionCookie(storage, "dev-editor");
+  const verifier = `verifier-${crypto.randomUUID()}`;
+  const challenge = await sha256Base64Url(verifier);
+  const authorizeUrl = new URL(
+    "https://example.downwrite.test/oauth/authorize",
+  );
+  authorizeUrl.searchParams.set("response_type", "code");
+  authorizeUrl.searchParams.set("client_id", "downwrite-mcp");
+  authorizeUrl.searchParams.set(
+    "redirect_uri",
+    "http://127.0.0.1:49152/callback",
+  );
+  authorizeUrl.searchParams.set("code_challenge", challenge);
+  authorizeUrl.searchParams.set("code_challenge_method", "S256");
+  authorizeUrl.searchParams.set("scope", "workspaces:read");
+  authorizeUrl.searchParams.set(
+    "resource",
+    "https://example.downwrite.test/api/v1",
+  );
+  authorizeUrl.searchParams.set("state", "original-state");
+
+  const consent = await app.request(
+    authorizeUrl.toString(),
+    { headers: { cookie: ownerCookie } },
+    env,
+  );
+  const authorizationRequest = hiddenInputValue(
+    await consent.text(),
+    "authorization_request",
+  );
+  const wrongIdentity = await app.request(
+    "https://example.downwrite.test/oauth/authorize/approve",
+    {
+      method: "POST",
+      headers: formHeaders({
+        cookie: editorCookie,
+        origin: "https://example.downwrite.test",
+      }),
+      body: new URLSearchParams({
+        authorization_request: authorizationRequest,
+      }),
+    },
+    env,
+  );
+  const approved = await app.request(
+    "https://example.downwrite.test/oauth/authorize/approve",
+    {
+      method: "POST",
+      headers: formHeaders({
+        cookie: ownerCookie,
+        origin: "https://example.downwrite.test",
+      }),
+      body: new URLSearchParams({
+        authorization_request: authorizationRequest,
+        scope: "documents:write",
+        state: "tampered-state",
+      }),
+    },
+    env,
+  );
+  const replay = await app.request(
+    "https://example.downwrite.test/oauth/authorize/approve",
+    {
+      method: "POST",
+      headers: formHeaders({
+        cookie: ownerCookie,
+        origin: "https://example.downwrite.test",
+      }),
+      body: new URLSearchParams({
+        authorization_request: authorizationRequest,
+      }),
+    },
+    env,
+  );
+  const redirect = new URL(approved.headers.get("location"));
+  const code = redirect.searchParams.get("code");
+  const tokenResponse = await app.request(
+    "https://example.downwrite.test/oauth/token",
+    {
+      method: "POST",
+      headers: formHeaders(),
+      body: new URLSearchParams({
+        grant_type: "authorization_code",
+        client_id: "downwrite-mcp",
+        redirect_uri: "http://127.0.0.1:49152/callback",
+        code,
+        code_verifier: verifier,
+      }),
+    },
+    env,
+  );
+  const token = await tokenResponse.json();
+
+  assert.equal(consent.status, 200);
+  assert.equal(wrongIdentity.status, 403);
+  assert.equal(approved.status, 302);
+  assert.equal(redirect.searchParams.get("state"), "original-state");
+  assert.equal(replay.status, 400);
+  assert.equal(
+    (await replay.json()).error,
+    "OAuth authorization request has already been used",
+  );
+  assert.equal(tokenResponse.status, 200);
+  assert.equal(token.scope, "workspaces:read");
+});
+
 test("OAuth refresh rotates tokens and revoke invalidates access", async () => {
   const { app, env, storage } = createHarness();
   await createGroup(app, env);
@@ -1591,6 +1700,10 @@ async function oauthToken(
   const consentHtml = await consent.text();
   assert.equal(consent.status, 200);
   assert.match(consentHtml, /Authorize downwrite-mcp/i);
+  const authorizationRequest = hiddenInputValue(
+    consentHtml,
+    "authorization_request",
+  );
 
   const approve = await app.request(
     "https://example.downwrite.test/oauth/authorize/approve",
@@ -1601,13 +1714,7 @@ async function oauthToken(
         origin: "https://example.downwrite.test",
       }),
       body: new URLSearchParams({
-        client_id: "downwrite-mcp",
-        redirect_uri: "http://127.0.0.1:49152/callback",
-        code_challenge: challenge,
-        code_challenge_method: "S256",
-        scope,
-        resource,
-        state,
+        authorization_request: authorizationRequest,
       }),
     },
     env,
@@ -1637,6 +1744,16 @@ async function oauthToken(
   const token = await tokenResponse.json();
   assert.equal(tokenResponse.status, 200);
   return token;
+}
+
+function hiddenInputValue(html, name) {
+  const pattern = new RegExp(
+    `<input[^>]+name="${name}"[^>]+value="([^"]+)"`,
+    "i",
+  );
+  const match = html.match(pattern);
+  assert.ok(match, `Expected hidden input ${name}`);
+  return match[1];
 }
 
 async function mcpCall(app, env, method, params) {

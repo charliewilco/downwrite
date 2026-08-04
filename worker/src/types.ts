@@ -175,6 +175,22 @@ export interface OAuthAuthorizationCodeRecord {
   consumedAt: string | null;
 }
 
+export interface OAuthAuthorizationRequestRecord {
+  id: string;
+  requestHash: string;
+  identityId: string;
+  clientId: string;
+  redirectUri: string;
+  codeChallenge: string;
+  codeChallengeMethod: "S256";
+  scopes: string[];
+  resource: string;
+  state: string | null;
+  createdAt: string;
+  expiresAt: string;
+  consumedAt: string | null;
+}
+
 export interface OAuthAccessTokenRecord {
   tokenHash: string;
   identityId: string;
@@ -201,6 +217,7 @@ export interface CleanupResult {
   sessions: number;
   webauthnChallenges: number;
   oauthAuthorizationCodes: number;
+  oauthAuthorizationRequests: number;
   oauthAccessTokens: number;
   oauthRefreshTokens: number;
   rateLimits: number;
@@ -292,6 +309,21 @@ export interface Storage {
     codeHash: string,
   ): Promise<OAuthAuthorizationCodeRecord | null>;
   consumeOAuthAuthorizationCode(codeHash: string): Promise<void>;
+  createOAuthAuthorizationRequest(input: {
+    requestHash: string;
+    identityId: string;
+    clientId: string;
+    redirectUri: string;
+    codeChallenge: string;
+    scopes: string[];
+    resource: string;
+    state: string | null;
+    expiresAt: string;
+  }): Promise<OAuthAuthorizationRequestRecord>;
+  getOAuthAuthorizationRequestByHash(
+    requestHash: string,
+  ): Promise<OAuthAuthorizationRequestRecord | null>;
+  consumeOAuthAuthorizationRequest(requestHash: string): Promise<void>;
   createOAuthAccessToken(input: {
     tokenHash: string;
     identityId: string;

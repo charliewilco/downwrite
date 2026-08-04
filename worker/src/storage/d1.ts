@@ -10,6 +10,7 @@ import type {
   InvitationPreview,
   OAuthAccessTokenRecord,
   OAuthAuthorizationCodeRecord,
+  OAuthAuthorizationRequestRecord,
   OAuthRefreshTokenRecord,
   PublicDocumentRecord,
   PublicLinkRecord,
@@ -143,6 +144,22 @@ interface OAuthAuthorizationCodeRow {
   code_challenge_method: "S256";
   scopes: string;
   resource: string;
+  created_at: string;
+  expires_at: string;
+  consumed_at: string | null;
+}
+
+interface OAuthAuthorizationRequestRow {
+  id: string;
+  request_hash: string;
+  identity_id: string;
+  client_id: string;
+  redirect_uri: string;
+  code_challenge: string;
+  code_challenge_method: "S256";
+  scopes: string;
+  resource: string;
+  state: string | null;
   created_at: string;
   expires_at: string;
   consumed_at: string | null;
@@ -527,6 +544,74 @@ export class D1Storage implements Storage {
       .run();
   }
 
+  async createOAuthAuthorizationRequest(input: {
+    requestHash: string;
+    identityId: string;
+    clientId: string;
+    redirectUri: string;
+    codeChallenge: string;
+    scopes: string[];
+    resource: string;
+    state: string | null;
+    expiresAt: string;
+  }): Promise<OAuthAuthorizationRequestRecord> {
+    const id = crypto.randomUUID();
+    await this.#db
+      .prepare(
+        `INSERT INTO oauth_authorization_requests
+          (id, request_hash, identity_id, client_id, redirect_uri,
+            code_challenge, code_challenge_method, scopes, resource, state,
+            expires_at)
+        VALUES (?, ?, ?, ?, ?, ?, 'S256', ?, ?, ?, ?)`,
+      )
+      .bind(
+        id,
+        input.requestHash,
+        input.identityId,
+        input.clientId,
+        input.redirectUri,
+        input.codeChallenge,
+        JSON.stringify(input.scopes),
+        input.resource,
+        input.state,
+        input.expiresAt,
+      )
+      .run();
+
+    const request = await this.getOAuthAuthorizationRequestByHash(
+      input.requestHash,
+    );
+    if (!request) {
+      throw new Error("Failed to create OAuth authorization request");
+    }
+    return request;
+  }
+
+  async getOAuthAuthorizationRequestByHash(requestHash: string) {
+    const row = await this.#db
+      .prepare(
+        `SELECT id, request_hash, identity_id, client_id, redirect_uri,
+          code_challenge, code_challenge_method, scopes, resource, state,
+          created_at, expires_at, consumed_at
+        FROM oauth_authorization_requests
+        WHERE request_hash = ?`,
+      )
+      .bind(requestHash)
+      .first<OAuthAuthorizationRequestRow>();
+    return row ? oauthAuthorizationRequestFromRow(row) : null;
+  }
+
+  async consumeOAuthAuthorizationRequest(requestHash: string) {
+    await this.#db
+      .prepare(
+        `UPDATE oauth_authorization_requests
+        SET consumed_at = CURRENT_TIMESTAMP
+        WHERE request_hash = ?`,
+      )
+      .bind(requestHash)
+      .run();
+  }
+
   async createOAuthAccessToken(input: {
     tokenHash: string;
     identityId: string;
@@ -683,6 +768,7 @@ export class D1Storage implements Storage {
       sessions,
       webauthnChallenges,
       oauthAuthorizationCodes,
+      oauthAuthorizationRequests,
       oauthAccessTokens,
       oauthRefreshTokens,
       rateLimits,
@@ -697,6 +783,12 @@ export class D1Storage implements Storage {
       this.#db
         .prepare(
           `DELETE FROM oauth_authorization_codes
+          WHERE expires_at <= ? OR consumed_at IS NOT NULL`,
+        )
+        .bind(now),
+      this.#db
+        .prepare(
+          `DELETE FROM oauth_authorization_requests
           WHERE expires_at <= ? OR consumed_at IS NOT NULL`,
         )
         .bind(now),
@@ -719,6 +811,7 @@ export class D1Storage implements Storage {
       sessions: sessions.meta.changes ?? 0,
       webauthnChallenges: webauthnChallenges.meta.changes ?? 0,
       oauthAuthorizationCodes: oauthAuthorizationCodes.meta.changes ?? 0,
+      oauthAuthorizationRequests: oauthAuthorizationRequests.meta.changes ?? 0,
       oauthAccessTokens: oauthAccessTokens.meta.changes ?? 0,
       oauthRefreshTokens: oauthRefreshTokens.meta.changes ?? 0,
       rateLimits: rateLimits.meta.changes ?? 0,
@@ -1627,6 +1720,26 @@ function oauthAuthorizationCodeFromRow(
     codeChallengeMethod: row.code_challenge_method,
     scopes: parseScopes(row.scopes),
     resource: row.resource,
+    createdAt: row.created_at,
+    expiresAt: row.expires_at,
+    consumedAt: row.consumed_at,
+  };
+}
+
+function oauthAuthorizationRequestFromRow(
+  row: OAuthAuthorizationRequestRow,
+): OAuthAuthorizationRequestRecord {
+  return {
+    id: row.id,
+    requestHash: row.request_hash,
+    identityId: row.identity_id,
+    clientId: row.client_id,
+    redirectUri: row.redirect_uri,
+    codeChallenge: row.code_challenge,
+    codeChallengeMethod: row.code_challenge_method,
+    scopes: parseScopes(row.scopes),
+    resource: row.resource,
+    state: row.state,
     createdAt: row.created_at,
     expiresAt: row.expires_at,
     consumedAt: row.consumed_at,
