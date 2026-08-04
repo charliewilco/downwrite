@@ -87,6 +87,8 @@ flow needs a directory with its own dependencies and Wrangler configuration.
 - Worker-first routing for `/api/*`, `/.well-known/*`, `/oauth/*`, and `/mcp`;
 - D1 binding `DB`;
 - R2 binding `CONTENT`;
+- a daily scheduled maintenance trigger that removes expired sessions, WebAuthn
+  challenges, OAuth credentials, and rate-limit rows from D1;
 - `WEBAUTHN_RP_NAME` plus optional production `WEBAUTHN_RP_ID` and
   `INSTANCE_PUBLIC_URL`;
 - secrets such as `AUTH_BOOTSTRAP_TOKEN`.

@@ -197,6 +197,15 @@ export interface OAuthRefreshTokenRecord {
   revokedAt: string | null;
 }
 
+export interface CleanupResult {
+  sessions: number;
+  webauthnChallenges: number;
+  oauthAuthorizationCodes: number;
+  oauthAccessTokens: number;
+  oauthRefreshTokens: number;
+  rateLimits: number;
+}
+
 export interface AuthStatus {
   authenticated: boolean;
   bootstrapRequired: boolean;
@@ -311,6 +320,7 @@ export interface Storage {
     limit: number;
     windowSeconds: number;
   }): Promise<boolean>;
+  cleanupExpiredRecords(now: string): Promise<CleanupResult>;
   listGroupsForIdentity(identityId: string): Promise<GroupSummary[]>;
   getGroupForIdentity(input: {
     identityId: string;

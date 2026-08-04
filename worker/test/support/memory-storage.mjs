@@ -287,6 +287,62 @@ export class MemoryStorage {
     return true;
   }
 
+  async cleanupExpiredRecords(nowIso) {
+    const nowMs = new Date(nowIso).getTime();
+    const result = {
+      sessions: 0,
+      webauthnChallenges: 0,
+      oauthAuthorizationCodes: 0,
+      oauthAccessTokens: 0,
+      oauthRefreshTokens: 0,
+      rateLimits: 0,
+    };
+
+    for (const [key, session] of this.#sessions) {
+      if (new Date(session.expiresAt).getTime() <= nowMs) {
+        this.#sessions.delete(key);
+        result.sessions += 1;
+      }
+    }
+
+    for (const [key, challenge] of this.#challenges) {
+      if (new Date(challenge.createdAt).getTime() + 15 * 60 * 1000 <= nowMs) {
+        this.#challenges.delete(key);
+        result.webauthnChallenges += 1;
+      }
+    }
+
+    for (const [key, code] of this.#oauthCodes) {
+      if (new Date(code.expiresAt).getTime() <= nowMs || code.consumedAt) {
+        this.#oauthCodes.delete(key);
+        result.oauthAuthorizationCodes += 1;
+      }
+    }
+
+    for (const [key, token] of this.#oauthAccessTokens) {
+      if (new Date(token.expiresAt).getTime() <= nowMs || token.revokedAt) {
+        this.#oauthAccessTokens.delete(key);
+        result.oauthAccessTokens += 1;
+      }
+    }
+
+    for (const [key, token] of this.#oauthRefreshTokens) {
+      if (new Date(token.expiresAt).getTime() <= nowMs || token.revokedAt) {
+        this.#oauthRefreshTokens.delete(key);
+        result.oauthRefreshTokens += 1;
+      }
+    }
+
+    for (const [key, rateLimit] of this.#rateLimits) {
+      if (rateLimit.resetAt <= nowMs) {
+        this.#rateLimits.delete(key);
+        result.rateLimits += 1;
+      }
+    }
+
+    return result;
+  }
+
   async listGroupsForIdentity(identityId) {
     const groups = [];
 

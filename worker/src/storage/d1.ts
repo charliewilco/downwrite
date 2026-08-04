@@ -678,6 +678,53 @@ export class D1Storage implements Storage {
     return true;
   }
 
+  async cleanupExpiredRecords(now: string) {
+    const [
+      sessions,
+      webauthnChallenges,
+      oauthAuthorizationCodes,
+      oauthAccessTokens,
+      oauthRefreshTokens,
+      rateLimits,
+    ] = await this.#db.batch([
+      this.#db.prepare(`DELETE FROM sessions WHERE expires_at <= ?`).bind(now),
+      this.#db
+        .prepare(
+          `DELETE FROM webauthn_challenges
+          WHERE datetime(created_at, '+15 minutes') <= datetime(?)`,
+        )
+        .bind(now),
+      this.#db
+        .prepare(
+          `DELETE FROM oauth_authorization_codes
+          WHERE expires_at <= ? OR consumed_at IS NOT NULL`,
+        )
+        .bind(now),
+      this.#db
+        .prepare(
+          `DELETE FROM oauth_access_tokens
+          WHERE expires_at <= ? OR revoked_at IS NOT NULL`,
+        )
+        .bind(now),
+      this.#db
+        .prepare(
+          `DELETE FROM oauth_refresh_tokens
+          WHERE expires_at <= ? OR revoked_at IS NOT NULL`,
+        )
+        .bind(now),
+      this.#db.prepare(`DELETE FROM rate_limits WHERE reset_at <= ?`).bind(now),
+    ]);
+
+    return {
+      sessions: sessions.meta.changes ?? 0,
+      webauthnChallenges: webauthnChallenges.meta.changes ?? 0,
+      oauthAuthorizationCodes: oauthAuthorizationCodes.meta.changes ?? 0,
+      oauthAccessTokens: oauthAccessTokens.meta.changes ?? 0,
+      oauthRefreshTokens: oauthRefreshTokens.meta.changes ?? 0,
+      rateLimits: rateLimits.meta.changes ?? 0,
+    };
+  }
+
   async listGroupsForIdentity(identityId: string): Promise<GroupSummary[]> {
     const groups = await this.#db
       .prepare(

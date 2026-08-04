@@ -14,7 +14,8 @@ The Worker is the product core. It serves:
 - a narrow authenticated MCP endpoint at `/mcp`;
 - D1 metadata for identities, sessions, workspaces, documents, sharing records,
   WebAuthn state, and coarse rate limits;
-- R2 Markdown document bodies.
+- R2 Markdown document bodies;
+- scheduled maintenance for expired operational auth/rate-limit records.
 
 There is no central Downwrite service. A forked repository and a deployer's own
 Cloudflare account are enough to run an isolated instance.

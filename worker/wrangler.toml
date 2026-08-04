@@ -21,6 +21,9 @@ bucket_name = "downwrite-content"
 enabled = true
 head_sampling_rate = 1
 
+[triggers]
+crons = ["17 3 * * *"]
+
 [vars]
 WEBAUTHN_RP_NAME = "Downwrite"
 # Local-only secrets are generated into .dev.vars by npm run dev.
