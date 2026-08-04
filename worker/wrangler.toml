@@ -5,7 +5,7 @@ compatibility_date = "2026-08-04"
 [assets]
 directory = "./web/dist"
 not_found_handling = "single-page-application"
-run_worker_first = ["/api/*", "/.well-known/*"]
+run_worker_first = ["/api/*", "/.well-known/*", "/oauth/*", "/mcp"]
 
 [[d1_databases]]
 binding = "DB"

@@ -141,6 +141,70 @@ test("OAuth metadata is public while token issuance remains unimplemented", asyn
   assert.equal("access_token" in tokenBody, false);
 });
 
+test("MCP endpoint challenges unauthenticated clients with resource metadata", async () => {
+  const { app, env } = createHarness();
+  const response = await app.request(
+    "https://example.downwrite.test/mcp",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 1,
+        method: "tools/list",
+      }),
+    },
+    env,
+  );
+  const body = await response.json();
+
+  assert.equal(response.status, 401);
+  assert.equal(body.code, "unauthorized");
+  assert.match(
+    response.headers.get("www-authenticate") ?? "",
+    /resource_metadata="https:\/\/example\.downwrite\.test\/\.well-known\/oauth-protected-resource"/,
+  );
+  assert.match(response.headers.get("www-authenticate") ?? "", /mcp:documents/);
+});
+
+test("MCP tools use derived local identity for document reads and writes", async () => {
+  const { app, env } = createHarness();
+  const group = await createGroup(app, env);
+  const document = await createDocument(app, env, group.id);
+
+  const tools = await mcpCall(app, env, "tools/list", undefined);
+  const workspaces = await mcpTool(app, env, "list_workspaces", {});
+  const documents = await mcpTool(app, env, "list_documents", {
+    groupId: group.id,
+  });
+  const read = await mcpTool(app, env, "read_document", {
+    documentId: document.id,
+  });
+  const created = await mcpTool(app, env, "create_document", {
+    groupId: group.id,
+    title: "MCP draft",
+    content: "# MCP",
+  });
+  const updated = await mcpTool(app, env, "update_document", {
+    documentId: document.id,
+    content: "# Updated through MCP",
+    baseRevision: document.revision,
+  });
+  const stale = await mcpToolResponse(app, env, "update_document", {
+    documentId: document.id,
+    content: "stale",
+    baseRevision: document.revision,
+  });
+
+  assert.equal(tools.result.tools.length, 5);
+  assert.equal(workspaces.workspaces[0].id, group.id);
+  assert.equal(workspaces.workspaces[0].documentCount, 1);
+  assert.equal(documents.documents[0].id, document.id);
+  assert.equal(read.document.content, "# Ship it");
+  assert.equal(created.document.title, "MCP draft");
+  assert.equal(updated.document.content, "# Updated through MCP");
+  assert.equal(stale.error.data.code, "conflict");
+});
+
 test("serves an OpenAPI contract for the implemented API", async () => {
   const { app, env } = createHarness();
   const response = await app.request(
@@ -171,6 +235,8 @@ test("serves an OpenAPI contract for the implemented API", async () => {
     body.paths["/.well-known/oauth-protected-resource"].get.operationId,
     "getOAuthProtectedResourceMetadata",
   );
+  assert.equal(body.paths["/mcp"].post.operationId, "invokeMcp");
+  assert.equal(body.paths["/mcp"].post["x-downwrite-scope"], "mcp:documents");
   assert.equal(
     body["x-downwrite-client-contract"].errors.envelope,
     "{ error: string, code: string, status: number }",
@@ -944,6 +1010,40 @@ function authHeaders(token) {
     authorization: `Bearer ${token}`,
     "content-type": "application/json",
   };
+}
+
+async function mcpCall(app, env, method, params) {
+  const response = await app.request(
+    "https://example.downwrite.test/mcp",
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: "request-id",
+        method,
+        ...(typeof params === "undefined" ? {} : { params }),
+      }),
+    },
+    env,
+  );
+  const body = await response.json();
+
+  assert.equal(response.status, 200);
+  return body;
+}
+
+async function mcpToolResponse(app, env, name, args) {
+  return mcpCall(app, env, "tools/call", {
+    name,
+    arguments: args,
+  });
+}
+
+async function mcpTool(app, env, name, args) {
+  const body = await mcpToolResponse(app, env, name, args);
+  assert.equal(body.error, undefined);
+  return JSON.parse(body.result.content[0].text);
 }
 
 function normalizeHonoPath(path) {

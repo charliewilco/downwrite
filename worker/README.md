@@ -43,6 +43,7 @@ GET /.well-known/oauth-authorization-server
 GET /api/v1/discovery
 GET /api/v1/openapi.json
 GET /api/v1/docs
+POST /mcp
 ```
 
 The intended future shape is one public, centrally distributed iOS Downwrite app
@@ -60,6 +61,14 @@ server or connector must call the same versioned Worker API as any other client,
 using scoped credentials and explicit workspace/document authorization. It must
 not expose broad instance data by default or bypass the owner/editor write
 boundary.
+
+`POST /mcp` is available as a narrow stateless JSON-RPC endpoint for MCP clients
+with five tools: list workspaces, list documents, read document, create
+document, and update document. The endpoint authenticates the incoming request,
+derives a local Downwrite identity, and invokes storage/domain methods with that
+identity. It does not forward arbitrary bearer tokens to API handlers. Until the
+production OAuth authorization server is implemented, MCP access is limited to
+the same instance-local development credentials used by API smoke tests.
 
 ## API Contract
 

@@ -22,6 +22,7 @@ import {
   securityHeaders,
 } from "./security.js";
 import { createOpaqueToken } from "./domain/tokens.js";
+import { handleMcpRequest } from "./mcp.js";
 import { createOpenApiDocument, createOpenApiHtml } from "./openapi.js";
 import { D1Storage } from "./storage/d1.js";
 import type { Env, Role, Storage } from "./types.js";
@@ -212,6 +213,8 @@ export function createApp(options: AppOptions = {}) {
       "oauth_not_implemented",
     );
   });
+
+  app.post("/mcp", async (c) => handleMcpRequest(c, storage(c.env)));
 
   app.get("/api/v1/auth/status", async (c) => {
     const store = storage(c.env);

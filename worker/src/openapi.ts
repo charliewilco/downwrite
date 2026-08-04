@@ -230,6 +230,7 @@ function apiRoadmap() {
         "GET /.well-known/oauth-authorization-server",
         "GET /oauth/authorize returns 501 planned-not-implemented",
         "POST /oauth/token returns 501 planned-not-implemented",
+        "POST /mcp authenticated stateless MCP JSON-RPC endpoint with development credentials only",
         "GET /api/v1/discovery",
         "GET /api/v1/auth/status",
         "POST /api/v1/auth/bootstrap/options",
@@ -270,8 +271,8 @@ function apiRoadmap() {
         "GET /api/v1/me planned for native/web account profile once broad account UX exists.",
       ],
       mcpSafeOperations: [
-        "Use existing/proposed list workspaces, list documents, read document, create document, update document endpoints with scoped credentials.",
-        "Add narrowly scoped token issuance/revocation before exposing MCP tools.",
+        "Implemented /mcp tools: list_workspaces, list_documents, read_document, create_document, update_document.",
+        "Production OAuth authorization and token issuance remain blocked until the authorization server boundary is implemented.",
         "Avoid any all-instance search/list endpoint by default.",
       ],
     },
@@ -430,6 +431,33 @@ function paths(origin: string): OpenApiDocument["paths"] {
         "x-downwrite-status": "planned",
         responses: {
           "501": refResponse("NotImplemented"),
+        },
+      }),
+    },
+    "/mcp": {
+      post: operation({
+        tags: ["External auth"],
+        summary: "Invoke the narrow Downwrite MCP tool endpoint.",
+        description:
+          "Stateless JSON-RPC endpoint for MCP clients. The current implementation authenticates with the same instance-local development bearer/session adapter, derives a local Downwrite identity, and calls storage/domain methods directly. It does not pass arbitrary bearer tokens through to API handlers. Production OAuth token issuance is not implemented.",
+        operationId: "invokeMcp",
+        security: authenticatedSecurity(),
+        "x-downwrite-scope": "mcp:documents",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: refSchema("JsonRpcRequest"),
+            },
+          },
+        },
+        responses: {
+          "200": jsonResponse("MCP JSON-RPC response.", "JsonRpcResponse"),
+          "204": {
+            description: "JSON-RPC notification accepted.",
+          },
+          "400": refResponse("BadRequest"),
+          "401": refResponse("Unauthorized"),
         },
       }),
     },
@@ -958,6 +986,32 @@ const schemas: Record<string, JsonSchema> = {
       "x-downwrite-resource-indicators-required",
       "x-downwrite-note",
     ],
+  ),
+  JsonRpcRequest: objectSchema(
+    {
+      jsonrpc: { type: "string", const: "2.0" },
+      id: { type: ["string", "number", "null"] },
+      method: {
+        type: "string",
+        enum: ["initialize", "tools/list", "tools/call"],
+      },
+      params: { type: "object", additionalProperties: true },
+    },
+    ["jsonrpc", "method"],
+  ),
+  JsonRpcResponse: objectSchema(
+    {
+      jsonrpc: { type: "string", const: "2.0" },
+      id: { type: ["string", "number", "null"] },
+      result: { type: "object", additionalProperties: true },
+      error: {
+        type: "object",
+        additionalProperties: true,
+        description:
+          "JSON-RPC error object. Downwrite HTTP-style error data appears in error.data when available.",
+      },
+    },
+    ["jsonrpc", "id"],
   ),
   AuthConfiguration: objectSchema(
     {

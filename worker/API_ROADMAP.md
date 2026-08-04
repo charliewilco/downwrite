@@ -17,6 +17,9 @@ until implemented in the Worker.
   metadata, reserved OAuth 501 endpoints, passkey owner bootstrap, passkey
   login, session logout.
 - Contract: OpenAPI JSON and local HTML documentation view.
+- MCP: stateless JSON-RPC endpoint with list workspaces, list documents, read
+  document, create document, and update document tools. Current access uses the
+  development identity adapter only.
 
 ## Blocks Near-Term Screens
 
@@ -46,7 +49,8 @@ until implemented in the Worker.
 
 ## MCP Needs
 
-- MCP tools should map to scoped API operations: list workspaces, list
-  documents, read document, create document, and update document.
-- Add narrowly scoped token issuance/revocation before exposing MCP tools.
+- Production MCP access needs OAuth 2.1 authorization-code with PKCE, resource
+  indicators, audience validation, and scoped access/refresh tokens.
+- Add narrowly scoped token issuance/revocation before treating MCP as production
+  external-client auth.
 - Avoid all-instance discovery/search endpoints by default.
