@@ -26,10 +26,20 @@ interface OpenApiDocument {
     parameters: Record<string, unknown>;
   };
   "x-downwrite-conventions": Record<string, unknown>;
+  "x-downwrite-client-contract": Record<string, unknown>;
   "x-downwrite-api-roadmap": Record<string, unknown>;
 }
 
 const API_VERSION = "v1";
+const OAUTH_SCOPES = {
+  "workspaces:read": "Read authorized workspaces.",
+  "workspaces:write": "Create and manage authorized workspaces.",
+  "documents:read": "Read authorized Markdown documents.",
+  "documents:write": "Create and update authorized Markdown documents.",
+  "sharing:write": "Manage collaborators, invitations, and public links.",
+  "mcp:documents":
+    "Use MCP document tools limited to the authorized instance data.",
+};
 
 export function createOpenApiDocument(requestUrl: string): OpenApiDocument {
   const origin = new URL(requestUrl).origin;
@@ -41,7 +51,7 @@ export function createOpenApiDocument(requestUrl: string): OpenApiDocument {
       version: API_VERSION,
       summary: "Self-hosted Markdown workspace and sharing API.",
       description:
-        "Versioned API for a self-hosted Downwrite Cloudflare Worker. The current implemented auth boundary is passkeys/WebAuthn for browser sessions plus an instance-local development bearer adapter. OAuth authorization-code-with-PKCE is documented as the planned future native-client boundary only; OAuth endpoints are not implemented in this version.",
+        "Versioned API for a self-hosted Downwrite Cloudflare Worker. The current implemented auth boundary is passkeys/WebAuthn for browser sessions plus an instance-local development bearer adapter. OAuth authorization-code-with-PKCE is the reserved external-client boundary for future iOS and MCP clients. OAuth metadata and placeholder endpoints are documented, but authorization and token issuance are not implemented in this version.",
       license: {
         name: "MIT",
       },
@@ -55,6 +65,7 @@ export function createOpenApiDocument(requestUrl: string): OpenApiDocument {
     tags: [
       { name: "Discovery" },
       { name: "Auth" },
+      { name: "External auth" },
       { name: "Workspaces" },
       { name: "Documents" },
       { name: "Sharing" },
@@ -82,20 +93,12 @@ export function createOpenApiDocument(requestUrl: string): OpenApiDocument {
         oauthPkcePlanned: {
           type: "oauth2",
           description:
-            "Planned future native-client boundary for the public iOS app. Authorization-code-with-PKCE is reserved but /oauth/authorize and /oauth/token are not implemented in v1.",
+            "Planned future external-client boundary for the public iOS app and MCP clients. Authorization-code-with-PKCE with resource indicators is reserved, but OAuth authorization and token issuance are not implemented in v1.",
           flows: {
             authorizationCode: {
               authorizationUrl: `${origin}/oauth/authorize`,
               tokenUrl: `${origin}/oauth/token`,
-              scopes: {
-                "workspaces:read": "Read authorized workspaces.",
-                "workspaces:write": "Create and manage authorized workspaces.",
-                "documents:read": "Read authorized Markdown documents.",
-                "documents:write":
-                  "Create and update authorized Markdown documents.",
-                "sharing:write":
-                  "Manage collaborators, invitations, and public links.",
-              },
+              scopes: OAUTH_SCOPES,
             },
           },
         },
@@ -112,6 +115,11 @@ export function createOpenApiDocument(requestUrl: string): OpenApiDocument {
         ),
         NotFound: errorResponse(404, "The requested resource was not found."),
         TooManyRequests: errorResponse(429, "Rate limit exceeded."),
+        Conflict: errorResponse(409, "The write precondition failed."),
+        NotImplemented: errorResponse(
+          501,
+          "The advertised boundary is planned but not implemented.",
+        ),
       },
       parameters: {
         groupId: pathParameter("groupId", "Workspace/group identifier."),
@@ -135,8 +143,11 @@ export function createOpenApiDocument(requestUrl: string): OpenApiDocument {
         "Document content is UTF-8 Markdown stored as text/markdown. The API returns Markdown source, not rendered HTML. Clients are responsible for preview rendering.",
       authorization:
         "Authenticated operations accept either the passkey session cookie or the instance-local development bearer token. Public-link reads are anonymous and read-only. Owner role is required for workspace settings and sharing management; owner or editor may write documents.",
+      errors:
+        "Error responses use { error, code, status }. The error string is preserved for older clients, while code is the stable programmatic discriminator.",
       mcp: "Future MCP tools must be normal API clients using scoped credentials. Planned mappings are list_workspaces, list_documents, read_document, create_document, and update_document; no MCP backdoor is implemented in v1.",
     },
+    "x-downwrite-client-contract": clientContract(),
     "x-downwrite-api-roadmap": apiRoadmap(),
   };
 }
@@ -215,6 +226,10 @@ function apiRoadmap() {
       ],
       discoveryAndAuth: [
         "GET /.well-known/downwrite",
+        "GET /.well-known/oauth-protected-resource",
+        "GET /.well-known/oauth-authorization-server",
+        "GET /oauth/authorize returns 501 planned-not-implemented",
+        "POST /oauth/token returns 501 planned-not-implemented",
         "GET /api/v1/discovery",
         "GET /api/v1/auth/status",
         "POST /api/v1/auth/bootstrap/options",
@@ -250,8 +265,8 @@ function apiRoadmap() {
         "Public-link expiration and last-used metadata if link lifecycle screens need it.",
       ],
       nativeClientAuth: [
-        "GET /oauth/authorize planned for system-browser OAuth authorization code with PKCE.",
-        "POST /oauth/token planned for short-lived access tokens and refresh-token rotation.",
+        "Implement GET /oauth/authorize for system-browser OAuth authorization code with PKCE.",
+        "Implement POST /oauth/token for short-lived access tokens and refresh-token rotation.",
         "GET /api/v1/me planned for native/web account profile once broad account UX exists.",
       ],
       mcpSafeOperations: [
@@ -262,6 +277,63 @@ function apiRoadmap() {
     },
     longerTerm:
       "iOS and MCP primarily need stable discovery, OAuth/PKCE, scoped credentials, cursor pagination, conflict semantics, import/export, and document movement. They do not require a different backend or privileged route family.",
+  };
+}
+
+function clientContract() {
+  return {
+    status: "v1-draft",
+    resource: "/api/v1",
+    mediaTypes: {
+      requests: ["application/json"],
+      responses: ["application/json"],
+      markdown: "Document content fields contain UTF-8 text/markdown source.",
+    },
+    errors: {
+      envelope: "{ error: string, code: string, status: number }",
+      compatibility:
+        "Clients may continue reading the error string, but new clients should switch on code.",
+      codes: [
+        "bad_request",
+        "unauthorized",
+        "forbidden",
+        "not_found",
+        "conflict",
+        "rate_limited",
+        "not_implemented",
+        "oauth_not_implemented",
+        "internal_error",
+      ],
+    },
+    lists: {
+      current:
+        "Workspace and document collections are unpaginated in this small self-hosted v1 slice.",
+      future:
+        "List endpoints may add optional cursor and limit query parameters plus nextCursor without changing item schemas.",
+    },
+    revisions: {
+      field: "revision",
+      precondition: "Document write requests may include baseRevision.",
+      conflict:
+        "A stale baseRevision returns 409 Conflict and does not mutate the document.",
+    },
+    permissions: {
+      owner:
+        "Can manage workspace settings, document content, collaborators, invitations, and public links.",
+      editor: "Can read and write explicitly authorized documents.",
+      publicLink: "Anonymous, bearer-by-possession, read-only Markdown access.",
+    },
+    externalAuth: {
+      resourceMetadata: "/.well-known/oauth-protected-resource",
+      authorizationServerMetadata: "/.well-known/oauth-authorization-server",
+      authorizationEndpoint: "/oauth/authorize",
+      tokenEndpoint: "/oauth/token",
+      status:
+        "Protected-resource metadata is implemented. OAuth authorization and token issuance are planned and return 501 in v1.",
+      pkceRequired: true,
+      resourceIndicatorsRequired: true,
+      scopes: Object.keys(OAUTH_SCOPES),
+    },
   };
 }
 
@@ -297,6 +369,67 @@ function paths(origin: string): OpenApiDocument["paths"] {
         security: [],
         responses: {
           "200": jsonResponse("Discovery metadata.", "Discovery"),
+        },
+      }),
+    },
+    "/.well-known/oauth-protected-resource": {
+      get: operation({
+        tags: ["External auth"],
+        summary: "Read OAuth protected-resource metadata.",
+        description:
+          "Public metadata for external clients that need to identify this Worker API as the protected resource. This does not issue credentials.",
+        operationId: "getOAuthProtectedResourceMetadata",
+        security: [],
+        responses: {
+          "200": jsonResponse(
+            "OAuth protected-resource metadata.",
+            "OAuthProtectedResourceMetadata",
+          ),
+        },
+      }),
+    },
+    "/.well-known/oauth-authorization-server": {
+      get: operation({
+        tags: ["External auth"],
+        summary: "Read reserved OAuth authorization-server metadata.",
+        description:
+          "Documents the standards-compatible OAuth/PKCE boundary reserved for future iOS and MCP clients. Authorization and token issuance are not implemented in v1.",
+        operationId: "getOAuthAuthorizationServerMetadata",
+        security: [],
+        "x-downwrite-status": "planned",
+        responses: {
+          "200": jsonResponse(
+            "Reserved OAuth authorization-server metadata.",
+            "OAuthAuthorizationServerMetadata",
+          ),
+        },
+      }),
+    },
+    "/oauth/authorize": {
+      get: operation({
+        tags: ["External auth"],
+        summary: "Reserved OAuth authorization endpoint.",
+        description:
+          "Planned future system-browser authorization endpoint. It returns 501 until production OAuth authorization is implemented.",
+        operationId: "authorizeOAuthClient",
+        security: [],
+        "x-downwrite-status": "planned",
+        responses: {
+          "501": refResponse("NotImplemented"),
+        },
+      }),
+    },
+    "/oauth/token": {
+      post: operation({
+        tags: ["External auth"],
+        summary: "Reserved OAuth token endpoint.",
+        description:
+          "Planned future authorization-code token endpoint. It returns 501 until token issuance, audience validation, refresh rotation, and revocation are implemented.",
+        operationId: "exchangeOAuthToken",
+        security: [],
+        "x-downwrite-status": "planned",
+        responses: {
+          "501": refResponse("NotImplemented"),
         },
       }),
     },
@@ -717,7 +850,20 @@ function paths(origin: string): OpenApiDocument["paths"] {
 }
 
 const schemas: Record<string, JsonSchema> = {
-  Error: objectSchema({ error: { type: "string" } }, ["error"]),
+  Error: objectSchema(
+    {
+      error: {
+        type: "string",
+        description: "Human-readable error message retained for compatibility.",
+      },
+      code: {
+        type: "string",
+        description: "Stable programmatic error discriminator.",
+      },
+      status: { type: "integer", minimum: 400, maximum: 599 },
+    },
+    ["error", "code", "status"],
+  ),
   Ok: objectSchema({ ok: { type: "boolean", const: true } }, ["ok"]),
   Role: {
     type: "string",
@@ -741,6 +887,78 @@ const schemas: Record<string, JsonSchema> = {
     auth: { type: "object", additionalProperties: true },
     clients: { type: "object", additionalProperties: true },
   }),
+  OAuthProtectedResourceMetadata: objectSchema(
+    {
+      resource: { type: "string", format: "uri" },
+      authorization_servers: {
+        type: "array",
+        items: { type: "string", format: "uri" },
+      },
+      scopes_supported: {
+        type: "array",
+        items: { type: "string" },
+      },
+      bearer_methods_supported: {
+        type: "array",
+        items: { type: "string" },
+      },
+      resource_documentation: { type: "string", format: "uri" },
+      "x-downwrite-status": { type: "string" },
+      "x-downwrite-current-token-adapter": { type: "string" },
+    },
+    [
+      "resource",
+      "authorization_servers",
+      "scopes_supported",
+      "bearer_methods_supported",
+      "resource_documentation",
+      "x-downwrite-status",
+      "x-downwrite-current-token-adapter",
+    ],
+  ),
+  OAuthAuthorizationServerMetadata: objectSchema(
+    {
+      issuer: { type: "string", format: "uri" },
+      authorization_endpoint: { type: "string", format: "uri" },
+      token_endpoint: { type: "string", format: "uri" },
+      response_types_supported: {
+        type: "array",
+        items: { type: "string" },
+      },
+      grant_types_supported: {
+        type: "array",
+        items: { type: "string" },
+      },
+      code_challenge_methods_supported: {
+        type: "array",
+        items: { type: "string" },
+      },
+      token_endpoint_auth_methods_supported: {
+        type: "array",
+        items: { type: "string" },
+      },
+      scopes_supported: {
+        type: "array",
+        items: { type: "string" },
+      },
+      "x-downwrite-status": { type: "string" },
+      "x-downwrite-resource-indicators-required": { type: "boolean" },
+      "x-downwrite-note": { type: "string" },
+    },
+    [
+      "issuer",
+      "authorization_endpoint",
+      "token_endpoint",
+      "response_types_supported",
+      "grant_types_supported",
+      "code_challenge_methods_supported",
+      "token_endpoint_auth_methods_supported",
+      "scopes_supported",
+      "x-downwrite-status",
+      "x-downwrite-resource-indicators-required",
+      "x-downwrite-note",
+    ],
+  ),
   AuthConfiguration: objectSchema(
     {
       bootstrapTokenConfigured: { type: "boolean" },
@@ -1128,6 +1346,16 @@ function jsonResponse(description: string, schema: string) {
 }
 
 function errorResponse(status: number, description: string) {
+  const codeByStatus: Record<number, string> = {
+    400: "bad_request",
+    401: "unauthorized",
+    403: "forbidden",
+    404: "not_found",
+    409: "conflict",
+    429: "rate_limited",
+    501: "not_implemented",
+  };
+
   return {
     description,
     content: {
@@ -1135,7 +1363,11 @@ function errorResponse(status: number, description: string) {
         schema: refSchema("Error"),
         examples: {
           default: {
-            value: { error: description || `HTTP ${status}` },
+            value: {
+              error: description || `HTTP ${status}`,
+              code: codeByStatus[status] ?? "internal_error",
+              status,
+            },
           },
         },
       },

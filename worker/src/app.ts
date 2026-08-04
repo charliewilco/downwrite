@@ -30,6 +30,14 @@ type AppBindings = { Bindings: Env };
 type StorageFactory = (env: Env) => Storage;
 
 const VALID_ROLES = new Set<Role>(["owner", "editor"]);
+const OAUTH_SCOPES = [
+  "workspaces:read",
+  "workspaces:write",
+  "documents:read",
+  "documents:write",
+  "sharing:write",
+  "mcp:documents",
+] as const;
 
 export interface AppOptions {
   createStorage?: StorageFactory;
@@ -65,7 +73,7 @@ export function createApp(options: AppOptions = {}) {
 
   app.onError((error, c) => jsonError(c, error));
 
-  app.notFound((c) => c.json({ error: "Not found" }, 404));
+  app.notFound((c) => jsonError(c, new HttpError(404, "Not found")));
 
   app.use("*", securityHeaders);
   app.use("*", async (c, next) => {
@@ -97,6 +105,10 @@ export function createApp(options: AppOptions = {}) {
           status: "reserved-not-implemented",
           authorizationEndpoint: `${instanceUrl}/oauth/authorize`,
           tokenEndpoint: `${instanceUrl}/oauth/token`,
+          protectedResourceMetadataUrl: `${instanceUrl}/.well-known/oauth-protected-resource`,
+          authorizationServerMetadataUrl: `${instanceUrl}/.well-known/oauth-authorization-server`,
+          resource: `${instanceUrl}/api/v1`,
+          scopesSupported: OAUTH_SCOPES,
           grant: "authorization_code",
           pkce: true,
           browserSignInRequired: true,
@@ -122,6 +134,39 @@ export function createApp(options: AppOptions = {}) {
     };
   }
 
+  function oauthProtectedResourceMetadata(url: string) {
+    const instanceUrl = new URL(url).origin;
+
+    return {
+      resource: `${instanceUrl}/api/v1`,
+      authorization_servers: [instanceUrl],
+      scopes_supported: OAUTH_SCOPES,
+      bearer_methods_supported: ["header"],
+      resource_documentation: `${instanceUrl}/api/v1/docs`,
+      "x-downwrite-status": "resource-server-metadata-implemented",
+      "x-downwrite-current-token-adapter": "instance-local-development-only",
+    };
+  }
+
+  function oauthAuthorizationServerMetadata(url: string) {
+    const instanceUrl = new URL(url).origin;
+
+    return {
+      issuer: instanceUrl,
+      authorization_endpoint: `${instanceUrl}/oauth/authorize`,
+      token_endpoint: `${instanceUrl}/oauth/token`,
+      response_types_supported: ["code"],
+      grant_types_supported: ["authorization_code"],
+      code_challenge_methods_supported: ["S256"],
+      token_endpoint_auth_methods_supported: ["none"],
+      scopes_supported: OAUTH_SCOPES,
+      "x-downwrite-status": "planned-not-implemented",
+      "x-downwrite-resource-indicators-required": true,
+      "x-downwrite-note":
+        "OAuth authorization-code-with-PKCE is the reserved external client boundary; authorization and token issuance are not implemented in this Worker slice.",
+    };
+  }
+
   app.get("/api/v1/health", (c) =>
     c.json({
       ok: true,
@@ -143,6 +188,30 @@ export function createApp(options: AppOptions = {}) {
   app.get("/api/v1/discovery", (c) => c.json(discovery(c.req.url)));
 
   app.get("/.well-known/downwrite", (c) => c.json(discovery(c.req.url)));
+
+  app.get("/.well-known/oauth-protected-resource", (c) =>
+    c.json(oauthProtectedResourceMetadata(c.req.url)),
+  );
+
+  app.get("/.well-known/oauth-authorization-server", (c) =>
+    c.json(oauthAuthorizationServerMetadata(c.req.url)),
+  );
+
+  app.get("/oauth/authorize", () => {
+    throw new HttpError(
+      501,
+      "OAuth authorization endpoint is planned but not implemented",
+      "oauth_not_implemented",
+    );
+  });
+
+  app.post("/oauth/token", () => {
+    throw new HttpError(
+      501,
+      "OAuth token endpoint is planned but not implemented",
+      "oauth_not_implemented",
+    );
+  });
 
   app.get("/api/v1/auth/status", async (c) => {
     const store = storage(c.env);

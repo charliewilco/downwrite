@@ -13,7 +13,9 @@ until implemented in the Worker.
 - Sharing: read share state, direct collaborator add/remove, invitation
   create/accept/revoke, public-link create/update, anonymous public-link read.
 - Discovery/auth: well-known discovery, API discovery, health, auth status,
-  passkey owner bootstrap, passkey login, session logout.
+  OAuth protected-resource metadata, reserved OAuth authorization-server
+  metadata, reserved OAuth 501 endpoints, passkey owner bootstrap, passkey
+  login, session logout.
 - Contract: OpenAPI JSON and local HTML documentation view.
 
 ## Blocks Near-Term Screens
@@ -36,8 +38,8 @@ until implemented in the Worker.
 
 ## iOS Needs
 
-- OAuth authorization code with PKCE through the system browser.
-- Short-lived access tokens and refresh-token rotation.
+- Implement OAuth authorization code with PKCE through the system browser.
+- Implement short-lived access tokens and refresh-token rotation.
 - `GET /api/v1/me` once broader account/profile UX exists.
 - Cursor pagination for workspace/document lists.
 - Stable conflict semantics for autosave and offline retry behavior.

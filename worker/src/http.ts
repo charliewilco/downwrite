@@ -2,20 +2,58 @@ import type { Context } from "hono";
 
 export class HttpError extends Error {
   readonly status: number;
+  readonly code: string;
 
-  constructor(status: number, message: string) {
+  constructor(
+    status: number,
+    message: string,
+    code = errorCodeForStatus(status),
+  ) {
     super(message);
     this.status = status;
+    this.code = code;
   }
 }
 
 export function jsonError(c: Context, error: unknown) {
   if (error instanceof HttpError) {
-    return c.json({ error: error.message }, error.status as never);
+    return c.json(errorEnvelope(error), error.status as never);
   }
 
   console.error(error);
-  return c.json({ error: "Internal server error" }, 500);
+  return c.json(
+    errorEnvelope(new HttpError(500, "Internal server error")),
+    500,
+  );
+}
+
+export function errorEnvelope(error: HttpError) {
+  return {
+    error: error.message,
+    code: error.code,
+    status: error.status,
+  };
+}
+
+function errorCodeForStatus(status: number) {
+  switch (status) {
+    case 400:
+      return "bad_request";
+    case 401:
+      return "unauthorized";
+    case 403:
+      return "forbidden";
+    case 404:
+      return "not_found";
+    case 409:
+      return "conflict";
+    case 429:
+      return "rate_limited";
+    case 501:
+      return "not_implemented";
+    default:
+      return "internal_error";
+  }
 }
 
 export async function readJsonObject(

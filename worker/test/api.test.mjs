@@ -66,6 +66,79 @@ test("discovery reports instance metadata for public native clients", async () =
   );
   assert.equal(body.auth.native.pkce, true);
   assert.equal(body.auth.native.browserSignInRequired, true);
+  assert.equal(
+    body.auth.native.protectedResourceMetadataUrl,
+    "https://example.downwrite.test/.well-known/oauth-protected-resource",
+  );
+  assert.equal(
+    body.auth.native.authorizationServerMetadataUrl,
+    "https://example.downwrite.test/.well-known/oauth-authorization-server",
+  );
+  assert.equal(
+    body.auth.native.resource,
+    "https://example.downwrite.test/api/v1",
+  );
+});
+
+test("OAuth metadata is public while token issuance remains unimplemented", async () => {
+  const { app, env } = createHarness();
+  const resourceResponse = await app.request(
+    "https://example.downwrite.test/.well-known/oauth-protected-resource",
+    {},
+    env,
+  );
+  const resourceBody = await resourceResponse.json();
+  const serverResponse = await app.request(
+    "https://example.downwrite.test/.well-known/oauth-authorization-server",
+    {},
+    env,
+  );
+  const serverBody = await serverResponse.json();
+  const authorizeResponse = await app.request(
+    "https://example.downwrite.test/oauth/authorize",
+    {},
+    env,
+  );
+  const tokenResponse = await app.request(
+    "https://example.downwrite.test/oauth/token",
+    { method: "POST" },
+    env,
+  );
+  const tokenBody = await tokenResponse.json();
+
+  assert.equal(resourceResponse.status, 200);
+  assert.equal(resourceBody.resource, "https://example.downwrite.test/api/v1");
+  assert.deepEqual(resourceBody.authorization_servers, [
+    "https://example.downwrite.test",
+  ]);
+  assert.equal(resourceBody.scopes_supported.includes("documents:write"), true);
+  assert.equal(resourceBody.bearer_methods_supported.includes("header"), true);
+  assert.equal(JSON.stringify(resourceBody).includes("owner-token"), false);
+
+  assert.equal(serverResponse.status, 200);
+  assert.equal(serverBody.issuer, "https://example.downwrite.test");
+  assert.equal(
+    serverBody.authorization_endpoint,
+    "https://example.downwrite.test/oauth/authorize",
+  );
+  assert.equal(
+    serverBody.token_endpoint,
+    "https://example.downwrite.test/oauth/token",
+  );
+  assert.equal(
+    serverBody.code_challenge_methods_supported.includes("S256"),
+    true,
+  );
+  assert.equal(serverBody["x-downwrite-status"], "planned-not-implemented");
+
+  assert.equal(authorizeResponse.status, 501);
+  assert.equal(tokenResponse.status, 501);
+  assert.deepEqual(tokenBody, {
+    error: "OAuth token endpoint is planned but not implemented",
+    code: "oauth_not_implemented",
+    status: 501,
+  });
+  assert.equal("access_token" in tokenBody, false);
 });
 
 test("serves an OpenAPI contract for the implemented API", async () => {
@@ -82,10 +155,30 @@ test("serves an OpenAPI contract for the implemented API", async () => {
   assert.equal(body.info.title, "Downwrite Worker API");
   assert.equal(body.info.version, "v1");
   assert.ok(body.components.schemas.DocumentRecord);
+  assert.ok(body.components.schemas.OAuthProtectedResourceMetadata);
   assert.ok(body.components.securitySchemes.sessionCookie);
   assert.ok(body.components.securitySchemes.developmentBearer);
   assert.ok(body.components.securitySchemes.oauthPkcePlanned);
-  assert.equal(body.paths["/oauth/authorize"], undefined);
+  assert.equal(
+    body.paths["/oauth/authorize"].get["x-downwrite-status"],
+    "planned",
+  );
+  assert.equal(
+    body.paths["/oauth/token"].post["x-downwrite-status"],
+    "planned",
+  );
+  assert.equal(
+    body.paths["/.well-known/oauth-protected-resource"].get.operationId,
+    "getOAuthProtectedResourceMetadata",
+  );
+  assert.equal(
+    body["x-downwrite-client-contract"].errors.envelope,
+    "{ error: string, code: string, status: number }",
+  );
+  assert.equal(
+    body["x-downwrite-client-contract"].externalAuth.pkceRequired,
+    true,
+  );
   assert.equal(
     body["x-downwrite-api-roadmap"].proposed.nativeClientAuth.some((item) =>
       item.includes("/oauth/authorize"),
@@ -370,6 +463,11 @@ test("anonymous requests cannot read or write private documents", async () => {
 
   assert.equal(readResponse.status, 401);
   assert.equal(writeResponse.status, 401);
+
+  const readBody = await readResponse.json();
+  assert.equal(readBody.error, "Missing session or bearer token");
+  assert.equal(readBody.code, "unauthorized");
+  assert.equal(readBody.status, 401);
 });
 
 test("explicitly invited editors may write a document", async () => {
@@ -737,7 +835,11 @@ test("authenticated writers can delete a document", async () => {
   const readBody = await readResponse.json();
 
   assert.equal(readResponse.status, 404);
-  assert.deepEqual(readBody, { error: "Document not found" });
+  assert.deepEqual(readBody, {
+    error: "Document not found",
+    code: "not_found",
+    status: 404,
+  });
 });
 
 function createHarness() {

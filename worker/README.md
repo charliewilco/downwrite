@@ -38,6 +38,8 @@ from an instance base URL:
 
 ```http
 GET /.well-known/downwrite
+GET /.well-known/oauth-protected-resource
+GET /.well-known/oauth-authorization-server
 GET /api/v1/discovery
 GET /api/v1/openapi.json
 GET /api/v1/docs
@@ -77,6 +79,12 @@ The OpenAPI `paths` object documents implemented routes only. Proposed endpoint
 gaps for near-term screens, iOS, and MCP are tracked in
 [`API_ROADMAP.md`](./API_ROADMAP.md) and mirrored under the
 `x-downwrite-api-roadmap` extension in the served spec.
+
+Client integration rules are summarized in
+[`V1_CLIENT_CONTRACT.md`](./V1_CLIENT_CONTRACT.md) and mirrored under the
+`x-downwrite-client-contract` extension in the served spec. Error responses use
+`{ error, code, status }`; the string `error` field is retained for existing
+clients, while new clients should branch on `code`.
 
 Document update, move, and reorder writes accept an optional `baseRevision`
 integer from the last document read. When the stored document has advanced, the
