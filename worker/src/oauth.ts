@@ -76,6 +76,7 @@ export function parseAuthorizationRequest(url: string): AuthorizationRequest {
 
   assertAllowedClientRedirect(clientId, redirectUri);
   assertExpectedResource(resource, origin);
+  assertScopeResourceCompatibility(scopes, resource, origin);
 
   return {
     responseType,
@@ -351,6 +352,7 @@ function parseAuthorizationForm(form: FormData, requestUrl: string) {
   const codeChallenge = requiredForm(form, "code_challenge");
   const codeChallengeMethod = requiredForm(form, "code_challenge_method");
   const resource = formString(form, "resource") ?? `${origin}/api/v1`;
+  const scopes = parseScopes(formString(form, "scope"));
 
   if (codeChallengeMethod !== SUPPORTED_CODE_CHALLENGE_METHOD) {
     throw new HttpError(400, "OAuth PKCE code_challenge_method must be S256");
@@ -358,13 +360,14 @@ function parseAuthorizationForm(form: FormData, requestUrl: string) {
 
   assertAllowedClientRedirect(clientId, redirectUri);
   assertExpectedResource(resource, origin);
+  assertScopeResourceCompatibility(scopes, resource, origin);
 
   return {
     clientId,
     redirectUri,
     codeChallenge,
     codeChallengeMethod,
-    scopes: parseScopes(formString(form, "scope")),
+    scopes,
     resource,
     state: formString(form, "state"),
   };
@@ -416,8 +419,24 @@ function isLoopbackCallback(redirectUri: string) {
 }
 
 function assertExpectedResource(resource: string, origin: string) {
-  if (resource !== `${origin}/api/v1`) {
-    throw new HttpError(400, "OAuth resource must be this Downwrite API");
+  if (resource !== `${origin}/api/v1` && resource !== `${origin}/mcp`) {
+    throw new HttpError(400, "OAuth resource must be this Downwrite instance");
+  }
+}
+
+function assertScopeResourceCompatibility(
+  scopes: string[],
+  resource: string,
+  origin: string,
+) {
+  const mcpScope = scopes.includes("mcp:documents");
+
+  if (resource === `${origin}/mcp` && !mcpScope) {
+    throw new HttpError(400, "MCP OAuth tokens require mcp:documents scope");
+  }
+
+  if (resource === `${origin}/api/v1` && mcpScope) {
+    throw new HttpError(400, "mcp:documents scope must use the MCP resource");
   }
 }
 

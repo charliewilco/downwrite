@@ -130,6 +130,8 @@ export function createApp(options: AppOptions = {}) {
         mcp: {
           supportedAsExternalClient: true,
           privilegedBackdoor: false,
+          resource: `${instanceUrl}/mcp`,
+          protectedResourceMetadataUrl: `${instanceUrl}/.well-known/oauth-protected-resource`,
           expectedTools: [
             "list_workspaces",
             "list_documents",
@@ -146,7 +148,7 @@ export function createApp(options: AppOptions = {}) {
     const instanceUrl = new URL(url).origin;
 
     return {
-      resource: `${instanceUrl}/api/v1`,
+      resource: `${instanceUrl}/mcp`,
       authorization_servers: [instanceUrl],
       scopes_supported: OAUTH_SCOPES,
       bearer_methods_supported: ["header"],

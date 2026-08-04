@@ -65,8 +65,9 @@ tokens for external clients. The public metadata is available at:
 The current built-in public clients are deliberately narrow: `downwrite-ios`
 uses `downwrite://oauth/callback`, and `downwrite-mcp` uses loopback callback
 URLs such as `http://127.0.0.1:49152/callback`. Tokens are opaque, stored only as
-hashes in D1, scoped to this instance's `/api/v1` resource, and revocable through
-`POST /oauth/revoke`.
+hashes in D1, and revocable through `POST /oauth/revoke`. API/iOS clients request
+the instance `/api/v1` resource. MCP clients request the instance `/mcp` resource
+with `mcp:documents`.
 
 ## Deploy to Cloudflare
 

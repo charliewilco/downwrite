@@ -79,6 +79,7 @@ test("discovery reports instance metadata for public native clients", async () =
     body.auth.native.resource,
     "https://example.downwrite.test/api/v1",
   );
+  assert.equal(body.clients.mcp.resource, "https://example.downwrite.test/mcp");
 });
 
 test("OAuth metadata is public and advertises instance-local PKCE clients", async () => {
@@ -97,7 +98,7 @@ test("OAuth metadata is public and advertises instance-local PKCE clients", asyn
   const serverBody = await serverResponse.json();
 
   assert.equal(resourceResponse.status, 200);
-  assert.equal(resourceBody.resource, "https://example.downwrite.test/api/v1");
+  assert.equal(resourceBody.resource, "https://example.downwrite.test/mcp");
   assert.deepEqual(resourceBody.authorization_servers, [
     "https://example.downwrite.test",
   ]);
@@ -256,23 +257,41 @@ test("OAuth bearer tokens are rejected for the wrong instance resource", async (
   assert.equal(body.code, "unauthorized");
 });
 
-test("MCP accepts OAuth tokens only with the MCP document scope", async () => {
+test("MCP accepts only OAuth tokens with the MCP resource and document scope", async () => {
   const { app, env, storage } = createHarness();
   const group = await createGroup(app, env);
   await createDocument(app, env, group.id);
   const cookie = await createSessionCookie(storage, "dev-owner");
-  const readOnly = await oauthToken(app, env, cookie, {
+  const apiToken = await oauthToken(app, env, cookie, {
     scope: "workspaces:read documents:read",
+    resource: "https://example.downwrite.test/api/v1",
+  });
+  const wrongScopeToken = `wrong-mcp-scope-${crypto.randomUUID()}`;
+  await storage.createOAuthAccessToken({
+    tokenHash: await sha256Base64Url(wrongScopeToken),
+    identityId: "dev-owner",
+    clientId: "downwrite-mcp",
+    scopes: ["workspaces:read"],
+    resource: "https://example.downwrite.test/mcp",
+    expiresAt: new Date(Date.now() + 60_000).toISOString(),
   });
   const mcpToken = await oauthToken(app, env, cookie, {
-    scope: "mcp:documents workspaces:read documents:read documents:write",
+    scope: "mcp:documents",
+    resource: "https://example.downwrite.test/mcp",
     state: "mcp-state",
   });
 
-  const denied = await mcpToolResponseWithToken(
+  const wrongAudience = await mcpToolResponseWithToken(
     app,
     env,
-    readOnly.access_token,
+    apiToken.access_token,
+    "list_workspaces",
+    {},
+  );
+  const insufficientScope = await mcpToolResponseWithToken(
+    app,
+    env,
+    wrongScopeToken,
     "list_workspaces",
     {},
   );
@@ -284,8 +303,10 @@ test("MCP accepts OAuth tokens only with the MCP document scope", async () => {
     {},
   );
 
-  assert.equal(denied.status, 403);
-  assert.equal((await denied.response.json()).code, "forbidden");
+  assert.equal(wrongAudience.status, 401);
+  assert.equal((await wrongAudience.response.json()).code, "unauthorized");
+  assert.equal(insufficientScope.status, 403);
+  assert.equal((await insufficientScope.response.json()).code, "forbidden");
   assert.equal(allowed.workspaces[0].id, group.id);
 });
 
@@ -1369,7 +1390,16 @@ async function createSessionCookie(storage, identityId) {
   return `dw_session=${token}; Path=/; HttpOnly; Secure; SameSite=Lax`;
 }
 
-async function oauthToken(app, env, cookie, { scope, state = "client-state" }) {
+async function oauthToken(
+  app,
+  env,
+  cookie,
+  {
+    scope,
+    state = "client-state",
+    resource = "https://example.downwrite.test/api/v1",
+  },
+) {
   const verifier = `verifier-${crypto.randomUUID()}`;
   const challenge = await sha256Base64Url(verifier);
   const authorizeUrl = new URL(
@@ -1384,10 +1414,7 @@ async function oauthToken(app, env, cookie, { scope, state = "client-state" }) {
   authorizeUrl.searchParams.set("code_challenge", challenge);
   authorizeUrl.searchParams.set("code_challenge_method", "S256");
   authorizeUrl.searchParams.set("scope", scope);
-  authorizeUrl.searchParams.set(
-    "resource",
-    "https://example.downwrite.test/api/v1",
-  );
+  authorizeUrl.searchParams.set("resource", resource);
   authorizeUrl.searchParams.set("state", state);
 
   const consent = await app.request(
@@ -1413,7 +1440,7 @@ async function oauthToken(app, env, cookie, { scope, state = "client-state" }) {
         code_challenge: challenge,
         code_challenge_method: "S256",
         scope,
-        resource: "https://example.downwrite.test/api/v1",
+        resource,
         state,
       }),
     },

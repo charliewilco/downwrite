@@ -52,9 +52,9 @@ documents use explicit `owner` and `editor` roles.
 - public link holder: anonymous read-only access to the linked Markdown.
 
 The MCP endpoint authenticates at `/mcp`, derives a local identity, then calls
-storage/domain methods. OAuth-authenticated requests must include the
-`mcp:documents` scope. It does not forward arbitrary bearer tokens into API
-handlers.
+storage/domain methods. OAuth-authenticated requests must carry the `/mcp`
+resource audience and include the `mcp:documents` scope. It does not forward
+arbitrary bearer tokens into API handlers.
 
 ## Native and MCP Boundary
 

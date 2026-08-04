@@ -52,7 +52,7 @@ export async function readIdentity(
     if (
       oauthToken.revokedAt ||
       new Date(oauthToken.expiresAt).getTime() <= Date.now() ||
-      oauthToken.resource !== `${new URL(c.req.url).origin}/api/v1`
+      oauthToken.resource !== expectedOAuthResource(c.req.url)
     ) {
       throw new HttpError(
         401,
@@ -133,4 +133,9 @@ function isLocalHttp(requestUrl: string) {
       url.hostname === "127.0.0.1" ||
       url.hostname === "::1")
   );
+}
+
+function expectedOAuthResource(requestUrl: string) {
+  const url = new URL(requestUrl);
+  return url.pathname === "/mcp" ? `${url.origin}/mcp` : `${url.origin}/api/v1`;
 }

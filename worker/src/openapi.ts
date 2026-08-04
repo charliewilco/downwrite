@@ -93,7 +93,7 @@ export function createOpenApiDocument(requestUrl: string): OpenApiDocument {
         oauthPkce: {
           type: "oauth2",
           description:
-            "Instance-local OAuth authorization-code-with-PKCE boundary for the public iOS app and MCP clients. Clients are public, use PKCE S256, request the instance API resource, and receive opaque bearer tokens issued by this self-hosted Worker.",
+            "Instance-local OAuth authorization-code-with-PKCE boundary for the public iOS app and MCP clients. Clients are public, use PKCE S256, request either the instance API or MCP resource, and receive opaque bearer tokens issued by this self-hosted Worker.",
           flows: {
             authorizationCode: {
               authorizationUrl: `${origin}/oauth/authorize`,
@@ -329,6 +329,8 @@ function clientContract() {
       authorizationEndpoint: "/oauth/authorize",
       tokenEndpoint: "/oauth/token",
       revocationEndpoint: "/oauth/revoke",
+      apiResource: "/api/v1",
+      mcpResource: "/mcp",
       status:
         "Protected-resource metadata, authorization, token exchange, refresh rotation, and token revocation are implemented by this self-hosted instance.",
       pkceRequired: true,
