@@ -66,6 +66,11 @@ field without changing item schemas.
 - `editor`: explicit document reads/writes.
 - Public link holder: anonymous read of the linked Markdown document only.
 
+Collaborators may remove themselves from a document, but the final owner
+collaborator cannot be removed or demoted. Public-link management uses
+`/api/v1/public-links/{publicLinkId}/manage`; anonymous public reads remain
+`/api/v1/public-links/{token}`.
+
 MCP uses the same permission model as normal API clients. Initial safe MCP
 mappings are list workspaces, list documents, read document, create document,
 and update document. OAuth-authenticated MCP requests require `mcp:documents`.

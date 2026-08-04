@@ -199,10 +199,12 @@ function apiRoadmap() {
       workspaceLifecycle: [
         "GET /api/v1/groups",
         "POST /api/v1/groups",
+        "GET /api/v1/groups/{groupId}",
         "PATCH /api/v1/groups/{groupId}",
         "DELETE /api/v1/groups/{groupId}",
       ],
       documents: [
+        "GET /api/v1/groups/{groupId}/documents",
         "POST /api/v1/groups/{groupId}/documents",
         "GET /api/v1/documents/{documentId}",
         "PATCH /api/v1/documents/{documentId}",
@@ -215,10 +217,12 @@ function apiRoadmap() {
         "POST /api/v1/documents/{documentId}/collaborators",
         "DELETE /api/v1/documents/{documentId}/collaborators/{identityId}",
         "POST /api/v1/documents/{documentId}/invitations",
+        "GET /api/v1/invitations/{token}",
         "POST /api/v1/invitations/{token}/accept",
         "DELETE /api/v1/invitations/{invitationId}",
         "POST /api/v1/documents/{documentId}/public-links",
         "PATCH /api/v1/public-links/{publicLinkId}",
+        "GET /api/v1/public-links/{publicLinkId}/manage",
         "GET /api/v1/public-links/{token}",
       ],
       discoveryAndAuth: [
@@ -242,12 +246,7 @@ function apiRoadmap() {
       contract: ["GET /api/v1/openapi.json", "GET /api/v1/docs"],
     },
     proposed: {
-      blocksNextInteractiveScreens: [
-        "GET /api/v1/groups/{groupId}: focused workspace detail without fetching every workspace.",
-        "GET /api/v1/groups/{groupId}/documents: explicit document list endpoint with future cursor pagination and ordering.",
-        "GET /api/v1/invitations/{token}: preview invitation before accepting.",
-        "GET /api/v1/public-links/{publicLinkId}: inspect one public link for management screens.",
-      ],
+      blocksNextInteractiveScreens: [],
       documentsAndContent: [
         "PUT /api/v1/documents/{documentId}/content: content-focused update separate from title/metadata.",
         "GET /api/v1/documents/{documentId}/revisions: list saved content revisions.",
@@ -697,6 +696,18 @@ function paths(origin: string): OpenApiDocument["paths"] {
       }),
     },
     "/api/v1/groups/{groupId}": {
+      get: operation({
+        tags: ["Workspaces"],
+        summary: "Read one authorized workspace.",
+        operationId: "getGroup",
+        security: authenticatedSecurity(),
+        parameters: [refParameter("groupId")],
+        "x-downwrite-scope": "workspaces:read",
+        responses: {
+          "200": jsonResponse("Workspace.", "GroupEnvelope"),
+          "404": refResponse("NotFound"),
+        },
+      }),
       patch: operation({
         tags: ["Workspaces"],
         summary: "Update workspace settings.",
@@ -724,6 +735,18 @@ function paths(origin: string): OpenApiDocument["paths"] {
       }),
     },
     "/api/v1/groups/{groupId}/documents": {
+      get: operation({
+        tags: ["Documents"],
+        summary: "List documents in one authorized workspace.",
+        operationId: "listGroupDocuments",
+        security: authenticatedSecurity(),
+        parameters: [refParameter("groupId")],
+        "x-downwrite-scope": "workspaces:read",
+        responses: {
+          "200": jsonResponse("Workspace documents.", "DocumentList"),
+          "404": refResponse("NotFound"),
+        },
+      }),
       post: operation({
         tags: ["Documents"],
         summary: "Create a Markdown document in a workspace.",
@@ -885,10 +908,29 @@ function paths(origin: string): OpenApiDocument["paths"] {
         operationId: "acceptDocumentInvitation",
         security: authenticatedSecurity(),
         parameters: [refParameter("invitationToken")],
-        "x-downwrite-scope": "sharing:accept",
+        "x-downwrite-scope": "sharing:write",
         responses: {
           "200": jsonResponse("Accepted invitation.", "InvitationEnvelope"),
           "403": refResponse("Forbidden"),
+        },
+      }),
+    },
+    "/api/v1/invitations/{token}": {
+      get: operation({
+        tags: ["Sharing"],
+        summary: "Preview a collaborator invitation by opaque token.",
+        description:
+          "Public token-preview endpoint for browser-facing invitation acceptance. It does not grant access; accepting still requires authentication as the invited identity.",
+        operationId: "getDocumentInvitationPreview",
+        security: [],
+        parameters: [refParameter("invitationToken")],
+        "x-downwrite-scope": "invitation:preview",
+        responses: {
+          "200": jsonResponse(
+            "Invitation preview.",
+            "InvitationPreviewEnvelope",
+          ),
+          "404": refResponse("NotFound"),
         },
       }),
     },
@@ -933,6 +975,22 @@ function paths(origin: string): OpenApiDocument["paths"] {
         responses: {
           "200": jsonResponse("Updated public link.", "PublicLinkEnvelope"),
           "403": refResponse("Forbidden"),
+        },
+      }),
+    },
+    "/api/v1/public-links/{publicLinkId}/manage": {
+      get: operation({
+        tags: ["Public links"],
+        summary: "Read one managed public-link record.",
+        description:
+          "Owner-only public-link management detail. The anonymous public read route remains /api/v1/public-links/{token}.",
+        operationId: "getManagedPublicLink",
+        security: authenticatedSecurity(),
+        parameters: [refParameter("publicLinkId")],
+        "x-downwrite-scope": "sharing:write",
+        responses: {
+          "200": jsonResponse("Public link.", "PublicLinkEnvelope"),
+          "404": refResponse("NotFound"),
         },
       }),
     },
@@ -1293,6 +1351,17 @@ const schemas: Record<string, JsonSchema> = {
     },
     ["groups"],
   ),
+  DocumentList: objectSchema(
+    {
+      documents: {
+        type: "array",
+        items: refSchema("DocumentSummary"),
+        description:
+          "Workspace document summaries sorted by ascending position, then recent update time.",
+      },
+    },
+    ["documents"],
+  ),
   DocumentCreate: objectSchema(
     {
       title: { type: "string", minLength: 1 },
@@ -1452,6 +1521,39 @@ const schemas: Record<string, JsonSchema> = {
   InvitationEnvelope: objectSchema({ invitation: refSchema("Invitation") }, [
     "invitation",
   ]),
+  InvitationPreview: objectSchema(
+    {
+      token: { type: "string", description: "Opaque invitation token." },
+      status: { type: "string", enum: ["pending", "accepted", "revoked"] },
+      invitedIdentityId: { type: "string" },
+      role: refSchema("Role"),
+      document: objectSchema(
+        {
+          id: { type: "string" },
+          groupId: { type: "string" },
+          title: { type: "string" },
+        },
+        ["id", "groupId", "title"],
+      ),
+      createdAt: { type: "string" },
+      acceptedAt: { type: ["string", "null"] },
+      revokedAt: { type: ["string", "null"] },
+    },
+    [
+      "token",
+      "status",
+      "invitedIdentityId",
+      "role",
+      "document",
+      "createdAt",
+      "acceptedAt",
+      "revokedAt",
+    ],
+  ),
+  InvitationPreviewEnvelope: objectSchema(
+    { invitation: refSchema("InvitationPreview") },
+    ["invitation"],
+  ),
   PublicLinkCreate: objectSchema({
     label: { type: ["string", "null"] },
   }),

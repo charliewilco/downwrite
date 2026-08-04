@@ -7,6 +7,7 @@ import type {
   GroupSummary,
   InvitationRecord,
   InvitationStatus,
+  InvitationPreview,
   OAuthAccessTokenRecord,
   OAuthAuthorizationCodeRecord,
   OAuthRefreshTokenRecord,
@@ -73,6 +74,19 @@ interface InvitationRow {
   token: string;
   status: InvitationStatus;
   created_by_identity_id: string;
+  created_at: string;
+  accepted_at: string | null;
+  revoked_at: string | null;
+}
+
+interface InvitationPreviewRow {
+  token: string;
+  status: InvitationStatus;
+  invited_identity_id: string;
+  role: Role;
+  document_id: string;
+  group_id: string;
+  title: string;
   created_at: string;
   accepted_at: string | null;
   revoked_at: string | null;
@@ -748,7 +762,10 @@ export class D1Storage implements Storage {
         .bind(id, input.identityId),
     ]);
 
-    const group = await this.getGroupForIdentity(input.identityId, id);
+    const group = await this.getGroupForIdentity({
+      identityId: input.identityId,
+      groupId: id,
+    });
     if (!group) {
       throw new Error("Failed to create group");
     }
@@ -766,10 +783,10 @@ export class D1Storage implements Storage {
     if (role !== "owner") {
       return null;
     }
-    const current = await this.getGroupForIdentity(
-      input.identityId,
-      input.groupId,
-    );
+    const current = await this.getGroupForIdentity({
+      identityId: input.identityId,
+      groupId: input.groupId,
+    });
     if (!current) {
       return null;
     }
@@ -791,7 +808,10 @@ export class D1Storage implements Storage {
         input.groupId,
       )
       .run();
-    return this.getGroupForIdentity(input.identityId, input.groupId);
+    return this.getGroupForIdentity({
+      identityId: input.identityId,
+      groupId: input.groupId,
+    });
   }
 
   async deleteGroup(input: { identityId: string; groupId: string }) {
@@ -1015,10 +1035,18 @@ export class D1Storage implements Storage {
     documentId: string;
     collaboratorIdentityId: string;
     role: Role;
-  }): Promise<void> {
+  }): Promise<boolean> {
     const current = await this.getDocumentForIdentity(input);
     if (!current || current.role !== "owner") {
-      return;
+      return false;
+    }
+
+    if (
+      input.identityId === input.collaboratorIdentityId &&
+      input.role !== "owner" &&
+      (await this.documentOwnerCount(input.documentId)) <= 1
+    ) {
+      return false;
     }
 
     await this.#db.batch([
@@ -1035,6 +1063,7 @@ export class D1Storage implements Storage {
         )
         .bind(input.documentId, input.collaboratorIdentityId, input.role),
     ]);
+    return true;
   }
 
   async removeDocumentCollaborator(input: {
@@ -1043,7 +1072,23 @@ export class D1Storage implements Storage {
     collaboratorIdentityId: string;
   }) {
     const current = await this.getDocumentForIdentity(input);
-    if (!current || current.role !== "owner") {
+    const selfRemoval = input.identityId === input.collaboratorIdentityId;
+    if (!current || (current.role !== "owner" && !selfRemoval)) {
+      return false;
+    }
+
+    const targetRole = await this.documentCollaboratorRole({
+      documentId: input.documentId,
+      identityId: input.collaboratorIdentityId,
+    });
+    if (!targetRole) {
+      return false;
+    }
+
+    if (
+      targetRole === "owner" &&
+      (await this.documentOwnerCount(input.documentId)) <= 1
+    ) {
       return false;
     }
 
@@ -1121,6 +1166,21 @@ export class D1Storage implements Storage {
         .bind(invitation.id),
     ]);
     return this.invitationById(invitation.id);
+  }
+
+  async getDocumentInvitationByToken(token: string) {
+    const row = await this.#db
+      .prepare(
+        `SELECT di.token, di.status, di.invited_identity_id, di.role,
+          d.id AS document_id, d.group_id, d.title,
+          di.created_at, di.accepted_at, di.revoked_at
+        FROM document_invitations di
+        INNER JOIN documents d ON d.id = di.document_id
+        WHERE di.token = ?`,
+      )
+      .bind(token)
+      .first<InvitationPreviewRow>();
+    return row ? invitationPreviewFromRow(row) : null;
   }
 
   async revokeDocumentInvitation(input: {
@@ -1301,7 +1361,27 @@ export class D1Storage implements Storage {
     };
   }
 
-  private async getGroupForIdentity(identityId: string, groupId: string) {
+  async getPublicLinkForIdentity(input: {
+    identityId: string;
+    publicLinkId: string;
+  }) {
+    const link = await this.publicLinkById(input.publicLinkId);
+    if (!link) {
+      return null;
+    }
+
+    const current = await this.getDocumentForIdentity({
+      identityId: input.identityId,
+      documentId: link.documentId,
+    });
+    if (!current || current.role !== "owner") {
+      return null;
+    }
+
+    return link;
+  }
+
+  async getGroupForIdentity(input: { identityId: string; groupId: string }) {
     const row = await this.#db
       .prepare(
         `SELECT g.id, g.name, g.description, g.accent_color, gm.role,
@@ -1310,9 +1390,33 @@ export class D1Storage implements Storage {
         INNER JOIN group_members gm ON gm.group_id = g.id
         WHERE g.id = ? AND gm.identity_id = ?`,
       )
-      .bind(groupId, identityId)
+      .bind(input.groupId, input.identityId)
       .first<GroupRow>();
-    return row ? groupFromRow(row, []) : null;
+    if (!row) {
+      return null;
+    }
+
+    const documents = await this.#db
+      .prepare(
+        `SELECT d.id, d.group_id, d.title, d.content_key,
+          d.position, d.revision, d.created_at, d.updated_at,
+          COALESCE(dc.role, gm.role) AS role
+        FROM documents d
+        LEFT JOIN group_members gm
+          ON gm.group_id = d.group_id AND gm.identity_id = ?
+        LEFT JOIN document_collaborators dc
+          ON dc.document_id = d.id AND dc.identity_id = ?
+        WHERE d.group_id = ?
+          AND (gm.identity_id IS NOT NULL OR dc.identity_id IS NOT NULL)
+        ORDER BY d.position ASC, d.updated_at DESC`,
+      )
+      .bind(input.identityId, input.identityId, input.groupId)
+      .all<DocumentRow>();
+
+    return groupFromRow(
+      row,
+      (documents.results ?? []).map(documentSummaryFromRow),
+    );
   }
 
   private async documentRowForIdentity(input: {
@@ -1356,6 +1460,31 @@ export class D1Storage implements Storage {
       .first<{ role: Role }>();
 
     return row?.role ?? null;
+  }
+
+  private async documentCollaboratorRole(input: {
+    documentId: string;
+    identityId: string;
+  }) {
+    const row = await this.#db
+      .prepare(
+        `SELECT role FROM document_collaborators
+        WHERE document_id = ? AND identity_id = ?`,
+      )
+      .bind(input.documentId, input.identityId)
+      .first<{ role: Role }>();
+    return row?.role ?? null;
+  }
+
+  private async documentOwnerCount(documentId: string) {
+    const row = await this.#db
+      .prepare(
+        `SELECT COUNT(*) AS count FROM document_collaborators
+        WHERE document_id = ? AND role = 'owner'`,
+      )
+      .bind(documentId)
+      .first<{ count: number }>();
+    return row?.count ?? 0;
   }
 
   private async publicLinkById(publicLinkId: string) {
@@ -1519,6 +1648,25 @@ function invitationFromRow(row: InvitationRow): InvitationRecord {
     token: row.token,
     status: row.status,
     createdByIdentityId: row.created_by_identity_id,
+    createdAt: row.created_at,
+    acceptedAt: row.accepted_at,
+    revokedAt: row.revoked_at,
+  };
+}
+
+function invitationPreviewFromRow(
+  row: InvitationPreviewRow,
+): InvitationPreview {
+  return {
+    token: row.token,
+    status: row.status,
+    invitedIdentityId: row.invited_identity_id,
+    role: row.role,
+    document: {
+      id: row.document_id,
+      groupId: row.group_id,
+      title: row.title,
+    },
     createdAt: row.created_at,
     acceptedAt: row.accepted_at,
     revokedAt: row.revoked_at,

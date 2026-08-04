@@ -350,6 +350,22 @@ export function createApp(options: AppOptions = {}) {
     return c.json({ groups });
   });
 
+  app.get("/api/v1/groups/:groupId", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    assertScope(identity, "workspaces:read");
+    const group = await store.getGroupForIdentity({
+      identityId: identity.id,
+      groupId: c.req.param("groupId"),
+    });
+
+    if (!group) {
+      throw new HttpError(404, "Workspace not found");
+    }
+
+    return c.json({ group });
+  });
+
   app.post("/api/v1/groups", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
@@ -421,6 +437,22 @@ export function createApp(options: AppOptions = {}) {
     }
 
     return c.json({ document }, 201);
+  });
+
+  app.get("/api/v1/groups/:groupId/documents", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    assertScope(identity, "workspaces:read");
+    const group = await store.getGroupForIdentity({
+      identityId: identity.id,
+      groupId: c.req.param("groupId"),
+    });
+
+    if (!group) {
+      throw new HttpError(404, "Workspace not found");
+    }
+
+    return c.json({ documents: group.documents });
   });
 
   app.get("/api/v1/documents/:documentId", async (c) => {
@@ -566,12 +598,16 @@ export function createApp(options: AppOptions = {}) {
       throw new HttpError(400, "Role must be owner or editor");
     }
 
-    await store.addDocumentCollaborator({
+    const added = await store.addDocumentCollaborator({
       identityId: identity.id,
       documentId: c.req.param("documentId"),
       collaboratorIdentityId: requireString(body, "identityId"),
       role,
     });
+
+    if (!added) {
+      throw new HttpError(403, "You cannot add this collaborator");
+    }
 
     return c.json({ ok: true });
   });
@@ -654,6 +690,18 @@ export function createApp(options: AppOptions = {}) {
     return c.json({ invitation });
   });
 
+  app.get("/api/v1/invitations/:token", async (c) => {
+    const invitation = await storage(c.env).getDocumentInvitationByToken(
+      c.req.param("token"),
+    );
+
+    if (!invitation) {
+      throw new HttpError(404, "Invitation not found");
+    }
+
+    return c.json({ invitation });
+  });
+
   app.delete("/api/v1/invitations/:invitationId", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
@@ -703,6 +751,22 @@ export function createApp(options: AppOptions = {}) {
 
     if (!publicLink) {
       throw new HttpError(403, "You cannot update this public link");
+    }
+
+    return c.json({ publicLink });
+  });
+
+  app.get("/api/v1/public-links/:publicLinkId/manage", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    assertScope(identity, "sharing:write");
+    const publicLink = await store.getPublicLinkForIdentity({
+      identityId: identity.id,
+      publicLinkId: c.req.param("publicLinkId"),
+    });
+
+    if (!publicLink) {
+      throw new HttpError(404, "Public link not found");
     }
 
     return c.json({ publicLink });

@@ -91,6 +91,21 @@ export interface ShareState {
   publicLinks: PublicLinkRecord[];
 }
 
+export interface InvitationPreview {
+  token: string;
+  status: InvitationStatus;
+  invitedIdentityId: string;
+  role: Role;
+  document: {
+    id: string;
+    groupId: string;
+    title: string;
+  };
+  createdAt: string;
+  acceptedAt: string | null;
+  revokedAt: string | null;
+}
+
 export interface PublicDocumentRecord {
   id: string;
   groupId: string;
@@ -297,6 +312,10 @@ export interface Storage {
     windowSeconds: number;
   }): Promise<boolean>;
   listGroupsForIdentity(identityId: string): Promise<GroupSummary[]>;
+  getGroupForIdentity(input: {
+    identityId: string;
+    groupId: string;
+  }): Promise<GroupSummary | null>;
   createGroup(input: {
     identityId: string;
     name: string;
@@ -347,7 +366,7 @@ export interface Storage {
     documentId: string;
     collaboratorIdentityId: string;
     role: Role;
-  }): Promise<void>;
+  }): Promise<boolean>;
   removeDocumentCollaborator(input: {
     identityId: string;
     documentId: string;
@@ -364,6 +383,9 @@ export interface Storage {
     identityId: string;
     token: string;
   }): Promise<InvitationRecord | null>;
+  getDocumentInvitationByToken(
+    token: string,
+  ): Promise<InvitationPreview | null>;
   revokeDocumentInvitation(input: {
     identityId: string;
     invitationId: string;
@@ -383,6 +405,10 @@ export interface Storage {
     publicLinkId: string;
     label?: string | null;
     active?: boolean;
+  }): Promise<PublicLinkRecord | null>;
+  getPublicLinkForIdentity(input: {
+    identityId: string;
+    publicLinkId: string;
   }): Promise<PublicLinkRecord | null>;
   getDocumentByPublicToken(token: string): Promise<PublicDocumentRecord | null>;
 }

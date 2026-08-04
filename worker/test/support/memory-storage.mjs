@@ -323,6 +323,11 @@ export class MemoryStorage {
     );
   }
 
+  async getGroupForIdentity({ identityId, groupId }) {
+    const groups = await this.listGroupsForIdentity(identityId);
+    return groups.find((group) => group.id === groupId) ?? null;
+  }
+
   async createGroup({ identityId, name, description, accentColor }) {
     this.#ensureIdentity(identityId);
     const timestamp = now();
@@ -538,7 +543,15 @@ export class MemoryStorage {
     });
 
     if (!current || current.role !== "owner") {
-      return;
+      return false;
+    }
+
+    if (
+      identityId === collaboratorIdentityId &&
+      role !== "owner" &&
+      this.#documentOwnerCount(documentId) <= 1
+    ) {
+      return false;
     }
 
     this.#ensureIdentity(collaboratorIdentityId);
@@ -546,6 +559,7 @@ export class MemoryStorage {
       key(documentId, collaboratorIdentityId),
       role,
     );
+    return true;
   }
 
   async removeDocumentCollaborator({
@@ -558,7 +572,19 @@ export class MemoryStorage {
       documentId,
     });
 
-    if (!current || current.role !== "owner") {
+    const selfRemoval = identityId === collaboratorIdentityId;
+    if (!current || (current.role !== "owner" && !selfRemoval)) {
+      return false;
+    }
+
+    const targetRole = this.#documentCollaborators.get(
+      key(documentId, collaboratorIdentityId),
+    );
+    if (!targetRole) {
+      return false;
+    }
+
+    if (targetRole === "owner" && this.#documentOwnerCount(documentId) <= 1) {
       return false;
     }
 
@@ -622,6 +648,35 @@ export class MemoryStorage {
       invitation.role,
     );
     return next;
+  }
+
+  async getDocumentInvitationByToken(token) {
+    const invitation =
+      [...this.#invitations.values()].find((item) => item.token === token) ??
+      null;
+    if (!invitation) {
+      return null;
+    }
+
+    const document = this.#documents.get(invitation.documentId);
+    if (!document) {
+      return null;
+    }
+
+    return {
+      token: invitation.token,
+      status: invitation.status,
+      invitedIdentityId: invitation.invitedIdentityId,
+      role: invitation.role,
+      document: {
+        id: document.id,
+        groupId: document.groupId,
+        title: document.title,
+      },
+      createdAt: invitation.createdAt,
+      acceptedAt: invitation.acceptedAt,
+      revokedAt: invitation.revokedAt,
+    };
   }
 
   async revokeDocumentInvitation({ identityId, invitationId }) {
@@ -726,6 +781,23 @@ export class MemoryStorage {
     return next;
   }
 
+  async getPublicLinkForIdentity({ identityId, publicLinkId }) {
+    const link = this.#publicLinksById.get(publicLinkId);
+    if (!link) {
+      return null;
+    }
+
+    const current = await this.getDocumentForIdentity({
+      identityId,
+      documentId: link.documentId,
+    });
+    if (!current || current.role !== "owner") {
+      return null;
+    }
+
+    return link;
+  }
+
   async getDocumentByPublicToken(token) {
     const publicLink = this.#publicLinksByToken.get(token);
 
@@ -774,6 +846,13 @@ export class MemoryStorage {
     if (group) {
       this.#groups.set(groupId, { ...group, updatedAt: now() });
     }
+  }
+
+  #documentOwnerCount(documentId) {
+    return [...this.#documentCollaborators.entries()].filter(
+      ([collaboratorKey, role]) =>
+        collaboratorKey.startsWith(`${documentId}:`) && role === "owner",
+    ).length;
   }
 }
 

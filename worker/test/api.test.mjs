@@ -604,6 +604,37 @@ test("documents can move between authorized workspaces", async () => {
   );
 });
 
+test("clients can fetch focused workspace detail and document list", async () => {
+  const { app, env } = createHarness();
+  const group = await createGroup(app, env);
+  const document = await createDocument(app, env, group.id);
+
+  const detailResponse = await app.request(
+    `/api/v1/groups/${group.id}`,
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+  const documentsResponse = await app.request(
+    `/api/v1/groups/${group.id}/documents`,
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+  const deniedResponse = await app.request(
+    `/api/v1/groups/${group.id}`,
+    { headers: authHeaders("outsider-token") },
+    env,
+  );
+  const detail = await detailResponse.json();
+  const documents = await documentsResponse.json();
+
+  assert.equal(detailResponse.status, 200);
+  assert.equal(detail.group.id, group.id);
+  assert.equal(detail.group.documents[0].id, document.id);
+  assert.equal(documentsResponse.status, 200);
+  assert.deepEqual(documents.documents, detail.group.documents);
+  assert.equal(deniedResponse.status, 404);
+});
+
 test("owners can update group organization fields", async () => {
   const { app, env } = createHarness();
   const group = await createGroup(app, env);
@@ -790,6 +821,17 @@ test("owners can inspect share state, invite collaborators, and invited identiti
   assert.equal(inviteResponse.status, 201);
   assert.equal(inviteBody.invitation.status, "pending");
 
+  const previewResponse = await app.request(
+    `/api/v1/invitations/${inviteBody.invitation.token}`,
+    {},
+    env,
+  );
+  const previewBody = await previewResponse.json();
+
+  assert.equal(previewResponse.status, 200);
+  assert.equal(previewBody.invitation.document.title, document.title);
+  assert.equal(previewBody.invitation.invitedIdentityId, "dev-editor");
+
   const acceptResponse = await app.request(
     `/api/v1/invitations/${inviteBody.invitation.token}/accept`,
     {
@@ -832,6 +874,42 @@ test("owners can inspect share state, invite collaborators, and invited identiti
   );
 });
 
+test("collaborators can self-remove but the final owner is protected", async () => {
+  const { app, env } = createHarness();
+  const group = await createGroup(app, env);
+  const document = await createDocument(app, env, group.id);
+
+  const removeOnlyOwner = await app.request(
+    `/api/v1/documents/${document.id}/collaborators/dev-owner`,
+    {
+      method: "DELETE",
+      headers: authHeaders("owner-token"),
+    },
+    env,
+  );
+
+  await app.request(
+    `/api/v1/documents/${document.id}/collaborators`,
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ identityId: "dev-editor", role: "editor" }),
+    },
+    env,
+  );
+  const editorSelfRemoval = await app.request(
+    `/api/v1/documents/${document.id}/collaborators/dev-editor`,
+    {
+      method: "DELETE",
+      headers: authHeaders("editor-token"),
+    },
+    env,
+  );
+
+  assert.equal(removeOnlyOwner.status, 403);
+  assert.equal(editorSelfRemoval.status, 200);
+});
+
 test("public links can be revoked by owners", async () => {
   const { app, env } = createHarness();
   const group = await createGroup(app, env);
@@ -865,6 +943,37 @@ test("public links can be revoked by owners", async () => {
 
   assert.equal(revokeResponse.status, 200);
   assert.equal(publicResponse.status, 404);
+});
+
+test("owners can inspect one managed public link without affecting anonymous reads", async () => {
+  const { app, env } = createHarness();
+  const group = await createGroup(app, env);
+  const document = await createDocument(app, env, group.id);
+
+  const linkResponse = await app.request(
+    `/api/v1/documents/${document.id}/public-links`,
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ label: "Managed" }),
+    },
+    env,
+  );
+  const link = (await linkResponse.json()).publicLink;
+  const manageResponse = await app.request(
+    `/api/v1/public-links/${link.id}/manage`,
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+  const publicResponse = await app.request(
+    `/api/v1/public-links/${link.token}`,
+    {},
+    env,
+  );
+
+  assert.equal(manageResponse.status, 200);
+  assert.equal((await manageResponse.json()).publicLink.id, link.id);
+  assert.equal(publicResponse.status, 200);
 });
 
 test("session cookies authenticate after passkey login verification", async () => {

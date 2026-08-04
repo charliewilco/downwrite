@@ -7,11 +7,12 @@ until implemented in the Worker.
 
 ## Implemented
 
-- Workspace lifecycle: list, create, update settings, delete.
-- Documents: create in a workspace, read, update title/content, move between
-  workspaces, set workspace order position, delete.
+- Workspace lifecycle: list, focused detail, create, update settings, delete.
+- Documents: list within a workspace, create in a workspace, read, update
+  title/content, move between workspaces, set workspace order position, delete.
 - Sharing: read share state, direct collaborator add/remove, invitation
-  create/accept/revoke, public-link create/update, anonymous public-link read.
+  preview/create/accept/revoke, public-link create/detail/update, anonymous
+  public-link read.
 - Discovery/auth: well-known discovery, API discovery, health, auth status,
   OAuth protected-resource metadata, OAuth authorization-server metadata,
   authorization-code-with-PKCE, token refresh rotation, token revocation,
@@ -23,11 +24,9 @@ until implemented in the Worker.
 
 ## Blocks Near-Term Screens
 
-- `GET /api/v1/groups/{groupId}` for focused workspace detail.
-- `GET /api/v1/groups/{groupId}/documents` for explicit document listing,
-  future cursor pagination, and document ordering.
-- `GET /api/v1/invitations/{token}` for invitation preview before accepting.
-- `GET /api/v1/public-links/{publicLinkId}` for single-link management screens.
+No known API endpoint gap currently blocks the existing workspace, document,
+sharing, invitation, public-link, OAuth, or MCP screens. Future screen work
+should start by checking the served OpenAPI paths before adding routes.
 
 ## Longer-Term Document API
 
