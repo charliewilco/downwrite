@@ -455,6 +455,7 @@ function paths(origin: string): OpenApiDocument["paths"] {
           },
           "400": refResponse("BadRequest"),
           "401": refResponse("Unauthorized"),
+          "429": refResponse("TooManyRequests"),
         },
       }),
     },
@@ -473,6 +474,7 @@ function paths(origin: string): OpenApiDocument["paths"] {
           "400": refResponse("BadRequest"),
           "401": refResponse("Unauthorized"),
           "403": refResponse("Forbidden"),
+          "429": refResponse("TooManyRequests"),
         },
       }),
     },
@@ -489,6 +491,7 @@ function paths(origin: string): OpenApiDocument["paths"] {
         responses: {
           "200": jsonResponse("OAuth token response.", "OAuthTokenResponse"),
           "400": refResponse("BadRequest"),
+          "429": refResponse("TooManyRequests"),
         },
       }),
     },
@@ -503,6 +506,7 @@ function paths(origin: string): OpenApiDocument["paths"] {
         responses: {
           "200": { description: "Token revoked or already unknown." },
           "400": refResponse("BadRequest"),
+          "429": refResponse("TooManyRequests"),
         },
       }),
     },

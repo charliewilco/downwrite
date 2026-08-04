@@ -2,6 +2,7 @@ import type { Context } from "hono";
 import { randomToken, sha256Base64Url, timingSafeEqual } from "./crypto.js";
 import { HttpError } from "./http.js";
 import { readSessionCookie } from "./identity.js";
+import { enforceRateLimit } from "./security.js";
 import type { Env, Identity, Storage } from "./types.js";
 
 const ACCESS_TOKEN_SECONDS = 15 * 60;
@@ -9,6 +10,11 @@ const REFRESH_TOKEN_SECONDS = 30 * 24 * 60 * 60;
 const AUTHORIZATION_CODE_SECONDS = 10 * 60;
 const SUPPORTED_CODE_CHALLENGE_METHOD = "S256";
 const PKCE_VALUE_PATTERN = /^[A-Za-z0-9._~-]{43,128}$/;
+const OAUTH_AUTHORIZE_RATE_LIMIT = 60;
+const OAUTH_APPROVE_RATE_LIMIT = 120;
+const OAUTH_TOKEN_RATE_LIMIT = 120;
+const OAUTH_REVOKE_RATE_LIMIT = 120;
+const OAUTH_RATE_WINDOW_SECONDS = 60;
 
 export const OAUTH_SCOPES = [
   "workspaces:read",
@@ -96,6 +102,14 @@ export async function renderAuthorizationPage(input: {
   storage: Storage;
 }) {
   const request = parseAuthorizationRequest(input.c.req.url);
+  await enforceRateLimit({
+    c: input.c,
+    storage: input.storage,
+    purpose: "oauth-authorize",
+    subject: request.clientId,
+    limit: OAUTH_AUTHORIZE_RATE_LIMIT,
+    windowSeconds: OAUTH_RATE_WINDOW_SECONDS,
+  });
   const identity = await readSessionIdentity(input);
   const authorizationRequest = randomToken();
   await input.storage.createOAuthAuthorizationRequest({
@@ -152,6 +166,14 @@ export async function approveAuthorizationRequest(input: {
   const identity = await readSessionIdentity(input);
   const form = await input.c.req.raw.formData();
   const requestToken = requiredForm(form, "authorization_request");
+  await enforceRateLimit({
+    c: input.c,
+    storage: input.storage,
+    purpose: "oauth-approve",
+    subject: requestToken.slice(0, 16),
+    limit: OAUTH_APPROVE_RATE_LIMIT,
+    windowSeconds: OAUTH_RATE_WINDOW_SECONDS,
+  });
   const requestHash = await sha256Base64Url(requestToken);
   const request =
     await input.storage.getOAuthAuthorizationRequestByHash(requestHash);
@@ -203,6 +225,15 @@ export async function exchangeToken(input: {
 }) {
   const form = await input.c.req.raw.formData();
   const grantType = requiredForm(form, "grant_type");
+  const clientId = formString(form, "client_id") ?? "unknown-client";
+  await enforceRateLimit({
+    c: input.c,
+    storage: input.storage,
+    purpose: "oauth-token",
+    subject: `${grantType}:${clientId}`,
+    limit: OAUTH_TOKEN_RATE_LIMIT,
+    windowSeconds: OAUTH_RATE_WINDOW_SECONDS,
+  });
 
   if (grantType === "authorization_code") {
     return exchangeAuthorizationCode(input, form);
@@ -221,7 +252,16 @@ export async function revokeToken(input: {
 }) {
   const form = await input.c.req.raw.formData();
   const token = requiredForm(form, "token");
-  await input.storage.revokeOAuthTokenByHash(await sha256Base64Url(token));
+  const tokenHash = await sha256Base64Url(token);
+  await enforceRateLimit({
+    c: input.c,
+    storage: input.storage,
+    purpose: "oauth-revoke",
+    subject: tokenHash.slice(0, 16),
+    limit: OAUTH_REVOKE_RATE_LIMIT,
+    windowSeconds: OAUTH_RATE_WINDOW_SECONDS,
+  });
+  await input.storage.revokeOAuthTokenByHash(tokenHash);
   return input.c.body(null, 200);
 }
 

@@ -474,6 +474,81 @@ test("OAuth refresh rotates tokens and revoke invalidates access", async () => {
   assert.equal(readResponse.status, 401);
 });
 
+test("OAuth endpoints are rate limited by endpoint and subject", async () => {
+  const { app, env, storage } = createHarness();
+  const cookie = await createSessionCookie(storage, "dev-owner");
+  const verifier = `verifier-${crypto.randomUUID()}`;
+  const challenge = await sha256Base64Url(verifier);
+  const authorizeUrl = new URL(
+    "https://example.downwrite.test/oauth/authorize",
+  );
+  authorizeUrl.searchParams.set("response_type", "code");
+  authorizeUrl.searchParams.set("client_id", "downwrite-mcp");
+  authorizeUrl.searchParams.set(
+    "redirect_uri",
+    "http://127.0.0.1:49152/callback",
+  );
+  authorizeUrl.searchParams.set("code_challenge", challenge);
+  authorizeUrl.searchParams.set("code_challenge_method", "S256");
+  authorizeUrl.searchParams.set("scope", "workspaces:read");
+  authorizeUrl.searchParams.set(
+    "resource",
+    "https://example.downwrite.test/api/v1",
+  );
+
+  const authorizeLimited = await exhaustRequests(61, () =>
+    app.request(authorizeUrl.toString(), { headers: { cookie } }, env),
+  );
+  const approveLimited = await exhaustRequests(121, () =>
+    app.request(
+      "https://example.downwrite.test/oauth/authorize/approve",
+      {
+        method: "POST",
+        headers: formHeaders({
+          cookie,
+          origin: "https://example.downwrite.test",
+        }),
+        body: new URLSearchParams({
+          authorization_request: "missing-request",
+        }),
+      },
+      env,
+    ),
+  );
+  const tokenLimited = await exhaustRequests(121, () =>
+    app.request(
+      "https://example.downwrite.test/oauth/token",
+      {
+        method: "POST",
+        headers: formHeaders(),
+        body: new URLSearchParams({
+          grant_type: "refresh_token",
+          client_id: "downwrite-mcp",
+          refresh_token: "missing-refresh",
+        }),
+      },
+      env,
+    ),
+  );
+  const revokeLimited = await exhaustRequests(121, () =>
+    app.request(
+      "https://example.downwrite.test/oauth/revoke",
+      {
+        method: "POST",
+        headers: formHeaders(),
+        body: new URLSearchParams({ token: "missing-token" }),
+      },
+      env,
+    ),
+  );
+
+  assert.equal(authorizeLimited.status, 429);
+  assert.equal((await authorizeLimited.json()).code, "rate_limited");
+  assert.equal(approveLimited.status, 429);
+  assert.equal(tokenLimited.status, 429);
+  assert.equal(revokeLimited.status, 429);
+});
+
 test("OAuth bearer tokens are rejected for the wrong instance resource", async () => {
   const { app, env, storage } = createHarness();
   const accessToken = `wrong-resource-${crypto.randomUUID()}`;
@@ -1879,6 +1954,15 @@ async function oauthToken(
   const token = await tokenResponse.json();
   assert.equal(tokenResponse.status, 200);
   return token;
+}
+
+async function exhaustRequests(count, request) {
+  let response;
+  for (let index = 0; index < count; index += 1) {
+    response = await request();
+  }
+
+  return response;
 }
 
 function hiddenInputValue(html, name) {

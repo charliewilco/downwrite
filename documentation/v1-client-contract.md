@@ -28,6 +28,9 @@ opaque, scoped, and issued by the deployer's self-hosted Worker instance.
   server-side authorization transaction created when the consent page renders.
   OAuth singleton parameters must be provided once, and PKCE challenge/verifier
   values must be 43-128 unreserved characters.
+  Authorization, approval, token, and revocation endpoints are rate-limited by
+  endpoint and request subject to bound abuse while keeping normal native/MCP
+  retries viable.
 - Current development/API smoke path: instance-local `Authorization: Bearer`
   tokens from `DEVELOPMENT_API_TOKENS`.
 - Public links: anonymous, read-only, bearer-by-possession URL tokens.
