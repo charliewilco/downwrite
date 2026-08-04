@@ -725,6 +725,96 @@ test("clients can fetch focused workspace detail and document list", async () =>
   assert.equal(deniedResponse.status, 404);
 });
 
+test("workspace and document lists support cursor pagination", async () => {
+  const { app, env } = createHarness();
+  const firstGroup = await createGroup(app, env);
+  await createGroup(app, env, { name: "Second workspace" });
+  await createGroup(app, env, { name: "Third workspace" });
+  const firstDocument = await createDocument(app, env, firstGroup.id);
+  const secondDocument = await createDocument(app, env, firstGroup.id, {
+    title: "Second",
+    content: "second",
+  });
+  const thirdDocument = await createDocument(app, env, firstGroup.id, {
+    title: "Third",
+    content: "third",
+  });
+
+  const groupsPageOne = await app.request(
+    "/api/v1/groups?limit=2",
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+  const groupsPageOneBody = await groupsPageOne.json();
+  const groupsPageTwo = await app.request(
+    `/api/v1/groups?limit=2&cursor=${encodeURIComponent(groupsPageOneBody.nextCursor)}`,
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+  const groupsPageTwoBody = await groupsPageTwo.json();
+
+  const documentsPageOne = await app.request(
+    `/api/v1/groups/${firstGroup.id}/documents?limit=2`,
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+  const documentsPageOneBody = await documentsPageOne.json();
+  const documentsPageTwo = await app.request(
+    `/api/v1/groups/${firstGroup.id}/documents?limit=2&cursor=${encodeURIComponent(documentsPageOneBody.nextCursor)}`,
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+  const documentsPageTwoBody = await documentsPageTwo.json();
+
+  assert.equal(groupsPageOne.status, 200);
+  assert.equal(groupsPageOneBody.groups.length, 2);
+  assert.equal(typeof groupsPageOneBody.nextCursor, "string");
+  assert.equal(groupsPageTwo.status, 200);
+  assert.equal(groupsPageTwoBody.groups.length, 1);
+  assert.equal(groupsPageTwoBody.nextCursor, undefined);
+  assert.equal(
+    new Set([
+      ...groupsPageOneBody.groups.map((group) => group.id),
+      ...groupsPageTwoBody.groups.map((group) => group.id),
+    ]).size,
+    3,
+  );
+
+  assert.equal(documentsPageOne.status, 200);
+  assert.deepEqual(
+    documentsPageOneBody.documents.map((document) => document.id),
+    [firstDocument.id, secondDocument.id],
+  );
+  assert.equal(typeof documentsPageOneBody.nextCursor, "string");
+  assert.equal(documentsPageTwo.status, 200);
+  assert.deepEqual(
+    documentsPageTwoBody.documents.map((document) => document.id),
+    [thirdDocument.id],
+  );
+  assert.equal(documentsPageTwoBody.nextCursor, undefined);
+});
+
+test("list pagination rejects invalid cursors and limits", async () => {
+  const { app, env } = createHarness();
+  const group = await createGroup(app, env);
+
+  const badLimit = await app.request(
+    "/api/v1/groups?limit=0",
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+  const badCursor = await app.request(
+    `/api/v1/groups/${group.id}/documents?cursor=not-a-cursor`,
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+
+  assert.equal(badLimit.status, 400);
+  assert.equal((await badLimit.json()).code, "bad_request");
+  assert.equal(badCursor.status, 400);
+  assert.equal((await badCursor.json()).error, "cursor is invalid");
+});
+
 test("owners can update group organization fields", async () => {
   const { app, env } = createHarness();
   const group = await createGroup(app, env);
@@ -1350,7 +1440,7 @@ function createHarness() {
   };
 }
 
-async function createGroup(app, env) {
+async function createGroup(app, env, overrides = {}) {
   const response = await app.request(
     "/api/v1/groups",
     {
@@ -1360,6 +1450,7 @@ async function createGroup(app, env) {
         name: "Downwrite",
         description: "Self-hosted Markdown",
         accentColor: "#566f5f",
+        ...overrides,
       }),
     },
     env,

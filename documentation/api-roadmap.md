@@ -18,6 +18,9 @@ until implemented in the Worker.
   authorization-code-with-PKCE, token refresh rotation, token revocation,
   passkey owner bootstrap, passkey login, session logout.
 - Contract: OpenAPI JSON and local HTML documentation view.
+- Pagination: workspace and per-workspace document lists accept optional
+  `limit`/`cursor` query parameters and return `nextCursor` when another page is
+  available.
 - MCP: stateless JSON-RPC endpoint with list workspaces, list documents, read
   document, create document, and update document tools. OAuth-authenticated MCP
   access requires `mcp:documents`.
@@ -45,7 +48,9 @@ should start by checking the served OpenAPI paths before adding routes.
 - `GET /api/v1/me` once broader account/profile UX exists.
 - Configurable client registration if the product later supports third-party
   HTTPS redirect clients beyond the built-in iOS and MCP public clients.
-- Cursor pagination for workspace/document lists.
+- Cursor pagination is implemented for workspace/document lists. Native clients
+  still need product-level sync policy decisions for when to refresh from the
+  first page after local/offline mutations.
 - Stable conflict semantics for autosave and offline retry behavior.
 
 ## MCP Needs

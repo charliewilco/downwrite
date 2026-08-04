@@ -26,6 +26,11 @@ export interface GroupSummary {
   documents: DocumentSummary[];
 }
 
+export interface ListPage<T> {
+  items: T[];
+  nextCursor?: string;
+}
+
 export interface CollaboratorRecord {
   identityId: string;
   displayName: string | null;
@@ -180,8 +185,11 @@ export async function startDevelopmentSession(input: {
   await assertOk(response, "Local development sign-in failed");
 }
 
-export async function fetchGroups(token?: string): Promise<GroupSummary[]> {
-  const response = await fetch("/api/v1/groups", {
+export async function fetchGroups(
+  token?: string,
+  page?: { limit?: number; cursor?: string },
+): Promise<GroupSummary[]> {
+  const response = await fetch(pathWithPage("/api/v1/groups", page), {
     headers: authHeaders(token),
     credentials: "include",
   });
@@ -245,6 +253,47 @@ export async function fetchDocument(
 
   const body = (await response.json()) as { document: DocumentRecord };
   return body.document;
+}
+
+export async function fetchGroupDocuments(
+  token: string | undefined,
+  groupId: string,
+  page?: { limit?: number; cursor?: string },
+): Promise<ListPage<DocumentSummary>> {
+  const response = await fetch(
+    pathWithPage(`/api/v1/groups/${groupId}/documents`, page),
+    {
+      headers: authHeaders(token),
+      credentials: "include",
+    },
+  );
+
+  await assertOk(response, "Document list request failed");
+
+  const body = (await response.json()) as {
+    documents: DocumentSummary[];
+    nextCursor?: string;
+  };
+  return { items: body.documents, nextCursor: body.nextCursor };
+}
+
+function pathWithPage(
+  path: string,
+  page?: { limit?: number; cursor?: string },
+) {
+  if (!page?.limit && !page?.cursor) {
+    return path;
+  }
+
+  const params = new URLSearchParams();
+  if (typeof page.limit !== "undefined") {
+    params.set("limit", String(page.limit));
+  }
+  if (page.cursor) {
+    params.set("cursor", page.cursor);
+  }
+
+  return `${path}?${params}`;
 }
 
 export async function createDocument(

@@ -58,10 +58,10 @@ stored `revision` has changed since the client read it, the Worker returns
 
 ## Lists
 
-Current workspace and document collections are unpaginated because this first
-self-hosted slice is deliberately small. Future v1-compatible list expansion may
-add optional `cursor` and `limit` query parameters plus a `nextCursor` response
-field without changing item schemas.
+Workspace and per-workspace document collections accept optional `limit` and
+`cursor` query parameters. `limit` must be between 1 and 100. When another page
+is available, the response includes `nextCursor`; clients pass that opaque value
+as the next request's `cursor`. Item schemas stay unchanged.
 
 ## Permissions
 

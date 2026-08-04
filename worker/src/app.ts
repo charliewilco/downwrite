@@ -45,6 +45,7 @@ type AppBindings = { Bindings: Env };
 type StorageFactory = (env: Env) => Storage;
 
 const VALID_ROLES = new Set<Role>(["owner", "editor"]);
+const MAX_LIST_LIMIT = 100;
 export interface AppOptions {
   createStorage?: StorageFactory;
   authService?: AuthService;
@@ -89,6 +90,80 @@ export function createApp(options: AppOptions = {}) {
 
   function canWrite(role: Role) {
     return role === "owner" || role === "editor";
+  }
+
+  function paginate<T>(
+    items: T[],
+    requestUrl: string,
+  ): { items: T[]; nextCursor?: string } {
+    const url = new URL(requestUrl);
+    const limitValue = url.searchParams.get("limit");
+    const cursorValue = url.searchParams.get("cursor");
+
+    if (limitValue === null && cursorValue === null) {
+      return { items };
+    }
+
+    const limit = parsePositiveInteger(limitValue ?? String(MAX_LIST_LIMIT), {
+      name: "limit",
+      maximum: MAX_LIST_LIMIT,
+    });
+    const offset = cursorValue ? decodeCursor(cursorValue) : 0;
+    const page = items.slice(offset, offset + limit);
+    const nextOffset = offset + page.length;
+
+    return {
+      items: page,
+      ...(nextOffset < items.length
+        ? { nextCursor: encodeCursor(nextOffset) }
+        : {}),
+    };
+  }
+
+  function parsePositiveInteger(
+    value: string,
+    options: { name: string; maximum: number },
+  ) {
+    if (!/^\d+$/.test(value)) {
+      throw new HttpError(400, `${options.name} must be a positive integer`);
+    }
+
+    const parsed = Number(value);
+    if (parsed < 1 || parsed > options.maximum) {
+      throw new HttpError(
+        400,
+        `${options.name} must be between 1 and ${options.maximum}`,
+      );
+    }
+
+    return parsed;
+  }
+
+  function encodeCursor(offset: number) {
+    return btoa(`offset:${offset}`)
+      .replaceAll("+", "-")
+      .replaceAll("/", "_")
+      .replaceAll("=", "");
+  }
+
+  function decodeCursor(cursor: string) {
+    try {
+      const padded = cursor.padEnd(
+        cursor.length + ((4 - (cursor.length % 4)) % 4),
+        "=",
+      );
+      const decoded = atob(padded.replaceAll("-", "+").replaceAll("_", "/"));
+      if (!decoded.startsWith("offset:")) {
+        throw new Error("Unknown cursor shape");
+      }
+
+      return parsePositiveInteger(decoded.slice("offset:".length), {
+        name: "cursor",
+        maximum: Number.MAX_SAFE_INTEGER,
+      });
+    } catch {
+      throw new HttpError(400, "cursor is invalid");
+    }
   }
 
   app.onError((error, c) => jsonError(c, error));
@@ -362,8 +437,9 @@ export function createApp(options: AppOptions = {}) {
     const identity = await readIdentity(c, store);
     assertScope(identity, "workspaces:read");
     const groups = await store.listGroupsForIdentity(identity.id);
+    const page = paginate(groups, c.req.url);
 
-    return c.json({ groups });
+    return c.json({ groups: page.items, nextCursor: page.nextCursor });
   });
 
   app.get("/api/v1/groups/:groupId", async (c) => {
@@ -468,7 +544,9 @@ export function createApp(options: AppOptions = {}) {
       throw new HttpError(404, "Workspace not found");
     }
 
-    return c.json({ documents: group.documents });
+    const page = paginate(group.documents, c.req.url);
+
+    return c.json({ documents: page.items, nextCursor: page.nextCursor });
   });
 
   app.get("/api/v1/documents/:documentId", async (c) => {

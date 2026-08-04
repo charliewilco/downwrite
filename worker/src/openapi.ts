@@ -139,7 +139,7 @@ export function createOpenApiDocument(requestUrl: string): OpenApiDocument {
       versioning:
         "All product API operations are rooted under /api/v1. Future breaking changes should add a new /api/vN base path while preserving discovery metadata.",
       pagination:
-        "Current collection responses are intentionally unpaginated for the small self-hosted slice. Future list endpoints should add cursor and limit query parameters and return a nextCursor field without changing item schemas.",
+        "List endpoints support optional cursor and limit query parameters and return nextCursor when another page is available.",
       markdown:
         "Document content is UTF-8 Markdown stored as text/markdown. The API returns Markdown source, not rendered HTML. Clients are responsible for preview rendering.",
       authorization:
@@ -312,9 +312,9 @@ function clientContract() {
     },
     lists: {
       current:
-        "Workspace and document collections are unpaginated in this small self-hosted v1 slice.",
+        "Workspace and document collections accept optional cursor and limit query parameters.",
       future:
-        "List endpoints may add optional cursor and limit query parameters plus nextCursor without changing item schemas.",
+        "Cursor pagination is additive: item schemas remain stable and nextCursor is omitted when no later page exists.",
     },
     revisions: {
       field: "revision",
@@ -685,6 +685,7 @@ function paths(origin: string): OpenApiDocument["paths"] {
         summary: "List authorized workspaces.",
         operationId: "listGroups",
         security: authenticatedSecurity(),
+        parameters: paginationParameters(),
         "x-downwrite-scope": "workspaces:read",
         responses: {
           "200": jsonResponse("Authorized workspaces.", "GroupList"),
@@ -750,7 +751,7 @@ function paths(origin: string): OpenApiDocument["paths"] {
         summary: "List documents in one authorized workspace.",
         operationId: "listGroupDocuments",
         security: authenticatedSecurity(),
-        parameters: [refParameter("groupId")],
+        parameters: [refParameter("groupId"), ...paginationParameters()],
         "x-downwrite-scope": "workspaces:read",
         responses: {
           "200": jsonResponse("Workspace documents.", "DocumentList"),
@@ -1358,9 +1359,9 @@ const schemas: Record<string, JsonSchema> = {
       groups: {
         type: "array",
         items: refSchema("GroupSummary"),
-        description:
-          "Currently unpaginated. See x-downwrite-conventions.pagination.",
+        description: "Authorized workspaces sorted by descending update time.",
       },
+      nextCursor: paginationCursorSchema(),
     },
     ["groups"],
   ),
@@ -1372,6 +1373,7 @@ const schemas: Record<string, JsonSchema> = {
         description:
           "Workspace document summaries sorted by ascending position, then recent update time.",
       },
+      nextCursor: paginationCursorSchema(),
     },
     ["documents"],
   ),
@@ -1731,6 +1733,27 @@ function refParameter(name: string) {
   return { $ref: `#/components/parameters/${name}` };
 }
 
+function paginationParameters() {
+  return [
+    {
+      name: "limit",
+      in: "query",
+      required: false,
+      description:
+        "Maximum number of items to return. Must be between 1 and 100.",
+      schema: { type: "integer", minimum: 1, maximum: 100 },
+    },
+    {
+      name: "cursor",
+      in: "query",
+      required: false,
+      description:
+        "Opaque cursor returned by the previous page's nextCursor field.",
+      schema: { type: "string" },
+    },
+  ];
+}
+
 function pathParameter(name: string, description: string) {
   return {
     name,
@@ -1748,6 +1771,14 @@ function queryParameter(name: string, description: string) {
     required: name !== "scope" && name !== "state",
     description,
     schema: { type: "string" },
+  };
+}
+
+function paginationCursorSchema() {
+  return {
+    type: "string",
+    description:
+      "Opaque cursor for the next page. Omitted when no later page exists.",
   };
 }
 
