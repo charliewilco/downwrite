@@ -8,23 +8,18 @@ coverage
 
 # production
 build
-.next/
-.now/
-.vercel/
+dist
 
 # misc
 .DS_Store
 .env
 .env.*
 npm-debug.log
-dist
 private.key
-api/docs
 
 tsconfig.tsbuildinfo
 **/tsconfig.tsbuildinfo
-.vercel
 .wrangler/
 worker/dist/
 worker/dist-worker/
-web/dist/
+worker/web/dist/

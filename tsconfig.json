@@ -1,4 +1,4 @@
 {
   "files": [],
-  "references": [{ "path": "./worker" }, { "path": "./web" }]
+  "references": [{ "path": "./worker" }]
 }

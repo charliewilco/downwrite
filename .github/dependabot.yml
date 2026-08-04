@@ -2,11 +2,6 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
-    ignore:
-      - dependency-name: "immutable"
-      - dependency-name: "draft-js-md-converter"
-      - dependency-name: "draft-js"
-      - dependency-name: "apollo-server-micro"
     commit-message:
       prefix: "chore"
     open-pull-requests-limit: 10
