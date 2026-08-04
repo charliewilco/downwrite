@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { createApp } from "../dist/app.js";
 import { sha256Base64Url } from "../dist/crypto.js";
+import { logMaintenanceResult } from "../dist/maintenance.js";
 import { MemoryStorage } from "./support/memory-storage.mjs";
 
 const TOKENS =
@@ -1690,6 +1691,50 @@ test("auth challenge creation is rate limited per identity and client", async ()
   }
 
   assert.equal(response?.status, 429);
+});
+
+test("maintenance cleanup emits a structured operational log payload", () => {
+  const entries = [];
+  const logger = {
+    info(message, payload) {
+      entries.push({ level: "info", message, payload });
+    },
+    error(message, payload) {
+      entries.push({ level: "error", message, payload });
+    },
+  };
+
+  logMaintenanceResult(
+    {
+      sessions: 1,
+      webauthnChallenges: 2,
+      oauthAuthorizationCodes: 3,
+      oauthAuthorizationRequests: 4,
+      oauthAccessTokens: 5,
+      oauthRefreshTokens: 6,
+      rateLimits: 7,
+    },
+    logger,
+  );
+
+  assert.deepEqual(entries, [
+    {
+      level: "info",
+      message: "downwrite.maintenance.cleanup",
+      payload: {
+        cleanup: {
+          sessions: 1,
+          webauthnChallenges: 2,
+          oauthAuthorizationCodes: 3,
+          oauthAuthorizationRequests: 4,
+          oauthAccessTokens: 5,
+          oauthRefreshTokens: 6,
+          rateLimits: 7,
+        },
+        deletedRecords: 28,
+      },
+    },
+  ]);
 });
 
 test("owner bootstrap remains available until a passkey credential exists", async () => {

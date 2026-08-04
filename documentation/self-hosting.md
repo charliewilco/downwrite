@@ -95,10 +95,14 @@ flow needs a directory with its own dependencies and Wrangler configuration.
 - D1 binding `DB`;
 - R2 binding `CONTENT`;
 - a daily scheduled maintenance trigger that removes expired sessions, WebAuthn
-  challenges, OAuth credentials, and rate-limit rows from D1;
+  challenges, OAuth credentials, and rate-limit rows from D1, then emits a
+  structured `downwrite.maintenance.cleanup` log with per-table deletion counts;
 - `WEBAUTHN_RP_NAME` plus optional production `WEBAUTHN_RP_ID` and
   `INSTANCE_PUBLIC_URL`;
 - secrets such as `AUTH_BOOTSTRAP_TOKEN`.
+
+Scheduled cleanup failures are logged as `downwrite.maintenance.failed` with the
+error message so operators can alert from Cloudflare Worker logs.
 
 Do not set `DOWNWRITE_LOCAL_AUTH=1` in production. It is only for local
 `wrangler dev`.
