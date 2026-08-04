@@ -276,6 +276,10 @@ p {
 .auth-panel input,
 .auth-panel select,
 .create-group input,
+.directory-create input,
+.settings-form input,
+.settings-form textarea,
+.document-picker select,
 .workspace-edit input,
 .workspace-edit textarea,
 .inline-form input,
@@ -309,6 +313,10 @@ p {
 .auth-panel input,
 .auth-panel select,
 .create-group input,
+.directory-create input,
+.settings-form input,
+.settings-form textarea,
+.document-picker select,
 .workspace-edit input,
 .workspace-edit textarea,
 .inline-form input,
@@ -390,8 +398,194 @@ p {
   padding: clamp(64px, 11vh, 136px) 0 64px;
 }
 
+.directory-screen,
+.settings-route,
+.sharing-route,
+.invitation-route,
+.public-document {
+  display: grid;
+  gap: 34px;
+}
+
 .workspace-detail {
   min-width: 0;
+}
+
+.directory-heading,
+.section-heading {
+  display: grid;
+  gap: 28px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 34px;
+}
+
+.directory-heading {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  align-items: start;
+}
+
+.eyebrow {
+  margin-bottom: 14px;
+  color: var(--subtle);
+  font-size: 0.75rem;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.directory-heading h1,
+.section-heading h1 {
+  max-width: 780px;
+  font-size: clamp(3rem, 6vw, 5.6rem);
+  font-weight: 780;
+  letter-spacing: 0;
+  line-height: 0.98;
+}
+
+.directory-heading p,
+.section-heading p {
+  max-width: 620px;
+  margin-top: 22px;
+  color: var(--muted);
+  font-size: clamp(1.02rem, 1.4vw, 1.2rem);
+  line-height: 1.65;
+}
+
+.directory-create,
+.settings-form {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.directory-create h2,
+.danger-zone h2 {
+  font-size: 0.78rem;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.settings-form {
+  max-width: 720px;
+}
+
+.settings-form label,
+.document-picker {
+  display: grid;
+  gap: 8px;
+}
+
+.settings-form label span,
+.document-picker span,
+.color-row span {
+  color: var(--subtle);
+  font-size: 0.76rem;
+  font-weight: 720;
+  text-transform: uppercase;
+}
+
+.settings-form textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.color-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.color-row input[type="color"] {
+  width: 52px;
+  height: 38px;
+  padding: 2px;
+}
+
+.primary-action {
+  border: 1px solid var(--primary);
+  background: var(--primary);
+  color: var(--primary-text);
+  padding: 10px 14px;
+  font-weight: 620;
+}
+
+.directory-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.directory-row {
+  border-bottom: 1px solid var(--line);
+}
+
+.directory-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  width: 100%;
+  border: 0;
+  border-left: 4px solid var(--line-strong);
+  background: transparent;
+  color: inherit;
+  padding: 20px 0 20px 18px;
+  text-align: left;
+}
+
+.directory-link:hover strong {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.directory-link span {
+  min-width: 0;
+  color: var(--muted);
+}
+
+.directory-link span:first-child {
+  display: grid;
+  gap: 6px;
+}
+
+.directory-link strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 1.06rem;
+  font-weight: 620;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.directory-link small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.danger-zone {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  padding-top: 26px;
+}
+
+.danger-zone p {
+  margin-top: 8px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.document-picker {
+  max-width: 520px;
 }
 
 .workspace-heading {

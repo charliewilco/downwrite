@@ -14,6 +14,7 @@ import {
   fetchAuthStatus,
   fetchDocument,
   fetchGroups,
+  fetchPublicDocument,
   fetchShareState,
   finishBootstrap,
   finishPasskeyLogin,
@@ -28,6 +29,7 @@ import {
   type AuthStatus,
   type DocumentRecord,
   type GroupSummary,
+  type PublicDocumentRecord,
   type Role,
   type ShareState,
 } from "./api.js";
@@ -39,7 +41,14 @@ const TOKEN_STORAGE_KEY = "DOWNWRITE_DEVELOPMENT_TOKEN";
 const AUTOSAVE_DELAY_MS = 900;
 const DEFAULT_ACCENT = "#566f5f";
 
-type Route = { name: "home" } | { name: "document"; documentId: string };
+type Route =
+  | { name: "directory" }
+  | { name: "workspace"; groupId: string }
+  | { name: "workspace-settings"; groupId: string }
+  | { name: "workspace-sharing"; groupId: string; documentId?: string }
+  | { name: "document"; documentId: string }
+  | { name: "invitation"; token: string }
+  | { name: "public-document"; token: string };
 type SaveState = "idle" | "dirty" | "saving" | "saved" | "error";
 
 export function App() {
@@ -92,8 +101,7 @@ export function App() {
   }, [token]);
 
   function navigate(nextRoute: Route) {
-    const path =
-      nextRoute.name === "home" ? "/" : `/documents/${nextRoute.documentId}`;
+    const path = routePath(nextRoute);
     history.pushState(null, "", path);
     setRoute(nextRoute);
   }
@@ -146,7 +154,7 @@ export function App() {
           <button
             className="brand"
             type="button"
-            onClick={() => navigate({ name: "home" })}
+            onClick={() => navigate({ name: "directory" })}
           >
             <span>Downwrite</span>
             <strong>Workspaces</strong>
@@ -167,32 +175,53 @@ export function App() {
             const group = await createGroup(token, input);
             setGroups((current) => [group, ...current]);
             setSelectedGroupId(group.id);
-            navigate({ name: "home" });
+            navigate({ name: "workspace", groupId: group.id });
             void refreshGroups();
           }}
           onSelectGroup={(groupId) => {
             setSelectedGroupId(groupId);
-            navigate({ name: "home" });
+            navigate({ name: "workspace", groupId });
           }}
           selectedGroupId={
-            route.name === "document"
-              ? (groups.find((group) =>
-                  group.documents.some(
-                    (document) => document.id === route.documentId,
-                  ),
-                )?.id ?? selectedGroupId)
-              : selectedGroupId
+            route.name === "workspace" ||
+            route.name === "workspace-settings" ||
+            route.name === "workspace-sharing"
+              ? route.groupId
+              : route.name === "document"
+                ? (groups.find((group) =>
+                    group.documents.some(
+                      (document) => document.id === route.documentId,
+                    ),
+                  )?.id ?? selectedGroupId)
+                : selectedGroupId
           }
         />
       </aside>
 
       <section className="content-canvas">
-        {route.name === "home" ? (
+        {route.name === "directory" ? (
+          <WorkspaceDirectory
+            error={error}
+            groups={groups}
+            loading={loading}
+            onCreateGroup={async (input) => {
+              const group = await createGroup(token, input);
+              setGroups((current) => [group, ...current]);
+              setSelectedGroupId(group.id);
+              navigate({ name: "workspace", groupId: group.id });
+              void refreshGroups();
+            }}
+            onOpenWorkspace={(groupId) =>
+              navigate({ name: "workspace", groupId })
+            }
+          />
+        ) : route.name === "workspace" ? (
           <HomeContent
             error={error}
             groups={groups}
             loading={loading}
             selectedGroupId={selectedGroupId}
+            routeGroupId={route.groupId}
             onCreateDocument={async (groupId) => {
               const document = await createDocument(token, groupId);
               upsertDocumentInGroups(document);
@@ -219,6 +248,12 @@ export function App() {
               });
               await refreshGroups();
             }}
+            onOpenSettings={(groupId) =>
+              navigate({ name: "workspace-settings", groupId })
+            }
+            onOpenSharing={(groupId) =>
+              navigate({ name: "workspace-sharing", groupId })
+            }
             onUpdateGroup={async (groupId, input) => {
               const group = await updateGroup(token, groupId, input);
               setGroups((current) =>
@@ -227,29 +262,122 @@ export function App() {
               void refreshGroups();
             }}
           />
+        ) : route.name === "workspace-settings" ? (
+          <WorkspaceSettingsRoute
+            error={error}
+            groupId={route.groupId}
+            groups={groups}
+            loading={loading}
+            onBack={(groupId) => navigate({ name: "workspace", groupId })}
+            onDeleteGroup={async (groupId) => {
+              await deleteGroup(token, groupId);
+              setGroups((current) =>
+                current.filter((group) => group.id !== groupId),
+              );
+              setSelectedGroupId((current) =>
+                current === groupId ? null : current,
+              );
+              navigate({ name: "directory" });
+              void refreshGroups();
+            }}
+            onUpdateGroup={async (groupId, input) => {
+              const group = await updateGroup(token, groupId, input);
+              setGroups((current) =>
+                current.map((item) => (item.id === group.id ? group : item)),
+              );
+              void refreshGroups();
+            }}
+          />
+        ) : route.name === "workspace-sharing" ? (
+          <WorkspaceSharingRoute
+            documentId={route.documentId}
+            error={error}
+            groupId={route.groupId}
+            groups={groups}
+            loading={loading}
+            token={token}
+            onBack={(groupId) => navigate({ name: "workspace", groupId })}
+          />
+        ) : route.name === "invitation" ? (
+          <InvitationRoute
+            invitationToken={route.token}
+            token={token}
+            onAccepted={async (invitation) => {
+              await refreshGroups();
+              const groupId = groups.find((group) =>
+                group.documents.some(
+                  (document) => document.id === invitation.documentId,
+                ),
+              )?.id;
+              navigate(
+                groupId
+                  ? { name: "workspace", groupId }
+                  : { name: "document", documentId: invitation.documentId },
+              );
+            }}
+          />
+        ) : route.name === "public-document" ? (
+          <PublicDocumentRoute publicToken={route.token} />
         ) : (
           <DocumentView
             documentId={route.documentId}
             groups={groups}
             token={token}
             onBack={() => {
-              navigate({ name: "home" });
+              const groupId = groups.find((group) =>
+                group.documents.some(
+                  (document) => document.id === route.documentId,
+                ),
+              )?.id;
+              navigate(
+                groupId
+                  ? { name: "workspace", groupId }
+                  : { name: "directory" },
+              );
               void refreshGroups();
             }}
             onDeleted={(deletedDocumentId) => {
               removeDocumentFromGroups(deletedDocumentId);
-              navigate({ name: "home" });
+              navigate({ name: "directory" });
               void refreshGroups();
             }}
             onMoved={async (movedDocument) => {
               upsertDocumentInGroups(movedDocument);
               await refreshGroups();
             }}
+            onShare={(groupId, documentId) =>
+              navigate({ name: "workspace-sharing", groupId, documentId })
+            }
           />
         )}
       </section>
     </main>
   );
+}
+
+function routePath(route: Route) {
+  if (route.name === "directory") {
+    return "/";
+  }
+  if (route.name === "workspace") {
+    return `/workspaces/${encodeURIComponent(route.groupId)}`;
+  }
+  if (route.name === "workspace-settings") {
+    return `/workspaces/${encodeURIComponent(route.groupId)}/settings`;
+  }
+  if (route.name === "workspace-sharing") {
+    const documentQuery = route.documentId
+      ? `?document=${encodeURIComponent(route.documentId)}`
+      : "";
+    return `/workspaces/${encodeURIComponent(route.groupId)}/share${documentQuery}`;
+  }
+  if (route.name === "document") {
+    return `/documents/${encodeURIComponent(route.documentId)}`;
+  }
+  if (route.name === "invitation") {
+    return `/invitations/${encodeURIComponent(route.token)}`;
+  }
+  return `/public/${encodeURIComponent(route.token)}`;
 }
 
 function AuthPanel({
@@ -428,8 +556,11 @@ function HomeContent({
   onCreateDocument,
   onDeleteGroup,
   onOpenDocument,
+  onOpenSettings,
+  onOpenSharing,
   onPositionDocument,
   onUpdateGroup,
+  routeGroupId,
   selectedGroupId,
 }: {
   error: string | null;
@@ -438,6 +569,8 @@ function HomeContent({
   onCreateDocument: (groupId: string) => Promise<void>;
   onDeleteGroup: (groupId: string) => Promise<void>;
   onOpenDocument: (documentId: string) => void;
+  onOpenSettings: (groupId: string) => void;
+  onOpenSharing: (groupId: string) => void;
   onPositionDocument: (
     documentId: string,
     position: number,
@@ -447,10 +580,14 @@ function HomeContent({
     groupId: string,
     input: Partial<Pick<GroupSummary, "name" | "description" | "accentColor">>,
   ) => Promise<void>;
+  routeGroupId: string;
   selectedGroupId: string | null;
 }) {
   const selectedGroup =
-    groups.find((group) => group.id === selectedGroupId) ?? groups[0] ?? null;
+    groups.find((group) => group.id === routeGroupId) ??
+    groups.find((group) => group.id === selectedGroupId) ??
+    groups[0] ??
+    null;
 
   if (loading) {
     return <p className="status">Loading workspaces...</p>;
@@ -468,6 +605,8 @@ function HomeContent({
           onCreateDocument={() => onCreateDocument(selectedGroup.id)}
           onDeleteGroup={() => onDeleteGroup(selectedGroup.id)}
           onOpenDocument={onOpenDocument}
+          onOpenSettings={() => onOpenSettings(selectedGroup.id)}
+          onOpenSharing={() => onOpenSharing(selectedGroup.id)}
           onPositionDocument={onPositionDocument}
           onUpdateGroup={(input) => onUpdateGroup(selectedGroup.id, input)}
         />
@@ -478,6 +617,537 @@ function HomeContent({
         </section>
       )}
     </section>
+  );
+}
+
+function WorkspaceDirectory({
+  error,
+  groups,
+  loading,
+  onCreateGroup,
+  onOpenWorkspace,
+}: {
+  error: string | null;
+  groups: GroupSummary[];
+  loading: boolean;
+  onCreateGroup: (
+    input: Pick<GroupSummary, "name" | "description" | "accentColor">,
+  ) => Promise<void>;
+  onOpenWorkspace: (groupId: string) => void;
+}) {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [accentColor, setAccentColor] = useState(DEFAULT_ACCENT);
+  const [creating, setCreating] = useState(false);
+  const recentGroups = [...groups].sort((left, right) =>
+    right.updatedAt.localeCompare(left.updatedAt),
+  );
+
+  if (loading) {
+    return <p className="status">Loading workspace directory...</p>;
+  }
+
+  if (error) {
+    return <p className="status error">{error}</p>;
+  }
+
+  return (
+    <section className="workspace-screen directory-screen">
+      <header className="directory-heading">
+        <div>
+          <p className="eyebrow">Workspace directory</p>
+          <h1>Choose a Markdown workspace.</h1>
+          <p>
+            Downwrite keeps writing projects separate from administration: pick
+            a workspace to write, or create a new one for a distinct project.
+          </p>
+        </div>
+        <form
+          className="directory-create"
+          onSubmit={(event) => {
+            event.preventDefault();
+            setCreating(true);
+            void onCreateGroup({
+              name: name || "Untitled workspace",
+              description: description || null,
+              accentColor,
+            }).finally(() => {
+              setCreating(false);
+              setName("");
+              setDescription("");
+            });
+          }}
+        >
+          <h2>New workspace</h2>
+          <input
+            aria-label="Workspace name"
+            placeholder="Workspace name"
+            value={name}
+            onInput={(event) => setName(event.currentTarget.value)}
+          />
+          <input
+            aria-label="Workspace description"
+            placeholder="Short project description"
+            value={description}
+            onInput={(event) => setDescription(event.currentTarget.value)}
+          />
+          <div className="color-row">
+            <span>Accent</span>
+            <input
+              aria-label="Workspace color"
+              type="color"
+              value={accentColor}
+              onInput={(event) => setAccentColor(event.currentTarget.value)}
+            />
+          </div>
+          <button className="primary-action" disabled={creating} type="submit">
+            {creating ? "Creating..." : "Create workspace"}
+          </button>
+        </form>
+      </header>
+      <ul className="directory-list">
+        {recentGroups.length === 0 && (
+          <li className="empty-row">
+            No workspaces yet. Create one to start collecting Markdown
+            documents.
+          </li>
+        )}
+        {recentGroups.map((group) => {
+          const recentDocument = mostRecentDocument(group);
+          return (
+            <li className="directory-row" key={group.id}>
+              <button
+                className="directory-link"
+                style={{ borderLeftColor: group.accentColor ?? DEFAULT_ACCENT }}
+                type="button"
+                onClick={() => onOpenWorkspace(group.id)}
+              >
+                <span>
+                  <strong>{group.name}</strong>
+                  <small>{group.description ?? "No description yet."}</small>
+                </span>
+                <span>
+                  {group.documents.length} document
+                  {group.documents.length === 1 ? "" : "s"}
+                  {recentDocument ? ` · recent: ${recentDocument.title}` : ""}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
+function WorkspaceSettingsRoute({
+  error,
+  groupId,
+  groups,
+  loading,
+  onBack,
+  onDeleteGroup,
+  onUpdateGroup,
+}: {
+  error: string | null;
+  groupId: string;
+  groups: GroupSummary[];
+  loading: boolean;
+  onBack: (groupId: string) => void;
+  onDeleteGroup: (groupId: string) => Promise<void>;
+  onUpdateGroup: (
+    groupId: string,
+    input: Partial<Pick<GroupSummary, "name" | "description" | "accentColor">>,
+  ) => Promise<void>;
+}) {
+  const group = groups.find((item) => item.id === groupId) ?? null;
+  const [name, setName] = useState(group?.name ?? "");
+  const [description, setDescription] = useState(group?.description ?? "");
+  const [accentColor, setAccentColor] = useState(
+    group?.accentColor ?? DEFAULT_ACCENT,
+  );
+  const [busy, setBusy] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [localError, setLocalError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setName(group?.name ?? "");
+    setDescription(group?.description ?? "");
+    setAccentColor(group?.accentColor ?? DEFAULT_ACCENT);
+    setConfirmingDelete(false);
+    setNotice(null);
+    setLocalError(null);
+  }, [group?.id, group?.name, group?.description, group?.accentColor]);
+
+  if (loading) {
+    return <p className="status">Loading workspace settings...</p>;
+  }
+
+  if (error) {
+    return <p className="status error">{error}</p>;
+  }
+
+  if (!group) {
+    return (
+      <section className="workspace-screen empty-document">
+        <button
+          className="back-button"
+          type="button"
+          onClick={() => history.back()}
+        >
+          Back
+        </button>
+        <h1>Workspace not found</h1>
+        <p>
+          This workspace may have been deleted or hidden from this identity.
+        </p>
+      </section>
+    );
+  }
+
+  return (
+    <section className="workspace-screen settings-route">
+      <header className="section-heading">
+        <button
+          className="back-button"
+          type="button"
+          onClick={() => onBack(group.id)}
+        >
+          Back to workspace
+        </button>
+        <div>
+          <p className="eyebrow">Workspace settings</p>
+          <h1>{group.name}</h1>
+          <p>Manage the project details separately from document writing.</p>
+        </div>
+      </header>
+      <form
+        className="settings-form"
+        onSubmit={(event) => {
+          event.preventDefault();
+          setBusy(true);
+          setLocalError(null);
+          void onUpdateGroup(group.id, {
+            name,
+            description: description || null,
+            accentColor,
+          })
+            .then(() => setNotice("Workspace saved"))
+            .catch((caught: unknown) =>
+              setLocalError(
+                caught instanceof Error ? caught.message : "Save failed",
+              ),
+            )
+            .finally(() => setBusy(false));
+        }}
+      >
+        <label>
+          <span>Name</span>
+          <input
+            value={name}
+            onInput={(event) => setName(event.currentTarget.value)}
+          />
+        </label>
+        <label>
+          <span>Description</span>
+          <textarea
+            value={description}
+            onInput={(event) => setDescription(event.currentTarget.value)}
+          />
+        </label>
+        <label className="color-row">
+          <span>Accent</span>
+          <input
+            type="color"
+            value={accentColor}
+            onInput={(event) => setAccentColor(event.currentTarget.value)}
+          />
+        </label>
+        <button className="primary-action" disabled={busy} type="submit">
+          {busy ? "Saving..." : "Save workspace"}
+        </button>
+      </form>
+      <section className="danger-zone">
+        <div>
+          <h2>Delete workspace</h2>
+          <p>
+            This removes the workspace and its documents from this self-hosted
+            instance.
+          </p>
+        </div>
+        <div className="toolbar-actions">
+          {confirmingDelete && (
+            <button
+              className="secondary-action"
+              type="button"
+              onClick={() => setConfirmingDelete(false)}
+            >
+              Cancel
+            </button>
+          )}
+          <button
+            className="danger-action"
+            type="button"
+            onClick={() => {
+              if (!confirmingDelete) {
+                setConfirmingDelete(true);
+                return;
+              }
+              void onDeleteGroup(group.id);
+            }}
+          >
+            {confirmingDelete ? "Confirm delete" : "Delete workspace"}
+          </button>
+        </div>
+      </section>
+      {notice && <p className="inline-notice">{notice}</p>}
+      {localError && <p className="inline-error">{localError}</p>}
+    </section>
+  );
+}
+
+function WorkspaceSharingRoute({
+  documentId,
+  error,
+  groupId,
+  groups,
+  loading,
+  onBack,
+  token,
+}: {
+  documentId?: string;
+  error: string | null;
+  groupId: string;
+  groups: GroupSummary[];
+  loading: boolean;
+  onBack: (groupId: string) => void;
+  token: string;
+}) {
+  const group = groups.find((item) => item.id === groupId) ?? null;
+  const [selectedDocumentId, setSelectedDocumentId] = useState(
+    documentId ?? "",
+  );
+
+  useEffect(() => {
+    if (documentId) {
+      setSelectedDocumentId(documentId);
+      return;
+    }
+    if (!selectedDocumentId && group?.documents[0]) {
+      setSelectedDocumentId(group.documents[0].id);
+    }
+  }, [documentId, group?.id, group?.documents, selectedDocumentId]);
+
+  if (loading) {
+    return <p className="status">Loading sharing controls...</p>;
+  }
+
+  if (error) {
+    return <p className="status error">{error}</p>;
+  }
+
+  if (!group) {
+    return (
+      <section className="workspace-screen empty-document">
+        <button
+          className="back-button"
+          type="button"
+          onClick={() => history.back()}
+        >
+          Back
+        </button>
+        <h1>Workspace not found</h1>
+        <p>
+          This workspace may have been deleted or hidden from this identity.
+        </p>
+      </section>
+    );
+  }
+
+  return (
+    <section className="workspace-screen sharing-route">
+      <header className="section-heading">
+        <button
+          className="back-button"
+          type="button"
+          onClick={() => onBack(group.id)}
+        >
+          Back to workspace
+        </button>
+        <div>
+          <p className="eyebrow">Sharing</p>
+          <h1>{group.name}</h1>
+          <p>
+            Invite explicit collaborators for editing, or create anonymous
+            public links for read-only access.
+          </p>
+        </div>
+      </header>
+      {group.documents.length === 0 ? (
+        <p className="empty-row">
+          Create a document before configuring invitations or public links.
+        </p>
+      ) : (
+        <>
+          <label className="document-picker">
+            <span>Document</span>
+            <select
+              value={selectedDocumentId}
+              onInput={(event) =>
+                setSelectedDocumentId(event.currentTarget.value)
+              }
+            >
+              {group.documents.map((document) => (
+                <option key={document.id} value={document.id}>
+                  {document.title}
+                </option>
+              ))}
+            </select>
+          </label>
+          {selectedDocumentId && (
+            <SharePanel documentId={selectedDocumentId} token={token} />
+          )}
+        </>
+      )}
+    </section>
+  );
+}
+
+function InvitationRoute({
+  invitationToken,
+  onAccepted,
+  token,
+}: {
+  invitationToken: string;
+  onAccepted: (
+    invitation: Awaited<ReturnType<typeof acceptInvitation>>,
+  ) => Promise<void>;
+  token: string;
+}) {
+  const [inputToken, setInputToken] = useState(invitationToken);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  return (
+    <section className="workspace-screen invitation-route">
+      <header className="section-heading">
+        <div>
+          <p className="eyebrow">Invitation</p>
+          <h1>Accept a document invitation.</h1>
+          <p>
+            Invitation tokens are instance-local. Sign in or use the invited
+            development token, then accept to gain the invited document role.
+          </p>
+        </div>
+      </header>
+      <form
+        className="settings-form"
+        onSubmit={(event) => {
+          event.preventDefault();
+          setBusy(true);
+          setError(null);
+          setNotice(null);
+          void acceptInvitation(token, inputToken)
+            .then(async (invitation) => {
+              setNotice("Invitation accepted");
+              await onAccepted(invitation);
+            })
+            .catch((caught: unknown) =>
+              setError(
+                caught instanceof Error ? caught.message : "Accept failed",
+              ),
+            )
+            .finally(() => setBusy(false));
+        }}
+      >
+        <label>
+          <span>Invitation token</span>
+          <input
+            value={inputToken}
+            onInput={(event) => setInputToken(event.currentTarget.value)}
+          />
+        </label>
+        <button className="primary-action" disabled={busy} type="submit">
+          {busy ? "Accepting..." : "Accept invitation"}
+        </button>
+      </form>
+      {notice && <p className="inline-notice">{notice}</p>}
+      {error && <p className="inline-error">{error}</p>}
+    </section>
+  );
+}
+
+function PublicDocumentRoute({ publicToken }: { publicToken: string }) {
+  const [document, setDocument] = useState<PublicDocumentRecord | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    setError(null);
+    fetchPublicDocument(publicToken)
+      .then((nextDocument) => {
+        if (active) {
+          setDocument(nextDocument);
+        }
+      })
+      .catch((caught: unknown) => {
+        if (active) {
+          setError(
+            caught instanceof Error
+              ? caught.message
+              : "Public document request failed",
+          );
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false);
+        }
+      });
+    return () => {
+      active = false;
+    };
+  }, [publicToken]);
+
+  const preview = useMemo(
+    () => renderMarkdown(document?.content ?? ""),
+    [document?.content],
+  );
+
+  if (loading) {
+    return <p className="status">Loading public document...</p>;
+  }
+
+  if (error || !document) {
+    return (
+      <section className="workspace-screen empty-document">
+        <h1>Public document unavailable</h1>
+        <p>{error ?? "This public link may have been revoked."}</p>
+      </section>
+    );
+  }
+
+  return (
+    <article className="workspace-screen public-document">
+      <header className="section-heading">
+        <div>
+          <p className="eyebrow">
+            Public read-only link
+            {document.publicLink.label ? ` · ${document.publicLink.label}` : ""}
+          </p>
+          <h1>{document.title}</h1>
+          <p>
+            Anonymous visitors can read this Markdown document. Editing stays
+            restricted to invited collaborators.
+          </p>
+        </div>
+      </header>
+      <section className="preview-pane public-preview">{preview}</section>
+    </article>
   );
 }
 
@@ -569,6 +1239,8 @@ function WorkspaceDetail({
   onCreateDocument,
   onDeleteGroup,
   onOpenDocument,
+  onOpenSettings,
+  onOpenSharing,
   onPositionDocument,
   onUpdateGroup,
 }: {
@@ -576,6 +1248,8 @@ function WorkspaceDetail({
   onCreateDocument: () => Promise<void>;
   onDeleteGroup: () => Promise<void>;
   onOpenDocument: (documentId: string) => void;
+  onOpenSettings: () => void;
+  onOpenSharing: () => void;
   onPositionDocument: (
     documentId: string,
     position: number,
@@ -592,7 +1266,6 @@ function WorkspaceDetail({
     group.accentColor ?? DEFAULT_ACCENT,
   );
   const [busy, setBusy] = useState(false);
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [reorderingId, setReorderingId] = useState<string | null>(null);
 
@@ -601,7 +1274,6 @@ function WorkspaceDetail({
     setDescription(group.description ?? "");
     setAccentColor(group.accentColor ?? DEFAULT_ACCENT);
     setEditing(false);
-    setSettingsOpen(false);
     setConfirmingDelete(false);
   }, [group.id, group.name, group.description, group.accentColor]);
 
@@ -654,7 +1326,14 @@ function WorkspaceDetail({
               <button
                 className="secondary-action"
                 type="button"
-                onClick={() => setSettingsOpen((open) => !open)}
+                onClick={onOpenSharing}
+              >
+                Share
+              </button>
+              <button
+                className="secondary-action"
+                type="button"
+                onClick={onOpenSettings}
               >
                 Settings
               </button>
@@ -670,8 +1349,8 @@ function WorkspaceDetail({
         )}
       </header>
 
-      {settingsOpen && !editing && (
-        <section className="settings-panel">
+      {false && !editing && (
+        <section className="settings-panel" aria-hidden="true">
           <div>
             <h2>Workspace settings</h2>
             <dl className="setup-list">
@@ -803,6 +1482,7 @@ function DocumentView({
   onBack,
   onDeleted,
   onMoved,
+  onShare,
   token,
 }: {
   documentId: string;
@@ -810,6 +1490,7 @@ function DocumentView({
   onBack: () => void;
   onDeleted: (documentId: string) => void;
   onMoved: (document: DocumentRecord) => Promise<void>;
+  onShare: (groupId: string, documentId: string) => void;
   token: string;
 }) {
   const [document, setDocument] = useState<DocumentRecord | null>(null);
@@ -821,7 +1502,6 @@ function DocumentView({
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [shareOpen, setShareOpen] = useState(false);
   const [targetGroupId, setTargetGroupId] = useState("");
   const [moving, setMoving] = useState(false);
   const loadedDocumentId = useRef<string | null>(null);
@@ -966,7 +1646,7 @@ function DocumentView({
           <button
             className="secondary-action"
             type="button"
-            onClick={() => setShareOpen((open) => !open)}
+            onClick={() => onShare(document.groupId, document.id)}
           >
             Share
           </button>
@@ -1016,7 +1696,6 @@ function DocumentView({
       </header>
 
       {error && <p className="status error">{error}</p>}
-      {shareOpen && <SharePanel documentId={document.id} token={token} />}
       <section className="document-organization">
         <div>
           <strong>Workspace</strong>
@@ -1243,12 +1922,14 @@ function SharePanel({
                 className="secondary-action"
                 type="button"
                 onClick={() =>
-                  void copyText(invitation.token)
-                    .then(() => setNotice("Invitation token copied"))
+                  void copyText(
+                    `${location.origin}/invitations/${invitation.token}`,
+                  )
+                    .then(() => setNotice("Invitation URL copied"))
                     .catch(() => setError("Copy failed"))
                 }
               >
-                Copy token
+                Copy invite URL
               </button>
               {invitation.status === "pending" && (
                 <button
@@ -1334,7 +2015,7 @@ function PublicLinkRow({
   token: string;
 }) {
   const [label, setLabel] = useState(link.label ?? "");
-  const publicUrl = `${location.origin}/api/v1/public-links/${link.token}`;
+  const publicUrl = `${location.origin}/public/${link.token}`;
 
   useEffect(() => {
     setLabel(link.label ?? "");
@@ -1415,6 +2096,40 @@ function workspaceName(groups: GroupSummary[], groupId: string) {
 }
 
 function readRoute(): Route {
+  const workspaceShareMatch = window.location.pathname.match(
+    /^\/workspaces\/([^/]+)\/share$/,
+  );
+  if (workspaceShareMatch) {
+    const documentId = new URLSearchParams(window.location.search).get(
+      "document",
+    );
+    return {
+      name: "workspace-sharing",
+      groupId: decodeURIComponent(workspaceShareMatch[1]),
+      documentId: documentId ? decodeURIComponent(documentId) : undefined,
+    };
+  }
+
+  const workspaceSettingsMatch = window.location.pathname.match(
+    /^\/workspaces\/([^/]+)\/settings$/,
+  );
+  if (workspaceSettingsMatch) {
+    return {
+      name: "workspace-settings",
+      groupId: decodeURIComponent(workspaceSettingsMatch[1]),
+    };
+  }
+
+  const workspaceMatch = window.location.pathname.match(
+    /^\/workspaces\/([^/]+)$/,
+  );
+  if (workspaceMatch) {
+    return {
+      name: "workspace",
+      groupId: decodeURIComponent(workspaceMatch[1]),
+    };
+  }
+
   const documentMatch = window.location.pathname.match(
     /^\/documents\/([^/]+)$/,
   );
@@ -1425,7 +2140,25 @@ function readRoute(): Route {
     };
   }
 
-  return { name: "home" };
+  const invitationMatch = window.location.pathname.match(
+    /^\/invitations\/([^/]+)$/,
+  );
+  if (invitationMatch) {
+    return {
+      name: "invitation",
+      token: decodeURIComponent(invitationMatch[1]),
+    };
+  }
+
+  const publicMatch = window.location.pathname.match(/^\/public\/([^/]+)$/);
+  if (publicMatch) {
+    return {
+      name: "public-document",
+      token: decodeURIComponent(publicMatch[1]),
+    };
+  }
+
+  return { name: "directory" };
 }
 
 function SaveStatusElement({ state }: { state: SaveState }) {

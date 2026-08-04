@@ -62,6 +62,19 @@ export interface ShareState {
   publicLinks: PublicLinkRecord[];
 }
 
+export interface PublicDocumentRecord {
+  id: string;
+  groupId: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  publicLink: {
+    token: string;
+    label: string | null;
+  };
+}
+
 export interface AuthStatus {
   authenticated: boolean;
   bootstrapRequired: boolean;
@@ -335,7 +348,10 @@ export async function createInvitation(
   return body.invitation;
 }
 
-export async function acceptInvitation(token: string, invitationToken: string) {
+export async function acceptInvitation(
+  token: string,
+  invitationToken: string,
+): Promise<InvitationRecord> {
   const response = await fetch(
     `/api/v1/invitations/${invitationToken}/accept`,
     {
@@ -345,6 +361,8 @@ export async function acceptInvitation(token: string, invitationToken: string) {
     },
   );
   await assertOk(response, "Accept invitation failed");
+  const body = (await response.json()) as { invitation: InvitationRecord };
+  return body.invitation;
 }
 
 export async function revokeInvitation(token: string, invitationId: string) {
@@ -402,6 +420,15 @@ export async function updatePublicLink(
   await assertOk(response, "Update public link failed");
   const body = (await response.json()) as { publicLink: PublicLinkRecord };
   return body.publicLink;
+}
+
+export async function fetchPublicDocument(
+  publicToken: string,
+): Promise<PublicDocumentRecord> {
+  const response = await fetch(`/api/v1/public-links/${publicToken}`);
+  await assertOk(response, "Public document request failed");
+  const body = (await response.json()) as { document: PublicDocumentRecord };
+  return body.document;
 }
 
 function authHeaders(token?: string): Record<string, string> {
