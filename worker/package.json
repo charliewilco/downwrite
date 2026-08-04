@@ -1,0 +1,49 @@
+{
+  "name": "@downwrite/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "tsc -p tsconfig.json",
+    "deploy": "npm run db:migrations:apply && wrangler deploy",
+    "db:migrations:apply": "wrangler d1 migrations apply DB --remote",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "validate:worker": "wrangler deploy --dry-run --outdir dist-worker"
+  },
+  "dependencies": {
+    "@simplewebauthn/server": "^13.2.2",
+    "hono": "4.13.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20260804.1",
+    "typescript": "7.0.2",
+    "wrangler": "4.118.0"
+  },
+  "cloudflare": {
+    "bindings": {
+      "DB": {
+        "description": "Instance-local D1 database for Downwrite metadata, sessions, passkey challenges, groups, documents, collaborators, public share links, and coarse abuse throttles."
+      },
+      "CONTENT": {
+        "description": "Instance-local R2 bucket for Markdown document bodies owned by the deployer's Cloudflare account."
+      },
+      "DEVELOPMENT_API_TOKENS": {
+        "description": "Comma-separated local identity token map in `identity:token` form. Example: `dev-owner:replace-with-random-token,dev-editor:another-random-token`. This is an instance-local development adapter, not a central Downwrite login service."
+      },
+      "AUTH_BOOTSTRAP_TOKEN": {
+        "description": "Instance-local one-time owner setup secret. Configure as a Worker secret; do not commit a production value."
+      },
+      "WEBAUTHN_RP_NAME": {
+        "description": "Display name shown by passkey authenticators for this self-hosted instance."
+      },
+      "WEBAUTHN_RP_ID": {
+        "description": "Optional WebAuthn relying-party ID, usually the production custom-domain host."
+      },
+      "INSTANCE_PUBLIC_URL": {
+        "description": "Optional canonical public base URL used in discovery and passkey origin checks."
+      }
+    }
+  }
+}

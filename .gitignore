@@ -17,10 +17,14 @@ build
 .env
 .env.*
 npm-debug.log
-package-lock.json
 dist
 private.key
 api/docs
 
 tsconfig.tsbuildinfo
+**/tsconfig.tsbuildinfo
 .vercel
+.wrangler/
+worker/dist/
+worker/dist-worker/
+web/dist/

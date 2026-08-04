@@ -1,0 +1,23 @@
+name = "downwrite-api"
+main = "src/index.ts"
+compatibility_date = "2026-08-04"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "downwrite"
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "./migrations"
+
+[[r2_buckets]]
+binding = "CONTENT"
+bucket_name = "downwrite-content"
+
+[observability]
+enabled = true
+head_sampling_rate = 1
+
+[vars]
+DEVELOPMENT_API_TOKENS = "dev-owner:owner-token,dev-editor:editor-token"
+WEBAUTHN_RP_NAME = "Downwrite"
+# Set INSTANCE_PUBLIC_URL and WEBAUTHN_RP_ID for production custom domains.
+# Store AUTH_BOOTSTRAP_TOKEN as a Worker secret, not in wrangler.toml.
