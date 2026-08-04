@@ -271,7 +271,7 @@ export async function updateDocument(
   token: string | undefined,
   documentId: string,
   update: Partial<Pick<DocumentRecord, "title" | "content">> & {
-    baseRevision?: number;
+    baseRevision: number;
   },
 ): Promise<DocumentRecord> {
   const response = await fetch(`/api/v1/documents/${documentId}`, {
@@ -290,7 +290,7 @@ export async function updateDocument(
 export async function moveDocument(
   token: string | undefined,
   documentId: string,
-  input: { groupId: string; position?: number; baseRevision?: number },
+  input: { groupId: string; position?: number; baseRevision: number },
 ): Promise<DocumentRecord> {
   const response = await fetch(`/api/v1/documents/${documentId}/move`, {
     method: "PATCH",
@@ -308,7 +308,7 @@ export async function moveDocument(
 export async function positionDocument(
   token: string | undefined,
   documentId: string,
-  input: { position: number; baseRevision?: number },
+  input: { position: number; baseRevision: number },
 ): Promise<DocumentRecord> {
   const response = await fetch(`/api/v1/documents/${documentId}/position`, {
     method: "PATCH",

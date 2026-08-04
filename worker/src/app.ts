@@ -60,15 +60,29 @@ export function createApp(options: AppOptions = {}) {
     return createStorage(env);
   }
 
+  function requireBaseRevision(body: Record<string, unknown>) {
+    const baseRevision = optionalNumber(body, "baseRevision");
+
+    if (
+      typeof baseRevision === "undefined" ||
+      !Number.isInteger(baseRevision) ||
+      baseRevision < 0
+    ) {
+      throw new HttpError(
+        428,
+        "Document writes require a non-negative integer baseRevision",
+      );
+    }
+
+    return baseRevision;
+  }
+
   function assertCurrentRevision(
     current: { revision: number },
     body: Record<string, unknown>,
   ) {
-    const baseRevision = optionalNumber(body, "baseRevision");
-    if (
-      typeof baseRevision !== "undefined" &&
-      Math.trunc(baseRevision) !== current.revision
-    ) {
+    const baseRevision = requireBaseRevision(body);
+    if (baseRevision !== current.revision) {
       throw new HttpError(409, "Document has changed since it was loaded");
     }
   }

@@ -47,6 +47,8 @@ function errorCodeForStatus(status: number) {
       return "not_found";
     case 409:
       return "conflict";
+    case 428:
+      return "precondition_required";
     case 429:
       return "rate_limited";
     case 501:

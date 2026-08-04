@@ -47,17 +47,23 @@ const TOOLS = [
   {
     name: "update_document",
     description:
-      "Update an authorized Markdown document. Include baseRevision to avoid stale writes.",
-    inputSchema: objectSchema({
-      documentId: { type: "string", description: "Document identifier." },
-      title: { type: "string", description: "Replacement title." },
-      content: { type: "string", description: "Replacement Markdown source." },
-      baseRevision: {
-        type: "integer",
-        minimum: 0,
-        description: "Revision read by the client before editing.",
+      "Update an authorized Markdown document. Requires baseRevision to avoid missing or stale write preconditions.",
+    inputSchema: objectSchema(
+      {
+        documentId: { type: "string", description: "Document identifier." },
+        title: { type: "string", description: "Replacement title." },
+        content: {
+          type: "string",
+          description: "Replacement Markdown source.",
+        },
+        baseRevision: {
+          type: "integer",
+          minimum: 0,
+          description: "Required revision read by the client before editing.",
+        },
       },
-    }),
+      ["documentId", "baseRevision"],
+    ),
   },
 ];
 
@@ -228,11 +234,8 @@ async function callTool(input: {
         throw new HttpError(400, "Expected title or content");
       }
 
-      const baseRevision = optionalNumber(input.args, "baseRevision");
-      if (
-        typeof baseRevision !== "undefined" &&
-        Math.trunc(baseRevision) !== current.revision
-      ) {
+      const baseRevision = requireBaseRevision(input.args);
+      if (baseRevision !== current.revision) {
         throw new HttpError(409, "Document has changed since it was loaded");
       }
 
@@ -349,10 +352,30 @@ function canWrite(role: Role) {
   return role === "owner" || role === "editor";
 }
 
-function objectSchema(properties: Record<string, unknown>) {
+function requireBaseRevision(value: JsonRecord) {
+  const baseRevision = optionalNumber(value, "baseRevision");
+  if (
+    typeof baseRevision === "undefined" ||
+    !Number.isInteger(baseRevision) ||
+    baseRevision < 0
+  ) {
+    throw new HttpError(
+      428,
+      "Document writes require a non-negative integer baseRevision",
+    );
+  }
+
+  return baseRevision;
+}
+
+function objectSchema(
+  properties: Record<string, unknown>,
+  required: string[] = [],
+) {
   return {
     type: "object",
     additionalProperties: false,
     properties,
+    ...(required.length > 0 ? { required } : {}),
   };
 }

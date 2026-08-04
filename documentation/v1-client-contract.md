@@ -51,7 +51,8 @@ Errors are JSON envelopes:
 Document `content` fields contain UTF-8 Markdown source. The API does not return
 rendered HTML. Clients are responsible for rendering previews safely.
 
-Document update, move, and reorder writes may include `baseRevision`. If the
+Document update, move, and reorder writes must include `baseRevision`. If it is
+missing or invalid, the Worker returns `428 Precondition Required`. If the
 stored `revision` has changed since the client read it, the Worker returns
 `409 Conflict` and leaves the document unchanged.
 

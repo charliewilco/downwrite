@@ -34,9 +34,9 @@ should start by checking the served OpenAPI paths before adding routes.
 - Revision list/read endpoints for historical Markdown recovery.
 - Import Markdown files into a workspace.
 - Export one document or an entire workspace as Markdown/archive output.
-- Optional `baseRevision` is implemented for document update/move/reorder writes
-  and returns `409 Conflict` on stale writes. Explicit ETag or `If-Match`
-  support remains future work.
+- `baseRevision` is required for document update/move/reorder writes. Missing
+  preconditions return `428 Precondition Required`; stale writes return
+  `409 Conflict`. Explicit ETag or `If-Match` support remains future work.
 
 ## iOS Needs
 

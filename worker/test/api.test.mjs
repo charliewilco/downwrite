@@ -363,6 +363,15 @@ test("MCP tools use derived local identity for document reads and writes", async
     content: "stale",
     baseRevision: document.revision,
   });
+  const missingPrecondition = await mcpToolResponse(
+    app,
+    env,
+    "update_document",
+    {
+      documentId: document.id,
+      content: "missing precondition",
+    },
+  );
 
   assert.equal(tools.result.tools.length, 5);
   assert.equal(workspaces.workspaces[0].id, group.id);
@@ -372,6 +381,7 @@ test("MCP tools use derived local identity for document reads and writes", async
   assert.equal(created.document.title, "MCP draft");
   assert.equal(updated.document.content, "# Updated through MCP");
   assert.equal(stale.error.data.code, "conflict");
+  assert.equal(missingPrecondition.error.data.code, "precondition_required");
 });
 
 test("serves an OpenAPI contract for the implemented API", async () => {
@@ -540,6 +550,65 @@ test("document writes can reject stale revisions", async () => {
   assert.equal(saved.status, 200);
   assert.equal(savedBody.document.revision, document.revision + 1);
   assert.equal(stale.status, 409);
+});
+
+test("document writes require explicit revision preconditions", async () => {
+  const { app, env } = createHarness();
+  const source = await createGroup(app, env);
+  const targetResponse = await app.request(
+    "/api/v1/groups",
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ name: "Archive" }),
+    },
+    env,
+  );
+  const target = (await targetResponse.json()).group;
+  const document = await createDocument(app, env, source.id);
+
+  const update = await app.request(
+    `/api/v1/documents/${document.id}`,
+    {
+      method: "PATCH",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ title: "No revision" }),
+    },
+    env,
+  );
+  const move = await app.request(
+    `/api/v1/documents/${document.id}/move`,
+    {
+      method: "PATCH",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ groupId: target.id }),
+    },
+    env,
+  );
+  const position = await app.request(
+    `/api/v1/documents/${document.id}/position`,
+    {
+      method: "PATCH",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ position: 10 }),
+    },
+    env,
+  );
+  const current = await app.request(
+    `/api/v1/documents/${document.id}`,
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+  const currentBody = await current.json();
+
+  assert.equal(update.status, 428);
+  assert.equal((await update.json()).code, "precondition_required");
+  assert.equal(move.status, 428);
+  assert.equal(position.status, 428);
+  assert.equal(currentBody.document.title, document.title);
+  assert.equal(currentBody.document.groupId, source.id);
+  assert.equal(currentBody.document.position, document.position);
+  assert.equal(currentBody.document.revision, document.revision);
 });
 
 test("documents can be reordered within a workspace", async () => {
@@ -770,7 +839,10 @@ test("explicitly invited editors may write a document", async () => {
     {
       method: "PATCH",
       headers: authHeaders("editor-token"),
-      body: JSON.stringify({ content: "edited by invite" }),
+      body: JSON.stringify({
+        content: "edited by invite",
+        baseRevision: document.revision,
+      }),
     },
     env,
   );
@@ -871,7 +943,10 @@ test("owners can inspect share state, invite collaborators, and invited identiti
     {
       method: "PATCH",
       headers: authHeaders("editor-token"),
-      body: JSON.stringify({ content: "accepted invite edit" }),
+      body: JSON.stringify({
+        content: "accepted invite edit",
+        baseRevision: document.revision,
+      }),
     },
     env,
   );

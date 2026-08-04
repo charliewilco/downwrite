@@ -117,6 +117,10 @@ export function createOpenApiDocument(requestUrl: string): OpenApiDocument {
         NotFound: errorResponse(404, "The requested resource was not found."),
         TooManyRequests: errorResponse(429, "Rate limit exceeded."),
         Conflict: errorResponse(409, "The write precondition failed."),
+        PreconditionRequired: errorResponse(
+          428,
+          "A required write precondition is missing.",
+        ),
       },
       parameters: {
         groupId: pathParameter("groupId", "Workspace/group identifier."),
@@ -256,7 +260,7 @@ function apiRoadmap() {
         "GET /api/v1/documents/{documentId}/export: export one Markdown document.",
       ],
       concurrency: [
-        "Current document writes accept optional baseRevision and return 409 Conflict on stale revisions.",
+        "Current document update/move/reorder writes require baseRevision, return 428 Precondition Required when it is missing or invalid, and return 409 Conflict on stale revisions.",
         "Future ETag/If-Match support may be added for cache-native clients without replacing revision.",
       ],
       sharingAndRoles: [
@@ -301,6 +305,7 @@ function clientContract() {
         "forbidden",
         "not_found",
         "conflict",
+        "precondition_required",
         "rate_limited",
         "internal_error",
       ],
@@ -313,7 +318,10 @@ function clientContract() {
     },
     revisions: {
       field: "revision",
-      precondition: "Document write requests may include baseRevision.",
+      precondition:
+        "Document update, move, and reorder requests must include baseRevision.",
+      missing:
+        "A missing or invalid baseRevision returns 428 Precondition Required and does not mutate the document.",
       conflict:
         "A stale baseRevision returns 409 Conflict and does not mutate the document.",
     },
@@ -789,6 +797,7 @@ function paths(origin: string): OpenApiDocument["paths"] {
           "400": refResponse("BadRequest"),
           "403": refResponse("Forbidden"),
           "409": errorResponse(409, "Document revision conflict."),
+          "428": refResponse("PreconditionRequired"),
         },
       }),
       delete: operation({
@@ -809,7 +818,7 @@ function paths(origin: string): OpenApiDocument["paths"] {
         tags: ["Documents"],
         summary: "Move a document into another authorized workspace.",
         description:
-          "Owner/editor document writers may move the document only into a workspace where they already have explicit access. Optional baseRevision protects against stale client writes.",
+          "Owner/editor document writers may move the document only into a workspace where they already have explicit access. Required baseRevision protects against missing or stale client write preconditions.",
         operationId: "moveDocument",
         security: authenticatedSecurity(),
         parameters: [refParameter("documentId")],
@@ -820,6 +829,7 @@ function paths(origin: string): OpenApiDocument["paths"] {
           "400": refResponse("BadRequest"),
           "403": refResponse("Forbidden"),
           "409": errorResponse(409, "Document revision conflict."),
+          "428": refResponse("PreconditionRequired"),
         },
       }),
     },
@@ -828,7 +838,7 @@ function paths(origin: string): OpenApiDocument["paths"] {
         tags: ["Documents"],
         summary: "Set a document's order position within its workspace.",
         description:
-          "The current ordering contract sorts documents by ascending numeric position, then recent update time. Optional baseRevision protects against stale client writes.",
+          "The current ordering contract sorts documents by ascending numeric position, then recent update time. Required baseRevision protects against missing or stale client write preconditions.",
         operationId: "positionDocument",
         security: authenticatedSecurity(),
         parameters: [refParameter("documentId")],
@@ -839,6 +849,7 @@ function paths(origin: string): OpenApiDocument["paths"] {
           "400": refResponse("BadRequest"),
           "403": refResponse("Forbidden"),
           "409": errorResponse(409, "Document revision conflict."),
+          "428": refResponse("PreconditionRequired"),
         },
       }),
     },
@@ -1375,20 +1386,23 @@ const schemas: Record<string, JsonSchema> = {
     },
     ["title"],
   ),
-  DocumentUpdate: objectSchema({
-    title: { type: "string", minLength: 1 },
-    content: {
-      type: "string",
-      mediaType: "text/markdown",
-      description: "UTF-8 Markdown source. Omit to leave content unchanged.",
+  DocumentUpdate: objectSchema(
+    {
+      title: { type: "string", minLength: 1 },
+      content: {
+        type: "string",
+        mediaType: "text/markdown",
+        description: "UTF-8 Markdown source. Omit to leave content unchanged.",
+      },
+      baseRevision: {
+        type: "integer",
+        minimum: 0,
+        description:
+          "Revision read by the client. Missing or invalid values return 428 Precondition Required; stale values return 409 Conflict.",
+      },
     },
-    baseRevision: {
-      type: "integer",
-      minimum: 0,
-      description:
-        "Optional revision read by the client. When present and stale, the server returns 409 Conflict.",
-    },
-  }),
+    ["baseRevision"],
+  ),
   DocumentMove: objectSchema(
     {
       groupId: { type: "string" },
@@ -1401,10 +1415,10 @@ const schemas: Record<string, JsonSchema> = {
         type: "integer",
         minimum: 0,
         description:
-          "Optional revision read by the client. When present and stale, the server returns 409 Conflict.",
+          "Revision read by the client. Missing or invalid values return 428 Precondition Required; stale values return 409 Conflict.",
       },
     },
-    ["groupId"],
+    ["groupId", "baseRevision"],
   ),
   DocumentPosition: objectSchema(
     {
@@ -1417,10 +1431,10 @@ const schemas: Record<string, JsonSchema> = {
         type: "integer",
         minimum: 0,
         description:
-          "Optional revision read by the client. When present and stale, the server returns 409 Conflict.",
+          "Revision read by the client. Missing or invalid values return 428 Precondition Required; stale values return 409 Conflict.",
       },
     },
-    ["position"],
+    ["position", "baseRevision"],
   ),
   DocumentSummary: objectSchema(
     {
