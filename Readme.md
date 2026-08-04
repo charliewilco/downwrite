@@ -1,167 +1,234 @@
-# ![Downwrite](.github/images/downwrite-og.png)
+# Downwrite
 
-![Node CI](https://github.com/charliewilco/downwrite/workflows/Node%20CI/badge.svg)
-![E2E Testing](https://github.com/charliewilco/downwrite/workflows/E2E%20Testing/badge.svg)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/charliewilco/downwrite/tree/main/worker)
 
-## About 🤔🦄🎉
+Downwrite is being rebuilt as an open-source, self-hostable Markdown writing
+service. The product core is a Cloudflare Worker with a versioned Hono API, D1
+metadata, R2 Markdown storage, passkey-backed web sessions, and instance-local
+authorization records. There is no dependency on a centrally operated Downwrite
+service.
 
-> _A place to write._ ✍️
+## Current Slice
 
-So the idea here was simple build a simple markdown writing application. Markdown is a huge deal and all the cool tools kept getting shut down and naively,I thought, _how hard can this really be_? 🤔📝📦
+This repository currently contains:
 
-So I've had poorly designed iterations of this thing for every year, on the year as one of these services got shut down. When [Canvas](https://blog.usecanvas.com/) shut down this last year, I started to get a little more serious about this idea. 💡 ⚡🔭
+- `worker/`: the isolated deployable Cloudflare Worker API package.
+- `web/`: a skeletal Preact client shell for local API-backed UI work.
+- legacy source under `src/`: retained only as historical material while the
+  greenfield Worker/Web implementation replaces it.
 
-During planning out some of my quarterly goals at my last job I decided to go a little more full-stack with Node and start to really work through the process of building a microservice. Since I'm never really one to learning languages and frameworks in the abstract, I decided to take up Downwrite as an excuse to build those microservices. 📡💸🌎
+The implemented API slice supports:
 
-### Why Markdown 🧐🤨📋
+- `GET /.well-known/downwrite`
+- `GET /api/v1/health`
+- `GET /api/v1/discovery`
+- `GET /api/v1/openapi.json`
+- `GET /api/v1/docs`
+- `GET /api/v1/auth/status`
+- `POST /api/v1/auth/bootstrap/options`
+- `POST /api/v1/auth/bootstrap/verify`
+- `POST /api/v1/auth/passkeys/login/options`
+- `POST /api/v1/auth/passkeys/login/verify`
+- `DELETE /api/v1/auth/session`
+- `GET /api/v1/groups`
+- `POST /api/v1/groups`
+- `PATCH /api/v1/groups/:groupId`
+- `DELETE /api/v1/groups/:groupId`
+- `POST /api/v1/groups/:groupId/documents`
+- `GET /api/v1/documents/:documentId`
+- `PATCH /api/v1/documents/:documentId`
+- `DELETE /api/v1/documents/:documentId`
+- `GET /api/v1/documents/:documentId/share`
+- `POST /api/v1/documents/:documentId/collaborators`
+- `DELETE /api/v1/documents/:documentId/collaborators/:identityId`
+- `POST /api/v1/documents/:documentId/invitations`
+- `POST /api/v1/invitations/:token/accept`
+- `DELETE /api/v1/invitations/:invitationId`
+- `POST /api/v1/documents/:documentId/public-links`
+- `PATCH /api/v1/public-links/:publicLinkId`
+- `GET /api/v1/public-links/:token`
 
-Markdown is probably the most efficient and universal tool for conveying syntax, semantics and structure across platforms. ⬇️
+Anonymous public-link reads are read-only. Writes require an instance-local bearer
+token or passkey session mapped to an invited `owner` or `editor` identity.
 
-Originally coined by [John Gruber (Daring Fireball)](https://daringfireball.net/projects/markdown/) it was originally conceived as a text to HTML and is the staple of static site generators, OSS as well as a fair amount of comment sections, notetaking applications or any documentation tool. 🛠
+The web shell now includes workspace create/rename/delete/description/color
+organization, document detail navigation, Markdown textarea editing, debounced
+autosave, rename, delete, dependency-free rendered Markdown preview, collaborator
+invitations, invitation acceptance, and public-link creation/revocation. It
+deliberately does not include a rich editor, iOS client, MCP server, or email
+delivery.
 
-These shortcuts are almost as ubiquitous as `cmd + b` for bold or `cmd + i` for italics. ⌨️
+The Worker also serves a versioned OpenAPI 3.1 contract at
+`/api/v1/openapi.json` and a local HTML documentation view at `/api/v1/docs`.
+Implemented endpoints appear in OpenAPI `paths`; proposed API gaps are tracked
+in [`worker/API_ROADMAP.md`](./worker/API_ROADMAP.md) and mirrored under the
+served spec's `x-downwrite-api-roadmap` extension.
 
-> Bottomline: markdown is data. It is a method for describing semantics of data and is data itself.
+## Native Client Direction
 
-## Features ✨🔥🚀
+Downwrite is self-hosted on the server side, but there should be one centrally
+distributed public iOS app. A user should install the public Downwrite iOS app
+once, enter or choose their own instance base URL, and sign into that instance.
+They should not need a separately deployed iOS app for each Cloudflare
+deployment.
 
-This is meant to be a simple writing application with some key features:
+That means every self-hosted server must preserve a stable instance base URL and
+public discovery metadata:
 
-- Write wherever you are in markdown
-- Share what you've written if you want
-- Upload a markdown file from your machine
-- Export to a static markdown file for your blog, etc.
+- `GET /.well-known/downwrite`
+- `GET /api/v1/discovery`
 
-## Setup 📲⏳⚙️
+Those endpoints are unauthenticated and report the instance origin, current and
+supported API versions, versioned API base path, versioned API base URL, and
+native-client compatibility flags. They do not expose credentials.
 
-This project uses Node (v12.18.x), [TypeScript](https://www.typescriptlang.org/) and pnpm.
+The production web auth path is passkeys/WebAuthn with secure httpOnly
+server-side sessions and one-time owner bootstrap. For the future public iOS
+app, Downwrite reserves an OAuth authorization-code-with-PKCE boundary: the app
+should open the instance in the system browser, let the user authenticate with
+that self-hosted instance, and receive a short-lived authorization code. Direct
+native passkeys are not required as the cross-instance mechanism because Apple
+associated-domain requirements are per domain.
+
+## MCP Client Direction
+
+A self-hosted Downwrite instance should also be attachable to a chat interface
+through MCP. MCP must be treated as another external API client, not a privileged
+backdoor into a deployment. The Worker API should remain the product boundary
+for web, native, and MCP clients.
+
+Future MCP support should map narrowly to explicit tools:
+
+- `list_workspaces`: list only workspaces the credential can access.
+- `list_documents`: list only documents visible in an authorized workspace.
+- `read_document`: read a specific authorized Markdown document.
+- `create_document`: create Markdown in an authorized workspace.
+- `update_document`: update a specific authorized Markdown document.
+
+The server must support scoped credentials, explicit workspace/document
+authorization, and no broad data discovery by default. A future MCP credential
+should scope tool calls to the user's authorized data in their chosen
+self-hosted instance. Public-link reads remain anonymous and read-only; MCP write
+tools must use the same owner/editor authorization boundary as the web and future
+native clients.
+
+## Deploy to Cloudflare
+
+The button above points at the isolated `worker/` directory:
+
+```md
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/charliewilco/downwrite/tree/main/worker)
+```
+
+Cloudflare's Deploy to Cloudflare flow treats the subdirectory as the project
+root, so `worker/` contains its own `package.json`, `wrangler.toml`, migrations,
+source, and tests. This is intentional: Cloudflare does not fully support
+monorepos for one-click Worker deploys, and a subdirectory deploy must be fully
+isolated.
+
+During the button flow, Cloudflare reads `worker/wrangler.toml` and provisions
+the deployer's own resources:
+
+- Worker: `downwrite-api`, or the deployer's chosen name.
+- D1 binding: `DB`, for groups, documents, collaborator roles, share links,
+  sessions, passkey challenges, and coarse abuse throttles.
+- R2 binding: `CONTENT`, for Markdown document bodies.
+- Worker secret: `AUTH_BOOTSTRAP_TOKEN`, for one-time owner setup.
+- Worker vars: `WEBAUTHN_RP_NAME`, optional `WEBAUTHN_RP_ID`, and optional
+  `INSTANCE_PUBLIC_URL`, for production passkey origin settings.
+- Worker var: `DEVELOPMENT_API_TOKENS`, for local API development only.
+
+No Cloudflare resources are provisioned by this repository itself. The deployer
+owns the Worker, D1 database, R2 bucket, routes, optional custom domain, data,
+and tokens in their own Cloudflare account.
+
+Workers observability is enabled in `worker/wrangler.toml` for the deployer's
+own account. No logs or metrics are sent to a Downwrite-operated service.
+
+## Local Development
+
+Install dependencies:
 
 ```bash
-brew cask install pnpm
-pnpm install
+npm install
 ```
 
-Personally use [`fnm`](https://github.com/Schniz/fnm) to manage my node versions.
+Copy the local var example and choose a random token:
 
 ```bash
-fnm install
-fnm use
+cp worker/.dev.vars.example worker/.dev.vars
 ```
 
-### Environment
-
-To get started create an `.env` file in the root of your project with the following
-
-```env
-SECRET_KEY="SECRET SECRETS ARE NO FUN"
-CURRENT_DB_ADDRESS="127.0.0.1:27017/downwrite"
-```
-
-### Client ⚡️🦊
-
-![Logos for Related Projects](.github/images/Client-2020.png)
-
-#### Setup
-
-Run in your terminal from the root of the project.
+Apply the D1 migration locally:
 
 ```bash
-pnpm dev
+cd worker
+npm run db:migrations:apply -- --local
 ```
 
-Open [`http://localhost:3000`](http://localhost:3000/) in your browser.
-
-#### UI 📝
-
-This is the client-side of the application, it uses Next.js and is a pretty stock implementation of how Next handles routing to different views. 👨‍💻🤜🦑🤯
-
-Downwrite needs to server side rendered to make sharing an entry as easy as possible. Next.js' data-fetching API makes it the perfect candidate. So when the page calls `getServerSideProps()` it fetches the data directly from the database (DB creditentials aren't exposed to the client build at all because of the bundling features inside Next 😁) and for the initial render it has data available instead of a skeleton screen. 🤖☠️💀
-
-For the Editor this project uses Draft.js and Draft.js Plugins. Markdown syntax is used inline and autogenerates the related rich text `_hello_` becomes "_hello_" as you type.💻⌨️🔏
-
-For styles I just used the built-in CSS support in Next.js
-
-#### Serverless Functions 🌎✨
-
-To update the data, this project calls endpoints at `/api/....` to enable this we're using Next'js [API Routes](https://nextjs.org/docs/api-routes/introduction). These are serverless functions so we don't need to keep a server or database connectioin running all the time, with serverless functions you're essentially calling the API on-demand.
-
-This project also depends on MongoDB 🍍 for data persistence, you should see this [gist](https://gist.github.com/nrollr/9f523ae17ecdbb50311980503409aeb3) on how to setup MongoDB on your machine.
-
-To authenticate we're using JWT to call the basic CRUD functions. Basically this is using a stateless auth model, more about that [here](https://auth0.com/blog/stateless-auth-for-stateful-minds/). 🔐
-
-#### Related Documentation 📚
-
-- [TypeScript](https://www.typescriptlang.org/)
-- [React](https://reactjs.org/)
-- [Next.js](https://nextjs.org/)
-- [Formik](https://formik.org/)
-- [Draft.js](https://draftjs.org/)
-- [Draft.js Plugins](https://www.draft-js-plugins.com/)
-- [Reach UI](https://reach.tech/)
-- [MDX](https://mdxjs.com/)
-- [MongoDB](https://docs.mongodb.com/manual/support/) & [Mongoose.js](http://mongoosejs.com)
-- [JWT](https://auth0.com/blog/hapijs-authentication-secure-your-api-with-json-web-tokens/)
-
-### Integration Testing 🌈🦁🐛
-
-![Logos for Related Projects](.github/images/Integration.png)
+Run the Worker:
 
 ```bash
-pnpm test
+npm run dev
 ```
 
-#### Info 📝🧪
+In another terminal, run the Preact shell:
 
-Short hand: `page` is just a representation of whatever the headless browser, _Puppeteer_ has rendered at that given moment.
-
-Using Puppeteer I write assertions like this:
-
-```js
-describe("Feature", () => {
-	it("does this thing", async () => {
-		await page.waitForSelector("#selector");
-		await page.click("#selector");
-		await page.waitForSelector("#other-selector");
-	});
-});
+```bash
+cd ../web
+npm run dev
 ```
 
-This approach accomplishes two things:
+The web shell defaults to `owner-token` for local development. Change it in the
+UI to match the token in `worker/.dev.vars`, or bootstrap an owner passkey with
+`AUTH_BOOTSTRAP_TOKEN`.
 
-- Ensures if an `await` statement errors or `catch()` the block will cause a failure
-- Makes the test sequential and simpler to write
+Production web sessions use opaque httpOnly server-side cookies. Cookie
+authenticated write requests are same-origin only; local bearer tokens remain
+available for development and API smoke tests. Auth challenge creation and
+public-link reads use a small D1-backed rate limiter. Deployers can add
+Cloudflare account-level WAF or rate limiting later without changing the
+versioned API.
 
-#### Related Documentation 📚
+## Validation
 
-- [Puppeteer](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md)
-- [Jest](https://jestjs.io/)
-- [_End-to-end Tests that Don’t Suck with Puppeteer_ from Trevor Miller](https://ropig.com/blog/end-end-tests-dont-suck-puppeteer/)
-- [_Write tests. Not too many. Mostly integration._ from Kent C. Dodds](https://blog.kentcdodds.com/write-tests-not-too-many-mostly-integration-5e8c7fff591c)
+From the repository root:
 
-### Workflow 👷‍♀️🚧
+```bash
+npm run validate
+```
 
-Working on this project it uses GitHub actions to run the tests and deploys using [`vercel`](https://vercel.com) for easy rollback and immutable deployments.
+The Worker tests use only Node's built-in test runner. There is no Jest, Vitest,
+or Miniflare dependency.
 
-## License ⚖️💣🛡⚔️
+## Dependency Policy
 
-MIT License
+Runtime dependencies are intentionally narrow:
 
-Copyright (c) 2022 Charlie Peters
+- `@simplewebauthn/server`: focused server-side WebAuthn challenge and
+  attestation/assertion verification. This is intentionally not handwritten; FIDO
+  verification is security-sensitive and not a good target for dependency
+  minimization.
+- `hono`: required by the accepted Worker-native API architecture.
+- `preact`: required by the accepted web-client direction.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+The OpenAPI contract is maintained as a typed local Worker module and verified
+against Hono's registered routes in Node tests. No OpenAPI generator or
+documentation dependency is currently required.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Development/deployment dependencies are limited to:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+- `wrangler`: Cloudflare's Worker build/deploy/local runtime tool.
+- `typescript`: type checking and Worker source compilation.
+- `@cloudflare/workers-types`: Cloudflare Worker binding types.
+- `vite` and `@preact/preset-vite`: local/build tooling for the Preact shell.
+
+The bearer identity adapter is for development only. `DEVELOPMENT_API_TOKENS` is
+a comma-separated local map in `identity:token` form, such as:
+
+```text
+dev-owner:replace-with-random-token,dev-editor:another-random-token
+```
+
+Those identities and tokens are scoped to a single self-hosted instance. They do
+not call or imply any central Downwrite authority.

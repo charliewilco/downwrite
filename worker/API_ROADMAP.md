@@ -1,0 +1,50 @@
+# Downwrite API Roadmap
+
+This roadmap is an API-first gap audit. The OpenAPI `paths` object documents
+implemented endpoints only. Proposed operations below are also mirrored in the
+served OpenAPI document under `x-downwrite-api-roadmap`; they are not available
+until implemented in the Worker.
+
+## Implemented
+
+- Workspace lifecycle: list, create, update settings, delete.
+- Documents: create in a workspace, read, update title/content, move between
+  workspaces, set workspace order position, delete.
+- Sharing: read share state, direct collaborator add/remove, invitation
+  create/accept/revoke, public-link create/update, anonymous public-link read.
+- Discovery/auth: well-known discovery, API discovery, health, auth status,
+  passkey owner bootstrap, passkey login, session logout.
+- Contract: OpenAPI JSON and local HTML documentation view.
+
+## Blocks Near-Term Screens
+
+- `GET /api/v1/groups/{groupId}` for focused workspace detail.
+- `GET /api/v1/groups/{groupId}/documents` for explicit document listing,
+  future cursor pagination, and document ordering.
+- `GET /api/v1/invitations/{token}` for invitation preview before accepting.
+- `GET /api/v1/public-links/{publicLinkId}` for single-link management screens.
+
+## Longer-Term Document API
+
+- Content-focused update endpoint separate from metadata.
+- Revision list/read endpoints for historical Markdown recovery.
+- Import Markdown files into a workspace.
+- Export one document or an entire workspace as Markdown/archive output.
+- Optional `baseRevision` is implemented for document update/move/reorder writes
+  and returns `409 Conflict` on stale writes. Explicit ETag or `If-Match`
+  support remains future work.
+
+## iOS Needs
+
+- OAuth authorization code with PKCE through the system browser.
+- Short-lived access tokens and refresh-token rotation.
+- `GET /api/v1/me` once broader account/profile UX exists.
+- Cursor pagination for workspace/document lists.
+- Stable conflict semantics for autosave and offline retry behavior.
+
+## MCP Needs
+
+- MCP tools should map to scoped API operations: list workspaces, list
+  documents, read document, create document, and update document.
+- Add narrowly scoped token issuance/revocation before exposing MCP tools.
+- Avoid all-instance discovery/search endpoints by default.

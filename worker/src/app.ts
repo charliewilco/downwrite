@@ -1,0 +1,619 @@
+import { Hono } from "hono";
+import { WebAuthnAuthService, type AuthService } from "./auth.js";
+import {
+  HttpError,
+  jsonError,
+  optionalBoolean,
+  optionalNumber,
+  optionalString,
+  optionalText,
+  readJsonObject,
+  requireString,
+} from "./http.js";
+import {
+  clearSessionCookie,
+  readIdentity,
+  readSessionCookie,
+} from "./identity.js";
+import {
+  assertSameOriginForSessionWrites,
+  authConfiguration,
+  enforceRateLimit,
+  securityHeaders,
+} from "./security.js";
+import { createOpaqueToken } from "./domain/tokens.js";
+import { createOpenApiDocument, createOpenApiHtml } from "./openapi.js";
+import { D1Storage } from "./storage/d1.js";
+import type { Env, Role, Storage } from "./types.js";
+
+type AppBindings = { Bindings: Env };
+type StorageFactory = (env: Env) => Storage;
+
+const VALID_ROLES = new Set<Role>(["owner", "editor"]);
+
+export interface AppOptions {
+  createStorage?: StorageFactory;
+  authService?: AuthService;
+}
+
+export function createApp(options: AppOptions = {}) {
+  const app = new Hono<AppBindings>();
+  const createStorage =
+    options.createStorage ?? ((env) => new D1Storage(env.DB, env.CONTENT));
+  const authService = options.authService ?? new WebAuthnAuthService();
+
+  function storage(env: Env) {
+    return createStorage(env);
+  }
+
+  function assertCurrentRevision(
+    current: { revision: number },
+    body: Record<string, unknown>,
+  ) {
+    const baseRevision = optionalNumber(body, "baseRevision");
+    if (
+      typeof baseRevision !== "undefined" &&
+      Math.trunc(baseRevision) !== current.revision
+    ) {
+      throw new HttpError(409, "Document has changed since it was loaded");
+    }
+  }
+
+  function canWrite(role: Role) {
+    return role === "owner" || role === "editor";
+  }
+
+  app.onError((error, c) => jsonError(c, error));
+
+  app.notFound((c) => c.json({ error: "Not found" }, 404));
+
+  app.use("*", securityHeaders);
+  app.use("*", async (c, next) => {
+    assertSameOriginForSessionWrites(c);
+    await next();
+  });
+
+  function discovery(url: string) {
+    const instanceUrl = new URL(url).origin;
+
+    return {
+      name: "downwrite-api",
+      instanceUrl,
+      api: {
+        currentVersion: "v1",
+        supportedVersions: ["v1"],
+        baseUrl: `${instanceUrl}/api/v1`,
+        basePath: "/api/v1",
+        discoveryUrl: `${instanceUrl}/.well-known/downwrite`,
+        openApiUrl: `${instanceUrl}/api/v1/openapi.json`,
+        documentationUrl: `${instanceUrl}/api/v1/docs`,
+      },
+      auth: {
+        current: "instance-local-development-bearer-token",
+        futureBoundary:
+          "OAuth 2.1 authorization code with PKCE for future native clients",
+        web: "passkeys-webauthn-http-only-server-side-session",
+        native: {
+          status: "reserved-not-implemented",
+          authorizationEndpoint: `${instanceUrl}/oauth/authorize`,
+          tokenEndpoint: `${instanceUrl}/oauth/token`,
+          grant: "authorization_code",
+          pkce: true,
+          browserSignInRequired: true,
+        },
+      },
+      clients: {
+        native: {
+          publicIosAppSupported: true,
+          deploymentSpecificIosAppRequired: false,
+        },
+        mcp: {
+          supportedAsExternalClient: true,
+          privilegedBackdoor: false,
+          expectedTools: [
+            "list_workspaces",
+            "list_documents",
+            "read_document",
+            "create_document",
+            "update_document",
+          ],
+        },
+      },
+    };
+  }
+
+  app.get("/api/v1/health", (c) =>
+    c.json({
+      ok: true,
+      name: "downwrite-api",
+      version: "v1",
+    }),
+  );
+
+  app.get("/api/v1/openapi.json", (c) =>
+    c.json(createOpenApiDocument(c.req.url)),
+  );
+
+  app.get("/api/v1/docs", (c) =>
+    c.html(createOpenApiHtml(c.req.url), 200, {
+      "content-type": "text/html; charset=utf-8",
+    }),
+  );
+
+  app.get("/api/v1/discovery", (c) => c.json(discovery(c.req.url)));
+
+  app.get("/.well-known/downwrite", (c) => c.json(discovery(c.req.url)));
+
+  app.get("/api/v1/auth/status", async (c) => {
+    const store = storage(c.env);
+    const bootstrapRequired = !(await store.hasAnyIdentity());
+    const configuration = authConfiguration(c.env);
+
+    try {
+      const identity = await readIdentity(c, store);
+      return c.json({
+        authenticated: true,
+        identity,
+        bootstrapRequired,
+        configuration,
+      });
+    } catch {
+      return c.json({ authenticated: false, bootstrapRequired, configuration });
+    }
+  });
+
+  app.post("/api/v1/auth/bootstrap/options", async (c) => {
+    const store = storage(c.env);
+    const body = await readJsonObject(c);
+    const identityId = requireString(body, "identityId");
+    await enforceRateLimit({
+      c,
+      storage: store,
+      purpose: "bootstrap",
+      subject: identityId,
+      limit: 8,
+      windowSeconds: 300,
+    });
+    const result = await authService.beginOwnerBootstrap({
+      env: c.env,
+      storage: store,
+      requestUrl: c.req.url,
+      setupToken: requireString(body, "setupToken"),
+      identityId,
+      displayName: requireString(body, "displayName"),
+    });
+
+    return c.json(result);
+  });
+
+  app.post("/api/v1/auth/bootstrap/verify", async (c) => {
+    const body = await readJsonObject(c);
+    const session = await authService.finishOwnerBootstrap({
+      env: c.env,
+      storage: storage(c.env),
+      requestUrl: c.req.url,
+      setupToken: requireString(body, "setupToken"),
+      challengeId: requireString(body, "challengeId"),
+      response: body.response as never,
+    });
+
+    c.header("set-cookie", session.cookie);
+    return c.json({ ok: true, identity: { id: session.identityId } });
+  });
+
+  app.post("/api/v1/auth/passkeys/login/options", async (c) => {
+    const store = storage(c.env);
+    const body = await readJsonObject(c);
+    const identityId = requireString(body, "identityId");
+    await enforceRateLimit({
+      c,
+      storage: store,
+      purpose: "login",
+      subject: identityId,
+      limit: 12,
+      windowSeconds: 300,
+    });
+    const result = await authService.beginLogin({
+      env: c.env,
+      storage: store,
+      requestUrl: c.req.url,
+      identityId,
+    });
+
+    return c.json(result);
+  });
+
+  app.post("/api/v1/auth/passkeys/login/verify", async (c) => {
+    const body = await readJsonObject(c);
+    const session = await authService.finishLogin({
+      env: c.env,
+      storage: storage(c.env),
+      requestUrl: c.req.url,
+      challengeId: requireString(body, "challengeId"),
+      response: body.response as never,
+    });
+
+    c.header("set-cookie", session.cookie);
+    return c.json({ ok: true, identity: { id: session.identityId } });
+  });
+
+  app.delete("/api/v1/auth/session", async (c) => {
+    await authService.logout({
+      storage: storage(c.env),
+      sessionToken: readSessionCookie(c.req.header("cookie") ?? ""),
+    });
+    c.header("set-cookie", clearSessionCookie(c.req.url));
+    return c.json({ ok: true });
+  });
+
+  app.get("/api/v1/groups", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const groups = await store.listGroupsForIdentity(identity.id);
+
+    return c.json({ groups });
+  });
+
+  app.post("/api/v1/groups", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const body = await readJsonObject(c);
+    const name = requireString(body, "name", "Untitled Group");
+    const group = await store.createGroup({
+      identityId: identity.id,
+      name,
+      description: optionalString(body, "description"),
+      accentColor: optionalString(body, "accentColor"),
+    });
+
+    return c.json({ group }, 201);
+  });
+
+  app.patch("/api/v1/groups/:groupId", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const body = await readJsonObject(c);
+    const group = await store.updateGroup({
+      identityId: identity.id,
+      groupId: c.req.param("groupId"),
+      name: optionalString(body, "name") ?? undefined,
+      description:
+        "description" in body ? optionalString(body, "description") : undefined,
+      accentColor:
+        "accentColor" in body ? optionalString(body, "accentColor") : undefined,
+    });
+
+    if (!group) {
+      throw new HttpError(403, "You cannot edit this group");
+    }
+
+    return c.json({ group });
+  });
+
+  app.delete("/api/v1/groups/:groupId", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const deleted = await store.deleteGroup({
+      identityId: identity.id,
+      groupId: c.req.param("groupId"),
+    });
+
+    if (!deleted) {
+      throw new HttpError(403, "You cannot delete this group");
+    }
+
+    return c.json({ ok: true });
+  });
+
+  app.post("/api/v1/groups/:groupId/documents", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const body = await readJsonObject(c);
+    const document = await store.createDocument({
+      identityId: identity.id,
+      groupId: c.req.param("groupId"),
+      title: requireString(body, "title", "Untitled Document"),
+      content: optionalString(body, "content") ?? "",
+    });
+
+    if (!document) {
+      throw new HttpError(403, "You cannot create documents in this group");
+    }
+
+    return c.json({ document }, 201);
+  });
+
+  app.get("/api/v1/documents/:documentId", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const document = await store.getDocumentForIdentity({
+      identityId: identity.id,
+      documentId: c.req.param("documentId"),
+    });
+
+    if (!document) {
+      throw new HttpError(404, "Document not found");
+    }
+
+    return c.json({ document });
+  });
+
+  app.patch("/api/v1/documents/:documentId", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const body = await readJsonObject(c);
+    const title = optionalString(body, "title") ?? undefined;
+    const content = optionalText(body, "content");
+    const documentId = c.req.param("documentId");
+
+    if (!title && typeof content === "undefined") {
+      throw new HttpError(400, "Expected title or content");
+    }
+
+    const current = await store.getDocumentForIdentity({
+      identityId: identity.id,
+      documentId,
+    });
+    if (!current || !canWrite(current.role)) {
+      throw new HttpError(403, "You cannot edit this document");
+    }
+    assertCurrentRevision(current, body);
+
+    const document = await store.updateDocument({
+      identityId: identity.id,
+      documentId,
+      title,
+      content,
+    });
+
+    if (!document) {
+      throw new HttpError(403, "You cannot edit this document");
+    }
+
+    return c.json({ document });
+  });
+
+  app.patch("/api/v1/documents/:documentId/move", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const body = await readJsonObject(c);
+    const documentId = c.req.param("documentId");
+    const current = await store.getDocumentForIdentity({
+      identityId: identity.id,
+      documentId,
+    });
+
+    if (!current || !canWrite(current.role)) {
+      throw new HttpError(403, "You cannot move this document");
+    }
+    assertCurrentRevision(current, body);
+
+    const document = await store.moveDocument({
+      identityId: identity.id,
+      documentId,
+      groupId: requireString(body, "groupId"),
+      position: optionalNumber(body, "position"),
+    });
+
+    if (!document) {
+      throw new HttpError(403, "You cannot move this document there");
+    }
+
+    return c.json({ document });
+  });
+
+  app.patch("/api/v1/documents/:documentId/position", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const body = await readJsonObject(c);
+    const position = optionalNumber(body, "position");
+    const documentId = c.req.param("documentId");
+
+    if (typeof position === "undefined") {
+      throw new HttpError(400, "Expected position");
+    }
+
+    const current = await store.getDocumentForIdentity({
+      identityId: identity.id,
+      documentId,
+    });
+    if (!current || !canWrite(current.role)) {
+      throw new HttpError(403, "You cannot reorder this document");
+    }
+    assertCurrentRevision(current, body);
+
+    const document = await store.positionDocument({
+      identityId: identity.id,
+      documentId,
+      position,
+    });
+
+    if (!document) {
+      throw new HttpError(403, "You cannot reorder this document");
+    }
+
+    return c.json({ document });
+  });
+
+  app.delete("/api/v1/documents/:documentId", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const deleted = await store.deleteDocument({
+      identityId: identity.id,
+      documentId: c.req.param("documentId"),
+    });
+
+    if (!deleted) {
+      throw new HttpError(403, "You cannot delete this document");
+    }
+
+    return c.json({ ok: true });
+  });
+
+  app.post("/api/v1/documents/:documentId/collaborators", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const body = await readJsonObject(c);
+    const role = requireString(body, "role") as Role;
+
+    if (!VALID_ROLES.has(role)) {
+      throw new HttpError(400, "Role must be owner or editor");
+    }
+
+    await store.addDocumentCollaborator({
+      identityId: identity.id,
+      documentId: c.req.param("documentId"),
+      collaboratorIdentityId: requireString(body, "identityId"),
+      role,
+    });
+
+    return c.json({ ok: true });
+  });
+
+  app.delete(
+    "/api/v1/documents/:documentId/collaborators/:identityId",
+    async (c) => {
+      const store = storage(c.env);
+      const identity = await readIdentity(c, store);
+      const removed = await store.removeDocumentCollaborator({
+        identityId: identity.id,
+        documentId: c.req.param("documentId"),
+        collaboratorIdentityId: c.req.param("identityId"),
+      });
+
+      if (!removed) {
+        throw new HttpError(403, "You cannot remove collaborators");
+      }
+
+      return c.json({ ok: true });
+    },
+  );
+
+  app.get("/api/v1/documents/:documentId/share", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const share = await store.getDocumentShareState({
+      identityId: identity.id,
+      documentId: c.req.param("documentId"),
+    });
+
+    if (!share) {
+      throw new HttpError(403, "You cannot manage sharing for this document");
+    }
+
+    return c.json({ share });
+  });
+
+  app.post("/api/v1/documents/:documentId/invitations", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const body = await readJsonObject(c);
+    const role = requireString(body, "role") as Role;
+
+    if (!VALID_ROLES.has(role)) {
+      throw new HttpError(400, "Role must be owner or editor");
+    }
+
+    const invitation = await store.createDocumentInvitation({
+      identityId: identity.id,
+      documentId: c.req.param("documentId"),
+      invitedIdentityId: requireString(body, "identityId"),
+      role,
+      token: createOpaqueToken(),
+    });
+
+    if (!invitation) {
+      throw new HttpError(403, "You cannot invite collaborators");
+    }
+
+    return c.json({ invitation }, 201);
+  });
+
+  app.post("/api/v1/invitations/:token/accept", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const invitation = await store.acceptDocumentInvitation({
+      identityId: identity.id,
+      token: c.req.param("token"),
+    });
+
+    if (!invitation) {
+      throw new HttpError(403, "You cannot accept this invitation");
+    }
+
+    return c.json({ invitation });
+  });
+
+  app.delete("/api/v1/invitations/:invitationId", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const revoked = await store.revokeDocumentInvitation({
+      identityId: identity.id,
+      invitationId: c.req.param("invitationId"),
+    });
+
+    if (!revoked) {
+      throw new HttpError(403, "You cannot revoke this invitation");
+    }
+
+    return c.json({ ok: true });
+  });
+
+  app.post("/api/v1/documents/:documentId/public-links", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const body = await readJsonObject(c);
+    const publicLink = await store.createPublicLink({
+      identityId: identity.id,
+      documentId: c.req.param("documentId"),
+      label: optionalString(body, "label"),
+      token: createOpaqueToken(),
+    });
+
+    if (!publicLink) {
+      throw new HttpError(403, "You cannot share this document");
+    }
+
+    return c.json({ publicLink }, 201);
+  });
+
+  app.patch("/api/v1/public-links/:publicLinkId", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    const body = await readJsonObject(c);
+    const publicLink = await store.updatePublicLink({
+      identityId: identity.id,
+      publicLinkId: c.req.param("publicLinkId"),
+      label: "label" in body ? optionalString(body, "label") : undefined,
+      active: optionalBoolean(body, "active"),
+    });
+
+    if (!publicLink) {
+      throw new HttpError(403, "You cannot update this public link");
+    }
+
+    return c.json({ publicLink });
+  });
+
+  app.get("/api/v1/public-links/:token", async (c) => {
+    const store = storage(c.env);
+    const token = c.req.param("token");
+    await enforceRateLimit({
+      c,
+      storage: store,
+      purpose: "public-link",
+      subject: token.slice(0, 8),
+      limit: 120,
+      windowSeconds: 60,
+    });
+    const document = await store.getDocumentByPublicToken(token);
+
+    if (!document) {
+      throw new HttpError(404, "Public document not found");
+    }
+
+    return c.json({ document });
+  });
+
+  return app;
+}
