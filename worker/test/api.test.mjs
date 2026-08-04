@@ -771,6 +771,32 @@ test("serves an OpenAPI contract for the implemented API", async () => {
       .mediaType,
     "text/markdown",
   );
+  assert.equal(
+    body.components.schemas.DocumentUpdate.required.includes("baseRevision"),
+    true,
+  );
+  assert.match(
+    body.components.schemas.DocumentUpdate.properties.baseRevision.description,
+    /428 Precondition Required/,
+  );
+  assert.match(
+    body.components.schemas.DocumentUpdate.properties.baseRevision.description,
+    /409 Conflict/,
+  );
+  assert.ok(body.components.schemas.GroupList.properties.nextCursor);
+  assert.ok(body.components.schemas.DocumentList.properties.nextCursor);
+  assert.deepEqual(
+    body.paths["/api/v1/groups"].get.parameters.map(
+      (parameter) => parameter.name,
+    ),
+    ["limit", "cursor"],
+  );
+  assert.deepEqual(
+    body.paths["/api/v1/groups/{groupId}/documents"].get.parameters.map(
+      (parameter) => parameter.name ?? parameter.$ref,
+    ),
+    ["#/components/parameters/groupId", "limit", "cursor"],
+  );
 });
 
 test("OpenAPI method and path set matches registered Hono routes", async () => {
@@ -929,6 +955,93 @@ test("document writes require explicit revision preconditions", async () => {
   assert.equal(currentBody.document.groupId, source.id);
   assert.equal(currentBody.document.position, document.position);
   assert.equal(currentBody.document.revision, document.revision);
+});
+
+test("API errors use the documented envelope across common edge statuses", async () => {
+  const { app, env } = createHarness();
+  const group = await createGroup(app, env);
+  const document = await createDocument(app, env, group.id);
+  const updated = await app.request(
+    `/api/v1/documents/${document.id}`,
+    {
+      method: "PATCH",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({
+        content: "first accepted update",
+        baseRevision: document.revision,
+      }),
+    },
+    env,
+  );
+  assert.equal(updated.status, 200);
+
+  const badRequest = await app.request(
+    "/api/v1/groups",
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify([]),
+    },
+    env,
+  );
+  const unauthorized = await app.request("/api/v1/groups", {}, env);
+  const forbidden = await app.request(
+    `/api/v1/documents/${document.id}`,
+    {
+      method: "PATCH",
+      headers: authHeaders("outsider-token"),
+      body: JSON.stringify({
+        content: "outsider update",
+        baseRevision: 1,
+      }),
+    },
+    env,
+  );
+  const notFound = await app.request(
+    "/api/v1/documents/missing-document",
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+  const conflict = await app.request(
+    `/api/v1/documents/${document.id}`,
+    {
+      method: "PATCH",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({
+        content: "stale update",
+        baseRevision: document.revision,
+      }),
+    },
+    env,
+  );
+  const preconditionRequired = await app.request(
+    `/api/v1/documents/${document.id}`,
+    {
+      method: "PATCH",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ content: "missing base revision" }),
+    },
+    env,
+  );
+  const rateLimited = await exhaustRequests(13, () =>
+    app.request(
+      "http://localhost/api/v1/auth/passkeys/login/options",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ identityId: "edge-status-owner" }),
+      },
+      env,
+    ),
+  );
+
+  await expectErrorEnvelope(badRequest, 400, "bad_request");
+  await expectErrorEnvelope(unauthorized, 401, "unauthorized");
+  await expectErrorEnvelope(forbidden, 403, "forbidden");
+  await expectErrorEnvelope(notFound, 404, "not_found");
+  await expectErrorEnvelope(conflict, 409, "conflict");
+  await expectErrorEnvelope(preconditionRequired, 428, "precondition_required");
+  await expectErrorEnvelope(rateLimited, 429, "rate_limited");
 });
 
 test("documents can be reordered within a workspace", async () => {
@@ -2008,6 +2121,17 @@ async function exhaustRequests(count, request) {
   }
 
   return response;
+}
+
+async function expectErrorEnvelope(response, status, code) {
+  const body = await response.json();
+
+  assert.equal(response.status, status);
+  assert.equal(body.status, status);
+  assert.equal(body.code, code);
+  assert.equal(typeof body.error, "string");
+  assert.notEqual(body.error.trim(), "");
+  assert.deepEqual(Object.keys(body).sort(), ["code", "error", "status"]);
 }
 
 function hiddenInputValue(html, name) {
