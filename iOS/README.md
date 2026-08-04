@@ -59,6 +59,8 @@ in the Worker until that server-side boundary is built.
 ## Current Non-Goals
 
 - No placeholder Xcode project.
+- No XcodeGen. When iOS implementation begins, use and maintain a normal native
+  Xcode project.
 - No fake native auth.
 - No iOS-specific backend fork.
 - No dependency on a central Downwrite service.
