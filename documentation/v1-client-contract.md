@@ -62,6 +62,27 @@ missing or invalid, the Worker returns `428 Precondition Required`. If the
 stored `revision` has changed since the client read it, the Worker returns
 `409 Conflict` and leaves the document unchanged.
 
+## Autosave and Offline Retries
+
+Autosave clients should treat `revision` as the write fence for every dirty
+document buffer. A client may retry the same failed network request with the
+same `baseRevision`; repeated transport failures do not require inventing a new
+revision. A successful write returns the next `revision`, which becomes the new
+base for later edits.
+
+`428 Precondition Required` means the client attempted a write without a valid
+read revision. Refresh the document, keep the local dirty buffer, and retry only
+after attaching the refreshed `revision`.
+
+`409 Conflict` means another accepted write already changed the document,
+position, or workspace membership. Refresh the current server document, compare
+it with the local dirty buffer, and preserve the user's unsaved changes for
+manual or client-side merge. Do not blindly replay the stale write.
+
+Move and reorder operations use the same rule as content updates: keep the local
+intent queued with its original `baseRevision`, retry after transport failures,
+and surface a conflict if the server reports `409`.
+
 ## Lists
 
 Workspace and per-workspace document collections accept optional `limit` and

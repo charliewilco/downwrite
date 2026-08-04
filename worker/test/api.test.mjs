@@ -756,6 +756,10 @@ test("serves an OpenAPI contract for the implemented API", async () => {
     body["x-downwrite-client-contract"].externalAuth.pkceRequired,
     true,
   );
+  assert.match(
+    body["x-downwrite-client-contract"].revisions.autosave,
+    /offline clients should retry transport failures with the same baseRevision/,
+  );
   assert.equal(
     body["x-downwrite-api-roadmap"].proposed.nativeClientAuth.some((item) =>
       item.includes("/oauth/authorize"),

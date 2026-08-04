@@ -324,6 +324,8 @@ function clientContract() {
         "A missing or invalid baseRevision returns 428 Precondition Required and does not mutate the document.",
       conflict:
         "A stale baseRevision returns 409 Conflict and does not mutate the document.",
+      autosave:
+        "Autosave and offline clients should retry transport failures with the same baseRevision, adopt the returned revision after success, refresh and attach a revision after 428, and refresh plus merge or surface user conflict after 409.",
     },
     permissions: {
       owner:
