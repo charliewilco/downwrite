@@ -39,21 +39,21 @@ system browser:
 Direct native passkeys are not the required cross-instance mechanism because
 Apple associated domains are per deployed domain.
 
-Current status: production OAuth authorization and token issuance are not
-implemented. `/oauth/authorize` and `/oauth/token` are reserved and return `501`
-in the Worker until that server-side boundary is built.
+Current Worker status: OAuth authorization, token exchange, refresh rotation,
+and revocation are implemented instance-locally. The reserved public iOS client
+id is `downwrite-ios`, with `downwrite://oauth/callback` as the allowed callback.
+The iOS app itself is still deferred.
 
 ## Phased Implementation Plan
 
 1. Server readiness: keep discovery, OpenAPI, error envelopes, document
-   revision semantics, and authorization scopes stable.
-2. OAuth server slice: implement authorization-code-with-PKCE, resource
-   indicators, token audience validation, refresh rotation, and revocation.
-3. iOS skeleton: create the Swift project, instance URL entry, discovery
+   revision semantics, OAuth public-client policy, and authorization scopes
+   stable.
+2. iOS skeleton: create the Swift project, instance URL entry, discovery
    verification, and system-browser sign-in.
-4. Workspace/document client: list workspaces, list/read/create/update Markdown
+3. Workspace/document client: list workspaces, list/read/create/update Markdown
    documents, and handle revision conflicts.
-5. Sharing and offline polish: add invitation/public-link surfaces only after
+4. Sharing and offline polish: add invitation/public-link surfaces only after
    the core writing flow is reliable.
 
 ## Current Non-Goals

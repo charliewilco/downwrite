@@ -32,7 +32,7 @@ export async function readIdentity(
     );
 
     if (session && new Date(session.expiresAt).getTime() > Date.now()) {
-      return { id: session.identityId };
+      return { id: session.identityId, authKind: "session" };
     }
   }
 
@@ -44,13 +44,36 @@ export async function readIdentity(
   }
 
   const token = match[1].trim();
+  const oauthToken = await storage.getOAuthAccessTokenByHash(
+    await sha256Base64Url(token),
+  );
+
+  if (oauthToken) {
+    if (
+      oauthToken.revokedAt ||
+      new Date(oauthToken.expiresAt).getTime() <= Date.now() ||
+      oauthToken.resource !== `${new URL(c.req.url).origin}/api/v1`
+    ) {
+      throw new HttpError(
+        401,
+        "OAuth bearer token is expired, revoked, or invalid for this resource",
+      );
+    }
+
+    return {
+      id: oauthToken.identityId,
+      authKind: "oauth",
+      scopes: oauthToken.scopes,
+    };
+  }
+
   const identityId = parseTokenMap(c.env.DEVELOPMENT_API_TOKENS).get(token);
 
   if (!identityId) {
     throw new HttpError(401, "Unknown bearer token");
   }
 
-  return { id: identityId };
+  return { id: identityId, authKind: "development" };
 }
 
 export function sessionCookie(input: {

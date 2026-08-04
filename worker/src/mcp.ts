@@ -1,6 +1,7 @@
 import type { Context } from "hono";
 import { HttpError, errorEnvelope } from "./http.js";
 import { readIdentity } from "./identity.js";
+import { assertScope } from "./oauth.js";
 import type { Env, Role, Storage } from "./types.js";
 
 type McpContext = Context<{ Bindings: Env }>;
@@ -72,6 +73,8 @@ export async function handleMcpRequest(c: McpContext, storage: Storage) {
 
     throw error;
   }
+
+  assertScope(identity, "mcp:documents");
 
   let request: JsonRecord;
   try {

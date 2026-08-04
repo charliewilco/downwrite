@@ -58,7 +58,7 @@ test("discovery reports instance metadata for public native clients", async () =
   ]);
   assert.equal(
     body.auth.futureBoundary,
-    "OAuth 2.1 authorization code with PKCE for future native clients",
+    "OAuth 2.1 authorization code with PKCE for external clients",
   );
   assert.equal(
     body.auth.web,
@@ -66,6 +66,7 @@ test("discovery reports instance metadata for public native clients", async () =
   );
   assert.equal(body.auth.native.pkce, true);
   assert.equal(body.auth.native.browserSignInRequired, true);
+  assert.equal(body.auth.native.status, "implemented");
   assert.equal(
     body.auth.native.protectedResourceMetadataUrl,
     "https://example.downwrite.test/.well-known/oauth-protected-resource",
@@ -80,7 +81,7 @@ test("discovery reports instance metadata for public native clients", async () =
   );
 });
 
-test("OAuth metadata is public while token issuance remains unimplemented", async () => {
+test("OAuth metadata is public and advertises instance-local PKCE clients", async () => {
   const { app, env } = createHarness();
   const resourceResponse = await app.request(
     "https://example.downwrite.test/.well-known/oauth-protected-resource",
@@ -94,17 +95,6 @@ test("OAuth metadata is public while token issuance remains unimplemented", asyn
     env,
   );
   const serverBody = await serverResponse.json();
-  const authorizeResponse = await app.request(
-    "https://example.downwrite.test/oauth/authorize",
-    {},
-    env,
-  );
-  const tokenResponse = await app.request(
-    "https://example.downwrite.test/oauth/token",
-    { method: "POST" },
-    env,
-  );
-  const tokenBody = await tokenResponse.json();
 
   assert.equal(resourceResponse.status, 200);
   assert.equal(resourceBody.resource, "https://example.downwrite.test/api/v1");
@@ -114,6 +104,10 @@ test("OAuth metadata is public while token issuance remains unimplemented", asyn
   assert.equal(resourceBody.scopes_supported.includes("documents:write"), true);
   assert.equal(resourceBody.bearer_methods_supported.includes("header"), true);
   assert.equal(JSON.stringify(resourceBody).includes("owner-token"), false);
+  assert.equal(
+    resourceBody["x-downwrite-token-model"],
+    "instance-local-opaque-bearer-tokens",
+  );
 
   assert.equal(serverResponse.status, 200);
   assert.equal(serverBody.issuer, "https://example.downwrite.test");
@@ -126,19 +120,173 @@ test("OAuth metadata is public while token issuance remains unimplemented", asyn
     "https://example.downwrite.test/oauth/token",
   );
   assert.equal(
+    serverBody.revocation_endpoint,
+    "https://example.downwrite.test/oauth/revoke",
+  );
+  assert.equal(
     serverBody.code_challenge_methods_supported.includes("S256"),
     true,
   );
-  assert.equal(serverBody["x-downwrite-status"], "planned-not-implemented");
+  assert.equal(serverBody["x-downwrite-status"], "implemented");
+  assert.equal(
+    serverBody.grant_types_supported.includes("refresh_token"),
+    true,
+  );
+  assert.equal(
+    serverBody["x-downwrite-public-clients"].some(
+      (client) => client.clientId === "downwrite-ios",
+    ),
+    true,
+  );
+  assert.equal(JSON.stringify(serverBody).includes("owner-token"), false);
+});
 
-  assert.equal(authorizeResponse.status, 501);
-  assert.equal(tokenResponse.status, 501);
-  assert.deepEqual(tokenBody, {
-    error: "OAuth token endpoint is planned but not implemented",
-    code: "oauth_not_implemented",
-    status: 501,
+test("OAuth authorization code with PKCE issues scoped bearer tokens", async () => {
+  const { app, env, storage } = createHarness();
+  const group = await createGroup(app, env);
+  const cookie = await createSessionCookie(storage, "dev-owner");
+  const token = await oauthToken(app, env, cookie, {
+    scope: "workspaces:read documents:read",
   });
-  assert.equal("access_token" in tokenBody, false);
+
+  const listResponse = await app.request(
+    "https://example.downwrite.test/api/v1/groups",
+    { headers: authHeaders(token.access_token) },
+    env,
+  );
+  const createResponse = await app.request(
+    "https://example.downwrite.test/api/v1/groups",
+    {
+      method: "POST",
+      headers: authHeaders(token.access_token),
+      body: JSON.stringify({ name: "Blocked by scope" }),
+    },
+    env,
+  );
+
+  assert.equal(token.token_type, "Bearer");
+  assert.equal(token.scope, "workspaces:read documents:read");
+  assert.equal(token.resource, "https://example.downwrite.test/api/v1");
+  assert.equal(listResponse.status, 200);
+  assert.equal((await listResponse.json()).groups[0].id, group.id);
+  assert.equal(createResponse.status, 403);
+  assert.equal((await createResponse.json()).code, "forbidden");
+});
+
+test("OAuth refresh rotates tokens and revoke invalidates access", async () => {
+  const { app, env, storage } = createHarness();
+  await createGroup(app, env);
+  const cookie = await createSessionCookie(storage, "dev-owner");
+  const first = await oauthToken(app, env, cookie, {
+    scope: "workspaces:read",
+  });
+  const refreshResponse = await app.request(
+    "https://example.downwrite.test/oauth/token",
+    {
+      method: "POST",
+      headers: formHeaders(),
+      body: new URLSearchParams({
+        grant_type: "refresh_token",
+        client_id: "downwrite-mcp",
+        refresh_token: first.refresh_token,
+      }),
+    },
+    env,
+  );
+  const refreshed = await refreshResponse.json();
+  const reusedResponse = await app.request(
+    "https://example.downwrite.test/oauth/token",
+    {
+      method: "POST",
+      headers: formHeaders(),
+      body: new URLSearchParams({
+        grant_type: "refresh_token",
+        client_id: "downwrite-mcp",
+        refresh_token: first.refresh_token,
+      }),
+    },
+    env,
+  );
+  const revokeResponse = await app.request(
+    "https://example.downwrite.test/oauth/revoke",
+    {
+      method: "POST",
+      headers: formHeaders(),
+      body: new URLSearchParams({ token: refreshed.access_token }),
+    },
+    env,
+  );
+  const readResponse = await app.request(
+    "https://example.downwrite.test/api/v1/groups",
+    { headers: authHeaders(refreshed.access_token) },
+    env,
+  );
+
+  assert.equal(refreshResponse.status, 200);
+  assert.equal(refreshed.access_token !== first.access_token, true);
+  assert.equal(reusedResponse.status, 400);
+  assert.equal(revokeResponse.status, 200);
+  assert.equal(readResponse.status, 401);
+});
+
+test("OAuth bearer tokens are rejected for the wrong instance resource", async () => {
+  const { app, env, storage } = createHarness();
+  const accessToken = `wrong-resource-${crypto.randomUUID()}`;
+  await storage.ensureIdentity({
+    identityId: "dev-owner",
+    displayName: "Development Owner",
+  });
+  await storage.createOAuthAccessToken({
+    tokenHash: await sha256Base64Url(accessToken),
+    identityId: "dev-owner",
+    clientId: "downwrite-mcp",
+    scopes: ["workspaces:read"],
+    resource: "https://other.downwrite.test/api/v1",
+    expiresAt: new Date(Date.now() + 60_000).toISOString(),
+  });
+
+  const response = await app.request(
+    "https://example.downwrite.test/api/v1/groups",
+    { headers: authHeaders(accessToken) },
+    env,
+  );
+  const body = await response.json();
+
+  assert.equal(response.status, 401);
+  assert.equal(body.code, "unauthorized");
+});
+
+test("MCP accepts OAuth tokens only with the MCP document scope", async () => {
+  const { app, env, storage } = createHarness();
+  const group = await createGroup(app, env);
+  await createDocument(app, env, group.id);
+  const cookie = await createSessionCookie(storage, "dev-owner");
+  const readOnly = await oauthToken(app, env, cookie, {
+    scope: "workspaces:read documents:read",
+  });
+  const mcpToken = await oauthToken(app, env, cookie, {
+    scope: "mcp:documents workspaces:read documents:read documents:write",
+    state: "mcp-state",
+  });
+
+  const denied = await mcpToolResponseWithToken(
+    app,
+    env,
+    readOnly.access_token,
+    "list_workspaces",
+    {},
+  );
+  const allowed = await mcpToolWithToken(
+    app,
+    env,
+    mcpToken.access_token,
+    "list_workspaces",
+    {},
+  );
+
+  assert.equal(denied.status, 403);
+  assert.equal((await denied.response.json()).code, "forbidden");
+  assert.equal(allowed.workspaces[0].id, group.id);
 });
 
 test("MCP endpoint challenges unauthenticated clients with resource metadata", async () => {
@@ -222,14 +370,22 @@ test("serves an OpenAPI contract for the implemented API", async () => {
   assert.ok(body.components.schemas.OAuthProtectedResourceMetadata);
   assert.ok(body.components.securitySchemes.sessionCookie);
   assert.ok(body.components.securitySchemes.developmentBearer);
-  assert.ok(body.components.securitySchemes.oauthPkcePlanned);
+  assert.ok(body.components.securitySchemes.oauthPkce);
   assert.equal(
     body.paths["/oauth/authorize"].get["x-downwrite-status"],
-    "planned",
+    "implemented",
+  );
+  assert.equal(
+    body.paths["/oauth/authorize/approve"].post["x-downwrite-status"],
+    "implemented",
   );
   assert.equal(
     body.paths["/oauth/token"].post["x-downwrite-status"],
-    "planned",
+    "implemented",
+  );
+  assert.equal(
+    body.paths["/oauth/revoke"].post["x-downwrite-status"],
+    "implemented",
   );
   assert.equal(
     body.paths["/.well-known/oauth-protected-resource"].get.operationId,
@@ -985,6 +1141,7 @@ function createHarness() {
   return {
     app: createApp({ createStorage: () => storage }),
     env: { DEVELOPMENT_API_TOKENS: TOKENS },
+    storage,
   };
 }
 
@@ -1084,12 +1241,112 @@ function authHeaders(token) {
   };
 }
 
+function formHeaders(extra = {}) {
+  return {
+    "content-type": "application/x-www-form-urlencoded",
+    ...extra,
+  };
+}
+
+async function createSessionCookie(storage, identityId) {
+  await storage.ensureIdentity({ identityId, displayName: identityId });
+  const token = `session-${identityId}-${crypto.randomUUID()}`;
+  const expiresAt = new Date(Date.now() + 86_400_000).toISOString();
+  await storage.createSession({
+    identityId,
+    tokenHash: await sha256Base64Url(token),
+    expiresAt,
+  });
+  return `dw_session=${token}; Path=/; HttpOnly; Secure; SameSite=Lax`;
+}
+
+async function oauthToken(app, env, cookie, { scope, state = "client-state" }) {
+  const verifier = `verifier-${crypto.randomUUID()}`;
+  const challenge = await sha256Base64Url(verifier);
+  const authorizeUrl = new URL(
+    "https://example.downwrite.test/oauth/authorize",
+  );
+  authorizeUrl.searchParams.set("response_type", "code");
+  authorizeUrl.searchParams.set("client_id", "downwrite-mcp");
+  authorizeUrl.searchParams.set(
+    "redirect_uri",
+    "http://127.0.0.1:49152/callback",
+  );
+  authorizeUrl.searchParams.set("code_challenge", challenge);
+  authorizeUrl.searchParams.set("code_challenge_method", "S256");
+  authorizeUrl.searchParams.set("scope", scope);
+  authorizeUrl.searchParams.set(
+    "resource",
+    "https://example.downwrite.test/api/v1",
+  );
+  authorizeUrl.searchParams.set("state", state);
+
+  const consent = await app.request(
+    authorizeUrl.toString(),
+    { headers: { cookie } },
+    env,
+  );
+  const consentHtml = await consent.text();
+  assert.equal(consent.status, 200);
+  assert.match(consentHtml, /Authorize downwrite-mcp/i);
+
+  const approve = await app.request(
+    "https://example.downwrite.test/oauth/authorize/approve",
+    {
+      method: "POST",
+      headers: formHeaders({
+        cookie,
+        origin: "https://example.downwrite.test",
+      }),
+      body: new URLSearchParams({
+        client_id: "downwrite-mcp",
+        redirect_uri: "http://127.0.0.1:49152/callback",
+        code_challenge: challenge,
+        code_challenge_method: "S256",
+        scope,
+        resource: "https://example.downwrite.test/api/v1",
+        state,
+      }),
+    },
+    env,
+  );
+  const location = approve.headers.get("location");
+  const redirect = new URL(location);
+  const code = redirect.searchParams.get("code");
+  assert.equal(approve.status, 302);
+  assert.equal(redirect.searchParams.get("state"), state);
+  assert.equal(typeof code, "string");
+
+  const tokenResponse = await app.request(
+    "https://example.downwrite.test/oauth/token",
+    {
+      method: "POST",
+      headers: formHeaders(),
+      body: new URLSearchParams({
+        grant_type: "authorization_code",
+        client_id: "downwrite-mcp",
+        redirect_uri: "http://127.0.0.1:49152/callback",
+        code,
+        code_verifier: verifier,
+      }),
+    },
+    env,
+  );
+  const token = await tokenResponse.json();
+  assert.equal(tokenResponse.status, 200);
+  return token;
+}
+
 async function mcpCall(app, env, method, params) {
+  return mcpCallWithToken(app, env, "owner-token", method, params);
+}
+
+async function mcpCallWithToken(app, env, token, method, params) {
   const response = await app.request(
     "https://example.downwrite.test/mcp",
     {
       method: "POST",
-      headers: authHeaders("owner-token"),
+      headers: authHeaders(token),
       body: JSON.stringify({
         jsonrpc: "2.0",
         id: "request-id",
@@ -1114,6 +1371,37 @@ async function mcpToolResponse(app, env, name, args) {
 
 async function mcpTool(app, env, name, args) {
   const body = await mcpToolResponse(app, env, name, args);
+  assert.equal(body.error, undefined);
+  return JSON.parse(body.result.content[0].text);
+}
+
+async function mcpToolResponseWithToken(app, env, token, name, args) {
+  const response = await app.request(
+    "https://example.downwrite.test/mcp",
+    {
+      method: "POST",
+      headers: authHeaders(token),
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: "request-id",
+        method: "tools/call",
+        params: {
+          name,
+          arguments: args,
+        },
+      }),
+    },
+    env,
+  );
+
+  return { status: response.status, response };
+}
+
+async function mcpToolWithToken(app, env, token, name, args) {
+  const body = await mcpCallWithToken(app, env, token, "tools/call", {
+    name,
+    arguments: args,
+  });
   assert.equal(body.error, undefined);
   return JSON.parse(body.result.content[0].text);
 }

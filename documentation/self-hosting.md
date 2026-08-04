@@ -53,6 +53,21 @@ origins. Localhost HTTP omits `Secure` so local passkey/session testing works
 without external deployment. Cookie-authenticated write requests require a
 same-origin `Origin` header.
 
+## External Clients
+
+Each self-hosted Worker instance issues its own OAuth authorization-code-with-PKCE
+tokens for external clients. The public metadata is available at:
+
+- `GET /.well-known/downwrite`
+- `GET /.well-known/oauth-protected-resource`
+- `GET /.well-known/oauth-authorization-server`
+
+The current built-in public clients are deliberately narrow: `downwrite-ios`
+uses `downwrite://oauth/callback`, and `downwrite-mcp` uses loopback callback
+URLs such as `http://127.0.0.1:49152/callback`. Tokens are opaque, stored only as
+hashes in D1, scoped to this instance's `/api/v1` resource, and revocable through
+`POST /oauth/revoke`.
+
 ## Deploy to Cloudflare
 
 The root README and Worker README expose Cloudflare's official Deploy to

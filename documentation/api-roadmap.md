@@ -13,13 +13,13 @@ until implemented in the Worker.
 - Sharing: read share state, direct collaborator add/remove, invitation
   create/accept/revoke, public-link create/update, anonymous public-link read.
 - Discovery/auth: well-known discovery, API discovery, health, auth status,
-  OAuth protected-resource metadata, reserved OAuth authorization-server
-  metadata, reserved OAuth 501 endpoints, passkey owner bootstrap, passkey
-  login, session logout.
+  OAuth protected-resource metadata, OAuth authorization-server metadata,
+  authorization-code-with-PKCE, token refresh rotation, token revocation,
+  passkey owner bootstrap, passkey login, session logout.
 - Contract: OpenAPI JSON and local HTML documentation view.
 - MCP: stateless JSON-RPC endpoint with list workspaces, list documents, read
-  document, create document, and update document tools. Current access uses the
-  development identity adapter only.
+  document, create document, and update document tools. OAuth-authenticated MCP
+  access requires `mcp:documents`.
 
 ## Blocks Near-Term Screens
 
@@ -41,16 +41,18 @@ until implemented in the Worker.
 
 ## iOS Needs
 
-- Implement OAuth authorization code with PKCE through the system browser.
-- Implement short-lived access tokens and refresh-token rotation.
+- Build the iOS app around the implemented OAuth authorization code with PKCE
+  flow through the system browser.
 - `GET /api/v1/me` once broader account/profile UX exists.
+- Configurable client registration if the product later supports third-party
+  HTTPS redirect clients beyond the built-in iOS and MCP public clients.
 - Cursor pagination for workspace/document lists.
 - Stable conflict semantics for autosave and offline retry behavior.
 
 ## MCP Needs
 
-- Production MCP access needs OAuth 2.1 authorization-code with PKCE, resource
+- Production MCP access uses OAuth authorization-code with PKCE, resource
   indicators, audience validation, and scoped access/refresh tokens.
-- Add narrowly scoped token issuance/revocation before treating MCP as production
-  external-client auth.
+- Keep the initial MCP tool set narrow: list workspaces, list documents, read
+  document, create document, and update document.
 - Avoid all-instance discovery/search endpoints by default.

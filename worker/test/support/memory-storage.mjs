@@ -6,10 +6,14 @@ export class MemoryStorage {
   #challengeCounter = 0;
   #sessionCounter = 0;
   #credentialCounter = 0;
+  #oauthCodeCounter = 0;
   #identities = new Map();
   #credentials = new Map();
   #challenges = new Map();
   #sessions = new Map();
+  #oauthCodes = new Map();
+  #oauthAccessTokens = new Map();
+  #oauthRefreshTokens = new Map();
   #groups = new Map();
   #groupMembers = new Map();
   #documents = new Map();
@@ -144,6 +148,123 @@ export class MemoryStorage {
 
   async deleteSessionByTokenHash(tokenHash) {
     this.#sessions.delete(tokenHash);
+  }
+
+  async createOAuthAuthorizationCode({
+    codeHash,
+    identityId,
+    clientId,
+    redirectUri,
+    codeChallenge,
+    scopes,
+    resource,
+    expiresAt,
+  }) {
+    const record = {
+      id: `oauth-code-${++this.#oauthCodeCounter}`,
+      codeHash,
+      identityId,
+      clientId,
+      redirectUri,
+      codeChallenge,
+      codeChallengeMethod: "S256",
+      scopes,
+      resource,
+      createdAt: now(),
+      expiresAt,
+      consumedAt: null,
+    };
+    this.#oauthCodes.set(codeHash, record);
+    return record;
+  }
+
+  async getOAuthAuthorizationCodeByHash(codeHash) {
+    return this.#oauthCodes.get(codeHash) ?? null;
+  }
+
+  async consumeOAuthAuthorizationCode(codeHash) {
+    const current = this.#oauthCodes.get(codeHash);
+    if (current) {
+      this.#oauthCodes.set(codeHash, {
+        ...current,
+        consumedAt: now(),
+      });
+    }
+  }
+
+  async createOAuthAccessToken({
+    tokenHash,
+    identityId,
+    clientId,
+    scopes,
+    resource,
+    expiresAt,
+  }) {
+    const record = {
+      tokenHash,
+      identityId,
+      clientId,
+      scopes,
+      resource,
+      createdAt: now(),
+      expiresAt,
+      revokedAt: null,
+    };
+    this.#oauthAccessTokens.set(tokenHash, record);
+    return record;
+  }
+
+  async getOAuthAccessTokenByHash(tokenHash) {
+    return this.#oauthAccessTokens.get(tokenHash) ?? null;
+  }
+
+  async createOAuthRefreshToken({
+    tokenHash,
+    identityId,
+    clientId,
+    scopes,
+    resource,
+    expiresAt,
+  }) {
+    const record = {
+      tokenHash,
+      identityId,
+      clientId,
+      scopes,
+      resource,
+      createdAt: now(),
+      expiresAt,
+      revokedAt: null,
+    };
+    this.#oauthRefreshTokens.set(tokenHash, record);
+    return record;
+  }
+
+  async getOAuthRefreshTokenByHash(tokenHash) {
+    return this.#oauthRefreshTokens.get(tokenHash) ?? null;
+  }
+
+  async revokeOAuthTokenByHash(tokenHash) {
+    let revoked = false;
+    const access = this.#oauthAccessTokens.get(tokenHash);
+    if (access && !access.revokedAt) {
+      this.#oauthAccessTokens.set(tokenHash, {
+        ...access,
+        revokedAt: now(),
+      });
+      revoked = true;
+    }
+
+    const refresh = this.#oauthRefreshTokens.get(tokenHash);
+    if (refresh && !refresh.revokedAt) {
+      this.#oauthRefreshTokens.set(tokenHash, {
+        ...refresh,
+        revokedAt: now(),
+      });
+      revoked = true;
+    }
+
+    return revoked;
   }
 
   async consumeRateLimit({ key, limit, windowSeconds }) {

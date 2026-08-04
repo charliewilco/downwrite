@@ -10,7 +10,7 @@ The Worker is the product core. It serves:
 - the compiled Preact web app from Workers Static Assets;
 - the versioned Hono API under `/api/v1`;
 - discovery and OAuth metadata under `/.well-known/*`;
-- reserved OAuth boundary routes under `/oauth/*`;
+- OAuth authorization, token, and revocation routes under `/oauth/*`;
 - a narrow authenticated MCP endpoint at `/mcp`;
 - D1 metadata for identities, sessions, workspaces, documents, sharing records,
   WebAuthn state, and coarse rate limits;
@@ -37,6 +37,7 @@ Cloudflare account are enough to run an isolated instance.
 - Anonymous read-only public links.
 - Passkey/WebAuthn browser sessions plus a localhost-only development session
   path for `wrangler dev`.
+- Instance-local OAuth authorization code with PKCE for external clients.
 - OpenAPI contract and local API docs.
 - MCP JSON-RPC endpoint with tools for list workspaces, list documents, read
   document, create document, and update document.
@@ -51,16 +52,18 @@ documents use explicit `owner` and `editor` roles.
 - public link holder: anonymous read-only access to the linked Markdown.
 
 The MCP endpoint authenticates at `/mcp`, derives a local identity, then calls
-storage/domain methods. It does not forward arbitrary bearer tokens into API
+storage/domain methods. OAuth-authenticated requests must include the
+`mcp:documents` scope. It does not forward arbitrary bearer tokens into API
 handlers.
 
-## Native and MCP Future Boundary
+## Native and MCP Boundary
 
-The long-term external-client boundary is OAuth authorization code with PKCE,
-resource indicators, audience validation, and scoped tokens. The Worker already
-publishes protected-resource and authorization-server metadata, but production
-OAuth authorization and token issuance are not implemented. The reserved OAuth
-routes return `501` until that server-side boundary is built.
+The external-client boundary is OAuth authorization code with PKCE, resource
+indicators, audience validation, and scoped opaque tokens issued by each
+self-hosted instance. The current public-client policy is deliberately narrow:
+`downwrite-ios` may use `downwrite://oauth/callback`, and `downwrite-mcp` may use
+loopback callback URLs. Configurable third-party HTTPS client registration is
+future work, not a central Downwrite authority.
 
 The intended iOS product remains one centrally distributed app that signs into
 arbitrary self-hosted Downwrite instances through the system browser. See

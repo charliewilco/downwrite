@@ -21,8 +21,12 @@ export interface Env {
   INSTANCE_PUBLIC_URL?: string;
 }
 
+export type AuthKind = "session" | "development" | "oauth";
+
 export interface Identity {
   id: string;
+  authKind?: AuthKind;
+  scopes?: string[];
 }
 
 export interface GroupSummary {
@@ -141,6 +145,43 @@ export interface SessionRecord {
   expiresAt: string;
 }
 
+export interface OAuthAuthorizationCodeRecord {
+  id: string;
+  codeHash: string;
+  identityId: string;
+  clientId: string;
+  redirectUri: string;
+  codeChallenge: string;
+  codeChallengeMethod: "S256";
+  scopes: string[];
+  resource: string;
+  createdAt: string;
+  expiresAt: string;
+  consumedAt: string | null;
+}
+
+export interface OAuthAccessTokenRecord {
+  tokenHash: string;
+  identityId: string;
+  clientId: string;
+  scopes: string[];
+  resource: string;
+  createdAt: string;
+  expiresAt: string;
+  revokedAt: string | null;
+}
+
+export interface OAuthRefreshTokenRecord {
+  tokenHash: string;
+  identityId: string;
+  clientId: string;
+  scopes: string[];
+  resource: string;
+  createdAt: string;
+  expiresAt: string;
+  revokedAt: string | null;
+}
+
 export interface AuthStatus {
   authenticated: boolean;
   bootstrapRequired: boolean;
@@ -213,6 +254,43 @@ export interface Storage {
   }): Promise<SessionRecord>;
   getSessionByTokenHash(tokenHash: string): Promise<SessionRecord | null>;
   deleteSessionByTokenHash(tokenHash: string): Promise<void>;
+  createOAuthAuthorizationCode(input: {
+    codeHash: string;
+    identityId: string;
+    clientId: string;
+    redirectUri: string;
+    codeChallenge: string;
+    scopes: string[];
+    resource: string;
+    expiresAt: string;
+  }): Promise<OAuthAuthorizationCodeRecord>;
+  getOAuthAuthorizationCodeByHash(
+    codeHash: string,
+  ): Promise<OAuthAuthorizationCodeRecord | null>;
+  consumeOAuthAuthorizationCode(codeHash: string): Promise<void>;
+  createOAuthAccessToken(input: {
+    tokenHash: string;
+    identityId: string;
+    clientId: string;
+    scopes: string[];
+    resource: string;
+    expiresAt: string;
+  }): Promise<OAuthAccessTokenRecord>;
+  getOAuthAccessTokenByHash(
+    tokenHash: string,
+  ): Promise<OAuthAccessTokenRecord | null>;
+  createOAuthRefreshToken(input: {
+    tokenHash: string;
+    identityId: string;
+    clientId: string;
+    scopes: string[];
+    resource: string;
+    expiresAt: string;
+  }): Promise<OAuthRefreshTokenRecord>;
+  getOAuthRefreshTokenByHash(
+    tokenHash: string,
+  ): Promise<OAuthRefreshTokenRecord | null>;
+  revokeOAuthTokenByHash(tokenHash: string): Promise<boolean>;
   consumeRateLimit(input: {
     key: string;
     limit: number;

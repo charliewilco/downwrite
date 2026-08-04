@@ -51,7 +51,7 @@ export function createOpenApiDocument(requestUrl: string): OpenApiDocument {
       version: API_VERSION,
       summary: "Self-hosted Markdown workspace and sharing API.",
       description:
-        "Versioned API for a self-hosted Downwrite Cloudflare Worker. The current implemented auth boundary is passkeys/WebAuthn for browser sessions plus an instance-local development bearer adapter. OAuth authorization-code-with-PKCE is the reserved external-client boundary for future iOS and MCP clients. OAuth metadata and placeholder endpoints are documented, but authorization and token issuance are not implemented in this version.",
+        "Versioned API for a self-hosted Downwrite Cloudflare Worker. The implemented auth boundaries are passkeys/WebAuthn for browser sessions, instance-local OAuth authorization-code-with-PKCE for external clients, and a localhost-only development session adapter. OAuth credentials are issued by the deployer's self-hosted instance, not a central Downwrite service.",
       license: {
         name: "MIT",
       },
@@ -90,14 +90,15 @@ export function createOpenApiDocument(requestUrl: string): OpenApiDocument {
           description:
             "Instance-local development/API token from DEVELOPMENT_API_TOKENS. This is not a central Downwrite account system.",
         },
-        oauthPkcePlanned: {
+        oauthPkce: {
           type: "oauth2",
           description:
-            "Planned future external-client boundary for the public iOS app and MCP clients. Authorization-code-with-PKCE with resource indicators is reserved, but OAuth authorization and token issuance are not implemented in v1.",
+            "Instance-local OAuth authorization-code-with-PKCE boundary for the public iOS app and MCP clients. Clients are public, use PKCE S256, request the instance API resource, and receive opaque bearer tokens issued by this self-hosted Worker.",
           flows: {
             authorizationCode: {
               authorizationUrl: `${origin}/oauth/authorize`,
               tokenUrl: `${origin}/oauth/token`,
+              refreshUrl: `${origin}/oauth/token`,
               scopes: OAUTH_SCOPES,
             },
           },
@@ -116,10 +117,6 @@ export function createOpenApiDocument(requestUrl: string): OpenApiDocument {
         NotFound: errorResponse(404, "The requested resource was not found."),
         TooManyRequests: errorResponse(429, "Rate limit exceeded."),
         Conflict: errorResponse(409, "The write precondition failed."),
-        NotImplemented: errorResponse(
-          501,
-          "The advertised boundary is planned but not implemented.",
-        ),
       },
       parameters: {
         groupId: pathParameter("groupId", "Workspace/group identifier."),
@@ -142,10 +139,10 @@ export function createOpenApiDocument(requestUrl: string): OpenApiDocument {
       markdown:
         "Document content is UTF-8 Markdown stored as text/markdown. The API returns Markdown source, not rendered HTML. Clients are responsible for preview rendering.",
       authorization:
-        "Authenticated operations accept either the passkey session cookie or the instance-local development bearer token. Public-link reads are anonymous and read-only. Owner role is required for workspace settings and sharing management; owner or editor may write documents.",
+        "Authenticated operations accept either the passkey session cookie, an instance-local OAuth bearer token, or the local-only development adapter. OAuth tokens must include the route scope. Public-link reads are anonymous and read-only. Owner role is required for workspace settings and sharing management; owner or editor may write documents.",
       errors:
         "Error responses use { error, code, status }. The error string is preserved for older clients, while code is the stable programmatic discriminator.",
-      mcp: "Future MCP tools must be normal API clients using scoped credentials. Planned mappings are list_workspaces, list_documents, read_document, create_document, and update_document; no MCP backdoor is implemented in v1.",
+      mcp: "MCP tools are normal external clients using scoped credentials. Implemented mappings are list_workspaces, list_documents, read_document, create_document, and update_document; no MCP backdoor is implemented in v1.",
     },
     "x-downwrite-client-contract": clientContract(),
     "x-downwrite-api-roadmap": apiRoadmap(),
@@ -228,9 +225,11 @@ function apiRoadmap() {
         "GET /.well-known/downwrite",
         "GET /.well-known/oauth-protected-resource",
         "GET /.well-known/oauth-authorization-server",
-        "GET /oauth/authorize returns 501 planned-not-implemented",
-        "POST /oauth/token returns 501 planned-not-implemented",
-        "POST /mcp authenticated stateless MCP JSON-RPC endpoint with development credentials only",
+        "GET /oauth/authorize",
+        "POST /oauth/authorize/approve",
+        "POST /oauth/token",
+        "POST /oauth/revoke",
+        "POST /mcp authenticated stateless MCP JSON-RPC endpoint with scoped credentials",
         "GET /api/v1/discovery",
         "GET /api/v1/auth/status",
         "POST /api/v1/auth/development/session local-only development session",
@@ -267,13 +266,15 @@ function apiRoadmap() {
         "Public-link expiration and last-used metadata if link lifecycle screens need it.",
       ],
       nativeClientAuth: [
-        "Implement GET /oauth/authorize for system-browser OAuth authorization code with PKCE.",
-        "Implement POST /oauth/token for short-lived access tokens and refresh-token rotation.",
+        "Implemented GET /oauth/authorize for system-browser OAuth authorization code with PKCE.",
+        "Implemented POST /oauth/token for short-lived access tokens and refresh-token rotation.",
+        "Implemented POST /oauth/revoke for opaque access/refresh token revocation.",
+        "Future work: add configurable client registration if third-party HTTPS redirect clients are needed beyond the built-in iOS and MCP public clients.",
         "GET /api/v1/me planned for native/web account profile once broad account UX exists.",
       ],
       mcpSafeOperations: [
         "Implemented /mcp tools: list_workspaces, list_documents, read_document, create_document, update_document.",
-        "Production OAuth authorization and token issuance remain blocked until the authorization server boundary is implemented.",
+        "MCP requires mcp:documents when authenticated with an OAuth bearer token.",
         "Avoid any all-instance search/list endpoint by default.",
       ],
     },
@@ -302,8 +303,6 @@ function clientContract() {
         "not_found",
         "conflict",
         "rate_limited",
-        "not_implemented",
-        "oauth_not_implemented",
         "internal_error",
       ],
     },
@@ -330,10 +329,15 @@ function clientContract() {
       authorizationServerMetadata: "/.well-known/oauth-authorization-server",
       authorizationEndpoint: "/oauth/authorize",
       tokenEndpoint: "/oauth/token",
+      revocationEndpoint: "/oauth/revoke",
       status:
-        "Protected-resource metadata is implemented. OAuth authorization and token issuance are planned and return 501 in v1.",
+        "Protected-resource metadata, authorization, token exchange, refresh rotation, and token revocation are implemented by this self-hosted instance.",
       pkceRequired: true,
       resourceIndicatorsRequired: true,
+      publicClients: [
+        "downwrite-ios with downwrite://oauth/callback",
+        "downwrite-mcp with loopback http://127.0.0.1:{port}/callback or http://localhost:{port}/callback",
+      ],
       scopes: Object.keys(OAUTH_SCOPES),
     },
   };
@@ -393,15 +397,15 @@ function paths(origin: string): OpenApiDocument["paths"] {
     "/.well-known/oauth-authorization-server": {
       get: operation({
         tags: ["External auth"],
-        summary: "Read reserved OAuth authorization-server metadata.",
+        summary: "Read OAuth authorization-server metadata.",
         description:
-          "Documents the standards-compatible OAuth/PKCE boundary reserved for future iOS and MCP clients. Authorization and token issuance are not implemented in v1.",
+          "Documents this instance's OAuth/PKCE authorization server. Tokens are opaque credentials issued by this self-hosted Worker for this Worker API resource.",
         operationId: "getOAuthAuthorizationServerMetadata",
         security: [],
-        "x-downwrite-status": "planned",
+        "x-downwrite-status": "implemented",
         responses: {
           "200": jsonResponse(
-            "Reserved OAuth authorization-server metadata.",
+            "OAuth authorization-server metadata.",
             "OAuthAuthorizationServerMetadata",
           ),
         },
@@ -410,28 +414,83 @@ function paths(origin: string): OpenApiDocument["paths"] {
     "/oauth/authorize": {
       get: operation({
         tags: ["External auth"],
-        summary: "Reserved OAuth authorization endpoint.",
+        summary: "Render OAuth authorization consent.",
         description:
-          "Planned future system-browser authorization endpoint. It returns 501 until production OAuth authorization is implemented.",
+          "Validates a public client authorization-code request with PKCE S256 and renders the minimal signed-in browser consent page.",
         operationId: "authorizeOAuthClient",
-        security: [],
-        "x-downwrite-status": "planned",
+        security: [sessionSecurity()],
+        parameters: [
+          queryParameter("response_type", "OAuth response type. Must be code."),
+          queryParameter("client_id", "Public client identifier."),
+          queryParameter(
+            "redirect_uri",
+            "Allowed redirect URI for the public client.",
+          ),
+          queryParameter("code_challenge", "PKCE S256 challenge."),
+          queryParameter("code_challenge_method", "PKCE method. Must be S256."),
+          queryParameter("scope", "Space-delimited requested scopes."),
+          queryParameter(
+            "resource",
+            "Protected resource. Must be this /api/v1 base URL.",
+          ),
+          queryParameter("state", "Opaque client state."),
+        ],
+        "x-downwrite-status": "implemented",
         responses: {
-          "501": refResponse("NotImplemented"),
+          "200": {
+            description: "HTML consent page.",
+            content: { "text/html": { schema: { type: "string" } } },
+          },
+          "400": refResponse("BadRequest"),
+          "401": refResponse("Unauthorized"),
+        },
+      }),
+    },
+    "/oauth/authorize/approve": {
+      post: operation({
+        tags: ["External auth"],
+        summary: "Approve OAuth authorization and redirect with a code.",
+        description:
+          "Cookie-authenticated consent action. Unsafe cookie writes require a same-origin Origin header. On success, redirects to the validated client redirect_uri with code and optional state.",
+        operationId: "approveOAuthClient",
+        security: [sessionSecurity()],
+        "x-downwrite-status": "implemented",
+        requestBody: formRequest("OAuthAuthorizeApproveRequest"),
+        responses: {
+          "302": { description: "Redirect to client redirect_uri with code." },
+          "400": refResponse("BadRequest"),
+          "401": refResponse("Unauthorized"),
+          "403": refResponse("Forbidden"),
         },
       }),
     },
     "/oauth/token": {
       post: operation({
         tags: ["External auth"],
-        summary: "Reserved OAuth token endpoint.",
+        summary: "Exchange OAuth authorization code or refresh token.",
         description:
-          "Planned future authorization-code token endpoint. It returns 501 until token issuance, audience validation, refresh rotation, and revocation are implemented.",
+          "Supports authorization_code and refresh_token grants for public clients using PKCE. Issues opaque instance-local bearer tokens scoped to this Worker API resource.",
         operationId: "exchangeOAuthToken",
         security: [],
-        "x-downwrite-status": "planned",
+        "x-downwrite-status": "implemented",
+        requestBody: formRequest("OAuthTokenRequest"),
         responses: {
-          "501": refResponse("NotImplemented"),
+          "200": jsonResponse("OAuth token response.", "OAuthTokenResponse"),
+          "400": refResponse("BadRequest"),
+        },
+      }),
+    },
+    "/oauth/revoke": {
+      post: operation({
+        tags: ["External auth"],
+        summary: "Revoke an OAuth access or refresh token.",
+        operationId: "revokeOAuthToken",
+        security: [],
+        "x-downwrite-status": "implemented",
+        requestBody: formRequest("OAuthRevokeRequest"),
+        responses: {
+          "200": { description: "Token revoked or already unknown." },
+          "400": refResponse("BadRequest"),
         },
       }),
     },
@@ -440,7 +499,7 @@ function paths(origin: string): OpenApiDocument["paths"] {
         tags: ["External auth"],
         summary: "Invoke the narrow Downwrite MCP tool endpoint.",
         description:
-          "Stateless JSON-RPC endpoint for MCP clients. The current implementation authenticates with the same instance-local development bearer/session adapter, derives a local Downwrite identity, and calls storage/domain methods directly. It does not pass arbitrary bearer tokens through to API handlers. Production OAuth token issuance is not implemented.",
+          "Stateless JSON-RPC endpoint for MCP clients. The implementation authenticates bearer credentials or session cookies, derives a local Downwrite identity, checks OAuth scope mcp:documents when applicable, and calls storage/domain methods directly. It does not pass arbitrary bearer tokens through to API handlers.",
         operationId: "invokeMcp",
         security: authenticatedSecurity(),
         "x-downwrite-scope": "mcp:documents",
@@ -459,6 +518,7 @@ function paths(origin: string): OpenApiDocument["paths"] {
           },
           "400": refResponse("BadRequest"),
           "401": refResponse("Unauthorized"),
+          "403": refResponse("Forbidden"),
         },
       }),
     },
@@ -949,7 +1009,7 @@ const schemas: Record<string, JsonSchema> = {
       },
       resource_documentation: { type: "string", format: "uri" },
       "x-downwrite-status": { type: "string" },
-      "x-downwrite-current-token-adapter": { type: "string" },
+      "x-downwrite-token-model": { type: "string" },
     },
     [
       "resource",
@@ -958,7 +1018,7 @@ const schemas: Record<string, JsonSchema> = {
       "bearer_methods_supported",
       "resource_documentation",
       "x-downwrite-status",
-      "x-downwrite-current-token-adapter",
+      "x-downwrite-token-model",
     ],
   ),
   OAuthAuthorizationServerMetadata: objectSchema(
@@ -966,6 +1026,7 @@ const schemas: Record<string, JsonSchema> = {
       issuer: { type: "string", format: "uri" },
       authorization_endpoint: { type: "string", format: "uri" },
       token_endpoint: { type: "string", format: "uri" },
+      revocation_endpoint: { type: "string", format: "uri" },
       response_types_supported: {
         type: "array",
         items: { type: "string" },
@@ -982,11 +1043,19 @@ const schemas: Record<string, JsonSchema> = {
         type: "array",
         items: { type: "string" },
       },
+      revocation_endpoint_auth_methods_supported: {
+        type: "array",
+        items: { type: "string" },
+      },
       scopes_supported: {
         type: "array",
         items: { type: "string" },
       },
       "x-downwrite-status": { type: "string" },
+      "x-downwrite-public-clients": {
+        type: "array",
+        items: { type: "object", additionalProperties: true },
+      },
       "x-downwrite-resource-indicators-required": { type: "boolean" },
       "x-downwrite-note": { type: "string" },
     },
@@ -994,14 +1063,77 @@ const schemas: Record<string, JsonSchema> = {
       "issuer",
       "authorization_endpoint",
       "token_endpoint",
+      "revocation_endpoint",
       "response_types_supported",
       "grant_types_supported",
       "code_challenge_methods_supported",
       "token_endpoint_auth_methods_supported",
+      "revocation_endpoint_auth_methods_supported",
       "scopes_supported",
       "x-downwrite-status",
+      "x-downwrite-public-clients",
       "x-downwrite-resource-indicators-required",
       "x-downwrite-note",
+    ],
+  ),
+  OAuthAuthorizeApproveRequest: objectSchema(
+    {
+      client_id: { type: "string" },
+      redirect_uri: { type: "string" },
+      code_challenge: { type: "string" },
+      code_challenge_method: { type: "string", const: "S256" },
+      scope: { type: "string" },
+      resource: { type: "string", format: "uri" },
+      state: { type: "string" },
+    },
+    [
+      "client_id",
+      "redirect_uri",
+      "code_challenge",
+      "code_challenge_method",
+      "scope",
+      "resource",
+    ],
+  ),
+  OAuthTokenRequest: objectSchema({
+    grant_type: {
+      type: "string",
+      enum: ["authorization_code", "refresh_token"],
+    },
+    client_id: { type: "string" },
+    code: { type: "string" },
+    redirect_uri: { type: "string" },
+    code_verifier: { type: "string" },
+    refresh_token: { type: "string" },
+  }),
+  OAuthRevokeRequest: objectSchema(
+    {
+      token: { type: "string" },
+      token_type_hint: {
+        type: "string",
+        enum: ["access_token", "refresh_token"],
+      },
+    },
+    ["token"],
+  ),
+  OAuthTokenResponse: objectSchema(
+    {
+      token_type: { type: "string", const: "Bearer" },
+      access_token: { type: "string" },
+      expires_in: { type: "integer" },
+      refresh_token: { type: "string" },
+      refresh_expires_in: { type: "integer" },
+      scope: { type: "string" },
+      resource: { type: "string", format: "uri" },
+    },
+    [
+      "token_type",
+      "access_token",
+      "expires_in",
+      "refresh_token",
+      "refresh_expires_in",
+      "scope",
+      "resource",
     ],
   ),
   JsonRpcRequest: objectSchema(
@@ -1395,7 +1527,7 @@ function operation(input: OpenApiOperation): OpenApiOperation {
 }
 
 function authenticatedSecurity() {
-  return [sessionSecurity(), bearerSecurity()];
+  return [sessionSecurity(), bearerSecurity(), oauthSecurity()];
 }
 
 function sessionSecurity() {
@@ -1406,11 +1538,26 @@ function bearerSecurity() {
   return { developmentBearer: [] };
 }
 
+function oauthSecurity() {
+  return { oauthPkce: [] };
+}
+
 function jsonRequest(schema: string) {
   return {
     required: true,
     content: {
       "application/json": {
+        schema: refSchema(schema),
+      },
+    },
+  };
+}
+
+function formRequest(schema: string) {
+  return {
+    required: true,
+    content: {
+      "application/x-www-form-urlencoded": {
         schema: refSchema(schema),
       },
     },
@@ -1471,6 +1618,16 @@ function pathParameter(name: string, description: string) {
     name,
     in: "path",
     required: true,
+    description,
+    schema: { type: "string" },
+  };
+}
+
+function queryParameter(name: string, description: string) {
+  return {
+    name,
+    in: "query",
+    required: name !== "scope" && name !== "state",
     description,
     schema: { type: "string" },
   };

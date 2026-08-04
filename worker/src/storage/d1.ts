@@ -7,6 +7,9 @@ import type {
   GroupSummary,
   InvitationRecord,
   InvitationStatus,
+  OAuthAccessTokenRecord,
+  OAuthAuthorizationCodeRecord,
+  OAuthRefreshTokenRecord,
   PublicDocumentRecord,
   PublicLinkRecord,
   Role,
@@ -114,6 +117,32 @@ interface SessionRow {
 interface RateLimitRow {
   count: number;
   reset_at: string;
+}
+
+interface OAuthAuthorizationCodeRow {
+  id: string;
+  code_hash: string;
+  identity_id: string;
+  client_id: string;
+  redirect_uri: string;
+  code_challenge: string;
+  code_challenge_method: "S256";
+  scopes: string;
+  resource: string;
+  created_at: string;
+  expires_at: string;
+  consumed_at: string | null;
+}
+
+interface OAuthTokenRow {
+  token_hash: string;
+  identity_id: string;
+  client_id: string;
+  scopes: string;
+  resource: string;
+  created_at: string;
+  expires_at: string;
+  revoked_at: string | null;
 }
 
 async function readMarkdown(bucket: R2Bucket, key: string) {
@@ -419,6 +448,178 @@ export class D1Storage implements Storage {
       .prepare(`DELETE FROM sessions WHERE token_hash = ?`)
       .bind(tokenHash)
       .run();
+  }
+
+  async createOAuthAuthorizationCode(input: {
+    codeHash: string;
+    identityId: string;
+    clientId: string;
+    redirectUri: string;
+    codeChallenge: string;
+    scopes: string[];
+    resource: string;
+    expiresAt: string;
+  }): Promise<OAuthAuthorizationCodeRecord> {
+    const id = crypto.randomUUID();
+    await this.#db
+      .prepare(
+        `INSERT INTO oauth_authorization_codes
+          (id, code_hash, identity_id, client_id, redirect_uri,
+            code_challenge, code_challenge_method, scopes, resource, expires_at)
+        VALUES (?, ?, ?, ?, ?, ?, 'S256', ?, ?, ?)`,
+      )
+      .bind(
+        id,
+        input.codeHash,
+        input.identityId,
+        input.clientId,
+        input.redirectUri,
+        input.codeChallenge,
+        JSON.stringify(input.scopes),
+        input.resource,
+        input.expiresAt,
+      )
+      .run();
+
+    const code = await this.getOAuthAuthorizationCodeByHash(input.codeHash);
+    if (!code) {
+      throw new Error("Failed to create OAuth authorization code");
+    }
+    return code;
+  }
+
+  async getOAuthAuthorizationCodeByHash(codeHash: string) {
+    const row = await this.#db
+      .prepare(
+        `SELECT id, code_hash, identity_id, client_id, redirect_uri,
+          code_challenge, code_challenge_method, scopes, resource,
+          created_at, expires_at, consumed_at
+        FROM oauth_authorization_codes
+        WHERE code_hash = ?`,
+      )
+      .bind(codeHash)
+      .first<OAuthAuthorizationCodeRow>();
+    return row ? oauthAuthorizationCodeFromRow(row) : null;
+  }
+
+  async consumeOAuthAuthorizationCode(codeHash: string) {
+    await this.#db
+      .prepare(
+        `UPDATE oauth_authorization_codes
+        SET consumed_at = CURRENT_TIMESTAMP
+        WHERE code_hash = ?`,
+      )
+      .bind(codeHash)
+      .run();
+  }
+
+  async createOAuthAccessToken(input: {
+    tokenHash: string;
+    identityId: string;
+    clientId: string;
+    scopes: string[];
+    resource: string;
+    expiresAt: string;
+  }): Promise<OAuthAccessTokenRecord> {
+    await this.#db
+      .prepare(
+        `INSERT INTO oauth_access_tokens
+          (token_hash, identity_id, client_id, scopes, resource, expires_at)
+        VALUES (?, ?, ?, ?, ?, ?)`,
+      )
+      .bind(
+        input.tokenHash,
+        input.identityId,
+        input.clientId,
+        JSON.stringify(input.scopes),
+        input.resource,
+        input.expiresAt,
+      )
+      .run();
+
+    const token = await this.getOAuthAccessTokenByHash(input.tokenHash);
+    if (!token) {
+      throw new Error("Failed to create OAuth access token");
+    }
+    return token;
+  }
+
+  async getOAuthAccessTokenByHash(tokenHash: string) {
+    const row = await this.#db
+      .prepare(
+        `SELECT token_hash, identity_id, client_id, scopes, resource,
+          created_at, expires_at, revoked_at
+        FROM oauth_access_tokens
+        WHERE token_hash = ?`,
+      )
+      .bind(tokenHash)
+      .first<OAuthTokenRow>();
+    return row ? oauthAccessTokenFromRow(row) : null;
+  }
+
+  async createOAuthRefreshToken(input: {
+    tokenHash: string;
+    identityId: string;
+    clientId: string;
+    scopes: string[];
+    resource: string;
+    expiresAt: string;
+  }): Promise<OAuthRefreshTokenRecord> {
+    await this.#db
+      .prepare(
+        `INSERT INTO oauth_refresh_tokens
+          (token_hash, identity_id, client_id, scopes, resource, expires_at)
+        VALUES (?, ?, ?, ?, ?, ?)`,
+      )
+      .bind(
+        input.tokenHash,
+        input.identityId,
+        input.clientId,
+        JSON.stringify(input.scopes),
+        input.resource,
+        input.expiresAt,
+      )
+      .run();
+
+    const token = await this.getOAuthRefreshTokenByHash(input.tokenHash);
+    if (!token) {
+      throw new Error("Failed to create OAuth refresh token");
+    }
+    return token;
+  }
+
+  async getOAuthRefreshTokenByHash(tokenHash: string) {
+    const row = await this.#db
+      .prepare(
+        `SELECT token_hash, identity_id, client_id, scopes, resource,
+          created_at, expires_at, revoked_at
+        FROM oauth_refresh_tokens
+        WHERE token_hash = ?`,
+      )
+      .bind(tokenHash)
+      .first<OAuthTokenRow>();
+    return row ? oauthRefreshTokenFromRow(row) : null;
+  }
+
+  async revokeOAuthTokenByHash(tokenHash: string) {
+    const access = await this.#db
+      .prepare(
+        `UPDATE oauth_access_tokens
+        SET revoked_at = CURRENT_TIMESTAMP
+        WHERE token_hash = ? AND revoked_at IS NULL`,
+      )
+      .bind(tokenHash)
+      .run();
+    const refresh = await this.#db
+      .prepare(
+        `UPDATE oauth_refresh_tokens
+        SET revoked_at = CURRENT_TIMESTAMP
+        WHERE token_hash = ? AND revoked_at IS NULL`,
+      )
+      .bind(tokenHash)
+      .run();
+
+    return Boolean(access.meta.changes || refresh.meta.changes);
   }
 
   async consumeRateLimit(input: {
@@ -1235,6 +1436,58 @@ function sessionFromRow(row: SessionRow): SessionRecord {
     createdAt: row.created_at,
     expiresAt: row.expires_at,
   };
+}
+
+function oauthAuthorizationCodeFromRow(
+  row: OAuthAuthorizationCodeRow,
+): OAuthAuthorizationCodeRecord {
+  return {
+    id: row.id,
+    codeHash: row.code_hash,
+    identityId: row.identity_id,
+    clientId: row.client_id,
+    redirectUri: row.redirect_uri,
+    codeChallenge: row.code_challenge,
+    codeChallengeMethod: row.code_challenge_method,
+    scopes: parseScopes(row.scopes),
+    resource: row.resource,
+    createdAt: row.created_at,
+    expiresAt: row.expires_at,
+    consumedAt: row.consumed_at,
+  };
+}
+
+function oauthAccessTokenFromRow(row: OAuthTokenRow): OAuthAccessTokenRecord {
+  return {
+    tokenHash: row.token_hash,
+    identityId: row.identity_id,
+    clientId: row.client_id,
+    scopes: parseScopes(row.scopes),
+    resource: row.resource,
+    createdAt: row.created_at,
+    expiresAt: row.expires_at,
+    revokedAt: row.revoked_at,
+  };
+}
+
+function oauthRefreshTokenFromRow(row: OAuthTokenRow): OAuthRefreshTokenRecord {
+  return {
+    tokenHash: row.token_hash,
+    identityId: row.identity_id,
+    clientId: row.client_id,
+    scopes: parseScopes(row.scopes),
+    resource: row.resource,
+    createdAt: row.created_at,
+    expiresAt: row.expires_at,
+    revokedAt: row.revoked_at,
+  };
+}
+
+function parseScopes(value: string) {
+  const scopes: unknown = JSON.parse(value);
+  return Array.isArray(scopes)
+    ? scopes.filter((scope): scope is string => typeof scope === "string")
+    : [];
 }
 
 function publicLinkFromRow(row: PublicLinkRow): PublicLinkRecord {

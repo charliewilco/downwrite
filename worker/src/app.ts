@@ -28,6 +28,15 @@ import {
 } from "./security.js";
 import { createOpaqueToken } from "./domain/tokens.js";
 import { handleMcpRequest } from "./mcp.js";
+import {
+  OAUTH_SCOPES,
+  assertScope,
+  exchangeToken,
+  oauthClientPolicy,
+  approveAuthorizationRequest,
+  renderAuthorizationPage,
+  revokeToken,
+} from "./oauth.js";
 import { createOpenApiDocument, createOpenApiHtml } from "./openapi.js";
 import { D1Storage } from "./storage/d1.js";
 import type { Env, Role, Storage } from "./types.js";
@@ -36,15 +45,6 @@ type AppBindings = { Bindings: Env };
 type StorageFactory = (env: Env) => Storage;
 
 const VALID_ROLES = new Set<Role>(["owner", "editor"]);
-const OAUTH_SCOPES = [
-  "workspaces:read",
-  "workspaces:write",
-  "documents:read",
-  "documents:write",
-  "sharing:write",
-  "mcp:documents",
-] as const;
-
 export interface AppOptions {
   createStorage?: StorageFactory;
   authService?: AuthService;
@@ -103,14 +103,15 @@ export function createApp(options: AppOptions = {}) {
         documentationUrl: `${instanceUrl}/api/v1/docs`,
       },
       auth: {
-        current: "instance-local-development-bearer-token",
+        current: "passkeys-webauthn-session-and-oauth-pkce",
         futureBoundary:
-          "OAuth 2.1 authorization code with PKCE for future native clients",
+          "OAuth 2.1 authorization code with PKCE for external clients",
         web: "passkeys-webauthn-http-only-server-side-session",
         native: {
-          status: "reserved-not-implemented",
+          status: "implemented",
           authorizationEndpoint: `${instanceUrl}/oauth/authorize`,
           tokenEndpoint: `${instanceUrl}/oauth/token`,
+          revocationEndpoint: `${instanceUrl}/oauth/revoke`,
           protectedResourceMetadataUrl: `${instanceUrl}/.well-known/oauth-protected-resource`,
           authorizationServerMetadataUrl: `${instanceUrl}/.well-known/oauth-authorization-server`,
           resource: `${instanceUrl}/api/v1`,
@@ -118,6 +119,7 @@ export function createApp(options: AppOptions = {}) {
           grant: "authorization_code",
           pkce: true,
           browserSignInRequired: true,
+          publicClients: oauthClientPolicy(),
         },
       },
       clients: {
@@ -150,7 +152,7 @@ export function createApp(options: AppOptions = {}) {
       bearer_methods_supported: ["header"],
       resource_documentation: `${instanceUrl}/api/v1/docs`,
       "x-downwrite-status": "resource-server-metadata-implemented",
-      "x-downwrite-current-token-adapter": "instance-local-development-only",
+      "x-downwrite-token-model": "instance-local-opaque-bearer-tokens",
     };
   }
 
@@ -161,15 +163,18 @@ export function createApp(options: AppOptions = {}) {
       issuer: instanceUrl,
       authorization_endpoint: `${instanceUrl}/oauth/authorize`,
       token_endpoint: `${instanceUrl}/oauth/token`,
+      revocation_endpoint: `${instanceUrl}/oauth/revoke`,
       response_types_supported: ["code"],
-      grant_types_supported: ["authorization_code"],
+      grant_types_supported: ["authorization_code", "refresh_token"],
       code_challenge_methods_supported: ["S256"],
       token_endpoint_auth_methods_supported: ["none"],
+      revocation_endpoint_auth_methods_supported: ["none"],
       scopes_supported: OAUTH_SCOPES,
-      "x-downwrite-status": "planned-not-implemented",
+      "x-downwrite-status": "implemented",
+      "x-downwrite-public-clients": oauthClientPolicy(),
       "x-downwrite-resource-indicators-required": true,
       "x-downwrite-note":
-        "OAuth authorization-code-with-PKCE is the reserved external client boundary; authorization and token issuance are not implemented in this Worker slice.",
+        "OAuth credentials are issued by this self-hosted instance only.",
     };
   }
 
@@ -203,21 +208,21 @@ export function createApp(options: AppOptions = {}) {
     c.json(oauthAuthorizationServerMetadata(c.req.url)),
   );
 
-  app.get("/oauth/authorize", () => {
-    throw new HttpError(
-      501,
-      "OAuth authorization endpoint is planned but not implemented",
-      "oauth_not_implemented",
-    );
-  });
+  app.get("/oauth/authorize", async (c) =>
+    renderAuthorizationPage({ c, storage: storage(c.env) }),
+  );
 
-  app.post("/oauth/token", () => {
-    throw new HttpError(
-      501,
-      "OAuth token endpoint is planned but not implemented",
-      "oauth_not_implemented",
-    );
-  });
+  app.post("/oauth/authorize/approve", async (c) =>
+    approveAuthorizationRequest({ c, storage: storage(c.env) }),
+  );
+
+  app.post("/oauth/token", async (c) =>
+    exchangeToken({ c, storage: storage(c.env) }),
+  );
+
+  app.post("/oauth/revoke", async (c) =>
+    revokeToken({ c, storage: storage(c.env) }),
+  );
 
   app.post("/mcp", async (c) => handleMcpRequest(c, storage(c.env)));
 
@@ -339,6 +344,7 @@ export function createApp(options: AppOptions = {}) {
   app.get("/api/v1/groups", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "workspaces:read");
     const groups = await store.listGroupsForIdentity(identity.id);
 
     return c.json({ groups });
@@ -347,6 +353,7 @@ export function createApp(options: AppOptions = {}) {
   app.post("/api/v1/groups", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "workspaces:write");
     const body = await readJsonObject(c);
     const name = requireString(body, "name", "Untitled Group");
     const group = await store.createGroup({
@@ -362,6 +369,7 @@ export function createApp(options: AppOptions = {}) {
   app.patch("/api/v1/groups/:groupId", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "workspaces:write");
     const body = await readJsonObject(c);
     const group = await store.updateGroup({
       identityId: identity.id,
@@ -383,6 +391,7 @@ export function createApp(options: AppOptions = {}) {
   app.delete("/api/v1/groups/:groupId", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "workspaces:write");
     const deleted = await store.deleteGroup({
       identityId: identity.id,
       groupId: c.req.param("groupId"),
@@ -398,6 +407,7 @@ export function createApp(options: AppOptions = {}) {
   app.post("/api/v1/groups/:groupId/documents", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "documents:write");
     const body = await readJsonObject(c);
     const document = await store.createDocument({
       identityId: identity.id,
@@ -416,6 +426,7 @@ export function createApp(options: AppOptions = {}) {
   app.get("/api/v1/documents/:documentId", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "documents:read");
     const document = await store.getDocumentForIdentity({
       identityId: identity.id,
       documentId: c.req.param("documentId"),
@@ -431,6 +442,7 @@ export function createApp(options: AppOptions = {}) {
   app.patch("/api/v1/documents/:documentId", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "documents:write");
     const body = await readJsonObject(c);
     const title = optionalString(body, "title") ?? undefined;
     const content = optionalText(body, "content");
@@ -466,6 +478,7 @@ export function createApp(options: AppOptions = {}) {
   app.patch("/api/v1/documents/:documentId/move", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "documents:write");
     const body = await readJsonObject(c);
     const documentId = c.req.param("documentId");
     const current = await store.getDocumentForIdentity({
@@ -495,6 +508,7 @@ export function createApp(options: AppOptions = {}) {
   app.patch("/api/v1/documents/:documentId/position", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "documents:write");
     const body = await readJsonObject(c);
     const position = optionalNumber(body, "position");
     const documentId = c.req.param("documentId");
@@ -528,6 +542,7 @@ export function createApp(options: AppOptions = {}) {
   app.delete("/api/v1/documents/:documentId", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "documents:write");
     const deleted = await store.deleteDocument({
       identityId: identity.id,
       documentId: c.req.param("documentId"),
@@ -543,6 +558,7 @@ export function createApp(options: AppOptions = {}) {
   app.post("/api/v1/documents/:documentId/collaborators", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "sharing:write");
     const body = await readJsonObject(c);
     const role = requireString(body, "role") as Role;
 
@@ -565,6 +581,7 @@ export function createApp(options: AppOptions = {}) {
     async (c) => {
       const store = storage(c.env);
       const identity = await readIdentity(c, store);
+      assertScope(identity, "sharing:write");
       const removed = await store.removeDocumentCollaborator({
         identityId: identity.id,
         documentId: c.req.param("documentId"),
@@ -582,6 +599,7 @@ export function createApp(options: AppOptions = {}) {
   app.get("/api/v1/documents/:documentId/share", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "sharing:write");
     const share = await store.getDocumentShareState({
       identityId: identity.id,
       documentId: c.req.param("documentId"),
@@ -597,6 +615,7 @@ export function createApp(options: AppOptions = {}) {
   app.post("/api/v1/documents/:documentId/invitations", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "sharing:write");
     const body = await readJsonObject(c);
     const role = requireString(body, "role") as Role;
 
@@ -622,6 +641,7 @@ export function createApp(options: AppOptions = {}) {
   app.post("/api/v1/invitations/:token/accept", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "sharing:write");
     const invitation = await store.acceptDocumentInvitation({
       identityId: identity.id,
       token: c.req.param("token"),
@@ -637,6 +657,7 @@ export function createApp(options: AppOptions = {}) {
   app.delete("/api/v1/invitations/:invitationId", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "sharing:write");
     const revoked = await store.revokeDocumentInvitation({
       identityId: identity.id,
       invitationId: c.req.param("invitationId"),
@@ -652,6 +673,7 @@ export function createApp(options: AppOptions = {}) {
   app.post("/api/v1/documents/:documentId/public-links", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "sharing:write");
     const body = await readJsonObject(c);
     const publicLink = await store.createPublicLink({
       identityId: identity.id,
@@ -670,6 +692,7 @@ export function createApp(options: AppOptions = {}) {
   app.patch("/api/v1/public-links/:publicLinkId", async (c) => {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
+    assertScope(identity, "sharing:write");
     const body = await readJsonObject(c);
     const publicLink = await store.updatePublicLink({
       identityId: identity.id,
