@@ -5,16 +5,16 @@
   "repository": "charliewilco/downwrite",
   "author": "Charlie <charliewilc0@pm.me>",
   "workspaces": [
-    "worker",
-    "web"
+    "worker"
   ],
   "scripts": {
     "dev:worker": "npm --workspace @downwrite/worker run dev",
-    "dev:web": "npm --workspace @downwrite/web run dev",
+    "dev:web": "npm --workspace @downwrite/worker run dev:web",
+    "dev:api": "npm --workspace @downwrite/worker run dev:api",
     "typecheck": "npm run typecheck --workspaces",
     "test": "npm --workspace @downwrite/worker run test",
     "build": "npm run build --workspaces",
-    "format:check": "npx --yes prettier@3.9.6 --check package.json tsconfig.json worker web",
+    "format:check": "npx --yes prettier@3.9.6 --check package.json tsconfig.json worker Readme.md",
     "validate": "npm run typecheck && npm run test && npm run build && npm --workspace @downwrite/worker run validate:worker"
   },
   "overrides": {

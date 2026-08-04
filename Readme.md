@@ -2,20 +2,21 @@
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/charliewilco/downwrite/tree/main/worker)
 
-Downwrite is being rebuilt as an open-source, self-hostable Markdown writing
-service. The product core is a Cloudflare Worker with a versioned Hono API, D1
-metadata, R2 Markdown storage, passkey-backed web sessions, and instance-local
-authorization records. There is no dependency on a centrally operated Downwrite
-service.
+Downwrite is an open-source, self-hostable Markdown writing service. The
+product core is one Cloudflare Worker deployment that serves the compiled Preact
+web app, the versioned Hono API, D1 metadata, R2 Markdown storage,
+passkey-backed web sessions, and instance-local authorization records from the
+same origin. There is no dependency on a centrally operated Downwrite service.
 
 ## Current Slice
 
 This repository currently contains:
 
-- `worker/`: the isolated deployable Cloudflare Worker API package.
-- `web/`: a skeletal Preact client shell for local API-backed UI work.
+- `worker/`: the isolated deployable Cloudflare Worker package, including API
+  source, D1 migrations, Wrangler config, and the Preact web source under
+  `worker/web/`.
 - legacy source under `src/`: retained only as historical material while the
-  greenfield Worker/Web implementation replaces it.
+  greenfield Worker implementation replaces it.
 
 The implemented API slice supports:
 
@@ -51,12 +52,17 @@ The implemented API slice supports:
 Anonymous public-link reads are read-only. Writes require an instance-local bearer
 token or passkey session mapped to an invited `owner` or `editor` identity.
 
-The web shell now includes workspace create/rename/delete/description/color
+The web app now includes workspace create/rename/delete/description/color
 organization, document detail navigation, Markdown textarea editing, debounced
 autosave, rename, delete, dependency-free rendered Markdown preview, collaborator
 invitations, invitation acceptance, and public-link creation/revocation. It
 deliberately does not include a rich editor, iOS client, MCP server, or email
 delivery.
+
+The compiled web assets are served by the same Cloudflare Worker as the API
+using Workers Static Assets. Browser routes such as `/workspaces/:id`,
+`/documents/:id`, `/invitations/:token`, and `/public/:token` are SPA routes;
+API and discovery routes remain under `/api/v1` and `/.well-known/downwrite`.
 
 The Worker also serves a versioned OpenAPI 3.1 contract at
 `/api/v1/openapi.json` and a local HTML documentation view at `/api/v1/docs`.
@@ -122,14 +128,18 @@ The button above points at the isolated `worker/` directory:
 
 Cloudflare's Deploy to Cloudflare flow treats the subdirectory as the project
 root, so `worker/` contains its own `package.json`, `wrangler.toml`, migrations,
-source, and tests. This is intentional: Cloudflare does not fully support
-monorepos for one-click Worker deploys, and a subdirectory deploy must be fully
-isolated.
+API source, web source, and tests. This is intentional: Cloudflare does not fully
+support monorepos for one-click Worker deploys, and a subdirectory deploy must
+be fully isolated.
 
-During the button flow, Cloudflare reads `worker/wrangler.toml` and provisions
-the deployer's own resources:
+During the button flow, Cloudflare reads `worker/wrangler.toml`, builds the
+compiled Preact assets into `worker/web/dist`, and provisions the deployer's own
+resources:
 
-- Worker: `downwrite-api`, or the deployer's chosen name.
+- Worker: `downwrite-api`, or the deployer's chosen name, serving both the web
+  app and `/api/v1`.
+- Workers Static Assets: `worker/web/dist`, with SPA fallback for browser
+  routes and Worker-first routing for `/api/*` and `/.well-known/*`.
 - D1 binding: `DB`, for groups, documents, collaborator roles, share links,
   sessions, passkey challenges, and coarse abuse throttles.
 - R2 binding: `CONTENT`, for Markdown document bodies.
@@ -172,16 +182,19 @@ Run the Worker:
 npm run dev
 ```
 
-In another terminal, run the Preact shell:
+This builds `worker/web/dist` and starts one local Worker that serves both the
+web app and API from the same origin. For faster API-only or split Vite
+iteration, use:
 
 ```bash
-cd ../web
-npm run dev
+npm run dev:api
+npm run dev:web
 ```
 
-The web shell defaults to `owner-token` for local development. Change it in the
-UI to match the token in `worker/.dev.vars`, or bootstrap an owner passkey with
-`AUTH_BOOTSTRAP_TOKEN`.
+The Vite dev server is optional and proxies `/api` to `http://localhost:8787`.
+The production/self-hosted shape remains one Worker. The web app defaults to
+`owner-token` for local development. Change it in the UI to match the token in
+`worker/.dev.vars`, or bootstrap an owner passkey with `AUTH_BOOTSTRAP_TOKEN`.
 
 Production web sessions use opaque httpOnly server-side cookies. Cookie
 authenticated write requests are same-origin only; local bearer tokens remain

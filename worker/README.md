@@ -3,12 +3,18 @@
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/charliewilco/downwrite/tree/main/worker)
 
 This directory is intentionally self-contained so Cloudflare's Deploy to
-Cloudflare button can treat it as the project root.
+Cloudflare button can treat it as the project root. It deploys one Cloudflare
+Worker that serves both the compiled Preact web app and the versioned API from
+the same origin.
 
 ## What Cloudflare Provisions
 
 `wrangler.toml` declares:
 
+- Workers Static Assets from `web/dist`, with SPA fallback for browser routes.
+- Worker-first routing for `/api/*` and `/.well-known/*` so API, OpenAPI,
+  discovery, and auth requests always execute the Worker script instead of the
+  SPA fallback.
 - `DB`: a D1 database for instance-local metadata, authorization records,
   sessions, and coarse abuse throttles.
 - `CONTENT`: an R2 bucket for Markdown document bodies.
@@ -18,7 +24,8 @@ Cloudflare button can treat it as the project root.
   passkey/origin settings for a production custom domain.
 
 Cloudflare provisions and binds those resources in the deployer's own account
-during the button flow. No central Downwrite service is involved.
+during the button flow. The web assets are uploaded with the Worker deployment;
+there is no second hosting platform or centrally operated Downwrite service.
 
 The Worker also enables Cloudflare Workers observability in `wrangler.toml` for
 the deployer's own account. This does not send data to a Downwrite-operated
@@ -84,15 +91,24 @@ to catch meaningful route/spec drift without adding a generator stack.
 
 ```bash
 npm run dev
+npm run dev:api
+npm run dev:web
 npm run typecheck
 npm test
+npm run build
 npm run validate:worker
 npm run deploy
 ```
 
-`npm run deploy` applies D1 migrations by binding name and then deploys:
+`npm run dev` builds `web/dist` and starts a single local Worker preview. Use
+`npm run dev:api` plus `npm run dev:web` only for split local iteration; that is
+not the deploy shape.
+
+`npm run deploy` builds the API and Preact assets, applies D1 migrations by
+binding name, and then deploys:
 
 ```bash
+npm run build
 wrangler d1 migrations apply DB --remote
 wrangler deploy
 ```
