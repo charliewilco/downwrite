@@ -107,6 +107,37 @@ error message so operators can alert from Cloudflare Worker logs.
 Do not set `DOWNWRITE_LOCAL_AUTH=1` in production. It is only for local
 `wrangler dev`.
 
+## Production Sanity Checklist
+
+Before deploying from a clean checkout:
+
+1. Run `npm run validate`. This type-checks the Worker and web client, runs the
+   API/runtime tests, builds assets, and performs a Wrangler dry-run deploy into
+   `worker/dist-worker` without applying remote migrations.
+2. Confirm the production Cloudflare account has D1 database `DB` and R2 bucket
+   `CONTENT` bound to this Worker.
+3. Set `INSTANCE_PUBLIC_URL` to the canonical HTTPS origin. Set
+   `WEBAUTHN_RP_ID` to that origin's hostname when using a custom domain.
+4. Store `AUTH_BOOTSTRAP_TOKEN` as a Worker secret for first-owner passkey
+   setup. Do not commit it. Remove or rotate it after bootstrap if the deployer
+   does not want future bootstrap attempts.
+5. Do not configure `DOWNWRITE_LOCAL_AUTH` in production. Do not configure
+   development bearer tokens unless the deployment is intentionally a private
+   smoke-test environment.
+6. Run `npm --workspace @downwrite/worker run deploy` only when ready to apply
+   remote D1 migrations and publish the Worker.
+
+After deployment, smoke-test:
+
+- `GET /api/v1/health`
+- `GET /.well-known/downwrite`
+- `GET /.well-known/oauth-protected-resource`
+- `GET /.well-known/oauth-authorization-server`
+- `GET /api/v1/openapi.json`
+
+Then bootstrap the first owner passkey through the web UI and verify the daily
+cron emits `downwrite.maintenance.cleanup` in Worker logs after its next run.
+
 ## Worker Commands
 
 From the repository root:
