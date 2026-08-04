@@ -58,13 +58,35 @@ export async function enforceRateLimit(input: {
   }
 }
 
-export function authConfiguration(env: Env) {
+export function authConfiguration(env: Env, requestUrl?: string) {
   return {
     bootstrapTokenConfigured: Boolean(env.AUTH_BOOTSTRAP_TOKEN),
     instancePublicUrl: env.INSTANCE_PUBLIC_URL ?? null,
+    localDevelopmentAuthEnabled: requestUrl
+      ? isLocalDevelopmentAuthEnabled(env, requestUrl)
+      : false,
     webauthnRpId: env.WEBAUTHN_RP_ID ?? null,
     webauthnRpName: env.WEBAUTHN_RP_NAME ?? "Downwrite",
   };
+}
+
+export function assertLocalDevelopmentAuth(c: Context<{ Bindings: Env }>) {
+  if (!isLocalDevelopmentAuthEnabled(c.env, c.req.url)) {
+    throw new HttpError(404, "Local development sign-in is not available");
+  }
+}
+
+function isLocalDevelopmentAuthEnabled(env: Env, requestUrl: string) {
+  if (env.DOWNWRITE_LOCAL_AUTH !== "1") {
+    return false;
+  }
+
+  const url = new URL(requestUrl);
+  return (
+    url.hostname === "localhost" ||
+    url.hostname === "127.0.0.1" ||
+    url.hostname === "::1"
+  );
 }
 
 function expectedOrigin(env: Env, requestUrl: string) {

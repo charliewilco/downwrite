@@ -236,6 +236,10 @@ test("serves an OpenAPI contract for the implemented API", async () => {
     "getOAuthProtectedResourceMetadata",
   );
   assert.equal(body.paths["/mcp"].post.operationId, "invokeMcp");
+  assert.equal(
+    body.paths["/api/v1/auth/development/session"].post.operationId,
+    "createDevelopmentSession",
+  );
   assert.equal(body.paths["/mcp"].post["x-downwrite-scope"], "mcp:documents");
   assert.equal(
     body["x-downwrite-client-contract"].errors.envelope,
@@ -800,6 +804,73 @@ test("cookie-authenticated writes require a same-origin request", async () => {
   assert.equal(allowed.status, 201);
 });
 
+test("local development session is localhost-only and creates a normal session", async () => {
+  const { app, env } = createHarness();
+  const blocked = await app.request(
+    "https://example.downwrite.test/api/v1/auth/development/session",
+    {
+      method: "POST",
+      body: JSON.stringify({ identityId: "local-owner" }),
+    },
+    { ...env, DOWNWRITE_LOCAL_AUTH: "1" },
+  );
+  const disabled = await app.request(
+    "http://localhost/api/v1/auth/development/session",
+    {
+      method: "POST",
+      body: JSON.stringify({ identityId: "local-owner" }),
+    },
+    env,
+  );
+  const sessionResponse = await app.request(
+    "http://localhost/api/v1/auth/development/session",
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        identityId: "local-owner",
+        displayName: "Local Owner",
+      }),
+    },
+    { ...env, DOWNWRITE_LOCAL_AUTH: "1" },
+  );
+  const cookie = sessionResponse.headers.get("set-cookie");
+  const groupResponse = await app.request(
+    "http://localhost/api/v1/groups",
+    {
+      method: "POST",
+      headers: {
+        cookie,
+        "content-type": "application/json",
+        origin: "http://localhost",
+      },
+      body: JSON.stringify({ name: "Local workspace" }),
+    },
+    env,
+  );
+  const group = (await groupResponse.json()).group;
+  const documentResponse = await app.request(
+    `http://localhost/api/v1/groups/${group.id}/documents`,
+    {
+      method: "POST",
+      headers: {
+        cookie,
+        "content-type": "application/json",
+        origin: "http://localhost",
+      },
+      body: JSON.stringify({ title: "Local note", content: "# Local" }),
+    },
+    env,
+  );
+
+  assert.equal(blocked.status, 404);
+  assert.equal(disabled.status, 404);
+  assert.equal(sessionResponse.status, 200);
+  assert.match(cookie, /dw_session=/);
+  assert.equal(groupResponse.status, 201);
+  assert.equal(documentResponse.status, 201);
+});
+
 test("auth status reports setup configuration without exposing secrets", async () => {
   const { app, env } = createHarness();
   const response = await app.request(
@@ -820,6 +891,7 @@ test("auth status reports setup configuration without exposing secrets", async (
   assert.deepEqual(body.configuration, {
     bootstrapTokenConfigured: true,
     instancePublicUrl: "https://example.downwrite.test",
+    localDevelopmentAuthEnabled: false,
     webauthnRpId: "example.downwrite.test",
     webauthnRpName: "Example Downwrite",
   });

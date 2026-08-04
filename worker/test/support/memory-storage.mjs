@@ -27,6 +27,17 @@ export class MemoryStorage {
     return this.#identities.get(identityId) ?? null;
   }
 
+  async ensureIdentity({ identityId, displayName }) {
+    const existing = this.#identities.get(identityId);
+    const identity = {
+      id: identityId,
+      displayName,
+      createdAt: existing?.createdAt ?? now(),
+    };
+    this.#identities.set(identityId, identity);
+    return identity;
+  }
+
   async listCredentialsForIdentity(identityId) {
     return [...this.#credentials.values()].filter(
       (credential) => credential.identityId === identityId,

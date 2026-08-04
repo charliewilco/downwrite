@@ -256,7 +256,7 @@ async function assertBootstrapAllowed(input: {
   }
 }
 
-async function createSession(
+export async function createSession(
   storage: Storage,
   identityId: string,
   requestUrl: string,

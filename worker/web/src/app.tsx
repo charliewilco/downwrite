@@ -23,6 +23,7 @@ import {
   removeCollaborator,
   revokeInvitation,
   signOut,
+  startDevelopmentSession,
   updateDocument,
   updateGroup,
   updatePublicLink,
@@ -37,7 +38,6 @@ import { renderMarkdown } from "./markdown.js";
 import { createPasskey, getPasskey } from "./passkeys.js";
 import "./document-elements.js";
 
-const TOKEN_STORAGE_KEY = "DOWNWRITE_DEVELOPMENT_TOKEN";
 const AUTOSAVE_DELAY_MS = 900;
 const DEFAULT_ACCENT = "#566f5f";
 
@@ -52,9 +52,7 @@ type Route =
 type SaveState = "idle" | "dirty" | "saving" | "saved" | "error";
 
 export function App() {
-  const [token, setToken] = useState(() => {
-    return localStorage.getItem(TOKEN_STORAGE_KEY) ?? "owner-token";
-  });
+  const token = undefined;
   const [route, setRoute] = useState<Route>(() => readRoute());
   const [authStatus, setAuthStatus] = useState<AuthStatus | null>(null);
   const [groups, setGroups] = useState<GroupSummary[]>([]);
@@ -67,10 +65,6 @@ export function App() {
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem(TOKEN_STORAGE_KEY, token);
-  }, [token]);
 
   async function refreshAuth() {
     try {
@@ -98,7 +92,7 @@ export function App() {
   useEffect(() => {
     void refreshAuth();
     void refreshGroups();
-  }, [token]);
+  }, []);
 
   function navigate(nextRoute: Route) {
     const path = routePath(nextRoute);
@@ -161,12 +155,10 @@ export function App() {
           </button>
           <AuthPanel
             authStatus={authStatus}
-            token={token}
             onAuthChanged={async () => {
               await refreshAuth();
               await refreshGroups();
             }}
-            onTokenChange={setToken}
           />
         </header>
         <WorkspaceList
@@ -383,13 +375,9 @@ function routePath(route: Route) {
 function AuthPanel({
   authStatus,
   onAuthChanged,
-  onTokenChange,
-  token,
 }: {
   authStatus: AuthStatus | null;
   onAuthChanged: () => Promise<void>;
-  onTokenChange: (token: string) => void;
-  token: string;
 }) {
   const [identityId, setIdentityId] = useState("owner");
   const [displayName, setDisplayName] = useState("Owner");
@@ -400,6 +388,7 @@ function AuthPanel({
   const configuration = authStatus?.configuration ?? {
     bootstrapTokenConfigured: false,
     instancePublicUrl: null,
+    localDevelopmentAuthEnabled: false,
     webauthnRpId: null,
     webauthnRpName: "Downwrite",
   };
@@ -536,13 +525,39 @@ function AuthPanel({
           </div>
         </div>
       ) : (
-        <label className="token auth-card">
-          <span>Development token</span>
-          <input
-            value={token}
-            onInput={(event) => onTokenChange(event.currentTarget.value)}
-          />
-        </label>
+        <div className="token auth-card">
+          <p>
+            Local sign-in is available only for <code>wrangler dev</code> on
+            localhost when <code>DOWNWRITE_LOCAL_AUTH=1</code> is set in{" "}
+            <code>.dev.vars</code>.
+          </p>
+          <button
+            className="secondary-action"
+            disabled={
+              busy ||
+              authStatus?.authenticated ||
+              !configuration.localDevelopmentAuthEnabled
+            }
+            type="button"
+            onClick={() =>
+              void run(async () => {
+                await startDevelopmentSession({
+                  identityId: "local-owner",
+                  displayName: "Local Owner",
+                });
+              })
+            }
+          >
+            {busy
+              ? "Signing in..."
+              : authStatus?.authenticated
+                ? "Local session active"
+                : "Start local owner session"}
+          </button>
+          {!configuration.localDevelopmentAuthEnabled && (
+            <p className="inline-error">Local development sign-in is off.</p>
+          )}
+        </div>
       )}
       {error && <p className="inline-error">{error}</p>}
     </section>
@@ -922,7 +937,7 @@ function WorkspaceSharingRoute({
   groups: GroupSummary[];
   loading: boolean;
   onBack: (groupId: string) => void;
-  token: string;
+  token: string | undefined;
 }) {
   const group = groups.find((item) => item.id === groupId) ?? null;
   const [selectedDocumentId, setSelectedDocumentId] = useState(
@@ -1023,7 +1038,7 @@ function InvitationRoute({
   onAccepted: (
     invitation: Awaited<ReturnType<typeof acceptInvitation>>,
   ) => Promise<void>;
-  token: string;
+  token: string | undefined;
 }) {
   const [inputToken, setInputToken] = useState(invitationToken);
   const [busy, setBusy] = useState(false);
@@ -1037,8 +1052,8 @@ function InvitationRoute({
           <p className="eyebrow">Invitation</p>
           <h1>Accept a document invitation.</h1>
           <p>
-            Invitation tokens are instance-local. Sign in or use the invited
-            development token, then accept to gain the invited document role.
+            Invitation tokens are instance-local. Sign in, then accept to gain
+            the invited document role.
           </p>
         </div>
       </header>
@@ -1491,7 +1506,7 @@ function DocumentView({
   onDeleted: (documentId: string) => void;
   onMoved: (document: DocumentRecord) => Promise<void>;
   onShare: (groupId: string, documentId: string) => void;
-  token: string;
+  token: string | undefined;
 }) {
   const [document, setDocument] = useState<DocumentRecord | null>(null);
   const [title, setTitle] = useState("");
@@ -1786,7 +1801,7 @@ function SharePanel({
   token,
 }: {
   documentId: string;
-  token: string;
+  token: string | undefined;
 }) {
   const [share, setShare] = useState<ShareState | null>(null);
   const [identityId, setIdentityId] = useState("");
@@ -2012,7 +2027,7 @@ function PublicLinkRow({
   onCopy: (message: string) => void;
   onError: (message: string) => void;
   onRefresh: () => Promise<void>;
-  token: string;
+  token: string | undefined;
 }) {
   const [label, setLabel] = useState(link.label ?? "");
   const publicUrl = `${location.origin}/public/${link.token}`;

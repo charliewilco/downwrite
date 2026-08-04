@@ -193,6 +193,26 @@ export class D1Storage implements Storage {
     return row ? identityFromRow(row) : null;
   }
 
+  async ensureIdentity(input: {
+    identityId: string;
+    displayName: string;
+  }): Promise<AuthIdentity> {
+    await this.#db
+      .prepare(
+        `INSERT INTO identities (id, display_name)
+        VALUES (?, ?)
+        ON CONFLICT(id) DO UPDATE SET display_name = excluded.display_name`,
+      )
+      .bind(input.identityId, input.displayName)
+      .run();
+
+    const identity = await this.getIdentity(input.identityId);
+    if (!identity) {
+      throw new Error("Failed to ensure identity");
+    }
+    return identity;
+  }
+
   async listCredentialsForIdentity(identityId: string) {
     const rows = await this.#db
       .prepare(

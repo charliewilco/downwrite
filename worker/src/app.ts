@@ -1,5 +1,9 @@
 import { Hono } from "hono";
-import { WebAuthnAuthService, type AuthService } from "./auth.js";
+import {
+  WebAuthnAuthService,
+  createSession,
+  type AuthService,
+} from "./auth.js";
 import {
   HttpError,
   jsonError,
@@ -17,6 +21,7 @@ import {
 } from "./identity.js";
 import {
   assertSameOriginForSessionWrites,
+  assertLocalDevelopmentAuth,
   authConfiguration,
   enforceRateLimit,
   securityHeaders,
@@ -219,7 +224,7 @@ export function createApp(options: AppOptions = {}) {
   app.get("/api/v1/auth/status", async (c) => {
     const store = storage(c.env);
     const bootstrapRequired = !(await store.hasAnyIdentity());
-    const configuration = authConfiguration(c.env);
+    const configuration = authConfiguration(c.env, c.req.url);
 
     try {
       const identity = await readIdentity(c, store);
@@ -232,6 +237,19 @@ export function createApp(options: AppOptions = {}) {
     } catch {
       return c.json({ authenticated: false, bootstrapRequired, configuration });
     }
+  });
+
+  app.post("/api/v1/auth/development/session", async (c) => {
+    assertLocalDevelopmentAuth(c);
+    const store = storage(c.env);
+    const body = await readJsonObject(c).catch(() => ({}));
+    const identityId = optionalString(body, "identityId") ?? "local-owner";
+    const displayName = optionalString(body, "displayName") ?? "Local Owner";
+    const identity = await store.ensureIdentity({ identityId, displayName });
+    const session = await createSession(store, identity.id, c.req.url);
+
+    c.header("set-cookie", session.cookie);
+    return c.json({ ok: true, identity: { id: identity.id } });
   });
 
   app.post("/api/v1/auth/bootstrap/options", async (c) => {

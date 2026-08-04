@@ -12,14 +12,16 @@ the same origin.
 `wrangler.toml` declares:
 
 - Workers Static Assets from `web/dist`, with SPA fallback for browser routes.
-- Worker-first routing for `/api/*` and `/.well-known/*` so API, OpenAPI,
-  discovery, and auth requests always execute the Worker script instead of the
-  SPA fallback.
+- Worker-first routing for `/api/*`, `/.well-known/*`, `/oauth/*`, and `/mcp`
+  so API, OpenAPI, discovery, auth, OAuth-boundary, and MCP requests always
+  execute the Worker script instead of the SPA fallback.
 - `DB`: a D1 database for instance-local metadata, authorization records,
   sessions, and coarse abuse throttles.
 - `CONTENT`: an R2 bucket for Markdown document bodies.
 - `AUTH_BOOTSTRAP_TOKEN`: a one-time owner setup secret configured by the deployer.
 - `DEVELOPMENT_API_TOKENS`: an instance-local development identity map.
+- `DOWNWRITE_LOCAL_AUTH`: a local `.dev.vars` flag for localhost-only browser
+  sign-in during `wrangler dev`. Do not set this in production.
 - `WEBAUTHN_RP_NAME`, `WEBAUTHN_RP_ID`, and `INSTANCE_PUBLIC_URL`: optional
   passkey/origin settings for a production custom domain.
 
@@ -117,7 +119,8 @@ npm run validate:worker
 npm run deploy
 ```
 
-`npm run dev` builds `web/dist` and starts a single local Worker preview. Use
+`npm run dev` prepares local development state, applies local D1 migrations,
+builds `web/dist`, and starts a single local Worker preview. Use
 `npm run dev:api` plus `npm run dev:web` only for split local iteration; that is
 not the deploy shape.
 
@@ -133,12 +136,37 @@ wrangler deploy
 Do not run the deploy script unless you intend to deploy to your own Cloudflare
 account.
 
-## Local Authentication
+## Local First Run
 
-Create `worker/.dev.vars` from `.dev.vars.example` and replace the placeholder
-values with random instance-local secrets:
+From the repository root:
+
+```bash
+npm install
+npm run dev:worker
+```
+
+The first run creates `worker/.dev.vars` with random local-only secrets if the
+file is missing, applies local D1 migrations for Wrangler, builds the Preact
+assets, and starts the single Worker at the URL printed by Wrangler, normally
+`http://localhost:8787`.
+
+Open that URL in a browser. For the fastest local path:
+
+1. Choose the `Development` tab in the auth panel.
+2. Select `Start local owner session`.
+3. Create a workspace.
+4. Open the workspace and create a Markdown document.
+
+That development button is only enabled on localhost when
+`DOWNWRITE_LOCAL_AUTH=1` is present in `worker/.dev.vars`. It creates a normal
+httpOnly Downwrite session cookie and does not expose or require a bearer token
+in the browser. It is not production authentication.
+
+For passkey bootstrap testing, edit `worker/.dev.vars` or create it from
+`.dev.vars.example` with random instance-local secrets:
 
 ```text
+DOWNWRITE_LOCAL_AUTH=1
 DEVELOPMENT_API_TOKENS=dev-owner:replace-with-a-random-local-token,dev-editor:replace-with-another-random-local-token
 AUTH_BOOTSTRAP_TOKEN=replace-with-a-random-one-time-owner-setup-token
 WEBAUTHN_RP_NAME=Downwrite

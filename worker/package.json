@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "npm run build:web && wrangler dev",
+    "dev": "npm run dev:prepare && npm run build:web && wrangler dev",
+    "dev:prepare": "node scripts/prepare-local-dev.mjs && wrangler d1 migrations apply DB --local",
     "dev:api": "wrangler dev",
     "dev:web": "vite --config web/vite.config.ts --host 0.0.0.0",
     "build": "npm run build:web && tsc -p tsconfig.json",
@@ -39,6 +40,9 @@
       },
       "DEVELOPMENT_API_TOKENS": {
         "description": "Comma-separated local identity token map in `identity:token` form. Example: `dev-owner:replace-with-random-token,dev-editor:another-random-token`. This is an instance-local development adapter, not a central Downwrite login service."
+      },
+      "DOWNWRITE_LOCAL_AUTH": {
+        "description": "Set to `1` only in local `.dev.vars` to enable localhost-only browser development sign-in. Do not configure this for production deployments."
       },
       "AUTH_BOOTSTRAP_TOKEN": {
         "description": "Instance-local one-time owner setup secret. Configure as a Worker secret; do not commit a production value."

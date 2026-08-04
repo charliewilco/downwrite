@@ -233,6 +233,7 @@ function apiRoadmap() {
         "POST /mcp authenticated stateless MCP JSON-RPC endpoint with development credentials only",
         "GET /api/v1/discovery",
         "GET /api/v1/auth/status",
+        "POST /api/v1/auth/development/session local-only development session",
         "POST /api/v1/auth/bootstrap/options",
         "POST /api/v1/auth/bootstrap/verify",
         "POST /api/v1/auth/passkeys/login/options",
@@ -509,6 +510,22 @@ function paths(origin: string): OpenApiDocument["paths"] {
         "x-downwrite-scope": "auth:read",
         responses: {
           "200": jsonResponse("Authentication status.", "AuthStatus"),
+        },
+      }),
+    },
+    "/api/v1/auth/development/session": {
+      post: operation({
+        tags: ["Auth"],
+        summary: "Create a localhost-only development session.",
+        description:
+          "Available only when DOWNWRITE_LOCAL_AUTH=1 and the request host is localhost. This creates a normal httpOnly session cookie for local Wrangler development so the browser flow does not require manually entering a bearer token. It is not production authentication.",
+        operationId: "createDevelopmentSession",
+        security: [],
+        "x-downwrite-scope": "auth:development",
+        requestBody: jsonRequest("DevelopmentSessionRequest"),
+        responses: {
+          "200": jsonResponse("Development session created.", "AuthResult"),
+          "404": refResponse("NotFound"),
         },
       }),
     },
@@ -1017,12 +1034,14 @@ const schemas: Record<string, JsonSchema> = {
     {
       bootstrapTokenConfigured: { type: "boolean" },
       instancePublicUrl: { type: ["string", "null"], format: "uri" },
+      localDevelopmentAuthEnabled: { type: "boolean" },
       webauthnRpId: { type: ["string", "null"] },
       webauthnRpName: { type: "string" },
     },
     [
       "bootstrapTokenConfigured",
       "instancePublicUrl",
+      "localDevelopmentAuthEnabled",
       "webauthnRpId",
       "webauthnRpName",
     ],
@@ -1063,6 +1082,16 @@ const schemas: Record<string, JsonSchema> = {
     },
     ["setupToken", "identityId", "displayName"],
   ),
+  DevelopmentSessionRequest: objectSchema({
+    identityId: {
+      type: "string",
+      description: "Local development identity id. Defaults to local-owner.",
+    },
+    displayName: {
+      type: "string",
+      description: "Local display name. Defaults to Local Owner.",
+    },
+  }),
   VerifyBootstrapRequest: objectSchema(
     {
       setupToken: { type: "string", writeOnly: true },

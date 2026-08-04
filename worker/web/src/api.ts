@@ -81,6 +81,7 @@ export interface AuthStatus {
   configuration: {
     bootstrapTokenConfigured: boolean;
     instancePublicUrl: string | null;
+    localDevelopmentAuthEnabled: boolean;
     webauthnRpId: string | null;
     webauthnRpName: string;
   };
@@ -166,7 +167,20 @@ export async function signOut() {
   await assertOk(response, "Sign out failed");
 }
 
-export async function fetchGroups(token: string): Promise<GroupSummary[]> {
+export async function startDevelopmentSession(input: {
+  identityId: string;
+  displayName: string;
+}) {
+  const response = await fetch("/api/v1/auth/development/session", {
+    method: "POST",
+    headers: jsonHeaders(),
+    credentials: "include",
+    body: JSON.stringify(input),
+  });
+  await assertOk(response, "Local development sign-in failed");
+}
+
+export async function fetchGroups(token?: string): Promise<GroupSummary[]> {
   const response = await fetch("/api/v1/groups", {
     headers: authHeaders(token),
     credentials: "include",
@@ -179,7 +193,7 @@ export async function fetchGroups(token: string): Promise<GroupSummary[]> {
 }
 
 export async function createGroup(
-  token: string,
+  token: string | undefined,
   input: Pick<GroupSummary, "name" | "description" | "accentColor">,
 ): Promise<GroupSummary> {
   const response = await fetch("/api/v1/groups", {
@@ -194,7 +208,7 @@ export async function createGroup(
 }
 
 export async function updateGroup(
-  token: string,
+  token: string | undefined,
   groupId: string,
   input: Partial<Pick<GroupSummary, "name" | "description" | "accentColor">>,
 ): Promise<GroupSummary> {
@@ -209,7 +223,7 @@ export async function updateGroup(
   return body.group;
 }
 
-export async function deleteGroup(token: string, groupId: string) {
+export async function deleteGroup(token: string | undefined, groupId: string) {
   const response = await fetch(`/api/v1/groups/${groupId}`, {
     method: "DELETE",
     headers: authHeaders(token),
@@ -219,7 +233,7 @@ export async function deleteGroup(token: string, groupId: string) {
 }
 
 export async function fetchDocument(
-  token: string,
+  token: string | undefined,
   documentId: string,
 ): Promise<DocumentRecord> {
   const response = await fetch(`/api/v1/documents/${documentId}`, {
@@ -234,7 +248,7 @@ export async function fetchDocument(
 }
 
 export async function createDocument(
-  token: string,
+  token: string | undefined,
   groupId: string,
 ): Promise<DocumentRecord> {
   const response = await fetch(`/api/v1/groups/${groupId}/documents`, {
@@ -254,7 +268,7 @@ export async function createDocument(
 }
 
 export async function updateDocument(
-  token: string,
+  token: string | undefined,
   documentId: string,
   update: Partial<Pick<DocumentRecord, "title" | "content">> & {
     baseRevision?: number;
@@ -274,7 +288,7 @@ export async function updateDocument(
 }
 
 export async function moveDocument(
-  token: string,
+  token: string | undefined,
   documentId: string,
   input: { groupId: string; position?: number; baseRevision?: number },
 ): Promise<DocumentRecord> {
@@ -292,7 +306,7 @@ export async function moveDocument(
 }
 
 export async function positionDocument(
-  token: string,
+  token: string | undefined,
   documentId: string,
   input: { position: number; baseRevision?: number },
 ): Promise<DocumentRecord> {
@@ -309,7 +323,10 @@ export async function positionDocument(
   return body.document;
 }
 
-export async function deleteDocument(token: string, documentId: string) {
+export async function deleteDocument(
+  token: string | undefined,
+  documentId: string,
+) {
   const response = await fetch(`/api/v1/documents/${documentId}`, {
     method: "DELETE",
     headers: authHeaders(token),
@@ -320,7 +337,7 @@ export async function deleteDocument(token: string, documentId: string) {
 }
 
 export async function fetchShareState(
-  token: string,
+  token: string | undefined,
   documentId: string,
 ): Promise<ShareState> {
   const response = await fetch(`/api/v1/documents/${documentId}/share`, {
@@ -333,7 +350,7 @@ export async function fetchShareState(
 }
 
 export async function createInvitation(
-  token: string,
+  token: string | undefined,
   documentId: string,
   input: { identityId: string; role: Role },
 ) {
@@ -349,7 +366,7 @@ export async function createInvitation(
 }
 
 export async function acceptInvitation(
-  token: string,
+  token: string | undefined,
   invitationToken: string,
 ): Promise<InvitationRecord> {
   const response = await fetch(
@@ -365,7 +382,10 @@ export async function acceptInvitation(
   return body.invitation;
 }
 
-export async function revokeInvitation(token: string, invitationId: string) {
+export async function revokeInvitation(
+  token: string | undefined,
+  invitationId: string,
+) {
   const response = await fetch(`/api/v1/invitations/${invitationId}`, {
     method: "DELETE",
     headers: authHeaders(token),
@@ -375,7 +395,7 @@ export async function revokeInvitation(token: string, invitationId: string) {
 }
 
 export async function removeCollaborator(
-  token: string,
+  token: string | undefined,
   documentId: string,
   identityId: string,
 ) {
@@ -391,7 +411,7 @@ export async function removeCollaborator(
 }
 
 export async function createPublicLink(
-  token: string,
+  token: string | undefined,
   documentId: string,
   label: string | null,
 ) {
@@ -407,7 +427,7 @@ export async function createPublicLink(
 }
 
 export async function updatePublicLink(
-  token: string,
+  token: string | undefined,
   publicLinkId: string,
   input: { label?: string | null; active?: boolean },
 ) {

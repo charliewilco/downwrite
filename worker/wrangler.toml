@@ -22,7 +22,8 @@ enabled = true
 head_sampling_rate = 1
 
 [vars]
-DEVELOPMENT_API_TOKENS = "dev-owner:owner-token,dev-editor:editor-token"
 WEBAUTHN_RP_NAME = "Downwrite"
+# Local-only secrets are generated into .dev.vars by npm run dev.
 # Set INSTANCE_PUBLIC_URL and WEBAUTHN_RP_ID for production custom domains.
-# Store AUTH_BOOTSTRAP_TOKEN as a Worker secret, not in wrangler.toml.
+# Store AUTH_BOOTSTRAP_TOKEN and any development token map as Worker secrets,
+# not in wrangler.toml.

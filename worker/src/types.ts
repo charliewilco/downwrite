@@ -14,6 +14,7 @@ export interface Env {
   DB: D1Database;
   CONTENT: R2Bucket;
   DEVELOPMENT_API_TOKENS?: string;
+  DOWNWRITE_LOCAL_AUTH?: string;
   AUTH_BOOTSTRAP_TOKEN?: string;
   WEBAUTHN_RP_NAME?: string;
   WEBAUTHN_RP_ID?: string;
@@ -166,6 +167,10 @@ export interface VerifiedAuthentication {
 export interface Storage {
   hasAnyIdentity(): Promise<boolean>;
   getIdentity(identityId: string): Promise<AuthIdentity | null>;
+  ensureIdentity(input: {
+    identityId: string;
+    displayName: string;
+  }): Promise<AuthIdentity>;
   listCredentialsForIdentity(
     identityId: string,
   ): Promise<WebAuthnCredentialRecord[]>;
