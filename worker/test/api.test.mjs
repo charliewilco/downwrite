@@ -17,7 +17,7 @@ test("health reports the versioned API", async () => {
   assert.equal(response.headers.get("cache-control"), "no-store");
   assert.deepEqual(await response.json(), {
     ok: true,
-    name: "downwrite-api",
+    name: "downwrite",
     version: "v1",
   });
 });
@@ -32,7 +32,7 @@ test("discovery reports instance metadata for public native clients", async () =
   const body = await response.json();
 
   assert.equal(response.status, 200);
-  assert.equal(body.name, "downwrite-api");
+  assert.equal(body.name, "downwrite");
   assert.equal(body.instanceUrl, "https://example.downwrite.test");
   assert.equal(body.api.currentVersion, "v1");
   assert.deepEqual(body.api.supportedVersions, ["v1"]);

@@ -1,4 +1,4 @@
-name = "downwrite-api"
+name = "downwrite"
 main = "src/index.ts"
 compatibility_date = "2026-08-04"
 
@@ -10,7 +10,7 @@ run_worker_first = ["/api/*", "/.well-known/*", "/oauth/*", "/mcp"]
 [[d1_databases]]
 binding = "DB"
 database_name = "downwrite"
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "e959f163-9ab0-4039-a3ec-acc01f47f882"
 migrations_dir = "./migrations"
 
 [[r2_buckets]]

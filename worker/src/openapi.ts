@@ -1061,7 +1061,7 @@ const schemas: Record<string, JsonSchema> = {
   Health: objectSchema(
     {
       ok: { type: "boolean", const: true },
-      name: { type: "string", const: "downwrite-api" },
+      name: { type: "string", const: "downwrite" },
       version: { type: "string", const: "v1" },
     },
     ["ok", "name", "version"],

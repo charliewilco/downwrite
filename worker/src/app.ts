@@ -180,7 +180,7 @@ export function createApp(options: AppOptions = {}) {
     const instanceUrl = new URL(url).origin;
 
     return {
-      name: "downwrite-api",
+      name: "downwrite",
       instanceUrl,
       api: {
         currentVersion: "v1",
@@ -272,7 +272,7 @@ export function createApp(options: AppOptions = {}) {
   app.get("/api/v1/health", (c) =>
     c.json({
       ok: true,
-      name: "downwrite-api",
+      name: "downwrite",
       version: "v1",
     }),
   );
