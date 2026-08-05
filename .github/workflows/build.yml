@@ -10,7 +10,11 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
+          cache-dependency-path: worker/package-lock.json
           cache: npm
-      - run: npm ci
-      - run: npm run format:check
-      - run: npm run validate
+      - working-directory: worker
+        run: npm ci
+      - working-directory: worker
+        run: npm run format:check
+      - working-directory: worker
+        run: npm run validate

@@ -5,19 +5,19 @@ and the API from one origin.
 
 ## Local First Run
 
-From the repository root:
+From the Worker package:
 
 ```bash
+cd worker
 npm install
-npm run dev:worker
+npm run dev
 ```
 
-`npm run dev:worker` runs the Worker package dev script. On first run it:
+`npm run dev` runs the Worker package dev script. On first run it:
 
-1. creates `worker/.dev.vars` with random local-only secrets if the file is
-   missing;
+1. creates `.dev.vars` with random local-only secrets if the file is missing;
 2. applies local D1 migrations for Wrangler;
-3. builds the Preact app into `worker/web/dist`;
+3. builds the Preact app into `web/dist`;
 4. starts `wrangler dev`, normally at `http://localhost:8787`.
 
 Open the local URL in a browser. For the fastest local browser path:
@@ -111,9 +111,9 @@ Do not set `DOWNWRITE_LOCAL_AUTH=1` in production. It is only for local
 
 Before deploying from a clean checkout:
 
-1. Run `npm run validate`. This type-checks the Worker and web client, runs the
+1. From `worker/`, run `npm run validate`. This type-checks the Worker and web client, runs the
    API/runtime tests, builds assets, and performs a Wrangler dry-run deploy into
-   `worker/dist-worker` without applying remote migrations.
+   `dist-worker` without applying remote migrations.
 2. Confirm the production Cloudflare account has D1 database `DB` and R2 bucket
    `CONTENT` bound to this Worker.
 3. Set `INSTANCE_PUBLIC_URL` to the canonical HTTPS origin. Set
@@ -124,8 +124,8 @@ Before deploying from a clean checkout:
 5. Do not configure `DOWNWRITE_LOCAL_AUTH` in production. Do not configure
    development bearer tokens unless the deployment is intentionally a private
    smoke-test environment.
-6. Run `npm --workspace @downwrite/worker run deploy` only when ready to apply
-   remote D1 migrations and publish the Worker.
+6. From `worker/`, run `npm run deploy` only when ready to apply remote D1
+   migrations and publish the Worker.
 
 After deployment, smoke-test:
 
@@ -140,23 +140,17 @@ cron emits `downwrite.maintenance.cleanup` in Worker logs after its next run.
 
 ## Worker Commands
 
-From the repository root:
+From `worker/`:
 
 ```bash
-npm run dev:worker
+cd worker
+npm run dev
+npm run dev:api
+npm run dev:web
 npm run typecheck
 npm test
 npm run build
 npm run validate
-```
-
-From `worker/`:
-
-```bash
-npm run dev
-npm run dev:api
-npm run dev:web
-npm run build
 npm run validate:worker
 npm run deploy
 ```

@@ -13,10 +13,12 @@
     "build:web": "vite build --config web/vite.config.ts",
     "deploy": "npm run build && npm run db:migrations:apply && wrangler deploy",
     "db:migrations:apply": "wrangler d1 migrations apply DB --remote",
+    "format:check": "npx --yes prettier@3.9.6 --check package.json package-lock.json tsconfig.json README.md ../README.md ../documentation ../iOS/README.md ../.github/workflows scripts src test web/index.html web/src web/tsconfig.json web/vite.config.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck:web",
     "typecheck:web": "tsc -p web/tsconfig.json --noEmit",
     "test": "npm run build:api && node --test test/*.test.mjs",
     "test:integration": "npm run build:api && node --test test/*.integration.test.mjs",
+    "validate": "npm run typecheck && npm run test && npm run build && npm run validate:worker",
     "validate:worker": "wrangler deploy --dry-run --outdir dist-worker"
   },
   "dependencies": {
@@ -30,6 +32,9 @@
     "typescript": "7.0.2",
     "vite": "8.2.0",
     "wrangler": "4.118.0"
+  },
+  "overrides": {
+    "undici": "7.29.0"
   },
   "cloudflare": {
     "bindings": {

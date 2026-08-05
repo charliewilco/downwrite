@@ -24,8 +24,9 @@ Cloudflare account.
 ## Start Locally
 
 ```bash
+cd worker
 npm install
-npm run dev:worker
+npm run dev
 ```
 
 The local Worker normally starts at `http://localhost:8787`. Use the
@@ -46,9 +47,10 @@ Detailed setup and deployment instructions live in
 
 ## Validation
 
-From the repository root:
+From `worker/`:
 
 ```bash
+cd worker
 npm run validate
 ```
 

@@ -17,16 +17,10 @@ origin. Workers Static Assets handle browser routes, while `/api/*`,
 
 ## Local Development
 
-From the repository root:
-
-```bash
-npm install
-npm run dev:worker
-```
-
 From this directory:
 
 ```bash
+npm install
 npm run dev
 ```
 
