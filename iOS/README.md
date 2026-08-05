@@ -24,6 +24,14 @@ foundation:
 The iOS app should treat the user-supplied instance URL as the trust boundary,
 verify discovery metadata, then use the versioned `/api/v1` contract.
 
+API compatibility and instance freshness are separate. The app should use
+`api.supportedVersions` from discovery to decide whether it can connect to an
+instance. A future `software.version` field can be compared with the GitHub
+release manifest to show a non-blocking instance update notice, but an older
+v1-compatible instance should remain usable unless a specific feature requires
+newer server behavior. See
+[`../documentation/versioning-and-updates.md`](../documentation/versioning-and-updates.md).
+
 ## Auth Boundary
 
 The intended native flow is OAuth authorization code with PKCE through the

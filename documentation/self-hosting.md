@@ -138,6 +138,30 @@ After deployment, smoke-test:
 Then bootstrap the first owner passkey through the web UI and verify the daily
 cron emits `downwrite.maintenance.cleanup` in Worker logs after its next run.
 
+## Updating an Instance
+
+Downwrite software releases are separate from the `/api/v1` compatibility
+contract. A self-hosted instance can support v1 and still be behind the latest
+Worker release.
+
+Use the GitHub release notes and the future machine-readable update manifest
+described in
+[`versioning-and-updates.md`](./versioning-and-updates.md) to decide whether an
+update is available.
+
+To update:
+
+1. Sync the repository or fork to the target release commit or tag.
+2. From `worker/`, run `npm run validate`.
+3. Review release notes for required D1 migrations or configuration changes.
+4. Run `npm run deploy` when ready to apply remote migrations and publish the
+   Worker.
+5. Smoke-test `GET /api/v1/health`, `GET /.well-known/downwrite`, and
+   `GET /api/v1/openapi.json`.
+
+The public iOS app does not need to be redeployed per Downwrite instance.
+Operators update their self-hosted installation by redeploying the Worker.
+
 ## Worker Commands
 
 From `worker/`:

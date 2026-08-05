@@ -40,6 +40,7 @@ Detailed setup and deployment instructions live in
 
 - [Architecture](./documentation/architecture.md)
 - [Self-hosting and local development](./documentation/self-hosting.md)
+- [Versioning and updates](./documentation/versioning-and-updates.md)
 - [v1 client contract](./documentation/v1-client-contract.md)
 - [API roadmap](./documentation/api-roadmap.md)
 - [Design QA](./documentation/design-qa.md)

@@ -46,6 +46,11 @@ Durable API documentation lives in:
 - [`../documentation/v1-client-contract.md`](../documentation/v1-client-contract.md)
 - [`../documentation/api-roadmap.md`](../documentation/api-roadmap.md)
 
+Downwrite software releases are versioned separately from the `/api/v1`
+compatibility contract. See
+[`../documentation/versioning-and-updates.md`](../documentation/versioning-and-updates.md)
+for the update discovery model.
+
 ## Deploy
 
 ```bash

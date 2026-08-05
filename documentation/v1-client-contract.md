@@ -15,6 +15,16 @@ The Worker is the resource server for `/api/v1`. OAuth authorization-code with
 PKCE and resource indicators is implemented for external clients. Tokens are
 opaque, scoped, and issued by the deployer's self-hosted Worker instance.
 
+## API Version vs Software Version
+
+`/api/v1` is the client compatibility boundary. It does not mean every
+self-hosted instance is running the latest Downwrite Worker release.
+
+The Worker software version should be tracked separately from the API major
+version so clients can answer two different questions: whether they can speak to
+the instance, and whether the instance has an update available. The full policy
+lives in [`versioning-and-updates.md`](./versioning-and-updates.md).
+
 ## Authentication
 
 - Web production path: passkeys/WebAuthn plus `dw_session` httpOnly server-side
