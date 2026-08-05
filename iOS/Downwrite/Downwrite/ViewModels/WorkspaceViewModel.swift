@@ -75,14 +75,14 @@ final class WorkspaceViewModel {
         replace(group)
     }
 
-    func removeGroup(_ groupID: String, replacementGroup: GroupSummary) {
+    func removeGroup(_ groupID: String, replacementGroup: GroupSummary?) {
         var nextGroups = groups.filter { $0.id != groupID }
-        if !nextGroups.contains(where: { $0.id == replacementGroup.id }) {
+        if let replacementGroup, !nextGroups.contains(where: { $0.id == replacementGroup.id }) {
             nextGroups.append(replacementGroup)
         }
         groupsState = .loaded(nextGroups)
-        selectedGroupID = replacementGroup.id
-        selectedDocumentID = replacementGroup.documents.first?.id
+        selectedGroupID = replacementGroup?.id ?? nextGroups.first?.id
+        selectedDocumentID = replacementGroup?.documents.first?.id ?? nextGroups.first?.documents.first?.id
     }
 
     func replace(_ group: GroupSummary) {

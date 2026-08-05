@@ -35,6 +35,32 @@ struct DownwriteTests {
         #expect(viewModel.selectedGroupID == "group-product")
     }
 
+    @Test func workspaceLoadWithoutSessionShowsFailure() async throws {
+        let viewModel = WorkspaceViewModel(session: .previewSignedOut)
+
+        await viewModel.loadGroups()
+
+        guard case .failed(let message) = viewModel.groupsState else {
+            Issue.record("Expected failed group loading state.")
+            return
+        }
+        #expect(message == "Sign in before loading groups.")
+    }
+
+    @Test func workspaceLoadSurfacesClientFailure() async throws {
+        let client = PreviewDownwriteAPIClient.sampleCopy()
+        client.listGroupsError = DownwriteErrorEnvelope(error: "Groups are unavailable", code: "unavailable", status: 503)
+        let viewModel = WorkspaceViewModel(session: .signedIn(client: client))
+
+        await viewModel.loadGroups()
+
+        guard case .failed(let message) = viewModel.groupsState else {
+            Issue.record("Expected failed group loading state.")
+            return
+        }
+        #expect(message == "Groups are unavailable")
+    }
+
     @Test func documentSaveUsesCurrentRevision() async throws {
         let session = SessionViewModel(
             state: .signedIn(
@@ -55,6 +81,34 @@ struct DownwriteTests {
         #expect(viewModel.hasChanges == false)
     }
 
+    @Test func documentLoadSurfacesMissingDocumentFailure() async throws {
+        let client = PreviewDownwriteAPIClient.sampleCopy()
+        client.getDocumentError = DownwriteErrorEnvelope(error: "Document was not found", code: "not_found", status: 404)
+        let viewModel = DocumentViewModel(documentID: "doc-missing", session: .signedIn(client: client))
+
+        await viewModel.load()
+
+        guard case .failed(let message) = viewModel.documentState else {
+            Issue.record("Expected failed document loading state.")
+            return
+        }
+        #expect(message == "Document was not found")
+    }
+
+    @Test func documentConflictKeepsDraftDirty() async throws {
+        let client = PreviewDownwriteAPIClient.sampleCopy()
+        let viewModel = DocumentViewModel(documentID: "doc-pitch", session: .signedIn(client: client))
+
+        await viewModel.load()
+        client.documents["doc-pitch"]?.revision += 1
+        viewModel.draftContent += "\n\nLocal draft."
+        await viewModel.save()
+
+        #expect(viewModel.document?.revision == 7)
+        #expect(viewModel.hasChanges == true)
+        #expect(viewModel.statusMessage == "Document has changed since it was loaded")
+    }
+
     @Test func groupRemovalMovesDocumentsBeforeDeletingSourceGroup() async throws {
         let client = PreviewDownwriteAPIClient.sampleCopy()
         let session = SessionViewModel(
@@ -70,16 +124,55 @@ struct DownwriteTests {
         let viewModel = GroupReassignmentViewModel(sourceGroup: source, groups: client.groups, session: session)
         viewModel.targetGroupID = "group-archive"
 
-        let target = try await viewModel.reassignAndDelete()
+        let result = try await viewModel.reassignAndDelete()
+        let target = try #require(result.replacementGroup)
 
         #expect(target.id == "group-archive")
         #expect(target.documents.contains { $0.id == "doc-pitch" })
         #expect(client.groups.contains { $0.id == "group-product" } == false)
+    }
+
+    @Test func emptyGroupRemovalDoesNotRequireReassignmentTarget() async throws {
+        let emptyGroup = GroupSummary(
+            id: "group-empty",
+            name: "Empty",
+            description: nil,
+            accentColor: nil,
+            role: .owner,
+            createdAt: PreviewDownwriteAPIClient.timestamp,
+            updatedAt: PreviewDownwriteAPIClient.timestamp,
+            documents: []
+        )
+        let client = PreviewDownwriteAPIClient(groups: [emptyGroup], documents: [:])
+        let viewModel = GroupReassignmentViewModel(sourceGroup: emptyGroup, groups: client.groups, session: .signedIn(client: client))
+
+        #expect(viewModel.canSubmit == true)
+
+        let result = try await viewModel.reassignAndDelete()
+
+        #expect(result.removedGroupID == "group-empty")
+        #expect(result.replacementGroup == nil)
+        #expect(client.groups.isEmpty)
     }
 }
 
 private extension PreviewDownwriteAPIClient {
     static func sampleCopy() -> PreviewDownwriteAPIClient {
         PreviewDownwriteAPIClient(groups: sample.groups, documents: sample.documents)
+    }
+}
+
+private extension SessionViewModel {
+    @MainActor
+    static func signedIn(client: PreviewDownwriteAPIClient) -> SessionViewModel {
+        SessionViewModel(
+            state: .signedIn(
+                InstanceSession(
+                    instanceURL: client.baseURL,
+                    identity: Identity(id: "local-owner"),
+                    apiClient: client
+                )
+            )
+        )
     }
 }

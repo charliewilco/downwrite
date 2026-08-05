@@ -6,10 +6,31 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
 
     var groups: [GroupSummary]
     var documents: [String: DocumentRecord]
+    var listGroupsError: Error?
+    var getDocumentError: Error?
+    var updateDocumentError: Error?
+    var updateGroupError: Error?
+    var moveDocumentError: Error?
+    var deleteGroupError: Error?
 
-    init(groups: [GroupSummary], documents: [String: DocumentRecord]) {
+    init(
+        groups: [GroupSummary],
+        documents: [String: DocumentRecord],
+        listGroupsError: Error? = nil,
+        getDocumentError: Error? = nil,
+        updateDocumentError: Error? = nil,
+        updateGroupError: Error? = nil,
+        moveDocumentError: Error? = nil,
+        deleteGroupError: Error? = nil
+    ) {
         self.groups = groups
         self.documents = documents
+        self.listGroupsError = listGroupsError
+        self.getDocumentError = getDocumentError
+        self.updateDocumentError = updateDocumentError
+        self.updateGroupError = updateGroupError
+        self.moveDocumentError = moveDocumentError
+        self.deleteGroupError = deleteGroupError
     }
 
     func discoverInstance() async throws -> DiscoveryMetadata {
@@ -48,7 +69,10 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func listGroups(limit: Int?, cursor: String?) async throws -> GroupList {
-        GroupList(groups: groups, nextCursor: nil)
+        if let listGroupsError {
+            throw listGroupsError
+        }
+        return GroupList(groups: groups, nextCursor: nil)
     }
 
     func getGroup(id: String) async throws -> GroupSummary {
@@ -71,6 +95,9 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func updateGroup(id: String, name: String?, description: String?, accentColor: String?) async throws -> GroupSummary {
+        if let updateGroupError {
+            throw updateGroupError
+        }
         guard let index = groups.firstIndex(where: { $0.id == id }) else {
             throw URLError(.badServerResponse)
         }
@@ -81,6 +108,9 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func deleteGroup(id: String) async throws {
+        if let deleteGroupError {
+            throw deleteGroupError
+        }
         groups.removeAll { $0.id == id }
     }
 
@@ -89,6 +119,9 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func getDocument(id: String) async throws -> DocumentRecord {
+        if let getDocumentError {
+            throw getDocumentError
+        }
         guard let document = documents[id] else {
             throw URLError(.badServerResponse)
         }
@@ -96,6 +129,9 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func updateDocument(id: String, title: String?, content: String?, baseRevision: Int) async throws -> DocumentRecord {
+        if let updateDocumentError {
+            throw updateDocumentError
+        }
         guard var document = documents[id], document.revision == baseRevision else {
             throw DownwriteErrorEnvelope(error: "Document has changed since it was loaded", code: "conflict", status: 409)
         }
@@ -107,6 +143,9 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func moveDocument(id: String, groupId: String, position: Int?, baseRevision: Int) async throws -> DocumentRecord {
+        if let moveDocumentError {
+            throw moveDocumentError
+        }
         guard var document = documents[id], document.revision == baseRevision else {
             throw DownwriteErrorEnvelope(error: "Document has changed since it was loaded", code: "conflict", status: 409)
         }

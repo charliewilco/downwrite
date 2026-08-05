@@ -15,10 +15,12 @@ struct Identity: Codable, Equatable {
     let id: String
 }
 
-struct DownwriteErrorEnvelope: Codable, Error, Equatable {
+struct DownwriteErrorEnvelope: Codable, LocalizedError, Equatable {
     let error: String
     let code: String
     let status: Int
+
+    var errorDescription: String? { error }
 }
 
 struct DiscoveryMetadata: Codable, Equatable {

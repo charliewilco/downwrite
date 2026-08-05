@@ -25,15 +25,23 @@ final class GroupReassignmentViewModel: Identifiable {
     }
 
     var canSubmit: Bool {
-        !sourceGroup.documents.isEmpty && targetGroup != nil
+        sourceGroup.documents.isEmpty || targetGroup != nil
     }
 
-    func reassignAndDelete() async throws -> GroupSummary {
-        guard let activeSession = session.activeSession, let targetGroup else {
+    func reassignAndDelete() async throws -> GroupRemovalResult {
+        guard let activeSession = session.activeSession else {
             throw URLError(.userAuthenticationRequired)
+        }
+        guard sourceGroup.documents.isEmpty || targetGroup != nil else {
+            throw URLError(.badServerResponse)
         }
         isWorking = true
         defer { isWorking = false }
+
+        guard let targetGroup else {
+            try await activeSession.apiClient.deleteGroup(id: sourceGroup.id)
+            return GroupRemovalResult(removedGroupID: sourceGroup.id, replacementGroup: candidateGroups.first)
+        }
 
         var movedDocuments = targetGroup.documents
         for document in sourceGroup.documents {
@@ -53,6 +61,11 @@ final class GroupReassignmentViewModel: Identifiable {
             }
             return lhs.position < rhs.position
         }
-        return updatedTarget
+        return GroupRemovalResult(removedGroupID: sourceGroup.id, replacementGroup: updatedTarget)
     }
+}
+
+struct GroupRemovalResult {
+    let removedGroupID: String
+    let replacementGroup: GroupSummary?
 }

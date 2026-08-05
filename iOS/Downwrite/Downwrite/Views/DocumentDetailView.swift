@@ -16,7 +16,9 @@ struct DocumentDetailView: View {
             }
         }
         .task {
-            await viewModel.load()
+            if case .idle = viewModel.documentState {
+                await viewModel.load()
+            }
         }
         .navigationTitle(viewModel.draftTitle.isEmpty ? "Document" : viewModel.draftTitle)
         .toolbar {
@@ -114,5 +116,33 @@ private struct DocumentEditor: View {
 #Preview("Document preview") {
     NavigationStack {
         DocumentDetailView(viewModel: DocumentViewModel(documentID: "doc-pitch", session: .previewSignedIn))
+    }
+}
+
+#Preview("Document loading") {
+    let viewModel = DocumentViewModel(documentID: "doc-pitch", session: .previewSignedIn)
+    viewModel.documentState = .loading
+    return NavigationStack {
+        DocumentDetailView(viewModel: viewModel)
+    }
+}
+
+#Preview("Document error") {
+    let viewModel = DocumentViewModel(documentID: "doc-missing", session: .previewSignedIn)
+    viewModel.documentState = .failed("Document was not found.")
+    return NavigationStack {
+        DocumentDetailView(viewModel: viewModel)
+    }
+}
+
+#Preview("Document save conflict") {
+    let viewModel = DocumentViewModel(documentID: "doc-pitch", session: .previewSignedIn)
+    let document = PreviewDownwriteAPIClient.sample.documents["doc-pitch"]!
+    viewModel.documentState = .loaded(document)
+    viewModel.draftTitle = document.title
+    viewModel.draftContent = "\(document.content)\n\nLocal edits are still here."
+    viewModel.statusMessage = "Document has changed since it was loaded"
+    return NavigationStack {
+        DocumentDetailView(viewModel: viewModel)
     }
 }

@@ -30,8 +30,8 @@ struct WorkspaceShellView: View {
             }
         }
         .sheet(item: $viewModel.groupReassignment) { reassignment in
-            GroupReassignmentView(viewModel: reassignment) { updatedTarget in
-                viewModel.removeGroup(reassignment.sourceGroup.id, replacementGroup: updatedTarget)
+            GroupReassignmentView(viewModel: reassignment) { result in
+                viewModel.removeGroup(result.removedGroupID, replacementGroup: result.replacementGroup)
                 viewModel.groupReassignment = nil
             }
         }

@@ -11,9 +11,13 @@ struct GroupListView: View {
             case .failed(let message):
                 ContentUnavailableView("Could Not Load Groups", systemImage: "exclamationmark.triangle", description: Text(message))
             case .loaded(let groups):
-                ForEach(groups) { group in
-                    GroupRowView(group: group)
-                        .tag(group.id)
+                if groups.isEmpty {
+                    ContentUnavailableView("No Groups", systemImage: "folder.badge.plus", description: Text("Create a group to start organizing documents."))
+                } else {
+                    ForEach(groups) { group in
+                        GroupRowView(group: group)
+                            .tag(group.id)
+                    }
                 }
             }
         }
@@ -60,5 +64,39 @@ private struct GroupRowView: View {
 #Preview("Groups") {
     NavigationStack {
         GroupListView(viewModel: AppViewModel.previewSignedIn.workspaceModel)
+    }
+}
+
+#Preview("Groups loading") {
+    let viewModel = WorkspaceViewModel(session: .previewSignedOut)
+    viewModel.groupsState = .loading
+    return NavigationStack {
+        GroupListView(viewModel: viewModel)
+    }
+}
+
+#Preview("Groups error") {
+    let viewModel = WorkspaceViewModel(session: .previewSignedOut)
+    viewModel.groupsState = .failed("The instance could not be reached.")
+    return NavigationStack {
+        GroupListView(viewModel: viewModel)
+    }
+}
+
+#Preview("Groups empty") {
+    let client = PreviewDownwriteAPIClient(groups: [], documents: [:])
+    let session = SessionViewModel(
+        state: .signedIn(
+            InstanceSession(
+                instanceURL: client.baseURL,
+                identity: Identity(id: "local-owner"),
+                apiClient: client
+            )
+        )
+    )
+    let viewModel = WorkspaceViewModel(session: session)
+    viewModel.groupsState = .loaded([])
+    return NavigationStack {
+        GroupListView(viewModel: viewModel)
     }
 }
