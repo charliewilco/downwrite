@@ -1,4 +1,5 @@
 import type { Context, Next } from "hono";
+import { admissionConfiguration } from "./admission.js";
 import { sha256Base64Url } from "./crypto.js";
 import { HttpError } from "./http.js";
 import { readSessionCookie } from "./identity.js";
@@ -59,12 +60,15 @@ export async function enforceRateLimit(input: {
 }
 
 export function authConfiguration(env: Env, requestUrl?: string) {
+  const admission = admissionConfiguration(env);
   return {
     bootstrapTokenConfigured: Boolean(env.AUTH_BOOTSTRAP_TOKEN),
     instancePublicUrl: env.INSTANCE_PUBLIC_URL ?? null,
     localDevelopmentAuthEnabled: requestUrl
       ? isLocalDevelopmentAuthEnabled(env, requestUrl)
       : false,
+    registrationMode: admission.registrationMode,
+    allowedEmailDomains: admission.allowedEmailDomains,
     webauthnRpId: env.WEBAUTHN_RP_ID ?? null,
     webauthnRpName: env.WEBAUTHN_RP_NAME ?? "Downwrite",
   };

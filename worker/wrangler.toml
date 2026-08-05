@@ -26,6 +26,10 @@ crons = ["17 3 * * *"]
 
 [vars]
 WEBAUTHN_RP_NAME = "Downwrite"
+# Production registration is closed by default after owner bootstrap.
+# Set DOWNWRITE_REGISTRATION_MODE to "open" or "email_domain" to allow
+# additional passkey registration. Domain mode also requires
+# DOWNWRITE_ALLOWED_EMAIL_DOMAINS, for example "example.com,team.example.com".
 # Local-only secrets are generated into .dev.vars by npm run dev.
 # Set INSTANCE_PUBLIC_URL and WEBAUTHN_RP_ID for production custom domains.
 # Store AUTH_BOOTSTRAP_TOKEN and any development token map as Worker secrets,

@@ -48,6 +48,38 @@ The web UI can bootstrap the first owner passkey with `AUTH_BOOTSTRAP_TOKEN`.
 After that, users sign in with passkeys and receive httpOnly server-side session
 cookies.
 
+## Restrict Instance Access
+
+Downwrite is self-hosted by default, and production deployments default to
+closed registration after the first owner bootstrap. That lets an operator host
+a personal instance without opening sign-up to the public internet.
+
+Configure registration with:
+
+```text
+DOWNWRITE_REGISTRATION_MODE=closed
+```
+
+Supported values:
+
+- `closed` prevents new passkey registration after owner bootstrap. Existing
+  passkey identities can still sign in.
+- `open` allows anyone who can reach the instance to create a passkey identity.
+- `email_domain` allows new passkey identities only when their identity id uses
+  one of the configured email domains.
+
+For a team instance:
+
+```text
+DOWNWRITE_REGISTRATION_MODE=email_domain
+DOWNWRITE_ALLOWED_EMAIL_DOMAINS=example.com,team.example.com
+```
+
+Domain checks are case-insensitive and apply to passkey registration,
+domain-gated passkey login/OAuth authorization, direct collaborator adds,
+document invitations, and invitation acceptance. Invitations do not override the
+instance access policy.
+
 Session cookies are `Secure`, `HttpOnly`, and `SameSite=Lax` on production
 origins. Localhost HTTP omits `Secure` so local passkey/session testing works
 without external deployment. Cookie-authenticated write requests require a
@@ -118,13 +150,18 @@ Before deploying from a clean checkout:
    `CONTENT` bound to this Worker.
 3. Set `INSTANCE_PUBLIC_URL` to the canonical HTTPS origin. Set
    `WEBAUTHN_RP_ID` to that origin's hostname when using a custom domain.
-4. Store `AUTH_BOOTSTRAP_TOKEN` as a Worker secret for first-owner passkey
+4. Choose the instance registration policy. Leave
+   `DOWNWRITE_REGISTRATION_MODE` unset or set it to `closed` for a personal
+   instance, set it to `open` only for intentionally public registration, or set
+   it to `email_domain` with `DOWNWRITE_ALLOWED_EMAIL_DOMAINS` for a team
+   instance.
+5. Store `AUTH_BOOTSTRAP_TOKEN` as a Worker secret for first-owner passkey
    setup. Do not commit it. Remove or rotate it after bootstrap if the deployer
    does not want future bootstrap attempts.
-5. Do not configure `DOWNWRITE_LOCAL_AUTH` in production. Do not configure
+6. Do not configure `DOWNWRITE_LOCAL_AUTH` in production. Do not configure
    development bearer tokens unless the deployment is intentionally a private
    smoke-test environment.
-6. From `worker/`, run `npm run deploy` only when ready to apply remote D1
+7. From `worker/`, run `npm run deploy` only when ready to apply remote D1
    migrations and publish the Worker.
 
 After deployment, smoke-test:

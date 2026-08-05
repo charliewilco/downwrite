@@ -1780,10 +1780,229 @@ test("auth status reports setup configuration without exposing secrets", async (
     bootstrapTokenConfigured: true,
     instancePublicUrl: "https://example.downwrite.test",
     localDevelopmentAuthEnabled: false,
+    registrationMode: "open",
+    allowedEmailDomains: [],
     webauthnRpId: "example.downwrite.test",
     webauthnRpName: "Example Downwrite",
   });
   assert.equal(JSON.stringify(body).includes("secret"), false);
+});
+
+test("production registration defaults closed after owner bootstrap", async () => {
+  const storage = new MemoryStorage();
+  const app = createApp({
+    createStorage: () => storage,
+    authService: new FakeAuthService("person@example.com"),
+  });
+  const env = { DEVELOPMENT_API_TOKENS: TOKENS };
+
+  const statusResponse = await app.request(
+    "https://example.downwrite.test/api/v1/auth/status",
+    {},
+    env,
+  );
+  const registrationResponse = await app.request(
+    "https://example.downwrite.test/api/v1/auth/passkeys/registration/options",
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        identityId: "person@example.com",
+        displayName: "Person",
+      }),
+    },
+    env,
+  );
+  const registrationBody = await registrationResponse.json();
+
+  assert.equal(
+    (await statusResponse.json()).configuration.registrationMode,
+    "closed",
+  );
+  assert.equal(registrationResponse.status, 403);
+  assert.equal(registrationBody.code, "forbidden");
+});
+
+test("open registration creates a passkey session", async () => {
+  const storage = new MemoryStorage();
+  const app = createApp({
+    createStorage: () => storage,
+    authService: new FakeAuthService("person@example.com"),
+  });
+  const env = {
+    DEVELOPMENT_API_TOKENS: TOKENS,
+    DOWNWRITE_REGISTRATION_MODE: "open",
+  };
+
+  const options = await app.request(
+    "https://example.downwrite.test/api/v1/auth/passkeys/registration/options",
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        identityId: "Person@Example.com",
+        displayName: "Person",
+      }),
+    },
+    env,
+  );
+  const verify = await app.request(
+    "https://example.downwrite.test/api/v1/auth/passkeys/registration/verify",
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ challengeId: "fake", response: {} }),
+    },
+    env,
+  );
+
+  assert.equal(options.status, 200);
+  assert.equal(verify.status, 200);
+  assert.match(verify.headers.get("set-cookie"), /dw_session=/);
+});
+
+test("email-domain registration is case-insensitive and rejects outside domains", async () => {
+  const storage = new MemoryStorage();
+  const app = createApp({
+    createStorage: () => storage,
+    authService: new FakeAuthService("person@team.test"),
+  });
+  const env = {
+    DEVELOPMENT_API_TOKENS: TOKENS,
+    DOWNWRITE_REGISTRATION_MODE: "email_domain",
+    DOWNWRITE_ALLOWED_EMAIL_DOMAINS: " Team.Test , example.test ",
+  };
+
+  const allowed = await app.request(
+    "https://example.downwrite.test/api/v1/auth/passkeys/registration/options",
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        identityId: "Person@Team.Test",
+        displayName: "Person",
+      }),
+    },
+    env,
+  );
+  const blocked = await app.request(
+    "https://example.downwrite.test/api/v1/auth/passkeys/registration/options",
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        identityId: "person@else.test",
+        displayName: "Person",
+      }),
+    },
+    env,
+  );
+  const malformed = await app.request(
+    "https://example.downwrite.test/api/v1/auth/passkeys/registration/options",
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ identityId: "not-email", displayName: "Person" }),
+    },
+    env,
+  );
+
+  assert.equal(allowed.status, 200);
+  assert.equal(blocked.status, 403);
+  assert.equal(malformed.status, 403);
+});
+
+test("email-domain policy blocks disallowed passkey login and OAuth authorization", async () => {
+  const storage = new MemoryStorage();
+  await storage.createIdentityWithCredential({
+    identityId: "person@else.test",
+    displayName: "Person",
+    credentialId: "credential-id",
+    publicKey: new Uint8Array([1, 2, 3]),
+    counter: 0,
+    transports: [],
+  });
+  const authService = new FakeAuthService("person@else.test");
+  const app = createApp({ createStorage: () => storage, authService });
+  const env = {
+    DEVELOPMENT_API_TOKENS: TOKENS,
+    DOWNWRITE_REGISTRATION_MODE: "email_domain",
+    DOWNWRITE_ALLOWED_EMAIL_DOMAINS: "team.test",
+  };
+  const cookie = await createSessionCookie(storage, "person@else.test");
+  const authorizeUrl = oauthAuthorizeUrl();
+
+  const loginOptions = await app.request(
+    "https://example.downwrite.test/api/v1/auth/passkeys/login/options",
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ identityId: "person@else.test" }),
+    },
+    env,
+  );
+  const oauthAuthorize = await app.request(
+    authorizeUrl.toString(),
+    { headers: { cookie } },
+    env,
+  );
+
+  assert.equal(loginOptions.status, 403);
+  assert.equal(oauthAuthorize.status, 403);
+});
+
+test("sharing targets and invitation acceptance respect domain policy", async () => {
+  const { app, env } = createHarness();
+  const domainEnv = {
+    ...env,
+    DEVELOPMENT_API_TOKENS: `${TOKENS},person@else.test:else-token`,
+    DOWNWRITE_REGISTRATION_MODE: "email_domain",
+    DOWNWRITE_ALLOWED_EMAIL_DOMAINS: "team.test",
+  };
+  const group = await createGroup(app, domainEnv);
+  const document = await createDocument(app, domainEnv, group.id);
+
+  const allowedCollaborator = await app.request(
+    `/api/v1/documents/${document.id}/collaborators`,
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ identityId: "Person@Team.Test", role: "editor" }),
+    },
+    domainEnv,
+  );
+  const blockedCollaborator = await app.request(
+    `/api/v1/documents/${document.id}/collaborators`,
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ identityId: "person@else.test", role: "editor" }),
+    },
+    domainEnv,
+  );
+  const inviteResponse = await app.request(
+    `/api/v1/documents/${document.id}/invitations`,
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ identityId: "person@else.test", role: "editor" }),
+    },
+    { ...env, DOWNWRITE_REGISTRATION_MODE: "open" },
+  );
+  const invitation = (await inviteResponse.json()).invitation;
+  const blockedAccept = await app.request(
+    `/api/v1/invitations/${invitation.token}/accept`,
+    {
+      method: "POST",
+      headers: authHeaders("else-token"),
+    },
+    domainEnv,
+  );
+
+  assert.equal(allowedCollaborator.status, 200);
+  assert.equal(blockedCollaborator.status, 403);
+  assert.equal(inviteResponse.status, 201);
+  assert.equal(blockedAccept.status, 403);
 });
 
 test("auth challenge creation is rate limited per identity and client", async () => {
@@ -1916,7 +2135,10 @@ function createHarness() {
   const storage = new MemoryStorage();
   return {
     app: createApp({ createStorage: () => storage }),
-    env: { DEVELOPMENT_API_TOKENS: TOKENS },
+    env: {
+      DEVELOPMENT_API_TOKENS: TOKENS,
+      DOWNWRITE_REGISTRATION_MODE: "open",
+    },
     storage,
   };
 }
@@ -1978,6 +2200,14 @@ class FakeAuthService {
     return this.#session(storage);
   }
 
+  async beginRegistration() {
+    return { challengeId: "fake", options: { challenge: "fake" } };
+  }
+
+  async finishRegistration({ storage }) {
+    return this.#session(storage);
+  }
+
   async beginLogin() {
     return { challengeId: "fake", options: { challenge: "fake" } };
   }
@@ -2023,6 +2253,21 @@ function formHeaders(extra = {}) {
     "content-type": "application/x-www-form-urlencoded",
     ...extra,
   };
+}
+
+function oauthAuthorizeUrl() {
+  const url = new URL("https://example.downwrite.test/oauth/authorize");
+  url.searchParams.set("response_type", "code");
+  url.searchParams.set("client_id", "downwrite-mcp");
+  url.searchParams.set("redirect_uri", "http://127.0.0.1:49152/callback");
+  url.searchParams.set(
+    "code_challenge",
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQ",
+  );
+  url.searchParams.set("code_challenge_method", "S256");
+  url.searchParams.set("scope", "workspaces:read");
+  url.searchParams.set("resource", "https://example.downwrite.test/api/v1");
+  return url;
 }
 
 async function createSessionCookie(storage, identityId) {

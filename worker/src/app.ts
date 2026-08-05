@@ -27,6 +27,12 @@ import {
   securityHeaders,
 } from "./security.js";
 import { createOpaqueToken } from "./domain/tokens.js";
+import {
+  admissionConfiguration,
+  assertIdentityAdmitted,
+  assertRegistrationAllowed,
+  normalizedIdentityId,
+} from "./admission.js";
 import { handleMcpRequest } from "./mcp.js";
 import {
   OAUTH_SCOPES,
@@ -176,7 +182,7 @@ export function createApp(options: AppOptions = {}) {
     await next();
   });
 
-  function discovery(url: string) {
+  function discovery(env: Env, url: string) {
     const instanceUrl = new URL(url).origin;
 
     return {
@@ -210,6 +216,7 @@ export function createApp(options: AppOptions = {}) {
           browserSignInRequired: true,
           publicClients: oauthClientPolicy(),
         },
+        registration: admissionConfiguration(env),
       },
       clients: {
         native: {
@@ -287,9 +294,9 @@ export function createApp(options: AppOptions = {}) {
     }),
   );
 
-  app.get("/api/v1/discovery", (c) => c.json(discovery(c.req.url)));
+  app.get("/api/v1/discovery", (c) => c.json(discovery(c.env, c.req.url)));
 
-  app.get("/.well-known/downwrite", (c) => c.json(discovery(c.req.url)));
+  app.get("/.well-known/downwrite", (c) => c.json(discovery(c.env, c.req.url)));
 
   app.get("/.well-known/oauth-protected-resource", (c) =>
     c.json(oauthProtectedResourceMetadata(c.req.url)),
@@ -351,7 +358,7 @@ export function createApp(options: AppOptions = {}) {
   app.post("/api/v1/auth/bootstrap/options", async (c) => {
     const store = storage(c.env);
     const body = await readJsonObject(c);
-    const identityId = requireString(body, "identityId");
+    const identityId = normalizedIdentityId(requireString(body, "identityId"));
     await enforceRateLimit({
       c,
       storage: store,
@@ -387,10 +394,49 @@ export function createApp(options: AppOptions = {}) {
     return c.json({ ok: true, identity: { id: session.identityId } });
   });
 
+  app.post("/api/v1/auth/passkeys/registration/options", async (c) => {
+    const store = storage(c.env);
+    const body = await readJsonObject(c);
+    const identityId = normalizedIdentityId(requireString(body, "identityId"));
+    assertRegistrationAllowed(c.env, identityId);
+    await enforceRateLimit({
+      c,
+      storage: store,
+      purpose: "registration",
+      subject: identityId,
+      limit: 8,
+      windowSeconds: 300,
+    });
+    const result = await authService.beginRegistration({
+      env: c.env,
+      storage: store,
+      requestUrl: c.req.url,
+      identityId,
+      displayName: requireString(body, "displayName"),
+    });
+
+    return c.json(result);
+  });
+
+  app.post("/api/v1/auth/passkeys/registration/verify", async (c) => {
+    const body = await readJsonObject(c);
+    const session = await authService.finishRegistration({
+      env: c.env,
+      storage: storage(c.env),
+      requestUrl: c.req.url,
+      challengeId: requireString(body, "challengeId"),
+      response: body.response as never,
+    });
+
+    c.header("set-cookie", session.cookie);
+    return c.json({ ok: true, identity: { id: session.identityId } });
+  });
+
   app.post("/api/v1/auth/passkeys/login/options", async (c) => {
     const store = storage(c.env);
     const body = await readJsonObject(c);
-    const identityId = requireString(body, "identityId");
+    const identityId = normalizedIdentityId(requireString(body, "identityId"));
+    assertIdentityAdmitted(c.env, identityId);
     await enforceRateLimit({
       c,
       storage: store,
@@ -692,10 +738,14 @@ export function createApp(options: AppOptions = {}) {
       throw new HttpError(400, "Role must be owner or editor");
     }
 
+    const collaboratorIdentityId = normalizedIdentityId(
+      requireString(body, "identityId"),
+    );
+    assertRegistrationAllowed(c.env, collaboratorIdentityId);
     const added = await store.addDocumentCollaborator({
       identityId: identity.id,
       documentId: c.req.param("documentId"),
-      collaboratorIdentityId: requireString(body, "identityId"),
+      collaboratorIdentityId,
       role,
     });
 
@@ -753,10 +803,14 @@ export function createApp(options: AppOptions = {}) {
       throw new HttpError(400, "Role must be owner or editor");
     }
 
+    const invitedIdentityId = normalizedIdentityId(
+      requireString(body, "identityId"),
+    );
+    assertRegistrationAllowed(c.env, invitedIdentityId);
     const invitation = await store.createDocumentInvitation({
       identityId: identity.id,
       documentId: c.req.param("documentId"),
-      invitedIdentityId: requireString(body, "identityId"),
+      invitedIdentityId,
       role,
       token: createOpaqueToken(),
     });
@@ -772,6 +826,7 @@ export function createApp(options: AppOptions = {}) {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
     assertScope(identity, "sharing:write");
+    assertRegistrationAllowed(c.env, identity.id);
     const invitation = await store.acceptDocumentInvitation({
       identityId: identity.id,
       token: c.req.param("token"),

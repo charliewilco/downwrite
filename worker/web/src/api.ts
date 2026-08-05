@@ -87,6 +87,8 @@ export interface AuthStatus {
     bootstrapTokenConfigured: boolean;
     instancePublicUrl: string | null;
     localDevelopmentAuthEnabled: boolean;
+    registrationMode: "closed" | "open" | "email_domain";
+    allowedEmailDomains: string[];
     webauthnRpId: string | null;
     webauthnRpName: string;
   };
@@ -138,6 +140,33 @@ export async function finishBootstrap(input: {
     body: JSON.stringify(input),
   });
   await assertOk(response, "Bootstrap verification failed");
+}
+
+export async function beginPasskeyRegistration(input: {
+  identityId: string;
+  displayName: string;
+}) {
+  const response = await fetch("/api/v1/auth/passkeys/registration/options", {
+    method: "POST",
+    headers: jsonHeaders(),
+    credentials: "include",
+    body: JSON.stringify(input),
+  });
+  await assertOk(response, "Passkey registration request failed");
+  return response.json() as Promise<{ challengeId: string; options: unknown }>;
+}
+
+export async function finishPasskeyRegistration(input: {
+  challengeId: string;
+  response: unknown;
+}) {
+  const response = await fetch("/api/v1/auth/passkeys/registration/verify", {
+    method: "POST",
+    headers: jsonHeaders(),
+    credentials: "include",
+    body: JSON.stringify(input),
+  });
+  await assertOk(response, "Passkey registration verification failed");
 }
 
 export async function beginPasskeyLogin(identityId: string) {

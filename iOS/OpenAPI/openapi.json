@@ -666,6 +666,123 @@
         }
       }
     },
+    "/api/v1/auth/passkeys/registration/options": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Begin passkey registration for an admitted identity.",
+        "description": "Creates WebAuthn registration options for non-bootstrap identity creation when the self-hosted instance registration policy allows the requested identity.",
+        "operationId": "beginPasskeyRegistration",
+        "security": [],
+        "x-downwrite-scope": "auth:registration",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasskeyRegistrationOptionsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "WebAuthn registration options.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebAuthnOptions"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "503": {
+            "description": "Domain registration is enabled without configured domains.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": "Domain registration is enabled without configured domains.",
+                      "code": "internal_error",
+                      "status": 503
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/passkeys/registration/verify": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Verify passkey registration and create a session.",
+        "operationId": "verifyPasskeyRegistration",
+        "security": [],
+        "x-downwrite-scope": "auth:registration",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyPasskeyRegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Session created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "503": {
+            "description": "Domain registration is enabled without configured domains.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": "Domain registration is enabled without configured domains.",
+                      "code": "internal_error",
+                      "status": 503
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/auth/passkeys/login/options": {
       "post": {
         "tags": [
@@ -2333,6 +2450,20 @@
           "localDevelopmentAuthEnabled": {
             "type": "boolean"
           },
+          "registrationMode": {
+            "type": "string",
+            "enum": [
+              "closed",
+              "open",
+              "email_domain"
+            ]
+          },
+          "allowedEmailDomains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "webauthnRpId": {
             "type": [
               "string",
@@ -2347,6 +2478,8 @@
           "bootstrapTokenConfigured",
           "instancePublicUrl",
           "localDevelopmentAuthEnabled",
+          "registrationMode",
+          "allowedEmailDomains",
           "webauthnRpId",
           "webauthnRpName"
         ]
@@ -2462,6 +2595,39 @@
         },
         "required": [
           "setupToken",
+          "challengeId",
+          "response"
+        ]
+      },
+      "PasskeyRegistrationOptionsRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "identityId": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "identityId",
+          "displayName"
+        ]
+      },
+      "VerifyPasskeyRegistrationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "challengeId": {
+            "type": "string"
+          },
+          "response": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
           "challengeId",
           "response"
         ]
@@ -3508,7 +3674,8 @@
         "sharing:write",
         "mcp:documents"
       ]
-    }
+    },
+    "registration": "Self-hosted instances default to closed registration after owner bootstrap. Operators may set DOWNWRITE_REGISTRATION_MODE=open or email_domain, with DOWNWRITE_ALLOWED_EMAIL_DOMAINS for domain-gated deployments."
   },
   "x-downwrite-api-roadmap": {
     "purpose": "Endpoint-gap audit for keeping the Worker API as Downwrite's product core. Proposed operations are not implemented in v1 unless they also appear under paths.",
@@ -3556,6 +3723,8 @@
         "POST /api/v1/auth/development/session local-only development session",
         "POST /api/v1/auth/bootstrap/options",
         "POST /api/v1/auth/bootstrap/verify",
+        "POST /api/v1/auth/passkeys/registration/options",
+        "POST /api/v1/auth/passkeys/registration/verify",
         "POST /api/v1/auth/passkeys/login/options",
         "POST /api/v1/auth/passkeys/login/verify",
         "DELETE /api/v1/auth/session"

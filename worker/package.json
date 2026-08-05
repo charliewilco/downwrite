@@ -54,6 +54,12 @@
       "AUTH_BOOTSTRAP_TOKEN": {
         "description": "Instance-local one-time owner setup secret. Configure as a Worker secret; do not commit a production value."
       },
+      "DOWNWRITE_REGISTRATION_MODE": {
+        "description": "Operator-controlled production registration mode. Defaults to `closed`; set to `open` for public registration or `email_domain` to restrict new passkey registration to configured email domains."
+      },
+      "DOWNWRITE_ALLOWED_EMAIL_DOMAINS": {
+        "description": "Comma-separated allowed email domains used only when DOWNWRITE_REGISTRATION_MODE=email_domain. Example: `example.com,team.example.com`."
+      },
       "WEBAUTHN_RP_NAME": {
         "description": "Display name shown by passkey authenticators for this self-hosted instance."
       },

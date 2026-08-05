@@ -5,6 +5,7 @@ import {
   acceptInvitation,
   beginBootstrap,
   beginPasskeyLogin,
+  beginPasskeyRegistration,
   createDocument,
   createGroup,
   createInvitation,
@@ -18,6 +19,7 @@ import {
   fetchShareState,
   finishBootstrap,
   finishPasskeyLogin,
+  finishPasskeyRegistration,
   moveDocument,
   positionDocument,
   removeCollaborator,
@@ -389,9 +391,14 @@ function AuthPanel({
     bootstrapTokenConfigured: false,
     instancePublicUrl: null,
     localDevelopmentAuthEnabled: false,
+    registrationMode: "closed",
+    allowedEmailDomains: [],
     webauthnRpId: null,
     webauthnRpName: "Downwrite",
   };
+  const registrationAvailable =
+    !authStatus?.bootstrapRequired &&
+    configuration.registrationMode !== "closed";
 
   async function run(action: () => Promise<void>) {
     setBusy(true);
@@ -459,6 +466,16 @@ function AuthPanel({
               <dt>Relying party</dt>
               <dd>{configuration.webauthnRpId ?? location.hostname}</dd>
             </div>
+            <div>
+              <dt>Registration</dt>
+              <dd>
+                {configuration.registrationMode === "closed"
+                  ? "Closed"
+                  : configuration.registrationMode === "email_domain"
+                    ? configuration.allowedEmailDomains.join(", ")
+                    : "Open"}
+              </dd>
+            </div>
           </dl>
           <div className="auth-grid">
             <input
@@ -466,7 +483,7 @@ function AuthPanel({
               value={identityId}
               onInput={(event) => setIdentityId(event.currentTarget.value)}
             />
-            {authStatus?.bootstrapRequired && (
+            {(authStatus?.bootstrapRequired || registrationAvailable) && (
               <input
                 aria-label="Display name"
                 value={displayName}
@@ -522,7 +539,36 @@ function AuthPanel({
                   ? "Create owner passkey"
                   : "Sign in with passkey"}
             </button>
+            {!authStatus?.bootstrapRequired && !authStatus?.authenticated && (
+              <button
+                className="secondary-action"
+                disabled={busy || !registrationAvailable}
+                type="button"
+                onClick={() =>
+                  void run(async () => {
+                    const result = await beginPasskeyRegistration({
+                      identityId,
+                      displayName,
+                    });
+                    const response = await createPasskey(result.options);
+                    await finishPasskeyRegistration({
+                      challengeId: result.challengeId,
+                      response,
+                    });
+                  })
+                }
+              >
+                {busy ? "Working..." : "Create passkey"}
+              </button>
+            )}
           </div>
+          {!authStatus?.bootstrapRequired &&
+            !authStatus?.authenticated &&
+            configuration.registrationMode === "closed" && (
+              <p className="inline-error">
+                Registration is closed for this instance.
+              </p>
+            )}
         </div>
       ) : (
         <div className="token auth-card">

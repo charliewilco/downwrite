@@ -243,6 +243,8 @@ function apiRoadmap() {
         "POST /api/v1/auth/development/session local-only development session",
         "POST /api/v1/auth/bootstrap/options",
         "POST /api/v1/auth/bootstrap/verify",
+        "POST /api/v1/auth/passkeys/registration/options",
+        "POST /api/v1/auth/passkeys/registration/verify",
         "POST /api/v1/auth/passkeys/login/options",
         "POST /api/v1/auth/passkeys/login/verify",
         "DELETE /api/v1/auth/session",
@@ -351,6 +353,8 @@ function clientContract() {
       ],
       scopes: Object.keys(OAUTH_SCOPES),
     },
+    registration:
+      "Self-hosted instances default to closed registration after owner bootstrap. Operators may set DOWNWRITE_REGISTRATION_MODE=open or email_domain, with DOWNWRITE_ALLOWED_EMAIL_DOMAINS for domain-gated deployments.",
   };
 }
 
@@ -640,6 +644,49 @@ function paths(origin: string): OpenApiDocument["paths"] {
           "400": refResponse("BadRequest"),
           "401": refResponse("Unauthorized"),
           "409": errorResponse(409, "Owner bootstrap has already completed."),
+        },
+      }),
+    },
+    "/api/v1/auth/passkeys/registration/options": {
+      post: operation({
+        tags: ["Auth"],
+        summary: "Begin passkey registration for an admitted identity.",
+        description:
+          "Creates WebAuthn registration options for non-bootstrap identity creation when the self-hosted instance registration policy allows the requested identity.",
+        operationId: "beginPasskeyRegistration",
+        security: [],
+        "x-downwrite-scope": "auth:registration",
+        requestBody: jsonRequest("PasskeyRegistrationOptionsRequest"),
+        responses: {
+          "200": jsonResponse(
+            "WebAuthn registration options.",
+            "WebAuthnOptions",
+          ),
+          "403": refResponse("Forbidden"),
+          "429": refResponse("TooManyRequests"),
+          "503": errorResponse(
+            503,
+            "Domain registration is enabled without configured domains.",
+          ),
+        },
+      }),
+    },
+    "/api/v1/auth/passkeys/registration/verify": {
+      post: operation({
+        tags: ["Auth"],
+        summary: "Verify passkey registration and create a session.",
+        operationId: "verifyPasskeyRegistration",
+        security: [],
+        "x-downwrite-scope": "auth:registration",
+        requestBody: jsonRequest("VerifyPasskeyRegistrationRequest"),
+        responses: {
+          "200": jsonResponse("Session created.", "AuthResult"),
+          "400": refResponse("BadRequest"),
+          "403": refResponse("Forbidden"),
+          "503": errorResponse(
+            503,
+            "Domain registration is enabled without configured domains.",
+          ),
         },
       }),
     },
@@ -1244,6 +1291,14 @@ const schemas: Record<string, JsonSchema> = {
       bootstrapTokenConfigured: { type: "boolean" },
       instancePublicUrl: { type: ["string", "null"], format: "uri" },
       localDevelopmentAuthEnabled: { type: "boolean" },
+      registrationMode: {
+        type: "string",
+        enum: ["closed", "open", "email_domain"],
+      },
+      allowedEmailDomains: {
+        type: "array",
+        items: { type: "string" },
+      },
       webauthnRpId: { type: ["string", "null"] },
       webauthnRpName: { type: "string" },
     },
@@ -1251,6 +1306,8 @@ const schemas: Record<string, JsonSchema> = {
       "bootstrapTokenConfigured",
       "instancePublicUrl",
       "localDevelopmentAuthEnabled",
+      "registrationMode",
+      "allowedEmailDomains",
       "webauthnRpId",
       "webauthnRpName",
     ],
@@ -1308,6 +1365,20 @@ const schemas: Record<string, JsonSchema> = {
       response: { type: "object", additionalProperties: true },
     },
     ["setupToken", "challengeId", "response"],
+  ),
+  PasskeyRegistrationOptionsRequest: objectSchema(
+    {
+      identityId: { type: "string" },
+      displayName: { type: "string" },
+    },
+    ["identityId", "displayName"],
+  ),
+  VerifyPasskeyRegistrationRequest: objectSchema(
+    {
+      challengeId: { type: "string" },
+      response: { type: "object", additionalProperties: true },
+    },
+    ["challengeId", "response"],
   ),
   PasskeyLoginOptionsRequest: objectSchema({ identityId: { type: "string" } }, [
     "identityId",

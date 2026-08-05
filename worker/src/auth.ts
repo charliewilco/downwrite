@@ -4,15 +4,22 @@ import {
   verifyAuthenticationResponse,
   verifyRegistrationResponse,
   type AuthenticationResponseJSON,
+  type AuthenticatorTransportFuture,
   type RegistrationResponseJSON,
 } from "@simplewebauthn/server";
 import { HttpError } from "./http.js";
 import { randomToken, sha256Base64Url, timingSafeEqual } from "./crypto.js";
 import { sessionCookie } from "./identity.js";
+import {
+  assertIdentityAdmitted,
+  assertRegistrationAllowed,
+  normalizedIdentityId,
+} from "./admission.js";
 import type {
   BootstrapOptions,
   Env,
   LoginOptions,
+  RegistrationOptions,
   SessionRecord,
   Storage,
 } from "./types.js";
@@ -33,6 +40,20 @@ export interface AuthService {
     storage: Storage;
     requestUrl: string;
     setupToken: string;
+    challengeId: string;
+    response: RegistrationResponseJSON;
+  }): Promise<AuthSession>;
+  beginRegistration(input: {
+    env: Env;
+    storage: Storage;
+    requestUrl: string;
+    identityId: string;
+    displayName: string;
+  }): Promise<RegistrationOptions>;
+  finishRegistration(input: {
+    env: Env;
+    storage: Storage;
+    requestUrl: string;
     challengeId: string;
     response: RegistrationResponseJSON;
   }): Promise<AuthSession>;
@@ -71,22 +92,17 @@ export class WebAuthnAuthService implements AuthService {
     displayName: string;
   }) {
     await assertBootstrapAllowed(input);
+    const identityId = normalizedIdentityId(input.identityId);
 
-    const options = await generateRegistrationOptions({
-      rpName: rpName(input.env),
-      rpID: rpId(input.env, input.requestUrl),
-      userID: arrayBufferUint8(new TextEncoder().encode(input.identityId)),
-      userName: input.identityId,
-      userDisplayName: input.displayName,
-      attestationType: "none",
-      authenticatorSelection: {
-        residentKey: "preferred",
-        userVerification: "required",
-      },
+    const options = await createRegistrationOptions({
+      env: input.env,
+      requestUrl: input.requestUrl,
+      identityId,
+      displayName: input.displayName,
       excludeCredentials: [],
     });
     const challenge = await input.storage.createWebAuthnChallenge({
-      identityId: input.identityId,
+      identityId,
       type: "bootstrap",
       challenge: options.challenge,
     });
@@ -113,28 +129,75 @@ export class WebAuthnAuthService implements AuthService {
       throw new HttpError(400, "Unknown bootstrap challenge");
     }
 
-    const verification = await verifyRegistrationResponse({
+    await verifyAndCreateCredential({
+      env: input.env,
+      storage: input.storage,
+      requestUrl: input.requestUrl,
+      challenge,
       response: input.response,
-      expectedChallenge: challenge.challenge,
-      expectedOrigin: origin(input.env, input.requestUrl),
-      expectedRPID: rpId(input.env, input.requestUrl),
-      requireUserVerification: true,
+      displayName: challenge.identityId,
     });
 
-    if (!verification.verified) {
-      throw new HttpError(400, "Passkey registration failed");
+    return createSession(input.storage, challenge.identityId, input.requestUrl);
+  }
+
+  async beginRegistration(input: {
+    env: Env;
+    storage: Storage;
+    requestUrl: string;
+    identityId: string;
+    displayName: string;
+  }) {
+    const identityId = normalizedIdentityId(input.identityId);
+    assertRegistrationAllowed(input.env, identityId);
+
+    const existingCredentials =
+      await input.storage.listCredentialsForIdentity(identityId);
+    const options = await createRegistrationOptions({
+      env: input.env,
+      requestUrl: input.requestUrl,
+      identityId,
+      displayName: input.displayName,
+      excludeCredentials: existingCredentials.map((credential) => ({
+        id: credential.credentialId,
+        type: "public-key",
+        transports: credential.transports,
+      })),
+    });
+    const challenge = await input.storage.createWebAuthnChallenge({
+      identityId,
+      type: "registration",
+      challenge: options.challenge,
+    });
+
+    return { challengeId: challenge.id, options };
+  }
+
+  async finishRegistration(input: {
+    env: Env;
+    storage: Storage;
+    requestUrl: string;
+    challengeId: string;
+    response: RegistrationResponseJSON;
+  }) {
+    const challenge = await input.storage.getWebAuthnChallenge({
+      challengeId: input.challengeId,
+      type: "registration",
+    });
+
+    if (!challenge) {
+      throw new HttpError(400, "Unknown registration challenge");
     }
 
-    const credential = verification.registrationInfo.credential;
-    await input.storage.createIdentityWithCredential({
-      identityId: challenge.identityId,
+    assertRegistrationAllowed(input.env, challenge.identityId);
+    await verifyAndCreateCredential({
+      env: input.env,
+      storage: input.storage,
+      requestUrl: input.requestUrl,
+      challenge,
+      response: input.response,
       displayName: challenge.identityId,
-      credentialId: credential.id,
-      publicKey: credential.publicKey,
-      counter: credential.counter,
-      transports: credential.transports ?? [],
     });
-    await input.storage.deleteWebAuthnChallenge(challenge.id);
 
     return createSession(input.storage, challenge.identityId, input.requestUrl);
   }
@@ -145,14 +208,15 @@ export class WebAuthnAuthService implements AuthService {
     requestUrl: string;
     identityId: string;
   }) {
-    const identity = await input.storage.getIdentity(input.identityId);
+    const identityId = normalizedIdentityId(input.identityId);
+    assertIdentityAdmitted(input.env, identityId);
+    const identity = await input.storage.getIdentity(identityId);
     if (!identity) {
       throw new HttpError(404, "Identity not found");
     }
 
-    const credentials = await input.storage.listCredentialsForIdentity(
-      input.identityId,
-    );
+    const credentials =
+      await input.storage.listCredentialsForIdentity(identityId);
     if (credentials.length === 0) {
       throw new HttpError(400, "Identity has no passkeys");
     }
@@ -167,7 +231,7 @@ export class WebAuthnAuthService implements AuthService {
       })),
     });
     const challenge = await input.storage.createWebAuthnChallenge({
-      identityId: input.identityId,
+      identityId,
       type: "login",
       challenge: options.challenge,
     });
@@ -191,6 +255,7 @@ export class WebAuthnAuthService implements AuthService {
       throw new HttpError(400, "Unknown login challenge");
     }
 
+    assertIdentityAdmitted(input.env, challenge.identityId);
     const credential = await input.storage.getCredentialByCredentialId(
       input.response.id,
     );
@@ -235,6 +300,68 @@ export class WebAuthnAuthService implements AuthService {
       await sha256Base64Url(input.sessionToken),
     );
   }
+}
+
+async function createRegistrationOptions(input: {
+  env: Env;
+  requestUrl: string;
+  identityId: string;
+  displayName: string;
+  excludeCredentials: Array<{
+    id: string;
+    type: "public-key";
+    transports?: AuthenticatorTransportFuture[];
+  }>;
+}) {
+  return generateRegistrationOptions({
+    rpName: rpName(input.env),
+    rpID: rpId(input.env, input.requestUrl),
+    userID: arrayBufferUint8(new TextEncoder().encode(input.identityId)),
+    userName: input.identityId,
+    userDisplayName: input.displayName,
+    attestationType: "none",
+    authenticatorSelection: {
+      residentKey: "preferred",
+      userVerification: "required",
+    },
+    excludeCredentials: input.excludeCredentials,
+  });
+}
+
+async function verifyAndCreateCredential(input: {
+  env: Env;
+  storage: Storage;
+  requestUrl: string;
+  challenge: {
+    id: string;
+    identityId: string;
+    challenge: string;
+  };
+  response: RegistrationResponseJSON;
+  displayName: string;
+}) {
+  const verification = await verifyRegistrationResponse({
+    response: input.response,
+    expectedChallenge: input.challenge.challenge,
+    expectedOrigin: origin(input.env, input.requestUrl),
+    expectedRPID: rpId(input.env, input.requestUrl),
+    requireUserVerification: true,
+  });
+
+  if (!verification.verified) {
+    throw new HttpError(400, "Passkey registration failed");
+  }
+
+  const credential = verification.registrationInfo.credential;
+  await input.storage.createIdentityWithCredential({
+    identityId: input.challenge.identityId,
+    displayName: input.displayName,
+    credentialId: credential.id,
+    publicKey: credential.publicKey,
+    counter: credential.counter,
+    transports: credential.transports ?? [],
+  });
+  await input.storage.deleteWebAuthnChallenge(input.challenge.id);
 }
 
 async function assertBootstrapAllowed(input: {

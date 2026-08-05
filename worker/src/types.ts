@@ -16,6 +16,8 @@ export interface Env {
   DEVELOPMENT_API_TOKENS?: string;
   DOWNWRITE_LOCAL_AUTH?: string;
   AUTH_BOOTSTRAP_TOKEN?: string;
+  DOWNWRITE_REGISTRATION_MODE?: string;
+  DOWNWRITE_ALLOWED_EMAIL_DOMAINS?: string;
   WEBAUTHN_RP_NAME?: string;
   WEBAUTHN_RP_ID?: string;
   INSTANCE_PUBLIC_URL?: string;
@@ -148,6 +150,11 @@ export interface BootstrapOptions {
   options: PublicKeyCredentialCreationOptionsJSON;
 }
 
+export interface RegistrationOptions {
+  challengeId: string;
+  options: PublicKeyCredentialCreationOptionsJSON;
+}
+
 export interface LoginOptions {
   challengeId: string;
   options: PublicKeyCredentialRequestOptionsJSON;
@@ -229,6 +236,9 @@ export interface AuthStatus {
   configuration: {
     bootstrapTokenConfigured: boolean;
     instancePublicUrl: string | null;
+    localDevelopmentAuthEnabled: boolean;
+    registrationMode: "closed" | "open" | "email_domain";
+    allowedEmailDomains: string[];
     webauthnRpId: string | null;
     webauthnRpName: string;
   };

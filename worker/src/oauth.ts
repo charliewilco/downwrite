@@ -1,4 +1,5 @@
 import type { Context } from "hono";
+import { assertIdentityAdmitted } from "./admission.js";
 import { randomToken, sha256Base64Url, timingSafeEqual } from "./crypto.js";
 import { HttpError } from "./http.js";
 import { readSessionCookie } from "./identity.js";
@@ -111,6 +112,7 @@ export async function renderAuthorizationPage(input: {
     windowSeconds: OAUTH_RATE_WINDOW_SECONDS,
   });
   const identity = await readSessionIdentity(input);
+  assertIdentityAdmitted(input.c.env, identity.id);
   const authorizationRequest = randomToken();
   await input.storage.createOAuthAuthorizationRequest({
     requestHash: await sha256Base64Url(authorizationRequest),
@@ -362,6 +364,7 @@ async function issueTokenResponse(
     resource: string;
   },
 ) {
+  assertIdentityAdmitted(input.c.env, token.identityId);
   const accessToken = randomToken();
   const refreshToken = randomToken();
   await input.storage.createOAuthAccessToken({

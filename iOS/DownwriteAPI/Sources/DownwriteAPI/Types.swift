@@ -105,6 +105,18 @@ public protocol APIProtocol: Sendable {
     /// - Remark: HTTP `POST /api/v1/auth/bootstrap/verify`.
     /// - Remark: Generated from `#/paths//api/v1/auth/bootstrap/verify/post(verifyOwnerBootstrap)`.
     func verifyOwnerBootstrap(_ input: Operations.verifyOwnerBootstrap.Input) async throws -> Operations.verifyOwnerBootstrap.Output
+    /// Begin passkey registration for an admitted identity.
+    ///
+    /// Creates WebAuthn registration options for non-bootstrap identity creation when the self-hosted instance registration policy allows the requested identity.
+    ///
+    /// - Remark: HTTP `POST /api/v1/auth/passkeys/registration/options`.
+    /// - Remark: Generated from `#/paths//api/v1/auth/passkeys/registration/options/post(beginPasskeyRegistration)`.
+    func beginPasskeyRegistration(_ input: Operations.beginPasskeyRegistration.Input) async throws -> Operations.beginPasskeyRegistration.Output
+    /// Verify passkey registration and create a session.
+    ///
+    /// - Remark: HTTP `POST /api/v1/auth/passkeys/registration/verify`.
+    /// - Remark: Generated from `#/paths//api/v1/auth/passkeys/registration/verify/post(verifyPasskeyRegistration)`.
+    func verifyPasskeyRegistration(_ input: Operations.verifyPasskeyRegistration.Input) async throws -> Operations.verifyPasskeyRegistration.Output
     /// Begin passkey login.
     ///
     /// - Remark: HTTP `POST /api/v1/auth/passkeys/login/options`.
@@ -419,6 +431,34 @@ extension APIProtocol {
         body: Operations.verifyOwnerBootstrap.Input.Body
     ) async throws -> Operations.verifyOwnerBootstrap.Output {
         try await verifyOwnerBootstrap(Operations.verifyOwnerBootstrap.Input(
+            headers: headers,
+            body: body
+        ))
+    }
+    /// Begin passkey registration for an admitted identity.
+    ///
+    /// Creates WebAuthn registration options for non-bootstrap identity creation when the self-hosted instance registration policy allows the requested identity.
+    ///
+    /// - Remark: HTTP `POST /api/v1/auth/passkeys/registration/options`.
+    /// - Remark: Generated from `#/paths//api/v1/auth/passkeys/registration/options/post(beginPasskeyRegistration)`.
+    public func beginPasskeyRegistration(
+        headers: Operations.beginPasskeyRegistration.Input.Headers = .init(),
+        body: Operations.beginPasskeyRegistration.Input.Body
+    ) async throws -> Operations.beginPasskeyRegistration.Output {
+        try await beginPasskeyRegistration(Operations.beginPasskeyRegistration.Input(
+            headers: headers,
+            body: body
+        ))
+    }
+    /// Verify passkey registration and create a session.
+    ///
+    /// - Remark: HTTP `POST /api/v1/auth/passkeys/registration/verify`.
+    /// - Remark: Generated from `#/paths//api/v1/auth/passkeys/registration/verify/post(verifyPasskeyRegistration)`.
+    public func verifyPasskeyRegistration(
+        headers: Operations.verifyPasskeyRegistration.Input.Headers = .init(),
+        body: Operations.verifyPasskeyRegistration.Input.Body
+    ) async throws -> Operations.verifyPasskeyRegistration.Output {
+        try await verifyPasskeyRegistration(Operations.verifyPasskeyRegistration.Input(
             headers: headers,
             body: body
         ))
@@ -1842,6 +1882,16 @@ public enum Components {
             public var instancePublicUrl: Swift.String?
             /// - Remark: Generated from `#/components/schemas/AuthConfiguration/localDevelopmentAuthEnabled`.
             public var localDevelopmentAuthEnabled: Swift.Bool
+            /// - Remark: Generated from `#/components/schemas/AuthConfiguration/registrationMode`.
+            @frozen public enum registrationModePayload: String, Codable, Hashable, Sendable, CaseIterable {
+                case closed = "closed"
+                case open = "open"
+                case email_domain = "email_domain"
+            }
+            /// - Remark: Generated from `#/components/schemas/AuthConfiguration/registrationMode`.
+            public var registrationMode: Components.Schemas.AuthConfiguration.registrationModePayload
+            /// - Remark: Generated from `#/components/schemas/AuthConfiguration/allowedEmailDomains`.
+            public var allowedEmailDomains: [Swift.String]
             /// - Remark: Generated from `#/components/schemas/AuthConfiguration/webauthnRpId`.
             public var webauthnRpId: Swift.String?
             /// - Remark: Generated from `#/components/schemas/AuthConfiguration/webauthnRpName`.
@@ -1852,18 +1902,24 @@ public enum Components {
             ///   - bootstrapTokenConfigured:
             ///   - instancePublicUrl:
             ///   - localDevelopmentAuthEnabled:
+            ///   - registrationMode:
+            ///   - allowedEmailDomains:
             ///   - webauthnRpId:
             ///   - webauthnRpName:
             public init(
                 bootstrapTokenConfigured: Swift.Bool,
                 instancePublicUrl: Swift.String? = nil,
                 localDevelopmentAuthEnabled: Swift.Bool,
+                registrationMode: Components.Schemas.AuthConfiguration.registrationModePayload,
+                allowedEmailDomains: [Swift.String],
                 webauthnRpId: Swift.String? = nil,
                 webauthnRpName: Swift.String
             ) {
                 self.bootstrapTokenConfigured = bootstrapTokenConfigured
                 self.instancePublicUrl = instancePublicUrl
                 self.localDevelopmentAuthEnabled = localDevelopmentAuthEnabled
+                self.registrationMode = registrationMode
+                self.allowedEmailDomains = allowedEmailDomains
                 self.webauthnRpId = webauthnRpId
                 self.webauthnRpName = webauthnRpName
             }
@@ -1871,6 +1927,8 @@ public enum Components {
                 case bootstrapTokenConfigured
                 case instancePublicUrl
                 case localDevelopmentAuthEnabled
+                case registrationMode
+                case allowedEmailDomains
                 case webauthnRpId
                 case webauthnRpName
             }
@@ -1888,6 +1946,14 @@ public enum Components {
                     Swift.Bool.self,
                     forKey: .localDevelopmentAuthEnabled
                 )
+                self.registrationMode = try container.decode(
+                    Components.Schemas.AuthConfiguration.registrationModePayload.self,
+                    forKey: .registrationMode
+                )
+                self.allowedEmailDomains = try container.decode(
+                    [Swift.String].self,
+                    forKey: .allowedEmailDomains
+                )
                 self.webauthnRpId = try container.decodeIfPresent(
                     Swift.String.self,
                     forKey: .webauthnRpId
@@ -1900,6 +1966,8 @@ public enum Components {
                     "bootstrapTokenConfigured",
                     "instancePublicUrl",
                     "localDevelopmentAuthEnabled",
+                    "registrationMode",
+                    "allowedEmailDomains",
                     "webauthnRpId",
                     "webauthnRpName"
                 ])
@@ -2216,6 +2284,100 @@ public enum Components {
                 )
                 try decoder.ensureNoAdditionalProperties(knownKeys: [
                     "setupToken",
+                    "challengeId",
+                    "response"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/PasskeyRegistrationOptionsRequest`.
+        public struct PasskeyRegistrationOptionsRequest: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/PasskeyRegistrationOptionsRequest/identityId`.
+            public var identityId: Swift.String
+            /// - Remark: Generated from `#/components/schemas/PasskeyRegistrationOptionsRequest/displayName`.
+            public var displayName: Swift.String
+            /// Creates a new `PasskeyRegistrationOptionsRequest`.
+            ///
+            /// - Parameters:
+            ///   - identityId:
+            ///   - displayName:
+            public init(
+                identityId: Swift.String,
+                displayName: Swift.String
+            ) {
+                self.identityId = identityId
+                self.displayName = displayName
+            }
+            public enum CodingKeys: String, CodingKey {
+                case identityId
+                case displayName
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.identityId = try container.decode(
+                    Swift.String.self,
+                    forKey: .identityId
+                )
+                self.displayName = try container.decode(
+                    Swift.String.self,
+                    forKey: .displayName
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "identityId",
+                    "displayName"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/VerifyPasskeyRegistrationRequest`.
+        public struct VerifyPasskeyRegistrationRequest: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/VerifyPasskeyRegistrationRequest/challengeId`.
+            public var challengeId: Swift.String
+            /// - Remark: Generated from `#/components/schemas/VerifyPasskeyRegistrationRequest/response`.
+            public struct responsePayload: Codable, Hashable, Sendable {
+                /// A container of undocumented properties.
+                public var additionalProperties: OpenAPIRuntime.OpenAPIObjectContainer
+                /// Creates a new `responsePayload`.
+                ///
+                /// - Parameters:
+                ///   - additionalProperties: A container of undocumented properties.
+                public init(additionalProperties: OpenAPIRuntime.OpenAPIObjectContainer = .init()) {
+                    self.additionalProperties = additionalProperties
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    additionalProperties = try decoder.decodeAdditionalProperties(knownKeys: [])
+                }
+                public func encode(to encoder: any Swift.Encoder) throws {
+                    try encoder.encodeAdditionalProperties(additionalProperties)
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/VerifyPasskeyRegistrationRequest/response`.
+            public var response: Components.Schemas.VerifyPasskeyRegistrationRequest.responsePayload
+            /// Creates a new `VerifyPasskeyRegistrationRequest`.
+            ///
+            /// - Parameters:
+            ///   - challengeId:
+            ///   - response:
+            public init(
+                challengeId: Swift.String,
+                response: Components.Schemas.VerifyPasskeyRegistrationRequest.responsePayload
+            ) {
+                self.challengeId = challengeId
+                self.response = response
+            }
+            public enum CodingKeys: String, CodingKey {
+                case challengeId
+                case response
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.challengeId = try container.decode(
+                    Swift.String.self,
+                    forKey: .challengeId
+                )
+                self.response = try container.decode(
+                    Components.Schemas.VerifyPasskeyRegistrationRequest.responsePayload.self,
+                    forKey: .response
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
                     "challengeId",
                     "response"
                 ])
@@ -6577,6 +6739,444 @@ public enum Operations {
                     default:
                         try throwUnexpectedResponseStatus(
                             expectedStatus: "conflict",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// Begin passkey registration for an admitted identity.
+    ///
+    /// Creates WebAuthn registration options for non-bootstrap identity creation when the self-hosted instance registration policy allows the requested identity.
+    ///
+    /// - Remark: HTTP `POST /api/v1/auth/passkeys/registration/options`.
+    /// - Remark: Generated from `#/paths//api/v1/auth/passkeys/registration/options/post(beginPasskeyRegistration)`.
+    public enum beginPasskeyRegistration {
+        public static let id: Swift.String = "beginPasskeyRegistration"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/api/v1/auth/passkeys/registration/options/POST/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.beginPasskeyRegistration.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.beginPasskeyRegistration.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.beginPasskeyRegistration.Input.Headers
+            /// - Remark: Generated from `#/paths/api/v1/auth/passkeys/registration/options/POST/requestBody`.
+            @frozen public enum Body: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/auth/passkeys/registration/options/POST/requestBody/content/application\/json`.
+                case json(Components.Schemas.PasskeyRegistrationOptionsRequest)
+            }
+            public var body: Operations.beginPasskeyRegistration.Input.Body
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - headers:
+            ///   - body:
+            public init(
+                headers: Operations.beginPasskeyRegistration.Input.Headers = .init(),
+                body: Operations.beginPasskeyRegistration.Input.Body
+            ) {
+                self.headers = headers
+                self.body = body
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/auth/passkeys/registration/options/POST/responses/200/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/auth/passkeys/registration/options/POST/responses/200/content/application\/json`.
+                    case json(Components.Schemas.WebAuthnOptions)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.WebAuthnOptions {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.beginPasskeyRegistration.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.beginPasskeyRegistration.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// WebAuthn registration options.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/auth/passkeys/registration/options/post(beginPasskeyRegistration)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.beginPasskeyRegistration.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            public var ok: Operations.beginPasskeyRegistration.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// The authenticated identity is not authorized.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/auth/passkeys/registration/options/post(beginPasskeyRegistration)/responses/403`.
+            ///
+            /// HTTP response code: `403 forbidden`.
+            case forbidden(Components.Responses.Forbidden)
+            /// The associated value of the enum case if `self` is `.forbidden`.
+            ///
+            /// - Throws: An error if `self` is not `.forbidden`.
+            /// - SeeAlso: `.forbidden`.
+            public var forbidden: Components.Responses.Forbidden {
+                get throws {
+                    switch self {
+                    case let .forbidden(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "forbidden",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Rate limit exceeded.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/auth/passkeys/registration/options/post(beginPasskeyRegistration)/responses/429`.
+            ///
+            /// HTTP response code: `429 tooManyRequests`.
+            case tooManyRequests(Components.Responses.TooManyRequests)
+            /// The associated value of the enum case if `self` is `.tooManyRequests`.
+            ///
+            /// - Throws: An error if `self` is not `.tooManyRequests`.
+            /// - SeeAlso: `.tooManyRequests`.
+            public var tooManyRequests: Components.Responses.TooManyRequests {
+                get throws {
+                    switch self {
+                    case let .tooManyRequests(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "tooManyRequests",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct ServiceUnavailable: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/auth/passkeys/registration/options/POST/responses/503/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/auth/passkeys/registration/options/POST/responses/503/content/application\/json`.
+                    case json(Components.Schemas._Error)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas._Error {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.beginPasskeyRegistration.Output.ServiceUnavailable.Body
+                /// Creates a new `ServiceUnavailable`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.beginPasskeyRegistration.Output.ServiceUnavailable.Body) {
+                    self.body = body
+                }
+            }
+            /// Domain registration is enabled without configured domains.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/auth/passkeys/registration/options/post(beginPasskeyRegistration)/responses/503`.
+            ///
+            /// HTTP response code: `503 serviceUnavailable`.
+            case serviceUnavailable(Operations.beginPasskeyRegistration.Output.ServiceUnavailable)
+            /// The associated value of the enum case if `self` is `.serviceUnavailable`.
+            ///
+            /// - Throws: An error if `self` is not `.serviceUnavailable`.
+            /// - SeeAlso: `.serviceUnavailable`.
+            public var serviceUnavailable: Operations.beginPasskeyRegistration.Output.ServiceUnavailable {
+                get throws {
+                    switch self {
+                    case let .serviceUnavailable(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "serviceUnavailable",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// Verify passkey registration and create a session.
+    ///
+    /// - Remark: HTTP `POST /api/v1/auth/passkeys/registration/verify`.
+    /// - Remark: Generated from `#/paths//api/v1/auth/passkeys/registration/verify/post(verifyPasskeyRegistration)`.
+    public enum verifyPasskeyRegistration {
+        public static let id: Swift.String = "verifyPasskeyRegistration"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/api/v1/auth/passkeys/registration/verify/POST/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.verifyPasskeyRegistration.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.verifyPasskeyRegistration.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.verifyPasskeyRegistration.Input.Headers
+            /// - Remark: Generated from `#/paths/api/v1/auth/passkeys/registration/verify/POST/requestBody`.
+            @frozen public enum Body: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/auth/passkeys/registration/verify/POST/requestBody/content/application\/json`.
+                case json(Components.Schemas.VerifyPasskeyRegistrationRequest)
+            }
+            public var body: Operations.verifyPasskeyRegistration.Input.Body
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - headers:
+            ///   - body:
+            public init(
+                headers: Operations.verifyPasskeyRegistration.Input.Headers = .init(),
+                body: Operations.verifyPasskeyRegistration.Input.Body
+            ) {
+                self.headers = headers
+                self.body = body
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/auth/passkeys/registration/verify/POST/responses/200/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/auth/passkeys/registration/verify/POST/responses/200/content/application\/json`.
+                    case json(Components.Schemas.AuthResult)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.AuthResult {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.verifyPasskeyRegistration.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.verifyPasskeyRegistration.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// Session created.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/auth/passkeys/registration/verify/post(verifyPasskeyRegistration)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.verifyPasskeyRegistration.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            public var ok: Operations.verifyPasskeyRegistration.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Invalid request body or parameter.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/auth/passkeys/registration/verify/post(verifyPasskeyRegistration)/responses/400`.
+            ///
+            /// HTTP response code: `400 badRequest`.
+            case badRequest(Components.Responses.BadRequest)
+            /// The associated value of the enum case if `self` is `.badRequest`.
+            ///
+            /// - Throws: An error if `self` is not `.badRequest`.
+            /// - SeeAlso: `.badRequest`.
+            public var badRequest: Components.Responses.BadRequest {
+                get throws {
+                    switch self {
+                    case let .badRequest(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "badRequest",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// The authenticated identity is not authorized.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/auth/passkeys/registration/verify/post(verifyPasskeyRegistration)/responses/403`.
+            ///
+            /// HTTP response code: `403 forbidden`.
+            case forbidden(Components.Responses.Forbidden)
+            /// The associated value of the enum case if `self` is `.forbidden`.
+            ///
+            /// - Throws: An error if `self` is not `.forbidden`.
+            /// - SeeAlso: `.forbidden`.
+            public var forbidden: Components.Responses.Forbidden {
+                get throws {
+                    switch self {
+                    case let .forbidden(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "forbidden",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct ServiceUnavailable: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/auth/passkeys/registration/verify/POST/responses/503/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/auth/passkeys/registration/verify/POST/responses/503/content/application\/json`.
+                    case json(Components.Schemas._Error)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas._Error {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.verifyPasskeyRegistration.Output.ServiceUnavailable.Body
+                /// Creates a new `ServiceUnavailable`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.verifyPasskeyRegistration.Output.ServiceUnavailable.Body) {
+                    self.body = body
+                }
+            }
+            /// Domain registration is enabled without configured domains.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/auth/passkeys/registration/verify/post(verifyPasskeyRegistration)/responses/503`.
+            ///
+            /// HTTP response code: `503 serviceUnavailable`.
+            case serviceUnavailable(Operations.verifyPasskeyRegistration.Output.ServiceUnavailable)
+            /// The associated value of the enum case if `self` is `.serviceUnavailable`.
+            ///
+            /// - Throws: An error if `self` is not `.serviceUnavailable`.
+            /// - SeeAlso: `.serviceUnavailable`.
+            public var serviceUnavailable: Operations.verifyPasskeyRegistration.Output.ServiceUnavailable {
+                get throws {
+                    switch self {
+                    case let .serviceUnavailable(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "serviceUnavailable",
                             response: self
                         )
                     }
