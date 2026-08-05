@@ -1,0 +1,118 @@
+import SwiftUI
+
+struct DocumentDetailView: View {
+    @State var viewModel: DocumentViewModel
+    @State private var mode: DocumentMode = .preview
+
+    var body: some View {
+        Group {
+            switch viewModel.documentState {
+            case .idle, .loading:
+                ProgressView()
+            case .failed(let message):
+                ContentUnavailableView("Could Not Load Document", systemImage: "exclamationmark.triangle", description: Text(message))
+            case .loaded:
+                documentBody
+            }
+        }
+        .task {
+            await viewModel.load()
+        }
+        .navigationTitle(viewModel.draftTitle.isEmpty ? "Document" : viewModel.draftTitle)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Picker("Mode", selection: $mode) {
+                    ForEach(DocumentMode.allCases) { mode in
+                        Label(mode.title, systemImage: mode.systemImage).tag(mode)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .frame(maxWidth: 240)
+            }
+
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    Task { await viewModel.save() }
+                } label: {
+                    Label("Save", systemImage: "square.and.arrow.down")
+                }
+                .disabled(!viewModel.hasChanges || viewModel.isSaving)
+            }
+        }
+    }
+
+    private var documentBody: some View {
+        VStack(spacing: 0) {
+            if let statusMessage = viewModel.statusMessage {
+                Text(statusMessage)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
+                    .background(.thinMaterial)
+            }
+
+            switch mode {
+            case .preview:
+                MarkdownReader(markdown: viewModel.draftContent)
+            case .edit:
+                DocumentEditor(title: $viewModel.draftTitle, content: $viewModel.draftContent)
+            }
+        }
+    }
+}
+
+private enum DocumentMode: String, CaseIterable, Identifiable {
+    case preview
+    case edit
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .preview:
+            "Preview"
+        case .edit:
+            "Edit"
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .preview:
+            "text.page"
+        case .edit:
+            "pencil"
+        }
+    }
+}
+
+private struct DocumentEditor: View {
+    @Binding var title: String
+    @Binding var content: String
+
+    var body: some View {
+        VStack(spacing: 0) {
+            TextField("Title", text: $title)
+                .font(.system(.title, design: .serif, weight: .semibold))
+                .textFieldStyle(.plain)
+                .padding()
+                .background(.background)
+
+            Divider()
+
+            TextEditor(text: $content)
+                .font(.system(.body, design: .monospaced))
+                .scrollContentBackground(.hidden)
+                .padding(.horizontal, 10)
+                .background(Color(.systemBackground))
+        }
+    }
+}
+
+#Preview("Document preview") {
+    NavigationStack {
+        DocumentDetailView(viewModel: DocumentViewModel(documentID: "doc-pitch", session: .previewSignedIn))
+    }
+}

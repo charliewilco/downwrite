@@ -1,24 +1,29 @@
-//
-//  ContentView.swift
-//  Downwrite
-//
-//  Created by Charlie on 8/4/26.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @State private var appModel: AppViewModel
+
+    init(appModel: AppViewModel = AppViewModel()) {
+        _appModel = State(initialValue: appModel)
+    }
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            switch appModel.session.state {
+            case .signedOut:
+                LoginView(viewModel: LoginViewModel(session: appModel.session))
+            case .signedIn:
+                WorkspaceShellView(viewModel: appModel.workspaceModel)
+            }
         }
-        .padding()
+        .tint(.primary)
     }
 }
 
-#Preview {
-    ContentView()
+#Preview("Signed out") {
+    ContentView(appModel: .previewSignedOut)
+}
+
+#Preview("Workspace") {
+    ContentView(appModel: .previewSignedIn)
 }

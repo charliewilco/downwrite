@@ -11,6 +11,7 @@
     "build": "npm run build:web && tsc -p tsconfig.json",
     "build:api": "tsc -p tsconfig.json",
     "build:web": "vite build --config web/vite.config.ts",
+    "generate:ios-client": "npm run build:api && node scripts/generate-ios-openapi-client.mjs",
     "deploy": "npm run build && npm run db:migrations:apply && wrangler deploy",
     "db:migrations:apply": "wrangler d1 migrations apply DB --remote",
     "format:check": "npx --yes prettier@3.9.6 --check package.json package-lock.json tsconfig.json README.md ../README.md ../documentation ../iOS/README.md ../.github/workflows scripts src test web/index.html web/src web/tsconfig.json web/vite.config.ts",

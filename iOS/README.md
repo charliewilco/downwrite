@@ -1,7 +1,7 @@
 # Downwrite iOS
 
-This directory is the planning home for the future Downwrite iOS client. It does
-not contain an Xcode project yet.
+This directory contains the native Downwrite iOS client and planning notes.
+The app lives in [`Downwrite/`](./Downwrite/) as a normal native Xcode project.
 
 ## Product Direction
 
@@ -50,15 +50,14 @@ The iOS app itself is still deferred.
    revision semantics, OAuth public-client policy, and authorization scopes
    stable.
 2. iOS skeleton: create the Swift project, instance URL entry, discovery
-   verification, and system-browser sign-in.
+   verification, and system-browser sign-in. Initial implementation exists.
 3. Workspace/document client: list workspaces, list/read/create/update Markdown
-   documents, and handle revision conflicts.
+   documents, and handle revision conflicts. Initial implementation exists.
 4. Sharing and offline polish: add invitation/public-link surfaces only after
    the core writing flow is reliable.
 
 ## Current Non-Goals
 
-- No placeholder Xcode project.
 - No XcodeGen. When iOS implementation begins, use and maintain a normal native
   Xcode project.
 - No fake native auth.
