@@ -10,8 +10,8 @@ struct OAuthCredential: Equatable {
 }
 
 struct OAuthAuthenticator {
-    func signIn(instanceURL: URL) async throws -> (credential: OAuthCredential, client: URLSessionDownwriteAPIClient) {
-        let client = URLSessionDownwriteAPIClient(baseURL: instanceURL)
+    func signIn(instanceURL: URL) async throws -> (credential: OAuthCredential, client: OpenAPIDownwriteAPIClient) {
+        let client = OpenAPIDownwriteAPIClient(baseURL: instanceURL)
         let verifier = PKCE.generateVerifier()
         let challenge = PKCE.challenge(for: verifier)
         let state = UUID().uuidString
@@ -30,7 +30,7 @@ struct OAuthAuthenticator {
                 scope: token.scope,
                 resource: token.resource
             ),
-            URLSessionDownwriteAPIClient(baseURL: instanceURL, accessToken: token.accessToken)
+            OpenAPIDownwriteAPIClient(baseURL: instanceURL, accessToken: token.accessToken)
         )
     }
 

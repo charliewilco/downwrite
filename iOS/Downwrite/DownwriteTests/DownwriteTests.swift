@@ -1,24 +1,20 @@
 import Foundation
+import DownwriteAPI
 import Testing
 @testable import Downwrite
 
 @MainActor
 struct DownwriteTests {
-    @Test func discoveryMetadataDecodesLooseOpenAPIObjects() throws {
-        let data = """
-        {
-          "name": "downwrite",
-          "instanceUrl": "http://localhost:8787",
-          "api": { "baseUrl": "http://localhost:8787/api/v1" },
-          "auth": { "current": "oauth" },
-          "clients": { "ios": { "clientId": "downwrite-ios" } }
-        }
-        """.data(using: .utf8)!
+    @Test func generatedDiscoveryMetadataMapsToAppModel() throws {
+        let discovery = Components.Schemas.Discovery(
+            name: "downwrite",
+            instanceUrl: "http://localhost:8787"
+        )
 
-        let metadata = try JSONDecoder().decode(DiscoveryMetadata.self, from: data)
+        let metadata = discovery.appModel
 
         #expect(metadata.name == "downwrite")
-        #expect(metadata.api?.storage["baseUrl"] == .string("http://localhost:8787/api/v1"))
+        #expect(metadata.instanceUrl == "http://localhost:8787")
     }
 
     @Test func workspaceLoadsGroupsFromSessionClient() async throws {

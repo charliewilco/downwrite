@@ -13,7 +13,7 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func discoverInstance() async throws -> DiscoveryMetadata {
-        DiscoveryMetadata(name: "Downwrite", instanceUrl: baseURL.absoluteString, api: nil, auth: nil, clients: nil)
+        DiscoveryMetadata(name: "Downwrite", instanceUrl: baseURL.absoluteString)
     }
 
     func authStatus() async throws -> AuthStatus {

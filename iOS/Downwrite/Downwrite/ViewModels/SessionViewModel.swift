@@ -22,7 +22,7 @@ final class SessionViewModel {
     }
 
     func signIn(instanceURL: URL, accessToken: String?, identity: Identity?) {
-        let client = URLSessionDownwriteAPIClient(baseURL: instanceURL, accessToken: accessToken)
+        let client = OpenAPIDownwriteAPIClient(baseURL: instanceURL, accessToken: accessToken)
         state = .signedIn(InstanceSession(instanceURL: instanceURL, identity: identity, apiClient: client))
     }
 

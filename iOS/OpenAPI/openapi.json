@@ -1,0 +1,3602 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Downwrite Worker API",
+    "version": "v1",
+    "summary": "Self-hosted Markdown workspace and sharing API.",
+    "description": "Versioned API for a self-hosted Downwrite Cloudflare Worker. The implemented auth boundaries are passkeys/WebAuthn for browser sessions, instance-local OAuth authorization-code-with-PKCE for external clients, and a localhost-only development session adapter. OAuth credentials are issued by the deployer's self-hosted instance, not a central Downwrite service.",
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8787/api/v1",
+      "description": "This self-hosted Downwrite instance."
+    }
+  ],
+  "tags": [
+    {
+      "name": "Discovery"
+    },
+    {
+      "name": "Auth"
+    },
+    {
+      "name": "External auth"
+    },
+    {
+      "name": "Workspaces"
+    },
+    {
+      "name": "Documents"
+    },
+    {
+      "name": "Sharing"
+    },
+    {
+      "name": "Public links"
+    },
+    {
+      "name": "Contract"
+    }
+  ],
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "tags": [
+          "Discovery"
+        ],
+        "summary": "Check API health and version.",
+        "operationId": "getHealth",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Health status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/discovery": {
+      "get": {
+        "tags": [
+          "Discovery"
+        ],
+        "summary": "Read instance discovery metadata.",
+        "operationId": "getDiscovery",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Discovery metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Discovery"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/.well-known/downwrite": {
+      "get": {
+        "tags": [
+          "Discovery"
+        ],
+        "summary": "Read well-known instance discovery metadata.",
+        "operationId": "getWellKnownDownwrite",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Discovery metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Discovery"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/.well-known/oauth-protected-resource": {
+      "get": {
+        "tags": [
+          "External auth"
+        ],
+        "summary": "Read OAuth protected-resource metadata.",
+        "description": "Public metadata for external clients that need to identify this Worker API as the protected resource. This does not issue credentials.",
+        "operationId": "getOAuthProtectedResourceMetadata",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "OAuth protected-resource metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthProtectedResourceMetadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/.well-known/oauth-authorization-server": {
+      "get": {
+        "tags": [
+          "External auth"
+        ],
+        "summary": "Read OAuth authorization-server metadata.",
+        "description": "Documents this instance's OAuth/PKCE authorization server. Tokens are opaque credentials issued by this self-hosted Worker for this Worker API resource.",
+        "operationId": "getOAuthAuthorizationServerMetadata",
+        "security": [],
+        "x-downwrite-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "OAuth authorization-server metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthAuthorizationServerMetadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oauth/authorize": {
+      "get": {
+        "tags": [
+          "External auth"
+        ],
+        "summary": "Render OAuth authorization consent.",
+        "description": "Validates a public client authorization-code request with PKCE S256 and renders the minimal signed-in browser consent page.",
+        "operationId": "authorizeOAuthClient",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "response_type",
+            "in": "query",
+            "required": true,
+            "description": "OAuth response type. Must be code.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "description": "Public client identifier.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "redirect_uri",
+            "in": "query",
+            "required": true,
+            "description": "Allowed redirect URI for the public client.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code_challenge",
+            "in": "query",
+            "required": true,
+            "description": "PKCE S256 challenge, 43-128 unreserved characters.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code_challenge_method",
+            "in": "query",
+            "required": true,
+            "description": "PKCE method. Must be S256.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "description": "Space-delimited requested scopes.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "resource",
+            "in": "query",
+            "required": true,
+            "description": "Protected resource. Must be this /api/v1 base URL.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "description": "Opaque client state.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-downwrite-status": "implemented",
+        "responses": {
+          "200": {
+            "description": "HTML consent page.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/oauth/authorize/approve": {
+      "post": {
+        "tags": [
+          "External auth"
+        ],
+        "summary": "Approve OAuth authorization and redirect with a code.",
+        "description": "Cookie-authenticated consent action. The consent page stores the validated OAuth request server-side and posts only authorization_request. Unsafe cookie writes require a same-origin Origin header. On success, redirects to the validated client redirect_uri with code and optional state.",
+        "operationId": "approveOAuthClient",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "x-downwrite-status": "implemented",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/OAuthAuthorizeApproveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to client redirect_uri with code."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/oauth/token": {
+      "post": {
+        "tags": [
+          "External auth"
+        ],
+        "summary": "Exchange OAuth authorization code or refresh token.",
+        "description": "Supports authorization_code and refresh_token grants for public clients using PKCE. Issues opaque instance-local bearer tokens scoped to this Worker API resource.",
+        "operationId": "exchangeOAuthToken",
+        "security": [],
+        "x-downwrite-status": "implemented",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/OAuthTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OAuth token response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/oauth/revoke": {
+      "post": {
+        "tags": [
+          "External auth"
+        ],
+        "summary": "Revoke an OAuth access or refresh token.",
+        "operationId": "revokeOAuthToken",
+        "security": [],
+        "x-downwrite-status": "implemented",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/OAuthRevokeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token revoked or already unknown."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/mcp": {
+      "post": {
+        "tags": [
+          "External auth"
+        ],
+        "summary": "Invoke the narrow Downwrite MCP tool endpoint.",
+        "description": "Stateless JSON-RPC endpoint for MCP clients. The implementation authenticates bearer credentials or session cookies, derives a local Downwrite identity, checks OAuth scope mcp:documents when applicable, and calls storage/domain methods directly. It does not pass arbitrary bearer tokens through to API handlers.",
+        "operationId": "invokeMcp",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "x-downwrite-scope": "mcp:documents",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JsonRpcRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "MCP JSON-RPC response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonRpcResponse"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "JSON-RPC notification accepted."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/openapi.json": {
+      "get": {
+        "tags": [
+          "Contract"
+        ],
+        "summary": "Read the OpenAPI contract for this instance.",
+        "operationId": "getOpenApiJson",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "OpenAPI 3.1 JSON document.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/docs": {
+      "get": {
+        "tags": [
+          "Contract"
+        ],
+        "summary": "Read a local human-oriented API documentation view.",
+        "operationId": "getApiDocs",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "HTML documentation view.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/status": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Read current authentication and setup status.",
+        "operationId": "getAuthStatus",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {}
+        ],
+        "x-downwrite-scope": "auth:read",
+        "responses": {
+          "200": {
+            "description": "Authentication status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/development/session": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Create a localhost-only development session.",
+        "description": "Available only when DOWNWRITE_LOCAL_AUTH=1 and the request host is localhost. This creates a normal httpOnly session cookie for local Wrangler development so the browser flow does not require manually entering a bearer token. It is not production authentication.",
+        "operationId": "createDevelopmentSession",
+        "security": [],
+        "x-downwrite-scope": "auth:development",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DevelopmentSessionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Development session created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/bootstrap/options": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Begin one-time owner passkey bootstrap.",
+        "operationId": "beginOwnerBootstrap",
+        "security": [],
+        "x-downwrite-scope": "auth:bootstrap",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BootstrapOptionsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "WebAuthn registration options.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebAuthnOptions"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "409": {
+            "description": "Owner bootstrap has already completed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": "Owner bootstrap has already completed.",
+                      "code": "conflict",
+                      "status": 409
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/bootstrap/verify": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Verify owner bootstrap passkey registration and create a session.",
+        "operationId": "verifyOwnerBootstrap",
+        "security": [],
+        "x-downwrite-scope": "auth:bootstrap",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyBootstrapRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Session created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "409": {
+            "description": "Owner bootstrap has already completed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": "Owner bootstrap has already completed.",
+                      "code": "conflict",
+                      "status": 409
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/passkeys/login/options": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Begin passkey login.",
+        "operationId": "beginPasskeyLogin",
+        "security": [],
+        "x-downwrite-scope": "auth:login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasskeyLoginOptionsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "WebAuthn authentication options.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebAuthnOptions"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/passkeys/login/verify": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Verify passkey login and create a session.",
+        "operationId": "verifyPasskeyLogin",
+        "security": [],
+        "x-downwrite-scope": "auth:login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyPasskeyLoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Session created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/session": {
+      "delete": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Delete the current session.",
+        "operationId": "deleteSession",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "x-downwrite-scope": "auth:logout",
+        "responses": {
+          "200": {
+            "description": "Session deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/groups": {
+      "get": {
+        "tags": [
+          "Workspaces"
+        ],
+        "summary": "List authorized workspaces.",
+        "operationId": "listGroups",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of items to return. Must be between 1 and 100.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Opaque cursor returned by the previous page's nextCursor field.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-downwrite-scope": "workspaces:read",
+        "responses": {
+          "200": {
+            "description": "Authorized workspaces.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Workspaces"
+        ],
+        "summary": "Create a workspace.",
+        "operationId": "createGroup",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "x-downwrite-scope": "workspaces:write",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroupCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created workspace.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/groups/{groupId}": {
+      "get": {
+        "tags": [
+          "Workspaces"
+        ],
+        "summary": "Read one authorized workspace.",
+        "operationId": "getGroup",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/groupId"
+          }
+        ],
+        "x-downwrite-scope": "workspaces:read",
+        "responses": {
+          "200": {
+            "description": "Workspace.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Workspaces"
+        ],
+        "summary": "Update workspace settings.",
+        "operationId": "updateGroup",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/groupId"
+          }
+        ],
+        "x-downwrite-scope": "workspaces:write",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroupUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated workspace.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Workspaces"
+        ],
+        "summary": "Delete a workspace and its documents.",
+        "operationId": "deleteGroup",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/groupId"
+          }
+        ],
+        "x-downwrite-scope": "workspaces:write",
+        "responses": {
+          "200": {
+            "description": "Workspace deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ok"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/groups/{groupId}/documents": {
+      "get": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "List documents in one authorized workspace.",
+        "operationId": "listGroupDocuments",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/groupId"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of items to return. Must be between 1 and 100.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Opaque cursor returned by the previous page's nextCursor field.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-downwrite-scope": "workspaces:read",
+        "responses": {
+          "200": {
+            "description": "Workspace documents.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentList"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Create a Markdown document in a workspace.",
+        "operationId": "createDocument",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/groupId"
+          }
+        ],
+        "x-downwrite-scope": "documents:write",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created document.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/documents/{documentId}": {
+      "get": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Read an authorized Markdown document.",
+        "operationId": "getDocument",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          }
+        ],
+        "x-downwrite-scope": "documents:read",
+        "responses": {
+          "200": {
+            "description": "Document.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Update document title and/or Markdown content.",
+        "operationId": "updateDocument",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          }
+        ],
+        "x-downwrite-scope": "documents:write",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated document.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "description": "Document revision conflict.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": "Document revision conflict.",
+                      "code": "conflict",
+                      "status": 409
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "$ref": "#/components/responses/PreconditionRequired"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Delete an authorized document.",
+        "operationId": "deleteDocument",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          }
+        ],
+        "x-downwrite-scope": "documents:write",
+        "responses": {
+          "200": {
+            "description": "Document deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ok"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/documents/{documentId}/move": {
+      "patch": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Move a document into another authorized workspace.",
+        "description": "Owner/editor document writers may move the document only into a workspace where they already have explicit access. Required baseRevision protects against missing or stale client write preconditions.",
+        "operationId": "moveDocument",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          }
+        ],
+        "x-downwrite-scope": "documents:write",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentMove"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Moved document.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "description": "Document revision conflict.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": "Document revision conflict.",
+                      "code": "conflict",
+                      "status": 409
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "$ref": "#/components/responses/PreconditionRequired"
+          }
+        }
+      }
+    },
+    "/api/v1/documents/{documentId}/position": {
+      "patch": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Set a document's order position within its workspace.",
+        "description": "The current ordering contract sorts documents by ascending numeric position, then recent update time. Required baseRevision protects against missing or stale client write preconditions.",
+        "operationId": "positionDocument",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          }
+        ],
+        "x-downwrite-scope": "documents:write",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentPosition"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reordered document.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "description": "Document revision conflict.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": "Document revision conflict.",
+                      "code": "conflict",
+                      "status": 409
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "$ref": "#/components/responses/PreconditionRequired"
+          }
+        }
+      }
+    },
+    "/api/v1/documents/{documentId}/share": {
+      "get": {
+        "tags": [
+          "Sharing"
+        ],
+        "summary": "Read document sharing state.",
+        "operationId": "getDocumentShareState",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          }
+        ],
+        "x-downwrite-scope": "sharing:write",
+        "responses": {
+          "200": {
+            "description": "Sharing state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/documents/{documentId}/collaborators": {
+      "post": {
+        "tags": [
+          "Sharing"
+        ],
+        "summary": "Directly add or update a document collaborator.",
+        "description": "Owner-only compatibility endpoint. The invitation lifecycle is preferred for user-facing sharing.",
+        "operationId": "addDocumentCollaborator",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          }
+        ],
+        "x-downwrite-scope": "sharing:write",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CollaboratorAdd"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Collaborator added.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ok"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/v1/documents/{documentId}/collaborators/{identityId}": {
+      "delete": {
+        "tags": [
+          "Sharing"
+        ],
+        "summary": "Remove a document collaborator.",
+        "operationId": "removeDocumentCollaborator",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          },
+          {
+            "$ref": "#/components/parameters/identityId"
+          }
+        ],
+        "x-downwrite-scope": "sharing:write",
+        "responses": {
+          "200": {
+            "description": "Collaborator removed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ok"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/documents/{documentId}/invitations": {
+      "post": {
+        "tags": [
+          "Sharing"
+        ],
+        "summary": "Create a pending collaborator invitation.",
+        "operationId": "createDocumentInvitation",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          }
+        ],
+        "x-downwrite-scope": "sharing:write",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvitationCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created invitation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvitationEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/invitations/{token}/accept": {
+      "post": {
+        "tags": [
+          "Sharing"
+        ],
+        "summary": "Accept a pending collaborator invitation.",
+        "operationId": "acceptDocumentInvitation",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/invitationToken"
+          }
+        ],
+        "x-downwrite-scope": "sharing:write",
+        "responses": {
+          "200": {
+            "description": "Accepted invitation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvitationEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/invitations/{token}": {
+      "get": {
+        "tags": [
+          "Sharing"
+        ],
+        "summary": "Preview a collaborator invitation by opaque token.",
+        "description": "Public token-preview endpoint for browser-facing invitation acceptance. It does not grant access; accepting still requires authentication as the invited identity.",
+        "operationId": "getDocumentInvitationPreview",
+        "security": [],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/invitationToken"
+          }
+        ],
+        "x-downwrite-scope": "invitation:preview",
+        "responses": {
+          "200": {
+            "description": "Invitation preview.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvitationPreviewEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/invitations/{invitationId}": {
+      "delete": {
+        "tags": [
+          "Sharing"
+        ],
+        "summary": "Revoke a pending invitation.",
+        "operationId": "revokeDocumentInvitation",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/invitationId"
+          }
+        ],
+        "x-downwrite-scope": "sharing:write",
+        "responses": {
+          "200": {
+            "description": "Invitation revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ok"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/documents/{documentId}/public-links": {
+      "post": {
+        "tags": [
+          "Public links"
+        ],
+        "summary": "Create an anonymous read-only public link.",
+        "operationId": "createPublicLink",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          }
+        ],
+        "x-downwrite-scope": "sharing:write",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicLinkCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created public link.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicLinkEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/public-links/{publicLinkId}": {
+      "patch": {
+        "tags": [
+          "Public links"
+        ],
+        "summary": "Update public-link label or active state.",
+        "operationId": "updatePublicLink",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/publicLinkId"
+          }
+        ],
+        "x-downwrite-scope": "sharing:write",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicLinkUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated public link.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicLinkEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/public-links/{publicLinkId}/manage": {
+      "get": {
+        "tags": [
+          "Public links"
+        ],
+        "summary": "Read one managed public-link record.",
+        "description": "Owner-only public-link management detail. The anonymous public read route remains /api/v1/public-links/{token}.",
+        "operationId": "getManagedPublicLink",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/publicLinkId"
+          }
+        ],
+        "x-downwrite-scope": "sharing:write",
+        "responses": {
+          "200": {
+            "description": "Public link.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicLinkEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/public-links/{token}": {
+      "get": {
+        "tags": [
+          "Public links"
+        ],
+        "summary": "Read a Markdown document anonymously through a public link.",
+        "operationId": "getPublicDocument",
+        "security": [],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/publicToken"
+          }
+        ],
+        "x-downwrite-scope": "public:read",
+        "responses": {
+          "200": {
+            "description": "Public document.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicDocumentEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Human-readable error message retained for compatibility."
+          },
+          "code": {
+            "type": "string",
+            "description": "Stable programmatic error discriminator."
+          },
+          "status": {
+            "type": "integer",
+            "minimum": 400,
+            "maximum": 599
+          }
+        },
+        "required": [
+          "error",
+          "code",
+          "status"
+        ]
+      },
+      "Ok": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
+      "Role": {
+        "type": "string",
+        "enum": [
+          "owner",
+          "editor"
+        ],
+        "description": "Owner can manage workspace/share settings. Owner and editor can write documents."
+      },
+      "Identity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "Health": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "const": true
+          },
+          "name": {
+            "type": "string",
+            "const": "downwrite"
+          },
+          "version": {
+            "type": "string",
+            "const": "v1"
+          }
+        },
+        "required": [
+          "ok",
+          "name",
+          "version"
+        ]
+      },
+      "Discovery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "instanceUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "api": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "auth": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "clients": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "OAuthProtectedResourceMetadata": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "resource": {
+            "type": "string",
+            "format": "uri"
+          },
+          "authorization_servers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "scopes_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "bearer_methods_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "resource_documentation": {
+            "type": "string",
+            "format": "uri"
+          },
+          "x-downwrite-status": {
+            "type": "string"
+          },
+          "x-downwrite-token-model": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "resource",
+          "authorization_servers",
+          "scopes_supported",
+          "bearer_methods_supported",
+          "resource_documentation",
+          "x-downwrite-status",
+          "x-downwrite-token-model"
+        ]
+      },
+      "OAuthAuthorizationServerMetadata": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "issuer": {
+            "type": "string",
+            "format": "uri"
+          },
+          "authorization_endpoint": {
+            "type": "string",
+            "format": "uri"
+          },
+          "token_endpoint": {
+            "type": "string",
+            "format": "uri"
+          },
+          "revocation_endpoint": {
+            "type": "string",
+            "format": "uri"
+          },
+          "response_types_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "grant_types_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "code_challenge_methods_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "token_endpoint_auth_methods_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "revocation_endpoint_auth_methods_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "scopes_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "x-downwrite-status": {
+            "type": "string"
+          },
+          "x-downwrite-public-clients": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "x-downwrite-resource-indicators-required": {
+            "type": "boolean"
+          },
+          "x-downwrite-note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "issuer",
+          "authorization_endpoint",
+          "token_endpoint",
+          "revocation_endpoint",
+          "response_types_supported",
+          "grant_types_supported",
+          "code_challenge_methods_supported",
+          "token_endpoint_auth_methods_supported",
+          "revocation_endpoint_auth_methods_supported",
+          "scopes_supported",
+          "x-downwrite-status",
+          "x-downwrite-public-clients",
+          "x-downwrite-resource-indicators-required",
+          "x-downwrite-note"
+        ]
+      },
+      "OAuthAuthorizeApproveRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "authorization_request": {
+            "type": "string",
+            "description": "Opaque server-issued authorization transaction from the consent page."
+          }
+        },
+        "required": [
+          "authorization_request"
+        ]
+      },
+      "OAuthTokenRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "grant_type": {
+            "type": "string",
+            "enum": [
+              "authorization_code",
+              "refresh_token"
+            ]
+          },
+          "client_id": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "redirect_uri": {
+            "type": "string"
+          },
+          "code_verifier": {
+            "type": "string",
+            "minLength": 43,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._~-]+$"
+          },
+          "refresh_token": {
+            "type": "string"
+          }
+        }
+      },
+      "OAuthRevokeRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "token_type_hint": {
+            "type": "string",
+            "enum": [
+              "access_token",
+              "refresh_token"
+            ]
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "OAuthTokenResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "token_type": {
+            "type": "string",
+            "const": "Bearer"
+          },
+          "access_token": {
+            "type": "string"
+          },
+          "expires_in": {
+            "type": "integer"
+          },
+          "refresh_token": {
+            "type": "string"
+          },
+          "refresh_expires_in": {
+            "type": "integer"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "token_type",
+          "access_token",
+          "expires_in",
+          "refresh_token",
+          "refresh_expires_in",
+          "scope",
+          "resource"
+        ]
+      },
+      "JsonRpcRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "jsonrpc": {
+            "type": "string",
+            "const": "2.0"
+          },
+          "id": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ]
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "initialize",
+              "tools/list",
+              "tools/call"
+            ]
+          },
+          "params": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "jsonrpc",
+          "method"
+        ]
+      },
+      "JsonRpcResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "jsonrpc": {
+            "type": "string",
+            "const": "2.0"
+          },
+          "id": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ]
+          },
+          "result": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "error": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "JSON-RPC error object. Downwrite HTTP-style error data appears in error.data when available."
+          }
+        },
+        "required": [
+          "jsonrpc",
+          "id"
+        ]
+      },
+      "AuthConfiguration": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "bootstrapTokenConfigured": {
+            "type": "boolean"
+          },
+          "instancePublicUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "localDevelopmentAuthEnabled": {
+            "type": "boolean"
+          },
+          "webauthnRpId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "webauthnRpName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "bootstrapTokenConfigured",
+          "instancePublicUrl",
+          "localDevelopmentAuthEnabled",
+          "webauthnRpId",
+          "webauthnRpName"
+        ]
+      },
+      "AuthStatus": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "authenticated": {
+            "type": "boolean"
+          },
+          "bootstrapRequired": {
+            "type": "boolean"
+          },
+          "configuration": {
+            "$ref": "#/components/schemas/AuthConfiguration"
+          },
+          "identity": {
+            "$ref": "#/components/schemas/Identity"
+          }
+        },
+        "required": [
+          "authenticated",
+          "bootstrapRequired",
+          "configuration"
+        ]
+      },
+      "AuthResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "const": true
+          },
+          "identity": {
+            "$ref": "#/components/schemas/Identity"
+          }
+        },
+        "required": [
+          "ok",
+          "identity"
+        ]
+      },
+      "WebAuthnOptions": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "challengeId": {
+            "type": "string"
+          },
+          "options": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "PublicKeyCredentialCreationOptionsJSON or PublicKeyCredentialRequestOptionsJSON returned by the server-side WebAuthn library."
+          }
+        },
+        "required": [
+          "challengeId",
+          "options"
+        ]
+      },
+      "BootstrapOptionsRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "setupToken": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "identityId": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "setupToken",
+          "identityId",
+          "displayName"
+        ]
+      },
+      "DevelopmentSessionRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "identityId": {
+            "type": "string",
+            "description": "Local development identity id. Defaults to local-owner."
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Local display name. Defaults to Local Owner."
+          }
+        }
+      },
+      "VerifyBootstrapRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "setupToken": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "challengeId": {
+            "type": "string"
+          },
+          "response": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "setupToken",
+          "challengeId",
+          "response"
+        ]
+      },
+      "PasskeyLoginOptionsRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "identityId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "identityId"
+        ]
+      },
+      "VerifyPasskeyLoginRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "challengeId": {
+            "type": "string"
+          },
+          "response": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "challengeId",
+          "response"
+        ]
+      },
+      "GroupCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "accentColor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Client-facing color value, currently expected as CSS hex."
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "GroupUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "accentColor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "GroupSummary": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "accentColor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentSummary"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "accentColor",
+          "role",
+          "createdAt",
+          "updatedAt",
+          "documents"
+        ]
+      },
+      "GroupEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "group": {
+            "$ref": "#/components/schemas/GroupSummary"
+          }
+        },
+        "required": [
+          "group"
+        ]
+      },
+      "GroupList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupSummary"
+            },
+            "description": "Authorized workspaces sorted by descending update time."
+          },
+          "nextCursor": {
+            "type": "string",
+            "description": "Opaque cursor for the next page. Omitted when no later page exists."
+          }
+        },
+        "required": [
+          "groups"
+        ]
+      },
+      "DocumentList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentSummary"
+            },
+            "description": "Workspace document summaries sorted by ascending position, then recent update time."
+          },
+          "nextCursor": {
+            "type": "string",
+            "description": "Opaque cursor for the next page. Omitted when no later page exists."
+          }
+        },
+        "required": [
+          "documents"
+        ]
+      },
+      "DocumentCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "content": {
+            "type": "string",
+            "mediaType": "text/markdown",
+            "description": "UTF-8 Markdown source."
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "DocumentUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "content": {
+            "type": "string",
+            "mediaType": "text/markdown",
+            "description": "UTF-8 Markdown source. Omit to leave content unchanged."
+          },
+          "baseRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Revision read by the client. Missing or invalid values return 428 Precondition Required; stale values return 409 Conflict."
+          }
+        },
+        "required": [
+          "baseRevision"
+        ]
+      },
+      "DocumentMove": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "groupId": {
+            "type": "string"
+          },
+          "position": {
+            "type": "integer",
+            "description": "Optional target order value. If omitted, the server appends the document to the target workspace."
+          },
+          "baseRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Revision read by the client. Missing or invalid values return 428 Precondition Required; stale values return 409 Conflict."
+          }
+        },
+        "required": [
+          "groupId",
+          "baseRevision"
+        ]
+      },
+      "DocumentPosition": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "position": {
+            "type": "integer",
+            "description": "Target order value. Workspaces list documents by ascending position."
+          },
+          "baseRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Revision read by the client. Missing or invalid values return 428 Precondition Required; stale values return 409 Conflict."
+          }
+        },
+        "required": [
+          "position",
+          "baseRevision"
+        ]
+      },
+      "DocumentSummary": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "groupId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "position": {
+            "type": "integer",
+            "description": "Workspace ordering value. Lower values render earlier in the workspace."
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Monotonic document revision incremented by content, metadata, move, and reorder writes."
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "groupId",
+          "title",
+          "role",
+          "position",
+          "revision",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "DocumentRecord": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DocumentSummary"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "content": {
+                "type": "string",
+                "mediaType": "text/markdown",
+                "description": "UTF-8 Markdown source, not rendered HTML."
+              }
+            },
+            "required": [
+              "content"
+            ]
+          }
+        ]
+      },
+      "DocumentEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "document": {
+            "$ref": "#/components/schemas/DocumentRecord"
+          }
+        },
+        "required": [
+          "document"
+        ]
+      },
+      "CollaboratorAdd": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "identityId": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          }
+        },
+        "required": [
+          "identityId",
+          "role"
+        ]
+      },
+      "Collaborator": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "identityId": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "identityId",
+          "displayName",
+          "role",
+          "createdAt"
+        ]
+      },
+      "InvitationCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "identityId": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          }
+        },
+        "required": [
+          "identityId",
+          "role"
+        ]
+      },
+      "Invitation": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "documentId": {
+            "type": "string"
+          },
+          "invitedIdentityId": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "token": {
+            "type": "string",
+            "description": "Opaque invitation token."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "accepted",
+              "revoked"
+            ]
+          },
+          "createdByIdentityId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "acceptedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revokedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "documentId",
+          "invitedIdentityId",
+          "role",
+          "token",
+          "status",
+          "createdByIdentityId",
+          "createdAt",
+          "acceptedAt",
+          "revokedAt"
+        ]
+      },
+      "InvitationEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "invitation": {
+            "$ref": "#/components/schemas/Invitation"
+          }
+        },
+        "required": [
+          "invitation"
+        ]
+      },
+      "InvitationPreview": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Opaque invitation token."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "accepted",
+              "revoked"
+            ]
+          },
+          "invitedIdentityId": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "document": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "groupId": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "groupId",
+              "title"
+            ]
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "acceptedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revokedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "token",
+          "status",
+          "invitedIdentityId",
+          "role",
+          "document",
+          "createdAt",
+          "acceptedAt",
+          "revokedAt"
+        ]
+      },
+      "InvitationPreviewEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "invitation": {
+            "$ref": "#/components/schemas/InvitationPreview"
+          }
+        },
+        "required": [
+          "invitation"
+        ]
+      },
+      "PublicLinkCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "PublicLinkUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PublicLink": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "documentId": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string",
+            "description": "Opaque bearer-by-possession token for anonymous reads."
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "documentId",
+          "token",
+          "label",
+          "active",
+          "createdAt"
+        ]
+      },
+      "PublicLinkEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "publicLink": {
+            "$ref": "#/components/schemas/PublicLink"
+          }
+        },
+        "required": [
+          "publicLink"
+        ]
+      },
+      "ShareState": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "documentId": {
+            "type": "string"
+          },
+          "collaborators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Collaborator"
+            }
+          },
+          "invitations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Invitation"
+            }
+          },
+          "publicLinks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicLink"
+            }
+          }
+        },
+        "required": [
+          "documentId",
+          "collaborators",
+          "invitations",
+          "publicLinks"
+        ]
+      },
+      "ShareEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "share": {
+            "$ref": "#/components/schemas/ShareState"
+          }
+        },
+        "required": [
+          "share"
+        ]
+      },
+      "PublicDocument": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "groupId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string",
+            "mediaType": "text/markdown",
+            "description": "UTF-8 Markdown source exposed by an active public link."
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "publicLink": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "token": {
+                "type": "string"
+              },
+              "label": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "token",
+              "label"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "groupId",
+          "title",
+          "content",
+          "createdAt",
+          "updatedAt",
+          "publicLink"
+        ]
+      },
+      "PublicDocumentEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "document": {
+            "$ref": "#/components/schemas/PublicDocument"
+          }
+        },
+        "required": [
+          "document"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "sessionCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "dw_session",
+        "description": "Opaque httpOnly server-side session cookie issued after passkey login or owner bootstrap. Unsafe cookie-authenticated writes require a same-origin Origin header."
+      },
+      "developmentBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "instance-local-development-token",
+        "description": "Instance-local development/API token from DEVELOPMENT_API_TOKENS. This is not a central Downwrite account system."
+      },
+      "oauthPkce": {
+        "type": "oauth2",
+        "description": "Instance-local OAuth authorization-code-with-PKCE boundary for the public iOS app and MCP clients. Clients are public, use PKCE S256, request either the instance API or MCP resource, and receive opaque bearer tokens issued by this self-hosted Worker.",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "http://localhost:8787/oauth/authorize",
+            "tokenUrl": "http://localhost:8787/oauth/token",
+            "refreshUrl": "http://localhost:8787/oauth/token",
+            "scopes": {
+              "workspaces:read": "Read authorized workspaces.",
+              "workspaces:write": "Create and manage authorized workspaces.",
+              "documents:read": "Read authorized Markdown documents.",
+              "documents:write": "Create and update authorized Markdown documents.",
+              "sharing:write": "Manage collaborators, invitations, and public links.",
+              "mcp:documents": "Use MCP document tools limited to the authorized instance data."
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Invalid request body or parameter.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "examples": {
+              "default": {
+                "value": {
+                  "error": "Invalid request body or parameter.",
+                  "code": "bad_request",
+                  "status": 400
+                }
+              }
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Authentication is missing or invalid.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "examples": {
+              "default": {
+                "value": {
+                  "error": "Authentication is missing or invalid.",
+                  "code": "unauthorized",
+                  "status": 401
+                }
+              }
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "The authenticated identity is not authorized.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "examples": {
+              "default": {
+                "value": {
+                  "error": "The authenticated identity is not authorized.",
+                  "code": "forbidden",
+                  "status": 403
+                }
+              }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "The requested resource was not found.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "examples": {
+              "default": {
+                "value": {
+                  "error": "The requested resource was not found.",
+                  "code": "not_found",
+                  "status": 404
+                }
+              }
+            }
+          }
+        }
+      },
+      "TooManyRequests": {
+        "description": "Rate limit exceeded.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "examples": {
+              "default": {
+                "value": {
+                  "error": "Rate limit exceeded.",
+                  "code": "rate_limited",
+                  "status": 429
+                }
+              }
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "The write precondition failed.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "examples": {
+              "default": {
+                "value": {
+                  "error": "The write precondition failed.",
+                  "code": "conflict",
+                  "status": 409
+                }
+              }
+            }
+          }
+        }
+      },
+      "PreconditionRequired": {
+        "description": "A required write precondition is missing.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "examples": {
+              "default": {
+                "value": {
+                  "error": "A required write precondition is missing.",
+                  "code": "internal_error",
+                  "status": 428
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "groupId": {
+        "name": "groupId",
+        "in": "path",
+        "required": true,
+        "description": "Workspace/group identifier.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "documentId": {
+        "name": "documentId",
+        "in": "path",
+        "required": true,
+        "description": "Document identifier.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "identityId": {
+        "name": "identityId",
+        "in": "path",
+        "required": true,
+        "description": "Instance-local identity identifier.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "invitationId": {
+        "name": "invitationId",
+        "in": "path",
+        "required": true,
+        "description": "Invitation identifier.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "invitationToken": {
+        "name": "token",
+        "in": "path",
+        "required": true,
+        "description": "Opaque invitation token.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "publicLinkId": {
+        "name": "publicLinkId",
+        "in": "path",
+        "required": true,
+        "description": "Public-link identifier.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "publicToken": {
+        "name": "token",
+        "in": "path",
+        "required": true,
+        "description": "Opaque public-link read token.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "x-downwrite-conventions": {
+    "versioning": "All product API operations are rooted under /api/v1. Future breaking changes should add a new /api/vN base path while preserving discovery metadata.",
+    "pagination": "List endpoints support optional cursor and limit query parameters and return nextCursor when another page is available.",
+    "markdown": "Document content is UTF-8 Markdown stored as text/markdown. The API returns Markdown source, not rendered HTML. Clients are responsible for preview rendering.",
+    "authorization": "Authenticated operations accept either the passkey session cookie, an instance-local OAuth bearer token, or the local-only development adapter. OAuth tokens must include the route scope. Public-link reads are anonymous and read-only. Owner role is required for workspace settings and sharing management; owner or editor may write documents.",
+    "errors": "Error responses use { error, code, status }. The error string is preserved for older clients, while code is the stable programmatic discriminator.",
+    "mcp": "MCP tools are normal external clients using scoped credentials. Implemented mappings are list_workspaces, list_documents, read_document, create_document, and update_document; no MCP backdoor is implemented in v1."
+  },
+  "x-downwrite-client-contract": {
+    "status": "v1-draft",
+    "resource": "/api/v1",
+    "mediaTypes": {
+      "requests": [
+        "application/json"
+      ],
+      "responses": [
+        "application/json"
+      ],
+      "markdown": "Document content fields contain UTF-8 text/markdown source."
+    },
+    "errors": {
+      "envelope": "{ error: string, code: string, status: number }",
+      "compatibility": "Clients may continue reading the error string, but new clients should switch on code.",
+      "codes": [
+        "bad_request",
+        "unauthorized",
+        "forbidden",
+        "not_found",
+        "conflict",
+        "precondition_required",
+        "rate_limited",
+        "internal_error"
+      ]
+    },
+    "lists": {
+      "current": "Workspace and document collections accept optional cursor and limit query parameters.",
+      "future": "Cursor pagination is additive: item schemas remain stable and nextCursor is omitted when no later page exists."
+    },
+    "revisions": {
+      "field": "revision",
+      "precondition": "Document update, move, and reorder requests must include baseRevision.",
+      "missing": "A missing or invalid baseRevision returns 428 Precondition Required and does not mutate the document.",
+      "conflict": "A stale baseRevision returns 409 Conflict and does not mutate the document.",
+      "autosave": "Autosave and offline clients should retry transport failures with the same baseRevision, adopt the returned revision after success, refresh and attach a revision after 428, and refresh plus merge or surface user conflict after 409."
+    },
+    "permissions": {
+      "owner": "Can manage workspace settings, document content, collaborators, invitations, and public links.",
+      "editor": "Can read and write explicitly authorized documents.",
+      "publicLink": "Anonymous, bearer-by-possession, read-only Markdown access."
+    },
+    "externalAuth": {
+      "resourceMetadata": "/.well-known/oauth-protected-resource",
+      "authorizationServerMetadata": "/.well-known/oauth-authorization-server",
+      "authorizationEndpoint": "/oauth/authorize",
+      "tokenEndpoint": "/oauth/token",
+      "revocationEndpoint": "/oauth/revoke",
+      "apiResource": "/api/v1",
+      "mcpResource": "/mcp",
+      "status": "Protected-resource metadata, authorization, token exchange, refresh rotation, and token revocation are implemented by this self-hosted instance.",
+      "pkceRequired": true,
+      "resourceIndicatorsRequired": true,
+      "publicClients": [
+        "downwrite-ios with downwrite://oauth/callback",
+        "downwrite-mcp with loopback http://127.0.0.1:{port}/callback or http://localhost:{port}/callback"
+      ],
+      "scopes": [
+        "workspaces:read",
+        "workspaces:write",
+        "documents:read",
+        "documents:write",
+        "sharing:write",
+        "mcp:documents"
+      ]
+    }
+  },
+  "x-downwrite-api-roadmap": {
+    "purpose": "Endpoint-gap audit for keeping the Worker API as Downwrite's product core. Proposed operations are not implemented in v1 unless they also appear under paths.",
+    "implemented": {
+      "workspaceLifecycle": [
+        "GET /api/v1/groups",
+        "POST /api/v1/groups",
+        "GET /api/v1/groups/{groupId}",
+        "PATCH /api/v1/groups/{groupId}",
+        "DELETE /api/v1/groups/{groupId}"
+      ],
+      "documents": [
+        "GET /api/v1/groups/{groupId}/documents",
+        "POST /api/v1/groups/{groupId}/documents",
+        "GET /api/v1/documents/{documentId}",
+        "PATCH /api/v1/documents/{documentId}",
+        "PATCH /api/v1/documents/{documentId}/move",
+        "PATCH /api/v1/documents/{documentId}/position",
+        "DELETE /api/v1/documents/{documentId}"
+      ],
+      "sharing": [
+        "GET /api/v1/documents/{documentId}/share",
+        "POST /api/v1/documents/{documentId}/collaborators",
+        "DELETE /api/v1/documents/{documentId}/collaborators/{identityId}",
+        "POST /api/v1/documents/{documentId}/invitations",
+        "GET /api/v1/invitations/{token}",
+        "POST /api/v1/invitations/{token}/accept",
+        "DELETE /api/v1/invitations/{invitationId}",
+        "POST /api/v1/documents/{documentId}/public-links",
+        "PATCH /api/v1/public-links/{publicLinkId}",
+        "GET /api/v1/public-links/{publicLinkId}/manage",
+        "GET /api/v1/public-links/{token}"
+      ],
+      "discoveryAndAuth": [
+        "GET /.well-known/downwrite",
+        "GET /.well-known/oauth-protected-resource",
+        "GET /.well-known/oauth-authorization-server",
+        "GET /oauth/authorize",
+        "POST /oauth/authorize/approve",
+        "POST /oauth/token",
+        "POST /oauth/revoke",
+        "POST /mcp authenticated stateless MCP JSON-RPC endpoint with scoped credentials",
+        "GET /api/v1/discovery",
+        "GET /api/v1/auth/status",
+        "POST /api/v1/auth/development/session local-only development session",
+        "POST /api/v1/auth/bootstrap/options",
+        "POST /api/v1/auth/bootstrap/verify",
+        "POST /api/v1/auth/passkeys/login/options",
+        "POST /api/v1/auth/passkeys/login/verify",
+        "DELETE /api/v1/auth/session"
+      ],
+      "contract": [
+        "GET /api/v1/openapi.json",
+        "GET /api/v1/docs"
+      ]
+    },
+    "proposed": {
+      "blocksNextInteractiveScreens": [],
+      "documentsAndContent": [
+        "PUT /api/v1/documents/{documentId}/content: content-focused update separate from title/metadata.",
+        "GET /api/v1/documents/{documentId}/revisions: list saved content revisions.",
+        "GET /api/v1/documents/{documentId}/revisions/{revisionId}: read a historical Markdown revision.",
+        "POST /api/v1/groups/{groupId}/imports: import Markdown files into a workspace.",
+        "GET /api/v1/groups/{groupId}/export: export workspace Markdown as an archive.",
+        "GET /api/v1/documents/{documentId}/export: export one Markdown document."
+      ],
+      "concurrency": [
+        "Current document update/move/reorder writes require baseRevision, return 428 Precondition Required when it is missing or invalid, and return 409 Conflict on stale revisions.",
+        "Future ETag/If-Match support may be added for cache-native clients without replacing revision."
+      ],
+      "sharingAndRoles": [
+        "GET /api/v1/groups/{groupId}/members and PATCH/DELETE member endpoints if workspace-level collaboration becomes productized.",
+        "Optional viewer role if private read-only invitations become a requirement.",
+        "Public-link expiration and last-used metadata if link lifecycle screens need it."
+      ],
+      "nativeClientAuth": [
+        "Implemented GET /oauth/authorize for system-browser OAuth authorization code with PKCE.",
+        "Implemented POST /oauth/token for short-lived access tokens and refresh-token rotation.",
+        "Implemented POST /oauth/revoke for opaque access/refresh token revocation.",
+        "Future work: add configurable client registration if third-party HTTPS redirect clients are needed beyond the built-in iOS and MCP public clients.",
+        "GET /api/v1/me planned for native/web account profile once broad account UX exists."
+      ],
+      "mcpSafeOperations": [
+        "Implemented /mcp tools: list_workspaces, list_documents, read_document, create_document, update_document.",
+        "MCP requires mcp:documents when authenticated with an OAuth bearer token.",
+        "Avoid any all-instance search/list endpoint by default."
+      ]
+    },
+    "longerTerm": "iOS and MCP primarily need stable discovery, OAuth/PKCE, scoped credentials, cursor pagination, conflict semantics, import/export, and document movement. They do not require a different backend or privileged route family."
+  }
+}

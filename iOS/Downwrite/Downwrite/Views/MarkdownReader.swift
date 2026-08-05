@@ -1,19 +1,15 @@
 import SwiftUI
+import Textual
 
 struct MarkdownReader: View {
     let markdown: String
 
-    private var attributed: AttributedString {
-        (try? AttributedString(markdown: markdown, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace))) ?? AttributedString(markdown)
-    }
-
     var body: some View {
         ScrollView {
-            Text(attributed)
+            StructuredText(markdown: markdown)
                 .font(.system(.body, design: .serif))
-                .fontWidth(.standard)
-                .lineSpacing(7)
-                .textSelection(.enabled)
+                .textual.structuredTextStyle(.gitHub)
+                .textual.textSelection(.enabled)
                 .frame(maxWidth: 720, alignment: .leading)
                 .padding(.horizontal, 24)
                 .padding(.vertical, 32)

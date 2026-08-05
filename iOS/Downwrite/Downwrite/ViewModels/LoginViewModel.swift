@@ -38,7 +38,7 @@ final class LoginViewModel {
         defer { isSigningIn = false }
 
         do {
-            _ = try await URLSessionDownwriteAPIClient(baseURL: instanceURL).discoverInstance()
+            _ = try await OpenAPIDownwriteAPIClient(baseURL: instanceURL).discoverInstance()
             let result = try await authenticator.signIn(instanceURL: instanceURL)
             session.signIn(
                 session: InstanceSession(
@@ -61,7 +61,7 @@ final class LoginViewModel {
         defer { isSigningIn = false }
 
         do {
-            let client = URLSessionDownwriteAPIClient(
+            let client = OpenAPIDownwriteAPIClient(
                 baseURL: instanceURL,
                 accessToken: developmentBearerToken.nilIfBlank
             )
