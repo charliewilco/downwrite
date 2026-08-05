@@ -1,0 +1,11 @@
+[package]
+name = "downwrite"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.100"
+clap = { version = "4.5.53", features = ["derive"] }
+dialoguer = "0.12.0"
+rand = "0.10.0-rc.5"
+which = "8.0.0"
