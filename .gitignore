@@ -24,3 +24,46 @@ tsconfig.tsbuildinfo
 worker/dist/
 worker/dist-worker/
 worker/web/dist/
+
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# iOS
+*.xcuserstate
+*.xccheckout
+*.moved-aside
+*.xcscmblueprint
+
+# Xcode
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+#*.xcworkspace
+#!*.xcworkspace/contents.xcworkspacedata
+#!*.xcworkspace/xcshareddata/*
+DerivedData
+.idea/
+.vscode/
+*.hmap
+
+*.xcuserdatad
+xcuserdata/
+
+# Swift Package Manager
+/.build/
+.build/
+.swiftpm/
+Packages/*/Package.resolved
+
+
+
