@@ -285,7 +285,7 @@ p {
 .inline-form input,
 .inline-form select,
 .title-input,
-.markdown-editor,
+.tiptap-editor,
 .share-list input,
 .document-organization select {
   width: 100%;
@@ -865,6 +865,32 @@ p {
   white-space: nowrap;
 }
 
+.document-composer {
+  display: grid;
+  gap: 18px;
+}
+
+.editor-mode-toggle {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.editor-mode-toggle button {
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--muted);
+  padding: 8px 12px;
+  font-size: 0.86rem;
+  font-weight: 580;
+}
+
+.editor-mode-toggle button.selected {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-text);
+}
+
 .document-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -892,20 +918,71 @@ p {
   line-height: 1;
 }
 
-.markdown-editor {
+.tiptap-editor {
   min-height: calc(68vh - 100px);
   border-color: var(--line);
   background: var(--surface);
+  overflow: auto;
+}
+
+.tiptap-editor-surface {
+  min-height: calc(68vh - 100px);
   padding: 18px;
+  outline: 0;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   font-size: 0.95rem;
   line-height: 1.62;
-  resize: vertical;
+  white-space: pre-wrap;
+}
+
+.tiptap-editor-surface > * + * {
+  margin-top: 0.8rem;
+}
+
+.tiptap-editor-surface p.is-editor-empty:first-child::before {
+  float: left;
+  height: 0;
+  color: var(--subtle);
+  content: attr(data-placeholder);
+  pointer-events: none;
+}
+
+.tiptap-editor-surface code {
+  background: var(--surface-subtle);
+  padding: 2px 4px;
+}
+
+.tiptap-editor-surface pre {
+  overflow: auto;
+  background: var(--surface-subtle);
+  padding: 12px;
+}
+
+.tiptap-editor-surface pre code {
+  padding: 0;
+  background: transparent;
+}
+
+.tiptap-editor-surface blockquote {
+  border-left: 4px solid var(--line-strong);
+  color: var(--muted);
+  margin-left: 0;
+  padding-left: 14px;
+}
+
+.editor-loading {
+  min-height: calc(68vh - 100px);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  padding: 18px;
 }
 
 .preview-pane {
-  border-left: 1px solid var(--line);
-  padding: 8px 0 8px clamp(24px, 4vw, 48px);
+  min-height: calc(68vh - 100px);
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  padding: 18px;
   line-height: 1.68;
 }
 

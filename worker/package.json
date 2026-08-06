@@ -24,6 +24,14 @@
   },
   "dependencies": {
     "@simplewebauthn/server": "^13.2.2",
+    "@tiptap/core": "^3.29.2",
+    "@tiptap/extension-link": "^3.29.2",
+    "@tiptap/extension-placeholder": "^3.29.2",
+    "@tiptap/extension-task-item": "^3.29.2",
+    "@tiptap/extension-task-list": "^3.29.2",
+    "@tiptap/markdown": "^3.29.2",
+    "@tiptap/pm": "^3.29.2",
+    "@tiptap/starter-kit": "^3.29.2",
     "hono": "4.13.0",
     "preact": "10.29.8"
   },

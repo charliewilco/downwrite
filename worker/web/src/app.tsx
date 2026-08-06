@@ -52,6 +52,15 @@ type Route =
   | { name: "invitation"; token: string }
   | { name: "public-document"; token: string };
 type SaveState = "idle" | "dirty" | "saving" | "saved" | "error";
+type DocumentEditorMode = "write" | "preview";
+interface TiptapMarkdownEditorProps {
+  documentId: string;
+  markdown: string;
+  onMarkdownChange: (markdown: string) => void;
+}
+type TiptapMarkdownEditorComponent = (
+  props: TiptapMarkdownEditorProps,
+) => h.JSX.Element;
 
 export function App() {
   const token = undefined;
@@ -1565,6 +1574,7 @@ function DocumentView({
   const [deleting, setDeleting] = useState(false);
   const [targetGroupId, setTargetGroupId] = useState("");
   const [moving, setMoving] = useState(false);
+  const [editorMode, setEditorMode] = useState<DocumentEditorMode>("write");
   const loadedDocumentId = useRef<string | null>(null);
   const lastSaved = useRef({ title: "", content: "", revision: 0 });
 
@@ -1576,6 +1586,7 @@ function DocumentView({
     setSaveState("idle");
     setConfirmingDelete(false);
     setDeleting(false);
+    setEditorMode("write");
 
     fetchDocument(token, documentId)
       .then((nextDocument) => {
@@ -1811,35 +1822,81 @@ function DocumentView({
         </form>
       </section>
 
-      <div className="document-grid">
-        <section className="editor-pane" aria-label="Markdown editor">
-          <input
-            className="title-input"
-            aria-label="Document title"
-            value={title}
-            onInput={(event) => setTitle(event.currentTarget.value)}
-          />
-          <textarea
-            aria-label="Markdown content"
-            className="markdown-editor"
-            spellcheck
-            value={content}
-            onInput={(event) => setContent(event.currentTarget.value)}
-          />
-        </section>
-        <section
-          className="preview-pane"
-          aria-label="Rendered Markdown preview"
+      <section className="document-composer">
+        <div
+          className="editor-mode-toggle"
+          role="group"
+          aria-label="Editor mode"
         >
-          {preview.length > 0 ? (
-            preview
-          ) : (
-            <p className="empty-preview">Empty document.</p>
-          )}
-        </section>
-      </div>
+          <button
+            className={editorMode === "write" ? "selected" : undefined}
+            type="button"
+            onClick={() => setEditorMode("write")}
+          >
+            Write
+          </button>
+          <button
+            className={editorMode === "preview" ? "selected" : undefined}
+            type="button"
+            onClick={() => setEditorMode("preview")}
+          >
+            Preview
+          </button>
+        </div>
+        {editorMode === "write" ? (
+          <section className="editor-pane" aria-label="Markdown editor">
+            <input
+              className="title-input"
+              aria-label="Document title"
+              value={title}
+              onInput={(event) => setTitle(event.currentTarget.value)}
+            />
+            <LazyTiptapMarkdownEditor
+              documentId={document.id}
+              markdown={content}
+              onMarkdownChange={setContent}
+            />
+          </section>
+        ) : (
+          <section
+            className="preview-pane"
+            aria-label="Rendered Markdown preview"
+          >
+            {preview.length > 0 ? (
+              preview
+            ) : (
+              <p className="empty-preview">Empty document.</p>
+            )}
+          </section>
+        )}
+      </section>
     </section>
   );
+}
+
+function LazyTiptapMarkdownEditor(props: TiptapMarkdownEditorProps) {
+  const [EditorComponent, setEditorComponent] =
+    useState<TiptapMarkdownEditorComponent | null>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    import("./TiptapMarkdownEditor.js").then((module) => {
+      if (active) {
+        setEditorComponent(() => module.TiptapMarkdownEditor);
+      }
+    });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  if (!EditorComponent) {
+    return <p className="editor-loading">Loading editor...</p>;
+  }
+
+  return <EditorComponent {...props} />;
 }
 
 function SharePanel({

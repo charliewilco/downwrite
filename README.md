@@ -2,24 +2,42 @@
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/charliewilco/downwrite/tree/main/worker)
 
-Downwrite is an open-source, self-hostable Markdown workspace app. The product
-ships as one Cloudflare Worker deployment: the Worker serves the Preact web app,
-the versioned Hono API, D1 metadata, R2 Markdown storage, auth/session
-boundaries, public links, and the narrow MCP endpoint from the same origin.
+> A place to write.
 
-There is no centrally operated Downwrite service. A developer should be able to
-fork or clone this repository and deploy an isolated instance into their own
-Cloudflare account.
+Downwrite is a small, open-source Markdown workspace for people who want their
+writing to stay portable. Write in Markdown, keep the files in an instance you
+control, and share a document only when you mean to.
 
-## Repository Layout
+The idea is still the simple one: writing tools come and go, but Markdown keeps
+showing up because it is plain text with enough structure to travel well. A
+document can be an essay, a note, a blog post, a README, an archive, or the
+beginning of something larger. Downwrite treats that as the useful part, not as
+an implementation detail to hide away.
 
-- [`worker/`](./worker/) is the deployable Cloudflare Worker package. It includes
-  the API, D1 migrations, Wrangler config, Preact web source, and Worker-local
-  tests.
-- [`documentation/`](./documentation/) is the durable product and architecture
-  documentation home.
-- [`iOS/`](./iOS/) is the native-client planning home for the future single
-  public Downwrite iOS app. No app source exists yet.
+There is no centrally operated Downwrite service. Fork or clone this repository,
+deploy it into your own Cloudflare account, and you have an isolated workspace
+with its own storage, auth boundary, and public links.
+
+## What It Does
+
+- Write and organize Markdown documents in a browser.
+- Store document metadata in D1 and Markdown bodies in R2.
+- Sign in to your own instance with passkeys, with a local development shortcut
+  for first-run setup.
+- Share selected documents through public links.
+- Serve the web app, API, auth endpoints, storage access, and narrow MCP endpoint
+  from one Cloudflare Worker origin.
+- Keep a versioned `/api/v1` contract for future native clients.
+
+## Why Markdown
+
+Markdown is probably the most useful compromise between syntax, semantics, and
+plain text durability. It is readable before anything renders it, familiar across
+writing tools and developer tools, and easy to move into a static site, docs
+system, issue tracker, notes app, or archive.
+
+Bottom line: Markdown is data. Downwrite is built around keeping that data
+legible and portable.
 
 ## Start Locally
 
@@ -35,6 +53,29 @@ workspace and Markdown document.
 
 Detailed setup and deployment instructions live in
 [`documentation/self-hosting.md`](./documentation/self-hosting.md).
+
+## Deploy
+
+Use the Cloudflare button above, or deploy from the Worker package:
+
+```bash
+cd worker
+npm run deploy
+```
+
+Deploying applies remote D1 migrations and publishes the Worker to the
+Cloudflare account configured in Wrangler. Production instances should configure
+passkey origin settings and secrets in that account.
+
+## Repository Layout
+
+- [`worker/`](./worker/) is the deployable Cloudflare Worker package. It includes
+  the Hono API, D1 migrations, Wrangler config, Preact web source, Worker-local
+  tests, and Deploy to Cloudflare metadata.
+- [`documentation/`](./documentation/) is the durable product and architecture
+  documentation home.
+- [`iOS/`](./iOS/) is the native-client planning home for the future single
+  public Downwrite iOS app. No app source exists yet.
 
 ## Key Documents
 
@@ -57,3 +98,7 @@ npm run validate
 
 Tests use Node's built-in test runner. No Jest, Vitest, UI framework, or test
 framework dependency is used.
+
+## License
+
+[MIT](./LICENSE)
