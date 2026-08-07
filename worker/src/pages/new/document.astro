@@ -1,5 +1,8 @@
 ---
 import AppLayout from "../../layouts/AppLayout.astro";
+import EmptyState from "../../components/EmptyState.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import CreateDocumentForm from "../../components/forms/CreateDocumentForm.astro";
 import { loadGroupsForRequest } from "../../web/page-data.js";
 
 const { groups, error } = await loadGroupsForRequest(Astro.request);
@@ -7,42 +10,24 @@ const { groups, error } = await loadGroupsForRequest(Astro.request);
 
 <AppLayout title="New Document - Downwrite">
   <section class="workspace-screen create-route">
-    <header class="section-heading">
-      <a class="back-button" href="/">Back</a>
-      <div>
-        <p class="eyebrow">New document</p>
-        <h1>Choose where it belongs.</h1>
-        <p>Documents start untitled and open directly in the Markdown editor.</p>
-      </div>
-    </header>
+    <SectionHeading
+      backHref="/"
+      description="Documents start untitled and open directly in the Markdown editor."
+      eyebrow="New document"
+      title="Choose where it belongs."
+    />
     {
       error ? (
         <p class="status error">{error}</p>
       ) : groups.length === 0 ? (
-        <section class="empty-document">
-          <h1>No workspaces</h1>
-          <p>Create a workspace before adding a document.</p>
-          <a class="primary-action" href="/new/workspace">
-            New workspace
-          </a>
-        </section>
+        <EmptyState
+          actionHref="/new/workspace"
+          actionLabel="New workspace"
+          description="Create a workspace before adding a document."
+          title="No workspaces"
+        />
       ) : (
-        <dw-create-document-form>
-          <form class="settings-form">
-            <label>
-              <span>Workspace</span>
-              <select name="groupId">
-                {groups.map((group) => (
-                  <option value={group.id}>{group.name}</option>
-                ))}
-              </select>
-            </label>
-            <button class="primary-action" type="submit">
-              Create document
-            </button>
-            <p class="inline-error" data-inline-error hidden></p>
-          </form>
-        </dw-create-document-form>
+        <CreateDocumentForm groups={groups} />
       )
     }
   </section>

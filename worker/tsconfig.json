@@ -18,6 +18,7 @@
     "src/index.ts",
     "src/assets/**/*",
     "src/client/**/*",
+    "src/components/**/*",
     "src/layouts/**/*",
     "src/pages/**/*",
     "src/styles/**/*",

@@ -1,0 +1,22 @@
+---
+import type { GroupSummary } from "../../types.js";
+
+interface Props {
+	groups: GroupSummary[];
+}
+
+const { groups } = Astro.props;
+---
+
+<dw-create-document-form>
+	<form class="settings-form">
+		<label>
+			<span>Workspace</span>
+			<select name="groupId">
+				{groups.map((group) => <option value={group.id}>{group.name}</option>)}
+			</select>
+		</label>
+		<button class="primary-action" type="submit">Create document</button>
+		<p class="inline-error" data-inline-error hidden></p>
+	</form>
+</dw-create-document-form>

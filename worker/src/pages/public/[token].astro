@@ -1,5 +1,7 @@
 ---
 import AppLayout from "../../layouts/AppLayout.astro";
+import EmptyState from "../../components/EmptyState.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
 import { loadPublicDocumentForRequest } from "../../web/page-data.js";
 import { renderMarkdownHtml } from "../../web/markdown-html.js";
 
@@ -12,26 +14,21 @@ const preview = document ? renderMarkdownHtml(document.content) : "";
   {
     document ? (
       <article class="workspace-screen public-document">
-        <header class="section-heading">
-          <div>
-            <p class="eyebrow">
-              Public read-only link
-              {document.publicLink.label ? ` · ${document.publicLink.label}` : ""}
-            </p>
-            <h1>{document.title}</h1>
-            <p>
-              Anonymous visitors can read this Markdown document. Editing stays
-              restricted to invited collaborators.
-            </p>
-          </div>
-        </header>
+        <SectionHeading
+          description="Anonymous visitors can read this Markdown document. Editing stays restricted to invited collaborators."
+          eyebrow={`Public read-only link${
+            document.publicLink.label ? ` · ${document.publicLink.label}` : ""
+          }`}
+          title={document.title}
+        />
         <section class="preview-pane public-preview" set:html={preview} />
       </article>
     ) : (
-      <section class="workspace-screen empty-document">
-        <h1>Public document unavailable</h1>
-        <p>{error ?? "This public link may have been revoked."}</p>
-      </section>
+      <EmptyState
+        class="workspace-screen empty-document"
+        description={error ?? "This public link may have been revoked."}
+        title="Public document unavailable"
+      />
     )
   }
 </AppLayout>

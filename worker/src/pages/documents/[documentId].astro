@@ -1,5 +1,6 @@
 ---
 import AppLayout from "../../layouts/AppLayout.astro";
+import EmptyState from "../../components/EmptyState.astro";
 import { DocumentEditor } from "../../client/islands/DocumentEditor.js";
 import { loadDocumentForRequest } from "../../web/page-data.js";
 
@@ -15,16 +16,15 @@ const { document, groups, error } = await loadDocumentForRequest(
     document ? (
       <DocumentEditor client:load document={document} groups={groups} />
     ) : (
-      <section class="document-screen empty-document">
-        <a class="back-button" href="/">Back</a>
-        <div>
-          <h1>Document not found</h1>
-          <p>
-            {error ??
-              "This document may have been deleted, moved, or hidden from the current identity."}
-          </p>
-        </div>
-      </section>
+      <EmptyState
+        backHref="/"
+        class="document-screen empty-document"
+        description={
+          error ??
+          "This document may have been deleted, moved, or hidden from the current identity."
+        }
+        title="Document not found"
+      />
     )
   }
 </AppLayout>

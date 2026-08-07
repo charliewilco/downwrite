@@ -1,13 +1,13 @@
 ---
 import AppLayout from "../../../layouts/AppLayout.astro";
+import EmptyState from "../../../components/EmptyState.astro";
+import CreateDocumentButton from "../../../components/workspaces/CreateDocumentButton.astro";
+import WorkspaceDocumentList from "../../../components/workspaces/WorkspaceDocumentList.astro";
 import { loadGroupForRequest } from "../../../web/page-data.js";
 import { DEFAULT_ACCENT } from "../../../client/app-constants.js";
 
 const groupId = Astro.params.groupId ?? "";
-const { group, groups, error } = await loadGroupForRequest(
-  Astro.request,
-  groupId,
-);
+const { group, error } = await loadGroupForRequest(Astro.request, groupId);
 ---
 
 <AppLayout title={group ? `${group.name} - Downwrite` : "Workspace - Downwrite"}>
@@ -39,73 +39,21 @@ const { group, groups, error } = await loadGroupForRequest(
                 >
                   Settings
                 </a>
-                <dw-create-document-button group-id={group.id}>
-                  <button class="secondary-action" type="button">
-                    New document
-                  </button>
-                </dw-create-document-button>
+                <CreateDocumentButton groupId={group.id} />
               </div>
             </header>
 
-            <ul class="document-list">
-              {group.documents.length === 0 && (
-                <li class="empty-row">
-                  No documents yet. Create one to start writing in this
-                  workspace.
-                </li>
-              )}
-              {group.documents.map((document, index) => (
-                <li class="document-row">
-                  <a
-                    class="document-link"
-                    href={`/documents/${encodeURIComponent(document.id)}`}
-                  >
-                    <strong>{document.title}</strong>
-                    <span>
-                      {document.role} · rev {document.revision}
-                    </span>
-                  </a>
-                  <dw-document-order-controls
-                    class="order-actions"
-                    aria-label="Document order"
-                    document-id={document.id}
-                    revision={document.revision}
-                  >
-                    <button
-                      class="icon-action"
-                      disabled={index === 0}
-                      title="Move up"
-                      type="button"
-                      data-position={group.documents[index - 1]
-                        ? group.documents[index - 1].position - 100
-                        : document.position}
-                    >
-                      Up
-                    </button>
-                    <button
-                      class="icon-action"
-                      disabled={index === group.documents.length - 1}
-                      title="Move down"
-                      type="button"
-                      data-position={group.documents[index + 1]
-                        ? group.documents[index + 1].position + 100
-                        : document.position}
-                    >
-                      Down
-                    </button>
-                  </dw-document-order-controls>
-                </li>
-              ))}
-            </ul>
+            <WorkspaceDocumentList group={group} />
           </section>
         </markdown-dragarea>
       </section>
     ) : (
       <section class="workspace-screen">
-        <section class="workspace-detail empty-document">
-          <h1>No workspaces</h1>
-          <p>Create a workspace to start organizing Markdown documents.</p>
-        </section>
+        <EmptyState
+          class="workspace-detail empty-document"
+          description="Create a workspace to start organizing Markdown documents."
+          title="No workspaces"
+        />
       </section>
     )
   }

@@ -1,0 +1,19 @@
+---
+interface Props {
+	token: string;
+}
+
+const { token } = Astro.props;
+---
+
+<dw-invitation-accept-form>
+	<form class="settings-form">
+		<label>
+			<span>Invitation token</span>
+			<input name="invitationToken" value={token} />
+		</label>
+		<button class="primary-action" type="submit">Accept invitation</button>
+	</form>
+	<p class="inline-notice" data-inline-notice hidden></p>
+	<p class="inline-error" data-inline-error hidden></p>
+</dw-invitation-accept-form>

@@ -1,0 +1,43 @@
+---
+import type { DocumentSummary } from "../../types.js";
+
+interface Props {
+	document: DocumentSummary;
+	documents: DocumentSummary[];
+	index: number;
+}
+
+const { document, documents, index } = Astro.props;
+const previousPosition = documents[index - 1]?.position;
+const nextPosition = documents[index + 1]?.position;
+const moveUpPosition =
+  previousPosition === undefined ? document.position : previousPosition - 100;
+const moveDownPosition =
+  nextPosition === undefined ? document.position : nextPosition + 100;
+---
+
+<dw-document-order-controls
+	class="order-actions"
+	aria-label="Document order"
+	document-id={document.id}
+	revision={document.revision}
+>
+	<button
+		class="icon-action"
+  disabled={index === 0}
+  title="Move up"
+  type="button"
+  data-position={moveUpPosition}
+>
+		Up
+	</button>
+	<button
+		class="icon-action"
+  disabled={index === documents.length - 1}
+  title="Move down"
+  type="button"
+  data-position={moveDownPosition}
+>
+		Down
+	</button>
+</dw-document-order-controls>

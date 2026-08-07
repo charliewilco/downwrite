@@ -1,0 +1,40 @@
+---
+import type { GroupSummary } from "../../types.js";
+import DocumentOrderControls from "./DocumentOrderControls.astro";
+
+interface Props {
+	group: GroupSummary;
+}
+
+const { group } = Astro.props;
+---
+
+<ul class="document-list">
+	{
+		group.documents.length === 0 && (
+			<li class="empty-row">
+				No documents yet. Create one to start writing in this workspace.
+			</li>
+		)
+	}
+	{
+		group.documents.map((document, index) => (
+			<li class="document-row">
+				<a
+					class="document-link"
+					href={`/documents/${encodeURIComponent(document.id)}`}
+				>
+					<strong>{document.title}</strong>
+					<span>
+						{document.role} · rev {document.revision}
+					</span>
+				</a>
+				<DocumentOrderControls
+					document={document}
+					documents={group.documents}
+					index={index}
+				/>
+			</li>
+		))
+	}
+</ul>

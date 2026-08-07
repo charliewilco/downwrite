@@ -1,0 +1,33 @@
+---
+type Props = {
+  backHref?: string;
+  backLabel?: string;
+  description?: string;
+  eyebrow?: string;
+  title: string;
+};
+
+const {
+  backHref,
+  backLabel = "Back",
+  description,
+  eyebrow,
+  title,
+} = Astro.props;
+---
+
+<header class="section-heading">
+  {
+    backHref && (
+      <a class="back-button" href={backHref}>
+        {backLabel}
+      </a>
+    )
+  }
+  <div>
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{title}</h1>
+    {description && <p>{description}</p>}
+    <slot />
+  </div>
+</header>

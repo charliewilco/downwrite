@@ -1,0 +1,51 @@
+---
+import { DEFAULT_ACCENT } from "../../client/app-constants.js";
+import type { GroupSummary } from "../../types.js";
+
+interface Props {
+	group: GroupSummary;
+}
+
+const { group } = Astro.props;
+---
+
+<dw-workspace-settings-form group-id={group.id}>
+	<form class="settings-form">
+		<label>
+			<span>Name</span>
+			<input name="name" value={group.name} />
+		</label>
+		<label>
+			<span>Description</span>
+			<textarea name="description">{group.description ?? ""}</textarea>
+		</label>
+		<label class="color-row">
+			<span>Accent</span>
+			<input
+				name="accentColor"
+				type="color"
+				value={group.accentColor ?? DEFAULT_ACCENT}
+			/>
+		</label>
+		<button class="primary-action" type="submit">Save workspace</button>
+	</form>
+	<section class="danger-zone">
+		<div>
+			<h2>Delete workspace</h2>
+			<p>
+				This removes the workspace and its documents from this self-hosted
+				instance.
+			</p>
+		</div>
+		<div class="toolbar-actions">
+			<button class="secondary-action" type="button" data-cancel-delete hidden>
+				Cancel
+			</button>
+			<button class="danger-action" type="button" data-delete-workspace>
+				Delete workspace
+			</button>
+		</div>
+	</section>
+	<p class="inline-notice" data-inline-notice hidden></p>
+	<p class="inline-error" data-inline-error hidden></p>
+</dw-workspace-settings-form>

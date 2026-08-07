@@ -1,0 +1,37 @@
+---
+interface Props {
+	actionHref?: string;
+	actionLabel?: string;
+	backHref?: string;
+	backLabel?: string;
+	class?: string;
+	description?: string;
+	title: string;
+}
+
+const {
+	actionHref,
+	actionLabel,
+	backHref,
+	backLabel = "Back",
+	class: className = "empty-document",
+	description,
+	title,
+} = Astro.props;
+---
+
+<section class={className}>
+	{backHref && <a class="back-button" href={backHref}>{backLabel}</a>}
+	<div>
+		<h1>{title}</h1>
+		{description && <p>{description}</p>}
+		<slot />
+	</div>
+	{
+		actionHref && actionLabel && (
+			<a class="primary-action" href={actionHref}>
+				{actionLabel}
+			</a>
+		)
+	}
+</section>
