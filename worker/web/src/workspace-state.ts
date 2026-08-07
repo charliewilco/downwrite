@@ -1,4 +1,3 @@
-import { useEffect, useState } from "preact/hooks";
 import {
   createDocument,
   createGroup,
@@ -10,13 +9,16 @@ import {
   type DocumentRecord,
   type GroupSummary,
 } from "./api.js";
-import type { MarkdownImport } from "./components/MarkdownImportDialog.js";
 
 export const workspaceToken = undefined;
 
+export interface MarkdownImport {
+  title: string;
+  content: string;
+}
+
 let cachedGroups: GroupSummary[] | null = null;
 let groupsRequest: Promise<GroupSummary[]> | null = null;
-const groupSubscribers = new Set<() => void>();
 
 export function getCachedGroups() {
   return cachedGroups ?? [];
@@ -24,9 +26,6 @@ export function getCachedGroups() {
 
 export function publishGroups(groups: GroupSummary[]) {
   cachedGroups = groups;
-  for (const subscriber of groupSubscribers) {
-    subscriber();
-  }
 }
 
 export async function loadGroups() {
@@ -48,51 +47,6 @@ export async function loadGroups() {
 export async function refreshGroups() {
   cachedGroups = null;
   return loadGroups();
-}
-
-export function useGroups(initialGroups?: GroupSummary[]) {
-  const [groups, setGroups] = useState<GroupSummary[]>(
-    initialGroups ?? getCachedGroups(),
-  );
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(!initialGroups && !cachedGroups);
-
-  async function refresh() {
-    setLoading(true);
-    setError(null);
-
-    try {
-      setGroups(await refreshGroups());
-    } catch (caught: unknown) {
-      setError(caught instanceof Error ? caught.message : "Unknown API error");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    if (initialGroups) {
-      publishGroups(initialGroups);
-    }
-
-    const subscriber = () => setGroups(getCachedGroups());
-    groupSubscribers.add(subscriber);
-
-    void loadGroups()
-      .then(setGroups)
-      .catch((caught: unknown) => {
-        setError(
-          caught instanceof Error ? caught.message : "Unknown API error",
-        );
-      })
-      .finally(() => setLoading(false));
-
-    return () => {
-      groupSubscribers.delete(subscriber);
-    };
-  }, []);
-
-  return { error, groups, loading, refresh };
 }
 
 export function removeDocumentFromGroups(documentId: string) {

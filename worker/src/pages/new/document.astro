@@ -1,6 +1,5 @@
 ---
 import AppLayout from "../../layouts/AppLayout.astro";
-import { CreateDocumentForm } from "../../../web/src/islands/CreateDocumentForm.js";
 import { loadGroupsForRequest } from "../../web/page-data.js";
 
 const { groups, error } = await loadGroupsForRequest(Astro.request);
@@ -28,7 +27,22 @@ const { groups, error } = await loadGroupsForRequest(Astro.request);
           </a>
         </section>
       ) : (
-        <CreateDocumentForm client:load initialGroups={groups} />
+        <dw-create-document-form>
+          <form class="settings-form">
+            <label>
+              <span>Workspace</span>
+              <select name="groupId">
+                {groups.map((group) => (
+                  <option value={group.id}>{group.name}</option>
+                ))}
+              </select>
+            </label>
+            <button class="primary-action" type="submit">
+              Create document
+            </button>
+            <p class="inline-error" data-inline-error hidden></p>
+          </form>
+        </dw-create-document-form>
       )
     }
   </section>

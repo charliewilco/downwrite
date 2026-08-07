@@ -1,6 +1,5 @@
 ---
 import AppLayout from "../../../layouts/AppLayout.astro";
-import { ShareControls } from "../../../../web/src/islands/ShareControls.js";
 import { loadGroupForRequest } from "../../../web/page-data.js";
 
 const groupId = Astro.params.groupId ?? "";
@@ -35,11 +34,30 @@ const selectedDocumentId = Astro.url.searchParams.get("document") ?? undefined;
             Create a document before configuring invitations or public links.
           </p>
         ) : (
-          <ShareControls
-            client:load
-            group={group}
-            initialDocumentId={selectedDocumentId}
-          />
+          <dw-share-controls>
+            <label class="document-picker">
+              <span>Document</span>
+              <select name="documentId">
+                {group.documents.map((document) => (
+                  <option
+                    value={document.id}
+                    selected={
+                      selectedDocumentId
+                        ? selectedDocumentId === document.id
+                        : document.id === group.documents[0]?.id
+                    }
+                  >
+                    {document.title}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <section class="share-panel" data-share-panel>
+              <p class="empty-row">Loading sharing controls...</p>
+            </section>
+            <p class="inline-notice" data-inline-notice hidden></p>
+            <p class="inline-error" data-inline-error hidden></p>
+          </dw-share-controls>
         )}
       </section>
     ) : (

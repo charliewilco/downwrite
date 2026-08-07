@@ -1,6 +1,5 @@
 ---
 import AppLayout from "../../layouts/AppLayout.astro";
-import { InvitationAcceptForm } from "../../../web/src/islands/InvitationAcceptForm.js";
 
 const token = Astro.params.token ?? "";
 ---
@@ -17,6 +16,18 @@ const token = Astro.params.token ?? "";
         </p>
       </div>
     </header>
-    <InvitationAcceptForm client:load token={token} />
+    <dw-invitation-accept-form>
+      <form class="settings-form">
+        <label>
+          <span>Invitation token</span>
+          <input name="invitationToken" value={token} />
+        </label>
+        <button class="primary-action" type="submit">
+          Accept invitation
+        </button>
+      </form>
+      <p class="inline-notice" data-inline-notice hidden></p>
+      <p class="inline-error" data-inline-error hidden></p>
+    </dw-invitation-accept-form>
   </section>
 </AppLayout>
