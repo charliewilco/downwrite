@@ -34,6 +34,8 @@ Cloudflare account are enough to run an isolated instance.
 - Workspace/group list, create, update settings, and delete.
 - Document create, read, update title/content, move between workspaces, reorder,
   delete, autosave, revision conflict handling, and Markdown preview.
+- Document comment threads for review notes or selected Markdown snippets, plus
+  manual document checkpoints.
 - Collaborator invitations and direct collaborator management.
 - Anonymous read-only public links.
 - Passkey/WebAuthn browser sessions plus a localhost-only development session

@@ -2,8 +2,15 @@ import { bytesFromBase64Url } from "../crypto.js";
 import type {
   AuthIdentity,
   CollaboratorRecord,
+  CommentAnchorKind,
+  CommentThreadStatus,
+  DocumentCommentAnchor,
+  DocumentCommentMessage,
+  DocumentCommentThread,
   DocumentRecord,
   DocumentSummary,
+  DocumentVersionRecord,
+  DocumentVersionSummary,
   GroupSummary,
   InvitationRecord,
   InvitationStatus,
@@ -49,6 +56,45 @@ interface DocumentRow {
   revision: number;
   created_at: string;
   updated_at: string;
+}
+
+interface CommentThreadRow {
+  id: string;
+  document_id: string;
+  status: CommentThreadStatus;
+  anchor_type: CommentAnchorKind;
+  start_line: number | null;
+  start_column: number | null;
+  end_line: number | null;
+  end_column: number | null;
+  quote: string | null;
+  base_revision: number | null;
+  created_by_identity_id: string;
+  created_at: string;
+  updated_at: string;
+  resolved_by_identity_id: string | null;
+  resolved_at: string | null;
+  document_revision: number;
+}
+
+interface CommentMessageRow {
+  id: string;
+  thread_id: string;
+  body: string;
+  created_by_identity_id: string;
+  created_at: string;
+}
+
+interface DocumentVersionRow {
+  id: string;
+  document_id: string;
+  name: string;
+  description: string | null;
+  source_revision: number;
+  title: string;
+  content_key: string;
+  created_by_identity_id: string;
+  created_at: string;
 }
 
 interface PublicLinkRow {
@@ -208,6 +254,75 @@ function documentSummaryFromRow(row: DocumentRow): DocumentSummary {
     revision: row.revision,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+  };
+}
+
+function commentMessageFromRow(row: CommentMessageRow): DocumentCommentMessage {
+  return {
+    id: row.id,
+    threadId: row.thread_id,
+    body: row.body,
+    createdByIdentityId: row.created_by_identity_id,
+    createdAt: row.created_at,
+  };
+}
+
+function commentAnchorFromRow(row: CommentThreadRow): DocumentCommentAnchor {
+  return {
+    type: row.anchor_type,
+    startLine: row.start_line,
+    startColumn: row.start_column,
+    endLine: row.end_line,
+    endColumn: row.end_column,
+    quote: row.quote,
+    baseRevision: row.base_revision,
+  };
+}
+
+function commentThreadFromRow(
+  row: CommentThreadRow,
+  comments: DocumentCommentMessage[],
+): DocumentCommentThread {
+  return {
+    id: row.id,
+    documentId: row.document_id,
+    status: row.status,
+    anchor: commentAnchorFromRow(row),
+    outdated:
+      row.anchor_type === "text" &&
+      row.base_revision !== null &&
+      row.document_revision > row.base_revision,
+    createdByIdentityId: row.created_by_identity_id,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    resolvedByIdentityId: row.resolved_by_identity_id,
+    resolvedAt: row.resolved_at,
+    comments,
+  };
+}
+
+function documentVersionSummaryFromRow(
+  row: DocumentVersionRow,
+): DocumentVersionSummary {
+  return {
+    id: row.id,
+    documentId: row.document_id,
+    name: row.name,
+    description: row.description,
+    sourceRevision: row.source_revision,
+    title: row.title,
+    createdByIdentityId: row.created_by_identity_id,
+    createdAt: row.created_at,
+  };
+}
+
+async function documentVersionFromRow(
+  bucket: R2Bucket,
+  row: DocumentVersionRow,
+): Promise<DocumentVersionRecord> {
+  return {
+    ...documentVersionSummaryFromRow(row),
+    content: await readMarkdown(bucket, row.content_key),
   };
 }
 
@@ -964,6 +1079,9 @@ export class D1Storage implements Storage {
       .prepare(`SELECT id FROM documents WHERE group_id = ?`)
       .bind(input.groupId)
       .all<{ id: string }>();
+    for (const document of documents.results ?? []) {
+      await this.deleteDocumentVersionObjects(document.id);
+    }
     await this.#db
       .prepare(`DELETE FROM groups WHERE id = ?`)
       .bind(input.groupId)
@@ -1161,12 +1279,310 @@ export class D1Storage implements Storage {
       return false;
     }
 
+    await this.deleteDocumentVersionObjects(input.documentId);
     await this.#db
       .prepare(`DELETE FROM documents WHERE id = ?`)
       .bind(input.documentId)
       .run();
     await this.#bucket.delete(`documents/${input.documentId}.md`);
 
+    return true;
+  }
+
+  async listCommentThreads(input: {
+    identityId: string;
+    documentId: string;
+    status?: CommentThreadStatus;
+    anchor?: CommentAnchorKind;
+  }): Promise<DocumentCommentThread[] | null> {
+    const current = await this.getDocumentForIdentity(input);
+    if (!current) {
+      return null;
+    }
+
+    const rows = await this.#db
+      .prepare(
+        `SELECT ct.id, ct.document_id, ct.status, ct.anchor_type,
+          ct.start_line, ct.start_column, ct.end_line, ct.end_column,
+          ct.quote, ct.base_revision, ct.created_by_identity_id,
+          ct.created_at, ct.updated_at, ct.resolved_by_identity_id,
+          ct.resolved_at, d.revision AS document_revision
+        FROM comment_threads ct
+        INNER JOIN documents d ON d.id = ct.document_id
+        WHERE ct.document_id = ?
+          AND (? IS NULL OR ct.status = ?)
+          AND (? IS NULL OR ct.anchor_type = ?)
+        ORDER BY ct.updated_at DESC, ct.created_at DESC`,
+      )
+      .bind(
+        input.documentId,
+        input.status ?? null,
+        input.status ?? null,
+        input.anchor ?? null,
+        input.anchor ?? null,
+      )
+      .all<CommentThreadRow>();
+
+    const threads: DocumentCommentThread[] = [];
+    for (const row of rows.results ?? []) {
+      threads.push(await this.commentThreadFromRowWithMessages(row));
+    }
+    return threads;
+  }
+
+  async createCommentThread(input: {
+    identityId: string;
+    documentId: string;
+    anchor: DocumentCommentAnchor;
+    body: string;
+  }): Promise<DocumentCommentThread | null> {
+    const current = await this.getDocumentForIdentity(input);
+    if (!current || !canWrite(current.role)) {
+      return null;
+    }
+
+    const threadId = crypto.randomUUID();
+    const commentId = crypto.randomUUID();
+    await this.#db.batch([
+      this.#db
+        .prepare(
+          `INSERT INTO comment_threads
+            (id, document_id, status, anchor_type, start_line, start_column,
+              end_line, end_column, quote, base_revision, created_by_identity_id)
+          VALUES (?, ?, 'open', ?, ?, ?, ?, ?, ?, ?, ?)`,
+        )
+        .bind(
+          threadId,
+          input.documentId,
+          input.anchor.type,
+          input.anchor.startLine,
+          input.anchor.startColumn,
+          input.anchor.endLine,
+          input.anchor.endColumn,
+          input.anchor.quote,
+          input.anchor.baseRevision,
+          input.identityId,
+        ),
+      this.#db
+        .prepare(
+          `INSERT INTO comment_messages
+            (id, thread_id, body, created_by_identity_id)
+          VALUES (?, ?, ?, ?)`,
+        )
+        .bind(commentId, threadId, input.body, input.identityId),
+    ]);
+
+    return this.commentThreadForIdentity({
+      identityId: input.identityId,
+      threadId,
+    });
+  }
+
+  async addCommentMessage(input: {
+    identityId: string;
+    threadId: string;
+    body: string;
+  }): Promise<DocumentCommentThread | null> {
+    const current = await this.documentForCommentThread(input);
+    if (!current || !canWrite(current.role)) {
+      return null;
+    }
+
+    const commentId = crypto.randomUUID();
+    await this.#db.batch([
+      this.#db
+        .prepare(
+          `INSERT INTO comment_messages
+            (id, thread_id, body, created_by_identity_id)
+          VALUES (?, ?, ?, ?)`,
+        )
+        .bind(commentId, input.threadId, input.body, input.identityId),
+      this.#db
+        .prepare(
+          `UPDATE comment_threads
+          SET updated_at = CURRENT_TIMESTAMP
+          WHERE id = ?`,
+        )
+        .bind(input.threadId),
+    ]);
+
+    return this.commentThreadForIdentity(input);
+  }
+
+  async updateCommentThreadStatus(input: {
+    identityId: string;
+    threadId: string;
+    status: CommentThreadStatus;
+  }): Promise<DocumentCommentThread | null> {
+    const current = await this.documentForCommentThread(input);
+    if (!current || !canWrite(current.role)) {
+      return null;
+    }
+
+    await this.#db
+      .prepare(
+        `UPDATE comment_threads
+        SET status = ?,
+          updated_at = CURRENT_TIMESTAMP,
+          resolved_by_identity_id = CASE WHEN ? = 'resolved' THEN ? ELSE NULL END,
+          resolved_at = CASE WHEN ? = 'resolved' THEN CURRENT_TIMESTAMP ELSE NULL END
+        WHERE id = ?`,
+      )
+      .bind(
+        input.status,
+        input.status,
+        input.identityId,
+        input.status,
+        input.threadId,
+      )
+      .run();
+
+    return this.commentThreadForIdentity(input);
+  }
+
+  async listDocumentVersions(input: {
+    identityId: string;
+    documentId: string;
+  }): Promise<DocumentVersionSummary[] | null> {
+    const current = await this.getDocumentForIdentity(input);
+    if (!current) {
+      return null;
+    }
+
+    const rows = await this.#db
+      .prepare(
+        `SELECT id, document_id, name, description, source_revision, title,
+          content_key, created_by_identity_id, created_at
+        FROM document_versions
+        WHERE document_id = ?
+        ORDER BY created_at DESC`,
+      )
+      .bind(input.documentId)
+      .all<DocumentVersionRow>();
+
+    return (rows.results ?? []).map(documentVersionSummaryFromRow);
+  }
+
+  async createDocumentVersion(input: {
+    identityId: string;
+    documentId: string;
+    name: string;
+    description: string | null;
+  }): Promise<DocumentVersionRecord | null> {
+    const current = await this.getDocumentForIdentity(input);
+    if (!current || !canWrite(current.role)) {
+      return null;
+    }
+
+    const id = crypto.randomUUID();
+    const contentKey = `documents/${input.documentId}/versions/${id}.md`;
+    await this.#bucket.put(contentKey, current.content, {
+      httpMetadata: {
+        contentType: "text/markdown; charset=utf-8",
+      },
+    });
+    await this.#db
+      .prepare(
+        `INSERT INTO document_versions
+          (id, document_id, name, description, source_revision, title,
+            content_key, created_by_identity_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .bind(
+        id,
+        input.documentId,
+        input.name,
+        input.description,
+        current.revision,
+        current.title,
+        contentKey,
+        input.identityId,
+      )
+      .run();
+
+    return this.getDocumentVersion({
+      identityId: input.identityId,
+      documentId: input.documentId,
+      versionId: id,
+    });
+  }
+
+  async getDocumentVersion(input: {
+    identityId: string;
+    documentId: string;
+    versionId: string;
+  }): Promise<DocumentVersionRecord | null> {
+    const current = await this.getDocumentForIdentity(input);
+    if (!current) {
+      return null;
+    }
+
+    const row = await this.documentVersionRow(input);
+    return row ? documentVersionFromRow(this.#bucket, row) : null;
+  }
+
+  async restoreDocumentVersion(input: {
+    identityId: string;
+    documentId: string;
+    versionId: string;
+  }): Promise<DocumentRecord | null> {
+    const current = await this.getDocumentForIdentity(input);
+    if (!current || !canWrite(current.role)) {
+      return null;
+    }
+
+    const version = await this.getDocumentVersion(input);
+    if (!version) {
+      return null;
+    }
+
+    await this.#bucket.put(
+      `documents/${input.documentId}.md`,
+      version.content,
+      {
+        httpMetadata: {
+          contentType: "text/markdown; charset=utf-8",
+        },
+      },
+    );
+    await this.#db.batch([
+      this.#db
+        .prepare(
+          `UPDATE documents
+          SET title = ?, revision = revision + 1, updated_at = CURRENT_TIMESTAMP
+          WHERE id = ?`,
+        )
+        .bind(version.title, input.documentId),
+      this.#db
+        .prepare(
+          `UPDATE groups SET updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+        )
+        .bind(current.groupId),
+    ]);
+
+    return this.getDocumentForIdentity(input);
+  }
+
+  async deleteDocumentVersion(input: {
+    identityId: string;
+    documentId: string;
+    versionId: string;
+  }): Promise<boolean> {
+    const current = await this.getDocumentForIdentity(input);
+    if (!current || !canWrite(current.role)) {
+      return false;
+    }
+
+    const row = await this.documentVersionRow(input);
+    if (!row) {
+      return false;
+    }
+
+    await this.#db
+      .prepare(`DELETE FROM document_versions WHERE id = ?`)
+      .bind(input.versionId)
+      .run();
+    await this.#bucket.delete(row.content_key);
     return true;
   }
 
@@ -1559,6 +1975,69 @@ export class D1Storage implements Storage {
     );
   }
 
+  private async commentThreadForIdentity(input: {
+    identityId: string;
+    threadId: string;
+  }): Promise<DocumentCommentThread | null> {
+    const row = await this.commentThreadRow(input);
+    return row ? this.commentThreadFromRowWithMessages(row) : null;
+  }
+
+  private async commentThreadFromRowWithMessages(row: CommentThreadRow) {
+    const comments = await this.#db
+      .prepare(
+        `SELECT id, thread_id, body, created_by_identity_id, created_at
+        FROM comment_messages
+        WHERE thread_id = ?
+        ORDER BY created_at ASC`,
+      )
+      .bind(row.id)
+      .all<CommentMessageRow>();
+    return commentThreadFromRow(
+      row,
+      (comments.results ?? []).map(commentMessageFromRow),
+    );
+  }
+
+  private async commentThreadRow(input: {
+    identityId: string;
+    threadId: string;
+  }) {
+    return this.#db
+      .prepare(
+        `SELECT ct.id, ct.document_id, ct.status, ct.anchor_type,
+          ct.start_line, ct.start_column, ct.end_line, ct.end_column,
+          ct.quote, ct.base_revision, ct.created_by_identity_id,
+          ct.created_at, ct.updated_at, ct.resolved_by_identity_id,
+          ct.resolved_at, d.revision AS document_revision
+        FROM comment_threads ct
+        INNER JOIN documents d ON d.id = ct.document_id
+        LEFT JOIN group_members gm
+          ON gm.group_id = d.group_id AND gm.identity_id = ?
+        LEFT JOIN document_collaborators dc
+          ON dc.document_id = d.id AND dc.identity_id = ?
+        WHERE ct.id = ?
+          AND (gm.identity_id IS NOT NULL OR dc.identity_id IS NOT NULL)`,
+      )
+      .bind(input.identityId, input.identityId, input.threadId)
+      .first<CommentThreadRow>();
+  }
+
+  private async documentForCommentThread(input: {
+    identityId: string;
+    threadId: string;
+  }) {
+    const row = await this.commentThreadRow(input);
+    if (!row) {
+      return null;
+    }
+
+    return this.getDocumentForIdentity({
+      identityId: input.identityId,
+      documentId: row.document_id,
+    });
+  }
+
   private async documentRowForIdentity(input: {
     identityId: string;
     documentId: string;
@@ -1578,6 +2057,34 @@ export class D1Storage implements Storage {
       )
       .bind(input.identityId, input.identityId, input.documentId)
       .first<DocumentRow>();
+  }
+
+  private async documentVersionRow(input: {
+    documentId: string;
+    versionId: string;
+  }) {
+    return this.#db
+      .prepare(
+        `SELECT id, document_id, name, description, source_revision, title,
+          content_key, created_by_identity_id, created_at
+        FROM document_versions
+        WHERE document_id = ? AND id = ?`,
+      )
+      .bind(input.documentId, input.versionId)
+      .first<DocumentVersionRow>();
+  }
+
+  private async deleteDocumentVersionObjects(documentId: string) {
+    const versions = await this.#db
+      .prepare(
+        `SELECT content_key FROM document_versions WHERE document_id = ?`,
+      )
+      .bind(documentId)
+      .all<{ content_key: string }>();
+
+    for (const version of versions.results ?? []) {
+      await this.#bucket.delete(version.content_key);
+    }
   }
 
   private async nextDocumentPosition(groupId: string) {

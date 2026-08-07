@@ -90,6 +90,71 @@ test("D1/R2 document writes enforce revision preconditions without changing stor
   });
 });
 
+test("D1/R2 comment rows cascade and checkpoint objects are cleaned up", async () => {
+  await withRuntimeHarness(async ({ app, env, proxy }) => {
+    const group = await createGroup(app, env);
+    const document = await createDocument(app, env, group.id, {
+      title: "Checkpointed runtime document",
+      content: "checkpoint source",
+    });
+    await json(
+      await app.request(
+        `https://example.downwrite.test/api/v1/documents/${document.id}/comment-threads`,
+        {
+          method: "POST",
+          headers: authHeaders("owner-token"),
+          body: JSON.stringify({
+            anchor: { type: "document" },
+            body: "Runtime comment.",
+          }),
+        },
+        env,
+      ),
+    );
+    const version = await json(
+      await app.request(
+        `https://example.downwrite.test/api/v1/documents/${document.id}/versions`,
+        {
+          method: "POST",
+          headers: authHeaders("owner-token"),
+          body: JSON.stringify({
+            name: "Runtime checkpoint",
+            baseRevision: document.revision,
+          }),
+        },
+        env,
+      ),
+    );
+    const versionRow = await proxy.env.DB.prepare(
+      `SELECT content_key FROM document_versions WHERE id = ?`,
+    )
+      .bind(version.version.id)
+      .first();
+    const versionObject = await proxy.env.CONTENT.get(versionRow.content_key);
+
+    const deleted = await json(
+      await app.request(
+        `https://example.downwrite.test/api/v1/documents/${document.id}`,
+        {
+          method: "DELETE",
+          headers: authHeaders("owner-token"),
+        },
+        env,
+      ),
+    );
+    const deletedVersionObject = await proxy.env.CONTENT.get(
+      versionRow.content_key,
+    );
+
+    assert.equal(await versionObject.text(), "checkpoint source");
+    assert.equal(deleted.ok, true);
+    assert.equal(await countRows(proxy.env.DB, "comment_threads"), 0);
+    assert.equal(await countRows(proxy.env.DB, "comment_messages"), 0);
+    assert.equal(await countRows(proxy.env.DB, "document_versions"), 0);
+    assert.equal(deletedVersionObject, null);
+  });
+});
+
 test("D1/R2 workspace and document lists preserve cursor pagination", async () => {
   await withRuntimeHarness(async ({ app, env }) => {
     const firstGroup = await createGroup(app, env, { name: "Runtime A" });

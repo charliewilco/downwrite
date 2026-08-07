@@ -10,6 +10,9 @@ until implemented in the Worker.
 - Workspace lifecycle: list, focused detail, create, update settings, delete.
 - Documents: list within a workspace, create in a workspace, read, update
   title/content, move between workspaces, set workspace order position, delete.
+- Comments: list/create document comment threads, add immutable replies, resolve
+  and reopen threads, with document-level and selected Markdown text anchors.
+- Versions: list, create, read, restore, and delete manual document checkpoints.
 - Sharing: read share state, direct collaborator add/remove, invitation
   preview/create/accept/revoke, public-link create/detail/update, anonymous
   public-link read.
@@ -34,7 +37,8 @@ should start by checking the served OpenAPI paths before adding routes.
 ## Longer-Term Document API
 
 - Content-focused update endpoint separate from metadata.
-- Revision list/read endpoints for historical Markdown recovery.
+- Automatic revision-history APIs remain out of scope. Manual checkpoint APIs
+  are implemented under document `/versions`.
 - Import Markdown files into a workspace.
 - Export one document or an entire workspace as Markdown/archive output.
 - `baseRevision` is required for document update/move/reorder writes. Missing

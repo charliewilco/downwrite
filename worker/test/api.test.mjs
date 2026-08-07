@@ -961,6 +961,300 @@ test("document writes require explicit revision preconditions", async () => {
   assert.equal(currentBody.document.revision, document.revision);
 });
 
+test("writers can create, review, resolve, and reopen document comment threads", async () => {
+  const { app, env } = createHarness();
+  const group = await createGroup(app, env);
+  const document = await createDocument(app, env, group.id);
+
+  const created = await app.request(
+    `/api/v1/documents/${document.id}/comment-threads`,
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({
+        anchor: { type: "document" },
+        body: "Please review this before publishing.",
+      }),
+    },
+    env,
+  );
+  const createdBody = await created.json();
+  const replied = await app.request(
+    `/api/v1/comment-threads/${createdBody.commentThread.id}/comments`,
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ body: "Reviewed." }),
+    },
+    env,
+  );
+  const resolved = await app.request(
+    `/api/v1/comment-threads/${createdBody.commentThread.id}`,
+    {
+      method: "PATCH",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ status: "resolved" }),
+    },
+    env,
+  );
+  const reopened = await app.request(
+    `/api/v1/comment-threads/${createdBody.commentThread.id}`,
+    {
+      method: "PATCH",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ status: "open" }),
+    },
+    env,
+  );
+  const list = await app.request(
+    `/api/v1/documents/${document.id}/comment-threads?status=open&anchor=document`,
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+
+  assert.equal(created.status, 201);
+  assert.equal(createdBody.commentThread.anchor.type, "document");
+  assert.equal(createdBody.commentThread.outdated, false);
+  assert.equal(
+    createdBody.commentThread.comments[0].body,
+    "Please review this before publishing.",
+  );
+  assert.equal(replied.status, 201);
+  assert.equal((await replied.json()).commentThread.comments.length, 2);
+  assert.equal(resolved.status, 200);
+  assert.equal((await resolved.json()).commentThread.status, "resolved");
+  assert.equal(reopened.status, 200);
+  assert.equal((await reopened.json()).commentThread.resolvedAt, null);
+  assert.equal(list.status, 200);
+  assert.equal((await list.json()).commentThreads.length, 1);
+});
+
+test("text comment anchors validate quote and become outdated after edits", async () => {
+  const { app, env } = createHarness();
+  const group = await createGroup(app, env);
+  const document = await createDocument(app, env, group.id, {
+    title: "Draft",
+    content: "alpha beta\nsecond line",
+  });
+
+  const created = await app.request(
+    `/api/v1/documents/${document.id}/comment-threads`,
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({
+        anchor: {
+          type: "text",
+          startLine: 1,
+          startColumn: 7,
+          endLine: 1,
+          endColumn: 11,
+          quote: "beta",
+          baseRevision: document.revision,
+        },
+        body: "This word needs a citation.",
+      }),
+    },
+    env,
+  );
+  const mismatch = await app.request(
+    `/api/v1/documents/${document.id}/comment-threads`,
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({
+        anchor: {
+          type: "text",
+          startLine: 1,
+          startColumn: 7,
+          endLine: 1,
+          endColumn: 11,
+          quote: "wrong",
+          baseRevision: document.revision,
+        },
+        body: "Bad anchor.",
+      }),
+    },
+    env,
+  );
+  const invalidRange = await app.request(
+    `/api/v1/documents/${document.id}/comment-threads`,
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({
+        anchor: {
+          type: "text",
+          startLine: 2,
+          startColumn: 1,
+          endLine: 1,
+          endColumn: 1,
+          quote: "bad",
+          baseRevision: document.revision,
+        },
+        body: "Bad range.",
+      }),
+    },
+    env,
+  );
+  const updated = await app.request(
+    `/api/v1/documents/${document.id}`,
+    {
+      method: "PATCH",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({
+        content: "alpha beta\nsecond line\nthird line",
+        baseRevision: document.revision,
+      }),
+    },
+    env,
+  );
+  const list = await app.request(
+    `/api/v1/documents/${document.id}/comment-threads?anchor=text`,
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+
+  assert.equal(created.status, 201);
+  assert.equal((await created.json()).commentThread.anchor.quote, "beta");
+  assert.equal(mismatch.status, 400);
+  assert.equal((await mismatch.json()).code, "bad_request");
+  assert.equal(invalidRange.status, 400);
+  assert.equal(updated.status, 200);
+  assert.equal((await list.json()).commentThreads[0].outdated, true);
+});
+
+test("comment and version routes enforce OAuth scopes", async () => {
+  const { app, env, storage } = createHarness();
+  const group = await createGroup(app, env);
+  const document = await createDocument(app, env, group.id);
+  const cookie = await createSessionCookie(storage, "dev-owner");
+  const token = await oauthToken(app, env, cookie, {
+    scope: "documents:read documents:write",
+  });
+
+  const comments = await app.request(
+    `https://example.downwrite.test/api/v1/documents/${document.id}/comment-threads`,
+    { headers: authHeaders(token.access_token) },
+    env,
+  );
+  const versions = await app.request(
+    `https://example.downwrite.test/api/v1/documents/${document.id}/versions`,
+    { headers: authHeaders(token.access_token) },
+    env,
+  );
+
+  assert.equal(comments.status, 403);
+  assert.equal((await comments.json()).code, "forbidden");
+  assert.equal(versions.status, 403);
+});
+
+test("manual document checkpoints can be created, read, restored, and deleted", async () => {
+  const { app, env } = createHarness();
+  const group = await createGroup(app, env);
+  const document = await createDocument(app, env, group.id, {
+    title: "Original title",
+    content: "original body",
+  });
+
+  const missingPrecondition = await app.request(
+    `/api/v1/documents/${document.id}/versions`,
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ name: "First checkpoint" }),
+    },
+    env,
+  );
+  const created = await app.request(
+    `/api/v1/documents/${document.id}/versions`,
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({
+        name: "First checkpoint",
+        description: "Before revisions.",
+        baseRevision: document.revision,
+      }),
+    },
+    env,
+  );
+  const version = (await created.json()).version;
+  const edited = await app.request(
+    `/api/v1/documents/${document.id}`,
+    {
+      method: "PATCH",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({
+        title: "Edited title",
+        content: "edited body",
+        baseRevision: document.revision,
+      }),
+    },
+    env,
+  );
+  const editedDocument = (await edited.json()).document;
+  const staleRestore = await app.request(
+    `/api/v1/documents/${document.id}/versions/${version.id}/restore`,
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ baseRevision: document.revision }),
+    },
+    env,
+  );
+  const restore = await app.request(
+    `/api/v1/documents/${document.id}/versions/${version.id}/restore`,
+    {
+      method: "POST",
+      headers: authHeaders("owner-token"),
+      body: JSON.stringify({ baseRevision: editedDocument.revision }),
+    },
+    env,
+  );
+  const restored = (await restore.json()).document;
+  const read = await app.request(
+    `/api/v1/documents/${document.id}/versions/${version.id}`,
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+  const list = await app.request(
+    `/api/v1/documents/${document.id}/versions`,
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+  const deleted = await app.request(
+    `/api/v1/documents/${document.id}/versions/${version.id}`,
+    {
+      method: "DELETE",
+      headers: authHeaders("owner-token"),
+    },
+    env,
+  );
+  const readDeleted = await app.request(
+    `/api/v1/documents/${document.id}/versions/${version.id}`,
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+
+  assert.equal(missingPrecondition.status, 428);
+  assert.equal(created.status, 201);
+  assert.equal(version.sourceRevision, document.revision);
+  assert.equal(version.title, "Original title");
+  assert.equal(version.content, "original body");
+  assert.equal(edited.status, 200);
+  assert.equal(staleRestore.status, 409);
+  assert.equal(restore.status, 200);
+  assert.equal(restored.title, "Original title");
+  assert.equal(restored.content, "original body");
+  assert.equal(restored.revision, editedDocument.revision + 1);
+  assert.equal(read.status, 200);
+  assert.equal((await read.json()).version.content, "original body");
+  assert.equal((await list.json()).versions[0].id, version.id);
+  assert.equal(deleted.status, 200);
+  assert.equal(readDeleted.status, 404);
+});
+
 test("API errors use the documented envelope across common edge statuses", async () => {
   const { app, env } = createHarness();
   const group = await createGroup(app, env);
@@ -1409,6 +1703,8 @@ test("public links allow anonymous read but not anonymous edit", async () => {
   assert.equal(publicResponse.status, 200);
   assert.equal(publicBody.document.title, "Launch notes");
   assert.equal(publicBody.document.content, "# Ship it");
+  assert.equal(Object.hasOwn(publicBody.document, "commentThreads"), false);
+  assert.equal(Object.hasOwn(publicBody.document, "versions"), false);
 
   const editResponse = await app.request(
     `/api/v1/documents/${document.id}`,

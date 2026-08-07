@@ -1,6 +1,9 @@
 export class MemoryStorage {
   #groupCounter = 0;
   #documentCounter = 0;
+  #commentThreadCounter = 0;
+  #commentMessageCounter = 0;
+  #documentVersionCounter = 0;
   #publicLinkCounter = 0;
   #invitationCounter = 0;
   #challengeCounter = 0;
@@ -19,6 +22,9 @@ export class MemoryStorage {
   #groups = new Map();
   #groupMembers = new Map();
   #documents = new Map();
+  #commentThreads = new Map();
+  #commentMessages = new Map();
+  #documentVersions = new Map();
   #documentCollaborators = new Map();
   #invitations = new Map();
   #publicLinksByToken = new Map();
@@ -499,7 +505,7 @@ export class MemoryStorage {
     this.#groups.delete(groupId);
     for (const document of this.#documents.values()) {
       if (document.groupId === groupId) {
-        this.#documents.delete(document.id);
+        this.#deleteDocumentRelatedRecords(document.id);
       }
     }
     return true;
@@ -639,8 +645,198 @@ export class MemoryStorage {
 
     this.#documents.delete(documentId);
     this.#documentCollaborators.delete(key(documentId, identityId));
+    this.#deleteDocumentRelatedRecords(documentId);
     this.#touchGroup(current.groupId);
 
+    return true;
+  }
+
+  async listCommentThreads({ identityId, documentId, status, anchor }) {
+    const current = await this.getDocumentForIdentity({
+      identityId,
+      documentId,
+    });
+    if (!current) {
+      return null;
+    }
+
+    return [...this.#commentThreads.values()]
+      .filter((thread) => thread.documentId === documentId)
+      .filter((thread) => !status || thread.status === status)
+      .filter((thread) => !anchor || thread.anchor.type === anchor)
+      .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt))
+      .map((thread) => this.#threadWithComments(thread));
+  }
+
+  async createCommentThread({ identityId, documentId, anchor, body }) {
+    const current = await this.getDocumentForIdentity({
+      identityId,
+      documentId,
+    });
+    if (!current || !canWrite(current.role)) {
+      return null;
+    }
+
+    const timestamp = now();
+    const thread = {
+      id: `comment-thread-${++this.#commentThreadCounter}`,
+      documentId,
+      status: "open",
+      anchor,
+      createdByIdentityId: identityId,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+      resolvedByIdentityId: null,
+      resolvedAt: null,
+    };
+    const comment = {
+      id: `comment-message-${++this.#commentMessageCounter}`,
+      threadId: thread.id,
+      body,
+      createdByIdentityId: identityId,
+      createdAt: timestamp,
+    };
+
+    this.#commentThreads.set(thread.id, thread);
+    this.#commentMessages.set(comment.id, comment);
+    return this.#threadWithComments(thread);
+  }
+
+  async addCommentMessage({ identityId, threadId, body }) {
+    const current = await this.#documentForCommentThread(identityId, threadId);
+    if (!current || !canWrite(current.role)) {
+      return null;
+    }
+
+    const thread = this.#commentThreads.get(threadId);
+    const timestamp = now();
+    const comment = {
+      id: `comment-message-${++this.#commentMessageCounter}`,
+      threadId,
+      body,
+      createdByIdentityId: identityId,
+      createdAt: timestamp,
+    };
+    this.#commentMessages.set(comment.id, comment);
+    this.#commentThreads.set(threadId, {
+      ...thread,
+      updatedAt: timestamp,
+    });
+    return this.#threadWithComments(this.#commentThreads.get(threadId));
+  }
+
+  async updateCommentThreadStatus({ identityId, threadId, status }) {
+    const current = await this.#documentForCommentThread(identityId, threadId);
+    if (!current || !canWrite(current.role)) {
+      return null;
+    }
+
+    const thread = this.#commentThreads.get(threadId);
+    const timestamp = now();
+    const next = {
+      ...thread,
+      status,
+      updatedAt: timestamp,
+      resolvedByIdentityId: status === "resolved" ? identityId : null,
+      resolvedAt: status === "resolved" ? timestamp : null,
+    };
+    this.#commentThreads.set(threadId, next);
+    return this.#threadWithComments(next);
+  }
+
+  async listDocumentVersions({ identityId, documentId }) {
+    const current = await this.getDocumentForIdentity({
+      identityId,
+      documentId,
+    });
+    if (!current) {
+      return null;
+    }
+
+    return [...this.#documentVersions.values()]
+      .filter((version) => version.documentId === documentId)
+      .sort((left, right) => right.createdAt.localeCompare(left.createdAt))
+      .map(stripVersionContent);
+  }
+
+  async createDocumentVersion({ identityId, documentId, name, description }) {
+    const current = await this.getDocumentForIdentity({
+      identityId,
+      documentId,
+    });
+    if (!current || !canWrite(current.role)) {
+      return null;
+    }
+
+    const version = {
+      id: `document-version-${++this.#documentVersionCounter}`,
+      documentId,
+      name,
+      description,
+      sourceRevision: current.revision,
+      title: current.title,
+      content: current.content,
+      createdByIdentityId: identityId,
+      createdAt: now(),
+    };
+    this.#documentVersions.set(version.id, version);
+    return version;
+  }
+
+  async getDocumentVersion({ identityId, documentId, versionId }) {
+    const current = await this.getDocumentForIdentity({
+      identityId,
+      documentId,
+    });
+    if (!current) {
+      return null;
+    }
+
+    const version = this.#documentVersions.get(versionId);
+    return version?.documentId === documentId ? version : null;
+  }
+
+  async restoreDocumentVersion({ identityId, documentId, versionId }) {
+    const current = await this.getDocumentForIdentity({
+      identityId,
+      documentId,
+    });
+    if (!current || !canWrite(current.role)) {
+      return null;
+    }
+
+    const version = this.#documentVersions.get(versionId);
+    if (!version || version.documentId !== documentId) {
+      return null;
+    }
+
+    const next = {
+      ...current,
+      title: version.title,
+      content: version.content,
+      revision: current.revision + 1,
+      updatedAt: now(),
+    };
+    this.#documents.set(documentId, stripRole(next));
+    this.#touchGroup(current.groupId);
+    return next;
+  }
+
+  async deleteDocumentVersion({ identityId, documentId, versionId }) {
+    const current = await this.getDocumentForIdentity({
+      identityId,
+      documentId,
+    });
+    if (!current || !canWrite(current.role)) {
+      return false;
+    }
+
+    const version = this.#documentVersions.get(versionId);
+    if (!version || version.documentId !== documentId) {
+      return false;
+    }
+
+    this.#documentVersions.delete(versionId);
     return true;
   }
 
@@ -961,6 +1157,56 @@ export class MemoryStorage {
     }
   }
 
+  async #documentForCommentThread(identityId, threadId) {
+    const thread = this.#commentThreads.get(threadId);
+    if (!thread) {
+      return null;
+    }
+
+    return this.getDocumentForIdentity({
+      identityId,
+      documentId: thread.documentId,
+    });
+  }
+
+  #threadWithComments(thread) {
+    const document = this.#documents.get(thread.documentId);
+    return {
+      ...thread,
+      outdated:
+        thread.anchor.type === "text" &&
+        document &&
+        document.revision > thread.anchor.baseRevision,
+      comments: [...this.#commentMessages.values()]
+        .filter((comment) => comment.threadId === thread.id)
+        .sort((left, right) => left.createdAt.localeCompare(right.createdAt)),
+    };
+  }
+
+  #deleteDocumentRelatedRecords(documentId) {
+    this.#documents.delete(documentId);
+    for (const collaboratorKey of this.#documentCollaborators.keys()) {
+      if (collaboratorKey.startsWith(`${documentId}:`)) {
+        this.#documentCollaborators.delete(collaboratorKey);
+      }
+    }
+    for (const [threadId, thread] of this.#commentThreads.entries()) {
+      if (thread.documentId === documentId) {
+        this.#commentThreads.delete(threadId);
+        for (const [commentId, comment] of this.#commentMessages.entries()) {
+          if (comment.threadId === threadId) {
+            this.#commentMessages.delete(commentId);
+          }
+        }
+      }
+    }
+    for (const [versionId, version] of this.#documentVersions.entries()) {
+      if (version.documentId === documentId) {
+        this.#documentVersions.delete(versionId);
+      }
+    }
+  }
+
   #documentOwnerCount(documentId) {
     return [...this.#documentCollaborators.entries()].filter(
       ([collaboratorKey, role]) =>
@@ -993,6 +1239,11 @@ function stripRole(document) {
 function stripTokenHash(session) {
   const { tokenHash, ...record } = session;
   return record;
+}
+
+function stripVersionContent(version) {
+  const { content, ...summary } = version;
+  return summary;
 }
 
 function compareDocuments(left, right) {

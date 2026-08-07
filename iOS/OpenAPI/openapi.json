@@ -32,6 +32,12 @@
       "name": "Documents"
     },
     {
+      "name": "Comments"
+    },
+    {
+      "name": "Versions"
+    },
+    {
       "name": "Sharing"
     },
     {
@@ -1540,6 +1546,547 @@
         }
       }
     },
+    "/api/v1/documents/{documentId}/comment-threads": {
+      "get": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "List document comment threads.",
+        "description": "Returns document-level review notes and selected-text snippet comment threads. Text anchors include outdated=true when the live document revision has advanced beyond the anchor baseRevision.",
+        "operationId": "listCommentThreads",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "resolved",
+                "all"
+              ],
+              "default": "all"
+            }
+          },
+          {
+            "name": "anchor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "document",
+                "text",
+                "all"
+              ],
+              "default": "all"
+            }
+          }
+        ],
+        "x-downwrite-scope": "comments:read",
+        "responses": {
+          "200": {
+            "description": "Document comment threads.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentThreadList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Create a document comment thread.",
+        "description": "Creates either a whole-document review note or a selected Markdown text thread. Text anchors use 1-based line/column positions and an exclusive end column; quote must match the current document content at baseRevision.",
+        "operationId": "createCommentThread",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          }
+        ],
+        "x-downwrite-scope": "comments:write",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentThreadCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created comment thread.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentThreadEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "description": "Document revision conflict.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": "Document revision conflict.",
+                      "code": "conflict",
+                      "status": 409
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "$ref": "#/components/responses/PreconditionRequired"
+          }
+        }
+      }
+    },
+    "/api/v1/comment-threads/{threadId}/comments": {
+      "post": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Add an immutable reply to a comment thread.",
+        "operationId": "addCommentMessage",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/commentThreadId"
+          }
+        ],
+        "x-downwrite-scope": "comments:write",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentMessageCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Updated comment thread.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentThreadEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/comment-threads/{threadId}": {
+      "patch": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Resolve or reopen a comment thread.",
+        "operationId": "updateCommentThread",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/commentThreadId"
+          }
+        ],
+        "x-downwrite-scope": "comments:write",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentThreadUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated comment thread.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentThreadEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/documents/{documentId}/versions": {
+      "get": {
+        "tags": [
+          "Versions"
+        ],
+        "summary": "List manual document checkpoints.",
+        "operationId": "listDocumentVersions",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          }
+        ],
+        "x-downwrite-scope": "versions:read",
+        "responses": {
+          "200": {
+            "description": "Document checkpoints.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentVersionList"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Versions"
+        ],
+        "summary": "Create a manual document checkpoint.",
+        "description": "Stores an immutable title/content snapshot without incrementing the live document revision. Requires baseRevision equal to the current document revision.",
+        "operationId": "createDocumentVersion",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          }
+        ],
+        "x-downwrite-scope": "versions:write",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentVersionCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created checkpoint.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentVersionEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "description": "Document revision conflict.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": "Document revision conflict.",
+                      "code": "conflict",
+                      "status": 409
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "$ref": "#/components/responses/PreconditionRequired"
+          }
+        }
+      }
+    },
+    "/api/v1/documents/{documentId}/versions/{versionId}": {
+      "get": {
+        "tags": [
+          "Versions"
+        ],
+        "summary": "Read one manual document checkpoint.",
+        "operationId": "getDocumentVersion",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          },
+          {
+            "$ref": "#/components/parameters/versionId"
+          }
+        ],
+        "x-downwrite-scope": "versions:read",
+        "responses": {
+          "200": {
+            "description": "Document checkpoint.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentVersionEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Versions"
+        ],
+        "summary": "Delete one manual document checkpoint.",
+        "operationId": "deleteDocumentVersion",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          },
+          {
+            "$ref": "#/components/parameters/versionId"
+          }
+        ],
+        "x-downwrite-scope": "versions:write",
+        "responses": {
+          "200": {
+            "description": "Document checkpoint deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ok"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/documents/{documentId}/versions/{versionId}/restore": {
+      "post": {
+        "tags": [
+          "Versions"
+        ],
+        "summary": "Restore a manual document checkpoint.",
+        "description": "Writes the checkpoint title/content into the live document, increments the live document revision, and preserves the checkpoint record.",
+        "operationId": "restoreDocumentVersion",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "developmentBearer": []
+          },
+          {
+            "oauthPkce": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/documentId"
+          },
+          {
+            "$ref": "#/components/parameters/versionId"
+          }
+        ],
+        "x-downwrite-scope": "versions:write",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentVersionRestore"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Restored document.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "description": "Document revision conflict.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": "Document revision conflict.",
+                      "code": "conflict",
+                      "status": 409
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "$ref": "#/components/responses/PreconditionRequired"
+          }
+        }
+      }
+    },
     "/api/v1/documents/{documentId}/share": {
       "get": {
         "tags": [
@@ -2968,6 +3515,405 @@
           "document"
         ]
       },
+      "CommentAnchorCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "document",
+              "text"
+            ]
+          },
+          "startLine": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "startColumn": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "endLine": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "endColumn": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "quote": {
+            "type": "string"
+          },
+          "baseRevision": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "CommentAnchor": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "document",
+              "text"
+            ]
+          },
+          "startLine": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "startColumn": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "endLine": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "endColumn": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "quote": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "baseRevision": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          }
+        },
+        "required": [
+          "type",
+          "startLine",
+          "startColumn",
+          "endLine",
+          "endColumn",
+          "quote",
+          "baseRevision"
+        ]
+      },
+      "CommentMessageCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "body": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "body"
+        ]
+      },
+      "CommentMessage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "threadId": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "createdByIdentityId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "threadId",
+          "body",
+          "createdByIdentityId",
+          "createdAt"
+        ]
+      },
+      "CommentThreadCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "anchor": {
+            "$ref": "#/components/schemas/CommentAnchorCreate"
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "anchor",
+          "body"
+        ]
+      },
+      "CommentThreadUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "resolved"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "CommentThread": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "documentId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "resolved"
+            ]
+          },
+          "anchor": {
+            "$ref": "#/components/schemas/CommentAnchor"
+          },
+          "outdated": {
+            "type": "boolean"
+          },
+          "createdByIdentityId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "resolvedByIdentityId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "resolvedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommentMessage"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "documentId",
+          "status",
+          "anchor",
+          "outdated",
+          "createdByIdentityId",
+          "createdAt",
+          "updatedAt",
+          "resolvedByIdentityId",
+          "resolvedAt",
+          "comments"
+        ]
+      },
+      "CommentThreadEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "commentThread": {
+            "$ref": "#/components/schemas/CommentThread"
+          }
+        },
+        "required": [
+          "commentThread"
+        ]
+      },
+      "CommentThreadList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "commentThreads": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommentThread"
+            }
+          }
+        },
+        "required": [
+          "commentThreads"
+        ]
+      },
+      "DocumentVersionCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "baseRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Revision read by the client. Creating a checkpoint does not increment the live document revision."
+          }
+        },
+        "required": [
+          "name",
+          "baseRevision"
+        ]
+      },
+      "DocumentVersionRestore": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "baseRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Current live document revision required before restoring a checkpoint."
+          }
+        },
+        "required": [
+          "baseRevision"
+        ]
+      },
+      "DocumentVersionSummary": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "documentId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sourceRevision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "title": {
+            "type": "string"
+          },
+          "createdByIdentityId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "documentId",
+          "name",
+          "description",
+          "sourceRevision",
+          "title",
+          "createdByIdentityId",
+          "createdAt"
+        ]
+      },
+      "DocumentVersionRecord": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DocumentVersionSummary"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "content": {
+                "type": "string",
+                "mediaType": "text/markdown",
+                "description": "Checkpoint Markdown source."
+              }
+            },
+            "required": [
+              "content"
+            ]
+          }
+        ]
+      },
+      "DocumentVersionEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "version": {
+            "$ref": "#/components/schemas/DocumentVersionRecord"
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "DocumentVersionList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "versions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentVersionSummary"
+            }
+          }
+        },
+        "required": [
+          "versions"
+        ]
+      },
       "CollaboratorAdd": {
         "type": "object",
         "additionalProperties": false,
@@ -3393,6 +4339,10 @@
               "workspaces:write": "Create and manage authorized workspaces.",
               "documents:read": "Read authorized Markdown documents.",
               "documents:write": "Create and update authorized Markdown documents.",
+              "comments:read": "Read authorized document comment threads.",
+              "comments:write": "Create and resolve authorized document comment threads.",
+              "versions:read": "Read authorized manual document checkpoints.",
+              "versions:write": "Create, restore, and delete manual document checkpoints.",
               "sharing:write": "Manage collaborators, invitations, and public links.",
               "mcp:documents": "Use MCP document tools limited to the authorized instance data."
             }
@@ -3554,6 +4504,24 @@
           "type": "string"
         }
       },
+      "commentThreadId": {
+        "name": "threadId",
+        "in": "path",
+        "required": true,
+        "description": "Comment-thread identifier.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "versionId": {
+        "name": "versionId",
+        "in": "path",
+        "required": true,
+        "description": "Document checkpoint identifier.",
+        "schema": {
+          "type": "string"
+        }
+      },
       "identityId": {
         "name": "identityId",
         "in": "path",
@@ -3671,6 +4639,10 @@
         "workspaces:write",
         "documents:read",
         "documents:write",
+        "comments:read",
+        "comments:write",
+        "versions:read",
+        "versions:write",
         "sharing:write",
         "mcp:documents"
       ]
@@ -3695,6 +4667,19 @@
         "PATCH /api/v1/documents/{documentId}/move",
         "PATCH /api/v1/documents/{documentId}/position",
         "DELETE /api/v1/documents/{documentId}"
+      ],
+      "comments": [
+        "GET /api/v1/documents/{documentId}/comment-threads",
+        "POST /api/v1/documents/{documentId}/comment-threads",
+        "POST /api/v1/comment-threads/{threadId}/comments",
+        "PATCH /api/v1/comment-threads/{threadId}"
+      ],
+      "versions": [
+        "GET /api/v1/documents/{documentId}/versions",
+        "POST /api/v1/documents/{documentId}/versions",
+        "GET /api/v1/documents/{documentId}/versions/{versionId}",
+        "POST /api/v1/documents/{documentId}/versions/{versionId}/restore",
+        "DELETE /api/v1/documents/{documentId}/versions/{versionId}"
       ],
       "sharing": [
         "GET /api/v1/documents/{documentId}/share",
@@ -3738,8 +4723,7 @@
       "blocksNextInteractiveScreens": [],
       "documentsAndContent": [
         "PUT /api/v1/documents/{documentId}/content: content-focused update separate from title/metadata.",
-        "GET /api/v1/documents/{documentId}/revisions: list saved content revisions.",
-        "GET /api/v1/documents/{documentId}/revisions/{revisionId}: read a historical Markdown revision.",
+        "Automatic revision-history APIs remain out of scope; manual checkpoint APIs are implemented under /versions.",
         "POST /api/v1/groups/{groupId}/imports: import Markdown files into a workspace.",
         "GET /api/v1/groups/{groupId}/export: export workspace Markdown as an archive.",
         "GET /api/v1/documents/{documentId}/export: export one Markdown document."

@@ -36,6 +36,10 @@ const OAUTH_SCOPES = {
   "workspaces:write": "Create and manage authorized workspaces.",
   "documents:read": "Read authorized Markdown documents.",
   "documents:write": "Create and update authorized Markdown documents.",
+  "comments:read": "Read authorized document comment threads.",
+  "comments:write": "Create and resolve authorized document comment threads.",
+  "versions:read": "Read authorized manual document checkpoints.",
+  "versions:write": "Create, restore, and delete manual document checkpoints.",
   "sharing:write": "Manage collaborators, invitations, and public links.",
   "mcp:documents":
     "Use MCP document tools limited to the authorized instance data.",
@@ -68,6 +72,8 @@ export function createOpenApiDocument(requestUrl: string): OpenApiDocument {
       { name: "External auth" },
       { name: "Workspaces" },
       { name: "Documents" },
+      { name: "Comments" },
+      { name: "Versions" },
       { name: "Sharing" },
       { name: "Public links" },
       { name: "Contract" },
@@ -125,6 +131,14 @@ export function createOpenApiDocument(requestUrl: string): OpenApiDocument {
       parameters: {
         groupId: pathParameter("groupId", "Workspace/group identifier."),
         documentId: pathParameter("documentId", "Document identifier."),
+        commentThreadId: pathParameter(
+          "threadId",
+          "Comment-thread identifier.",
+        ),
+        versionId: pathParameter(
+          "versionId",
+          "Document checkpoint identifier.",
+        ),
         identityId: pathParameter(
           "identityId",
           "Instance-local identity identifier.",
@@ -216,6 +230,19 @@ function apiRoadmap() {
         "PATCH /api/v1/documents/{documentId}/position",
         "DELETE /api/v1/documents/{documentId}",
       ],
+      comments: [
+        "GET /api/v1/documents/{documentId}/comment-threads",
+        "POST /api/v1/documents/{documentId}/comment-threads",
+        "POST /api/v1/comment-threads/{threadId}/comments",
+        "PATCH /api/v1/comment-threads/{threadId}",
+      ],
+      versions: [
+        "GET /api/v1/documents/{documentId}/versions",
+        "POST /api/v1/documents/{documentId}/versions",
+        "GET /api/v1/documents/{documentId}/versions/{versionId}",
+        "POST /api/v1/documents/{documentId}/versions/{versionId}/restore",
+        "DELETE /api/v1/documents/{documentId}/versions/{versionId}",
+      ],
       sharing: [
         "GET /api/v1/documents/{documentId}/share",
         "POST /api/v1/documents/{documentId}/collaborators",
@@ -255,8 +282,7 @@ function apiRoadmap() {
       blocksNextInteractiveScreens: [],
       documentsAndContent: [
         "PUT /api/v1/documents/{documentId}/content: content-focused update separate from title/metadata.",
-        "GET /api/v1/documents/{documentId}/revisions: list saved content revisions.",
-        "GET /api/v1/documents/{documentId}/revisions/{revisionId}: read a historical Markdown revision.",
+        "Automatic revision-history APIs remain out of scope; manual checkpoint APIs are implemented under /versions.",
         "POST /api/v1/groups/{groupId}/imports: import Markdown files into a workspace.",
         "GET /api/v1/groups/{groupId}/export: export workspace Markdown as an archive.",
         "GET /api/v1/documents/{documentId}/export: export one Markdown document.",
@@ -905,6 +931,186 @@ function paths(origin: string): OpenApiDocument["paths"] {
           "200": jsonResponse("Reordered document.", "DocumentEnvelope"),
           "400": refResponse("BadRequest"),
           "403": refResponse("Forbidden"),
+          "409": errorResponse(409, "Document revision conflict."),
+          "428": refResponse("PreconditionRequired"),
+        },
+      }),
+    },
+    "/api/v1/documents/{documentId}/comment-threads": {
+      get: operation({
+        tags: ["Comments"],
+        summary: "List document comment threads.",
+        description:
+          "Returns document-level review notes and selected-text snippet comment threads. Text anchors include outdated=true when the live document revision has advanced beyond the anchor baseRevision.",
+        operationId: "listCommentThreads",
+        security: authenticatedSecurity(),
+        parameters: [
+          refParameter("documentId"),
+          {
+            name: "status",
+            in: "query",
+            required: false,
+            schema: {
+              type: "string",
+              enum: ["open", "resolved", "all"],
+              default: "all",
+            },
+          },
+          {
+            name: "anchor",
+            in: "query",
+            required: false,
+            schema: {
+              type: "string",
+              enum: ["document", "text", "all"],
+              default: "all",
+            },
+          },
+        ],
+        "x-downwrite-scope": "comments:read",
+        responses: {
+          "200": jsonResponse("Document comment threads.", "CommentThreadList"),
+          "400": refResponse("BadRequest"),
+          "404": refResponse("NotFound"),
+        },
+      }),
+      post: operation({
+        tags: ["Comments"],
+        summary: "Create a document comment thread.",
+        description:
+          "Creates either a whole-document review note or a selected Markdown text thread. Text anchors use 1-based line/column positions and an exclusive end column; quote must match the current document content at baseRevision.",
+        operationId: "createCommentThread",
+        security: authenticatedSecurity(),
+        parameters: [refParameter("documentId")],
+        "x-downwrite-scope": "comments:write",
+        requestBody: jsonRequest("CommentThreadCreate"),
+        responses: {
+          "201": jsonResponse(
+            "Created comment thread.",
+            "CommentThreadEnvelope",
+          ),
+          "400": refResponse("BadRequest"),
+          "403": refResponse("Forbidden"),
+          "409": errorResponse(409, "Document revision conflict."),
+          "428": refResponse("PreconditionRequired"),
+        },
+      }),
+    },
+    "/api/v1/comment-threads/{threadId}/comments": {
+      post: operation({
+        tags: ["Comments"],
+        summary: "Add an immutable reply to a comment thread.",
+        operationId: "addCommentMessage",
+        security: authenticatedSecurity(),
+        parameters: [refParameter("commentThreadId")],
+        "x-downwrite-scope": "comments:write",
+        requestBody: jsonRequest("CommentMessageCreate"),
+        responses: {
+          "201": jsonResponse(
+            "Updated comment thread.",
+            "CommentThreadEnvelope",
+          ),
+          "400": refResponse("BadRequest"),
+          "403": refResponse("Forbidden"),
+        },
+      }),
+    },
+    "/api/v1/comment-threads/{threadId}": {
+      patch: operation({
+        tags: ["Comments"],
+        summary: "Resolve or reopen a comment thread.",
+        operationId: "updateCommentThread",
+        security: authenticatedSecurity(),
+        parameters: [refParameter("commentThreadId")],
+        "x-downwrite-scope": "comments:write",
+        requestBody: jsonRequest("CommentThreadUpdate"),
+        responses: {
+          "200": jsonResponse(
+            "Updated comment thread.",
+            "CommentThreadEnvelope",
+          ),
+          "400": refResponse("BadRequest"),
+          "403": refResponse("Forbidden"),
+        },
+      }),
+    },
+    "/api/v1/documents/{documentId}/versions": {
+      get: operation({
+        tags: ["Versions"],
+        summary: "List manual document checkpoints.",
+        operationId: "listDocumentVersions",
+        security: authenticatedSecurity(),
+        parameters: [refParameter("documentId")],
+        "x-downwrite-scope": "versions:read",
+        responses: {
+          "200": jsonResponse("Document checkpoints.", "DocumentVersionList"),
+          "404": refResponse("NotFound"),
+        },
+      }),
+      post: operation({
+        tags: ["Versions"],
+        summary: "Create a manual document checkpoint.",
+        description:
+          "Stores an immutable title/content snapshot without incrementing the live document revision. Requires baseRevision equal to the current document revision.",
+        operationId: "createDocumentVersion",
+        security: authenticatedSecurity(),
+        parameters: [refParameter("documentId")],
+        "x-downwrite-scope": "versions:write",
+        requestBody: jsonRequest("DocumentVersionCreate"),
+        responses: {
+          "201": jsonResponse("Created checkpoint.", "DocumentVersionEnvelope"),
+          "400": refResponse("BadRequest"),
+          "403": refResponse("Forbidden"),
+          "409": errorResponse(409, "Document revision conflict."),
+          "428": refResponse("PreconditionRequired"),
+        },
+      }),
+    },
+    "/api/v1/documents/{documentId}/versions/{versionId}": {
+      get: operation({
+        tags: ["Versions"],
+        summary: "Read one manual document checkpoint.",
+        operationId: "getDocumentVersion",
+        security: authenticatedSecurity(),
+        parameters: [refParameter("documentId"), refParameter("versionId")],
+        "x-downwrite-scope": "versions:read",
+        responses: {
+          "200": jsonResponse(
+            "Document checkpoint.",
+            "DocumentVersionEnvelope",
+          ),
+          "404": refResponse("NotFound"),
+        },
+      }),
+      delete: operation({
+        tags: ["Versions"],
+        summary: "Delete one manual document checkpoint.",
+        operationId: "deleteDocumentVersion",
+        security: authenticatedSecurity(),
+        parameters: [refParameter("documentId"), refParameter("versionId")],
+        "x-downwrite-scope": "versions:write",
+        responses: {
+          "200": jsonResponse("Document checkpoint deleted.", "Ok"),
+          "403": refResponse("Forbidden"),
+        },
+      }),
+    },
+    "/api/v1/documents/{documentId}/versions/{versionId}/restore": {
+      post: operation({
+        tags: ["Versions"],
+        summary: "Restore a manual document checkpoint.",
+        description:
+          "Writes the checkpoint title/content into the live document, increments the live document revision, and preserves the checkpoint record.",
+        operationId: "restoreDocumentVersion",
+        security: authenticatedSecurity(),
+        parameters: [refParameter("documentId"), refParameter("versionId")],
+        "x-downwrite-scope": "versions:write",
+        requestBody: jsonRequest("DocumentVersionRestore"),
+        responses: {
+          "200": jsonResponse("Restored document.", "DocumentEnvelope"),
+          "400": refResponse("BadRequest"),
+          "403": refResponse("Forbidden"),
+          "404": refResponse("NotFound"),
           "409": errorResponse(409, "Document revision conflict."),
           "428": refResponse("PreconditionRequired"),
         },
@@ -1563,6 +1769,172 @@ const schemas: Record<string, JsonSchema> = {
   DocumentEnvelope: objectSchema({ document: refSchema("DocumentRecord") }, [
     "document",
   ]),
+  CommentAnchorCreate: objectSchema(
+    {
+      type: { type: "string", enum: ["document", "text"] },
+      startLine: { type: "integer", minimum: 1 },
+      startColumn: { type: "integer", minimum: 1 },
+      endLine: { type: "integer", minimum: 1 },
+      endColumn: { type: "integer", minimum: 1 },
+      quote: { type: "string" },
+      baseRevision: { type: "integer", minimum: 0 },
+    },
+    ["type"],
+  ),
+  CommentAnchor: objectSchema(
+    {
+      type: { type: "string", enum: ["document", "text"] },
+      startLine: { type: ["integer", "null"], minimum: 1 },
+      startColumn: { type: ["integer", "null"], minimum: 1 },
+      endLine: { type: ["integer", "null"], minimum: 1 },
+      endColumn: { type: ["integer", "null"], minimum: 1 },
+      quote: { type: ["string", "null"] },
+      baseRevision: { type: ["integer", "null"], minimum: 0 },
+    },
+    [
+      "type",
+      "startLine",
+      "startColumn",
+      "endLine",
+      "endColumn",
+      "quote",
+      "baseRevision",
+    ],
+  ),
+  CommentMessageCreate: objectSchema(
+    {
+      body: { type: "string", minLength: 1 },
+    },
+    ["body"],
+  ),
+  CommentMessage: objectSchema(
+    {
+      id: { type: "string" },
+      threadId: { type: "string" },
+      body: { type: "string" },
+      createdByIdentityId: { type: "string" },
+      createdAt: { type: "string" },
+    },
+    ["id", "threadId", "body", "createdByIdentityId", "createdAt"],
+  ),
+  CommentThreadCreate: objectSchema(
+    {
+      anchor: refSchema("CommentAnchorCreate"),
+      body: { type: "string", minLength: 1 },
+    },
+    ["anchor", "body"],
+  ),
+  CommentThreadUpdate: objectSchema(
+    {
+      status: { type: "string", enum: ["open", "resolved"] },
+    },
+    ["status"],
+  ),
+  CommentThread: objectSchema(
+    {
+      id: { type: "string" },
+      documentId: { type: "string" },
+      status: { type: "string", enum: ["open", "resolved"] },
+      anchor: refSchema("CommentAnchor"),
+      outdated: { type: "boolean" },
+      createdByIdentityId: { type: "string" },
+      createdAt: { type: "string" },
+      updatedAt: { type: "string" },
+      resolvedByIdentityId: { type: ["string", "null"] },
+      resolvedAt: { type: ["string", "null"] },
+      comments: { type: "array", items: refSchema("CommentMessage") },
+    },
+    [
+      "id",
+      "documentId",
+      "status",
+      "anchor",
+      "outdated",
+      "createdByIdentityId",
+      "createdAt",
+      "updatedAt",
+      "resolvedByIdentityId",
+      "resolvedAt",
+      "comments",
+    ],
+  ),
+  CommentThreadEnvelope: objectSchema(
+    { commentThread: refSchema("CommentThread") },
+    ["commentThread"],
+  ),
+  CommentThreadList: objectSchema(
+    { commentThreads: { type: "array", items: refSchema("CommentThread") } },
+    ["commentThreads"],
+  ),
+  DocumentVersionCreate: objectSchema(
+    {
+      name: { type: "string", minLength: 1 },
+      description: { type: ["string", "null"] },
+      baseRevision: {
+        type: "integer",
+        minimum: 0,
+        description:
+          "Revision read by the client. Creating a checkpoint does not increment the live document revision.",
+      },
+    },
+    ["name", "baseRevision"],
+  ),
+  DocumentVersionRestore: objectSchema(
+    {
+      baseRevision: {
+        type: "integer",
+        minimum: 0,
+        description:
+          "Current live document revision required before restoring a checkpoint.",
+      },
+    },
+    ["baseRevision"],
+  ),
+  DocumentVersionSummary: objectSchema(
+    {
+      id: { type: "string" },
+      documentId: { type: "string" },
+      name: { type: "string" },
+      description: { type: ["string", "null"] },
+      sourceRevision: { type: "integer", minimum: 0 },
+      title: { type: "string" },
+      createdByIdentityId: { type: "string" },
+      createdAt: { type: "string" },
+    },
+    [
+      "id",
+      "documentId",
+      "name",
+      "description",
+      "sourceRevision",
+      "title",
+      "createdByIdentityId",
+      "createdAt",
+    ],
+  ),
+  DocumentVersionRecord: {
+    allOf: [
+      refSchema("DocumentVersionSummary"),
+      objectSchema(
+        {
+          content: {
+            type: "string",
+            mediaType: "text/markdown",
+            description: "Checkpoint Markdown source.",
+          },
+        },
+        ["content"],
+      ),
+    ],
+  },
+  DocumentVersionEnvelope: objectSchema(
+    { version: refSchema("DocumentVersionRecord") },
+    ["version"],
+  ),
+  DocumentVersionList: objectSchema(
+    { versions: { type: "array", items: refSchema("DocumentVersionSummary") } },
+    ["versions"],
+  ),
   CollaboratorAdd: objectSchema(
     {
       identityId: { type: "string" },

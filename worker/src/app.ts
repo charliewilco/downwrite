@@ -45,12 +45,24 @@ import {
 } from "./oauth.js";
 import { createOpenApiDocument, createOpenApiHtml } from "./openapi.js";
 import { D1Storage } from "./storage/d1.js";
-import type { Env, Role, Storage } from "./types.js";
+import type {
+  CommentAnchorKind,
+  CommentThreadStatus,
+  DocumentCommentAnchor,
+  Env,
+  Role,
+  Storage,
+} from "./types.js";
 
 type AppBindings = { Bindings: Env };
 type StorageFactory = (env: Env) => Storage;
 
 const VALID_ROLES = new Set<Role>(["owner", "editor"]);
+const VALID_COMMENT_THREAD_STATUSES = new Set<CommentThreadStatus>([
+  "open",
+  "resolved",
+]);
+const VALID_COMMENT_ANCHORS = new Set<CommentAnchorKind>(["document", "text"]);
 const MAX_LIST_LIMIT = 100;
 export interface AppOptions {
   createStorage?: StorageFactory;
@@ -92,6 +104,142 @@ export function createApp(options: AppOptions = {}) {
     if (baseRevision !== current.revision) {
       throw new HttpError(409, "Document has changed since it was loaded");
     }
+  }
+
+  function requireInteger(
+    body: Record<string, unknown>,
+    key: string,
+    options: { minimum: number },
+  ) {
+    const value = optionalNumber(body, key);
+    if (
+      typeof value === "undefined" ||
+      !Number.isInteger(value) ||
+      value < options.minimum
+    ) {
+      throw new HttpError(
+        400,
+        `Expected ${key} to be an integer greater than or equal to ${options.minimum}`,
+      );
+    }
+    return value;
+  }
+
+  function parseCommentStatusFilter(value: string | null) {
+    if (value === null || value === "all") {
+      return undefined;
+    }
+    if (!VALID_COMMENT_THREAD_STATUSES.has(value as CommentThreadStatus)) {
+      throw new HttpError(400, "Comment thread status filter is invalid");
+    }
+    return value as CommentThreadStatus;
+  }
+
+  function parseCommentAnchorFilter(value: string | null) {
+    if (value === null || value === "all") {
+      return undefined;
+    }
+    if (!VALID_COMMENT_ANCHORS.has(value as CommentAnchorKind)) {
+      throw new HttpError(400, "Comment anchor filter is invalid");
+    }
+    return value as CommentAnchorKind;
+  }
+
+  function parseCommentAnchor(
+    body: Record<string, unknown>,
+    current: { content: string; revision: number },
+  ): DocumentCommentAnchor {
+    const rawAnchor = body.anchor;
+    if (
+      rawAnchor === null ||
+      typeof rawAnchor !== "object" ||
+      Array.isArray(rawAnchor)
+    ) {
+      throw new HttpError(400, "Expected anchor to be a JSON object");
+    }
+
+    const anchor = rawAnchor as Record<string, unknown>;
+    const type = requireString(anchor, "type") as CommentAnchorKind;
+    if (!VALID_COMMENT_ANCHORS.has(type)) {
+      throw new HttpError(400, "Comment anchor type is invalid");
+    }
+
+    if (type === "document") {
+      return {
+        type,
+        startLine: null,
+        startColumn: null,
+        endLine: null,
+        endColumn: null,
+        quote: null,
+        baseRevision: null,
+      };
+    }
+
+    const parsedAnchor: DocumentCommentAnchor = {
+      type,
+      startLine: requireInteger(anchor, "startLine", { minimum: 1 }),
+      startColumn: requireInteger(anchor, "startColumn", { minimum: 1 }),
+      endLine: requireInteger(anchor, "endLine", { minimum: 1 }),
+      endColumn: requireInteger(anchor, "endColumn", { minimum: 1 }),
+      quote: requireString(anchor, "quote"),
+      baseRevision: requireBaseRevision(anchor),
+    };
+
+    if (parsedAnchor.baseRevision !== current.revision) {
+      throw new HttpError(
+        409,
+        "Document has changed since the snippet was selected",
+      );
+    }
+
+    if (
+      parsedAnchor.endLine! < parsedAnchor.startLine! ||
+      (parsedAnchor.endLine === parsedAnchor.startLine &&
+        parsedAnchor.endColumn! <= parsedAnchor.startColumn!)
+    ) {
+      throw new HttpError(400, "Comment anchor range is invalid");
+    }
+
+    const selected = markdownRange(current.content, parsedAnchor);
+    if (selected !== parsedAnchor.quote) {
+      throw new HttpError(
+        400,
+        "Comment anchor quote does not match document content",
+      );
+    }
+
+    return parsedAnchor;
+  }
+
+  function markdownRange(markdown: string, anchor: DocumentCommentAnchor) {
+    const lines = markdown.split("\n");
+    const startLineIndex = anchor.startLine! - 1;
+    const endLineIndex = anchor.endLine! - 1;
+    const startColumnIndex = anchor.startColumn! - 1;
+    const endColumnIndex = anchor.endColumn! - 1;
+
+    if (
+      startLineIndex < 0 ||
+      endLineIndex >= lines.length ||
+      startColumnIndex > lines[startLineIndex].length ||
+      endColumnIndex > lines[endLineIndex].length
+    ) {
+      throw new HttpError(
+        400,
+        "Comment anchor range is outside document content",
+      );
+    }
+
+    if (startLineIndex === endLineIndex) {
+      return lines[startLineIndex].slice(startColumnIndex, endColumnIndex);
+    }
+
+    return [
+      lines[startLineIndex].slice(startColumnIndex),
+      ...lines.slice(startLineIndex + 1, endLineIndex),
+      lines[endLineIndex].slice(0, endColumnIndex),
+    ].join("\n");
   }
 
   function canWrite(role: Role) {
@@ -722,6 +870,226 @@ export function createApp(options: AppOptions = {}) {
 
     if (!deleted) {
       throw new HttpError(403, "You cannot delete this document");
+    }
+
+    return c.json({ ok: true });
+  });
+
+  app.get("/api/v1/documents/:documentId/comment-threads", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    assertScope(identity, "comments:read");
+    const url = new URL(c.req.url);
+    const threads = await store.listCommentThreads({
+      identityId: identity.id,
+      documentId: c.req.param("documentId"),
+      status: parseCommentStatusFilter(url.searchParams.get("status")),
+      anchor: parseCommentAnchorFilter(url.searchParams.get("anchor")),
+    });
+
+    if (!threads) {
+      throw new HttpError(404, "Document not found");
+    }
+
+    return c.json({ commentThreads: threads });
+  });
+
+  app.post("/api/v1/documents/:documentId/comment-threads", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    assertScope(identity, "comments:write");
+    const body = await readJsonObject(c);
+    const documentId = c.req.param("documentId");
+    const current = await store.getDocumentForIdentity({
+      identityId: identity.id,
+      documentId,
+    });
+
+    if (!current || !canWrite(current.role)) {
+      throw new HttpError(403, "You cannot comment on this document");
+    }
+
+    const thread = await store.createCommentThread({
+      identityId: identity.id,
+      documentId,
+      anchor: parseCommentAnchor(body, current),
+      body: requireString(body, "body"),
+    });
+
+    if (!thread) {
+      throw new HttpError(403, "You cannot comment on this document");
+    }
+
+    return c.json({ commentThread: thread }, 201);
+  });
+
+  app.post("/api/v1/comment-threads/:threadId/comments", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    assertScope(identity, "comments:write");
+    const body = await readJsonObject(c);
+    const thread = await store.addCommentMessage({
+      identityId: identity.id,
+      threadId: c.req.param("threadId"),
+      body: requireString(body, "body"),
+    });
+
+    if (!thread) {
+      throw new HttpError(403, "You cannot comment on this thread");
+    }
+
+    return c.json({ commentThread: thread }, 201);
+  });
+
+  app.patch("/api/v1/comment-threads/:threadId", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    assertScope(identity, "comments:write");
+    const body = await readJsonObject(c);
+    const status = requireString(body, "status") as CommentThreadStatus;
+    if (!VALID_COMMENT_THREAD_STATUSES.has(status)) {
+      throw new HttpError(400, "Comment thread status is invalid");
+    }
+
+    const thread = await store.updateCommentThreadStatus({
+      identityId: identity.id,
+      threadId: c.req.param("threadId"),
+      status,
+    });
+
+    if (!thread) {
+      throw new HttpError(403, "You cannot update this comment thread");
+    }
+
+    return c.json({ commentThread: thread });
+  });
+
+  app.get("/api/v1/documents/:documentId/versions", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    assertScope(identity, "versions:read");
+    const versions = await store.listDocumentVersions({
+      identityId: identity.id,
+      documentId: c.req.param("documentId"),
+    });
+
+    if (!versions) {
+      throw new HttpError(404, "Document not found");
+    }
+
+    return c.json({ versions });
+  });
+
+  app.post("/api/v1/documents/:documentId/versions", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    assertScope(identity, "versions:write");
+    const body = await readJsonObject(c);
+    const documentId = c.req.param("documentId");
+    const current = await store.getDocumentForIdentity({
+      identityId: identity.id,
+      documentId,
+    });
+
+    if (!current || !canWrite(current.role)) {
+      throw new HttpError(
+        403,
+        "You cannot create checkpoints for this document",
+      );
+    }
+    assertCurrentRevision(current, body);
+
+    const version = await store.createDocumentVersion({
+      identityId: identity.id,
+      documentId,
+      name: requireString(body, "name"),
+      description: optionalString(body, "description"),
+    });
+
+    if (!version) {
+      throw new HttpError(
+        403,
+        "You cannot create checkpoints for this document",
+      );
+    }
+
+    return c.json({ version }, 201);
+  });
+
+  app.get("/api/v1/documents/:documentId/versions/:versionId", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    assertScope(identity, "versions:read");
+    const documentId = c.req.param("documentId");
+    const current = await store.getDocumentForIdentity({
+      identityId: identity.id,
+      documentId,
+    });
+
+    if (!current) {
+      throw new HttpError(404, "Document not found");
+    }
+
+    const version = await store.getDocumentVersion({
+      identityId: identity.id,
+      documentId,
+      versionId: c.req.param("versionId"),
+    });
+
+    if (!version) {
+      throw new HttpError(404, "Document version not found");
+    }
+
+    return c.json({ version });
+  });
+
+  app.post(
+    "/api/v1/documents/:documentId/versions/:versionId/restore",
+    async (c) => {
+      const store = storage(c.env);
+      const identity = await readIdentity(c, store);
+      assertScope(identity, "versions:write");
+      const body = await readJsonObject(c);
+      const documentId = c.req.param("documentId");
+      const current = await store.getDocumentForIdentity({
+        identityId: identity.id,
+        documentId,
+      });
+
+      if (!current || !canWrite(current.role)) {
+        throw new HttpError(
+          403,
+          "You cannot restore checkpoints for this document",
+        );
+      }
+      assertCurrentRevision(current, body);
+
+      const document = await store.restoreDocumentVersion({
+        identityId: identity.id,
+        documentId,
+        versionId: c.req.param("versionId"),
+      });
+
+      if (!document) {
+        throw new HttpError(404, "Document version not found");
+      }
+
+      return c.json({ document });
+    },
+  );
+
+  app.delete("/api/v1/documents/:documentId/versions/:versionId", async (c) => {
+    const store = storage(c.env);
+    const identity = await readIdentity(c, store);
+    assertScope(identity, "versions:write");
+    const deleted = await store.deleteDocumentVersion({
+      identityId: identity.id,
+      documentId: c.req.param("documentId"),
+      versionId: c.req.param("versionId"),
+    });
+
+    if (!deleted) {
+      throw new HttpError(403, "You cannot delete this document checkpoint");
     }
 
     return c.json({ ok: true });

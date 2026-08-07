@@ -15,6 +15,56 @@ export interface DocumentRecord extends DocumentSummary {
   content: string;
 }
 
+export type CommentThreadStatus = "open" | "resolved";
+export type CommentAnchorKind = "document" | "text";
+
+export interface DocumentCommentAnchor {
+  type: CommentAnchorKind;
+  startLine: number | null;
+  startColumn: number | null;
+  endLine: number | null;
+  endColumn: number | null;
+  quote: string | null;
+  baseRevision: number | null;
+}
+
+export interface DocumentCommentMessage {
+  id: string;
+  threadId: string;
+  body: string;
+  createdByIdentityId: string;
+  createdAt: string;
+}
+
+export interface DocumentCommentThread {
+  id: string;
+  documentId: string;
+  status: CommentThreadStatus;
+  anchor: DocumentCommentAnchor;
+  outdated: boolean;
+  createdByIdentityId: string;
+  createdAt: string;
+  updatedAt: string;
+  resolvedByIdentityId: string | null;
+  resolvedAt: string | null;
+  comments: DocumentCommentMessage[];
+}
+
+export interface DocumentVersionSummary {
+  id: string;
+  documentId: string;
+  name: string;
+  description: string | null;
+  sourceRevision: number;
+  title: string;
+  createdByIdentityId: string;
+  createdAt: string;
+}
+
+export interface DocumentVersionRecord extends DocumentVersionSummary {
+  content: string;
+}
+
 export interface GroupSummary {
   id: string;
   name: string;
@@ -412,6 +462,177 @@ export async function deleteDocument(
   });
 
   await assertOk(response, "Delete request failed");
+}
+
+export async function fetchCommentThreads(
+  token: string | undefined,
+  documentId: string,
+  filters?: {
+    status?: CommentThreadStatus | "all";
+    anchor?: CommentAnchorKind | "all";
+  },
+): Promise<DocumentCommentThread[]> {
+  const params = new URLSearchParams();
+  if (filters?.status) {
+    params.set("status", filters.status);
+  }
+  if (filters?.anchor) {
+    params.set("anchor", filters.anchor);
+  }
+  const suffix = params.toString() ? `?${params}` : "";
+  const response = await fetch(
+    `/api/v1/documents/${documentId}/comment-threads${suffix}`,
+    {
+      headers: authHeaders(token),
+      credentials: "include",
+    },
+  );
+  await assertOk(response, "Comment threads request failed");
+  const body = (await response.json()) as {
+    commentThreads: DocumentCommentThread[];
+  };
+  return body.commentThreads;
+}
+
+export async function createCommentThread(
+  token: string | undefined,
+  documentId: string,
+  input: { anchor: DocumentCommentAnchor; body: string },
+): Promise<DocumentCommentThread> {
+  const response = await fetch(
+    `/api/v1/documents/${documentId}/comment-threads`,
+    {
+      method: "POST",
+      headers: jsonHeaders(token),
+      credentials: "include",
+      body: JSON.stringify(input),
+    },
+  );
+  await assertOk(response, "Create comment thread failed");
+  const body = (await response.json()) as {
+    commentThread: DocumentCommentThread;
+  };
+  return body.commentThread;
+}
+
+export async function addCommentMessage(
+  token: string | undefined,
+  threadId: string,
+  bodyText: string,
+): Promise<DocumentCommentThread> {
+  const response = await fetch(`/api/v1/comment-threads/${threadId}/comments`, {
+    method: "POST",
+    headers: jsonHeaders(token),
+    credentials: "include",
+    body: JSON.stringify({ body: bodyText }),
+  });
+  await assertOk(response, "Add comment failed");
+  const body = (await response.json()) as {
+    commentThread: DocumentCommentThread;
+  };
+  return body.commentThread;
+}
+
+export async function updateCommentThreadStatus(
+  token: string | undefined,
+  threadId: string,
+  status: CommentThreadStatus,
+): Promise<DocumentCommentThread> {
+  const response = await fetch(`/api/v1/comment-threads/${threadId}`, {
+    method: "PATCH",
+    headers: jsonHeaders(token),
+    credentials: "include",
+    body: JSON.stringify({ status }),
+  });
+  await assertOk(response, "Update comment thread failed");
+  const body = (await response.json()) as {
+    commentThread: DocumentCommentThread;
+  };
+  return body.commentThread;
+}
+
+export async function fetchDocumentVersions(
+  token: string | undefined,
+  documentId: string,
+): Promise<DocumentVersionSummary[]> {
+  const response = await fetch(`/api/v1/documents/${documentId}/versions`, {
+    headers: authHeaders(token),
+    credentials: "include",
+  });
+  await assertOk(response, "Document versions request failed");
+  const body = (await response.json()) as {
+    versions: DocumentVersionSummary[];
+  };
+  return body.versions;
+}
+
+export async function createDocumentVersion(
+  token: string | undefined,
+  documentId: string,
+  input: { name: string; description?: string | null; baseRevision: number },
+): Promise<DocumentVersionRecord> {
+  const response = await fetch(`/api/v1/documents/${documentId}/versions`, {
+    method: "POST",
+    headers: jsonHeaders(token),
+    credentials: "include",
+    body: JSON.stringify(input),
+  });
+  await assertOk(response, "Create checkpoint failed");
+  const body = (await response.json()) as { version: DocumentVersionRecord };
+  return body.version;
+}
+
+export async function fetchDocumentVersion(
+  token: string | undefined,
+  documentId: string,
+  versionId: string,
+): Promise<DocumentVersionRecord> {
+  const response = await fetch(
+    `/api/v1/documents/${documentId}/versions/${versionId}`,
+    {
+      headers: authHeaders(token),
+      credentials: "include",
+    },
+  );
+  await assertOk(response, "Document version request failed");
+  const body = (await response.json()) as { version: DocumentVersionRecord };
+  return body.version;
+}
+
+export async function restoreDocumentVersion(
+  token: string | undefined,
+  documentId: string,
+  versionId: string,
+  baseRevision: number,
+): Promise<DocumentRecord> {
+  const response = await fetch(
+    `/api/v1/documents/${documentId}/versions/${versionId}/restore`,
+    {
+      method: "POST",
+      headers: jsonHeaders(token),
+      credentials: "include",
+      body: JSON.stringify({ baseRevision }),
+    },
+  );
+  await assertOk(response, "Restore checkpoint failed");
+  const body = (await response.json()) as { document: DocumentRecord };
+  return body.document;
+}
+
+export async function deleteDocumentVersion(
+  token: string | undefined,
+  documentId: string,
+  versionId: string,
+) {
+  const response = await fetch(
+    `/api/v1/documents/${documentId}/versions/${versionId}`,
+    {
+      method: "DELETE",
+      headers: authHeaders(token),
+      credentials: "include",
+    },
+  );
+  await assertOk(response, "Delete checkpoint failed");
 }
 
 export async function fetchShareState(

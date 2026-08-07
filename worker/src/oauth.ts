@@ -22,6 +22,10 @@ export const OAUTH_SCOPES = [
   "workspaces:write",
   "documents:read",
   "documents:write",
+  "comments:read",
+  "comments:write",
+  "versions:read",
+  "versions:write",
   "sharing:write",
   "mcp:documents",
 ] as const;

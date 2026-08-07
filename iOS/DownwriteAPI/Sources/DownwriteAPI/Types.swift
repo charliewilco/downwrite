@@ -196,6 +196,59 @@ public protocol APIProtocol: Sendable {
     /// - Remark: HTTP `PATCH /api/v1/documents/{documentId}/position`.
     /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/position/patch(positionDocument)`.
     func positionDocument(_ input: Operations.positionDocument.Input) async throws -> Operations.positionDocument.Output
+    /// List document comment threads.
+    ///
+    /// Returns document-level review notes and selected-text snippet comment threads. Text anchors include outdated=true when the live document revision has advanced beyond the anchor baseRevision.
+    ///
+    /// - Remark: HTTP `GET /api/v1/documents/{documentId}/comment-threads`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/comment-threads/get(listCommentThreads)`.
+    func listCommentThreads(_ input: Operations.listCommentThreads.Input) async throws -> Operations.listCommentThreads.Output
+    /// Create a document comment thread.
+    ///
+    /// Creates either a whole-document review note or a selected Markdown text thread. Text anchors use 1-based line/column positions and an exclusive end column; quote must match the current document content at baseRevision.
+    ///
+    /// - Remark: HTTP `POST /api/v1/documents/{documentId}/comment-threads`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/comment-threads/post(createCommentThread)`.
+    func createCommentThread(_ input: Operations.createCommentThread.Input) async throws -> Operations.createCommentThread.Output
+    /// Add an immutable reply to a comment thread.
+    ///
+    /// - Remark: HTTP `POST /api/v1/comment-threads/{threadId}/comments`.
+    /// - Remark: Generated from `#/paths//api/v1/comment-threads/{threadId}/comments/post(addCommentMessage)`.
+    func addCommentMessage(_ input: Operations.addCommentMessage.Input) async throws -> Operations.addCommentMessage.Output
+    /// Resolve or reopen a comment thread.
+    ///
+    /// - Remark: HTTP `PATCH /api/v1/comment-threads/{threadId}`.
+    /// - Remark: Generated from `#/paths//api/v1/comment-threads/{threadId}/patch(updateCommentThread)`.
+    func updateCommentThread(_ input: Operations.updateCommentThread.Input) async throws -> Operations.updateCommentThread.Output
+    /// List manual document checkpoints.
+    ///
+    /// - Remark: HTTP `GET /api/v1/documents/{documentId}/versions`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/get(listDocumentVersions)`.
+    func listDocumentVersions(_ input: Operations.listDocumentVersions.Input) async throws -> Operations.listDocumentVersions.Output
+    /// Create a manual document checkpoint.
+    ///
+    /// Stores an immutable title/content snapshot without incrementing the live document revision. Requires baseRevision equal to the current document revision.
+    ///
+    /// - Remark: HTTP `POST /api/v1/documents/{documentId}/versions`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/post(createDocumentVersion)`.
+    func createDocumentVersion(_ input: Operations.createDocumentVersion.Input) async throws -> Operations.createDocumentVersion.Output
+    /// Read one manual document checkpoint.
+    ///
+    /// - Remark: HTTP `GET /api/v1/documents/{documentId}/versions/{versionId}`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/get(getDocumentVersion)`.
+    func getDocumentVersion(_ input: Operations.getDocumentVersion.Input) async throws -> Operations.getDocumentVersion.Output
+    /// Delete one manual document checkpoint.
+    ///
+    /// - Remark: HTTP `DELETE /api/v1/documents/{documentId}/versions/{versionId}`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/delete(deleteDocumentVersion)`.
+    func deleteDocumentVersion(_ input: Operations.deleteDocumentVersion.Input) async throws -> Operations.deleteDocumentVersion.Output
+    /// Restore a manual document checkpoint.
+    ///
+    /// Writes the checkpoint title/content into the live document, increments the live document revision, and preserves the checkpoint record.
+    ///
+    /// - Remark: HTTP `POST /api/v1/documents/{documentId}/versions/{versionId}/restore`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/restore/post(restoreDocumentVersion)`.
+    func restoreDocumentVersion(_ input: Operations.restoreDocumentVersion.Input) async throws -> Operations.restoreDocumentVersion.Output
     /// Read document sharing state.
     ///
     /// - Remark: HTTP `GET /api/v1/documents/{documentId}/share`.
@@ -663,6 +716,143 @@ extension APIProtocol {
         body: Operations.positionDocument.Input.Body
     ) async throws -> Operations.positionDocument.Output {
         try await positionDocument(Operations.positionDocument.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
+    }
+    /// List document comment threads.
+    ///
+    /// Returns document-level review notes and selected-text snippet comment threads. Text anchors include outdated=true when the live document revision has advanced beyond the anchor baseRevision.
+    ///
+    /// - Remark: HTTP `GET /api/v1/documents/{documentId}/comment-threads`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/comment-threads/get(listCommentThreads)`.
+    public func listCommentThreads(
+        path: Operations.listCommentThreads.Input.Path,
+        query: Operations.listCommentThreads.Input.Query = .init(),
+        headers: Operations.listCommentThreads.Input.Headers = .init()
+    ) async throws -> Operations.listCommentThreads.Output {
+        try await listCommentThreads(Operations.listCommentThreads.Input(
+            path: path,
+            query: query,
+            headers: headers
+        ))
+    }
+    /// Create a document comment thread.
+    ///
+    /// Creates either a whole-document review note or a selected Markdown text thread. Text anchors use 1-based line/column positions and an exclusive end column; quote must match the current document content at baseRevision.
+    ///
+    /// - Remark: HTTP `POST /api/v1/documents/{documentId}/comment-threads`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/comment-threads/post(createCommentThread)`.
+    public func createCommentThread(
+        path: Operations.createCommentThread.Input.Path,
+        headers: Operations.createCommentThread.Input.Headers = .init(),
+        body: Operations.createCommentThread.Input.Body
+    ) async throws -> Operations.createCommentThread.Output {
+        try await createCommentThread(Operations.createCommentThread.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
+    }
+    /// Add an immutable reply to a comment thread.
+    ///
+    /// - Remark: HTTP `POST /api/v1/comment-threads/{threadId}/comments`.
+    /// - Remark: Generated from `#/paths//api/v1/comment-threads/{threadId}/comments/post(addCommentMessage)`.
+    public func addCommentMessage(
+        path: Operations.addCommentMessage.Input.Path,
+        headers: Operations.addCommentMessage.Input.Headers = .init(),
+        body: Operations.addCommentMessage.Input.Body
+    ) async throws -> Operations.addCommentMessage.Output {
+        try await addCommentMessage(Operations.addCommentMessage.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
+    }
+    /// Resolve or reopen a comment thread.
+    ///
+    /// - Remark: HTTP `PATCH /api/v1/comment-threads/{threadId}`.
+    /// - Remark: Generated from `#/paths//api/v1/comment-threads/{threadId}/patch(updateCommentThread)`.
+    public func updateCommentThread(
+        path: Operations.updateCommentThread.Input.Path,
+        headers: Operations.updateCommentThread.Input.Headers = .init(),
+        body: Operations.updateCommentThread.Input.Body
+    ) async throws -> Operations.updateCommentThread.Output {
+        try await updateCommentThread(Operations.updateCommentThread.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
+    }
+    /// List manual document checkpoints.
+    ///
+    /// - Remark: HTTP `GET /api/v1/documents/{documentId}/versions`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/get(listDocumentVersions)`.
+    public func listDocumentVersions(
+        path: Operations.listDocumentVersions.Input.Path,
+        headers: Operations.listDocumentVersions.Input.Headers = .init()
+    ) async throws -> Operations.listDocumentVersions.Output {
+        try await listDocumentVersions(Operations.listDocumentVersions.Input(
+            path: path,
+            headers: headers
+        ))
+    }
+    /// Create a manual document checkpoint.
+    ///
+    /// Stores an immutable title/content snapshot without incrementing the live document revision. Requires baseRevision equal to the current document revision.
+    ///
+    /// - Remark: HTTP `POST /api/v1/documents/{documentId}/versions`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/post(createDocumentVersion)`.
+    public func createDocumentVersion(
+        path: Operations.createDocumentVersion.Input.Path,
+        headers: Operations.createDocumentVersion.Input.Headers = .init(),
+        body: Operations.createDocumentVersion.Input.Body
+    ) async throws -> Operations.createDocumentVersion.Output {
+        try await createDocumentVersion(Operations.createDocumentVersion.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
+    }
+    /// Read one manual document checkpoint.
+    ///
+    /// - Remark: HTTP `GET /api/v1/documents/{documentId}/versions/{versionId}`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/get(getDocumentVersion)`.
+    public func getDocumentVersion(
+        path: Operations.getDocumentVersion.Input.Path,
+        headers: Operations.getDocumentVersion.Input.Headers = .init()
+    ) async throws -> Operations.getDocumentVersion.Output {
+        try await getDocumentVersion(Operations.getDocumentVersion.Input(
+            path: path,
+            headers: headers
+        ))
+    }
+    /// Delete one manual document checkpoint.
+    ///
+    /// - Remark: HTTP `DELETE /api/v1/documents/{documentId}/versions/{versionId}`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/delete(deleteDocumentVersion)`.
+    public func deleteDocumentVersion(
+        path: Operations.deleteDocumentVersion.Input.Path,
+        headers: Operations.deleteDocumentVersion.Input.Headers = .init()
+    ) async throws -> Operations.deleteDocumentVersion.Output {
+        try await deleteDocumentVersion(Operations.deleteDocumentVersion.Input(
+            path: path,
+            headers: headers
+        ))
+    }
+    /// Restore a manual document checkpoint.
+    ///
+    /// Writes the checkpoint title/content into the live document, increments the live document revision, and preserves the checkpoint record.
+    ///
+    /// - Remark: HTTP `POST /api/v1/documents/{documentId}/versions/{versionId}/restore`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/restore/post(restoreDocumentVersion)`.
+    public func restoreDocumentVersion(
+        path: Operations.restoreDocumentVersion.Input.Path,
+        headers: Operations.restoreDocumentVersion.Input.Headers = .init(),
+        body: Operations.restoreDocumentVersion.Input.Body
+    ) async throws -> Operations.restoreDocumentVersion.Output {
+        try await restoreDocumentVersion(Operations.restoreDocumentVersion.Input(
             path: path,
             headers: headers,
             body: body
@@ -3152,6 +3342,844 @@ public enum Components {
                 ])
             }
         }
+        /// - Remark: Generated from `#/components/schemas/CommentAnchorCreate`.
+        public struct CommentAnchorCreate: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CommentAnchorCreate/type`.
+            @frozen public enum _typePayload: String, Codable, Hashable, Sendable, CaseIterable {
+                case document = "document"
+                case text = "text"
+            }
+            /// - Remark: Generated from `#/components/schemas/CommentAnchorCreate/type`.
+            public var _type: Components.Schemas.CommentAnchorCreate._typePayload
+            /// - Remark: Generated from `#/components/schemas/CommentAnchorCreate/startLine`.
+            public var startLine: Swift.Int?
+            /// - Remark: Generated from `#/components/schemas/CommentAnchorCreate/startColumn`.
+            public var startColumn: Swift.Int?
+            /// - Remark: Generated from `#/components/schemas/CommentAnchorCreate/endLine`.
+            public var endLine: Swift.Int?
+            /// - Remark: Generated from `#/components/schemas/CommentAnchorCreate/endColumn`.
+            public var endColumn: Swift.Int?
+            /// - Remark: Generated from `#/components/schemas/CommentAnchorCreate/quote`.
+            public var quote: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/CommentAnchorCreate/baseRevision`.
+            public var baseRevision: Swift.Int?
+            /// Creates a new `CommentAnchorCreate`.
+            ///
+            /// - Parameters:
+            ///   - _type:
+            ///   - startLine:
+            ///   - startColumn:
+            ///   - endLine:
+            ///   - endColumn:
+            ///   - quote:
+            ///   - baseRevision:
+            public init(
+                _type: Components.Schemas.CommentAnchorCreate._typePayload,
+                startLine: Swift.Int? = nil,
+                startColumn: Swift.Int? = nil,
+                endLine: Swift.Int? = nil,
+                endColumn: Swift.Int? = nil,
+                quote: Swift.String? = nil,
+                baseRevision: Swift.Int? = nil
+            ) {
+                self._type = _type
+                self.startLine = startLine
+                self.startColumn = startColumn
+                self.endLine = endLine
+                self.endColumn = endColumn
+                self.quote = quote
+                self.baseRevision = baseRevision
+            }
+            public enum CodingKeys: String, CodingKey {
+                case _type = "type"
+                case startLine
+                case startColumn
+                case endLine
+                case endColumn
+                case quote
+                case baseRevision
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self._type = try container.decode(
+                    Components.Schemas.CommentAnchorCreate._typePayload.self,
+                    forKey: ._type
+                )
+                self.startLine = try container.decodeIfPresent(
+                    Swift.Int.self,
+                    forKey: .startLine
+                )
+                self.startColumn = try container.decodeIfPresent(
+                    Swift.Int.self,
+                    forKey: .startColumn
+                )
+                self.endLine = try container.decodeIfPresent(
+                    Swift.Int.self,
+                    forKey: .endLine
+                )
+                self.endColumn = try container.decodeIfPresent(
+                    Swift.Int.self,
+                    forKey: .endColumn
+                )
+                self.quote = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .quote
+                )
+                self.baseRevision = try container.decodeIfPresent(
+                    Swift.Int.self,
+                    forKey: .baseRevision
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "type",
+                    "startLine",
+                    "startColumn",
+                    "endLine",
+                    "endColumn",
+                    "quote",
+                    "baseRevision"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/CommentAnchor`.
+        public struct CommentAnchor: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CommentAnchor/type`.
+            @frozen public enum _typePayload: String, Codable, Hashable, Sendable, CaseIterable {
+                case document = "document"
+                case text = "text"
+            }
+            /// - Remark: Generated from `#/components/schemas/CommentAnchor/type`.
+            public var _type: Components.Schemas.CommentAnchor._typePayload
+            /// - Remark: Generated from `#/components/schemas/CommentAnchor/startLine`.
+            public var startLine: Swift.Int?
+            /// - Remark: Generated from `#/components/schemas/CommentAnchor/startColumn`.
+            public var startColumn: Swift.Int?
+            /// - Remark: Generated from `#/components/schemas/CommentAnchor/endLine`.
+            public var endLine: Swift.Int?
+            /// - Remark: Generated from `#/components/schemas/CommentAnchor/endColumn`.
+            public var endColumn: Swift.Int?
+            /// - Remark: Generated from `#/components/schemas/CommentAnchor/quote`.
+            public var quote: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/CommentAnchor/baseRevision`.
+            public var baseRevision: Swift.Int?
+            /// Creates a new `CommentAnchor`.
+            ///
+            /// - Parameters:
+            ///   - _type:
+            ///   - startLine:
+            ///   - startColumn:
+            ///   - endLine:
+            ///   - endColumn:
+            ///   - quote:
+            ///   - baseRevision:
+            public init(
+                _type: Components.Schemas.CommentAnchor._typePayload,
+                startLine: Swift.Int? = nil,
+                startColumn: Swift.Int? = nil,
+                endLine: Swift.Int? = nil,
+                endColumn: Swift.Int? = nil,
+                quote: Swift.String? = nil,
+                baseRevision: Swift.Int? = nil
+            ) {
+                self._type = _type
+                self.startLine = startLine
+                self.startColumn = startColumn
+                self.endLine = endLine
+                self.endColumn = endColumn
+                self.quote = quote
+                self.baseRevision = baseRevision
+            }
+            public enum CodingKeys: String, CodingKey {
+                case _type = "type"
+                case startLine
+                case startColumn
+                case endLine
+                case endColumn
+                case quote
+                case baseRevision
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self._type = try container.decode(
+                    Components.Schemas.CommentAnchor._typePayload.self,
+                    forKey: ._type
+                )
+                self.startLine = try container.decodeIfPresent(
+                    Swift.Int.self,
+                    forKey: .startLine
+                )
+                self.startColumn = try container.decodeIfPresent(
+                    Swift.Int.self,
+                    forKey: .startColumn
+                )
+                self.endLine = try container.decodeIfPresent(
+                    Swift.Int.self,
+                    forKey: .endLine
+                )
+                self.endColumn = try container.decodeIfPresent(
+                    Swift.Int.self,
+                    forKey: .endColumn
+                )
+                self.quote = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .quote
+                )
+                self.baseRevision = try container.decodeIfPresent(
+                    Swift.Int.self,
+                    forKey: .baseRevision
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "type",
+                    "startLine",
+                    "startColumn",
+                    "endLine",
+                    "endColumn",
+                    "quote",
+                    "baseRevision"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/CommentMessageCreate`.
+        public struct CommentMessageCreate: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CommentMessageCreate/body`.
+            public var body: Swift.String
+            /// Creates a new `CommentMessageCreate`.
+            ///
+            /// - Parameters:
+            ///   - body:
+            public init(body: Swift.String) {
+                self.body = body
+            }
+            public enum CodingKeys: String, CodingKey {
+                case body
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.body = try container.decode(
+                    Swift.String.self,
+                    forKey: .body
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "body"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/CommentMessage`.
+        public struct CommentMessage: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CommentMessage/id`.
+            public var id: Swift.String
+            /// - Remark: Generated from `#/components/schemas/CommentMessage/threadId`.
+            public var threadId: Swift.String
+            /// - Remark: Generated from `#/components/schemas/CommentMessage/body`.
+            public var body: Swift.String
+            /// - Remark: Generated from `#/components/schemas/CommentMessage/createdByIdentityId`.
+            public var createdByIdentityId: Swift.String
+            /// - Remark: Generated from `#/components/schemas/CommentMessage/createdAt`.
+            public var createdAt: Swift.String
+            /// Creates a new `CommentMessage`.
+            ///
+            /// - Parameters:
+            ///   - id:
+            ///   - threadId:
+            ///   - body:
+            ///   - createdByIdentityId:
+            ///   - createdAt:
+            public init(
+                id: Swift.String,
+                threadId: Swift.String,
+                body: Swift.String,
+                createdByIdentityId: Swift.String,
+                createdAt: Swift.String
+            ) {
+                self.id = id
+                self.threadId = threadId
+                self.body = body
+                self.createdByIdentityId = createdByIdentityId
+                self.createdAt = createdAt
+            }
+            public enum CodingKeys: String, CodingKey {
+                case id
+                case threadId
+                case body
+                case createdByIdentityId
+                case createdAt
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.id = try container.decode(
+                    Swift.String.self,
+                    forKey: .id
+                )
+                self.threadId = try container.decode(
+                    Swift.String.self,
+                    forKey: .threadId
+                )
+                self.body = try container.decode(
+                    Swift.String.self,
+                    forKey: .body
+                )
+                self.createdByIdentityId = try container.decode(
+                    Swift.String.self,
+                    forKey: .createdByIdentityId
+                )
+                self.createdAt = try container.decode(
+                    Swift.String.self,
+                    forKey: .createdAt
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "id",
+                    "threadId",
+                    "body",
+                    "createdByIdentityId",
+                    "createdAt"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/CommentThreadCreate`.
+        public struct CommentThreadCreate: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CommentThreadCreate/anchor`.
+            public var anchor: Components.Schemas.CommentAnchorCreate
+            /// - Remark: Generated from `#/components/schemas/CommentThreadCreate/body`.
+            public var body: Swift.String
+            /// Creates a new `CommentThreadCreate`.
+            ///
+            /// - Parameters:
+            ///   - anchor:
+            ///   - body:
+            public init(
+                anchor: Components.Schemas.CommentAnchorCreate,
+                body: Swift.String
+            ) {
+                self.anchor = anchor
+                self.body = body
+            }
+            public enum CodingKeys: String, CodingKey {
+                case anchor
+                case body
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.anchor = try container.decode(
+                    Components.Schemas.CommentAnchorCreate.self,
+                    forKey: .anchor
+                )
+                self.body = try container.decode(
+                    Swift.String.self,
+                    forKey: .body
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "anchor",
+                    "body"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/CommentThreadUpdate`.
+        public struct CommentThreadUpdate: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CommentThreadUpdate/status`.
+            @frozen public enum statusPayload: String, Codable, Hashable, Sendable, CaseIterable {
+                case open = "open"
+                case resolved = "resolved"
+            }
+            /// - Remark: Generated from `#/components/schemas/CommentThreadUpdate/status`.
+            public var status: Components.Schemas.CommentThreadUpdate.statusPayload
+            /// Creates a new `CommentThreadUpdate`.
+            ///
+            /// - Parameters:
+            ///   - status:
+            public init(status: Components.Schemas.CommentThreadUpdate.statusPayload) {
+                self.status = status
+            }
+            public enum CodingKeys: String, CodingKey {
+                case status
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.status = try container.decode(
+                    Components.Schemas.CommentThreadUpdate.statusPayload.self,
+                    forKey: .status
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "status"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/CommentThread`.
+        public struct CommentThread: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CommentThread/id`.
+            public var id: Swift.String
+            /// - Remark: Generated from `#/components/schemas/CommentThread/documentId`.
+            public var documentId: Swift.String
+            /// - Remark: Generated from `#/components/schemas/CommentThread/status`.
+            @frozen public enum statusPayload: String, Codable, Hashable, Sendable, CaseIterable {
+                case open = "open"
+                case resolved = "resolved"
+            }
+            /// - Remark: Generated from `#/components/schemas/CommentThread/status`.
+            public var status: Components.Schemas.CommentThread.statusPayload
+            /// - Remark: Generated from `#/components/schemas/CommentThread/anchor`.
+            public var anchor: Components.Schemas.CommentAnchor
+            /// - Remark: Generated from `#/components/schemas/CommentThread/outdated`.
+            public var outdated: Swift.Bool
+            /// - Remark: Generated from `#/components/schemas/CommentThread/createdByIdentityId`.
+            public var createdByIdentityId: Swift.String
+            /// - Remark: Generated from `#/components/schemas/CommentThread/createdAt`.
+            public var createdAt: Swift.String
+            /// - Remark: Generated from `#/components/schemas/CommentThread/updatedAt`.
+            public var updatedAt: Swift.String
+            /// - Remark: Generated from `#/components/schemas/CommentThread/resolvedByIdentityId`.
+            public var resolvedByIdentityId: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/CommentThread/resolvedAt`.
+            public var resolvedAt: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/CommentThread/comments`.
+            public var comments: [Components.Schemas.CommentMessage]
+            /// Creates a new `CommentThread`.
+            ///
+            /// - Parameters:
+            ///   - id:
+            ///   - documentId:
+            ///   - status:
+            ///   - anchor:
+            ///   - outdated:
+            ///   - createdByIdentityId:
+            ///   - createdAt:
+            ///   - updatedAt:
+            ///   - resolvedByIdentityId:
+            ///   - resolvedAt:
+            ///   - comments:
+            public init(
+                id: Swift.String,
+                documentId: Swift.String,
+                status: Components.Schemas.CommentThread.statusPayload,
+                anchor: Components.Schemas.CommentAnchor,
+                outdated: Swift.Bool,
+                createdByIdentityId: Swift.String,
+                createdAt: Swift.String,
+                updatedAt: Swift.String,
+                resolvedByIdentityId: Swift.String? = nil,
+                resolvedAt: Swift.String? = nil,
+                comments: [Components.Schemas.CommentMessage]
+            ) {
+                self.id = id
+                self.documentId = documentId
+                self.status = status
+                self.anchor = anchor
+                self.outdated = outdated
+                self.createdByIdentityId = createdByIdentityId
+                self.createdAt = createdAt
+                self.updatedAt = updatedAt
+                self.resolvedByIdentityId = resolvedByIdentityId
+                self.resolvedAt = resolvedAt
+                self.comments = comments
+            }
+            public enum CodingKeys: String, CodingKey {
+                case id
+                case documentId
+                case status
+                case anchor
+                case outdated
+                case createdByIdentityId
+                case createdAt
+                case updatedAt
+                case resolvedByIdentityId
+                case resolvedAt
+                case comments
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.id = try container.decode(
+                    Swift.String.self,
+                    forKey: .id
+                )
+                self.documentId = try container.decode(
+                    Swift.String.self,
+                    forKey: .documentId
+                )
+                self.status = try container.decode(
+                    Components.Schemas.CommentThread.statusPayload.self,
+                    forKey: .status
+                )
+                self.anchor = try container.decode(
+                    Components.Schemas.CommentAnchor.self,
+                    forKey: .anchor
+                )
+                self.outdated = try container.decode(
+                    Swift.Bool.self,
+                    forKey: .outdated
+                )
+                self.createdByIdentityId = try container.decode(
+                    Swift.String.self,
+                    forKey: .createdByIdentityId
+                )
+                self.createdAt = try container.decode(
+                    Swift.String.self,
+                    forKey: .createdAt
+                )
+                self.updatedAt = try container.decode(
+                    Swift.String.self,
+                    forKey: .updatedAt
+                )
+                self.resolvedByIdentityId = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .resolvedByIdentityId
+                )
+                self.resolvedAt = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .resolvedAt
+                )
+                self.comments = try container.decode(
+                    [Components.Schemas.CommentMessage].self,
+                    forKey: .comments
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "id",
+                    "documentId",
+                    "status",
+                    "anchor",
+                    "outdated",
+                    "createdByIdentityId",
+                    "createdAt",
+                    "updatedAt",
+                    "resolvedByIdentityId",
+                    "resolvedAt",
+                    "comments"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/CommentThreadEnvelope`.
+        public struct CommentThreadEnvelope: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CommentThreadEnvelope/commentThread`.
+            public var commentThread: Components.Schemas.CommentThread
+            /// Creates a new `CommentThreadEnvelope`.
+            ///
+            /// - Parameters:
+            ///   - commentThread:
+            public init(commentThread: Components.Schemas.CommentThread) {
+                self.commentThread = commentThread
+            }
+            public enum CodingKeys: String, CodingKey {
+                case commentThread
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.commentThread = try container.decode(
+                    Components.Schemas.CommentThread.self,
+                    forKey: .commentThread
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "commentThread"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/CommentThreadList`.
+        public struct CommentThreadList: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/CommentThreadList/commentThreads`.
+            public var commentThreads: [Components.Schemas.CommentThread]
+            /// Creates a new `CommentThreadList`.
+            ///
+            /// - Parameters:
+            ///   - commentThreads:
+            public init(commentThreads: [Components.Schemas.CommentThread]) {
+                self.commentThreads = commentThreads
+            }
+            public enum CodingKeys: String, CodingKey {
+                case commentThreads
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.commentThreads = try container.decode(
+                    [Components.Schemas.CommentThread].self,
+                    forKey: .commentThreads
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "commentThreads"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/DocumentVersionCreate`.
+        public struct DocumentVersionCreate: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionCreate/name`.
+            public var name: Swift.String
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionCreate/description`.
+            public var description: Swift.String?
+            /// Revision read by the client. Creating a checkpoint does not increment the live document revision.
+            ///
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionCreate/baseRevision`.
+            public var baseRevision: Swift.Int
+            /// Creates a new `DocumentVersionCreate`.
+            ///
+            /// - Parameters:
+            ///   - name:
+            ///   - description:
+            ///   - baseRevision: Revision read by the client. Creating a checkpoint does not increment the live document revision.
+            public init(
+                name: Swift.String,
+                description: Swift.String? = nil,
+                baseRevision: Swift.Int
+            ) {
+                self.name = name
+                self.description = description
+                self.baseRevision = baseRevision
+            }
+            public enum CodingKeys: String, CodingKey {
+                case name
+                case description
+                case baseRevision
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.name = try container.decode(
+                    Swift.String.self,
+                    forKey: .name
+                )
+                self.description = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .description
+                )
+                self.baseRevision = try container.decode(
+                    Swift.Int.self,
+                    forKey: .baseRevision
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "name",
+                    "description",
+                    "baseRevision"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/DocumentVersionRestore`.
+        public struct DocumentVersionRestore: Codable, Hashable, Sendable {
+            /// Current live document revision required before restoring a checkpoint.
+            ///
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionRestore/baseRevision`.
+            public var baseRevision: Swift.Int
+            /// Creates a new `DocumentVersionRestore`.
+            ///
+            /// - Parameters:
+            ///   - baseRevision: Current live document revision required before restoring a checkpoint.
+            public init(baseRevision: Swift.Int) {
+                self.baseRevision = baseRevision
+            }
+            public enum CodingKeys: String, CodingKey {
+                case baseRevision
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.baseRevision = try container.decode(
+                    Swift.Int.self,
+                    forKey: .baseRevision
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "baseRevision"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/DocumentVersionSummary`.
+        public struct DocumentVersionSummary: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionSummary/id`.
+            public var id: Swift.String
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionSummary/documentId`.
+            public var documentId: Swift.String
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionSummary/name`.
+            public var name: Swift.String
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionSummary/description`.
+            public var description: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionSummary/sourceRevision`.
+            public var sourceRevision: Swift.Int
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionSummary/title`.
+            public var title: Swift.String
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionSummary/createdByIdentityId`.
+            public var createdByIdentityId: Swift.String
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionSummary/createdAt`.
+            public var createdAt: Swift.String
+            /// Creates a new `DocumentVersionSummary`.
+            ///
+            /// - Parameters:
+            ///   - id:
+            ///   - documentId:
+            ///   - name:
+            ///   - description:
+            ///   - sourceRevision:
+            ///   - title:
+            ///   - createdByIdentityId:
+            ///   - createdAt:
+            public init(
+                id: Swift.String,
+                documentId: Swift.String,
+                name: Swift.String,
+                description: Swift.String? = nil,
+                sourceRevision: Swift.Int,
+                title: Swift.String,
+                createdByIdentityId: Swift.String,
+                createdAt: Swift.String
+            ) {
+                self.id = id
+                self.documentId = documentId
+                self.name = name
+                self.description = description
+                self.sourceRevision = sourceRevision
+                self.title = title
+                self.createdByIdentityId = createdByIdentityId
+                self.createdAt = createdAt
+            }
+            public enum CodingKeys: String, CodingKey {
+                case id
+                case documentId
+                case name
+                case description
+                case sourceRevision
+                case title
+                case createdByIdentityId
+                case createdAt
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.id = try container.decode(
+                    Swift.String.self,
+                    forKey: .id
+                )
+                self.documentId = try container.decode(
+                    Swift.String.self,
+                    forKey: .documentId
+                )
+                self.name = try container.decode(
+                    Swift.String.self,
+                    forKey: .name
+                )
+                self.description = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .description
+                )
+                self.sourceRevision = try container.decode(
+                    Swift.Int.self,
+                    forKey: .sourceRevision
+                )
+                self.title = try container.decode(
+                    Swift.String.self,
+                    forKey: .title
+                )
+                self.createdByIdentityId = try container.decode(
+                    Swift.String.self,
+                    forKey: .createdByIdentityId
+                )
+                self.createdAt = try container.decode(
+                    Swift.String.self,
+                    forKey: .createdAt
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "id",
+                    "documentId",
+                    "name",
+                    "description",
+                    "sourceRevision",
+                    "title",
+                    "createdByIdentityId",
+                    "createdAt"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord`.
+        public struct DocumentVersionRecord: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/value1`.
+            public var value1: Components.Schemas.DocumentVersionSummary
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/value2`.
+            public struct Value2Payload: Codable, Hashable, Sendable {
+                /// Checkpoint Markdown source.
+                ///
+                /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/value2/content`.
+                public var content: Swift.String
+                /// Creates a new `Value2Payload`.
+                ///
+                /// - Parameters:
+                ///   - content: Checkpoint Markdown source.
+                public init(content: Swift.String) {
+                    self.content = content
+                }
+                public enum CodingKeys: String, CodingKey {
+                    case content
+                }
+                public init(from decoder: any Swift.Decoder) throws {
+                    let container = try decoder.container(keyedBy: CodingKeys.self)
+                    self.content = try container.decode(
+                        Swift.String.self,
+                        forKey: .content
+                    )
+                    try decoder.ensureNoAdditionalProperties(knownKeys: [
+                        "content"
+                    ])
+                }
+            }
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/value2`.
+            public var value2: Components.Schemas.DocumentVersionRecord.Value2Payload
+            /// Creates a new `DocumentVersionRecord`.
+            ///
+            /// - Parameters:
+            ///   - value1:
+            ///   - value2:
+            public init(
+                value1: Components.Schemas.DocumentVersionSummary,
+                value2: Components.Schemas.DocumentVersionRecord.Value2Payload
+            ) {
+                self.value1 = value1
+                self.value2 = value2
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                self.value1 = try .init(from: decoder)
+                self.value2 = try .init(from: decoder)
+            }
+            public func encode(to encoder: any Swift.Encoder) throws {
+                try self.value1.encode(to: encoder)
+                try self.value2.encode(to: encoder)
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/DocumentVersionEnvelope`.
+        public struct DocumentVersionEnvelope: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionEnvelope/version`.
+            public var version: Components.Schemas.DocumentVersionRecord
+            /// Creates a new `DocumentVersionEnvelope`.
+            ///
+            /// - Parameters:
+            ///   - version:
+            public init(version: Components.Schemas.DocumentVersionRecord) {
+                self.version = version
+            }
+            public enum CodingKeys: String, CodingKey {
+                case version
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.version = try container.decode(
+                    Components.Schemas.DocumentVersionRecord.self,
+                    forKey: .version
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "version"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/DocumentVersionList`.
+        public struct DocumentVersionList: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionList/versions`.
+            public var versions: [Components.Schemas.DocumentVersionSummary]
+            /// Creates a new `DocumentVersionList`.
+            ///
+            /// - Parameters:
+            ///   - versions:
+            public init(versions: [Components.Schemas.DocumentVersionSummary]) {
+                self.versions = versions
+            }
+            public enum CodingKeys: String, CodingKey {
+                case versions
+            }
+            public init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.versions = try container.decode(
+                    [Components.Schemas.DocumentVersionSummary].self,
+                    forKey: .versions
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "versions"
+                ])
+            }
+        }
         /// - Remark: Generated from `#/components/schemas/CollaboratorAdd`.
         public struct CollaboratorAdd: Codable, Hashable, Sendable {
             /// - Remark: Generated from `#/components/schemas/CollaboratorAdd/identityId`.
@@ -4059,6 +5087,14 @@ public enum Components {
         ///
         /// - Remark: Generated from `#/components/parameters/documentId`.
         public typealias documentId = Swift.String
+        /// Comment-thread identifier.
+        ///
+        /// - Remark: Generated from `#/components/parameters/commentThreadId`.
+        public typealias commentThreadId = Swift.String
+        /// Document checkpoint identifier.
+        ///
+        /// - Remark: Generated from `#/components/parameters/versionId`.
+        public typealias versionId = Swift.String
         /// Instance-local identity identifier.
         ///
         /// - Remark: Generated from `#/components/parameters/identityId`.
@@ -9832,6 +10868,1881 @@ public enum Operations {
             /// A required write precondition is missing.
             ///
             /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/position/patch(positionDocument)/responses/428`.
+            ///
+            /// HTTP response code: `428 preconditionRequired`.
+            case preconditionRequired(Components.Responses.PreconditionRequired)
+            /// The associated value of the enum case if `self` is `.preconditionRequired`.
+            ///
+            /// - Throws: An error if `self` is not `.preconditionRequired`.
+            /// - SeeAlso: `.preconditionRequired`.
+            public var preconditionRequired: Components.Responses.PreconditionRequired {
+                get throws {
+                    switch self {
+                    case let .preconditionRequired(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "preconditionRequired",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// List document comment threads.
+    ///
+    /// Returns document-level review notes and selected-text snippet comment threads. Text anchors include outdated=true when the live document revision has advanced beyond the anchor baseRevision.
+    ///
+    /// - Remark: HTTP `GET /api/v1/documents/{documentId}/comment-threads`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/comment-threads/get(listCommentThreads)`.
+    public enum listCommentThreads {
+        public static let id: Swift.String = "listCommentThreads"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/GET/path`.
+            public struct Path: Sendable, Hashable {
+                /// Document identifier.
+                ///
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/GET/path/documentId`.
+                public var documentId: Components.Parameters.documentId
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - documentId: Document identifier.
+                public init(documentId: Components.Parameters.documentId) {
+                    self.documentId = documentId
+                }
+            }
+            public var path: Operations.listCommentThreads.Input.Path
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/GET/query`.
+            public struct Query: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/GET/query/status`.
+                @frozen public enum statusPayload: String, Codable, Hashable, Sendable, CaseIterable {
+                    case open = "open"
+                    case resolved = "resolved"
+                    case all = "all"
+                }
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/GET/query/status`.
+                public var status: Operations.listCommentThreads.Input.Query.statusPayload?
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/GET/query/anchor`.
+                @frozen public enum anchorPayload: String, Codable, Hashable, Sendable, CaseIterable {
+                    case document = "document"
+                    case text = "text"
+                    case all = "all"
+                }
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/GET/query/anchor`.
+                public var anchor: Operations.listCommentThreads.Input.Query.anchorPayload?
+                /// Creates a new `Query`.
+                ///
+                /// - Parameters:
+                ///   - status:
+                ///   - anchor:
+                public init(
+                    status: Operations.listCommentThreads.Input.Query.statusPayload? = nil,
+                    anchor: Operations.listCommentThreads.Input.Query.anchorPayload? = nil
+                ) {
+                    self.status = status
+                    self.anchor = anchor
+                }
+            }
+            public var query: Operations.listCommentThreads.Input.Query
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/GET/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.listCommentThreads.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.listCommentThreads.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.listCommentThreads.Input.Headers
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - query:
+            ///   - headers:
+            public init(
+                path: Operations.listCommentThreads.Input.Path,
+                query: Operations.listCommentThreads.Input.Query = .init(),
+                headers: Operations.listCommentThreads.Input.Headers = .init()
+            ) {
+                self.path = path
+                self.query = query
+                self.headers = headers
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/GET/responses/200/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/GET/responses/200/content/application\/json`.
+                    case json(Components.Schemas.CommentThreadList)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.CommentThreadList {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.listCommentThreads.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.listCommentThreads.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// Document comment threads.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/comment-threads/get(listCommentThreads)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.listCommentThreads.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            public var ok: Operations.listCommentThreads.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Invalid request body or parameter.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/comment-threads/get(listCommentThreads)/responses/400`.
+            ///
+            /// HTTP response code: `400 badRequest`.
+            case badRequest(Components.Responses.BadRequest)
+            /// The associated value of the enum case if `self` is `.badRequest`.
+            ///
+            /// - Throws: An error if `self` is not `.badRequest`.
+            /// - SeeAlso: `.badRequest`.
+            public var badRequest: Components.Responses.BadRequest {
+                get throws {
+                    switch self {
+                    case let .badRequest(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "badRequest",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// The requested resource was not found.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/comment-threads/get(listCommentThreads)/responses/404`.
+            ///
+            /// HTTP response code: `404 notFound`.
+            case notFound(Components.Responses.NotFound)
+            /// The associated value of the enum case if `self` is `.notFound`.
+            ///
+            /// - Throws: An error if `self` is not `.notFound`.
+            /// - SeeAlso: `.notFound`.
+            public var notFound: Components.Responses.NotFound {
+                get throws {
+                    switch self {
+                    case let .notFound(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "notFound",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// Create a document comment thread.
+    ///
+    /// Creates either a whole-document review note or a selected Markdown text thread. Text anchors use 1-based line/column positions and an exclusive end column; quote must match the current document content at baseRevision.
+    ///
+    /// - Remark: HTTP `POST /api/v1/documents/{documentId}/comment-threads`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/comment-threads/post(createCommentThread)`.
+    public enum createCommentThread {
+        public static let id: Swift.String = "createCommentThread"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/POST/path`.
+            public struct Path: Sendable, Hashable {
+                /// Document identifier.
+                ///
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/POST/path/documentId`.
+                public var documentId: Components.Parameters.documentId
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - documentId: Document identifier.
+                public init(documentId: Components.Parameters.documentId) {
+                    self.documentId = documentId
+                }
+            }
+            public var path: Operations.createCommentThread.Input.Path
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/POST/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.createCommentThread.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.createCommentThread.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.createCommentThread.Input.Headers
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/POST/requestBody`.
+            @frozen public enum Body: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/POST/requestBody/content/application\/json`.
+                case json(Components.Schemas.CommentThreadCreate)
+            }
+            public var body: Operations.createCommentThread.Input.Body
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            ///   - body:
+            public init(
+                path: Operations.createCommentThread.Input.Path,
+                headers: Operations.createCommentThread.Input.Headers = .init(),
+                body: Operations.createCommentThread.Input.Body
+            ) {
+                self.path = path
+                self.headers = headers
+                self.body = body
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Created: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/POST/responses/201/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/POST/responses/201/content/application\/json`.
+                    case json(Components.Schemas.CommentThreadEnvelope)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.CommentThreadEnvelope {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.createCommentThread.Output.Created.Body
+                /// Creates a new `Created`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.createCommentThread.Output.Created.Body) {
+                    self.body = body
+                }
+            }
+            /// Created comment thread.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/comment-threads/post(createCommentThread)/responses/201`.
+            ///
+            /// HTTP response code: `201 created`.
+            case created(Operations.createCommentThread.Output.Created)
+            /// The associated value of the enum case if `self` is `.created`.
+            ///
+            /// - Throws: An error if `self` is not `.created`.
+            /// - SeeAlso: `.created`.
+            public var created: Operations.createCommentThread.Output.Created {
+                get throws {
+                    switch self {
+                    case let .created(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "created",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Invalid request body or parameter.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/comment-threads/post(createCommentThread)/responses/400`.
+            ///
+            /// HTTP response code: `400 badRequest`.
+            case badRequest(Components.Responses.BadRequest)
+            /// The associated value of the enum case if `self` is `.badRequest`.
+            ///
+            /// - Throws: An error if `self` is not `.badRequest`.
+            /// - SeeAlso: `.badRequest`.
+            public var badRequest: Components.Responses.BadRequest {
+                get throws {
+                    switch self {
+                    case let .badRequest(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "badRequest",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// The authenticated identity is not authorized.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/comment-threads/post(createCommentThread)/responses/403`.
+            ///
+            /// HTTP response code: `403 forbidden`.
+            case forbidden(Components.Responses.Forbidden)
+            /// The associated value of the enum case if `self` is `.forbidden`.
+            ///
+            /// - Throws: An error if `self` is not `.forbidden`.
+            /// - SeeAlso: `.forbidden`.
+            public var forbidden: Components.Responses.Forbidden {
+                get throws {
+                    switch self {
+                    case let .forbidden(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "forbidden",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct Conflict: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/POST/responses/409/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/comment-threads/POST/responses/409/content/application\/json`.
+                    case json(Components.Schemas._Error)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas._Error {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.createCommentThread.Output.Conflict.Body
+                /// Creates a new `Conflict`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.createCommentThread.Output.Conflict.Body) {
+                    self.body = body
+                }
+            }
+            /// Document revision conflict.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/comment-threads/post(createCommentThread)/responses/409`.
+            ///
+            /// HTTP response code: `409 conflict`.
+            case conflict(Operations.createCommentThread.Output.Conflict)
+            /// The associated value of the enum case if `self` is `.conflict`.
+            ///
+            /// - Throws: An error if `self` is not `.conflict`.
+            /// - SeeAlso: `.conflict`.
+            public var conflict: Operations.createCommentThread.Output.Conflict {
+                get throws {
+                    switch self {
+                    case let .conflict(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "conflict",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// A required write precondition is missing.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/comment-threads/post(createCommentThread)/responses/428`.
+            ///
+            /// HTTP response code: `428 preconditionRequired`.
+            case preconditionRequired(Components.Responses.PreconditionRequired)
+            /// The associated value of the enum case if `self` is `.preconditionRequired`.
+            ///
+            /// - Throws: An error if `self` is not `.preconditionRequired`.
+            /// - SeeAlso: `.preconditionRequired`.
+            public var preconditionRequired: Components.Responses.PreconditionRequired {
+                get throws {
+                    switch self {
+                    case let .preconditionRequired(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "preconditionRequired",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// Add an immutable reply to a comment thread.
+    ///
+    /// - Remark: HTTP `POST /api/v1/comment-threads/{threadId}/comments`.
+    /// - Remark: Generated from `#/paths//api/v1/comment-threads/{threadId}/comments/post(addCommentMessage)`.
+    public enum addCommentMessage {
+        public static let id: Swift.String = "addCommentMessage"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/api/v1/comment-threads/{threadId}/comments/POST/path`.
+            public struct Path: Sendable, Hashable {
+                /// Comment-thread identifier.
+                ///
+                /// - Remark: Generated from `#/paths/api/v1/comment-threads/{threadId}/comments/POST/path/threadId`.
+                public var threadId: Components.Parameters.commentThreadId
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - threadId: Comment-thread identifier.
+                public init(threadId: Components.Parameters.commentThreadId) {
+                    self.threadId = threadId
+                }
+            }
+            public var path: Operations.addCommentMessage.Input.Path
+            /// - Remark: Generated from `#/paths/api/v1/comment-threads/{threadId}/comments/POST/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.addCommentMessage.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.addCommentMessage.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.addCommentMessage.Input.Headers
+            /// - Remark: Generated from `#/paths/api/v1/comment-threads/{threadId}/comments/POST/requestBody`.
+            @frozen public enum Body: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/comment-threads/{threadId}/comments/POST/requestBody/content/application\/json`.
+                case json(Components.Schemas.CommentMessageCreate)
+            }
+            public var body: Operations.addCommentMessage.Input.Body
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            ///   - body:
+            public init(
+                path: Operations.addCommentMessage.Input.Path,
+                headers: Operations.addCommentMessage.Input.Headers = .init(),
+                body: Operations.addCommentMessage.Input.Body
+            ) {
+                self.path = path
+                self.headers = headers
+                self.body = body
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Created: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/comment-threads/{threadId}/comments/POST/responses/201/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/comment-threads/{threadId}/comments/POST/responses/201/content/application\/json`.
+                    case json(Components.Schemas.CommentThreadEnvelope)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.CommentThreadEnvelope {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.addCommentMessage.Output.Created.Body
+                /// Creates a new `Created`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.addCommentMessage.Output.Created.Body) {
+                    self.body = body
+                }
+            }
+            /// Updated comment thread.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/comment-threads/{threadId}/comments/post(addCommentMessage)/responses/201`.
+            ///
+            /// HTTP response code: `201 created`.
+            case created(Operations.addCommentMessage.Output.Created)
+            /// The associated value of the enum case if `self` is `.created`.
+            ///
+            /// - Throws: An error if `self` is not `.created`.
+            /// - SeeAlso: `.created`.
+            public var created: Operations.addCommentMessage.Output.Created {
+                get throws {
+                    switch self {
+                    case let .created(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "created",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Invalid request body or parameter.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/comment-threads/{threadId}/comments/post(addCommentMessage)/responses/400`.
+            ///
+            /// HTTP response code: `400 badRequest`.
+            case badRequest(Components.Responses.BadRequest)
+            /// The associated value of the enum case if `self` is `.badRequest`.
+            ///
+            /// - Throws: An error if `self` is not `.badRequest`.
+            /// - SeeAlso: `.badRequest`.
+            public var badRequest: Components.Responses.BadRequest {
+                get throws {
+                    switch self {
+                    case let .badRequest(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "badRequest",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// The authenticated identity is not authorized.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/comment-threads/{threadId}/comments/post(addCommentMessage)/responses/403`.
+            ///
+            /// HTTP response code: `403 forbidden`.
+            case forbidden(Components.Responses.Forbidden)
+            /// The associated value of the enum case if `self` is `.forbidden`.
+            ///
+            /// - Throws: An error if `self` is not `.forbidden`.
+            /// - SeeAlso: `.forbidden`.
+            public var forbidden: Components.Responses.Forbidden {
+                get throws {
+                    switch self {
+                    case let .forbidden(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "forbidden",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// Resolve or reopen a comment thread.
+    ///
+    /// - Remark: HTTP `PATCH /api/v1/comment-threads/{threadId}`.
+    /// - Remark: Generated from `#/paths//api/v1/comment-threads/{threadId}/patch(updateCommentThread)`.
+    public enum updateCommentThread {
+        public static let id: Swift.String = "updateCommentThread"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/api/v1/comment-threads/{threadId}/PATCH/path`.
+            public struct Path: Sendable, Hashable {
+                /// Comment-thread identifier.
+                ///
+                /// - Remark: Generated from `#/paths/api/v1/comment-threads/{threadId}/PATCH/path/threadId`.
+                public var threadId: Components.Parameters.commentThreadId
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - threadId: Comment-thread identifier.
+                public init(threadId: Components.Parameters.commentThreadId) {
+                    self.threadId = threadId
+                }
+            }
+            public var path: Operations.updateCommentThread.Input.Path
+            /// - Remark: Generated from `#/paths/api/v1/comment-threads/{threadId}/PATCH/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.updateCommentThread.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.updateCommentThread.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.updateCommentThread.Input.Headers
+            /// - Remark: Generated from `#/paths/api/v1/comment-threads/{threadId}/PATCH/requestBody`.
+            @frozen public enum Body: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/comment-threads/{threadId}/PATCH/requestBody/content/application\/json`.
+                case json(Components.Schemas.CommentThreadUpdate)
+            }
+            public var body: Operations.updateCommentThread.Input.Body
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            ///   - body:
+            public init(
+                path: Operations.updateCommentThread.Input.Path,
+                headers: Operations.updateCommentThread.Input.Headers = .init(),
+                body: Operations.updateCommentThread.Input.Body
+            ) {
+                self.path = path
+                self.headers = headers
+                self.body = body
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/comment-threads/{threadId}/PATCH/responses/200/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/comment-threads/{threadId}/PATCH/responses/200/content/application\/json`.
+                    case json(Components.Schemas.CommentThreadEnvelope)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.CommentThreadEnvelope {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.updateCommentThread.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.updateCommentThread.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// Updated comment thread.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/comment-threads/{threadId}/patch(updateCommentThread)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.updateCommentThread.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            public var ok: Operations.updateCommentThread.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Invalid request body or parameter.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/comment-threads/{threadId}/patch(updateCommentThread)/responses/400`.
+            ///
+            /// HTTP response code: `400 badRequest`.
+            case badRequest(Components.Responses.BadRequest)
+            /// The associated value of the enum case if `self` is `.badRequest`.
+            ///
+            /// - Throws: An error if `self` is not `.badRequest`.
+            /// - SeeAlso: `.badRequest`.
+            public var badRequest: Components.Responses.BadRequest {
+                get throws {
+                    switch self {
+                    case let .badRequest(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "badRequest",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// The authenticated identity is not authorized.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/comment-threads/{threadId}/patch(updateCommentThread)/responses/403`.
+            ///
+            /// HTTP response code: `403 forbidden`.
+            case forbidden(Components.Responses.Forbidden)
+            /// The associated value of the enum case if `self` is `.forbidden`.
+            ///
+            /// - Throws: An error if `self` is not `.forbidden`.
+            /// - SeeAlso: `.forbidden`.
+            public var forbidden: Components.Responses.Forbidden {
+                get throws {
+                    switch self {
+                    case let .forbidden(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "forbidden",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// List manual document checkpoints.
+    ///
+    /// - Remark: HTTP `GET /api/v1/documents/{documentId}/versions`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/get(listDocumentVersions)`.
+    public enum listDocumentVersions {
+        public static let id: Swift.String = "listDocumentVersions"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/GET/path`.
+            public struct Path: Sendable, Hashable {
+                /// Document identifier.
+                ///
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/GET/path/documentId`.
+                public var documentId: Components.Parameters.documentId
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - documentId: Document identifier.
+                public init(documentId: Components.Parameters.documentId) {
+                    self.documentId = documentId
+                }
+            }
+            public var path: Operations.listDocumentVersions.Input.Path
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/GET/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.listDocumentVersions.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.listDocumentVersions.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.listDocumentVersions.Input.Headers
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            public init(
+                path: Operations.listDocumentVersions.Input.Path,
+                headers: Operations.listDocumentVersions.Input.Headers = .init()
+            ) {
+                self.path = path
+                self.headers = headers
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/GET/responses/200/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/GET/responses/200/content/application\/json`.
+                    case json(Components.Schemas.DocumentVersionList)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.DocumentVersionList {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.listDocumentVersions.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.listDocumentVersions.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// Document checkpoints.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/get(listDocumentVersions)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.listDocumentVersions.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            public var ok: Operations.listDocumentVersions.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// The requested resource was not found.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/get(listDocumentVersions)/responses/404`.
+            ///
+            /// HTTP response code: `404 notFound`.
+            case notFound(Components.Responses.NotFound)
+            /// The associated value of the enum case if `self` is `.notFound`.
+            ///
+            /// - Throws: An error if `self` is not `.notFound`.
+            /// - SeeAlso: `.notFound`.
+            public var notFound: Components.Responses.NotFound {
+                get throws {
+                    switch self {
+                    case let .notFound(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "notFound",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// Create a manual document checkpoint.
+    ///
+    /// Stores an immutable title/content snapshot without incrementing the live document revision. Requires baseRevision equal to the current document revision.
+    ///
+    /// - Remark: HTTP `POST /api/v1/documents/{documentId}/versions`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/post(createDocumentVersion)`.
+    public enum createDocumentVersion {
+        public static let id: Swift.String = "createDocumentVersion"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/POST/path`.
+            public struct Path: Sendable, Hashable {
+                /// Document identifier.
+                ///
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/POST/path/documentId`.
+                public var documentId: Components.Parameters.documentId
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - documentId: Document identifier.
+                public init(documentId: Components.Parameters.documentId) {
+                    self.documentId = documentId
+                }
+            }
+            public var path: Operations.createDocumentVersion.Input.Path
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/POST/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.createDocumentVersion.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.createDocumentVersion.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.createDocumentVersion.Input.Headers
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/POST/requestBody`.
+            @frozen public enum Body: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/POST/requestBody/content/application\/json`.
+                case json(Components.Schemas.DocumentVersionCreate)
+            }
+            public var body: Operations.createDocumentVersion.Input.Body
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            ///   - body:
+            public init(
+                path: Operations.createDocumentVersion.Input.Path,
+                headers: Operations.createDocumentVersion.Input.Headers = .init(),
+                body: Operations.createDocumentVersion.Input.Body
+            ) {
+                self.path = path
+                self.headers = headers
+                self.body = body
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Created: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/POST/responses/201/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/POST/responses/201/content/application\/json`.
+                    case json(Components.Schemas.DocumentVersionEnvelope)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.DocumentVersionEnvelope {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.createDocumentVersion.Output.Created.Body
+                /// Creates a new `Created`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.createDocumentVersion.Output.Created.Body) {
+                    self.body = body
+                }
+            }
+            /// Created checkpoint.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/post(createDocumentVersion)/responses/201`.
+            ///
+            /// HTTP response code: `201 created`.
+            case created(Operations.createDocumentVersion.Output.Created)
+            /// The associated value of the enum case if `self` is `.created`.
+            ///
+            /// - Throws: An error if `self` is not `.created`.
+            /// - SeeAlso: `.created`.
+            public var created: Operations.createDocumentVersion.Output.Created {
+                get throws {
+                    switch self {
+                    case let .created(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "created",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Invalid request body or parameter.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/post(createDocumentVersion)/responses/400`.
+            ///
+            /// HTTP response code: `400 badRequest`.
+            case badRequest(Components.Responses.BadRequest)
+            /// The associated value of the enum case if `self` is `.badRequest`.
+            ///
+            /// - Throws: An error if `self` is not `.badRequest`.
+            /// - SeeAlso: `.badRequest`.
+            public var badRequest: Components.Responses.BadRequest {
+                get throws {
+                    switch self {
+                    case let .badRequest(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "badRequest",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// The authenticated identity is not authorized.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/post(createDocumentVersion)/responses/403`.
+            ///
+            /// HTTP response code: `403 forbidden`.
+            case forbidden(Components.Responses.Forbidden)
+            /// The associated value of the enum case if `self` is `.forbidden`.
+            ///
+            /// - Throws: An error if `self` is not `.forbidden`.
+            /// - SeeAlso: `.forbidden`.
+            public var forbidden: Components.Responses.Forbidden {
+                get throws {
+                    switch self {
+                    case let .forbidden(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "forbidden",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct Conflict: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/POST/responses/409/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/POST/responses/409/content/application\/json`.
+                    case json(Components.Schemas._Error)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas._Error {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.createDocumentVersion.Output.Conflict.Body
+                /// Creates a new `Conflict`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.createDocumentVersion.Output.Conflict.Body) {
+                    self.body = body
+                }
+            }
+            /// Document revision conflict.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/post(createDocumentVersion)/responses/409`.
+            ///
+            /// HTTP response code: `409 conflict`.
+            case conflict(Operations.createDocumentVersion.Output.Conflict)
+            /// The associated value of the enum case if `self` is `.conflict`.
+            ///
+            /// - Throws: An error if `self` is not `.conflict`.
+            /// - SeeAlso: `.conflict`.
+            public var conflict: Operations.createDocumentVersion.Output.Conflict {
+                get throws {
+                    switch self {
+                    case let .conflict(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "conflict",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// A required write precondition is missing.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/post(createDocumentVersion)/responses/428`.
+            ///
+            /// HTTP response code: `428 preconditionRequired`.
+            case preconditionRequired(Components.Responses.PreconditionRequired)
+            /// The associated value of the enum case if `self` is `.preconditionRequired`.
+            ///
+            /// - Throws: An error if `self` is not `.preconditionRequired`.
+            /// - SeeAlso: `.preconditionRequired`.
+            public var preconditionRequired: Components.Responses.PreconditionRequired {
+                get throws {
+                    switch self {
+                    case let .preconditionRequired(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "preconditionRequired",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// Read one manual document checkpoint.
+    ///
+    /// - Remark: HTTP `GET /api/v1/documents/{documentId}/versions/{versionId}`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/get(getDocumentVersion)`.
+    public enum getDocumentVersion {
+        public static let id: Swift.String = "getDocumentVersion"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/GET/path`.
+            public struct Path: Sendable, Hashable {
+                /// Document identifier.
+                ///
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/GET/path/documentId`.
+                public var documentId: Components.Parameters.documentId
+                /// Document checkpoint identifier.
+                ///
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/GET/path/versionId`.
+                public var versionId: Components.Parameters.versionId
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - documentId: Document identifier.
+                ///   - versionId: Document checkpoint identifier.
+                public init(
+                    documentId: Components.Parameters.documentId,
+                    versionId: Components.Parameters.versionId
+                ) {
+                    self.documentId = documentId
+                    self.versionId = versionId
+                }
+            }
+            public var path: Operations.getDocumentVersion.Input.Path
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/GET/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.getDocumentVersion.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.getDocumentVersion.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.getDocumentVersion.Input.Headers
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            public init(
+                path: Operations.getDocumentVersion.Input.Path,
+                headers: Operations.getDocumentVersion.Input.Headers = .init()
+            ) {
+                self.path = path
+                self.headers = headers
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/GET/responses/200/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/GET/responses/200/content/application\/json`.
+                    case json(Components.Schemas.DocumentVersionEnvelope)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.DocumentVersionEnvelope {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.getDocumentVersion.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.getDocumentVersion.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// Document checkpoint.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/get(getDocumentVersion)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.getDocumentVersion.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            public var ok: Operations.getDocumentVersion.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// The requested resource was not found.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/get(getDocumentVersion)/responses/404`.
+            ///
+            /// HTTP response code: `404 notFound`.
+            case notFound(Components.Responses.NotFound)
+            /// The associated value of the enum case if `self` is `.notFound`.
+            ///
+            /// - Throws: An error if `self` is not `.notFound`.
+            /// - SeeAlso: `.notFound`.
+            public var notFound: Components.Responses.NotFound {
+                get throws {
+                    switch self {
+                    case let .notFound(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "notFound",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// Delete one manual document checkpoint.
+    ///
+    /// - Remark: HTTP `DELETE /api/v1/documents/{documentId}/versions/{versionId}`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/delete(deleteDocumentVersion)`.
+    public enum deleteDocumentVersion {
+        public static let id: Swift.String = "deleteDocumentVersion"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/DELETE/path`.
+            public struct Path: Sendable, Hashable {
+                /// Document identifier.
+                ///
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/DELETE/path/documentId`.
+                public var documentId: Components.Parameters.documentId
+                /// Document checkpoint identifier.
+                ///
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/DELETE/path/versionId`.
+                public var versionId: Components.Parameters.versionId
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - documentId: Document identifier.
+                ///   - versionId: Document checkpoint identifier.
+                public init(
+                    documentId: Components.Parameters.documentId,
+                    versionId: Components.Parameters.versionId
+                ) {
+                    self.documentId = documentId
+                    self.versionId = versionId
+                }
+            }
+            public var path: Operations.deleteDocumentVersion.Input.Path
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/DELETE/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.deleteDocumentVersion.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.deleteDocumentVersion.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.deleteDocumentVersion.Input.Headers
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            public init(
+                path: Operations.deleteDocumentVersion.Input.Path,
+                headers: Operations.deleteDocumentVersion.Input.Headers = .init()
+            ) {
+                self.path = path
+                self.headers = headers
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/DELETE/responses/200/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/DELETE/responses/200/content/application\/json`.
+                    case json(Components.Schemas.Ok)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.Ok {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.deleteDocumentVersion.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.deleteDocumentVersion.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// Document checkpoint deleted.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/delete(deleteDocumentVersion)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.deleteDocumentVersion.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            public var ok: Operations.deleteDocumentVersion.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// The authenticated identity is not authorized.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/delete(deleteDocumentVersion)/responses/403`.
+            ///
+            /// HTTP response code: `403 forbidden`.
+            case forbidden(Components.Responses.Forbidden)
+            /// The associated value of the enum case if `self` is `.forbidden`.
+            ///
+            /// - Throws: An error if `self` is not `.forbidden`.
+            /// - SeeAlso: `.forbidden`.
+            public var forbidden: Components.Responses.Forbidden {
+                get throws {
+                    switch self {
+                    case let .forbidden(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "forbidden",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// Restore a manual document checkpoint.
+    ///
+    /// Writes the checkpoint title/content into the live document, increments the live document revision, and preserves the checkpoint record.
+    ///
+    /// - Remark: HTTP `POST /api/v1/documents/{documentId}/versions/{versionId}/restore`.
+    /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/restore/post(restoreDocumentVersion)`.
+    public enum restoreDocumentVersion {
+        public static let id: Swift.String = "restoreDocumentVersion"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/restore/POST/path`.
+            public struct Path: Sendable, Hashable {
+                /// Document identifier.
+                ///
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/restore/POST/path/documentId`.
+                public var documentId: Components.Parameters.documentId
+                /// Document checkpoint identifier.
+                ///
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/restore/POST/path/versionId`.
+                public var versionId: Components.Parameters.versionId
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - documentId: Document identifier.
+                ///   - versionId: Document checkpoint identifier.
+                public init(
+                    documentId: Components.Parameters.documentId,
+                    versionId: Components.Parameters.versionId
+                ) {
+                    self.documentId = documentId
+                    self.versionId = versionId
+                }
+            }
+            public var path: Operations.restoreDocumentVersion.Input.Path
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/restore/POST/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.restoreDocumentVersion.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.restoreDocumentVersion.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.restoreDocumentVersion.Input.Headers
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/restore/POST/requestBody`.
+            @frozen public enum Body: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/restore/POST/requestBody/content/application\/json`.
+                case json(Components.Schemas.DocumentVersionRestore)
+            }
+            public var body: Operations.restoreDocumentVersion.Input.Body
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            ///   - body:
+            public init(
+                path: Operations.restoreDocumentVersion.Input.Path,
+                headers: Operations.restoreDocumentVersion.Input.Headers = .init(),
+                body: Operations.restoreDocumentVersion.Input.Body
+            ) {
+                self.path = path
+                self.headers = headers
+                self.body = body
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/restore/POST/responses/200/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/restore/POST/responses/200/content/application\/json`.
+                    case json(Components.Schemas.DocumentEnvelope)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.DocumentEnvelope {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.restoreDocumentVersion.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.restoreDocumentVersion.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// Restored document.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/restore/post(restoreDocumentVersion)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.restoreDocumentVersion.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            public var ok: Operations.restoreDocumentVersion.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Invalid request body or parameter.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/restore/post(restoreDocumentVersion)/responses/400`.
+            ///
+            /// HTTP response code: `400 badRequest`.
+            case badRequest(Components.Responses.BadRequest)
+            /// The associated value of the enum case if `self` is `.badRequest`.
+            ///
+            /// - Throws: An error if `self` is not `.badRequest`.
+            /// - SeeAlso: `.badRequest`.
+            public var badRequest: Components.Responses.BadRequest {
+                get throws {
+                    switch self {
+                    case let .badRequest(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "badRequest",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// The authenticated identity is not authorized.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/restore/post(restoreDocumentVersion)/responses/403`.
+            ///
+            /// HTTP response code: `403 forbidden`.
+            case forbidden(Components.Responses.Forbidden)
+            /// The associated value of the enum case if `self` is `.forbidden`.
+            ///
+            /// - Throws: An error if `self` is not `.forbidden`.
+            /// - SeeAlso: `.forbidden`.
+            public var forbidden: Components.Responses.Forbidden {
+                get throws {
+                    switch self {
+                    case let .forbidden(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "forbidden",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// The requested resource was not found.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/restore/post(restoreDocumentVersion)/responses/404`.
+            ///
+            /// HTTP response code: `404 notFound`.
+            case notFound(Components.Responses.NotFound)
+            /// The associated value of the enum case if `self` is `.notFound`.
+            ///
+            /// - Throws: An error if `self` is not `.notFound`.
+            /// - SeeAlso: `.notFound`.
+            public var notFound: Components.Responses.NotFound {
+                get throws {
+                    switch self {
+                    case let .notFound(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "notFound",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct Conflict: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/restore/POST/responses/409/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/versions/{versionId}/restore/POST/responses/409/content/application\/json`.
+                    case json(Components.Schemas._Error)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas._Error {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.restoreDocumentVersion.Output.Conflict.Body
+                /// Creates a new `Conflict`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.restoreDocumentVersion.Output.Conflict.Body) {
+                    self.body = body
+                }
+            }
+            /// Document revision conflict.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/restore/post(restoreDocumentVersion)/responses/409`.
+            ///
+            /// HTTP response code: `409 conflict`.
+            case conflict(Operations.restoreDocumentVersion.Output.Conflict)
+            /// The associated value of the enum case if `self` is `.conflict`.
+            ///
+            /// - Throws: An error if `self` is not `.conflict`.
+            /// - SeeAlso: `.conflict`.
+            public var conflict: Operations.restoreDocumentVersion.Output.Conflict {
+                get throws {
+                    switch self {
+                    case let .conflict(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "conflict",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// A required write precondition is missing.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/versions/{versionId}/restore/post(restoreDocumentVersion)/responses/428`.
             ///
             /// HTTP response code: `428 preconditionRequired`.
             case preconditionRequired(Components.Responses.PreconditionRequired)

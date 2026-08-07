@@ -9,6 +9,8 @@ import type {
 export type Role = "owner" | "editor";
 export type InvitationStatus = "pending" | "accepted" | "revoked";
 export type WebAuthnChallengeType = "bootstrap" | "registration" | "login";
+export type CommentThreadStatus = "open" | "resolved";
+export type CommentAnchorKind = "document" | "text";
 
 export interface Env {
   DB: D1Database;
@@ -54,6 +56,53 @@ export interface DocumentSummary {
 }
 
 export interface DocumentRecord extends DocumentSummary {
+  content: string;
+}
+
+export interface DocumentCommentAnchor {
+  type: CommentAnchorKind;
+  startLine: number | null;
+  startColumn: number | null;
+  endLine: number | null;
+  endColumn: number | null;
+  quote: string | null;
+  baseRevision: number | null;
+}
+
+export interface DocumentCommentMessage {
+  id: string;
+  threadId: string;
+  body: string;
+  createdByIdentityId: string;
+  createdAt: string;
+}
+
+export interface DocumentCommentThread {
+  id: string;
+  documentId: string;
+  status: CommentThreadStatus;
+  anchor: DocumentCommentAnchor;
+  outdated: boolean;
+  createdByIdentityId: string;
+  createdAt: string;
+  updatedAt: string;
+  resolvedByIdentityId: string | null;
+  resolvedAt: string | null;
+  comments: DocumentCommentMessage[];
+}
+
+export interface DocumentVersionSummary {
+  id: string;
+  documentId: string;
+  name: string;
+  description: string | null;
+  sourceRevision: number;
+  title: string;
+  createdByIdentityId: string;
+  createdAt: string;
+}
+
+export interface DocumentVersionRecord extends DocumentVersionSummary {
   content: string;
 }
 
@@ -412,6 +461,53 @@ export interface Storage {
   deleteDocument(input: {
     identityId: string;
     documentId: string;
+  }): Promise<boolean>;
+  listCommentThreads(input: {
+    identityId: string;
+    documentId: string;
+    status?: CommentThreadStatus;
+    anchor?: CommentAnchorKind;
+  }): Promise<DocumentCommentThread[] | null>;
+  createCommentThread(input: {
+    identityId: string;
+    documentId: string;
+    anchor: DocumentCommentAnchor;
+    body: string;
+  }): Promise<DocumentCommentThread | null>;
+  addCommentMessage(input: {
+    identityId: string;
+    threadId: string;
+    body: string;
+  }): Promise<DocumentCommentThread | null>;
+  updateCommentThreadStatus(input: {
+    identityId: string;
+    threadId: string;
+    status: CommentThreadStatus;
+  }): Promise<DocumentCommentThread | null>;
+  listDocumentVersions(input: {
+    identityId: string;
+    documentId: string;
+  }): Promise<DocumentVersionSummary[] | null>;
+  createDocumentVersion(input: {
+    identityId: string;
+    documentId: string;
+    name: string;
+    description: string | null;
+  }): Promise<DocumentVersionRecord | null>;
+  getDocumentVersion(input: {
+    identityId: string;
+    documentId: string;
+    versionId: string;
+  }): Promise<DocumentVersionRecord | null>;
+  restoreDocumentVersion(input: {
+    identityId: string;
+    documentId: string;
+    versionId: string;
+  }): Promise<DocumentRecord | null>;
+  deleteDocumentVersion(input: {
+    identityId: string;
+    documentId: string;
+    versionId: string;
   }): Promise<boolean>;
   addDocumentCollaborator(input: {
     identityId: string;

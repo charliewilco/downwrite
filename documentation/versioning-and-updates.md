@@ -1,6 +1,6 @@
 # Versioning and Updates
 
-Downwrite has three separate version concepts. They answer different questions
+Downwrite has several separate version concepts. They answer different questions
 and should not be collapsed into one field.
 
 ## API Version
@@ -63,6 +63,18 @@ from database readiness.
 For v1, schema changes should remain compatible with the served v1 API. A
 release that requires remote migrations should say so clearly in release notes
 and in the machine-readable update manifest.
+
+## Document Checkpoints
+
+Manual document checkpoints are product data, not API, software, or schema
+versions. They are explicit user-created snapshots of a document title and
+Markdown content at a source document `revision`.
+
+The live document `revision` remains the write fence for autosave, move,
+reorder, comment anchor creation, checkpoint creation, and checkpoint restore.
+Creating a checkpoint does not increment the live revision. Restoring a
+checkpoint writes the checkpoint title/content into the live document and does
+increment the live revision.
 
 ## Update Manifest
 

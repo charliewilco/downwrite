@@ -93,6 +93,32 @@ Move and reorder operations use the same rule as content updates: keep the local
 intent queued with its original `baseRevision`, retry after transport failures,
 and surface a conflict if the server reports `409`.
 
+## Comments and Review
+
+Comment threads belong to one document. A thread anchor is either a whole
+document note or a selected Markdown text range. Text anchors use 1-based
+line/column positions with an exclusive end column, store the selected quote,
+and include the `baseRevision` that was current when the selection was made.
+
+The Worker validates selected-text anchors against the current Markdown content
+when the thread is created. It does not auto-reanchor comments after edits.
+Clients should treat `outdated: true` as a signal that the live document has
+advanced beyond the text anchor's `baseRevision`.
+
+Messages are immutable in v1. Threads can be `open` or `resolved`; reopening a
+thread clears the resolver fields.
+
+## Manual Checkpoints
+
+Document checkpoints are explicit user-created versions, not automatic autosave
+history. Creating a checkpoint requires `baseRevision` equal to the current live
+document revision and does not increment the document revision.
+
+Restoring a checkpoint also requires `baseRevision`. A successful restore writes
+the checkpoint title and Markdown content into the live document, increments the
+live document revision, and keeps the checkpoint available unless the client
+deletes it.
+
 ## Lists
 
 Workspace and per-workspace document collections accept optional `limit` and
