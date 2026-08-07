@@ -4,9 +4,9 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { getPlatformProxy } from "wrangler";
-import { createApp } from "../dist/app.js";
-import { sha256Base64Url } from "../dist/crypto.js";
-import { runMaintenance } from "../dist/maintenance.js";
+import { createApp } from "../dist-api/app.js";
+import { sha256Base64Url } from "../dist-api/crypto.js";
+import { runMaintenance } from "../dist-api/maintenance.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const workerRoot = path.resolve(__dirname, "..");

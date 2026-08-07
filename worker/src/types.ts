@@ -15,6 +15,7 @@ export type CommentAnchorKind = "document" | "text";
 export interface Env {
   DB: D1Database;
   CONTENT: R2Bucket;
+  ASSETS: Fetcher;
   DEVELOPMENT_API_TOKENS?: string;
   DOWNWRITE_LOCAL_AUTH?: string;
   AUTH_BOOTSTRAP_TOKEN?: string;

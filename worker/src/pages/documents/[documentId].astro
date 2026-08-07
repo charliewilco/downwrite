@@ -1,0 +1,30 @@
+---
+import AppLayout from "../../layouts/AppLayout.astro";
+import { DocumentEditor } from "../../../web/src/islands/DocumentEditor.js";
+import { loadDocumentForRequest } from "../../web/page-data.js";
+
+const documentId = Astro.params.documentId ?? "";
+const { document, groups, error } = await loadDocumentForRequest(
+  Astro.request,
+  documentId,
+);
+---
+
+<AppLayout title={document ? `${document.title} - Downwrite` : "Document - Downwrite"}>
+  {
+    document ? (
+      <DocumentEditor client:load document={document} groups={groups} />
+    ) : (
+      <section class="document-screen empty-document">
+        <a class="back-button" href="/">Back</a>
+        <div>
+          <h1>Document not found</h1>
+          <p>
+            {error ??
+              "This document may have been deleted, moved, or hidden from the current identity."}
+          </p>
+        </div>
+      </section>
+    )
+  }
+</AppLayout>

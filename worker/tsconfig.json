@@ -6,11 +6,18 @@
     "lib": ["ES2022"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "outDir": "dist",
+    "outDir": "dist-api",
     "rootDir": "src",
     "strict": true,
     "target": "ES2022",
     "types": ["@cloudflare/workers-types"]
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "src/env.d.ts",
+    "src/index.ts",
+    "src/layouts/**/*",
+    "src/pages/**/*",
+    "src/web/**/*"
+  ]
 }

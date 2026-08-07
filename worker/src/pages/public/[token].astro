@@ -1,0 +1,37 @@
+---
+import AppLayout from "../../layouts/AppLayout.astro";
+import { loadPublicDocumentForRequest } from "../../web/page-data.js";
+import { renderMarkdownHtml } from "../../web/markdown-html.js";
+
+const publicToken = Astro.params.token ?? "";
+const { document, error } = await loadPublicDocumentForRequest(publicToken);
+const preview = document ? renderMarkdownHtml(document.content) : "";
+---
+
+<AppLayout title={document ? `${document.title} - Downwrite` : "Public Document - Downwrite"}>
+  {
+    document ? (
+      <article class="workspace-screen public-document">
+        <header class="section-heading">
+          <div>
+            <p class="eyebrow">
+              Public read-only link
+              {document.publicLink.label ? ` · ${document.publicLink.label}` : ""}
+            </p>
+            <h1>{document.title}</h1>
+            <p>
+              Anonymous visitors can read this Markdown document. Editing stays
+              restricted to invited collaborators.
+            </p>
+          </div>
+        </header>
+        <section class="preview-pane public-preview" set:html={preview} />
+      </article>
+    ) : (
+      <section class="workspace-screen empty-document">
+        <h1>Public document unavailable</h1>
+        <p>{error ?? "This public link may have been revoked."}</p>
+      </section>
+    )
+  }
+</AppLayout>

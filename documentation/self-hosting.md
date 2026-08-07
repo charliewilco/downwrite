@@ -17,8 +17,8 @@ npm run dev
 
 1. creates `.dev.vars` with random local-only secrets if the file is missing;
 2. applies local D1 migrations for Wrangler;
-3. builds the Preact app into `web/dist`;
-4. starts `wrangler dev`, normally at `http://localhost:8787`.
+3. serves the Astro web app with local Cloudflare bindings;
+4. starts Astro dev with local Cloudflare bindings, normally at `http://localhost:4321`.
 
 Open the local URL in a browser. For the fastest local browser path:
 
@@ -122,7 +122,7 @@ flow needs a directory with its own dependencies and Wrangler configuration.
 
 `worker/wrangler.toml` declares:
 
-- Workers Static Assets from `worker/web/dist`;
+- Astro server output and Workers Static Assets from `worker/dist`;
 - Worker-first routing for `/api/*`, `/.well-known/*`, `/oauth/*`, and `/mcp`;
 - D1 binding `DB`;
 - R2 binding `CONTENT`;
@@ -216,7 +216,7 @@ npm run validate:worker
 npm run deploy
 ```
 
-`npm run deploy` builds the API and Preact assets, applies remote D1 migrations,
+`npm run deploy` builds the API and Astro web app, applies remote D1 migrations,
 and deploys with Wrangler. Do not run it unless you intend to deploy to your own
 Cloudflare account.
 

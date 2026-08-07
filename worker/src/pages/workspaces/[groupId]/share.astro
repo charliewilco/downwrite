@@ -1,0 +1,53 @@
+---
+import AppLayout from "../../../layouts/AppLayout.astro";
+import { ShareControls } from "../../../../web/src/islands/ShareControls.js";
+import { loadGroupForRequest } from "../../../web/page-data.js";
+
+const groupId = Astro.params.groupId ?? "";
+const { group, error } = await loadGroupForRequest(Astro.request, groupId);
+const selectedDocumentId = Astro.url.searchParams.get("document") ?? undefined;
+---
+
+<AppLayout title={group ? `${group.name} Sharing - Downwrite` : "Sharing - Downwrite"}>
+  {
+    error ? (
+      <p class="status error">{error}</p>
+    ) : group ? (
+      <section class="workspace-screen sharing-route">
+        <header class="section-heading">
+          <a
+            class="back-button"
+            href={`/workspaces/${encodeURIComponent(group.id)}`}
+          >
+            Back to workspace
+          </a>
+          <div>
+            <p class="eyebrow">Sharing</p>
+            <h1>{group.name}</h1>
+            <p>
+              Invite explicit collaborators for editing, or create anonymous
+              public links for read-only access.
+            </p>
+          </div>
+        </header>
+        {group.documents.length === 0 ? (
+          <p class="empty-row">
+            Create a document before configuring invitations or public links.
+          </p>
+        ) : (
+          <ShareControls
+            client:load
+            group={group}
+            initialDocumentId={selectedDocumentId}
+          />
+        )}
+      </section>
+    ) : (
+      <section class="workspace-screen empty-document">
+        <a class="back-button" href="/">Back</a>
+        <h1>Workspace not found</h1>
+        <p>This workspace may have been deleted or hidden from this identity.</p>
+      </section>
+    )
+  }
+</AppLayout>

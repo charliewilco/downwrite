@@ -7,13 +7,14 @@ self-contained for Cloudflare's Deploy to Cloudflare button and includes:
 
 - Hono Worker API source in `src/`;
 - D1 migrations in `migrations/`;
-- Preact web source in `web/`;
+- Astro page source in `src/pages/`;
+- focused Preact islands and web components in `web/src/`;
 - Wrangler configuration in `wrangler.toml`;
 - Node-native tests in `test/`.
 
-The deployed Worker serves the compiled web app and `/api/v1` from the same
-origin. Workers Static Assets handle browser routes, while `/api/*`,
-`/.well-known/*`, `/oauth/*`, and `/mcp` run through the Worker script first.
+The deployed Worker serves Astro-rendered web routes and `/api/v1` from the
+same origin. Hono handles `/api/*`, `/.well-known/*`, `/oauth/*`, and `/mcp`;
+Astro handles browser routes and static assets.
 
 ## Local Development
 
@@ -25,8 +26,8 @@ npm run dev
 ```
 
 The dev script prepares generated local secrets, applies local D1 migrations,
-builds the Preact assets, and starts `wrangler dev`, normally at
-`http://localhost:8787`.
+and starts Astro dev with Cloudflare bindings, normally at
+`http://localhost:4321`.
 
 For the full local first-run flow, see
 [`../documentation/self-hosting.md`](../documentation/self-hosting.md).

@@ -1,0 +1,48 @@
+---
+import { AuthPanel } from "../../web/src/shell.js";
+import { ElementRegistry } from "../../web/src/ElementRegistry.js";
+import { MarkdownImportDialog } from "../../web/src/components/MarkdownImportDialog.js";
+import downwriteMarkUrl from "../../web/src/DownwriteMark.svg";
+import "../../web/src/style.css";
+
+const { title = "Downwrite" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <ElementRegistry client:load />
+    <main class="shell">
+      <header class="app-header">
+        <a class="brand" href="/">
+          <img class="downwrite-mark" src={downwriteMarkUrl.src} alt="" />
+          <span>Downwrite</span>
+        </a>
+        <div class="header-actions">
+          <details class="app-menu app-menu-plus">
+            <summary aria-label="Create"></summary>
+            <div class="create-menu">
+              <a class="menu-option" href="/new/document">New document</a>
+              <a class="menu-option" href="/new/workspace">New workspace</a>
+            </div>
+          </details>
+          <details class="app-menu">
+            <summary aria-label="Account"></summary>
+            <div class="account-menu">
+              <AuthPanel client:only="preact" />
+            </div>
+          </details>
+        </div>
+      </header>
+      <section class="content-canvas">
+        <slot />
+        <MarkdownImportDialog client:only="preact" />
+      </section>
+    </main>
+  </body>
+</html>

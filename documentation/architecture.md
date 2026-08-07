@@ -7,7 +7,7 @@ single Cloudflare Worker deployment.
 
 The Worker is the product core. It serves:
 
-- the compiled Preact web app from Workers Static Assets;
+- Astro-rendered web routes and static assets;
 - the versioned Hono API under `/api/v1`;
 - discovery and OAuth metadata under `/.well-known/*`;
 - OAuth authorization, token, and revocation routes under `/oauth/*`;
@@ -23,7 +23,8 @@ Cloudflare account are enough to run an isolated instance.
 ## Repository Boundaries
 
 - `worker/` is the complete deployable Cloudflare Worker package.
-- `worker/web/` is the Preact browser app source compiled into Worker assets.
+- `worker/src/pages/` contains Astro web routes.
+- `worker/web/src/` contains focused Preact islands and web components.
 - `documentation/` is durable product, API, auth, deployment, and design
   documentation.
 - `iOS/` is the future native-client planning home. It intentionally has no

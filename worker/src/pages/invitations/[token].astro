@@ -1,0 +1,22 @@
+---
+import AppLayout from "../../layouts/AppLayout.astro";
+import { InvitationAcceptForm } from "../../../web/src/islands/InvitationAcceptForm.js";
+
+const token = Astro.params.token ?? "";
+---
+
+<AppLayout title="Invitation - Downwrite">
+  <section class="workspace-screen invitation-route">
+    <header class="section-heading">
+      <div>
+        <p class="eyebrow">Invitation</p>
+        <h1>Accept a document invitation.</h1>
+        <p>
+          Invitation tokens are instance-local. Sign in, then accept to gain the
+          invited document role.
+        </p>
+      </div>
+    </header>
+    <InvitationAcceptForm client:load token={token} />
+  </section>
+</AppLayout>

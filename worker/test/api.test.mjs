@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createApp } from "../dist/app.js";
-import { sha256Base64Url } from "../dist/crypto.js";
-import { logMaintenanceResult } from "../dist/maintenance.js";
+import { createApp } from "../dist-api/app.js";
+import { sha256Base64Url } from "../dist-api/crypto.js";
+import { logMaintenanceResult } from "../dist-api/maintenance.js";
 import { MemoryStorage } from "./support/memory-storage.mjs";
 
 const TOKENS =

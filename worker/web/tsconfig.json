@@ -8,8 +8,7 @@
     "moduleResolution": "NodeNext",
     "noEmit": true,
     "strict": true,
-    "target": "ES2022",
-    "types": ["vite/client"]
+    "target": "ES2022"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

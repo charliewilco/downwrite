@@ -24,7 +24,27 @@ export async function readIdentity(
   c: Context<{ Bindings: Env }>,
   storage: Storage,
 ): Promise<Identity> {
-  const sessionToken = readCookie(c.req.header("cookie") ?? "", SESSION_COOKIE);
+  return readIdentityFromRequest(
+    {
+      authorization: c.req.header("authorization") ?? "",
+      cookie: c.req.header("cookie") ?? "",
+      env: c.env,
+      url: c.req.url,
+    },
+    storage,
+  );
+}
+
+export async function readIdentityFromRequest(
+  request: {
+    authorization: string;
+    cookie: string;
+    env: Env;
+    url: string;
+  },
+  storage: Storage,
+): Promise<Identity> {
+  const sessionToken = readCookie(request.cookie, SESSION_COOKIE);
 
   if (sessionToken) {
     const session = await storage.getSessionByTokenHash(
@@ -36,7 +56,7 @@ export async function readIdentity(
     }
   }
 
-  const header = c.req.header("authorization") ?? "";
+  const header = request.authorization;
   const match = header.match(/^Bearer\s+(.+)$/i);
 
   if (!match) {
@@ -52,7 +72,7 @@ export async function readIdentity(
     if (
       oauthToken.revokedAt ||
       new Date(oauthToken.expiresAt).getTime() <= Date.now() ||
-      oauthToken.resource !== expectedOAuthResource(c.req.url)
+      oauthToken.resource !== expectedOAuthResource(request.url)
     ) {
       throw new HttpError(
         401,
@@ -67,7 +87,9 @@ export async function readIdentity(
     };
   }
 
-  const identityId = parseTokenMap(c.env.DEVELOPMENT_API_TOKENS).get(token);
+  const identityId = parseTokenMap(request.env.DEVELOPMENT_API_TOKENS).get(
+    token,
+  );
 
   if (!identityId) {
     throw new HttpError(401, "Unknown bearer token");

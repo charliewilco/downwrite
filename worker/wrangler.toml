@@ -3,7 +3,8 @@ main = "src/index.ts"
 compatibility_date = "2026-08-04"
 
 [assets]
-directory = "./web/dist"
+directory = "./dist/client"
+binding = "ASSETS"
 not_found_handling = "single-page-application"
 run_worker_first = ["/api/*", "/.well-known/*", "/oauth/*", "/mcp"]
 

@@ -22,7 +22,9 @@ tsconfig.tsbuildinfo
 **/tsconfig.tsbuildinfo
 .wrangler/
 worker/dist/
+worker/dist-api/
 worker/dist-worker/
+worker/.astro/
 worker/web/dist/
 
 

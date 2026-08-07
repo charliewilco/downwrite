@@ -1,0 +1,69 @@
+---
+import AppLayout from "../layouts/AppLayout.astro";
+import { loadGroupsForRequest } from "../web/page-data.js";
+import { DEFAULT_ACCENT } from "../../web/src/app-constants.js";
+import { sortedGroups } from "../../web/src/workspace-search.js";
+
+const { groups, error } = await loadGroupsForRequest(Astro.request);
+const recentGroups = sortedGroups(groups);
+---
+
+<AppLayout title="Downwrite">
+  {
+    error ? (
+      <p class="status error">{error}</p>
+    ) : (
+      <markdown-dragarea workspace-id="">
+        <section class="workspace-screen directory-screen">
+          <ul class="directory-list">
+            {recentGroups.length === 0 && (
+              <li class="empty-row">
+                No workspaces yet. Create one to start collecting Markdown
+                documents.
+              </li>
+            )}
+            {recentGroups.map((group) => (
+              <li class="workspace-section">
+                <header class="workspace-section-heading">
+                  <a
+                    class="workspace-section-title"
+                    href={`/workspaces/${encodeURIComponent(group.id)}`}
+                    style={`border-left-color: ${
+                      group.accentColor ?? DEFAULT_ACCENT
+                    }`}
+                  >
+                    <strong>{group.name}</strong>
+                    <span>{group.description ?? "No description yet."}</span>
+                  </a>
+                  <span class="workspace-section-count">
+                    {group.documents.length} document
+                    {group.documents.length === 1 ? "" : "s"}
+                  </span>
+                </header>
+                <ul class="document-card-list">
+                  {group.documents.length === 0 ? (
+                    <li class="document-card-empty">No documents yet.</li>
+                  ) : (
+                    group.documents.map((document) => (
+                      <li class="document-card-item">
+                        <a
+                          class="document-card"
+                          href={`/documents/${encodeURIComponent(document.id)}`}
+                        >
+                          <strong>{document.title}</strong>
+                          <span>
+                            {document.role} · rev {document.revision}
+                          </span>
+                        </a>
+                      </li>
+                    ))
+                  )}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </markdown-dragarea>
+    )
+  }
+</AppLayout>

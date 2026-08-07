@@ -1,0 +1,88 @@
+---
+import AppLayout from "../../../layouts/AppLayout.astro";
+import { loadGroupForRequest } from "../../../web/page-data.js";
+import { DEFAULT_ACCENT } from "../../../../web/src/app-constants.js";
+import {
+  CreateDocumentButton,
+  DocumentOrderControls,
+} from "../../../../web/src/islands/WorkspaceActions.js";
+
+const groupId = Astro.params.groupId ?? "";
+const { group, groups, error } = await loadGroupForRequest(
+  Astro.request,
+  groupId,
+);
+---
+
+<AppLayout title={group ? `${group.name} - Downwrite` : "Workspace - Downwrite"}>
+  {
+    error ? (
+      <p class="status error">{error}</p>
+    ) : group ? (
+      <section class="workspace-screen">
+        <markdown-dragarea workspace-id={group.id}>
+          <section class="workspace-detail">
+            <header
+              class="workspace-heading"
+              style={`border-top-color: ${group.accentColor ?? DEFAULT_ACCENT}`}
+            >
+              <div>
+                <h1>{group.name}</h1>
+                <p>{group.description ?? "No description yet."}</p>
+              </div>
+              <div class="toolbar-actions">
+                <a
+                  class="secondary-action"
+                  href={`/workspaces/${encodeURIComponent(group.id)}/share`}
+                >
+                  Share
+                </a>
+                <a
+                  class="secondary-action"
+                  href={`/workspaces/${encodeURIComponent(group.id)}/settings`}
+                >
+                  Settings
+                </a>
+                <CreateDocumentButton client:load groupId={group.id} />
+              </div>
+            </header>
+
+            <ul class="document-list">
+              {group.documents.length === 0 && (
+                <li class="empty-row">
+                  No documents yet. Create one to start writing in this
+                  workspace.
+                </li>
+              )}
+              {group.documents.map((document, index) => (
+                <li class="document-row">
+                  <a
+                    class="document-link"
+                    href={`/documents/${encodeURIComponent(document.id)}`}
+                  >
+                    <strong>{document.title}</strong>
+                    <span>
+                      {document.role} · rev {document.revision}
+                    </span>
+                  </a>
+                  <DocumentOrderControls
+                    client:load
+                    documents={group.documents}
+                    index={index}
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
+        </markdown-dragarea>
+      </section>
+    ) : (
+      <section class="workspace-screen">
+        <section class="workspace-detail empty-document">
+          <h1>No workspaces</h1>
+          <p>Create a workspace to start organizing Markdown documents.</p>
+        </section>
+      </section>
+    )
+  }
+</AppLayout>

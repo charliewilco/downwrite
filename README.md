@@ -47,7 +47,7 @@ npm install
 npm run dev
 ```
 
-The local Worker normally starts at `http://localhost:8787`. Use the
+The local web app normally starts at `http://localhost:4321`. Use the
 `Development` tab in the app to start a local owner session, then create a
 workspace and Markdown document.
 
@@ -70,8 +70,9 @@ passkey origin settings and secrets in that account.
 ## Repository Layout
 
 - [`worker/`](./worker/) is the deployable Cloudflare Worker package. It includes
-  the Hono API, D1 migrations, Wrangler config, Preact web source, Worker-local
-  tests, and Deploy to Cloudflare metadata.
+  the Hono API, Astro web routes, D1 migrations, Wrangler config, focused
+  Preact/web-component browser islands, Worker-local tests, and Deploy to
+  Cloudflare metadata.
 - [`documentation/`](./documentation/) is the durable product and architecture
   documentation home.
 - [`iOS/`](./iOS/) is the native-client planning home for the future single
