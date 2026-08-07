@@ -8,7 +8,7 @@ self-contained for Cloudflare's Deploy to Cloudflare button and includes:
 - Hono Worker API source in `src/`;
 - D1 migrations in `migrations/`;
 - Astro page source in `src/pages/`;
-- focused Preact islands and web components in `web/src/`;
+- focused browser custom elements and the editor island in `src/client/`;
 - Wrangler configuration in `wrangler.toml`;
 - Node-native tests in `test/`.
 

@@ -1,8 +1,8 @@
 ---
 import AppLayout from "../layouts/AppLayout.astro";
 import { loadGroupsForRequest } from "../web/page-data.js";
-import { DEFAULT_ACCENT } from "../../web/src/app-constants.js";
-import { sortedGroups } from "../../web/src/workspace-search.js";
+import { DEFAULT_ACCENT } from "../client/app-constants.js";
+import { sortedGroups } from "../client/workspace-search.js";
 
 const { groups, error } = await loadGroupsForRequest(Astro.request);
 const recentGroups = sortedGroups(groups);

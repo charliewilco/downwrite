@@ -1,6 +1,6 @@
 ---
-import downwriteMarkUrl from "../../web/src/DownwriteMark.svg";
-import "../../web/src/style.css";
+import downwriteMarkUrl from "../assets/DownwriteMark.svg";
+import "../styles/style.css";
 
 const { title = "Downwrite" } = Astro.props;
 ---
@@ -14,7 +14,7 @@ const { title = "Downwrite" } = Astro.props;
   </head>
   <body>
     <script>
-      import "../../web/src/document-elements.ts";
+      import "../client/document-elements.ts";
     </script>
     <main class="shell">
       <header class="app-header">

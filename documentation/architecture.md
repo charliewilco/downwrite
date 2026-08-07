@@ -24,7 +24,7 @@ Cloudflare account are enough to run an isolated instance.
 
 - `worker/` is the complete deployable Cloudflare Worker package.
 - `worker/src/pages/` contains Astro web routes.
-- `worker/web/src/` contains focused Preact islands and web components.
+- `worker/src/client/` contains focused browser custom elements and the editor island.
 - `documentation/` is durable product, API, auth, deployment, and design
   documentation.
 - `iOS/` is the future native-client planning home. It intentionally has no

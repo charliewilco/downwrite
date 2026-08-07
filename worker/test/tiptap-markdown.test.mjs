@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createMarkdownManager } from "../web/src/tiptap-extensions.mjs";
+import { createMarkdownManager } from "../src/client/tiptap-extensions.mjs";
 
 const fixtures = [
   {

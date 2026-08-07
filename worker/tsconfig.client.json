@@ -10,5 +10,9 @@
     "strict": true,
     "target": "ES2022"
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"]
+  "include": [
+    "src/assets/**/*.d.ts",
+    "src/client/**/*.ts",
+    "src/client/**/*.tsx"
+  ]
 }

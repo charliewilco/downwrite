@@ -16,8 +16,11 @@
   "exclude": [
     "src/env.d.ts",
     "src/index.ts",
+    "src/assets/**/*",
+    "src/client/**/*",
     "src/layouts/**/*",
     "src/pages/**/*",
+    "src/styles/**/*",
     "src/web/**/*"
   ]
 }

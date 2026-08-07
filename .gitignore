@@ -20,6 +20,7 @@ private.key
 
 tsconfig.tsbuildinfo
 **/tsconfig.tsbuildinfo
+worker/tsconfig.client.tsbuildinfo
 .wrangler/
 worker/dist/
 worker/dist-api/
