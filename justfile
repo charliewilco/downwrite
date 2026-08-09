@@ -22,13 +22,13 @@ generate-ios-client:
     cd worker && npm run generate:ios-client
 
 ios-build:
-    xcodebuild build -project iOS/Downwrite/Downwrite.xcodeproj -scheme Downwrite -destination 'platform=iOS Simulator,name=iPhone 17' -configuration Debug
+    xcodebuild build -project iOS/Downwrite/Downwrite.xcodeproj -scheme Downwrite -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' -configuration Debug
 
 ios-test:
-    xcodebuild test -project iOS/Downwrite/Downwrite.xcodeproj -scheme Downwrite -destination 'platform=iOS Simulator,name=iPhone 17' -configuration Debug -only-testing:DownwriteTests
+    xcodebuild test -project iOS/Downwrite/Downwrite.xcodeproj -scheme Downwrite -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' -configuration Debug -only-testing:DownwriteTests
 
 ios-ui-test:
-    xcodebuild test -project iOS/Downwrite/Downwrite.xcodeproj -scheme Downwrite -destination 'platform=iOS Simulator,name=iPhone 17' -configuration Debug -only-testing:DownwriteUITests -only-testing:DownwriteUITestsLaunchTests
+    xcodebuild test -project iOS/Downwrite/Downwrite.xcodeproj -scheme Downwrite -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' -configuration Debug -only-testing:DownwriteUITests -only-testing:DownwriteUITestsLaunchTests
 
 validate:
     just generate-ios-client

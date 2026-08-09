@@ -34,6 +34,12 @@ struct GroupDetailView: View {
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button {
+                    viewModel.createDocument(in: group)
+                } label: {
+                    Label("New Document", systemImage: "square.and.pencil")
+                }
+
+                Button {
                     viewModel.editSelectedGroup()
                 } label: {
                     Label("Edit Group", systemImage: "slider.horizontal.3")

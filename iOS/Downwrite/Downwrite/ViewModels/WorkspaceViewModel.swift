@@ -6,6 +6,7 @@ final class WorkspaceViewModel {
     var groupsState: LoadState<[GroupSummary]> = .idle
     var selectedGroupID: String?
     var selectedDocumentID: String?
+    var documentCreator: DocumentCreatorViewModel?
     var groupEditor: GroupEditorViewModel?
     var groupReassignment: GroupReassignmentViewModel?
 
@@ -62,6 +63,20 @@ final class WorkspaceViewModel {
             return
         }
         groupEditor = GroupEditorViewModel(group: group, session: session)
+    }
+
+    func createDocument(in group: GroupSummary) {
+        documentCreator = DocumentCreatorViewModel(group: group, session: session)
+    }
+
+    func applyCreatedDocument(_ document: DocumentRecord) {
+        guard var group = groups.first(where: { $0.id == document.groupId }) else {
+            return
+        }
+        group.documents.append(document.summary)
+        replace(group)
+        selectedGroupID = group.id
+        selectedDocumentID = document.id
     }
 
     func reassignAndRemoveSelectedGroup() {

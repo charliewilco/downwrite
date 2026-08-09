@@ -8,6 +8,7 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     var documents: [String: DocumentRecord]
     var listGroupsError: Error?
     var getDocumentError: Error?
+    var createDocumentError: Error?
     var updateDocumentError: Error?
     var updateGroupError: Error?
     var moveDocumentError: Error?
@@ -18,6 +19,7 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
         documents: [String: DocumentRecord],
         listGroupsError: Error? = nil,
         getDocumentError: Error? = nil,
+        createDocumentError: Error? = nil,
         updateDocumentError: Error? = nil,
         updateGroupError: Error? = nil,
         moveDocumentError: Error? = nil,
@@ -27,6 +29,7 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
         self.documents = documents
         self.listGroupsError = listGroupsError
         self.getDocumentError = getDocumentError
+        self.createDocumentError = createDocumentError
         self.updateDocumentError = updateDocumentError
         self.updateGroupError = updateGroupError
         self.moveDocumentError = moveDocumentError
@@ -116,6 +119,29 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
 
     func listDocuments(groupId: String, limit: Int?, cursor: String?) async throws -> DocumentList {
         DocumentList(documents: groups.first { $0.id == groupId }?.documents ?? [], nextCursor: nil)
+    }
+
+    func createDocument(groupId: String, title: String, content: String) async throws -> DocumentRecord {
+        if let createDocumentError {
+            throw createDocumentError
+        }
+        guard let groupIndex = groups.firstIndex(where: { $0.id == groupId }) else {
+            throw URLError(.badServerResponse)
+        }
+        let document = DocumentRecord(
+            id: UUID().uuidString,
+            groupId: groupId,
+            title: title,
+            role: .owner,
+            position: groups[groupIndex].documents.count,
+            revision: 1,
+            createdAt: Self.timestamp,
+            updatedAt: Self.timestamp,
+            content: content
+        )
+        documents[document.id] = document
+        groups[groupIndex].documents.append(document.summary)
+        return document
     }
 
     func getDocument(id: String) async throws -> DocumentRecord {

@@ -3,7 +3,7 @@ import Observation
 
 @Observable
 final class LoginViewModel {
-    var instanceURLText = "http://localhost:8787"
+    var instanceURLText = "http://localhost:4321"
     var developmentIdentity = "local-owner"
     var developmentDisplayName = "Local Owner"
     var developmentBearerToken = ""

@@ -50,7 +50,8 @@ Apple associated domains are per deployed domain.
 Current Worker status: OAuth authorization, token exchange, refresh rotation,
 and revocation are implemented instance-locally. The reserved public iOS client
 id is `downwrite-ios`, with `downwrite://oauth/callback` as the allowed callback.
-The iOS app itself is still deferred.
+The initial native app can connect to an instance, authenticate, browse
+workspaces, and create, read, and update Markdown documents.
 
 ## Phased Implementation Plan
 

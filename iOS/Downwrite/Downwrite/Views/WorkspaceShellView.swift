@@ -29,6 +29,12 @@ struct WorkspaceShellView: View {
                 viewModel.groupEditor = nil
             }
         }
+        .sheet(item: $viewModel.documentCreator) { creator in
+            DocumentCreatorView(viewModel: creator) { document in
+                viewModel.applyCreatedDocument(document)
+                viewModel.documentCreator = nil
+            }
+        }
         .sheet(item: $viewModel.groupReassignment) { reassignment in
             GroupReassignmentView(viewModel: reassignment) { result in
                 viewModel.removeGroup(result.removedGroupID, replacementGroup: result.replacementGroup)

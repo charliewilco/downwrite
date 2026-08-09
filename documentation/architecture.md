@@ -27,8 +27,8 @@ Cloudflare account are enough to run an isolated instance.
 - `worker/src/client/` contains focused browser custom elements and the editor island.
 - `documentation/` is durable product, API, auth, deployment, and design
   documentation.
-- `iOS/` is the future native-client planning home. It intentionally has no
-  placeholder Xcode project.
+- `iOS/` contains the native Xcode project, generated Swift API client, and
+  native workspace and document flows.
 
 ## Implemented Web/API Capabilities
 

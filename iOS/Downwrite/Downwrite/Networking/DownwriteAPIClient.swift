@@ -129,6 +129,7 @@ protocol DownwriteAPIClient {
     func updateGroup(id: String, name: String?, description: String?, accentColor: String?) async throws -> GroupSummary
     func deleteGroup(id: String) async throws
     func listDocuments(groupId: String, limit: Int?, cursor: String?) async throws -> DocumentList
+    func createDocument(groupId: String, title: String, content: String) async throws -> DocumentRecord
     func getDocument(id: String) async throws -> DocumentRecord
     func updateDocument(id: String, title: String?, content: String?, baseRevision: Int) async throws -> DocumentRecord
     func moveDocument(id: String, groupId: String, position: Int?, baseRevision: Int) async throws -> DocumentRecord
@@ -215,6 +216,14 @@ struct OpenAPIDownwriteAPIClient: DownwriteAPIClient {
             query: .init(limit: limit, cursor: cursor)
         )
         return try output.ok.body.json.appModel
+    }
+
+    func createDocument(groupId: String, title: String, content: String) async throws -> DocumentRecord {
+        let output = try await client.createDocument(
+            path: .init(groupId: groupId),
+            body: .json(.init(title: title, content: content))
+        )
+        return try output.created.body.json.document.appModel
     }
 
     func getDocument(id: String) async throws -> DocumentRecord {

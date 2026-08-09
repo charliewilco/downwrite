@@ -81,6 +81,37 @@ struct DownwriteTests {
         #expect(viewModel.hasChanges == false)
     }
 
+    @Test func documentCreationAddsAndSelectsDocument() async throws {
+        let client = PreviewDownwriteAPIClient.sampleCopy()
+        let session = SessionViewModel.signedIn(client: client)
+        let workspace = WorkspaceViewModel(session: session)
+        let group = try #require(workspace.groups.first)
+        let creator = DocumentCreatorViewModel(group: group, session: session)
+        creator.title = "  New outline  "
+        creator.content = "# New outline"
+
+        let document = try await creator.create()
+        workspace.applyCreatedDocument(document)
+
+        #expect(document.title == "New outline")
+        #expect(workspace.selectedGroupID == group.id)
+        #expect(workspace.selectedDocumentID == document.id)
+        #expect(workspace.selectedGroup?.documents.contains { $0.id == document.id } == true)
+    }
+
+    @Test func documentCreationRequiresTitle() async throws {
+        let client = PreviewDownwriteAPIClient.sampleCopy()
+        let session = SessionViewModel.signedIn(client: client)
+        let group = try #require(client.groups.first)
+        let creator = DocumentCreatorViewModel(group: group, session: session)
+
+        #expect(creator.canCreate == false)
+
+        creator.title = "Draft"
+
+        #expect(creator.canCreate == true)
+    }
+
     @Test func documentLoadSurfacesMissingDocumentFailure() async throws {
         let client = PreviewDownwriteAPIClient.sampleCopy()
         client.getDocumentError = DownwriteErrorEnvelope(error: "Document was not found", code: "not_found", status: 404)

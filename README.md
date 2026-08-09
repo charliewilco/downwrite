@@ -75,8 +75,8 @@ passkey origin settings and secrets in that account.
   Cloudflare metadata.
 - [`documentation/`](./documentation/) is the durable product and architecture
   documentation home.
-- [`iOS/`](./iOS/) is the native-client planning home for the future single
-  public Downwrite iOS app. No app source exists yet.
+- [`iOS/`](./iOS/) contains the native Xcode project and generated Swift client
+  for the single public Downwrite iOS app.
 
 ## Key Documents
 
