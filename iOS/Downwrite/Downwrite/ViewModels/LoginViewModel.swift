@@ -58,7 +58,8 @@ final class LoginViewModel {
         do {
             let client = OpenAPIDownwriteAPIClient(
                 baseURL: instanceURL,
-                accessToken: developmentBearerToken.nilIfBlank
+                accessToken: developmentBearerToken.nilIfBlank,
+                localDevelopmentSession: true
             )
             _ = try await client.discoverInstance()
             let identity: Identity
@@ -76,7 +77,10 @@ final class LoginViewModel {
                 session: InstanceSession(
                     instanceURL: instanceURL,
                     identity: identity,
-                    apiClient: client
+                    apiClient: client,
+					signOutAction: {
+						await client.signOutLocalDevelopmentSession()
+					}
                 )
             )
 		}

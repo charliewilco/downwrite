@@ -160,19 +160,53 @@ final class OpenAPIDownwriteAPIClient: DownwriteAPIClient {
     let baseURL: URL
 	private let accessToken: String?
 	private let tokenManager: OAuthTokenManager?
+	private let localDevelopmentURLSession: LocalDevelopmentURLSession?
+	private let transport: URLSessionTransport
 
 	private func client(accessToken: String? = nil) -> Client {
-        Client(
+        var middlewares: [any ClientMiddleware] = []
+        if let accessToken {
+            middlewares.append(BearerTokenMiddleware(accessToken: accessToken))
+        }
+        if localDevelopmentURLSession != nil {
+            middlewares.append(LocalDevelopmentOriginMiddleware(origin: baseURL.absoluteString))
+        }
+        return Client(
             serverURL: baseURL,
-            transport: URLSessionTransport(),
-            middlewares: accessToken.map { [BearerTokenMiddleware(accessToken: $0)] } ?? []
+            transport: transport,
+            middlewares: middlewares
         )
     }
 
-	init(baseURL: URL, accessToken: String? = nil, tokenManager: OAuthTokenManager? = nil) {
+    init(
+        baseURL: URL,
+        accessToken: String? = nil,
+        tokenManager: OAuthTokenManager? = nil,
+        localDevelopmentSession: Bool = false
+    ) {
         self.baseURL = baseURL
         self.accessToken = accessToken
 		self.tokenManager = tokenManager
+		if localDevelopmentSession {
+			let localDevelopmentURLSession = LocalDevelopmentURLSession()
+			self.localDevelopmentURLSession = localDevelopmentURLSession
+			transport = URLSessionTransport(
+				configuration: .init(session: localDevelopmentURLSession.urlSession)
+			)
+		}
+		else {
+			self.localDevelopmentURLSession = nil
+			let configuration = URLSessionConfiguration.ephemeral
+			configuration.httpCookieStorage = nil
+			configuration.httpShouldSetCookies = false
+			transport = URLSessionTransport(
+				configuration: .init(session: URLSession(configuration: configuration))
+			)
+		}
+	}
+
+	func signOutLocalDevelopmentSession() async {
+		await localDevelopmentURLSession?.signOut()
 	}
 
 	private func authenticatedClient() async throws -> Client {
@@ -320,6 +354,27 @@ struct BearerTokenMiddleware: ClientMiddleware {
     ) async throws -> (HTTPResponse, HTTPBody?) {
         var request = request
         request.headerFields[.authorization] = "Bearer \(accessToken)"
+        return try await next(request, body, baseURL)
+    }
+}
+
+struct LocalDevelopmentOriginMiddleware: ClientMiddleware {
+    let origin: String
+
+    func intercept(
+        _ request: HTTPRequest,
+        body: HTTPBody?,
+        baseURL: URL,
+        operationID: String,
+        next: @concurrent @Sendable (HTTPRequest, HTTPBody?, URL) async throws -> (HTTPResponse, HTTPBody?)
+    ) async throws -> (HTTPResponse, HTTPBody?) {
+        var request = request
+        switch request.method {
+        case .post, .put, .patch, .delete:
+            request.headerFields[.origin] = origin
+        default:
+            break
+        }
         return try await next(request, body, baseURL)
     }
 }

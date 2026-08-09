@@ -75,8 +75,10 @@ final class SessionViewModel {
 
     func signOut() async {
         let tokenManager = activeSession?.tokenManager
+		let signOutAction = activeSession?.signOutAction
         state = .signedOut
         await tokenManager?.signOut()
+		await signOutAction?()
     }
 
     private func makeOAuthSession(credential: OAuthCredential) -> InstanceSession {
@@ -105,19 +107,22 @@ struct InstanceSession: Equatable, Identifiable {
     let identity: Identity?
     var apiClient: any DownwriteAPIClient
     var tokenManager: OAuthTokenManager? = nil
+	var signOutAction: (() async -> Void)? = nil
 
     init(
         id: UUID = UUID(),
         instanceURL: URL,
         identity: Identity?,
         apiClient: any DownwriteAPIClient,
-        tokenManager: OAuthTokenManager? = nil
+		tokenManager: OAuthTokenManager? = nil,
+		signOutAction: (() async -> Void)? = nil
     ) {
         self.id = id
         self.instanceURL = instanceURL
         self.identity = identity
         self.apiClient = apiClient
         self.tokenManager = tokenManager
+		self.signOutAction = signOutAction
     }
 
     static func == (lhs: InstanceSession, rhs: InstanceSession) -> Bool {
