@@ -80,10 +80,10 @@ export function createApp(options: AppOptions = {}) {
   }
 
   function requireBaseRevision(body: Record<string, unknown>) {
-    const baseRevision = optionalNumber(body, "baseRevision");
+    const baseRevision = body.baseRevision;
 
     if (
-      typeof baseRevision === "undefined" ||
+      typeof baseRevision !== "number" ||
       !Number.isInteger(baseRevision) ||
       baseRevision < 0
     ) {
@@ -863,12 +863,38 @@ export function createApp(options: AppOptions = {}) {
     const store = storage(c.env);
     const identity = await readIdentity(c, store);
     assertScope(identity, "documents:write");
+    const documentId = c.req.param("documentId");
+    const baseRevisionValue = new URL(c.req.url).searchParams.get(
+      "baseRevision",
+    );
+    const baseRevision =
+      baseRevisionValue === null || baseRevisionValue.trim() === ""
+        ? undefined
+        : Number(baseRevisionValue);
+    const current = await store.getDocumentForIdentity({
+      identityId: identity.id,
+      documentId,
+    });
+
+    if (!current || !canWrite(current.role)) {
+      throw new HttpError(403, "You cannot delete this document");
+    }
+    assertCurrentRevision(current, { baseRevision });
+
     const deleted = await store.deleteDocument({
       identityId: identity.id,
-      documentId: c.req.param("documentId"),
+      documentId,
+      baseRevision: requireBaseRevision({ baseRevision }),
     });
 
     if (!deleted) {
+      const latest = await store.getDocumentForIdentity({
+        identityId: identity.id,
+        documentId,
+      });
+      if (latest && canWrite(latest.role)) {
+        assertCurrentRevision(latest, { baseRevision });
+      }
       throw new HttpError(403, "You cannot delete this document");
     }
 

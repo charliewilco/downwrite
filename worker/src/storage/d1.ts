@@ -1272,6 +1272,7 @@ export class D1Storage implements Storage {
   async deleteDocument(input: {
     identityId: string;
     documentId: string;
+    baseRevision: number;
   }): Promise<boolean> {
     const current = await this.getDocumentForIdentity(input);
 
@@ -1279,11 +1280,24 @@ export class D1Storage implements Storage {
       return false;
     }
 
-    await this.deleteDocumentVersionObjects(input.documentId);
-    await this.#db
-      .prepare(`DELETE FROM documents WHERE id = ?`)
-      .bind(input.documentId)
+    const versionObjectKeys = await this.documentVersionObjectKeys(
+      input.documentId,
+    );
+    const result = await this.#db
+      .prepare(
+        `DELETE FROM documents
+		WHERE id = ? AND revision = ?`,
+      )
+      .bind(input.documentId, input.baseRevision)
       .run();
+
+    if (!result.meta.changes) {
+      return false;
+    }
+
+    for (const contentKey of versionObjectKeys) {
+      await this.#bucket.delete(contentKey);
+    }
     await this.#bucket.delete(`documents/${input.documentId}.md`);
 
     return true;
@@ -2075,6 +2089,13 @@ export class D1Storage implements Storage {
   }
 
   private async deleteDocumentVersionObjects(documentId: string) {
+    const contentKeys = await this.documentVersionObjectKeys(documentId);
+    for (const contentKey of contentKeys) {
+      await this.#bucket.delete(contentKey);
+    }
+  }
+
+  private async documentVersionObjectKeys(documentId: string) {
     const versions = await this.#db
       .prepare(
         `SELECT content_key FROM document_versions WHERE document_id = ?`,
@@ -2082,9 +2103,7 @@ export class D1Storage implements Storage {
       .bind(documentId)
       .all<{ content_key: string }>();
 
-    for (const version of versions.results ?? []) {
-      await this.#bucket.delete(version.content_key);
-    }
+    return (versions.results ?? []).map((version) => version.content_key);
   }
 
   private async nextDocumentPosition(groupId: string) {

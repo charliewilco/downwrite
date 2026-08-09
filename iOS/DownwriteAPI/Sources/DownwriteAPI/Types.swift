@@ -179,6 +179,8 @@ public protocol APIProtocol: Sendable {
     func updateDocument(_ input: Operations.updateDocument.Input) async throws -> Operations.updateDocument.Output
     /// Delete an authorized document.
     ///
+    /// Required baseRevision prevents permanently deleting a document revision the client has not seen.
+    ///
     /// - Remark: HTTP `DELETE /api/v1/documents/{documentId}`.
     /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/delete(deleteDocument)`.
     func deleteDocument(_ input: Operations.deleteDocument.Input) async throws -> Operations.deleteDocument.Output
@@ -676,14 +678,18 @@ extension APIProtocol {
     }
     /// Delete an authorized document.
     ///
+    /// Required baseRevision prevents permanently deleting a document revision the client has not seen.
+    ///
     /// - Remark: HTTP `DELETE /api/v1/documents/{documentId}`.
     /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/delete(deleteDocument)`.
     public func deleteDocument(
         path: Operations.deleteDocument.Input.Path,
+        query: Operations.deleteDocument.Input.Query,
         headers: Operations.deleteDocument.Input.Headers = .init()
     ) async throws -> Operations.deleteDocument.Output {
         try await deleteDocument(Operations.deleteDocument.Input(
             path: path,
+            query: query,
             headers: headers
         ))
     }
@@ -3340,56 +3346,123 @@ public enum Components {
         }
         /// - Remark: Generated from `#/components/schemas/DocumentRecord`.
         public struct DocumentRecord: Codable, Hashable, Sendable {
-            /// - Remark: Generated from `#/components/schemas/DocumentRecord/value1`.
-            public var value1: Components.Schemas.DocumentSummary
-            /// - Remark: Generated from `#/components/schemas/DocumentRecord/value2`.
-            public struct Value2Payload: Codable, Hashable, Sendable {
-                /// UTF-8 Markdown source, not rendered HTML.
-                ///
-                /// - Remark: Generated from `#/components/schemas/DocumentRecord/value2/content`.
-                public var content: Swift.String
-                /// Creates a new `Value2Payload`.
-                ///
-                /// - Parameters:
-                ///   - content: UTF-8 Markdown source, not rendered HTML.
-                public init(content: Swift.String) {
-                    self.content = content
-                }
-                public enum CodingKeys: String, CodingKey {
-                    case content
-                }
-                public init(from decoder: any Swift.Decoder) throws {
-                    let container = try decoder.container(keyedBy: CodingKeys.self)
-                    self.content = try container.decode(
-                        Swift.String.self,
-                        forKey: .content
-                    )
-                    try decoder.ensureNoAdditionalProperties(knownKeys: [
-                        "content"
-                    ])
-                }
-            }
-            /// - Remark: Generated from `#/components/schemas/DocumentRecord/value2`.
-            public var value2: Components.Schemas.DocumentRecord.Value2Payload
+            /// - Remark: Generated from `#/components/schemas/DocumentRecord/id`.
+            public var id: Swift.String
+            /// - Remark: Generated from `#/components/schemas/DocumentRecord/groupId`.
+            public var groupId: Swift.String
+            /// - Remark: Generated from `#/components/schemas/DocumentRecord/title`.
+            public var title: Swift.String
+            /// - Remark: Generated from `#/components/schemas/DocumentRecord/role`.
+            public var role: Components.Schemas.Role
+            /// Workspace ordering value. Lower values render earlier in the workspace.
+            ///
+            /// - Remark: Generated from `#/components/schemas/DocumentRecord/position`.
+            public var position: Swift.Int
+            /// Monotonic document revision incremented by content, metadata, move, and reorder writes.
+            ///
+            /// - Remark: Generated from `#/components/schemas/DocumentRecord/revision`.
+            public var revision: Swift.Int
+            /// - Remark: Generated from `#/components/schemas/DocumentRecord/createdAt`.
+            public var createdAt: Swift.String
+            /// - Remark: Generated from `#/components/schemas/DocumentRecord/updatedAt`.
+            public var updatedAt: Swift.String
+            /// UTF-8 Markdown source, not rendered HTML.
+            ///
+            /// - Remark: Generated from `#/components/schemas/DocumentRecord/content`.
+            public var content: Swift.String
             /// Creates a new `DocumentRecord`.
             ///
             /// - Parameters:
-            ///   - value1:
-            ///   - value2:
+            ///   - id:
+            ///   - groupId:
+            ///   - title:
+            ///   - role:
+            ///   - position: Workspace ordering value. Lower values render earlier in the workspace.
+            ///   - revision: Monotonic document revision incremented by content, metadata, move, and reorder writes.
+            ///   - createdAt:
+            ///   - updatedAt:
+            ///   - content: UTF-8 Markdown source, not rendered HTML.
             public init(
-                value1: Components.Schemas.DocumentSummary,
-                value2: Components.Schemas.DocumentRecord.Value2Payload
+                id: Swift.String,
+                groupId: Swift.String,
+                title: Swift.String,
+                role: Components.Schemas.Role,
+                position: Swift.Int,
+                revision: Swift.Int,
+                createdAt: Swift.String,
+                updatedAt: Swift.String,
+                content: Swift.String
             ) {
-                self.value1 = value1
-                self.value2 = value2
+                self.id = id
+                self.groupId = groupId
+                self.title = title
+                self.role = role
+                self.position = position
+                self.revision = revision
+                self.createdAt = createdAt
+                self.updatedAt = updatedAt
+                self.content = content
+            }
+            public enum CodingKeys: String, CodingKey {
+                case id
+                case groupId
+                case title
+                case role
+                case position
+                case revision
+                case createdAt
+                case updatedAt
+                case content
             }
             public init(from decoder: any Swift.Decoder) throws {
-                self.value1 = try .init(from: decoder)
-                self.value2 = try .init(from: decoder)
-            }
-            public func encode(to encoder: any Swift.Encoder) throws {
-                try self.value1.encode(to: encoder)
-                try self.value2.encode(to: encoder)
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.id = try container.decode(
+                    Swift.String.self,
+                    forKey: .id
+                )
+                self.groupId = try container.decode(
+                    Swift.String.self,
+                    forKey: .groupId
+                )
+                self.title = try container.decode(
+                    Swift.String.self,
+                    forKey: .title
+                )
+                self.role = try container.decode(
+                    Components.Schemas.Role.self,
+                    forKey: .role
+                )
+                self.position = try container.decode(
+                    Swift.Int.self,
+                    forKey: .position
+                )
+                self.revision = try container.decode(
+                    Swift.Int.self,
+                    forKey: .revision
+                )
+                self.createdAt = try container.decode(
+                    Swift.String.self,
+                    forKey: .createdAt
+                )
+                self.updatedAt = try container.decode(
+                    Swift.String.self,
+                    forKey: .updatedAt
+                )
+                self.content = try container.decode(
+                    Swift.String.self,
+                    forKey: .content
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "id",
+                    "groupId",
+                    "title",
+                    "role",
+                    "position",
+                    "revision",
+                    "createdAt",
+                    "updatedAt",
+                    "content"
+                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/DocumentEnvelope`.
@@ -4153,56 +4226,119 @@ public enum Components {
         }
         /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord`.
         public struct DocumentVersionRecord: Codable, Hashable, Sendable {
-            /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/value1`.
-            public var value1: Components.Schemas.DocumentVersionSummary
-            /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/value2`.
-            public struct Value2Payload: Codable, Hashable, Sendable {
-                /// Checkpoint Markdown source.
-                ///
-                /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/value2/content`.
-                public var content: Swift.String
-                /// Creates a new `Value2Payload`.
-                ///
-                /// - Parameters:
-                ///   - content: Checkpoint Markdown source.
-                public init(content: Swift.String) {
-                    self.content = content
-                }
-                public enum CodingKeys: String, CodingKey {
-                    case content
-                }
-                public init(from decoder: any Swift.Decoder) throws {
-                    let container = try decoder.container(keyedBy: CodingKeys.self)
-                    self.content = try container.decode(
-                        Swift.String.self,
-                        forKey: .content
-                    )
-                    try decoder.ensureNoAdditionalProperties(knownKeys: [
-                        "content"
-                    ])
-                }
-            }
-            /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/value2`.
-            public var value2: Components.Schemas.DocumentVersionRecord.Value2Payload
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/id`.
+            public var id: Swift.String
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/documentId`.
+            public var documentId: Swift.String
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/name`.
+            public var name: Swift.String
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/description`.
+            public var description: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/sourceRevision`.
+            public var sourceRevision: Swift.Int
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/title`.
+            public var title: Swift.String
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/createdByIdentityId`.
+            public var createdByIdentityId: Swift.String
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/createdAt`.
+            public var createdAt: Swift.String
+            /// Checkpoint Markdown source.
+            ///
+            /// - Remark: Generated from `#/components/schemas/DocumentVersionRecord/content`.
+            public var content: Swift.String
             /// Creates a new `DocumentVersionRecord`.
             ///
             /// - Parameters:
-            ///   - value1:
-            ///   - value2:
+            ///   - id:
+            ///   - documentId:
+            ///   - name:
+            ///   - description:
+            ///   - sourceRevision:
+            ///   - title:
+            ///   - createdByIdentityId:
+            ///   - createdAt:
+            ///   - content: Checkpoint Markdown source.
             public init(
-                value1: Components.Schemas.DocumentVersionSummary,
-                value2: Components.Schemas.DocumentVersionRecord.Value2Payload
+                id: Swift.String,
+                documentId: Swift.String,
+                name: Swift.String,
+                description: Swift.String? = nil,
+                sourceRevision: Swift.Int,
+                title: Swift.String,
+                createdByIdentityId: Swift.String,
+                createdAt: Swift.String,
+                content: Swift.String
             ) {
-                self.value1 = value1
-                self.value2 = value2
+                self.id = id
+                self.documentId = documentId
+                self.name = name
+                self.description = description
+                self.sourceRevision = sourceRevision
+                self.title = title
+                self.createdByIdentityId = createdByIdentityId
+                self.createdAt = createdAt
+                self.content = content
+            }
+            public enum CodingKeys: String, CodingKey {
+                case id
+                case documentId
+                case name
+                case description
+                case sourceRevision
+                case title
+                case createdByIdentityId
+                case createdAt
+                case content
             }
             public init(from decoder: any Swift.Decoder) throws {
-                self.value1 = try .init(from: decoder)
-                self.value2 = try .init(from: decoder)
-            }
-            public func encode(to encoder: any Swift.Encoder) throws {
-                try self.value1.encode(to: encoder)
-                try self.value2.encode(to: encoder)
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.id = try container.decode(
+                    Swift.String.self,
+                    forKey: .id
+                )
+                self.documentId = try container.decode(
+                    Swift.String.self,
+                    forKey: .documentId
+                )
+                self.name = try container.decode(
+                    Swift.String.self,
+                    forKey: .name
+                )
+                self.description = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .description
+                )
+                self.sourceRevision = try container.decode(
+                    Swift.Int.self,
+                    forKey: .sourceRevision
+                )
+                self.title = try container.decode(
+                    Swift.String.self,
+                    forKey: .title
+                )
+                self.createdByIdentityId = try container.decode(
+                    Swift.String.self,
+                    forKey: .createdByIdentityId
+                )
+                self.createdAt = try container.decode(
+                    Swift.String.self,
+                    forKey: .createdAt
+                )
+                self.content = try container.decode(
+                    Swift.String.self,
+                    forKey: .content
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "id",
+                    "documentId",
+                    "name",
+                    "description",
+                    "sourceRevision",
+                    "title",
+                    "createdByIdentityId",
+                    "createdAt",
+                    "content"
+                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/DocumentVersionEnvelope`.
@@ -10321,6 +10457,8 @@ public enum Operations {
     }
     /// Delete an authorized document.
     ///
+    /// Required baseRevision prevents permanently deleting a document revision the client has not seen.
+    ///
     /// - Remark: HTTP `DELETE /api/v1/documents/{documentId}`.
     /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/delete(deleteDocument)`.
     public enum deleteDocument {
@@ -10341,6 +10479,21 @@ public enum Operations {
                 }
             }
             public var path: Operations.deleteDocument.Input.Path
+            /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/DELETE/query`.
+            public struct Query: Sendable, Hashable {
+                /// Revision read by the client before confirming deletion.
+                ///
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/DELETE/query/baseRevision`.
+                public var baseRevision: Swift.Int
+                /// Creates a new `Query`.
+                ///
+                /// - Parameters:
+                ///   - baseRevision: Revision read by the client before confirming deletion.
+                public init(baseRevision: Swift.Int) {
+                    self.baseRevision = baseRevision
+                }
+            }
+            public var query: Operations.deleteDocument.Input.Query
             /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/DELETE/header`.
             public struct Headers: Sendable, Hashable {
                 public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.deleteDocument.AcceptableContentType>]
@@ -10357,12 +10510,15 @@ public enum Operations {
             ///
             /// - Parameters:
             ///   - path:
+            ///   - query:
             ///   - headers:
             public init(
                 path: Operations.deleteDocument.Input.Path,
+                query: Operations.deleteDocument.Input.Query,
                 headers: Operations.deleteDocument.Input.Headers = .init()
             ) {
                 self.path = path
+                self.query = query
                 self.headers = headers
             }
         }
@@ -10436,6 +10592,80 @@ public enum Operations {
                     default:
                         try throwUnexpectedResponseStatus(
                             expectedStatus: "forbidden",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct Conflict: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/DELETE/responses/409/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/api/v1/documents/{documentId}/DELETE/responses/409/content/application\/json`.
+                    case json(Components.Schemas._Error)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas._Error {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.deleteDocument.Output.Conflict.Body
+                /// Creates a new `Conflict`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.deleteDocument.Output.Conflict.Body) {
+                    self.body = body
+                }
+            }
+            /// Document revision conflict.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/delete(deleteDocument)/responses/409`.
+            ///
+            /// HTTP response code: `409 conflict`.
+            case conflict(Operations.deleteDocument.Output.Conflict)
+            /// The associated value of the enum case if `self` is `.conflict`.
+            ///
+            /// - Throws: An error if `self` is not `.conflict`.
+            /// - SeeAlso: `.conflict`.
+            public var conflict: Operations.deleteDocument.Output.Conflict {
+                get throws {
+                    switch self {
+                    case let .conflict(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "conflict",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// A required write precondition is missing.
+            ///
+            /// - Remark: Generated from `#/paths//api/v1/documents/{documentId}/delete(deleteDocument)/responses/428`.
+            ///
+            /// HTTP response code: `428 preconditionRequired`.
+            case preconditionRequired(Components.Responses.PreconditionRequired)
+            /// The associated value of the enum case if `self` is `.preconditionRequired`.
+            ///
+            /// - Throws: An error if `self` is not `.preconditionRequired`.
+            /// - SeeAlso: `.preconditionRequired`.
+            public var preconditionRequired: Components.Responses.PreconditionRequired {
+                get throws {
+                    switch self {
+                    case let .preconditionRequired(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "preconditionRequired",
                             response: self
                         )
                     }

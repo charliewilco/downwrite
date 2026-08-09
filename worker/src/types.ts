@@ -462,6 +462,7 @@ export interface Storage {
   deleteDocument(input: {
     identityId: string;
     documentId: string;
+    baseRevision: number;
   }): Promise<boolean>;
   listCommentThreads(input: {
     identityId: string;

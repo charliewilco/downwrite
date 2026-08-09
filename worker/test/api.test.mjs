@@ -771,9 +771,12 @@ test("serves an OpenAPI contract for the implemented API", async () => {
     "documents:write",
   );
   assert.equal(
-    body.components.schemas.DocumentRecord.allOf[1].properties.content
-      .mediaType,
+    body.components.schemas.DocumentRecord.properties.content.mediaType,
     "text/markdown",
+  );
+  assert.equal(
+    body.components.schemas.DocumentRecord.required.includes("content"),
+    true,
   );
   assert.equal(
     body.components.schemas.DocumentUpdate.required.includes("baseRevision"),
@@ -2402,7 +2405,7 @@ test("authenticated writers can delete a document", async () => {
   const document = await createDocument(app, env, group.id);
 
   const deleteResponse = await app.request(
-    `/api/v1/documents/${document.id}`,
+    `/api/v1/documents/${document.id}?baseRevision=${document.revision}`,
     {
       method: "DELETE",
       headers: authHeaders("owner-token"),
@@ -2425,6 +2428,89 @@ test("authenticated writers can delete a document", async () => {
     code: "not_found",
     status: 404,
   });
+});
+
+test("document deletion requires the current revision", async () => {
+  const { app, env } = createHarness();
+  const group = await createGroup(app, env);
+  const document = await createDocument(app, env, group.id);
+
+  const missingRevisionResponse = await app.request(
+    `/api/v1/documents/${document.id}`,
+    {
+      method: "DELETE",
+      headers: authHeaders("owner-token"),
+    },
+    env,
+  );
+  const invalidRevisionResponses = await Promise.all(
+    ["not-a-number", "-1", "1.5"].map((baseRevision) =>
+      app.request(
+        `/api/v1/documents/${document.id}?baseRevision=${baseRevision}`,
+        {
+          method: "DELETE",
+          headers: authHeaders("owner-token"),
+        },
+        env,
+      ),
+    ),
+  );
+  const staleRevisionResponse = await app.request(
+    `/api/v1/documents/${document.id}?baseRevision=${document.revision + 1}`,
+    {
+      method: "DELETE",
+      headers: authHeaders("owner-token"),
+    },
+    env,
+  );
+  const readResponse = await app.request(
+    `/api/v1/documents/${document.id}`,
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+
+  assert.equal(missingRevisionResponse.status, 428);
+  assert.deepEqual(
+    invalidRevisionResponses.map((response) => response.status),
+    [428, 428, 428],
+  );
+  assert.equal(staleRevisionResponse.status, 409);
+  assert.equal(readResponse.status, 200);
+});
+
+test("document deletion cannot race a newer revision", async () => {
+  const { app, env, storage } = createHarness();
+  const group = await createGroup(app, env);
+  const document = await createDocument(app, env, group.id);
+  const deleteDocument = storage.deleteDocument.bind(storage);
+  storage.deleteDocument = async (input) => {
+    await storage.updateDocument({
+      identityId: input.identityId,
+      documentId: input.documentId,
+      title: "Concurrent revision",
+    });
+    return deleteDocument(input);
+  };
+
+  const deleteResponse = await app.request(
+    `/api/v1/documents/${document.id}?baseRevision=${document.revision}`,
+    {
+      method: "DELETE",
+      headers: authHeaders("owner-token"),
+    },
+    env,
+  );
+  const readResponse = await app.request(
+    `/api/v1/documents/${document.id}`,
+    { headers: authHeaders("owner-token") },
+    env,
+  );
+  const readBody = await readResponse.json();
+
+  assert.equal(deleteResponse.status, 409);
+  assert.equal(readResponse.status, 200);
+  assert.equal(readBody.document.title, "Concurrent revision");
+  assert.equal(readBody.document.revision, document.revision + 1);
 });
 
 function createHarness() {

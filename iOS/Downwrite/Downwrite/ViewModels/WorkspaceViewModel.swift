@@ -104,6 +104,26 @@ final class WorkspaceViewModel {
         selectedDocumentID = document.id
     }
 
+	func applyDeletedDocument(_ document: DocumentRecord) {
+		let wasSelected = selectedDocumentID == document.id
+		guard var group = groups.first(where: { $0.id == document.groupId }),
+			let deletedIndex = group.documents.firstIndex(where: { $0.id == document.id })
+		else {
+			return
+		}
+		group.documents.remove(at: deletedIndex)
+		let adjacentDocumentID =
+			group.documents.indices.contains(deletedIndex)
+			? group.documents[deletedIndex].id
+			: group.documents.last?.id
+		replace(group)
+		guard wasSelected else {
+			return
+		}
+		selectedGroupID = group.id
+		selectedDocumentID = adjacentDocumentID
+	}
+
     func reassignAndRemoveSelectedGroup() {
         guard let group = selectedGroup else {
             return
@@ -116,6 +136,7 @@ final class WorkspaceViewModel {
     }
 
     func removeGroup(_ groupID: String, replacementGroup: GroupSummary?) {
+		groupsRequestID += 1
         var nextGroups = groups.filter { $0.id != groupID }
         if let replacementGroup, !nextGroups.contains(where: { $0.id == replacementGroup.id }) {
             nextGroups.append(replacementGroup)
@@ -126,6 +147,7 @@ final class WorkspaceViewModel {
     }
 
     func replace(_ group: GroupSummary) {
+		groupsRequestID += 1
         var nextGroups = groups
         if let index = nextGroups.firstIndex(where: { $0.id == group.id }) {
             nextGroups[index] = group

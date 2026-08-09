@@ -454,8 +454,10 @@ export async function positionDocument(
 export async function deleteDocument(
   token: string | undefined,
   documentId: string,
+  baseRevision: number,
 ) {
-  const response = await fetch(`/api/v1/documents/${documentId}`, {
+  const params = new URLSearchParams({ baseRevision: String(baseRevision) });
+  const response = await fetch(`/api/v1/documents/${documentId}?${params}`, {
     method: "DELETE",
     headers: authHeaders(token),
     credentials: "include",

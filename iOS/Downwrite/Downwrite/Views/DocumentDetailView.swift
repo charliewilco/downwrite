@@ -3,6 +3,8 @@ import SwiftUI
 struct DocumentDetailView: View {
     @State var viewModel: DocumentViewModel
     @State private var mode: DocumentMode = .preview
+	@State private var isPresentingDeleteConfirmation = false
+	let onDelete: (DocumentRecord) -> Void
 
     var body: some View {
         Group {
@@ -32,27 +34,71 @@ struct DocumentDetailView: View {
                 .frame(maxWidth: 240)
             }
 
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .topBarTrailing) {
                 Button {
                     Task { await viewModel.save() }
                 } label: {
                     Label("Save", systemImage: "square.and.arrow.down")
                 }
-                .disabled(!viewModel.hasChanges || viewModel.isSaving)
+				.disabled(!viewModel.canSave)
+
+				Menu {
+					Button("Delete Document", systemImage: "trash", role: .destructive) {
+						isPresentingDeleteConfirmation = true
+					}
+				} label: {
+					Label("More", systemImage: "ellipsis.circle")
+				}
+				.disabled(!viewModel.canDelete)
             }
         }
+		.confirmationDialog(
+			"Delete \(deletionTarget)?",
+			isPresented: $isPresentingDeleteConfirmation,
+			titleVisibility: .visible
+		) {
+			Button("Delete Document", role: .destructive) {
+				Task {
+					guard let document = await viewModel.delete() else {
+						return
+					}
+					onDelete(document)
+				}
+			}
+			Button("Cancel", role: .cancel) {}
+		} message: {
+			Text("This permanently deletes the document.")
+		}
     }
+
+	private var deletionTarget: String {
+		let title = viewModel.draftTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+		return title.isEmpty ? "this document" : "“\(title)”"
+	}
 
     private var documentBody: some View {
         VStack(spacing: 0) {
             if let statusMessage = viewModel.statusMessage {
-                Text(statusMessage)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
-                    .background(.thinMaterial)
+				HStack {
+					Text(statusMessage)
+						.frame(maxWidth: .infinity, alignment: .leading)
+					if viewModel.isDeleteOutcomeUncertain {
+						Button("Reload") {
+							Task {
+								guard let deleted = await viewModel.reconcileDeleteOutcome() else {
+									return
+								}
+								onDelete(deleted)
+							}
+						}
+						.buttonStyle(.bordered)
+					}
+				}
+				.font(.footnote)
+				.foregroundStyle(.secondary)
+				.padding(.horizontal)
+				.padding(.vertical, 8)
+				.background(.thinMaterial)
             }
 
             switch mode {
@@ -115,7 +161,10 @@ private struct DocumentEditor: View {
 
 #Preview("Document preview") {
     NavigationStack {
-        DocumentDetailView(viewModel: DocumentViewModel(documentID: "doc-pitch", session: .previewSignedIn))
+		DocumentDetailView(
+			viewModel: DocumentViewModel(documentID: "doc-pitch", session: .previewSignedIn),
+			onDelete: { _ in }
+		)
     }
 }
 
@@ -123,7 +172,7 @@ private struct DocumentEditor: View {
     let viewModel = DocumentViewModel(documentID: "doc-pitch", session: .previewSignedIn)
     viewModel.documentState = .loading
     return NavigationStack {
-        DocumentDetailView(viewModel: viewModel)
+		DocumentDetailView(viewModel: viewModel, onDelete: { _ in })
     }
 }
 
@@ -131,7 +180,7 @@ private struct DocumentEditor: View {
     let viewModel = DocumentViewModel(documentID: "doc-missing", session: .previewSignedIn)
     viewModel.documentState = .failed("Document was not found.")
     return NavigationStack {
-        DocumentDetailView(viewModel: viewModel)
+		DocumentDetailView(viewModel: viewModel, onDelete: { _ in })
     }
 }
 
@@ -143,6 +192,6 @@ private struct DocumentEditor: View {
     viewModel.draftContent = "\(document.content)\n\nLocal edits are still here."
     viewModel.statusMessage = "Document has changed since it was loaded"
     return NavigationStack {
-        DocumentDetailView(viewModel: viewModel)
+		DocumentDetailView(viewModel: viewModel, onDelete: { _ in })
     }
 }

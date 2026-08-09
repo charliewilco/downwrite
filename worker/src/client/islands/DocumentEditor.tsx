@@ -1,6 +1,7 @@
 import { h } from "preact";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import {
+  ApiError,
   deleteDocument,
   moveDocument,
   updateDocument,
@@ -147,11 +148,19 @@ export function DocumentEditor({
               setError(null);
 
               try {
-                await deleteDocument(workspaceToken, document.id);
+                await deleteDocument(
+                  workspaceToken,
+                  document.id,
+                  document.revision,
+                );
                 removeDocumentFromGroups(document.id);
                 void refreshGroups();
                 window.location.assign("/");
               } catch (caught: unknown) {
+                if (caught instanceof ApiError && caught.status === 409) {
+                  window.location.reload();
+                  return;
+                }
                 setError(
                   caught instanceof Error
                     ? caught.message

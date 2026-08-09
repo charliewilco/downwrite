@@ -153,6 +153,8 @@ protocol DownwriteAPIClient {
     func createDocument(groupId: String, title: String, content: String) async throws -> DocumentRecord
     func getDocument(id: String) async throws -> DocumentRecord
     func updateDocument(id: String, title: String?, content: String?, baseRevision: Int) async throws -> DocumentRecord
+	func deleteDocument(id: String, baseRevision: Int) async throws
+	func documentExists(id: String) async throws -> Bool
     func moveDocument(id: String, groupId: String, position: Int?, baseRevision: Int) async throws -> DocumentRecord
 }
 
@@ -333,6 +335,42 @@ final class OpenAPIDownwriteAPIClient: DownwriteAPIClient {
         return try output.ok.body.json.document.appModel
     }
 
+	func deleteDocument(id: String, baseRevision: Int) async throws {
+		let output = try await authenticatedClient().deleteDocument(
+			path: .init(documentId: id),
+			query: .init(baseRevision: baseRevision)
+		)
+		switch output {
+		case .ok:
+			return
+		case .forbidden(let response):
+			throw try response.body.json.appError
+		case .conflict(let response):
+			throw try response.body.json.appError
+		case .preconditionRequired(let response):
+			throw try response.body.json.appError
+		case .undocumented(let statusCode, _):
+			throw DownwriteErrorEnvelope(
+				error: "Delete request failed.",
+				code: "unexpected_response",
+				status: statusCode
+			)
+		}
+	}
+
+	func documentExists(id: String) async throws -> Bool {
+		let output = try await authenticatedClient().getDocument(path: .init(documentId: id))
+		switch output {
+		case .ok:
+			return true
+		case .notFound:
+			return false
+		case .undocumented:
+			_ = try output.ok
+			return false
+		}
+	}
+
     func moveDocument(id: String, groupId: String, position: Int? = nil, baseRevision: Int) async throws -> DocumentRecord {
 		let output = try await authenticatedClient().moveDocument(
             path: .init(documentId: id),
@@ -500,17 +538,23 @@ extension Components.Schemas.DocumentSummary {
 extension Components.Schemas.DocumentRecord {
 	fileprivate var appModel: DocumentRecord {
         DocumentRecord(
-            id: value1.id,
-            groupId: value1.groupId,
-            title: value1.title,
-            role: value1.role.appModel,
-            position: value1.position,
-            revision: value1.revision,
-            createdAt: value1.createdAt,
-            updatedAt: value1.updatedAt,
-            content: value2.content
+			id: id,
+			groupId: groupId,
+			title: title,
+			role: role.appModel,
+			position: position,
+			revision: revision,
+			createdAt: createdAt,
+			updatedAt: updatedAt,
+			content: content
         )
     }
+}
+
+extension Components.Schemas._Error {
+	fileprivate var appError: DownwriteErrorEnvelope {
+		DownwriteErrorEnvelope(error: error, code: code, status: status)
+	}
 }
 
 extension Components.Schemas.Role {

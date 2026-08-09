@@ -886,13 +886,27 @@ function paths(origin: string): OpenApiDocument["paths"] {
       delete: operation({
         tags: ["Documents"],
         summary: "Delete an authorized document.",
+        description:
+          "Required baseRevision prevents permanently deleting a document revision the client has not seen.",
         operationId: "deleteDocument",
         security: authenticatedSecurity(),
-        parameters: [refParameter("documentId")],
+        parameters: [
+          refParameter("documentId"),
+          {
+            name: "baseRevision",
+            in: "query",
+            required: true,
+            description:
+              "Revision read by the client before confirming deletion.",
+            schema: { type: "integer", minimum: 0 },
+          },
+        ],
         "x-downwrite-scope": "documents:write",
         responses: {
           "200": jsonResponse("Document deleted.", "Ok"),
           "403": refResponse("Forbidden"),
+          "409": errorResponse(409, "Document revision conflict."),
+          "428": refResponse("PreconditionRequired"),
         },
       }),
     },
@@ -1287,6 +1301,59 @@ function paths(origin: string): OpenApiDocument["paths"] {
     },
   };
 }
+
+const documentSummaryProperties: Record<string, unknown> = {
+  id: { type: "string" },
+  groupId: { type: "string" },
+  title: { type: "string" },
+  role: refSchema("Role"),
+  position: {
+    type: "integer",
+    description:
+      "Workspace ordering value. Lower values render earlier in the workspace.",
+  },
+  revision: {
+    type: "integer",
+    minimum: 0,
+    description:
+      "Monotonic document revision incremented by content, metadata, move, and reorder writes.",
+  },
+  createdAt: { type: "string" },
+  updatedAt: { type: "string" },
+};
+
+const documentSummaryRequired = [
+  "id",
+  "groupId",
+  "title",
+  "role",
+  "position",
+  "revision",
+  "createdAt",
+  "updatedAt",
+];
+
+const documentVersionSummaryProperties: Record<string, unknown> = {
+  id: { type: "string" },
+  documentId: { type: "string" },
+  name: { type: "string" },
+  description: { type: ["string", "null"] },
+  sourceRevision: { type: "integer", minimum: 0 },
+  title: { type: "string" },
+  createdByIdentityId: { type: "string" },
+  createdAt: { type: "string" },
+};
+
+const documentVersionSummaryRequired = [
+  "id",
+  "documentId",
+  "name",
+  "description",
+  "sourceRevision",
+  "title",
+  "createdByIdentityId",
+  "createdAt",
+];
 
 const schemas: Record<string, JsonSchema> = {
   Error: objectSchema(
@@ -1746,51 +1813,20 @@ const schemas: Record<string, JsonSchema> = {
     ["position", "baseRevision"],
   ),
   DocumentSummary: objectSchema(
-    {
-      id: { type: "string" },
-      groupId: { type: "string" },
-      title: { type: "string" },
-      role: refSchema("Role"),
-      position: {
-        type: "integer",
-        description:
-          "Workspace ordering value. Lower values render earlier in the workspace.",
-      },
-      revision: {
-        type: "integer",
-        minimum: 0,
-        description:
-          "Monotonic document revision incremented by content, metadata, move, and reorder writes.",
-      },
-      createdAt: { type: "string" },
-      updatedAt: { type: "string" },
-    },
-    [
-      "id",
-      "groupId",
-      "title",
-      "role",
-      "position",
-      "revision",
-      "createdAt",
-      "updatedAt",
-    ],
+    documentSummaryProperties,
+    documentSummaryRequired,
   ),
-  DocumentRecord: {
-    allOf: [
-      refSchema("DocumentSummary"),
-      objectSchema(
-        {
-          content: {
-            type: "string",
-            mediaType: "text/markdown",
-            description: "UTF-8 Markdown source, not rendered HTML.",
-          },
-        },
-        ["content"],
-      ),
-    ],
-  },
+  DocumentRecord: objectSchema(
+    {
+      ...documentSummaryProperties,
+      content: {
+        type: "string",
+        mediaType: "text/markdown",
+        description: "UTF-8 Markdown source, not rendered HTML.",
+      },
+    },
+    [...documentSummaryRequired, "content"],
+  ),
   DocumentEnvelope: objectSchema({ document: refSchema("DocumentRecord") }, [
     "document",
   ]),
@@ -1916,42 +1952,20 @@ const schemas: Record<string, JsonSchema> = {
     ["baseRevision"],
   ),
   DocumentVersionSummary: objectSchema(
-    {
-      id: { type: "string" },
-      documentId: { type: "string" },
-      name: { type: "string" },
-      description: { type: ["string", "null"] },
-      sourceRevision: { type: "integer", minimum: 0 },
-      title: { type: "string" },
-      createdByIdentityId: { type: "string" },
-      createdAt: { type: "string" },
-    },
-    [
-      "id",
-      "documentId",
-      "name",
-      "description",
-      "sourceRevision",
-      "title",
-      "createdByIdentityId",
-      "createdAt",
-    ],
+    documentVersionSummaryProperties,
+    documentVersionSummaryRequired,
   ),
-  DocumentVersionRecord: {
-    allOf: [
-      refSchema("DocumentVersionSummary"),
-      objectSchema(
-        {
-          content: {
-            type: "string",
-            mediaType: "text/markdown",
-            description: "Checkpoint Markdown source.",
-          },
-        },
-        ["content"],
-      ),
-    ],
-  },
+  DocumentVersionRecord: objectSchema(
+    {
+      ...documentVersionSummaryProperties,
+      content: {
+        type: "string",
+        mediaType: "text/markdown",
+        description: "Checkpoint Markdown source.",
+      },
+    },
+    [...documentVersionSummaryRequired, "content"],
+  ),
   DocumentVersionEnvelope: objectSchema(
     { version: refSchema("DocumentVersionRecord") },
     ["version"],

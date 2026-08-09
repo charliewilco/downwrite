@@ -7,6 +7,7 @@ import { getPlatformProxy } from "wrangler";
 import { createApp } from "../dist-api/app.js";
 import { sha256Base64Url } from "../dist-api/crypto.js";
 import { runMaintenance } from "../dist-api/maintenance.js";
+import { D1Storage } from "../dist-api/storage/d1.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const workerRoot = path.resolve(__dirname, "..");
@@ -90,6 +91,47 @@ test("D1/R2 document writes enforce revision preconditions without changing stor
   });
 });
 
+test("D1 deletion atomically rejects a revision changed before storage mutation", async () => {
+  await withRuntimeHarness(async ({ app, env, proxy }) => {
+    const group = await createGroup(app, env);
+    const document = await createDocument(app, env, group.id, {
+      content: "Document content that must survive",
+    });
+    const documentRow = await proxy.env.DB.prepare(
+      `SELECT content_key FROM documents WHERE id = ?`,
+    )
+      .bind(document.id)
+      .first();
+    await proxy.env.DB.prepare(
+      `UPDATE documents SET revision = revision + 1 WHERE id = ?`,
+    )
+      .bind(document.id)
+      .run();
+
+    const store = new D1Storage(proxy.env.DB, proxy.env.CONTENT);
+    const deleted = await store.deleteDocument({
+      identityId: "dev-owner",
+      documentId: document.id,
+      baseRevision: document.revision,
+    });
+    const survivingRow = await proxy.env.DB.prepare(
+      `SELECT revision FROM documents WHERE id = ?`,
+    )
+      .bind(document.id)
+      .first();
+    const survivingObject = await proxy.env.CONTENT.get(
+      documentRow.content_key,
+    );
+
+    assert.equal(deleted, false);
+    assert.equal(survivingRow.revision, document.revision + 1);
+    assert.equal(
+      await survivingObject.text(),
+      "Document content that must survive",
+    );
+  });
+});
+
 test("D1/R2 comment rows cascade and checkpoint objects are cleaned up", async () => {
   await withRuntimeHarness(async ({ app, env, proxy }) => {
     const group = await createGroup(app, env);
@@ -134,7 +176,7 @@ test("D1/R2 comment rows cascade and checkpoint objects are cleaned up", async (
 
     const deleted = await json(
       await app.request(
-        `https://example.downwrite.test/api/v1/documents/${document.id}`,
+        `https://example.downwrite.test/api/v1/documents/${document.id}?baseRevision=${document.revision}`,
         {
           method: "DELETE",
           headers: authHeaders("owner-token"),

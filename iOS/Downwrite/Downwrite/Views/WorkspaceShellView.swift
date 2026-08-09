@@ -14,7 +14,11 @@ struct WorkspaceShellView: View {
             }
         } detail: {
             if let documentID = viewModel.selectedDocumentID {
-                DocumentDetailView(viewModel: DocumentViewModel(documentID: documentID, session: viewModel.session))
+				DocumentDetailView(
+					viewModel: DocumentViewModel(documentID: documentID, session: viewModel.session)
+				) { document in
+					viewModel.applyDeletedDocument(document)
+				}
                     .id(documentID)
             } else {
                 ContentUnavailableView("Select a Document", systemImage: "doc.text")

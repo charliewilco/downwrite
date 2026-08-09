@@ -633,13 +633,17 @@ export class MemoryStorage {
     return next;
   }
 
-  async deleteDocument({ identityId, documentId }) {
+  async deleteDocument({ identityId, documentId, baseRevision }) {
     const current = await this.getDocumentForIdentity({
       identityId,
       documentId,
     });
 
-    if (!current || !canWrite(current.role)) {
+    if (
+      !current ||
+      !canWrite(current.role) ||
+      current.revision !== baseRevision
+    ) {
       return false;
     }
 

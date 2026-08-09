@@ -9,6 +9,9 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     var getDocumentError: Error?
     var createGroupError: Error?
     var createDocumentError: Error?
+	var deleteDocumentError: Error?
+	var deleteDocumentCommittedError: Error?
+	var documentExistsError: Error?
     var updateDocumentError: Error?
     var updateGroupError: Error?
     var moveDocumentError: Error?
@@ -21,6 +24,8 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
 	var listGroupsDelay: Duration?
 	var createGroupDelay: Duration?
 	var createGroupCallCount = 0
+	var deleteDocumentDelay: Duration?
+	var deleteDocumentCallCount = 0
 
     init(
         groups: [GroupSummary],
@@ -233,6 +238,41 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
         documents[id] = document
         return document
     }
+
+	func deleteDocument(id: String, baseRevision: Int) async throws {
+		deleteDocumentCallCount += 1
+		if let deleteDocumentDelay {
+			try await Task.sleep(for: deleteDocumentDelay)
+		}
+		if let deleteDocumentError {
+			throw deleteDocumentError
+		}
+		guard documents[id]?.revision == baseRevision else {
+			throw DownwriteErrorEnvelope(
+				error: "Document has changed since it was loaded",
+				code: "conflict",
+				status: 409
+			)
+		}
+		removeDocument(id: id)
+		if let deleteDocumentCommittedError {
+			throw deleteDocumentCommittedError
+		}
+	}
+
+	func documentExists(id: String) async throws -> Bool {
+		if let documentExistsError {
+			throw documentExistsError
+		}
+		return documents[id] != nil
+	}
+
+	private func removeDocument(id: String) {
+		documents[id] = nil
+		for index in groups.indices {
+			groups[index].documents.removeAll { $0.id == id }
+		}
+	}
 
     func moveDocument(id: String, groupId: String, position: Int?, baseRevision: Int) async throws -> DocumentRecord {
         if let moveDocumentError {

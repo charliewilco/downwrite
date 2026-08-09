@@ -1357,6 +1357,7 @@
           "Documents"
         ],
         "summary": "Delete an authorized document.",
+        "description": "Required baseRevision prevents permanently deleting a document revision the client has not seen.",
         "operationId": "deleteDocument",
         "security": [
           {
@@ -1372,6 +1373,16 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/documentId"
+          },
+          {
+            "name": "baseRevision",
+            "in": "query",
+            "required": true,
+            "description": "Revision read by the client before confirming deletion.",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
           }
         ],
         "x-downwrite-scope": "documents:write",
@@ -1388,6 +1399,28 @@
           },
           "403": {
             "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "description": "Document revision conflict.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "error": "Document revision conflict.",
+                      "code": "conflict",
+                      "status": 409
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "$ref": "#/components/responses/PreconditionRequired"
           }
         }
       }
@@ -3529,24 +3562,52 @@
         ]
       },
       "DocumentRecord": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/DocumentSummary"
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "content": {
-                "type": "string",
-                "mediaType": "text/markdown",
-                "description": "UTF-8 Markdown source, not rendered HTML."
-              }
-            },
-            "required": [
-              "content"
-            ]
+          "groupId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "position": {
+            "type": "integer",
+            "description": "Workspace ordering value. Lower values render earlier in the workspace."
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Monotonic document revision incremented by content, metadata, move, and reorder writes."
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string",
+            "mediaType": "text/markdown",
+            "description": "UTF-8 Markdown source, not rendered HTML."
           }
+        },
+        "required": [
+          "id",
+          "groupId",
+          "title",
+          "role",
+          "position",
+          "revision",
+          "createdAt",
+          "updatedAt",
+          "content"
         ]
       },
       "DocumentEnvelope": {
@@ -3913,24 +3974,53 @@
         ]
       },
       "DocumentVersionRecord": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/DocumentVersionSummary"
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "content": {
-                "type": "string",
-                "mediaType": "text/markdown",
-                "description": "Checkpoint Markdown source."
-              }
-            },
-            "required": [
-              "content"
+          "documentId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
             ]
+          },
+          "sourceRevision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "title": {
+            "type": "string"
+          },
+          "createdByIdentityId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string",
+            "mediaType": "text/markdown",
+            "description": "Checkpoint Markdown source."
           }
+        },
+        "required": [
+          "id",
+          "documentId",
+          "name",
+          "description",
+          "sourceRevision",
+          "title",
+          "createdByIdentityId",
+          "createdAt",
+          "content"
         ]
       },
       "DocumentVersionEnvelope": {
