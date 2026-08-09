@@ -1321,8 +1321,8 @@ const schemas: Record<string, JsonSchema> = {
   ),
   Discovery: objectSchema(
     {
-    name: { type: "string" },
-    instanceUrl: { type: "string", format: "uri" },
+      name: { type: "string" },
+      instanceUrl: { type: "string", format: "uri" },
       api: objectSchema(
         {
           currentVersion: { type: "string" },
@@ -1346,8 +1346,8 @@ const schemas: Record<string, JsonSchema> = {
           "documentationUrl",
         ],
       ),
-    auth: { type: "object", additionalProperties: true },
-    clients: { type: "object", additionalProperties: true },
+      auth: { type: "object", additionalProperties: true },
+      clients: { type: "object", additionalProperties: true },
     },
     ["name", "instanceUrl", "api", "auth", "clients"],
   ),
