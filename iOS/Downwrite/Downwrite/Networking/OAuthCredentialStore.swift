@@ -9,8 +9,14 @@ struct OAuthCredential: Codable, Equatable, Sendable {
     let refreshTokenExpiresAt: Date
     let scope: String
     let resource: String
+	let identityID: String?
 
-    init(instanceURL: URL, response: OAuthTokenResponse, issuedAt: Date = .now) {
+    init(
+		instanceURL: URL,
+		response: OAuthTokenResponse,
+		issuedAt: Date = .now,
+		identityID: String? = nil
+	) {
         self.instanceURL = instanceURL
         accessToken = response.accessToken
         refreshToken = response.refreshToken
@@ -18,6 +24,7 @@ struct OAuthCredential: Codable, Equatable, Sendable {
         refreshTokenExpiresAt = issuedAt.addingTimeInterval(TimeInterval(response.refreshExpiresIn))
         scope = response.scope
         resource = response.resource
+		self.identityID = identityID
     }
 }
 

@@ -10,7 +10,8 @@ struct DocumentDeletionTests {
 		let document = try #require(client.documents["doc-pitch"])
 		let viewModel = DocumentViewModel(
 			documentID: document.id,
-			session: .deletionSignedIn(client: client)
+			session: .deletionSignedIn(client: client),
+			draftStore: .testStore()
 		)
 		await viewModel.load()
 		viewModel.draftTitle = "Unsaved title"
@@ -37,7 +38,8 @@ struct DocumentDeletionTests {
 		let document = try #require(client.documents["doc-pitch"])
 		let viewModel = DocumentViewModel(
 			documentID: document.id,
-			session: .deletionSignedIn(client: client)
+			session: .deletionSignedIn(client: client),
+			draftStore: .testStore()
 		)
 		await viewModel.load()
 		viewModel.draftTitle = "Unsaved title"
@@ -60,7 +62,8 @@ struct DocumentDeletionTests {
 		let document = try #require(client.documents["doc-pitch"])
 		let viewModel = DocumentViewModel(
 			documentID: document.id,
-			session: .deletionSignedIn(client: client)
+			session: .deletionSignedIn(client: client),
+			draftStore: .testStore()
 		)
 		await viewModel.load()
 
@@ -77,7 +80,8 @@ struct DocumentDeletionTests {
 		let document = try #require(client.documents["doc-pitch"])
 		let viewModel = DocumentViewModel(
 			documentID: document.id,
-			session: .deletionSignedIn(client: client)
+			session: .deletionSignedIn(client: client),
+			draftStore: .testStore()
 		)
 		await viewModel.load()
 		viewModel.draftTitle = "Unsaved local title"
@@ -104,7 +108,8 @@ struct DocumentDeletionTests {
 		let document = try #require(client.documents["doc-pitch"])
 		let viewModel = DocumentViewModel(
 			documentID: document.id,
-			session: .deletionSignedIn(client: client)
+			session: .deletionSignedIn(client: client),
+			draftStore: .testStore()
 		)
 		await viewModel.load()
 		viewModel.draftTitle = "Unsaved title"
@@ -138,7 +143,8 @@ struct DocumentDeletionTests {
 		let document = try #require(client.documents["doc-pitch"])
 		let viewModel = DocumentViewModel(
 			documentID: document.id,
-			session: .deletionSignedIn(client: client)
+			session: .deletionSignedIn(client: client),
+			draftStore: .testStore()
 		)
 		await viewModel.load()
 
@@ -160,7 +166,8 @@ struct DocumentDeletionTests {
 		let document = try #require(client.documents["doc-pitch"])
 		let viewModel = DocumentViewModel(
 			documentID: document.id,
-			session: .deletionSignedIn(client: client)
+			session: .deletionSignedIn(client: client),
+			draftStore: .testStore()
 		)
 		await viewModel.load()
 		viewModel.draftContent.append("\nUnsaved")
@@ -249,7 +256,7 @@ private extension SessionViewModel {
 			state: .signedIn(
 				InstanceSession(
 					instanceURL: client.baseURL,
-					identity: Identity(id: "local-owner"),
+					identity: Identity(id: "deletion-\(UUID().uuidString)"),
 					apiClient: client
 				)
 			)

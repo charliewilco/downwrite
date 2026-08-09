@@ -11,13 +11,16 @@ final class SessionViewModel {
 
     private(set) var state: State
     private let credentialStore: any OAuthCredentialStore
+	private let draftStore: DocumentDraftStore
 
     init(
         state: State = .restoring,
-        credentialStore: any OAuthCredentialStore = KeychainOAuthCredentialStore()
+		credentialStore: any OAuthCredentialStore = KeychainOAuthCredentialStore(),
+		draftStore: DocumentDraftStore = .shared
     ) {
         self.state = state
         self.credentialStore = credentialStore
+		self.draftStore = draftStore
     }
 
     var activeSession: InstanceSession? {
@@ -32,8 +35,20 @@ final class SessionViewModel {
         state = .signedIn(InstanceSession(instanceURL: instanceURL, identity: identity, apiClient: client))
     }
 
-    func signIn(configuration: InstanceConfiguration, tokenResponse: OAuthTokenResponse) throws {
-        let credential = OAuthCredential(instanceURL: configuration.instanceURL, response: tokenResponse)
+    func signIn(configuration: InstanceConfiguration, tokenResponse: OAuthTokenResponse) async throws {
+        let identityClient = OpenAPIDownwriteAPIClient(
+			baseURL: configuration.instanceURL,
+			accessToken: tokenResponse.accessToken
+		)
+		let authStatus = try await identityClient.authStatus()
+		guard authStatus.authenticated, let identity = authStatus.identity else {
+			throw OAuthSessionError.identityMissing
+		}
+		let credential = OAuthCredential(
+			instanceURL: configuration.instanceURL,
+			response: tokenResponse,
+			identityID: identity.id
+		)
         guard credential.resource == configuration.apiBaseURL.absoluteString else {
             throw OAuthSessionError.resourceMismatch
         }
@@ -60,8 +75,10 @@ final class SessionViewModel {
             let instanceURL = try InstanceConfiguration.candidate(from: credential.instanceURL.absoluteString)
             guard credential.refreshTokenExpiresAt > .now,
                   credential.resource == instanceURL.appending(path: "/api/v1").absoluteString,
-                  credential.containsRequiredScopes
+				  credential.containsRequiredScopes,
+				  credential.identityID?.isEmpty == false
             else {
+				try? draftStore.removeAll(instanceURL: credential.instanceURL)
                 try credentialStore.delete()
                 state = .signedOut
                 return
@@ -76,7 +93,11 @@ final class SessionViewModel {
     func signOut() async {
         let tokenManager = activeSession?.tokenManager
 		let signOutAction = activeSession?.signOutAction
+		let instanceURL = activeSession?.instanceURL
         state = .signedOut
+		if let instanceURL {
+			try? draftStore.removeAll(instanceURL: instanceURL)
+		}
         await tokenManager?.signOut()
 		await signOutAction?()
     }
@@ -94,7 +115,7 @@ final class SessionViewModel {
         )
         return InstanceSession(
             instanceURL: credential.instanceURL,
-            identity: nil,
+			identity: credential.identityID.map(Identity.init(id:)),
             apiClient: client,
             tokenManager: tokenManager
         )

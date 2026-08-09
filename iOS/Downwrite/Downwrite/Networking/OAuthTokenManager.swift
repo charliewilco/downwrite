@@ -55,7 +55,8 @@ final class OAuthTokenManager {
             let refreshed = OAuthCredential(
                 instanceURL: credential.instanceURL,
                 response: response,
-                issuedAt: issuedAt
+				issuedAt: issuedAt,
+				identityID: credential.identityID
             )
             guard refreshed.resource == credential.resource else {
                 throw OAuthSessionError.resourceMismatch
@@ -100,6 +101,7 @@ enum OAuthSessionError: LocalizedError, Equatable {
     case expired
     case resourceMismatch
     case scopeMismatch
+	case identityMissing
 
     var errorDescription: String? {
         switch self {
@@ -111,6 +113,8 @@ enum OAuthSessionError: LocalizedError, Equatable {
             "The instance returned credentials for an unexpected API resource."
         case .scopeMismatch:
             "The instance returned credentials without the required permissions."
+		case .identityMissing:
+			"The instance did not identify the authenticated account."
         }
     }
 }

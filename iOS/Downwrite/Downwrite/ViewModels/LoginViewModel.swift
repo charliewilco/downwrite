@@ -39,7 +39,7 @@ final class LoginViewModel {
 				authorizationServer: authorizationServerMetadata
                 )
 			let tokenResponse = try await authenticator.signIn(configuration: configuration)
-			try session.signIn(configuration: configuration, tokenResponse: tokenResponse)
+			try await session.signIn(configuration: configuration, tokenResponse: tokenResponse)
 		}
 		catch {
             statusMessage = error.localizedDescription

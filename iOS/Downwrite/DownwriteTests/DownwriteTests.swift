@@ -36,7 +36,7 @@ struct DownwriteTests {
             state: .signedIn(
                 InstanceSession(
                     instanceURL: URL(string: "http://localhost:8787")!,
-                    identity: Identity(id: "local-owner"),
+					identity: Identity(id: "local-owner"),
                     apiClient: PreviewDownwriteAPIClient.sampleCopy()
                 )
             )
@@ -85,7 +85,11 @@ struct DownwriteTests {
                 )
             )
         )
-        let viewModel = DocumentViewModel(documentID: "doc-pitch", session: session)
+		let viewModel = DocumentViewModel(
+			documentID: "doc-pitch",
+			session: session,
+			draftStore: .testStore()
+		)
 
         await viewModel.load()
         viewModel.draftContent += "\n\nSaved from a test."
@@ -129,7 +133,11 @@ struct DownwriteTests {
     @Test func documentLoadSurfacesMissingDocumentFailure() async throws {
         let client = PreviewDownwriteAPIClient.sampleCopy()
         client.getDocumentError = DownwriteErrorEnvelope(error: "Document was not found", code: "not_found", status: 404)
-        let viewModel = DocumentViewModel(documentID: "doc-missing", session: .signedIn(client: client))
+		let viewModel = DocumentViewModel(
+			documentID: "doc-missing",
+			session: .signedIn(client: client),
+			draftStore: .testStore()
+		)
 
         await viewModel.load()
 
@@ -142,16 +150,25 @@ struct DownwriteTests {
 
     @Test func documentConflictKeepsDraftDirty() async throws {
         let client = PreviewDownwriteAPIClient.sampleCopy()
-        let viewModel = DocumentViewModel(documentID: "doc-pitch", session: .signedIn(client: client))
+		let viewModel = DocumentViewModel(
+			documentID: "doc-pitch",
+			session: .signedIn(client: client),
+			draftStore: .testStore()
+		)
 
         await viewModel.load()
         client.documents["doc-pitch"]?.revision += 1
         viewModel.draftContent += "\n\nLocal draft."
         await viewModel.save()
 
-        #expect(viewModel.document?.revision == 7)
-        #expect(viewModel.hasChanges == true)
-        #expect(viewModel.statusMessage == "Document has changed since it was loaded")
+		#expect(viewModel.document?.revision == 8)
+		#expect(viewModel.hasChanges == true)
+		#expect(
+			viewModel.saveState == .conflict(
+				message: "Document changed elsewhere. Your edits are preserved; save again to replace the latest revision."
+			)
+		)
+		#expect(viewModel.statusMessage == nil)
     }
 
     @Test func groupRemovalMovesDocumentsBeforeDeletingSourceGroup() async throws {
@@ -212,10 +229,10 @@ extension SessionViewModel {
 	fileprivate static func signedIn(client: PreviewDownwriteAPIClient) -> SessionViewModel {
         SessionViewModel(
             state: .signedIn(
-                InstanceSession(
-                    instanceURL: client.baseURL,
-                    identity: Identity(id: "local-owner"),
-                    apiClient: client
+				InstanceSession(
+					instanceURL: client.baseURL,
+					identity: Identity(id: "tests-\(UUID().uuidString)"),
+					apiClient: client
                 )
             )
         )

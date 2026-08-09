@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DocumentDetailView: View {
+	@Environment(\.scenePhase) private var scenePhase
     @State var viewModel: DocumentViewModel
     @State private var mode: DocumentMode = .preview
 	@State private var isPresentingDeleteConfirmation = false
@@ -22,6 +23,15 @@ struct DocumentDetailView: View {
                 await viewModel.load()
             }
         }
+		.onDisappear {
+			Task { await viewModel.flushPendingSave() }
+		}
+		.onChange(of: scenePhase) { _, newPhase in
+			guard newPhase != .active else {
+				return
+			}
+			Task { await viewModel.flushPendingSave() }
+		}
         .navigationTitle(viewModel.draftTitle.isEmpty ? "Document" : viewModel.draftTitle)
         .toolbar {
             ToolbarItem(placement: .principal) {
@@ -78,6 +88,8 @@ struct DocumentDetailView: View {
 
     private var documentBody: some View {
         VStack(spacing: 0) {
+			DocumentSaveStatusView(state: viewModel.saveState)
+
             if let statusMessage = viewModel.statusMessage {
 				HStack {
 					Text(statusMessage)

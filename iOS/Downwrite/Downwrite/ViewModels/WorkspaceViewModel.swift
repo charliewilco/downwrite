@@ -104,6 +104,16 @@ final class WorkspaceViewModel {
         selectedDocumentID = document.id
     }
 
+	func applyUpdatedDocument(_ document: DocumentRecord) {
+		guard var group = groups.first(where: { $0.id == document.groupId }),
+			let documentIndex = group.documents.firstIndex(where: { $0.id == document.id })
+		else {
+			return
+		}
+		group.documents[documentIndex] = document.summary
+		replace(group)
+	}
+
 	func applyDeletedDocument(_ document: DocumentRecord) {
 		let wasSelected = selectedDocumentID == document.id
 		guard var group = groups.first(where: { $0.id == document.groupId }),

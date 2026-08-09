@@ -15,7 +15,13 @@ struct WorkspaceShellView: View {
         } detail: {
             if let documentID = viewModel.selectedDocumentID {
 				DocumentDetailView(
-					viewModel: DocumentViewModel(documentID: documentID, session: viewModel.session)
+					viewModel: DocumentViewModel(
+						documentID: documentID,
+						session: viewModel.session,
+						onDocumentUpdate: { document in
+							viewModel.applyUpdatedDocument(document)
+						}
+					)
 				) { document in
 					viewModel.applyDeletedDocument(document)
 				}

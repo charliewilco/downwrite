@@ -136,8 +136,54 @@ struct OAuthTokenManagerTests {
         session.restore()
 
         #expect(session.activeSession?.instanceURL == instanceURL)
+		#expect(session.activeSession?.identity == Identity(id: "oauth-owner"))
         #expect(session.activeSession?.tokenManager != nil)
     }
+
+	@Test func expiredSessionRestorationPurgesInstanceDrafts() throws {
+		let response = OAuthTokenResponse(
+			tokenType: "Bearer",
+			accessToken: "expired-access",
+			expiresIn: 1,
+			refreshToken: "expired-refresh",
+			refreshExpiresIn: 1,
+			scope: InstanceConfiguration.requestedScopes.joined(separator: " "),
+			resource: instanceURL.appending(path: "/api/v1").absoluteString
+		)
+		let expiredCredential = OAuthCredential(
+			instanceURL: instanceURL,
+			response: response,
+			issuedAt: .now.addingTimeInterval(-60),
+			identityID: "oauth-owner"
+		)
+		let credentialStore = InMemoryOAuthCredentialStore(credential: expiredCredential)
+		let draftStore = DocumentDraftStore.testStore()
+		let document = try #require(PreviewDownwriteAPIClient.sample.documents["doc-pitch"])
+		let key = DocumentDraftKey(
+			instanceURL: instanceURL.absoluteString,
+			identityID: "oauth-owner",
+			documentID: document.id
+		)
+		try draftStore.save(
+			StoredDocumentDraft(
+				key: key,
+				baseline: document,
+				title: document.title,
+				content: "Unsaved OAuth draft"
+			)
+		)
+		let session = SessionViewModel(
+			state: .restoring,
+			credentialStore: credentialStore,
+			draftStore: draftStore
+		)
+
+		session.restore()
+
+		#expect(session.state == .signedOut)
+		#expect(credentialStore.credential == nil)
+		#expect(try draftStore.load(for: key) == nil)
+	}
 
     @Test func replacingSessionChangesWorkspaceIdentity() {
         let first = InstanceSession(
@@ -173,7 +219,8 @@ struct OAuthTokenManagerTests {
                 scope: InstanceConfiguration.requestedScopes.joined(separator: " "),
                 resource: instanceURL.appending(path: "/api/v1").absoluteString
             ),
-            issuedAt: issuedAt
+			issuedAt: issuedAt,
+			identityID: "oauth-owner"
         )
     }
 

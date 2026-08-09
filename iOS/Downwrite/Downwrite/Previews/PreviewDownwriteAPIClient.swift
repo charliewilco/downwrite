@@ -1,5 +1,12 @@
 import Foundation
 
+struct PreviewDocumentUpdate: Equatable {
+	let id: String
+	let title: String?
+	let content: String?
+	let baseRevision: Int
+}
+
 final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     var baseURL = URL(string: "http://localhost:8787")!
 
@@ -13,6 +20,9 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
 	var deleteDocumentCommittedError: Error?
 	var documentExistsError: Error?
     var updateDocumentError: Error?
+	var updateDocumentDelay: Duration?
+	var updateDocumentCallCount = 0
+	var updateDocumentInputs: [PreviewDocumentUpdate] = []
     var updateGroupError: Error?
     var moveDocumentError: Error?
     var deleteGroupError: Error?
@@ -226,9 +236,22 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func updateDocument(id: String, title: String?, content: String?, baseRevision: Int) async throws -> DocumentRecord {
-        if let updateDocumentError {
-            throw updateDocumentError
-        }
+		updateDocumentCallCount += 1
+		updateDocumentInputs.append(
+			PreviewDocumentUpdate(
+				id: id,
+				title: title,
+				content: content,
+				baseRevision: baseRevision
+			)
+		)
+		let error = updateDocumentError
+		if let updateDocumentDelay {
+			try await Task.sleep(for: updateDocumentDelay)
+		}
+		if let error {
+			throw error
+		}
         guard var document = documents[id], document.revision == baseRevision else {
             throw DownwriteErrorEnvelope(error: "Document has changed since it was loaded", code: "conflict", status: 409)
         }

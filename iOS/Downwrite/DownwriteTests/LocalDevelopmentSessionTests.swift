@@ -30,7 +30,8 @@ struct LocalDevelopmentSessionTests {
 						await localDevelopmentSession.signOut()
 					}
 				)
-			)
+			),
+			draftStore: .testStore()
 		)
 
 		#expect(localDevelopmentSession.cookieStorage.cookies?.contains(cookie) == true)
