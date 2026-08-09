@@ -3,7 +3,7 @@ import Observation
 
 @Observable
 final class LoginViewModel {
-    var instanceURLText = "http://localhost:4321"
+	var instanceURLText = "https://downwrite.github-ab4.workers.dev"
     var developmentIdentity = "local-owner"
     var developmentDisplayName = "Local Owner"
     var developmentBearerToken = ""
@@ -13,41 +13,35 @@ final class LoginViewModel {
     private let session: SessionViewModel
     private let authenticator: OAuthAuthenticator
 
-    init(session: SessionViewModel, authenticator: OAuthAuthenticator = OAuthAuthenticator()) {
+	init(session: SessionViewModel, authenticator: OAuthAuthenticator? = nil) {
         self.session = session
-        self.authenticator = authenticator
+		self.authenticator = authenticator ?? OAuthAuthenticator()
     }
 
     var normalizedInstanceURL: URL? {
-        guard let url = URL(string: instanceURLText.trimmingCharacters(in: .whitespacesAndNewlines)),
-              let scheme = url.scheme,
-              ["http", "https"].contains(scheme),
-              url.host != nil
-        else {
-            return nil
-        }
-        return url
+		try? InstanceConfiguration.candidate(from: instanceURLText)
     }
 
     func signInWithOAuth() async {
-        guard let instanceURL = normalizedInstanceURL else {
-            statusMessage = "Enter a valid Downwrite instance URL."
-            return
-        }
         isSigningIn = true
         defer { isSigningIn = false }
+		statusMessage = nil
 
         do {
-            _ = try await OpenAPIDownwriteAPIClient(baseURL: instanceURL).discoverInstance()
-            let result = try await authenticator.signIn(instanceURL: instanceURL)
-            session.signIn(
-                session: InstanceSession(
-                    instanceURL: instanceURL,
-                    identity: nil,
-                    apiClient: result.client
+			let candidateURL = try InstanceConfiguration.candidate(from: instanceURLText)
+			let client = OpenAPIDownwriteAPIClient(baseURL: candidateURL)
+			async let discovery = client.discoverInstance()
+			async let authorizationServer = client.oauthAuthorizationServerMetadata()
+			let (discoveryMetadata, authorizationServerMetadata) = try await (discovery, authorizationServer)
+			let configuration = try InstanceConfiguration(
+				candidateURL: candidateURL,
+				discovery: discoveryMetadata,
+				authorizationServer: authorizationServerMetadata
                 )
-            )
-        } catch {
+			let tokenResponse = try await authenticator.signIn(configuration: configuration)
+			try session.signIn(configuration: configuration, tokenResponse: tokenResponse)
+		}
+		catch {
             statusMessage = error.localizedDescription
         }
     }
@@ -59,6 +53,7 @@ final class LoginViewModel {
         }
         isSigningIn = true
         defer { isSigningIn = false }
+		statusMessage = nil
 
         do {
             let client = OpenAPIDownwriteAPIClient(
@@ -73,7 +68,8 @@ final class LoginViewModel {
                     displayName: developmentDisplayName.nilIfBlank ?? "Local Owner"
                 )
                 identity = result.identity
-            } else {
+			}
+			else {
                 identity = Identity(id: developmentIdentity.nilIfBlank ?? "development-token")
             }
             session.signIn(
@@ -83,14 +79,15 @@ final class LoginViewModel {
                     apiClient: client
                 )
             )
-        } catch {
+		}
+		catch {
             statusMessage = error.localizedDescription
         }
     }
 }
 
-private extension String {
-    var nilIfBlank: String? {
+extension String {
+	fileprivate var nilIfBlank: String? {
         let value = trimmingCharacters(in: .whitespacesAndNewlines)
         return value.isEmpty ? nil : value
     }

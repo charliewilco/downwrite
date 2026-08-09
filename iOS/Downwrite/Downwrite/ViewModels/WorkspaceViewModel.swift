@@ -42,18 +42,21 @@ final class WorkspaceViewModel {
             return
         }
         if case .loaded = groupsState {
-        } else {
+		}
+		else {
             groupsState = .loading
         }
 
         do {
             let list = try await activeSession.apiClient.listGroups(limit: 100, cursor: nil)
             groupsState = .loaded(list.groups)
-            selectedGroupID = selectedGroupID ?? list.groups.first?.id
-            if selectedDocumentID == nil {
-                selectedDocumentID = list.groups.first?.documents.first?.id
+			let selectedGroup = list.groups.first { $0.id == selectedGroupID } ?? list.groups.first
+			selectedGroupID = selectedGroup?.id
+			selectedDocumentID =
+				selectedGroup?.documents.first { $0.id == selectedDocumentID }?.id
+				?? selectedGroup?.documents.first?.id
             }
-        } catch {
+		catch {
             groupsState = .failed(error.localizedDescription)
         }
     }
@@ -104,15 +107,16 @@ final class WorkspaceViewModel {
         var nextGroups = groups
         if let index = nextGroups.firstIndex(where: { $0.id == group.id }) {
             nextGroups[index] = group
-        } else {
+		}
+		else {
             nextGroups.append(group)
         }
         groupsState = .loaded(nextGroups)
     }
 }
 
-private extension InstanceSession {
-    var previewGroups: [GroupSummary] {
+extension InstanceSession {
+	fileprivate var previewGroups: [GroupSummary] {
         guard let client = apiClient as? PreviewDownwriteAPIClient else {
             return []
         }

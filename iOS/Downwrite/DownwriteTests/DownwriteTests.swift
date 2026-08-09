@@ -1,6 +1,7 @@
-import Foundation
 import DownwriteAPI
+import Foundation
 import Testing
+
 @testable import Downwrite
 
 @MainActor
@@ -8,13 +9,26 @@ struct DownwriteTests {
     @Test func generatedDiscoveryMetadataMapsToAppModel() throws {
         let discovery = Components.Schemas.Discovery(
             name: "downwrite",
-            instanceUrl: "http://localhost:8787"
+			instanceUrl: "http://localhost:8787",
+			api: .init(
+				currentVersion: "v1",
+				supportedVersions: ["v1"],
+				baseUrl: "http://localhost:8787/api/v1",
+				basePath: "/api/v1",
+				discoveryUrl: "http://localhost:8787/.well-known/downwrite",
+				openApiUrl: "http://localhost:8787/api/v1/openapi.json",
+				documentationUrl: "http://localhost:8787/api/v1/docs"
+			),
+			auth: .init(),
+			clients: .init()
         )
 
         let metadata = discovery.appModel
 
         #expect(metadata.name == "downwrite")
-        #expect(metadata.instanceUrl == "http://localhost:8787")
+		#expect(metadata.instanceURL == "http://localhost:8787")
+		#expect(metadata.supportedAPIVersions == ["v1"])
+		#expect(metadata.apiBaseURL == "http://localhost:8787/api/v1")
     }
 
     @Test func workspaceLoadsGroupsFromSessionClient() async throws {
@@ -187,15 +201,15 @@ struct DownwriteTests {
     }
 }
 
-private extension PreviewDownwriteAPIClient {
-    static func sampleCopy() -> PreviewDownwriteAPIClient {
+extension PreviewDownwriteAPIClient {
+	fileprivate static func sampleCopy() -> PreviewDownwriteAPIClient {
         PreviewDownwriteAPIClient(groups: sample.groups, documents: sample.documents)
     }
 }
 
-private extension SessionViewModel {
+extension SessionViewModel {
     @MainActor
-    static func signedIn(client: PreviewDownwriteAPIClient) -> SessionViewModel {
+	fileprivate static func signedIn(client: PreviewDownwriteAPIClient) -> SessionViewModel {
         SessionViewModel(
             state: .signedIn(
                 InstanceSession(

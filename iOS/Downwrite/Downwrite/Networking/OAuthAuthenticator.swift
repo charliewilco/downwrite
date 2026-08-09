@@ -1,72 +1,114 @@
 import AuthenticationServices
 import CryptoKit
 import Foundation
+import UIKit
 
-struct OAuthCredential: Equatable {
-    let accessToken: String
-    let refreshToken: String
-    let scope: String
-    let resource: String
-}
+@MainActor
+final class OAuthAuthenticator: NSObject, ASWebAuthenticationPresentationContextProviding {
+	private var activeSession: ASWebAuthenticationSession?
 
-struct OAuthAuthenticator {
-    func signIn(instanceURL: URL) async throws -> (credential: OAuthCredential, client: OpenAPIDownwriteAPIClient) {
-        let client = OpenAPIDownwriteAPIClient(baseURL: instanceURL)
+	func signIn(configuration: InstanceConfiguration) async throws -> OAuthTokenResponse {
+		let client = OpenAPIDownwriteAPIClient(baseURL: configuration.instanceURL)
         let verifier = PKCE.generateVerifier()
         let challenge = PKCE.challenge(for: verifier)
         let state = UUID().uuidString
-        let callback = try await authorizationCallback(instanceURL: instanceURL, challenge: challenge, state: state)
+		let callback = try await authorizationCallback(
+			configuration: configuration,
+			challenge: challenge,
+			state: state
+		)
+		guard callback.scheme == InstanceConfiguration.callbackURL.scheme,
+			callback.host == InstanceConfiguration.callbackURL.host,
+			callback.path == InstanceConfiguration.callbackURL.path
+		else {
+			throw OAuthAuthenticationError.invalidCallback
+		}
         guard callback.queryValue("state") == state else {
-            throw URLError(.userAuthenticationRequired)
+			throw OAuthAuthenticationError.invalidState
         }
         guard let code = callback.queryValue("code") else {
-            throw URLError(.userAuthenticationRequired)
-        }
-        let token = try await client.exchangeAuthorizationCode(code: code, codeVerifier: verifier)
-        return (
-            OAuthCredential(
-                accessToken: token.accessToken,
-                refreshToken: token.refreshToken,
-                scope: token.scope,
-                resource: token.resource
-            ),
-            OpenAPIDownwriteAPIClient(baseURL: instanceURL, accessToken: token.accessToken)
-        )
+			throw OAuthAuthenticationError.missingCode
+		}
+		return try await client.exchangeAuthorizationCode(code: code, codeVerifier: verifier)
     }
 
-    private func authorizationCallback(instanceURL: URL, challenge: String, state: String) async throws -> URL {
-        let authURL = authorizationURL(instanceURL: instanceURL, challenge: challenge, state: state)
+	private func authorizationCallback(
+		configuration: InstanceConfiguration,
+		challenge: String,
+		state: String
+	) async throws -> URL {
+		guard activeSession == nil else {
+			throw URLError(.cannotLoadFromNetwork)
+		}
+		let authURL = authorizationURL(configuration: configuration, challenge: challenge, state: state)
         return try await withCheckedThrowingContinuation { continuation in
             let session = ASWebAuthenticationSession(url: authURL, callbackURLScheme: "downwrite") { url, error in
+				Task { @MainActor [weak self] in
+					self?.activeSession = nil
                 if let url {
                     continuation.resume(returning: url)
-                } else {
+					}
+					else {
                     continuation.resume(throwing: error ?? URLError(.userAuthenticationRequired))
                 }
             }
+			}
             session.prefersEphemeralWebBrowserSession = false
-            WebAuthenticationSessionRetainer.shared.retain(session)
+			session.presentationContextProvider = self
+			activeSession = session
             if !session.start() {
-                WebAuthenticationSessionRetainer.shared.release(session)
+				activeSession = nil
                 continuation.resume(throwing: URLError(.cannotLoadFromNetwork))
             }
         }
     }
 
-    private func authorizationURL(instanceURL: URL, challenge: String, state: String) -> URL {
-        var components = URLComponents(url: instanceURL.appending(path: "/oauth/authorize"), resolvingAgainstBaseURL: false)!
+	private func authorizationURL(configuration: InstanceConfiguration, challenge: String, state: String) -> URL {
+		var components = URLComponents(url: configuration.authorizationEndpoint, resolvingAgainstBaseURL: false)!
         components.queryItems = [
             URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "client_id", value: "downwrite-ios"),
-            URLQueryItem(name: "redirect_uri", value: "downwrite://oauth/callback"),
+			URLQueryItem(name: "client_id", value: InstanceConfiguration.clientID),
+			URLQueryItem(name: "redirect_uri", value: InstanceConfiguration.callbackURL.absoluteString),
             URLQueryItem(name: "code_challenge", value: challenge),
             URLQueryItem(name: "code_challenge_method", value: "S256"),
-            URLQueryItem(name: "scope", value: "workspaces:read workspaces:write documents:read documents:write sharing:write"),
-            URLQueryItem(name: "resource", value: instanceURL.appending(path: "/api/v1").absoluteString),
-            URLQueryItem(name: "state", value: state)
+			URLQueryItem(name: "scope", value: InstanceConfiguration.requestedScopes.joined(separator: " ")),
+			URLQueryItem(name: "resource", value: configuration.apiBaseURL.absoluteString),
+			URLQueryItem(name: "state", value: state),
         ]
         return components.url!
     }
+
+	func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+		let windowScenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+		if let window =
+			windowScenes
+			.flatMap(\.windows)
+			.first(where: \.isKeyWindow) ?? windowScenes.first?.windows.first
+		{
+			return window
+		}
+		guard let windowScene = windowScenes.first else {
+			fatalError("Downwrite requires an active window scene for browser authentication.")
+		}
+		return ASPresentationAnchor(windowScene: windowScene)
+	}
+}
+
+enum OAuthAuthenticationError: LocalizedError, Equatable {
+	case invalidCallback
+	case invalidState
+	case missingCode
+
+	var errorDescription: String? {
+		switch self {
+		case .invalidCallback:
+			"The instance returned an invalid OAuth callback."
+		case .invalidState:
+			"The OAuth response could not be verified."
+		case .missingCode:
+			"The instance did not return an OAuth authorization code."
+		}
+	}
 }
 
 private enum PKCE {
@@ -85,22 +127,8 @@ private enum PKCE {
     }
 }
 
-private final class WebAuthenticationSessionRetainer {
-    static let shared = WebAuthenticationSessionRetainer()
-
-    private var sessions: [ASWebAuthenticationSession] = []
-
-    func retain(_ session: ASWebAuthenticationSession) {
-        sessions.append(session)
-    }
-
-    func release(_ session: ASWebAuthenticationSession) {
-        sessions.removeAll { $0 === session }
-    }
-}
-
-private extension URL {
-    func queryValue(_ name: String) -> String? {
+extension URL {
+	fileprivate func queryValue(_ name: String) -> String? {
         URLComponents(url: self, resolvingAgainstBaseURL: false)?
             .queryItems?
             .first { $0.name == name }?

@@ -1,5 +1,5 @@
-import Foundation
 import DownwriteAPI
+import Foundation
 import HTTPTypes
 import OpenAPIRuntime
 import OpenAPIURLSession
@@ -24,8 +24,22 @@ struct DownwriteErrorEnvelope: Codable, LocalizedError, Equatable {
 }
 
 struct DiscoveryMetadata: Codable, Equatable {
-    let name: String?
-    let instanceUrl: String?
+	let name: String
+	let instanceURL: String
+	let supportedAPIVersions: [String]
+	let apiBaseURL: String
+}
+
+struct OAuthAuthorizationServerMetadata: Codable, Equatable {
+	let issuer: String
+	let authorizationEndpoint: String
+	let tokenEndpoint: String
+	let revocationEndpoint: String
+	let responseTypesSupported: [String]
+	let grantTypesSupported: [String]
+	let codeChallengeMethodsSupported: [String]
+	let tokenEndpointAuthMethodsSupported: [String]
+	let scopesSupported: [String]
 }
 
 struct AuthConfiguration: Codable, Equatable {
@@ -56,6 +70,11 @@ struct OAuthTokenResponse: Codable, Equatable {
     let refreshExpiresIn: Int
     let scope: String
     let resource: String
+}
+
+enum OAuthTokenType: Equatable {
+	case accessToken
+	case refreshToken
 }
 
 struct GroupSummary: Codable, Equatable, Identifiable {
@@ -117,12 +136,14 @@ struct DocumentList: Codable, Equatable {
 
 protocol DownwriteAPIClient {
     var baseURL: URL { get }
-    var accessToken: String? { get set }
 
     func discoverInstance() async throws -> DiscoveryMetadata
+	func oauthAuthorizationServerMetadata() async throws -> OAuthAuthorizationServerMetadata
     func authStatus() async throws -> AuthStatus
     func createDevelopmentSession(identityId: String, displayName: String) async throws -> AuthResult
     func exchangeAuthorizationCode(code: String, codeVerifier: String) async throws -> OAuthTokenResponse
+	func refreshOAuthToken(_ refreshToken: String) async throws -> OAuthTokenResponse
+	func revokeOAuthToken(_ token: String, type: OAuthTokenType) async throws
     func listGroups(limit: Int?, cursor: String?) async throws -> GroupList
     func getGroup(id: String) async throws -> GroupSummary
     func createGroup(name: String, description: String?, accentColor: String?) async throws -> GroupSummary
@@ -135,11 +156,12 @@ protocol DownwriteAPIClient {
     func moveDocument(id: String, groupId: String, position: Int?, baseRevision: Int) async throws -> DocumentRecord
 }
 
-struct OpenAPIDownwriteAPIClient: DownwriteAPIClient {
+final class OpenAPIDownwriteAPIClient: DownwriteAPIClient {
     let baseURL: URL
-    var accessToken: String?
+	private let accessToken: String?
+	private let tokenManager: OAuthTokenManager?
 
-    private var client: Client {
+	private func client(accessToken: String? = nil) -> Client {
         Client(
             serverURL: baseURL,
             transport: URLSessionTransport(),
@@ -147,23 +169,36 @@ struct OpenAPIDownwriteAPIClient: DownwriteAPIClient {
         )
     }
 
-    init(baseURL: URL, accessToken: String? = nil) {
+	init(baseURL: URL, accessToken: String? = nil, tokenManager: OAuthTokenManager? = nil) {
         self.baseURL = baseURL
         self.accessToken = accessToken
+		self.tokenManager = tokenManager
+	}
+
+	private func authenticatedClient() async throws -> Client {
+		if let tokenManager {
+			return client(accessToken: try await tokenManager.validAccessToken())
+		}
+		return client(accessToken: accessToken)
     }
 
     func discoverInstance() async throws -> DiscoveryMetadata {
-        let output = try await client.getWellKnownDownwrite(.init())
+		let output = try await client().getWellKnownDownwrite(.init())
+		return try output.ok.body.json.appModel
+	}
+
+	func oauthAuthorizationServerMetadata() async throws -> OAuthAuthorizationServerMetadata {
+		let output = try await client().getOAuthAuthorizationServerMetadata(.init())
         return try output.ok.body.json.appModel
     }
 
     func authStatus() async throws -> AuthStatus {
-        let output = try await client.getAuthStatus(.init())
+		let output = try await client().getAuthStatus(.init())
         return try output.ok.body.json.appModel
     }
 
     func createDevelopmentSession(identityId: String, displayName: String) async throws -> AuthResult {
-        let output = try await client.createDevelopmentSession(
+		let output = try await client().createDevelopmentSession(
             body: .json(.init(identityId: identityId, displayName: displayName))
         )
         return try output.ok.body.json.appModel
@@ -177,29 +212,54 @@ struct OpenAPIDownwriteAPIClient: DownwriteAPIClient {
             redirect_uri: "downwrite://oauth/callback",
             code_verifier: codeVerifier
         )
-        let output = try await client.exchangeOAuthToken(body: .urlEncodedForm(request))
+		let output = try await client().exchangeOAuthToken(body: .urlEncodedForm(request))
         return try output.ok.body.json.appModel
     }
 
+	func refreshOAuthToken(_ refreshToken: String) async throws -> OAuthTokenResponse {
+		let request = Components.Schemas.OAuthTokenRequest(
+			grant_type: .refresh_token,
+			client_id: InstanceConfiguration.clientID,
+			refresh_token: refreshToken
+		)
+		let output = try await client().exchangeOAuthToken(body: .urlEncodedForm(request))
+		return try output.ok.body.json.appModel
+	}
+
+	func revokeOAuthToken(_ token: String, type: OAuthTokenType) async throws {
+		let tokenTypeHint: Components.Schemas.OAuthRevokeRequest.token_type_hintPayload =
+			switch type {
+			case .accessToken:
+				.access_token
+			case .refreshToken:
+				.refresh_token
+			}
+		let request = Components.Schemas.OAuthRevokeRequest(
+			token: token,
+			token_type_hint: tokenTypeHint
+		)
+		_ = try await client().revokeOAuthToken(body: .urlEncodedForm(request)).ok
+	}
+
     func listGroups(limit: Int? = nil, cursor: String? = nil) async throws -> GroupList {
-        let output = try await client.listGroups(query: .init(limit: limit, cursor: cursor))
+		let output = try await authenticatedClient().listGroups(query: .init(limit: limit, cursor: cursor))
         return try output.ok.body.json.appModel
     }
 
     func getGroup(id: String) async throws -> GroupSummary {
-        let output = try await client.getGroup(path: .init(groupId: id))
+		let output = try await authenticatedClient().getGroup(path: .init(groupId: id))
         return try output.ok.body.json.group.appModel
     }
 
     func createGroup(name: String, description: String?, accentColor: String?) async throws -> GroupSummary {
-        let output = try await client.createGroup(
+		let output = try await authenticatedClient().createGroup(
             body: .json(.init(name: name, description: description, accentColor: accentColor))
         )
         return try output.created.body.json.group.appModel
     }
 
     func updateGroup(id: String, name: String?, description: String?, accentColor: String?) async throws -> GroupSummary {
-        let output = try await client.updateGroup(
+		let output = try await authenticatedClient().updateGroup(
             path: .init(groupId: id),
             body: .json(.init(name: name, description: description, accentColor: accentColor))
         )
@@ -207,11 +267,11 @@ struct OpenAPIDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func deleteGroup(id: String) async throws {
-        _ = try await client.deleteGroup(path: .init(groupId: id)).ok
+		_ = try await authenticatedClient().deleteGroup(path: .init(groupId: id)).ok
     }
 
     func listDocuments(groupId: String, limit: Int? = nil, cursor: String? = nil) async throws -> DocumentList {
-        let output = try await client.listGroupDocuments(
+		let output = try await authenticatedClient().listGroupDocuments(
             path: .init(groupId: groupId),
             query: .init(limit: limit, cursor: cursor)
         )
@@ -219,7 +279,7 @@ struct OpenAPIDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func createDocument(groupId: String, title: String, content: String) async throws -> DocumentRecord {
-        let output = try await client.createDocument(
+		let output = try await authenticatedClient().createDocument(
             path: .init(groupId: groupId),
             body: .json(.init(title: title, content: content))
         )
@@ -227,12 +287,12 @@ struct OpenAPIDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func getDocument(id: String) async throws -> DocumentRecord {
-        let output = try await client.getDocument(path: .init(documentId: id))
+		let output = try await authenticatedClient().getDocument(path: .init(documentId: id))
         return try output.ok.body.json.document.appModel
     }
 
     func updateDocument(id: String, title: String?, content: String?, baseRevision: Int) async throws -> DocumentRecord {
-        let output = try await client.updateDocument(
+		let output = try await authenticatedClient().updateDocument(
             path: .init(documentId: id),
             body: .json(.init(title: title, content: content, baseRevision: baseRevision))
         )
@@ -240,7 +300,7 @@ struct OpenAPIDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func moveDocument(id: String, groupId: String, position: Int? = nil, baseRevision: Int) async throws -> DocumentRecord {
-        let output = try await client.moveDocument(
+		let output = try await authenticatedClient().moveDocument(
             path: .init(documentId: id),
             body: .json(.init(groupId: groupId, position: position, baseRevision: baseRevision))
         )
@@ -266,12 +326,33 @@ struct BearerTokenMiddleware: ClientMiddleware {
 
 extension Components.Schemas.Discovery {
     var appModel: DiscoveryMetadata {
-        DiscoveryMetadata(name: name, instanceUrl: instanceUrl)
+		DiscoveryMetadata(
+			name: name,
+			instanceURL: instanceUrl,
+			supportedAPIVersions: api.supportedVersions,
+			apiBaseURL: api.baseUrl
+		)
+	}
+}
+
+extension Components.Schemas.OAuthAuthorizationServerMetadata {
+	fileprivate var appModel: OAuthAuthorizationServerMetadata {
+		OAuthAuthorizationServerMetadata(
+			issuer: issuer,
+			authorizationEndpoint: authorization_endpoint,
+			tokenEndpoint: token_endpoint,
+			revocationEndpoint: revocation_endpoint,
+			responseTypesSupported: response_types_supported,
+			grantTypesSupported: grant_types_supported,
+			codeChallengeMethodsSupported: code_challenge_methods_supported,
+			tokenEndpointAuthMethodsSupported: token_endpoint_auth_methods_supported,
+			scopesSupported: scopes_supported
+		)
     }
 }
 
-private extension Components.Schemas.AuthStatus {
-    var appModel: AuthStatus {
+extension Components.Schemas.AuthStatus {
+	fileprivate var appModel: AuthStatus {
         AuthStatus(
             authenticated: authenticated,
             bootstrapRequired: bootstrapRequired,
@@ -281,8 +362,8 @@ private extension Components.Schemas.AuthStatus {
     }
 }
 
-private extension Components.Schemas.AuthConfiguration {
-    var appModel: AuthConfiguration {
+extension Components.Schemas.AuthConfiguration {
+	fileprivate var appModel: AuthConfiguration {
         AuthConfiguration(
             bootstrapTokenConfigured: bootstrapTokenConfigured,
             instancePublicUrl: instancePublicUrl,
@@ -293,20 +374,20 @@ private extension Components.Schemas.AuthConfiguration {
     }
 }
 
-private extension Components.Schemas.AuthResult {
-    var appModel: AuthResult {
+extension Components.Schemas.AuthResult {
+	fileprivate var appModel: AuthResult {
         AuthResult(ok: ok, identity: identity.appModel)
     }
 }
 
-private extension Components.Schemas.Identity {
-    var appModel: Identity {
+extension Components.Schemas.Identity {
+	fileprivate var appModel: Identity {
         Identity(id: id)
     }
 }
 
-private extension Components.Schemas.OAuthTokenResponse {
-    var appModel: OAuthTokenResponse {
+extension Components.Schemas.OAuthTokenResponse {
+	fileprivate var appModel: OAuthTokenResponse {
         OAuthTokenResponse(
             tokenType: token_type.rawValue,
             accessToken: access_token,
@@ -319,20 +400,20 @@ private extension Components.Schemas.OAuthTokenResponse {
     }
 }
 
-private extension Components.Schemas.GroupList {
-    var appModel: GroupList {
+extension Components.Schemas.GroupList {
+	fileprivate var appModel: GroupList {
         GroupList(groups: groups.map(\.appModel), nextCursor: nextCursor)
     }
 }
 
-private extension Components.Schemas.DocumentList {
-    var appModel: DocumentList {
+extension Components.Schemas.DocumentList {
+	fileprivate var appModel: DocumentList {
         DocumentList(documents: documents.map(\.appModel), nextCursor: nextCursor)
     }
 }
 
-private extension Components.Schemas.GroupSummary {
-    var appModel: GroupSummary {
+extension Components.Schemas.GroupSummary {
+	fileprivate var appModel: GroupSummary {
         GroupSummary(
             id: id,
             name: name,
@@ -346,8 +427,8 @@ private extension Components.Schemas.GroupSummary {
     }
 }
 
-private extension Components.Schemas.DocumentSummary {
-    var appModel: DocumentSummary {
+extension Components.Schemas.DocumentSummary {
+	fileprivate var appModel: DocumentSummary {
         DocumentSummary(
             id: id,
             groupId: groupId,
@@ -361,8 +442,8 @@ private extension Components.Schemas.DocumentSummary {
     }
 }
 
-private extension Components.Schemas.DocumentRecord {
-    var appModel: DocumentRecord {
+extension Components.Schemas.DocumentRecord {
+	fileprivate var appModel: DocumentRecord {
         DocumentRecord(
             id: value1.id,
             groupId: value1.groupId,
@@ -377,8 +458,8 @@ private extension Components.Schemas.DocumentRecord {
     }
 }
 
-private extension Components.Schemas.Role {
-    var appModel: Role {
+extension Components.Schemas.Role {
+	fileprivate var appModel: Role {
         switch self {
         case .owner:
             .owner

@@ -1319,13 +1319,38 @@ const schemas: Record<string, JsonSchema> = {
     },
     ["ok", "name", "version"],
   ),
-  Discovery: objectSchema({
+  Discovery: objectSchema(
+    {
     name: { type: "string" },
     instanceUrl: { type: "string", format: "uri" },
-    api: { type: "object", additionalProperties: true },
+      api: objectSchema(
+        {
+          currentVersion: { type: "string" },
+          supportedVersions: {
+            type: "array",
+            items: { type: "string" },
+          },
+          baseUrl: { type: "string", format: "uri" },
+          basePath: { type: "string" },
+          discoveryUrl: { type: "string", format: "uri" },
+          openApiUrl: { type: "string", format: "uri" },
+          documentationUrl: { type: "string", format: "uri" },
+        },
+        [
+          "currentVersion",
+          "supportedVersions",
+          "baseUrl",
+          "basePath",
+          "discoveryUrl",
+          "openApiUrl",
+          "documentationUrl",
+        ],
+      ),
     auth: { type: "object", additionalProperties: true },
     clients: { type: "object", additionalProperties: true },
-  }),
+    },
+    ["name", "instanceUrl", "api", "auth", "clients"],
+  ),
   OAuthProtectedResourceMetadata: objectSchema(
     {
       resource: { type: "string", format: "uri" },

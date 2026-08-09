@@ -19,13 +19,17 @@ struct LoginView: View {
                     Button {
                         Task { await viewModel.signInWithOAuth() }
                     } label: {
-                        Label("Continue with OAuth", systemImage: "person.badge.key")
+						Label(
+							viewModel.isSigningIn ? "Connecting…" : "Continue with OAuth",
+							systemImage: "person.badge.key"
+						)
                     }
                     .disabled(viewModel.isSigningIn)
                 } footer: {
                     Text("Uses the instance-local OAuth authorization code flow with PKCE.")
                 }
 
+				#if DEBUG
                 Section {
                     TextField("Identity", text: $viewModel.developmentIdentity)
                         .textInputAutocapitalization(.never)
@@ -43,8 +47,11 @@ struct LoginView: View {
                 } header: {
                     Text("Development")
                 } footer: {
-                    Text("For a local Worker, leave bearer token blank to use the localhost-only development session adapter.")
+						Text(
+							"For a local Worker, leave bearer token blank to use the localhost-only development session adapter."
+						)
                 }
+				#endif
 
                 if let statusMessage = viewModel.statusMessage {
                     Section {

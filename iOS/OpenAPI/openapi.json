@@ -2666,7 +2666,46 @@
           },
           "api": {
             "type": "object",
-            "additionalProperties": true
+            "additionalProperties": false,
+            "properties": {
+              "currentVersion": {
+                "type": "string"
+              },
+              "supportedVersions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "baseUrl": {
+                "type": "string",
+                "format": "uri"
+              },
+              "basePath": {
+                "type": "string"
+              },
+              "discoveryUrl": {
+                "type": "string",
+                "format": "uri"
+              },
+              "openApiUrl": {
+                "type": "string",
+                "format": "uri"
+              },
+              "documentationUrl": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "required": [
+              "currentVersion",
+              "supportedVersions",
+              "baseUrl",
+              "basePath",
+              "discoveryUrl",
+              "openApiUrl",
+              "documentationUrl"
+            ]
           },
           "auth": {
             "type": "object",
@@ -2676,7 +2715,14 @@
             "type": "object",
             "additionalProperties": true
           }
-        }
+        },
+        "required": [
+          "name",
+          "instanceUrl",
+          "api",
+          "auth",
+          "clients"
+        ]
       },
       "OAuthProtectedResourceMetadata": {
         "type": "object",

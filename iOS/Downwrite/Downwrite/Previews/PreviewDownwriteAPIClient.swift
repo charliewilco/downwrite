@@ -2,7 +2,6 @@ import Foundation
 
 final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     var baseURL = URL(string: "http://localhost:8787")!
-    var accessToken: String?
 
     var groups: [GroupSummary]
     var documents: [String: DocumentRecord]
@@ -13,6 +12,11 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     var updateGroupError: Error?
     var moveDocumentError: Error?
     var deleteGroupError: Error?
+	var refreshTokenError: Error?
+	var refreshTokenDelay: Duration?
+	var ignoresRefreshCancellation = false
+	var refreshTokenCallCount = 0
+	var revokedTokens: [(token: String, type: OAuthTokenType)] = []
 
     init(
         groups: [GroupSummary],
@@ -37,7 +41,26 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func discoverInstance() async throws -> DiscoveryMetadata {
-        DiscoveryMetadata(name: "Downwrite", instanceUrl: baseURL.absoluteString)
+		DiscoveryMetadata(
+			name: "downwrite",
+			instanceURL: baseURL.absoluteString,
+			supportedAPIVersions: ["v1"],
+			apiBaseURL: baseURL.appending(path: "/api/v1").absoluteString
+		)
+	}
+
+	func oauthAuthorizationServerMetadata() async throws -> OAuthAuthorizationServerMetadata {
+		OAuthAuthorizationServerMetadata(
+			issuer: baseURL.absoluteString,
+			authorizationEndpoint: baseURL.appending(path: "/oauth/authorize").absoluteString,
+			tokenEndpoint: baseURL.appending(path: "/oauth/token").absoluteString,
+			revocationEndpoint: baseURL.appending(path: "/oauth/revoke").absoluteString,
+			responseTypesSupported: ["code"],
+			grantTypesSupported: ["authorization_code", "refresh_token"],
+			codeChallengeMethodsSupported: ["S256"],
+			tokenEndpointAuthMethodsSupported: ["none"],
+			scopesSupported: InstanceConfiguration.requestedScopes
+		)
     }
 
     func authStatus() async throws -> AuthStatus {
@@ -60,7 +83,7 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func exchangeAuthorizationCode(code: String, codeVerifier: String) async throws -> OAuthTokenResponse {
-        OAuthTokenResponse(
+		return OAuthTokenResponse(
             tokenType: "Bearer",
             accessToken: "preview-access",
             expiresIn: 900,
@@ -70,6 +93,34 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
             resource: baseURL.appending(path: "/api/v1").absoluteString
         )
     }
+
+	func refreshOAuthToken(_ refreshToken: String) async throws -> OAuthTokenResponse {
+		refreshTokenCallCount += 1
+		if let refreshTokenDelay {
+			if ignoresRefreshCancellation {
+				try? await Task.sleep(for: refreshTokenDelay)
+			}
+			else {
+				try await Task.sleep(for: refreshTokenDelay)
+			}
+		}
+		if let refreshTokenError {
+			throw refreshTokenError
+		}
+		return OAuthTokenResponse(
+			tokenType: "Bearer",
+			accessToken: "preview-refreshed-access",
+			expiresIn: 900,
+			refreshToken: "preview-rotated-refresh",
+			refreshExpiresIn: 2_592_000,
+			scope: InstanceConfiguration.requestedScopes.joined(separator: " "),
+			resource: baseURL.appending(path: "/api/v1").absoluteString
+		)
+	}
+
+	func revokeOAuthToken(_ token: String, type: OAuthTokenType) async throws {
+		revokedTokens.append((token, type))
+	}
 
     func listGroups(limit: Int?, cursor: String?) async throws -> GroupList {
         if let listGroupsError {
@@ -251,12 +302,15 @@ extension PreviewDownwriteAPIClient {
                 createdAt: timestamp,
                 updatedAt: timestamp,
                 documents: [archive.summary]
-            )
+			),
         ]
-        return PreviewDownwriteAPIClient(groups: groups, documents: [
+		return PreviewDownwriteAPIClient(
+			groups: groups,
+			documents: [
             pitch.id: pitch,
             release.id: release,
-            archive.id: archive
-        ])
+				archive.id: archive,
+			]
+		)
     }()
 }

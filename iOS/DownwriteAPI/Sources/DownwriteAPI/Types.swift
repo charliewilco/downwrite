@@ -1213,29 +1213,104 @@ public enum Components {
         /// - Remark: Generated from `#/components/schemas/Discovery`.
         public struct Discovery: Codable, Hashable, Sendable {
             /// - Remark: Generated from `#/components/schemas/Discovery/name`.
-            public var name: Swift.String?
+            public var name: Swift.String
             /// - Remark: Generated from `#/components/schemas/Discovery/instanceUrl`.
-            public var instanceUrl: Swift.String?
+            public var instanceUrl: Swift.String
             /// - Remark: Generated from `#/components/schemas/Discovery/api`.
             public struct apiPayload: Codable, Hashable, Sendable {
-                /// A container of undocumented properties.
-                public var additionalProperties: OpenAPIRuntime.OpenAPIObjectContainer
+                /// - Remark: Generated from `#/components/schemas/Discovery/api/currentVersion`.
+                public var currentVersion: Swift.String
+                /// - Remark: Generated from `#/components/schemas/Discovery/api/supportedVersions`.
+                public var supportedVersions: [Swift.String]
+                /// - Remark: Generated from `#/components/schemas/Discovery/api/baseUrl`.
+                public var baseUrl: Swift.String
+                /// - Remark: Generated from `#/components/schemas/Discovery/api/basePath`.
+                public var basePath: Swift.String
+                /// - Remark: Generated from `#/components/schemas/Discovery/api/discoveryUrl`.
+                public var discoveryUrl: Swift.String
+                /// - Remark: Generated from `#/components/schemas/Discovery/api/openApiUrl`.
+                public var openApiUrl: Swift.String
+                /// - Remark: Generated from `#/components/schemas/Discovery/api/documentationUrl`.
+                public var documentationUrl: Swift.String
                 /// Creates a new `apiPayload`.
                 ///
                 /// - Parameters:
-                ///   - additionalProperties: A container of undocumented properties.
-                public init(additionalProperties: OpenAPIRuntime.OpenAPIObjectContainer = .init()) {
-                    self.additionalProperties = additionalProperties
+                ///   - currentVersion:
+                ///   - supportedVersions:
+                ///   - baseUrl:
+                ///   - basePath:
+                ///   - discoveryUrl:
+                ///   - openApiUrl:
+                ///   - documentationUrl:
+                public init(
+                    currentVersion: Swift.String,
+                    supportedVersions: [Swift.String],
+                    baseUrl: Swift.String,
+                    basePath: Swift.String,
+                    discoveryUrl: Swift.String,
+                    openApiUrl: Swift.String,
+                    documentationUrl: Swift.String
+                ) {
+                    self.currentVersion = currentVersion
+                    self.supportedVersions = supportedVersions
+                    self.baseUrl = baseUrl
+                    self.basePath = basePath
+                    self.discoveryUrl = discoveryUrl
+                    self.openApiUrl = openApiUrl
+                    self.documentationUrl = documentationUrl
+                }
+                public enum CodingKeys: String, CodingKey {
+                    case currentVersion
+                    case supportedVersions
+                    case baseUrl
+                    case basePath
+                    case discoveryUrl
+                    case openApiUrl
+                    case documentationUrl
                 }
                 public init(from decoder: any Swift.Decoder) throws {
-                    additionalProperties = try decoder.decodeAdditionalProperties(knownKeys: [])
-                }
-                public func encode(to encoder: any Swift.Encoder) throws {
-                    try encoder.encodeAdditionalProperties(additionalProperties)
+                    let container = try decoder.container(keyedBy: CodingKeys.self)
+                    self.currentVersion = try container.decode(
+                        Swift.String.self,
+                        forKey: .currentVersion
+                    )
+                    self.supportedVersions = try container.decode(
+                        [Swift.String].self,
+                        forKey: .supportedVersions
+                    )
+                    self.baseUrl = try container.decode(
+                        Swift.String.self,
+                        forKey: .baseUrl
+                    )
+                    self.basePath = try container.decode(
+                        Swift.String.self,
+                        forKey: .basePath
+                    )
+                    self.discoveryUrl = try container.decode(
+                        Swift.String.self,
+                        forKey: .discoveryUrl
+                    )
+                    self.openApiUrl = try container.decode(
+                        Swift.String.self,
+                        forKey: .openApiUrl
+                    )
+                    self.documentationUrl = try container.decode(
+                        Swift.String.self,
+                        forKey: .documentationUrl
+                    )
+                    try decoder.ensureNoAdditionalProperties(knownKeys: [
+                        "currentVersion",
+                        "supportedVersions",
+                        "baseUrl",
+                        "basePath",
+                        "discoveryUrl",
+                        "openApiUrl",
+                        "documentationUrl"
+                    ])
                 }
             }
             /// - Remark: Generated from `#/components/schemas/Discovery/api`.
-            public var api: Components.Schemas.Discovery.apiPayload?
+            public var api: Components.Schemas.Discovery.apiPayload
             /// - Remark: Generated from `#/components/schemas/Discovery/auth`.
             public struct authPayload: Codable, Hashable, Sendable {
                 /// A container of undocumented properties.
@@ -1255,7 +1330,7 @@ public enum Components {
                 }
             }
             /// - Remark: Generated from `#/components/schemas/Discovery/auth`.
-            public var auth: Components.Schemas.Discovery.authPayload?
+            public var auth: Components.Schemas.Discovery.authPayload
             /// - Remark: Generated from `#/components/schemas/Discovery/clients`.
             public struct clientsPayload: Codable, Hashable, Sendable {
                 /// A container of undocumented properties.
@@ -1275,7 +1350,7 @@ public enum Components {
                 }
             }
             /// - Remark: Generated from `#/components/schemas/Discovery/clients`.
-            public var clients: Components.Schemas.Discovery.clientsPayload?
+            public var clients: Components.Schemas.Discovery.clientsPayload
             /// Creates a new `Discovery`.
             ///
             /// - Parameters:
@@ -1285,11 +1360,11 @@ public enum Components {
             ///   - auth:
             ///   - clients:
             public init(
-                name: Swift.String? = nil,
-                instanceUrl: Swift.String? = nil,
-                api: Components.Schemas.Discovery.apiPayload? = nil,
-                auth: Components.Schemas.Discovery.authPayload? = nil,
-                clients: Components.Schemas.Discovery.clientsPayload? = nil
+                name: Swift.String,
+                instanceUrl: Swift.String,
+                api: Components.Schemas.Discovery.apiPayload,
+                auth: Components.Schemas.Discovery.authPayload,
+                clients: Components.Schemas.Discovery.clientsPayload
             ) {
                 self.name = name
                 self.instanceUrl = instanceUrl
@@ -1306,23 +1381,23 @@ public enum Components {
             }
             public init(from decoder: any Swift.Decoder) throws {
                 let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.name = try container.decodeIfPresent(
+                self.name = try container.decode(
                     Swift.String.self,
                     forKey: .name
                 )
-                self.instanceUrl = try container.decodeIfPresent(
+                self.instanceUrl = try container.decode(
                     Swift.String.self,
                     forKey: .instanceUrl
                 )
-                self.api = try container.decodeIfPresent(
+                self.api = try container.decode(
                     Components.Schemas.Discovery.apiPayload.self,
                     forKey: .api
                 )
-                self.auth = try container.decodeIfPresent(
+                self.auth = try container.decode(
                     Components.Schemas.Discovery.authPayload.self,
                     forKey: .auth
                 )
-                self.clients = try container.decodeIfPresent(
+                self.clients = try container.decode(
                     Components.Schemas.Discovery.clientsPayload.self,
                     forKey: .clients
                 )
