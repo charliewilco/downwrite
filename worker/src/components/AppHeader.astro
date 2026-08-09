@@ -1,0 +1,207 @@
+---
+import downwriteMarkUrl from "../assets/DownwriteMark.svg";
+---
+
+<header class="app-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img class="downwrite-mark" src={downwriteMarkUrl.src} alt="" />
+      <span>Downwrite</span>
+    </a>
+    <nav class="header-actions" aria-label="Application actions">
+      <details class="app-menu app-menu-plus">
+        <summary aria-label="Create"></summary>
+        <div class="create-menu">
+          <a class="menu-option" href="/new/document">New document</a>
+          <a class="menu-option" href="/new/workspace">New workspace</a>
+        </div>
+      </details>
+      <details class="app-menu">
+        <summary aria-label="Account"></summary>
+        <div class="account-menu">
+          <dw-auth-panel>
+            <section class="auth-panel" aria-label="Authentication">
+              <div class="auth-row">
+                <strong>Checking session</strong>
+              </div>
+            </section>
+          </dw-auth-panel>
+        </div>
+      </details>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .app-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--canvas) 94%, transparent);
+    backdrop-filter: blur(18px);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 64px;
+    gap: 16px;
+    padding: 10px clamp(18px, 4vw, 48px);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    gap: 10px;
+    border-radius: 8px;
+    color: inherit;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .brand span {
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 750;
+    letter-spacing: 0;
+  }
+
+  .downwrite-mark {
+    display: block;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 auto;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  .app-menu {
+    position: relative;
+    display: block;
+  }
+
+  .app-menu summary {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--line-strong);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--surface) 86%, transparent);
+    color: var(--text);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .app-menu summary:hover {
+    border-color: var(--focus);
+    background: var(--surface);
+  }
+
+  .app-menu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .app-menu summary::before,
+  .app-menu summary::after {
+    width: 16px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    content: "";
+  }
+
+  .app-menu summary::before {
+    box-shadow:
+      0 -5px 0 currentColor,
+      0 5px 0 currentColor;
+  }
+
+  .app-menu summary::after {
+    display: none;
+  }
+
+  .app-menu-plus summary::before {
+    box-shadow: none;
+  }
+
+  .app-menu-plus summary::after {
+    position: absolute;
+    display: block;
+    transform: rotate(90deg);
+  }
+
+  .app-menu summary:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .app-menu > div {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    z-index: 20;
+    display: none;
+    width: min(360px, calc(100vw - 32px));
+    max-height: calc(100vh - 92px);
+    overflow: auto;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    color: var(--text);
+    padding: 16px;
+  }
+
+  .app-menu[open] > div {
+    display: grid;
+  }
+
+  .account-menu {
+    display: grid;
+    gap: 18px;
+  }
+
+  .create-menu {
+    display: grid;
+    gap: 6px;
+  }
+
+  .menu-option {
+    width: 100%;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text);
+    padding: 12px;
+    text-align: left;
+  }
+
+  .menu-option:hover {
+    border-color: var(--line);
+    background: var(--surface-subtle);
+  }
+
+  @media (max-width: 560px) {
+    .header-inner {
+      min-height: 58px;
+      padding: 8px 16px;
+    }
+
+    .brand span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+</style>

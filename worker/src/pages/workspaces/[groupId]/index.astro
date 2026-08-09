@@ -1,10 +1,8 @@
 ---
 import AppLayout from "../../../layouts/AppLayout.astro";
 import EmptyState from "../../../components/EmptyState.astro";
-import CreateDocumentButton from "../../../components/workspaces/CreateDocumentButton.astro";
-import WorkspaceDocumentList from "../../../components/workspaces/WorkspaceDocumentList.astro";
+import WorkspaceDetail from "../../../components/workspaces/WorkspaceDetail.astro";
 import { loadGroupForRequest } from "../../../web/page-data.js";
-import { DEFAULT_ACCENT } from "../../../client/app-constants.js";
 
 const groupId = Astro.params.groupId ?? "";
 const { group, error } = await loadGroupForRequest(Astro.request, groupId);
@@ -15,38 +13,9 @@ const { group, error } = await loadGroupForRequest(Astro.request, groupId);
     error ? (
       <p class="status error">{error}</p>
     ) : group ? (
-      <section class="workspace-screen">
-        <markdown-dragarea workspace-id={group.id}>
-          <section class="workspace-detail">
-            <header
-              class="workspace-heading"
-              style={`border-top-color: ${group.accentColor ?? DEFAULT_ACCENT}`}
-            >
-              <div>
-                <h1>{group.name}</h1>
-                <p>{group.description ?? "No description yet."}</p>
-              </div>
-              <div class="toolbar-actions">
-                <a
-                  class="secondary-action"
-                  href={`/workspaces/${encodeURIComponent(group.id)}/share`}
-                >
-                  Share
-                </a>
-                <a
-                  class="secondary-action"
-                  href={`/workspaces/${encodeURIComponent(group.id)}/settings`}
-                >
-                  Settings
-                </a>
-                <CreateDocumentButton groupId={group.id} />
-              </div>
-            </header>
-
-            <WorkspaceDocumentList group={group} />
-          </section>
-        </markdown-dragarea>
-      </section>
+      <markdown-dragarea workspace-id={group.id}>
+        <WorkspaceDetail group={group} />
+      </markdown-dragarea>
     ) : (
       <section class="workspace-screen">
         <EmptyState

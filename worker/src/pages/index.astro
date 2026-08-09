@@ -12,9 +12,7 @@ const { groups, error } = await loadGroupsForRequest(Astro.request);
       <p class="status error">{error}</p>
     ) : (
       <markdown-dragarea workspace-id="">
-        <section class="workspace-screen directory-screen">
-          <DirectoryList groups={groups} />
-        </section>
+        <DirectoryList groups={groups} />
       </markdown-dragarea>
     )
   }

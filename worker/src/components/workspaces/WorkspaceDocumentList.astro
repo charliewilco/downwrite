@@ -1,12 +1,13 @@
 ---
 import type { GroupSummary } from "../../types.js";
-import DocumentOrderControls from "./DocumentOrderControls.astro";
+import WorkspaceDocumentCard from "./WorkspaceDocumentCard.astro";
 
 interface Props {
+	accentColor: string;
 	group: GroupSummary;
 }
 
-const { group } = Astro.props;
+const { accentColor, group } = Astro.props;
 ---
 
 <ul class="document-list">
@@ -19,22 +20,34 @@ const { group } = Astro.props;
 	}
 	{
 		group.documents.map((document, index) => (
-			<li class="document-row">
-				<a
-					class="document-link"
-					href={`/documents/${encodeURIComponent(document.id)}`}
-				>
-					<strong>{document.title}</strong>
-					<span>
-						{document.role} · rev {document.revision}
-					</span>
-				</a>
-				<DocumentOrderControls
-					document={document}
-					documents={group.documents}
-					index={index}
-				/>
-			</li>
+			<WorkspaceDocumentCard
+				accentColor={accentColor}
+				document={document}
+				documents={group.documents}
+				index={index}
+			/>
 		))
 	}
 </ul>
+
+<style define:vars={{ accentColor }}>
+	.document-list {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+		align-self: end;
+		gap: 12px;
+		width: 100%;
+		margin-block: 0;
+		padding: 0 var(--workspace-inline-gutter);
+		list-style: none;
+	}
+
+	.document-list :global(.empty-row) {
+		min-height: 124px;
+		border: 1px solid var(--line);
+		background: color-mix(in srgb, var(--surface) 18%, var(--accentColor));
+		color: var(--muted);
+		font-size: 0.88rem;
+		padding: 16px;
+	}
+</style>

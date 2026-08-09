@@ -1,0 +1,102 @@
+---
+import { DEFAULT_ACCENT } from "../../client/app-constants.js";
+import type { GroupSummary } from "../../types.js";
+import CreateDocumentButton from "./CreateDocumentButton.astro";
+import WorkspaceDocumentList from "./WorkspaceDocumentList.astro";
+
+interface Props {
+	group: GroupSummary;
+}
+
+const { group } = Astro.props;
+const accentColor = group.accentColor ?? DEFAULT_ACCENT;
+---
+
+<section class="workspace-screen workspace-detail-screen">
+	<section class="workspace-detail-band">
+		<header class="workspace-detail-heading">
+			<div>
+				<h1>{group.name}</h1>
+				<p>{group.description ?? "No description yet."}</p>
+			</div>
+			<div class="toolbar-actions">
+				<a
+					class="secondary-action"
+					href={`/workspaces/${encodeURIComponent(group.id)}/share`}
+				>
+					Share
+				</a>
+				<a
+					class="secondary-action"
+					href={`/workspaces/${encodeURIComponent(group.id)}/settings`}
+				>
+					Settings
+				</a>
+				<CreateDocumentButton groupId={group.id} />
+			</div>
+		</header>
+
+		<WorkspaceDocumentList accentColor={accentColor} group={group} />
+	</section>
+</section>
+
+<style define:vars={{ accentColor }}>
+	.workspace-detail-screen {
+		padding-top: 0;
+	}
+
+	.workspace-detail-band {
+		--workspace-inline-gutter: clamp(28px, 6vw, 96px);
+		display: grid;
+		grid-template-rows: auto minmax(24px, 1fr);
+		width: 100vw;
+		min-height: 320px;
+		margin-inline: calc((100% - 100vw) / 2);
+		background: color-mix(in srgb, var(--surface) 64%, var(--accentColor));
+		padding-top: 24px;
+	}
+
+	.workspace-detail-heading {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 18px;
+		align-items: end;
+		width: min(100% - (var(--workspace-inline-gutter) * 2), 1060px);
+		margin: 0 auto;
+	}
+
+	.workspace-detail-heading h1 {
+		overflow: hidden;
+		color: color-mix(in srgb, var(--accentColor) 18%, var(--text));
+		font-size: 1.24rem;
+		font-weight: 700;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.workspace-detail-heading p {
+		margin-top: 6px;
+		color: var(--muted);
+		font-size: 0.9rem;
+	}
+
+	.workspace-detail-heading :global(.secondary-action:last-child) {
+		border-color: var(--primary);
+		background: var(--primary);
+		color: var(--primary-text);
+	}
+
+	@media (max-width: 980px) {
+		.workspace-detail-heading,
+		.workspace-detail-heading :global(.toolbar-actions) {
+			align-items: stretch;
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.workspace-detail-band {
+			--workspace-inline-gutter: 16px;
+		}
+	}
+</style>

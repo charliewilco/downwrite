@@ -511,7 +511,7 @@ class CreateWorkspaceForm extends HTMLElement {
       const group = await createGroupInCache({
         name: value(this, "name") || "Untitled workspace",
         description: value(this, "description") || null,
-        accentColor: value(this, "accentColor") || "#566f5f",
+        accentColor: value(this, "accentColor") || DEFAULT_ACCENT,
       });
       window.location.assign(`/workspaces/${encodeURIComponent(group.id)}`);
     } catch (caught: unknown) {

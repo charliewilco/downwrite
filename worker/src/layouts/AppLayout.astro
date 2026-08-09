@@ -1,5 +1,5 @@
 ---
-import downwriteMarkUrl from "../assets/DownwriteMark.svg";
+import AppHeader from "../components/AppHeader.astro";
 import "../styles/style.css";
 
 const { title = "Downwrite" } = Astro.props;
@@ -16,34 +16,8 @@ const { title = "Downwrite" } = Astro.props;
     <script>
       import "../client/document-elements.ts";
     </script>
+    <AppHeader />
     <main class="shell">
-      <header class="app-header">
-        <a class="brand" href="/">
-          <img class="downwrite-mark" src={downwriteMarkUrl.src} alt="" />
-          <span>Downwrite</span>
-        </a>
-        <div class="header-actions">
-          <details class="app-menu app-menu-plus">
-            <summary aria-label="Create"></summary>
-            <div class="create-menu">
-              <a class="menu-option" href="/new/document">New document</a>
-              <a class="menu-option" href="/new/workspace">New workspace</a>
-            </div>
-          </details>
-          <details class="app-menu">
-            <summary aria-label="Account"></summary>
-            <div class="account-menu">
-              <dw-auth-panel>
-                <section class="auth-panel" aria-label="Authentication">
-                  <div class="auth-row">
-                    <strong>Checking session</strong>
-                  </div>
-                </section>
-              </dw-auth-panel>
-            </div>
-          </details>
-        </div>
-      </header>
       <section class="content-canvas">
         <slot />
         <dw-markdown-import-dialog></dw-markdown-import-dialog>
