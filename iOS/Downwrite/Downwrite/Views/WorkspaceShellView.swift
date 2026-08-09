@@ -20,8 +20,12 @@ struct WorkspaceShellView: View {
 						session: viewModel.session,
 						onDocumentUpdate: { document in
 							viewModel.applyUpdatedDocument(document)
+						},
+						onDocumentMove: { document, sourceGroupID in
+							viewModel.applyMovedDocument(document, from: sourceGroupID)
 						}
-					)
+					),
+					workspaces: viewModel.groups
 				) { document in
 					viewModel.applyDeletedDocument(document)
 				}

@@ -114,6 +114,29 @@ final class WorkspaceViewModel {
 		replace(group)
 	}
 
+	func applyMovedDocument(_ document: DocumentRecord, from sourceGroupID: String) {
+		groupsRequestID += 1
+		var nextGroups = groups
+		if let sourceIndex = nextGroups.firstIndex(where: { $0.id == sourceGroupID }) {
+			nextGroups[sourceIndex].documents.removeAll { $0.id == document.id }
+		}
+		guard let targetIndex = nextGroups.firstIndex(where: { $0.id == document.groupId }) else {
+			groupsState = .loaded(nextGroups)
+			return
+		}
+		nextGroups[targetIndex].documents.removeAll { $0.id == document.id }
+		nextGroups[targetIndex].documents.append(document.summary)
+		nextGroups[targetIndex].documents.sort { lhs, rhs in
+			if lhs.position == rhs.position {
+				return lhs.updatedAt > rhs.updatedAt
+			}
+			return lhs.position < rhs.position
+		}
+		groupsState = .loaded(nextGroups)
+		selectedGroupID = document.groupId
+		selectedDocumentID = document.id
+	}
+
 	func applyDeletedDocument(_ document: DocumentRecord) {
 		let wasSelected = selectedDocumentID == document.id
 		guard var group = groups.first(where: { $0.id == document.groupId }),

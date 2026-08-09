@@ -5,7 +5,20 @@ struct DocumentDetailView: View {
     @State var viewModel: DocumentViewModel
     @State private var mode: DocumentMode = .preview
 	@State private var isPresentingDeleteConfirmation = false
+	@State private var moveViewModel: DocumentMoveViewModel?
+	let workspaces: [GroupSummary]
 	let onDelete: (DocumentRecord) -> Void
+
+	init(
+		viewModel: DocumentViewModel,
+		workspaces: [GroupSummary] = [],
+		onDelete: @escaping (DocumentRecord) -> Void
+	) {
+		_viewModel = State(initialValue: viewModel)
+		_moveViewModel = State(initialValue: nil)
+		self.workspaces = workspaces
+		self.onDelete = onDelete
+	}
 
     var body: some View {
         Group {
@@ -53,13 +66,18 @@ struct DocumentDetailView: View {
 				.disabled(!viewModel.canSave)
 
 				Menu {
+					Button("Move to Workspace", systemImage: "folder") {
+						presentMoveSheet()
+					}
+					.disabled(!viewModel.canMove || moveCandidates.isEmpty)
+
 					Button("Delete Document", systemImage: "trash", role: .destructive) {
 						isPresentingDeleteConfirmation = true
 					}
+					.disabled(!viewModel.canDelete)
 				} label: {
 					Label("More", systemImage: "ellipsis.circle")
 				}
-				.disabled(!viewModel.canDelete)
             }
         }
 		.confirmationDialog(
@@ -79,11 +97,37 @@ struct DocumentDetailView: View {
 		} message: {
 			Text("This permanently deletes the document.")
 		}
+		.sheet(item: $moveViewModel) { moveViewModel in
+			DocumentMoveView(viewModel: moveViewModel)
+		}
     }
 
 	private var deletionTarget: String {
 		let title = viewModel.draftTitle.trimmingCharacters(in: .whitespacesAndNewlines)
 		return title.isEmpty ? "this document" : "“\(title)”"
+	}
+
+	private var moveCandidates: [GroupSummary] {
+		guard let document = viewModel.document else {
+			return []
+		}
+		return workspaces.filter { $0.id != document.groupId }
+	}
+
+	private func presentMoveSheet() {
+		guard let document = viewModel.document else {
+			return
+		}
+		moveViewModel = DocumentMoveViewModel(
+			document: document,
+			groups: workspaces,
+			moveAction: { targetGroupID in
+				if await viewModel.move(toGroupID: targetGroupID) != nil {
+					return nil
+				}
+				return viewModel.statusMessage ?? "The document could not be moved."
+			}
+		)
 	}
 
     private var documentBody: some View {
@@ -102,6 +146,12 @@ struct DocumentDetailView: View {
 								}
 								onDelete(deleted)
 							}
+						}
+						.buttonStyle(.bordered)
+					}
+					else if viewModel.isMoveOutcomeUncertain {
+						Button("Reload") {
+							Task { await viewModel.reconcileMoveOutcome() }
 						}
 						.buttonStyle(.bordered)
 					}

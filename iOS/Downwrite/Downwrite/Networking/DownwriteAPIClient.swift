@@ -393,7 +393,24 @@ final class OpenAPIDownwriteAPIClient: DownwriteAPIClient {
             path: .init(documentId: id),
             body: .json(.init(groupId: groupId, position: position, baseRevision: baseRevision))
         )
-        return try output.ok.body.json.document.appModel
+		switch output {
+		case .ok(let response):
+			return try response.body.json.document.appModel
+		case .badRequest(let response):
+			throw try response.body.json.appError
+		case .forbidden(let response):
+			throw try response.body.json.appError
+		case .conflict(let response):
+			throw try response.body.json.appError
+		case .preconditionRequired(let response):
+			throw try response.body.json.appError
+		case .undocumented(let statusCode, _):
+			throw DownwriteErrorEnvelope(
+				error: "Move request failed.",
+				code: "unexpected_response",
+				status: statusCode
+			)
+		}
     }
 }
 

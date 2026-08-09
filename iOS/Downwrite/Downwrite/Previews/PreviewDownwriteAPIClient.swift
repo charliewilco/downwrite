@@ -7,6 +7,13 @@ struct PreviewDocumentUpdate: Equatable {
 	let baseRevision: Int
 }
 
+struct PreviewDocumentMove: Equatable {
+	let id: String
+	let groupID: String
+	let position: Int?
+	let baseRevision: Int
+}
+
 final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     var baseURL = URL(string: "http://localhost:8787")!
 
@@ -24,7 +31,14 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
 	var updateDocumentCallCount = 0
 	var updateDocumentInputs: [PreviewDocumentUpdate] = []
     var updateGroupError: Error?
-    var moveDocumentError: Error?
+	var moveDocumentError: Error?
+	var moveDocumentCommittedError: Error?
+	var moveDocumentCommittedTitle: String?
+	var moveDocumentCommittedContent: String?
+	var moveDocumentCommittedRevisionIncrement = 0
+	var moveDocumentDelay: Duration?
+	var moveDocumentCallCount = 0
+	var moveDocumentInputs: [PreviewDocumentMove] = []
     var deleteGroupError: Error?
 	var refreshTokenError: Error?
 	var refreshTokenDelay: Duration?
@@ -298,15 +312,47 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
 	}
 
     func moveDocument(id: String, groupId: String, position: Int?, baseRevision: Int) async throws -> DocumentRecord {
-        if let moveDocumentError {
-            throw moveDocumentError
-        }
+		moveDocumentCallCount += 1
+		moveDocumentInputs.append(
+			PreviewDocumentMove(id: id, groupID: groupId, position: position, baseRevision: baseRevision)
+		)
+		let error = moveDocumentError
+		if let moveDocumentDelay {
+			try await Task.sleep(for: moveDocumentDelay)
+		}
+		if let error {
+			throw error
+		}
         guard var document = documents[id], document.revision == baseRevision else {
             throw DownwriteErrorEnvelope(error: "Document has changed since it was loaded", code: "conflict", status: 409)
         }
         document.groupId = groupId
+		document.position = position ?? groups.first(where: { $0.id == groupId })?.documents.count ?? 0
         document.revision += 1
         documents[id] = document
+		for index in groups.indices {
+			groups[index].documents.removeAll { $0.id == id }
+			if groups[index].id == groupId {
+				groups[index].documents.append(document.summary)
+			}
+		}
+		if let moveDocumentCommittedError {
+			if moveDocumentCommittedTitle != nil
+				|| moveDocumentCommittedContent != nil
+				|| moveDocumentCommittedRevisionIncrement > 0
+			{
+				document.title = moveDocumentCommittedTitle ?? document.title
+				document.content = moveDocumentCommittedContent ?? document.content
+				document.revision += moveDocumentCommittedRevisionIncrement
+				documents[id] = document
+				for index in groups.indices where groups[index].id == groupId {
+					if let documentIndex = groups[index].documents.firstIndex(where: { $0.id == id }) {
+						groups[index].documents[documentIndex] = document.summary
+					}
+				}
+			}
+			throw moveDocumentCommittedError
+		}
         return document
     }
 }

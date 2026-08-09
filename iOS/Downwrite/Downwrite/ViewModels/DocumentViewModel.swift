@@ -22,31 +22,39 @@ final class DocumentViewModel {
 	var saveState: DocumentSaveState = .ready
 	var isSaving = false
 	var isDeleting = false
+	var isMoving = false
 	var isDeleteOutcomeUncertain = false
+	var isMoveOutcomeUncertain = false
 	var statusMessage: String?
 
 	private let documentID: String
 	private let session: SessionViewModel
 	private let autosaveDelay: Duration
 	private let onDocumentUpdate: (DocumentRecord) -> Void
+	private let onDocumentMove: (DocumentRecord, String) -> Void
 	private let draftStore: DocumentDraftStore
 	private let draftKey: DocumentDraftKey?
 	private var autosaveTask: Task<Void, Never>?
 	private var isApplyingServerState = false
 	private var automaticSaveSuspended = false
+	private var uncertainMoveSourceGroupID: String?
+	private var uncertainMoveTargetGroupID: String?
+	private var uncertainMoveHadLocalChanges = false
 
 	init(
 		documentID: String,
 		session: SessionViewModel,
 		autosaveDelay: Duration = .milliseconds(900),
 		draftStore: DocumentDraftStore = .shared,
-		onDocumentUpdate: @escaping (DocumentRecord) -> Void = { _ in }
+		onDocumentUpdate: @escaping (DocumentRecord) -> Void = { _ in },
+		onDocumentMove: @escaping (DocumentRecord, String) -> Void = { _, _ in }
 	) {
 		self.documentID = documentID
 		self.session = session
 		self.autosaveDelay = autosaveDelay
 		self.draftStore = draftStore
 		self.onDocumentUpdate = onDocumentUpdate
+		self.onDocumentMove = onDocumentMove
 		if let activeSession = session.activeSession, let identity = activeSession.identity {
 			draftKey = DocumentDraftKey(
 				instanceURL: activeSession.instanceURL.absoluteString,
@@ -78,11 +86,15 @@ final class DocumentViewModel {
 	}
 
 	var canSave: Bool {
-		hasChanges && !isSaving && !isDeleting && !isDeleteOutcomeUncertain
+		hasChanges && !isSaving && !isDeleting && !isMoving && !isDeleteOutcomeUncertain && !isMoveOutcomeUncertain
 	}
 
 	var canDelete: Bool {
-		document != nil && !isSaving && !isDeleting && !isDeleteOutcomeUncertain
+		document != nil && !isSaving && !isDeleting && !isMoving && !isDeleteOutcomeUncertain && !isMoveOutcomeUncertain
+	}
+
+	var canMove: Bool {
+		document != nil && !isSaving && !isDeleting && !isMoving && !isDeleteOutcomeUncertain && !isMoveOutcomeUncertain
 	}
 
 	func load() async {
@@ -166,7 +178,7 @@ final class DocumentViewModel {
 				return nil
 			}
 		}
-		guard !isDeleting, !isDeleteOutcomeUncertain,
+		guard !isDeleting, !isMoving, !isDeleteOutcomeUncertain, !isMoveOutcomeUncertain,
 			let activeSession = session.activeSession,
 			let document
 		else {
@@ -212,6 +224,137 @@ final class DocumentViewModel {
 		}
 	}
 
+	func move(toGroupID targetGroupID: String) async -> DocumentRecord? {
+		autosaveTask?.cancel()
+		autosaveTask = nil
+		while isSaving {
+			try? await Task.sleep(for: .milliseconds(5))
+		}
+		guard !isDeleting, !isMoving, !isDeleteOutcomeUncertain, !isMoveOutcomeUncertain,
+			let activeSession = session.activeSession,
+			let document,
+			document.groupId != targetGroupID
+		else {
+			return nil
+		}
+
+		let hadLocalChanges = hasChanges
+		isMoving = true
+		statusMessage = nil
+		defer { isMoving = false }
+		let sourceGroupID = document.groupId
+		do {
+			let moved = try await activeSession.apiClient.moveDocument(
+				id: document.id,
+				groupId: targetGroupID,
+				position: nil,
+				baseRevision: document.revision
+			)
+			applyMovedRecord(
+				moved,
+				sourceGroupID: sourceGroupID,
+				autosaveSafe: true,
+				preserveDraft: hadLocalChanges || hasChanges
+			)
+			return moved
+		}
+		catch {
+			if let apiError = error as? DownwriteErrorEnvelope {
+				if apiError.status == 409 {
+					await refreshAfterMoveConflict(
+						using: activeSession.apiClient,
+						sourceGroupID: sourceGroupID,
+						preserveDraft: hadLocalChanges || hasChanges
+					)
+					return nil
+				}
+				if apiError.status < 500 {
+					statusMessage = apiError.localizedDescription
+					return nil
+				}
+			}
+
+			do {
+				let latest = try await activeSession.apiClient.getDocument(id: document.id)
+				let preserveDraft = hadLocalChanges || hasChanges
+				if latest.groupId == targetGroupID {
+					let autosaveSafe = isExpectedMoveOnly(
+						latest,
+						from: document,
+						targetGroupID: targetGroupID
+					)
+					applyMovedRecord(
+						latest,
+						sourceGroupID: sourceGroupID,
+						autosaveSafe: autosaveSafe,
+						preserveDraft: preserveDraft
+					)
+					return latest
+				}
+				let autosaveSafe = serverRecordMatches(latest, document)
+				applyServerRecord(
+					latest,
+					previousGroupID: sourceGroupID,
+					preserveDraft: preserveDraft
+				)
+				statusMessage = error.localizedDescription
+				if preserveDraft {
+					resumeOrSuspendAutosave(
+						autosaveSafe: autosaveSafe,
+						conflictMessage: "Document changed while its move was being checked. Your local edits are preserved; save again to replace the latest revision."
+					)
+				}
+				return nil
+			}
+			catch {
+				uncertainMoveSourceGroupID = sourceGroupID
+				uncertainMoveTargetGroupID = targetGroupID
+				uncertainMoveHadLocalChanges = hadLocalChanges || hasChanges
+				isMoveOutcomeUncertain = true
+				statusMessage = "Move outcome could not be confirmed. Reload before editing this document."
+				return nil
+			}
+		}
+	}
+
+	func reconcileMoveOutcome() async {
+		guard isMoveOutcomeUncertain,
+			let activeSession = session.activeSession,
+			let document,
+			let sourceGroupID = uncertainMoveSourceGroupID,
+			let targetGroupID = uncertainMoveTargetGroupID
+		else {
+			return
+		}
+		do {
+			let latest = try await activeSession.apiClient.getDocument(id: document.id)
+			let preserveDraft = uncertainMoveHadLocalChanges || hasChanges
+			let autosaveSafe = isExpectedMoveOnly(latest, from: document, targetGroupID: targetGroupID)
+				|| serverRecordMatches(latest, document)
+			applyServerRecord(
+				latest,
+				previousGroupID: sourceGroupID,
+				preserveDraft: preserveDraft
+			)
+			isMoveOutcomeUncertain = false
+			uncertainMoveSourceGroupID = nil
+			uncertainMoveTargetGroupID = nil
+			uncertainMoveHadLocalChanges = false
+			statusMessage = latest.groupId == targetGroupID
+				? "Document move confirmed."
+				: "Document remains in its current workspace. Your local edits are preserved."
+			if preserveDraft {
+				resumeOrSuspendAutosave(
+					autosaveSafe: autosaveSafe,
+					conflictMessage: "Document changed while its move was uncertain. Your local edits are preserved; save again to replace the latest revision."
+				)
+			}
+		}
+		catch {
+			statusMessage = "Move outcome still could not be confirmed. Try reloading again."
+		}
+	}
+
 	func reconcileDeleteOutcome() async -> DocumentRecord? {
 		guard isDeleteOutcomeUncertain,
 			let activeSession = session.activeSession,
@@ -244,7 +387,11 @@ final class DocumentViewModel {
 		guard !isApplyingServerState, document != nil else {
 			return
 		}
-		guard hasChanges else {
+		let currentHasChanges = hasChanges
+		if isMoveOutcomeUncertain {
+			uncertainMoveHadLocalChanges = currentHasChanges
+		}
+		guard currentHasChanges else {
 			autosaveTask?.cancel()
 			autosaveTask = nil
 			automaticSaveSuspended = false
@@ -254,10 +401,10 @@ final class DocumentViewModel {
 			}
 			return
 		}
-		guard !isDeleting, !isDeleteOutcomeUncertain else {
+		guard persistStoredDraft() else {
 			return
 		}
-		guard persistStoredDraft() else {
+		guard !isDeleting, !isMoving, !isDeleteOutcomeUncertain, !isMoveOutcomeUncertain else {
 			return
 		}
 		if isSaving {
@@ -297,7 +444,7 @@ final class DocumentViewModel {
 	}
 
 	private func persistChanges() async {
-		guard !isSaving, !isDeleting, !isDeleteOutcomeUncertain,
+		guard !isSaving, !isDeleting, !isMoving, !isDeleteOutcomeUncertain, !isMoveOutcomeUncertain,
 			let activeSession = session.activeSession,
 			document != nil,
 			hasChanges
@@ -389,6 +536,119 @@ final class DocumentViewModel {
 			return
 		}
 		try? draftStore.remove(for: draftKey)
+	}
+
+	private func applyMovedRecord(
+		_ moved: DocumentRecord,
+		sourceGroupID: String,
+		autosaveSafe: Bool,
+		preserveDraft: Bool
+	) {
+		documentState = .loaded(moved)
+		onDocumentMove(moved, sourceGroupID)
+		if preserveDraft, hasChanges {
+			_ = persistStoredDraft()
+			resumeOrSuspendAutosave(
+				autosaveSafe: autosaveSafe,
+				conflictMessage: "Document changed while its move was being confirmed. Your local edits are preserved; save again to replace the latest revision."
+			)
+		}
+		else {
+			applyDraft(moved)
+			automaticSaveSuspended = false
+			removeStoredDraft()
+			saveState = .saved(revision: moved.revision)
+		}
+	}
+
+	private func applyServerRecord(
+		_ latest: DocumentRecord,
+		previousGroupID: String,
+		preserveDraft: Bool
+	) {
+		documentState = .loaded(latest)
+		if latest.groupId == previousGroupID {
+			onDocumentUpdate(latest)
+		}
+		else {
+			onDocumentMove(latest, previousGroupID)
+		}
+		if preserveDraft, hasChanges {
+			_ = persistStoredDraft()
+		}
+		else {
+			applyDraft(latest)
+			automaticSaveSuspended = false
+			removeStoredDraft()
+			saveState = .saved(revision: latest.revision)
+		}
+	}
+
+	private func refreshAfterMoveConflict(
+		using apiClient: any DownwriteAPIClient,
+		sourceGroupID: String,
+		preserveDraft: Bool
+	) async {
+		do {
+			let latest = try await apiClient.getDocument(id: documentID)
+			applyServerRecord(
+				latest,
+				previousGroupID: sourceGroupID,
+				preserveDraft: preserveDraft
+			)
+			if preserveDraft, hasChanges {
+				automaticSaveSuspended = true
+				saveState = .conflict(
+					message: "Document changed elsewhere. Your edits are preserved; save again to replace the latest revision."
+				)
+			}
+			statusMessage = preserveDraft
+				? "Document changed since it was loaded. Your local edits are preserved; try moving it again."
+				: "Document changed since it was loaded. The latest version is shown; try moving it again."
+		}
+		catch {
+			if preserveDraft, hasChanges {
+				automaticSaveSuspended = true
+				saveState = .conflict(
+					message: "Document changed elsewhere. Your edits are preserved, but the latest revision could not be loaded."
+				)
+			}
+			statusMessage = "Document changed since it was loaded, but the latest revision could not be refreshed."
+		}
+	}
+
+	private func serverRecordMatches(_ latest: DocumentRecord, _ baseline: DocumentRecord) -> Bool {
+		latest.id == baseline.id
+			&& latest.groupId == baseline.groupId
+			&& latest.title == baseline.title
+			&& latest.content == baseline.content
+			&& latest.position == baseline.position
+			&& latest.revision == baseline.revision
+	}
+
+	private func isExpectedMoveOnly(
+		_ latest: DocumentRecord,
+		from baseline: DocumentRecord,
+		targetGroupID: String
+	) -> Bool {
+		latest.id == baseline.id
+			&& latest.groupId == targetGroupID
+			&& latest.title == baseline.title
+			&& latest.content == baseline.content
+			&& latest.revision == baseline.revision + 1
+	}
+
+	private func resumeOrSuspendAutosave(autosaveSafe: Bool, conflictMessage: String) {
+		guard hasChanges else {
+			return
+		}
+		if autosaveSafe, !automaticSaveSuspended {
+			scheduleAutosave()
+		}
+		else {
+			automaticSaveSuspended = true
+			saveState = .conflict(message: conflictMessage)
+		}
 	}
 
 	private func refreshAfterSaveConflict(using apiClient: any DownwriteAPIClient) async {
