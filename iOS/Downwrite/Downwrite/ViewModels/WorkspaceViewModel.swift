@@ -6,11 +6,13 @@ final class WorkspaceViewModel {
     var groupsState: LoadState<[GroupSummary]> = .idle
     var selectedGroupID: String?
     var selectedDocumentID: String?
+    var workspaceCreator: WorkspaceCreatorViewModel?
     var documentCreator: DocumentCreatorViewModel?
     var groupEditor: GroupEditorViewModel?
     var groupReassignment: GroupReassignmentViewModel?
 
     let session: SessionViewModel
+	private var groupsRequestID = 0
 
     init(session: SessionViewModel) {
         self.session = session
@@ -36,7 +38,21 @@ final class WorkspaceViewModel {
         selectedGroup?.documents.first { $0.id == selectedDocumentID }
     }
 
+    func createWorkspace() {
+        workspaceCreator = WorkspaceCreatorViewModel(session: session)
+    }
+
+    func applyCreatedWorkspace(_ workspace: GroupSummary) {
+		groupsRequestID += 1
+        groupsState = .loaded([workspace] + groups.filter { $0.id != workspace.id })
+        selectedGroupID = workspace.id
+        selectedDocumentID = nil
+        workspaceCreator = nil
+    }
+
     func loadGroups() async {
+		groupsRequestID += 1
+		let requestID = groupsRequestID
         guard let activeSession = session.activeSession else {
             groupsState = .failed("Sign in before loading groups.")
             return
@@ -49,6 +65,9 @@ final class WorkspaceViewModel {
 
         do {
             let list = try await activeSession.apiClient.listGroups(limit: 100, cursor: nil)
+			guard requestID == groupsRequestID else {
+				return
+			}
             groupsState = .loaded(list.groups)
 			let selectedGroup = list.groups.first { $0.id == selectedGroupID } ?? list.groups.first
 			selectedGroupID = selectedGroup?.id
@@ -57,6 +76,9 @@ final class WorkspaceViewModel {
 				?? selectedGroup?.documents.first?.id
             }
 		catch {
+			guard requestID == groupsRequestID else {
+				return
+			}
             groupsState = .failed(error.localizedDescription)
         }
     }

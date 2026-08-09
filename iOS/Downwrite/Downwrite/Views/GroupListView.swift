@@ -12,13 +12,17 @@ struct GroupListView: View {
                 ContentUnavailableView("Could Not Load Groups", systemImage: "exclamationmark.triangle", description: Text(message))
             case .loaded(let groups):
                 if groups.isEmpty {
-					ContentUnavailableView(
-						"No Groups",
-						systemImage: "folder.badge.plus",
-						description: Text("Create a group to start organizing documents.")
-					)
-				}
-				else {
+                    ContentUnavailableView {
+                        Label("No Workspaces", systemImage: "folder.badge.plus")
+                    } description: {
+                        Text("Create a workspace to start organizing documents.")
+                    } actions: {
+                        Button("New Workspace") {
+                            viewModel.createWorkspace()
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                } else {
                     ForEach(groups) { group in
                         GroupRowView(group: group)
                             .tag(group.id)
@@ -26,14 +30,19 @@ struct GroupListView: View {
                 }
             }
         }
-        .navigationTitle("Groups")
+        .navigationTitle("Workspaces")
         .toolbar {
-			ToolbarItem(placement: .topBarLeading) {
-				Button("Sign out") {
-					Task { await viewModel.session.signOut() }
-				}
-			}
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("Sign out") {
+                    Task { await viewModel.session.signOut() }
+                }
+            }
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Button {
+                    viewModel.createWorkspace()
+                } label: {
+                    Label("New Workspace", systemImage: "plus")
+                }
                 Button {
                     Task { await viewModel.loadGroups() }
                 } label: {

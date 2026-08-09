@@ -7,6 +7,7 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     var documents: [String: DocumentRecord]
     var listGroupsError: Error?
     var getDocumentError: Error?
+    var createGroupError: Error?
     var createDocumentError: Error?
     var updateDocumentError: Error?
     var updateGroupError: Error?
@@ -17,6 +18,9 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
 	var ignoresRefreshCancellation = false
 	var refreshTokenCallCount = 0
 	var revokedTokens: [(token: String, type: OAuthTokenType)] = []
+	var listGroupsDelay: Duration?
+	var createGroupDelay: Duration?
+	var createGroupCallCount = 0
 
     init(
         groups: [GroupSummary],
@@ -123,6 +127,10 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
 	}
 
     func listGroups(limit: Int?, cursor: String?) async throws -> GroupList {
+		let groups = groups
+		if let listGroupsDelay {
+			try await Task.sleep(for: listGroupsDelay)
+		}
         if let listGroupsError {
             throw listGroupsError
         }
@@ -134,6 +142,13 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func createGroup(name: String, description: String?, accentColor: String?) async throws -> GroupSummary {
+		createGroupCallCount += 1
+		if let createGroupDelay {
+			try await Task.sleep(for: createGroupDelay)
+		}
+        if let createGroupError {
+            throw createGroupError
+        }
         let group = GroupSummary(
             id: UUID().uuidString,
             name: name,

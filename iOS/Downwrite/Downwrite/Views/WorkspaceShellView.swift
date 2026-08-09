@@ -10,7 +10,7 @@ struct WorkspaceShellView: View {
             if let group = viewModel.selectedGroup {
                 GroupDetailView(group: group, viewModel: viewModel)
             } else {
-                ContentUnavailableView("Select a Group", systemImage: "folder")
+                ContentUnavailableView("Select a Workspace", systemImage: "folder")
             }
         } detail: {
             if let documentID = viewModel.selectedDocumentID {
@@ -22,6 +22,11 @@ struct WorkspaceShellView: View {
         }
         .task {
             await viewModel.loadGroups()
+        }
+        .sheet(item: $viewModel.workspaceCreator) { creator in
+            WorkspaceCreatorView(viewModel: creator) { workspace in
+                viewModel.applyCreatedWorkspace(workspace)
+            }
         }
         .sheet(item: $viewModel.groupEditor) { editor in
             GroupEditorView(viewModel: editor) { updated in
