@@ -14,11 +14,34 @@ struct PreviewDocumentMove: Equatable {
 	let baseRevision: Int
 }
 
+struct PreviewInvitationInput: Equatable {
+	let documentID: String
+	let identityID: String
+	let role: Role
+}
+
+struct PreviewPublicLinkInput: Equatable {
+	let documentID: String
+	let label: String?
+}
+
+struct PreviewPublicLinkUpdate: Equatable {
+	let id: String
+	let label: String?
+	let active: Bool?
+}
+
+struct PreviewCollaboratorRemoval: Equatable {
+	let documentID: String
+	let identityID: String
+}
+
 final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     var baseURL = URL(string: "http://localhost:8787")!
 
     var groups: [GroupSummary]
     var documents: [String: DocumentRecord]
+	var shareStates: [String: DocumentShareState]
     var listGroupsError: Error?
     var getDocumentError: Error?
     var createGroupError: Error?
@@ -50,10 +73,22 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
 	var createGroupCallCount = 0
 	var deleteDocumentDelay: Duration?
 	var deleteDocumentCallCount = 0
+	var shareStateError: Error?
+	var shareStateDelay: Duration?
+	var sharingMutationError: Error?
+	var sharingMutationDelay: Duration?
+	var invitationCommittedError: Error?
+	var publicLinkCommittedError: Error?
+	var publicLinkUpdateCommittedError: Error?
+	var invitationInputs: [PreviewInvitationInput] = []
+	var publicLinkInputs: [PreviewPublicLinkInput] = []
+	var publicLinkUpdates: [PreviewPublicLinkUpdate] = []
+	var collaboratorRemovals: [PreviewCollaboratorRemoval] = []
 
     init(
         groups: [GroupSummary],
         documents: [String: DocumentRecord],
+		shareStates: [String: DocumentShareState] = [:],
         listGroupsError: Error? = nil,
         getDocumentError: Error? = nil,
         createDocumentError: Error? = nil,
@@ -64,6 +99,7 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     ) {
         self.groups = groups
         self.documents = documents
+		self.shareStates = shareStates
         self.listGroupsError = listGroupsError
         self.getDocumentError = getDocumentError
         self.createDocumentError = createDocumentError
@@ -355,6 +391,130 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
 		}
         return document
     }
+
+	func getDocumentShareState(id: String) async throws -> DocumentShareState {
+		let shareState = shareState(for: id)
+		if let shareStateDelay {
+			try await Task.sleep(for: shareStateDelay)
+		}
+		if let shareStateError {
+			throw shareStateError
+		}
+		return shareState
+	}
+
+	func createDocumentInvitation(
+		documentID: String,
+		identityID: String,
+		role: Role
+	) async throws -> DocumentInvitation {
+		invitationInputs.append(
+			PreviewInvitationInput(documentID: documentID, identityID: identityID, role: role)
+		)
+		try await waitForSharingMutation()
+		let invitation = DocumentInvitation(
+			id: UUID().uuidString,
+			documentID: documentID,
+			invitedIdentityID: identityID,
+			role: role,
+			token: "invite-\(UUID().uuidString)",
+			status: .pending,
+			createdByIdentityID: "local-owner",
+			createdAt: Self.timestamp,
+			acceptedAt: nil,
+			revokedAt: nil
+		)
+		var shareState = shareState(for: documentID)
+		shareState.invitations.append(invitation)
+		shareStates[documentID] = shareState
+		if let invitationCommittedError {
+			throw invitationCommittedError
+		}
+		return invitation
+	}
+
+	func revokeDocumentInvitation(id: String) async throws {
+		try await waitForSharingMutation()
+		for documentID in Array(shareStates.keys) {
+			shareStates[documentID]?.invitations.removeAll { $0.id == id }
+		}
+	}
+
+	func removeDocumentCollaborator(documentID: String, identityID: String) async throws {
+		collaboratorRemovals.append(
+			PreviewCollaboratorRemoval(documentID: documentID, identityID: identityID)
+		)
+		try await waitForSharingMutation()
+		shareStates[documentID]?.collaborators.removeAll { $0.identityID == identityID }
+	}
+
+	func createPublicLink(documentID: String, label: String?) async throws -> DocumentPublicLink {
+		publicLinkInputs.append(PreviewPublicLinkInput(documentID: documentID, label: label))
+		try await waitForSharingMutation()
+		let publicLink = DocumentPublicLink(
+			id: UUID().uuidString,
+			documentID: documentID,
+			token: "public-\(UUID().uuidString)",
+			label: label,
+			active: true,
+			createdAt: Self.timestamp
+		)
+		var shareState = shareState(for: documentID)
+		shareState.publicLinks.append(publicLink)
+		shareStates[documentID] = shareState
+		if let publicLinkCommittedError {
+			throw publicLinkCommittedError
+		}
+		return publicLink
+	}
+
+	func updatePublicLink(
+		id: String,
+		label: String?,
+		active: Bool?
+	) async throws -> DocumentPublicLink {
+		publicLinkUpdates.append(PreviewPublicLinkUpdate(id: id, label: label, active: active))
+		try await waitForSharingMutation()
+		for documentID in Array(shareStates.keys) {
+			guard let index = shareStates[documentID]?.publicLinks.firstIndex(where: { $0.id == id }),
+				let existing = shareStates[documentID]?.publicLinks[index]
+			else {
+				continue
+			}
+			let updated = DocumentPublicLink(
+				id: existing.id,
+				documentID: existing.documentID,
+				token: existing.token,
+				label: label ?? existing.label,
+				active: active ?? existing.active,
+				createdAt: existing.createdAt
+			)
+			shareStates[documentID]?.publicLinks[index] = updated
+			if let publicLinkUpdateCommittedError {
+				throw publicLinkUpdateCommittedError
+			}
+			return updated
+		}
+		throw URLError(.resourceUnavailable)
+	}
+
+	private func shareState(for documentID: String) -> DocumentShareState {
+		shareStates[documentID] ?? DocumentShareState(
+			documentID: documentID,
+			collaborators: [],
+			invitations: [],
+			publicLinks: []
+		)
+	}
+
+	private func waitForSharingMutation() async throws {
+		if let sharingMutationDelay {
+			try await Task.sleep(for: sharingMutationDelay)
+		}
+		if let sharingMutationError {
+			throw sharingMutationError
+		}
+	}
 }
 
 extension PreviewDownwriteAPIClient {

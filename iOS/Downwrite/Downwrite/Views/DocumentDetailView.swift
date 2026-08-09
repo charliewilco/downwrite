@@ -6,6 +6,7 @@ struct DocumentDetailView: View {
     @State private var mode: DocumentMode = .preview
 	@State private var isPresentingDeleteConfirmation = false
 	@State private var moveViewModel: DocumentMoveViewModel?
+	@State private var sharingViewModel: DocumentSharingViewModel?
 	let workspaces: [GroupSummary]
 	let onDelete: (DocumentRecord) -> Void
 
@@ -16,6 +17,7 @@ struct DocumentDetailView: View {
 	) {
 		_viewModel = State(initialValue: viewModel)
 		_moveViewModel = State(initialValue: nil)
+		_sharingViewModel = State(initialValue: nil)
 		self.workspaces = workspaces
 		self.onDelete = onDelete
 	}
@@ -66,6 +68,11 @@ struct DocumentDetailView: View {
 				.disabled(!viewModel.canSave)
 
 				Menu {
+					Button("Share Document", systemImage: "person.2") {
+						presentSharingSheet()
+					}
+					.disabled(!viewModel.canManageSharing)
+
 					Button("Move to Workspace", systemImage: "folder") {
 						presentMoveSheet()
 					}
@@ -100,6 +107,9 @@ struct DocumentDetailView: View {
 		.sheet(item: $moveViewModel) { moveViewModel in
 			DocumentMoveView(viewModel: moveViewModel)
 		}
+		.sheet(item: $sharingViewModel) { sharingViewModel in
+			DocumentSharingView(viewModel: sharingViewModel)
+		}
     }
 
 	private var deletionTarget: String {
@@ -128,6 +138,10 @@ struct DocumentDetailView: View {
 				return viewModel.statusMessage ?? "The document could not be moved."
 			}
 		)
+	}
+
+	private func presentSharingSheet() {
+		sharingViewModel = viewModel.makeSharingViewModel()
 	}
 
     private var documentBody: some View {

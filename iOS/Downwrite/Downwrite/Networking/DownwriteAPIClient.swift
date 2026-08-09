@@ -156,6 +156,12 @@ protocol DownwriteAPIClient {
 	func deleteDocument(id: String, baseRevision: Int) async throws
 	func documentExists(id: String) async throws -> Bool
     func moveDocument(id: String, groupId: String, position: Int?, baseRevision: Int) async throws -> DocumentRecord
+	func getDocumentShareState(id: String) async throws -> DocumentShareState
+	func createDocumentInvitation(documentID: String, identityID: String, role: Role) async throws -> DocumentInvitation
+	func revokeDocumentInvitation(id: String) async throws
+	func removeDocumentCollaborator(documentID: String, identityID: String) async throws
+	func createPublicLink(documentID: String, label: String?) async throws -> DocumentPublicLink
+	func updatePublicLink(id: String, label: String?, active: Bool?) async throws -> DocumentPublicLink
 }
 
 final class OpenAPIDownwriteAPIClient: DownwriteAPIClient {
@@ -412,6 +418,107 @@ final class OpenAPIDownwriteAPIClient: DownwriteAPIClient {
 			)
 		}
     }
+
+	func getDocumentShareState(id: String) async throws -> DocumentShareState {
+		let output = try await authenticatedClient().getDocumentShareState(
+			path: .init(documentId: id)
+		)
+		switch output {
+		case .ok(let response):
+			return try response.body.json.share.appModel
+		case .forbidden(let response):
+			throw try response.body.json.appError
+		case .undocumented(let statusCode, _):
+			throw unexpectedResponse("Share request failed.", status: statusCode)
+		}
+	}
+
+	func createDocumentInvitation(
+		documentID: String,
+		identityID: String,
+		role: Role
+	) async throws -> DocumentInvitation {
+		let output = try await authenticatedClient().createDocumentInvitation(
+			path: .init(documentId: documentID),
+			body: .json(.init(identityId: identityID, role: role.apiModel))
+		)
+		switch output {
+		case .created(let response):
+			return try response.body.json.invitation.appModel
+		case .badRequest(let response):
+			throw try response.body.json.appError
+		case .forbidden(let response):
+			throw try response.body.json.appError
+		case .undocumented(let statusCode, _):
+			throw unexpectedResponse("Invitation request failed.", status: statusCode)
+		}
+	}
+
+	func revokeDocumentInvitation(id: String) async throws {
+		let output = try await authenticatedClient().revokeDocumentInvitation(
+			path: .init(invitationId: id)
+		)
+		switch output {
+		case .ok:
+			return
+		case .forbidden(let response):
+			throw try response.body.json.appError
+		case .undocumented(let statusCode, _):
+			throw unexpectedResponse("Revoke invitation failed.", status: statusCode)
+		}
+	}
+
+	func removeDocumentCollaborator(documentID: String, identityID: String) async throws {
+		let output = try await authenticatedClient().removeDocumentCollaborator(
+			path: .init(documentId: documentID, identityId: identityID)
+		)
+		switch output {
+		case .ok:
+			return
+		case .forbidden(let response):
+			throw try response.body.json.appError
+		case .undocumented(let statusCode, _):
+			throw unexpectedResponse("Remove collaborator failed.", status: statusCode)
+		}
+	}
+
+	func createPublicLink(documentID: String, label: String?) async throws -> DocumentPublicLink {
+		let output = try await authenticatedClient().createPublicLink(
+			path: .init(documentId: documentID),
+			body: .json(.init(label: label))
+		)
+		switch output {
+		case .created(let response):
+			return try response.body.json.publicLink.appModel
+		case .forbidden(let response):
+			throw try response.body.json.appError
+		case .undocumented(let statusCode, _):
+			throw unexpectedResponse("Public link request failed.", status: statusCode)
+		}
+	}
+
+	func updatePublicLink(
+		id: String,
+		label: String?,
+		active: Bool?
+	) async throws -> DocumentPublicLink {
+		let output = try await authenticatedClient().updatePublicLink(
+			path: .init(publicLinkId: id),
+			body: .json(.init(label: label, active: active))
+		)
+		switch output {
+		case .ok(let response):
+			return try response.body.json.publicLink.appModel
+		case .forbidden(let response):
+			throw try response.body.json.appError
+		case .undocumented(let statusCode, _):
+			throw unexpectedResponse("Update public link failed.", status: statusCode)
+		}
+	}
+
+	private func unexpectedResponse(_ message: String, status: Int) -> DownwriteErrorEnvelope {
+		DownwriteErrorEnvelope(error: message, code: "unexpected_response", status: status)
+	}
 }
 
 struct BearerTokenMiddleware: ClientMiddleware {
@@ -600,4 +707,67 @@ extension Components.Schemas.Role {
             .editor
         }
     }
+}
+
+extension Role {
+	fileprivate var apiModel: Components.Schemas.Role {
+		switch self {
+		case .owner:
+			.owner
+		case .editor:
+			.editor
+		}
+	}
+}
+
+extension Components.Schemas.Collaborator {
+	fileprivate var appModel: DocumentCollaborator {
+		DocumentCollaborator(
+			identityID: identityId,
+			displayName: displayName,
+			role: role.appModel,
+			createdAt: createdAt
+		)
+	}
+}
+
+extension Components.Schemas.Invitation {
+	fileprivate var appModel: DocumentInvitation {
+		DocumentInvitation(
+			id: id,
+			documentID: documentId,
+			invitedIdentityID: invitedIdentityId,
+			role: role.appModel,
+			token: token,
+			status: DocumentInvitationStatus(rawValue: status.rawValue) ?? .pending,
+			createdByIdentityID: createdByIdentityId,
+			createdAt: createdAt,
+			acceptedAt: acceptedAt,
+			revokedAt: revokedAt
+		)
+	}
+}
+
+extension Components.Schemas.PublicLink {
+	fileprivate var appModel: DocumentPublicLink {
+		DocumentPublicLink(
+			id: id,
+			documentID: documentId,
+			token: token,
+			label: label,
+			active: active,
+			createdAt: createdAt
+		)
+	}
+}
+
+extension Components.Schemas.ShareState {
+	fileprivate var appModel: DocumentShareState {
+		DocumentShareState(
+			documentID: documentId,
+			collaborators: collaborators.map(\.appModel),
+			invitations: invitations.map(\.appModel),
+			publicLinks: publicLinks.map(\.appModel)
+		)
+	}
 }

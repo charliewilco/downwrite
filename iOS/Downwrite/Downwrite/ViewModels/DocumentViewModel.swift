@@ -97,6 +97,17 @@ final class DocumentViewModel {
 		document != nil && !isSaving && !isDeleting && !isMoving && !isDeleteOutcomeUncertain && !isMoveOutcomeUncertain
 	}
 
+	var canManageSharing: Bool {
+		document?.role == .owner && !isDeleting && !isMoving && !isDeleteOutcomeUncertain && !isMoveOutcomeUncertain
+	}
+
+	func makeSharingViewModel() -> DocumentSharingViewModel? {
+		guard canManageSharing, let document else {
+			return nil
+		}
+		return DocumentSharingViewModel(document: document, session: session)
+	}
+
 	func load() async {
 		guard let activeSession = session.activeSession else {
 			documentState = .failed("Sign in before loading documents.")
