@@ -60,7 +60,7 @@
 		"remark-rehype": "^10.1.0",
 		"remark-stringify": "^10.0.2",
 		"rxjs": "^7.5.5",
-		"sharp": "^0.30.3",
+		"sharp": "^0.35.3",
 		"styled-jsx": "^5.0.1",
 		"swr": "^1.2.2",
 		"unified": "^10.1.2",
