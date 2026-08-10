@@ -2397,6 +2397,11 @@
   resolved "https://registry.yarnpkg.com/@reach/observe-rect/-/observe-rect-1.2.0.tgz#d7a6013b8aafcc64c778a0ccb83355a11204d3b2"
   integrity sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==
 
+"@reach/polymorphic@0.18.0":
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/@reach/polymorphic/-/polymorphic-0.18.0.tgz#2fe42007a774e06cdbc8e13e0d46f2dc30f2f1ed"
+  integrity sha512-N9iAjdMbE//6rryZZxAPLRorzDcGBnluf7YQij6XDLiMtfCj1noa7KyLpEc/5XCIB/EwhX3zCluFAwloBKdblA==
+
 "@reach/popover@0.16.2":
   version "0.16.2"
   resolved "https://registry.yarnpkg.com/@reach/popover/-/popover-0.16.2.tgz#71d7af3002ca49d791476b22dee1840dd1719c19"
@@ -2428,13 +2433,12 @@
     tiny-warning "^1.0.3"
     tslib "^2.3.0"
 
-"@reach/skip-nav@^0.16.0":
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/@reach/skip-nav/-/skip-nav-0.16.0.tgz#dec34f3a40a1e804e05647646aacab0ffd73b24d"
-  integrity sha512-SY4PdNx+hQHbeOr/+qLc+QXdRt9NTVlt0r737bOqY1WURGBIEN9sGgsmIsHluP1/bQuAe0JKdOJ/tXiwQ3Z3ug==
+"@reach/skip-nav@^0.18.0":
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/@reach/skip-nav/-/skip-nav-0.18.0.tgz#9f72ba7ffcd8231c5d3aa10829ef68806e5bf759"
+  integrity sha512-7XKHX0NNTz9VJw1d+ZRuu3KhKSOZTIHSbHUuv7qKKPwSNApDa+dVGqR/I7dKwyB/CDFMXO4iEz4XLtOmvi0FEg==
   dependencies:
-    "@reach/utils" "0.16.0"
-    tslib "^2.3.0"
+    "@reach/polymorphic" "0.18.0"
 
 "@reach/utils@0.16.0":
   version "0.16.0"
