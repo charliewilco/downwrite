@@ -62,7 +62,7 @@
 		"rxjs": "^7.5.5",
 		"sharp": "^0.30.3",
 		"styled-jsx": "^5.0.1",
-		"swr": "^1.2.2",
+		"swr": "^2.5.0",
 		"unified": "^10.1.2",
 		"universal-cookie": "^4.0.4",
 		"use-subscription": "^1.5.1",
