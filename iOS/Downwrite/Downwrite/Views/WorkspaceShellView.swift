@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct WorkspaceShellView: View {
     @State var viewModel: WorkspaceViewModel
@@ -60,7 +61,33 @@ struct WorkspaceShellView: View {
                 viewModel.groupReassignment = nil
             }
         }
+		.sheet(item: $viewModel.markdownImporter, onDismiss: {
+			Task { await viewModel.loadGroups() }
+		}) { importer in
+			MarkdownImportView(viewModel: importer) { documents in
+				viewModel.applyImportedDocuments(documents)
+			}
+		}
+		.fileImporter(
+			isPresented: $viewModel.isSelectingMarkdownFiles,
+			allowedContentTypes: Self.markdownContentTypes,
+			allowsMultipleSelection: true
+		) { result in
+			viewModel.handleMarkdownFileSelection(result)
+		}
+		.alert(item: $viewModel.markdownImportFailure) { failure in
+			Alert(
+				title: Text("Could Not Select Files"),
+				message: Text(failure.message),
+				dismissButton: .default(Text("OK"))
+			)
+		}
     }
+
+	private static var markdownContentTypes: [UTType] {
+		let types = ["md", "markdown"].compactMap { UTType(filenameExtension: $0) }
+		return types.isEmpty ? [.plainText] : types
+	}
 }
 
 #Preview("Workspace") {

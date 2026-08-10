@@ -10,9 +10,13 @@ final class WorkspaceViewModel {
     var documentCreator: DocumentCreatorViewModel?
     var groupEditor: GroupEditorViewModel?
     var groupReassignment: GroupReassignmentViewModel?
+	var markdownImporter: MarkdownImportViewModel?
+	var markdownImportFailure: MarkdownImportFailure?
+	var isSelectingMarkdownFiles = false
 
     let session: SessionViewModel
 	private var groupsRequestID = 0
+	private var markdownImportWorkspace: GroupSummary?
 
     init(session: SessionViewModel) {
         self.session = session
@@ -94,6 +98,31 @@ final class WorkspaceViewModel {
         documentCreator = DocumentCreatorViewModel(group: group, session: session)
     }
 
+	func selectMarkdownFiles(in group: GroupSummary) {
+		markdownImportWorkspace = group
+		isSelectingMarkdownFiles = true
+	}
+
+	func handleMarkdownFileSelection(_ result: Result<[URL], Error>) {
+		defer { markdownImportWorkspace = nil }
+		guard let workspace = markdownImportWorkspace else {
+			return
+		}
+		switch result {
+		case .success(let urls):
+			guard !urls.isEmpty else {
+				return
+			}
+			markdownImporter = MarkdownImportViewModel(
+				urls: urls,
+				workspace: workspace,
+				session: session
+			)
+		case .failure(let error):
+			markdownImportFailure = MarkdownImportFailure(message: error.localizedDescription)
+		}
+	}
+
     func applyCreatedDocument(_ document: DocumentRecord) {
         guard var group = groups.first(where: { $0.id == document.groupId }) else {
             return
@@ -103,6 +132,28 @@ final class WorkspaceViewModel {
         selectedGroupID = group.id
         selectedDocumentID = document.id
     }
+
+	func applyImportedDocuments(_ documents: [DocumentRecord]) {
+		guard !documents.isEmpty, let groupID = documents.last?.groupId,
+			var group = groups.first(where: { $0.id == groupID })
+		else {
+			return
+		}
+		groupsRequestID += 1
+		for document in documents {
+			group.documents.removeAll { $0.id == document.id }
+			group.documents.append(document.summary)
+		}
+		group.documents.sort { lhs, rhs in
+			if lhs.position == rhs.position {
+				return lhs.updatedAt > rhs.updatedAt
+			}
+			return lhs.position < rhs.position
+		}
+		replace(group)
+		selectedGroupID = group.id
+		selectedDocumentID = documents.last?.id
+	}
 
 	func applyUpdatedDocument(_ document: DocumentRecord) {
 		guard var group = groups.first(where: { $0.id == document.groupId }),

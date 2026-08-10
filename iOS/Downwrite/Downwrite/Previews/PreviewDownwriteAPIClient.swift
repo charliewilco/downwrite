@@ -7,6 +7,12 @@ struct PreviewDocumentUpdate: Equatable {
 	let baseRevision: Int
 }
 
+struct PreviewDocumentCreation: Equatable {
+	let groupID: String
+	let title: String
+	let content: String
+}
+
 struct PreviewDocumentMove: Equatable {
 	let id: String
 	let groupID: String
@@ -46,6 +52,11 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     var getDocumentError: Error?
     var createGroupError: Error?
     var createDocumentError: Error?
+	var createDocumentErrors: [Int: Error] = [:]
+	var createDocumentCommittedError: Error?
+	var createDocumentDelay: Duration?
+	var createDocumentCallCount = 0
+	var createDocumentInputs: [PreviewDocumentCreation] = []
 	var deleteDocumentError: Error?
 	var deleteDocumentCommittedError: Error?
 	var documentExistsError: Error?
@@ -253,6 +264,16 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
     }
 
     func createDocument(groupId: String, title: String, content: String) async throws -> DocumentRecord {
+		createDocumentCallCount += 1
+		createDocumentInputs.append(
+			PreviewDocumentCreation(groupID: groupId, title: title, content: content)
+		)
+		if let createDocumentDelay {
+			try await Task.sleep(for: createDocumentDelay)
+		}
+		if let error = createDocumentErrors[createDocumentCallCount] {
+			throw error
+		}
         if let createDocumentError {
             throw createDocumentError
         }
@@ -272,6 +293,9 @@ final class PreviewDownwriteAPIClient: DownwriteAPIClient {
         )
         documents[document.id] = document
         groups[groupIndex].documents.append(document.summary)
+		if let createDocumentCommittedError {
+			throw createDocumentCommittedError
+		}
         return document
     }
 

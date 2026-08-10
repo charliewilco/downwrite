@@ -325,7 +325,14 @@ final class OpenAPIDownwriteAPIClient: DownwriteAPIClient {
             path: .init(groupId: groupId),
             body: .json(.init(title: title, content: content))
         )
-        return try output.created.body.json.document.appModel
+		switch output {
+		case .created(let response):
+			return try response.body.json.document.appModel
+		case .forbidden(let response):
+			throw try response.body.json.appError
+		case .undocumented(let statusCode, _):
+			throw unexpectedResponse("Create document failed.", status: statusCode)
+		}
     }
 
     func getDocument(id: String) async throws -> DocumentRecord {

@@ -39,18 +39,19 @@ struct GroupDetailView: View {
                     Label("New Document", systemImage: "square.and.pencil")
                 }
 
-                Button {
-                    viewModel.editSelectedGroup()
-                } label: {
-                    Label("Edit Group", systemImage: "slider.horizontal.3")
-                }
-
-                Button(role: .destructive) {
-                    viewModel.reassignAndRemoveSelectedGroup()
-                } label: {
-                    Label("Remove Group", systemImage: "trash")
-                }
-                .disabled(viewModel.groups.count < 2)
+				Menu("Workspace Actions", systemImage: "ellipsis.circle") {
+					Button("Import Markdown", systemImage: "square.and.arrow.down") {
+						viewModel.selectMarkdownFiles(in: group)
+					}
+					Button("Edit Workspace", systemImage: "slider.horizontal.3") {
+						viewModel.editSelectedGroup()
+					}
+					Divider()
+					Button("Remove Workspace", systemImage: "trash", role: .destructive) {
+						viewModel.reassignAndRemoveSelectedGroup()
+					}
+					.disabled(viewModel.groups.count < 2)
+				}
             }
         }
     }
