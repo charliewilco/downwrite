@@ -64,7 +64,7 @@
 		"styled-jsx": "^5.0.1",
 		"swr": "^1.2.2",
 		"unified": "^10.1.2",
-		"universal-cookie": "^4.0.4",
+		"universal-cookie": "^8.1.2",
 		"use-subscription": "^1.5.1",
 		"zod": "^3.14.2"
 	},
