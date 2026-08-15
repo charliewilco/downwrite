@@ -1,0 +1,693 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D10000000000000000000301 /* Textual in Frameworks */ = {isa = PBXBuildFile; productRef = D10000000000000000000201 /* Textual */; };
+		D10000000000000000000302 /* OpenAPIRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = D10000000000000000000202 /* OpenAPIRuntime */; };
+		D10000000000000000000303 /* OpenAPIURLSession in Frameworks */ = {isa = PBXBuildFile; productRef = D10000000000000000000203 /* OpenAPIURLSession */; };
+		D10000000000000000000304 /* HTTPTypes in Frameworks */ = {isa = PBXBuildFile; productRef = D10000000000000000000204 /* HTTPTypes */; };
+		D10000000000000000000305 /* DownwriteAPI in Frameworks */ = {isa = PBXBuildFile; productRef = D10000000000000000000205 /* DownwriteAPI */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CB77F1803022D80000C39F46 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB77F16A3022D7FF00C39F46 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CB77F1713022D7FF00C39F46;
+			remoteInfo = Downwrite;
+		};
+		CB77F18A3022D80000C39F46 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB77F16A3022D7FF00C39F46 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CB77F1713022D7FF00C39F46;
+			remoteInfo = Downwrite;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		CB77F1723022D7FF00C39F46 /* Downwrite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Downwrite.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB77F17F3022D80000C39F46 /* DownwriteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DownwriteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB77F1893022D80000C39F46 /* DownwriteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DownwriteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D10000000000000000000401 /* Exceptions for "Downwrite" folder in "Downwrite" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Config/Info.plist,
+			);
+			target = CB77F1713022D7FF00C39F46 /* Downwrite */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		CB77F1743022D7FF00C39F46 /* Downwrite */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D10000000000000000000401 /* Exceptions for "Downwrite" folder in "Downwrite" target */,
+			);
+			path = Downwrite;
+			sourceTree = "<group>";
+		};
+		CB77F1823022D80000C39F46 /* DownwriteTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DownwriteTests;
+			sourceTree = "<group>";
+		};
+		CB77F18C3022D80000C39F46 /* DownwriteUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DownwriteUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CB77F16F3022D7FF00C39F46 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D10000000000000000000301 /* Textual in Frameworks */,
+				D10000000000000000000302 /* OpenAPIRuntime in Frameworks */,
+				D10000000000000000000303 /* OpenAPIURLSession in Frameworks */,
+				D10000000000000000000304 /* HTTPTypes in Frameworks */,
+				D10000000000000000000305 /* DownwriteAPI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB77F17C3022D80000C39F46 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB77F1863022D80000C39F46 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CB77F1693022D7FF00C39F46 = {
+			isa = PBXGroup;
+			children = (
+				CB77F1743022D7FF00C39F46 /* Downwrite */,
+				CB77F1823022D80000C39F46 /* DownwriteTests */,
+				CB77F18C3022D80000C39F46 /* DownwriteUITests */,
+				CB77F1733022D7FF00C39F46 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CB77F1733022D7FF00C39F46 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CB77F1723022D7FF00C39F46 /* Downwrite.app */,
+				CB77F17F3022D80000C39F46 /* DownwriteTests.xctest */,
+				CB77F1893022D80000C39F46 /* DownwriteUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CB77F1713022D7FF00C39F46 /* Downwrite */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CB77F1933022D80000C39F46 /* Build configuration list for PBXNativeTarget "Downwrite" */;
+			buildPhases = (
+				CB77F16E3022D7FF00C39F46 /* Sources */,
+				CB77F16F3022D7FF00C39F46 /* Frameworks */,
+				CB77F1703022D7FF00C39F46 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				CB77F1743022D7FF00C39F46 /* Downwrite */,
+			);
+			name = Downwrite;
+			packageProductDependencies = (
+				D10000000000000000000201 /* Textual */,
+				D10000000000000000000202 /* OpenAPIRuntime */,
+				D10000000000000000000203 /* OpenAPIURLSession */,
+				D10000000000000000000204 /* HTTPTypes */,
+				D10000000000000000000205 /* DownwriteAPI */,
+			);
+			productName = Downwrite;
+			productReference = CB77F1723022D7FF00C39F46 /* Downwrite.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CB77F17E3022D80000C39F46 /* DownwriteTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CB77F1963022D80000C39F46 /* Build configuration list for PBXNativeTarget "DownwriteTests" */;
+			buildPhases = (
+				CB77F17B3022D80000C39F46 /* Sources */,
+				CB77F17C3022D80000C39F46 /* Frameworks */,
+				CB77F17D3022D80000C39F46 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CB77F1813022D80000C39F46 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CB77F1823022D80000C39F46 /* DownwriteTests */,
+			);
+			name = DownwriteTests;
+			packageProductDependencies = (
+			);
+			productName = DownwriteTests;
+			productReference = CB77F17F3022D80000C39F46 /* DownwriteTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		CB77F1883022D80000C39F46 /* DownwriteUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CB77F1993022D80000C39F46 /* Build configuration list for PBXNativeTarget "DownwriteUITests" */;
+			buildPhases = (
+				CB77F1853022D80000C39F46 /* Sources */,
+				CB77F1863022D80000C39F46 /* Frameworks */,
+				CB77F1873022D80000C39F46 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CB77F18B3022D80000C39F46 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CB77F18C3022D80000C39F46 /* DownwriteUITests */,
+			);
+			name = DownwriteUITests;
+			packageProductDependencies = (
+			);
+			productName = DownwriteUITests;
+			productReference = CB77F1893022D80000C39F46 /* DownwriteUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CB77F16A3022D7FF00C39F46 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2660;
+				LastUpgradeCheck = 2660;
+				TargetAttributes = {
+					CB77F1713022D7FF00C39F46 = {
+						CreatedOnToolsVersion = 26.6;
+					};
+					CB77F17E3022D80000C39F46 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = CB77F1713022D7FF00C39F46;
+					};
+					CB77F1883022D80000C39F46 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = CB77F1713022D7FF00C39F46;
+					};
+				};
+			};
+			buildConfigurationList = CB77F16D3022D7FF00C39F46 /* Build configuration list for PBXProject "Downwrite" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CB77F1693022D7FF00C39F46;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D10000000000000000000101 /* XCRemoteSwiftPackageReference "textual" */,
+				D10000000000000000000102 /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */,
+				D10000000000000000000103 /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */,
+				D10000000000000000000104 /* XCRemoteSwiftPackageReference "swift-http-types" */,
+				D10000000000000000000105 /* XCLocalSwiftPackageReference "../DownwriteAPI" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = CB77F1733022D7FF00C39F46 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CB77F1713022D7FF00C39F46 /* Downwrite */,
+				CB77F17E3022D80000C39F46 /* DownwriteTests */,
+				CB77F1883022D80000C39F46 /* DownwriteUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CB77F1703022D7FF00C39F46 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB77F17D3022D80000C39F46 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB77F1873022D80000C39F46 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CB77F16E3022D7FF00C39F46 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB77F17B3022D80000C39F46 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB77F1853022D80000C39F46 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CB77F1813022D80000C39F46 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CB77F1713022D7FF00C39F46 /* Downwrite */;
+			targetProxy = CB77F1803022D80000C39F46 /* PBXContainerItemProxy */;
+		};
+		CB77F18B3022D80000C39F46 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CB77F1713022D7FF00C39F46 /* Downwrite */;
+			targetProxy = CB77F18A3022D80000C39F46 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		CB77F1913022D80000C39F46 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 824752FF3X;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		CB77F1923022D80000C39F46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 824752FF3X;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CB77F1943022D80000C39F46 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = DownwriteAppV2;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 824752FF3X;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Downwrite/Config/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.charliewil.Downwrite;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CB77F1953022D80000C39F46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = DownwriteAppV2;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 824752FF3X;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Downwrite/Config/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.charliewil.Downwrite;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CB77F1973022D80000C39F46 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 824752FF3X;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.charliewil.DownwriteTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Downwrite.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Downwrite";
+			};
+			name = Debug;
+		};
+		CB77F1983022D80000C39F46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 824752FF3X;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.charliewil.DownwriteTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Downwrite.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Downwrite";
+			};
+			name = Release;
+		};
+		CB77F19A3022D80000C39F46 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 824752FF3X;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.charliewil.DownwriteUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Downwrite;
+			};
+			name = Debug;
+		};
+		CB77F19B3022D80000C39F46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 824752FF3X;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.charliewil.DownwriteUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Downwrite;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CB77F16D3022D7FF00C39F46 /* Build configuration list for PBXProject "Downwrite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB77F1913022D80000C39F46 /* Debug */,
+				CB77F1923022D80000C39F46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CB77F1933022D80000C39F46 /* Build configuration list for PBXNativeTarget "Downwrite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB77F1943022D80000C39F46 /* Debug */,
+				CB77F1953022D80000C39F46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CB77F1963022D80000C39F46 /* Build configuration list for PBXNativeTarget "DownwriteTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB77F1973022D80000C39F46 /* Debug */,
+				CB77F1983022D80000C39F46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CB77F1993022D80000C39F46 /* Build configuration list for PBXNativeTarget "DownwriteUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB77F19A3022D80000C39F46 /* Debug */,
+				CB77F19B3022D80000C39F46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		D10000000000000000000105 /* XCLocalSwiftPackageReference "../DownwriteAPI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../DownwriteAPI;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D10000000000000000000101 /* XCRemoteSwiftPackageReference "textual" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gonzalezreal/textual";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.0;
+			};
+		};
+		D10000000000000000000102 /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-openapi-runtime";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.12.0;
+			};
+		};
+		D10000000000000000000103 /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-openapi-urlsession";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.1;
+			};
+		};
+		D10000000000000000000104 /* XCRemoteSwiftPackageReference "swift-http-types" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-http-types";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D10000000000000000000201 /* Textual */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D10000000000000000000101 /* XCRemoteSwiftPackageReference "textual" */;
+			productName = Textual;
+		};
+		D10000000000000000000202 /* OpenAPIRuntime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D10000000000000000000102 /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */;
+			productName = OpenAPIRuntime;
+		};
+		D10000000000000000000203 /* OpenAPIURLSession */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D10000000000000000000103 /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */;
+			productName = OpenAPIURLSession;
+		};
+		D10000000000000000000204 /* HTTPTypes */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D10000000000000000000104 /* XCRemoteSwiftPackageReference "swift-http-types" */;
+			productName = HTTPTypes;
+		};
+		D10000000000000000000205 /* DownwriteAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D10000000000000000000105 /* XCLocalSwiftPackageReference "../DownwriteAPI" */;
+			productName = DownwriteAPI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = CB77F16A3022D7FF00C39F46 /* Project object */;
+}

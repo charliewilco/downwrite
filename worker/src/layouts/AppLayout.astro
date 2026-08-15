@@ -1,0 +1,27 @@
+---
+import AppHeader from "../components/AppHeader.astro";
+import "../styles/style.css";
+
+const { title = "Downwrite" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <script>
+      import "../client/document-elements.ts";
+    </script>
+    <AppHeader />
+    <main class="shell">
+      <section class="content-canvas">
+        <slot />
+        <dw-markdown-import-dialog></dw-markdown-import-dialog>
+      </section>
+    </main>
+  </body>
+</html>

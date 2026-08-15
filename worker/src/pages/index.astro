@@ -1,0 +1,19 @@
+---
+import AppLayout from "../layouts/AppLayout.astro";
+import DirectoryList from "../components/workspaces/DirectoryList.astro";
+import { loadGroupsForRequest } from "../web/page-data.js";
+
+const { groups, error } = await loadGroupsForRequest(Astro.request);
+---
+
+<AppLayout title="Downwrite">
+  {
+    error ? (
+      <p class="status error">{error}</p>
+    ) : (
+      <markdown-dragarea workspace-id="">
+        <DirectoryList groups={groups} />
+      </markdown-dragarea>
+    )
+  }
+</AppLayout>

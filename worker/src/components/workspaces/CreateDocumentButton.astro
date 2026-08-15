@@ -1,0 +1,11 @@
+---
+interface Props {
+	groupId: string;
+}
+
+const { groupId } = Astro.props;
+---
+
+<dw-create-document-button group-id={groupId}>
+	<button class="secondary-action" type="button">New document</button>
+</dw-create-document-button>

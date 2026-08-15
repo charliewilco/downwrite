@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "dist-api",
+    "rootDir": "src",
+    "strict": true,
+    "target": "ES2022",
+    "types": ["@cloudflare/workers-types"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "src/env.d.ts",
+    "src/index.ts",
+    "src/assets/**/*",
+    "src/client/**/*",
+    "src/components/**/*",
+    "src/layouts/**/*",
+    "src/pages/**/*",
+    "src/styles/**/*",
+    "src/web/**/*"
+  ]
+}

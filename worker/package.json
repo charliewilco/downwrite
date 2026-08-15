@@ -1,0 +1,84 @@
+{
+  "name": "@downwrite/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm run dev:prepare && astro dev --host 0.0.0.0",
+    "dev:prepare": "node scripts/prepare-local-dev.mjs && wrangler d1 migrations apply DB --local",
+    "dev:api": "wrangler dev",
+    "dev:web": "astro dev --host 0.0.0.0",
+    "build": "npm run build:api && npm run build:web",
+    "build:api": "tsc -p tsconfig.json",
+    "build:web": "astro build",
+    "generate:ios-client": "npm run build:api && node scripts/generate-ios-openapi-client.mjs",
+    "deploy": "npm run build && npm run db:migrations:apply && wrangler deploy",
+    "db:migrations:apply": "wrangler d1 migrations apply DB --remote",
+    "format:check": "npx --yes prettier@3.9.6 --check astro.config.mjs package.json package-lock.json tsconfig.json tsconfig.client.json README.md ../README.md ../documentation ../iOS/README.md ../.github/workflows scripts src test",
+    "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck:web",
+    "typecheck:web": "astro sync && tsc -p tsconfig.client.json --noEmit",
+    "test": "npm run build:api && node --test test/*.test.mjs",
+    "test:ssr": "node --test test/ssr-pages.smoke.mjs",
+    "test:integration": "npm run build:api && node --test test/*.integration.test.mjs",
+    "validate": "npm run typecheck && npm run test && npm run build && npm run test:ssr && npm run validate:worker",
+    "validate:worker": "wrangler deploy --dry-run --outdir dist-worker"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^14.2.0",
+    "@astrojs/preact": "^6.0.2",
+    "@simplewebauthn/server": "^13.2.2",
+    "@tiptap/core": "^3.29.2",
+    "@tiptap/extension-link": "^3.29.2",
+    "@tiptap/extension-placeholder": "^3.29.2",
+    "@tiptap/extension-task-item": "^3.29.2",
+    "@tiptap/extension-task-list": "^3.29.2",
+    "@tiptap/markdown": "^3.29.2",
+    "@tiptap/pm": "^3.29.2",
+    "@tiptap/starter-kit": "^3.29.2",
+    "astro": "^7.2.0",
+    "hono": "4.13.0",
+    "preact": "10.29.8"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20260804.1",
+    "typescript": "7.0.2",
+    "wrangler": "4.118.0"
+  },
+  "overrides": {
+    "undici": "7.29.0"
+  },
+  "cloudflare": {
+    "bindings": {
+      "DB": {
+        "description": "Instance-local D1 database for Downwrite metadata, sessions, passkey challenges, groups, documents, collaborators, public share links, and coarse abuse throttles."
+      },
+      "CONTENT": {
+        "description": "Instance-local R2 bucket for Markdown document bodies owned by the deployer's Cloudflare account."
+      },
+      "DEVELOPMENT_API_TOKENS": {
+        "description": "Comma-separated local identity token map in `identity:token` form. Example: `dev-owner:replace-with-random-token,dev-editor:another-random-token`. This is an instance-local development adapter, not a central Downwrite login service."
+      },
+      "DOWNWRITE_LOCAL_AUTH": {
+        "description": "Set to `1` only in local `.dev.vars` to enable localhost-only browser development sign-in. Do not configure this for production deployments."
+      },
+      "AUTH_BOOTSTRAP_TOKEN": {
+        "description": "Instance-local one-time owner setup secret. Configure as a Worker secret; do not commit a production value."
+      },
+      "DOWNWRITE_REGISTRATION_MODE": {
+        "description": "Operator-controlled production registration mode. Defaults to `closed`; set to `open` for public registration or `email_domain` to restrict new passkey registration to configured email domains."
+      },
+      "DOWNWRITE_ALLOWED_EMAIL_DOMAINS": {
+        "description": "Comma-separated allowed email domains used only when DOWNWRITE_REGISTRATION_MODE=email_domain. Example: `example.com,team.example.com`."
+      },
+      "WEBAUTHN_RP_NAME": {
+        "description": "Display name shown by passkey authenticators for this self-hosted instance."
+      },
+      "WEBAUTHN_RP_ID": {
+        "description": "Optional WebAuthn relying-party ID, usually the production custom-domain host."
+      },
+      "INSTANCE_PUBLIC_URL": {
+        "description": "Optional canonical public base URL used in discovery and passkey origin checks."
+      }
+    }
+  }
+}

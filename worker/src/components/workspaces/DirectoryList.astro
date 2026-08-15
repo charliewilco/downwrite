@@ -1,0 +1,39 @@
+---
+import { sortedGroups } from "../../client/workspace-search.js";
+import type { GroupSummary } from "../../types.js";
+import WorkspaceSection from "./WorkspaceSection.astro";
+
+interface Props {
+  groups: GroupSummary[];
+}
+
+const { groups } = Astro.props;
+const recentGroups = sortedGroups(groups);
+---
+
+<section class="workspace-screen directory-screen">
+  <ul class="directory-list">
+    {
+      recentGroups.length === 0 && (
+        <li class="empty-row">
+          No workspaces yet. Create one to start collecting Markdown documents.
+        </li>
+      )
+    }
+    {recentGroups.map((group) => <WorkspaceSection group={group} />)}
+  </ul>
+</section>
+
+<style>
+  .directory-screen {
+    display: grid;
+    padding-top: 0;
+  }
+
+  .directory-list {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>

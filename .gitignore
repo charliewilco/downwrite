@@ -8,19 +8,65 @@ coverage
 
 # production
 build
-.next/
-.now/
-.vercel/
+dist
 
 # misc
 .DS_Store
 .env
 .env.*
+worker/.dev.vars
 npm-debug.log
-package-lock.json
-dist
 private.key
-api/docs
 
 tsconfig.tsbuildinfo
-.vercel
+**/tsconfig.tsbuildinfo
+worker/tsconfig.client.tsbuildinfo
+.wrangler/
+worker/dist/
+worker/dist-api/
+worker/dist-worker/
+worker/.astro/
+worker/web/dist/
+
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# iOS
+*.xcuserstate
+*.xccheckout
+*.moved-aside
+*.xcscmblueprint
+
+# Xcode
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+#*.xcworkspace
+#!*.xcworkspace/contents.xcworkspacedata
+#!*.xcworkspace/xcshareddata/*
+DerivedData
+.idea/
+.vscode/
+*.hmap
+
+*.xcuserdatad
+xcuserdata/
+
+# Swift Package Manager
+/.build/
+.build/
+.swiftpm/
+Packages/*/Package.resolved
+iOS/DownwriteAPI/Package.resolved
+
+cli/target

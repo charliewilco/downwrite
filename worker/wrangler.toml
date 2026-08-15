@@ -1,0 +1,37 @@
+name = "downwrite"
+main = "src/index.ts"
+compatibility_date = "2026-08-04"
+
+[assets]
+directory = "./dist/client"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*", "/.well-known/*", "/oauth/*", "/mcp"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "downwrite"
+database_id = "e959f163-9ab0-4039-a3ec-acc01f47f882"
+migrations_dir = "./migrations"
+
+[[r2_buckets]]
+binding = "CONTENT"
+bucket_name = "downwrite-content"
+
+[observability]
+enabled = true
+head_sampling_rate = 1
+
+[triggers]
+crons = ["17 3 * * *"]
+
+[vars]
+WEBAUTHN_RP_NAME = "Downwrite"
+# Production registration is closed by default after owner bootstrap.
+# Set DOWNWRITE_REGISTRATION_MODE to "open" or "email_domain" to allow
+# additional passkey registration. Domain mode also requires
+# DOWNWRITE_ALLOWED_EMAIL_DOMAINS, for example "example.com,team.example.com".
+# Local-only secrets are generated into .dev.vars by npm run dev.
+# Set INSTANCE_PUBLIC_URL and WEBAUTHN_RP_ID for production custom domains.
+# Store AUTH_BOOTSTRAP_TOKEN and any development token map as Worker secrets,
+# not in wrangler.toml.

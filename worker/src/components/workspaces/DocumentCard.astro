@@ -1,0 +1,61 @@
+---
+import type { GroupSummary } from "../../types.js";
+
+interface Props {
+  accentColor: string;
+  document: GroupSummary["documents"][number];
+}
+
+const { accentColor, document } = Astro.props;
+---
+
+<li class="document-card-item">
+  <a
+    class="document-card"
+    href={`/documents/${encodeURIComponent(document.id)}`}
+  >
+    <strong>{document.title}</strong>
+    <span>
+      {document.role} · rev {document.revision}
+    </span>
+  </a>
+</li>
+
+<style define:vars={{ accentColor }}>
+  .document-card-item {
+    min-width: 0;
+  }
+
+  .document-card {
+    display: grid;
+    align-content: space-between;
+    width: 100%;
+    min-height: 124px;
+    gap: 10px;
+    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--surface) 18%, var(--accentColor));
+    color: inherit;
+    padding: 16px;
+    text-align: left;
+    border-radius: 1rem 1rem 0 0;
+  }
+
+  .document-card:hover strong {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .document-card strong {
+    overflow: hidden;
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .document-card span {
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+</style>

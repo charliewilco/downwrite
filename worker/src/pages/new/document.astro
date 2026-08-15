@@ -1,0 +1,34 @@
+---
+import AppLayout from "../../layouts/AppLayout.astro";
+import EmptyState from "../../components/EmptyState.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import CreateDocumentForm from "../../components/forms/CreateDocumentForm.astro";
+import { loadGroupsForRequest } from "../../web/page-data.js";
+
+const { groups, error } = await loadGroupsForRequest(Astro.request);
+---
+
+<AppLayout title="New Document - Downwrite">
+  <section class="workspace-screen create-route">
+    <SectionHeading
+      backHref="/"
+      description="Documents start untitled and open directly in the Markdown editor."
+      eyebrow="New document"
+      title="Choose where it belongs."
+    />
+    {
+      error ? (
+        <p class="status error">{error}</p>
+      ) : groups.length === 0 ? (
+        <EmptyState
+          actionHref="/new/workspace"
+          actionLabel="New workspace"
+          description="Create a workspace before adding a document."
+          title="No workspaces"
+        />
+      ) : (
+        <CreateDocumentForm groups={groups} />
+      )
+    }
+  </section>
+</AppLayout>

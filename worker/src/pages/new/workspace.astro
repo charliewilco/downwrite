@@ -1,0 +1,17 @@
+---
+import AppLayout from "../../layouts/AppLayout.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import CreateWorkspaceForm from "../../components/forms/CreateWorkspaceForm.astro";
+---
+
+<AppLayout title="New Workspace - Downwrite">
+  <section class="workspace-screen create-route">
+    <SectionHeading
+      backHref="/"
+      description="Keep a project, topic, or client separated from the rest."
+      eyebrow="New workspace"
+      title="Start a writing space."
+    />
+    <CreateWorkspaceForm />
+  </section>
+</AppLayout>

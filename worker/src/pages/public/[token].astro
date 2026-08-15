@@ -1,0 +1,34 @@
+---
+import AppLayout from "../../layouts/AppLayout.astro";
+import EmptyState from "../../components/EmptyState.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import { loadPublicDocumentForRequest } from "../../web/page-data.js";
+import { renderMarkdownHtml } from "../../web/markdown-html.js";
+
+const publicToken = Astro.params.token ?? "";
+const { document, error } = await loadPublicDocumentForRequest(publicToken);
+const preview = document ? renderMarkdownHtml(document.content) : "";
+---
+
+<AppLayout title={document ? `${document.title} - Downwrite` : "Public Document - Downwrite"}>
+  {
+    document ? (
+      <article class="workspace-screen public-document">
+        <SectionHeading
+          description="Anonymous visitors can read this Markdown document. Editing stays restricted to invited collaborators."
+          eyebrow={`Public read-only link${
+            document.publicLink.label ? ` · ${document.publicLink.label}` : ""
+          }`}
+          title={document.title}
+        />
+        <section class="preview-pane public-preview" set:html={preview} />
+      </article>
+    ) : (
+      <EmptyState
+        class="workspace-screen empty-document"
+        description={error ?? "This public link may have been revoked."}
+        title="Public document unavailable"
+      />
+    )
+  }
+</AppLayout>

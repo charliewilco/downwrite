@@ -1,60 +1,68 @@
-name: Node CI
-on: [push, pull_request]
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  worker:
+    name: Worker
     runs-on: ubuntu-latest
-    env:
-      NEXT_TELEMETRY_DISABLED: 1
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x]
-
     steps:
-      - uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-      - uses: pnpm/action-setup@v2.1.0
-        with:
-          version: 6.32.0
-      - name: Install deps and build package
-        run: pnpm install --frozen-lockfile
-      - name: Build
-        run: pnpm build
+      - uses: actions/checkout@v5
 
-  test:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
+
+      - working-directory: worker
+        run: npm ci
+
+      - working-directory: worker
+        run: npm run format:check
+
+      - working-directory: worker
+        run: npm run validate
+
+  cli:
+    name: CLI
     runs-on: ubuntu-latest
-    env:
-      NEXT_TELEMETRY_DISABLED: 1
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x]
-
-    services:
-      mongodb:
-        image: mongo:4.4
-        ports:
-          - 27017:27017
     steps:
-      - uses: actions/cache@v2
+      - uses: actions/checkout@v5
+
+      - working-directory: cli
+        run: cargo fmt --check
+
+      - working-directory: cli
+        run: cargo test --locked
+
+  ios:
+    name: iOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
         with:
-          path: ${{ github.workspace }}/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-      - uses: pnpm/action-setup@v2.1.0
-        with:
-          version: 6.32.0
-      - name: Install deps and build package
-        run: pnpm install --frozen-lockfile
-      - name: Unit Tests
-        run: pnpm test:ci
+          node-version: 24
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
+
+      - working-directory: worker
+        run: npm ci
+
+      - name: Verify generated iOS client is current
+        working-directory: worker
+        run: npm run generate:ios-client
+
+      - name: Check generated client diff
+        run: git diff --exit-code -- iOS/OpenAPI/openapi.json iOS/DownwriteAPI/Sources/DownwriteAPI
+
+      - name: Test iOS app
+        run: xcodebuild test -project iOS/Downwrite/Downwrite.xcodeproj -scheme Downwrite -destination 'platform=iOS Simulator,name=iPhone 17' -configuration Debug -only-testing:DownwriteTests

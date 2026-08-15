@@ -1,0 +1,53 @@
+---
+import type { GroupSummary } from "../../types.js";
+import WorkspaceDocumentCard from "./WorkspaceDocumentCard.astro";
+
+interface Props {
+	accentColor: string;
+	group: GroupSummary;
+}
+
+const { accentColor, group } = Astro.props;
+---
+
+<ul class="document-list">
+	{
+		group.documents.length === 0 && (
+			<li class="empty-row">
+				No documents yet. Create one to start writing in this workspace.
+			</li>
+		)
+	}
+	{
+		group.documents.map((document, index) => (
+			<WorkspaceDocumentCard
+				accentColor={accentColor}
+				document={document}
+				documents={group.documents}
+				index={index}
+			/>
+		))
+	}
+</ul>
+
+<style define:vars={{ accentColor }}>
+	.document-list {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+		align-self: end;
+		gap: 12px;
+		width: 100%;
+		margin-block: 0;
+		padding: 0 var(--workspace-inline-gutter);
+		list-style: none;
+	}
+
+	.document-list :global(.empty-row) {
+		min-height: 124px;
+		border: 1px solid var(--line);
+		background: color-mix(in srgb, var(--surface) 18%, var(--accentColor));
+		color: var(--muted);
+		font-size: 0.88rem;
+		padding: 16px;
+	}
+</style>

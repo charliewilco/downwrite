@@ -1,0 +1,18 @@
+---
+import AppLayout from "../../layouts/AppLayout.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import InvitationAcceptForm from "../../components/forms/InvitationAcceptForm.astro";
+
+const token = Astro.params.token ?? "";
+---
+
+<AppLayout title="Invitation - Downwrite">
+  <section class="workspace-screen invitation-route">
+    <SectionHeading
+      description="Invitation tokens are instance-local. Sign in, then accept to gain the invited document role."
+      eyebrow="Invitation"
+      title="Accept a document invitation."
+    />
+    <InvitationAcceptForm token={token} />
+  </section>
+</AppLayout>

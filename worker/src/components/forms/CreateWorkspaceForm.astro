@@ -1,0 +1,22 @@
+---
+import { DEFAULT_ACCENT } from "../../client/app-constants.js";
+---
+
+<dw-create-workspace-form>
+	<form class="settings-form">
+		<label>
+			<span>Name</span>
+			<input name="name" />
+		</label>
+		<label>
+			<span>Description</span>
+			<textarea name="description"></textarea>
+		</label>
+		<label class="color-row">
+			<span>Accent</span>
+			<input name="accentColor" type="color" value={DEFAULT_ACCENT} />
+		</label>
+		<button class="primary-action" type="submit">Create workspace</button>
+		<p class="inline-error" data-inline-error hidden></p>
+	</form>
+</dw-create-workspace-form>

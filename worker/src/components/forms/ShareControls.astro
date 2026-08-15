@@ -1,0 +1,31 @@
+---
+import type { GroupSummary } from "../../types.js";
+
+interface Props {
+	group: GroupSummary;
+	selectedDocumentId?: string;
+}
+
+const { group, selectedDocumentId } = Astro.props;
+const activeDocumentId = selectedDocumentId ?? group.documents[0]?.id;
+---
+
+<dw-share-controls>
+	<label class="document-picker">
+		<span>Document</span>
+		<select name="documentId">
+			{
+				group.documents.map((document) => (
+					<option value={document.id} selected={document.id === activeDocumentId}>
+						{document.title}
+					</option>
+				))
+			}
+		</select>
+	</label>
+	<section class="share-panel" data-share-panel>
+		<p class="empty-row">Loading sharing controls...</p>
+	</section>
+	<p class="inline-notice" data-inline-notice hidden></p>
+	<p class="inline-error" data-inline-error hidden></p>
+</dw-share-controls>
